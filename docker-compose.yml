@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  sol-compile:
+    build: ./
+    command: build:watch
+    volumes:
+      - ./contracts:/app/contracts
+      - ./artifacts:/app/artifacts
+
+  jest:
+    build: ./
+    command: test:watch
+    volumes:
+      - ./contracts:/app/contracts
+      - ./artifacts:/app/artifacts
+      - ./.git:/app/.git
+      - ./.babelrc:/app/.babelrc
+      - ./compiler.json:/app/compiler.json
+    depends_on:
+      - ganache
+
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
