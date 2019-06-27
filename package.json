@@ -1,0 +1,38 @@
+{
+  "name": "radish-34",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "sol-compiler",
+    "build:watch": "sol-compiler --watch",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EYBlockchain/radish-34.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EYBlockchain/radish-34/issues"
+  },
+  "homepage": "https://github.com/EYBlockchain/radish-34#readme",
+  "dependencies": {
+    "openzeppelin-solidity": "^2.3.0"
+  },
+  "devDependencies": {
+    "@0x/sol-compiler": "^3.1.8",
+    "@0x/sol-coverage": "^3.0.5",
+    "@0x/sol-profiler": "^3.1.7",
+    "@0x/sol-trace": "^2.0.13",
+    "ethereum-doppelganger": "0.0.7",
+    "ethers": "^4.0.31",
+    "jest": "^24.8.0",
+    "web3-provider-engine": "^15.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
