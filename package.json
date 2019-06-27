@@ -7,7 +7,7 @@
     "build": "sol-compiler",
     "build:watch": "sol-compiler --watch",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watchAll"
   },
   "repository": {
     "type": "git",

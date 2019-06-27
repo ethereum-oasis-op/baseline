@@ -5,18 +5,17 @@ services:
     build: ./
     command: build:watch
     volumes:
-      - ./contracts:/app/contracts
-      - ./artifacts:/app/artifacts
+      - ./contracts:/app/contracts:delegated
+      - ./artifacts:/app/artifacts:cached
 
   jest:
     build: ./
     command: test:watch
     volumes:
-      - ./contracts:/app/contracts
-      - ./artifacts:/app/artifacts
-      - ./.git:/app/.git
-      - ./.babelrc:/app/.babelrc
-      - ./compiler.json:/app/compiler.json
+      - ./contracts:/app/contracts:delegated
+      - ./artifacts:/app/artifacts:delegated
+      - ./.babelrc:/app/.babelrc:delegated
+      - ./compiler.json:/app/compiler.json:delegated
     depends_on:
       - ganache
 
