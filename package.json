@@ -6,6 +6,7 @@
   "scripts": {
     "build": "sol-compiler",
     "build:watch": "sol-compiler --watch",
+    "lint": "solhint \"contracts/**/*.sol\"",
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
@@ -30,6 +31,7 @@
     "ethereum-doppelganger": "0.0.7",
     "ethers": "^4.0.31",
     "jest": "^24.8.0",
+    "solhint": "2.1.0",
     "web3-provider-engine": "^15.0.0"
   },
   "jest": {
