@@ -21,7 +21,7 @@ const getWallet = () => {
   // const coverageSubprovider = new CoverageSubprovider(artifactAdapter, wallet.address);
   const rpcProvider = new RpcSubprovider({ rpcUrl: 'http://ganache:8545' });
 
-  engine.addProvider(revertTraceSubprovider);
+  //engine.addProvider(revertTraceSubprovider);
   // engine.addProvider(profilerSubprovider);
   // engine.addProvider(coverageSubprovider);
   engine.addProvider(rpcProvider);
