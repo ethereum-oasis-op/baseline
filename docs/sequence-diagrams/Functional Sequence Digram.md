@@ -25,3 +25,6 @@ In addition, following flows can be considered to be adjacent or pre-requisite f
 
 ## Open Questions
 
+1. What needs to be public/private about RFQ? Should we consider tokenizing this?
+2. Should ownership be tracked at a widget level for legal ownership, or at a shipping container level for shipping token ownership and transfer of rights ownership?
+
