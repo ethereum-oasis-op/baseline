@@ -27,4 +27,6 @@ In addition, following flows can be considered to be adjacent or pre-requisite f
 
 1. What needs to be public/private about RFQ? Should we consider tokenizing this?
 2. Should ownership be tracked at a widget level for legal ownership, or at a shipping container level for shipping token ownership and transfer of rights ownership?
+3. How should Oracle be interfaced? Should it be for oil prices or are there any other attributes?
+4. Dispute management in general is around disputes with price reconciliation, and blockchain based solutions typically address this due to transparency of data and logic on chain. Defective products are typically addressed as part of the contractual agreement. How do we envision the defective products and related revised payments be built in for this use case?
 
