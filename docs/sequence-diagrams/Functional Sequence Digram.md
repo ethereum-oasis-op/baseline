@@ -26,7 +26,20 @@ In addition, following flows can be considered to be adjacent or pre-requisite f
 ## Open Questions
 
 1. What needs to be public/private about RFQ? Should we consider tokenizing this?
+    - RFQ is shown to suppliers but private from the "general public". 
+    - Price that is quoted can only be seen by the supplier and the buyer. 
+    - Use Smart Contract for RFQ - has price and volume. ZK-proof price and volume, and person will have ability to burn it
+    - Price and volume could be the metadata to a shell RFQ token OR RFQ token could be minted before the fact, and sending         and RFQ happens through a private transfer  
 2. Should ownership be tracked at a widget level for legal ownership, or at a shipping container level for shipping token ownership and transfer of rights ownership?
+    - Definitely a shipping token and a transfer of rights token. 
+    - **Clarification**: Token composition - widgets become pallet, pallet becomes shipment. At shipment level, we are                transferring ownership at shipment level to carrier who then gets carried to a buyer. When transferring ownership to          shipper, is it partial ownership or full ownership transfer?
+    - We will make this configurable. Look into batch zero-knowledge proofs - can this be used to decomopose a commitment           without burning it?
 3. How should Oracle be interfaced? Should it be for oil prices or are there any other attributes?
+    - Oil price doesn't change much within a few months
+    - More valuable would be to have an oracle that does currency conversion
+    - Proof that final price being calculated is priced at a certain currency at a certain date
+    - might be on chainlink marketplace
 4. Dispute management in general is around disputes with price reconciliation, and blockchain based solutions typically address this due to transparency of data and logic on chain. Defective products are typically addressed as part of the contractual agreement. How do we envision the defective products and related revised payments be built in for this use case?
+    - Build UI story for price dispute. 
+    - Or assume there are products that have already been proven defective
 
