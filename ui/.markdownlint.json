@@ -1,0 +1,13 @@
+{
+  "default": true,
+  "line-length": {
+    "line_length": 100,
+    "code_blocks": false,
+    "tables": false
+  },
+  "html": {
+    "allowed_elements": ["sup"]
+  },
+  "MD033": false,
+  "MD041": false
+}
