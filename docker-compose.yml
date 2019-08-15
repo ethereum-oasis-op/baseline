@@ -24,7 +24,7 @@ services:
     command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
 
   zok:
-    image: kartheek14/zokrates_dev:081419
+    image: kartheek14/zokrates_dev:081519
     volumes:
       - ./zok/code:/home/zokrates/zok_code
       - ./zok/output:/home/zokrates/output
