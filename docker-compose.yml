@@ -28,3 +28,20 @@ services:
     volumes:
       - ./zok/code:/home/zokrates/zok_code
       - ./zok/output:/home/zokrates/output
+      
+  radish34-ui:
+    build:
+      context: ./ui/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./ui/src:/app/src:delegated
+      - ./ui/.env:/app/.env:delegated
+      - ./ui/public/index.html:/app/public/index.html:delegated
+      - ./ui/public/favicon.ico:/app/public/favicon.ico:delegated
+      - ./ui/public/manifest.json:/app/public/manifest.json:delegated
+      - ./ui/public/logo.svg:/app/public/logo.svg:delegated
+    environment:
+      VIRTUAL_HOST: radish34-ui.docker
+    logging:
+      options:
+        max-size: 10m
