@@ -1,0 +1,5 @@
+// a and b are factorization of c
+def main(c):
+  c == a * b
+  return 1
+
