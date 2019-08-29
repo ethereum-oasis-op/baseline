@@ -1,5 +1,28 @@
-Getting started with Whisper
+# Getting started with Whisper
+
+After starting a private docker Ethereum network, run the following commands to attach the Whisper CLIs to the running geth docker containers. A UI will run in the terminal window that allows you to send Whisper messages.
+
+- Terminal window 1:
+```
+npm run start
+```
+- Terminal window 2:
+```
+npm run start2
+```
+## Public messages
+Type anything into the UI and hit `enter`. All Whisper clients will receive the message because they are all subscribed to the same hard-coded topic and have the same hard-coded symmetric key.
+
+## Private messages
+The Whisper public keys (identities) are written to text files `pubKey1.txt` and `pubKey2.txt`. To send a private message from client 1 to client 2, read the contents of `pubKey2.txt`, then send a message from terminal window 1 with the following format:
+```
+/priv 0x<pubKey2_contents> <message_to_send>
+```
+
 ===
+
+The following instructions are from https://github.com/status-im/whisper-tutorial and may not apply to Radish34 efforts. Preserving these instructions just in case there is useful setup information.
+
 
 ## Intro
 In this tutorial we'll learn how to use Ethereum's Whisper protocol to create a simple chat CLI. While everything happens in your console for this tutorial, you should be able to re-use the JS we provide in your own apps and get a good sense of how to send and display different kinds of messages, as well as the beginnings of what it is possible to build with Whisper. 
