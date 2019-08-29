@@ -6,7 +6,7 @@ docker-compose up
 ```
 If you edit any of the dockerfiles, start the network with the following command to ensure that the containers pickup your changes.
 ```
-docker-composue up --build
+docker-compose up --build
 ```
 
 ==========
