@@ -19,9 +19,9 @@ The Whisper public keys (identities) are written to text files `pubKey1.txt` and
 /priv 0x<pubKey2_contents> <message_to_send>
 ```
 
-===
+==========
 
-The following instructions are from https://github.com/status-im/whisper-tutorial and may not apply to Radish34 efforts. Preserving these instructions just in case there is useful setup information.
+***The following instructions are from https://github.com/status-im/whisper-tutorial and may not apply to Radish34 efforts. Preserving these instructions just in case there is useful setup information.***
 
 
 ## Intro
