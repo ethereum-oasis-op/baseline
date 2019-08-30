@@ -5,7 +5,8 @@ services:
     environment:
       - nodekeyhex=08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b #Needs to be fix, so that the miners know the resulting enode id
     build:
-      context: ./bootnode
+      context: ./geth-env
+      dockerfile: ./geth-env/bootnode
     ports:
       - 30301:30301/udp
     networks:
@@ -23,7 +24,8 @@ services:
     ports:
       - 8550:8545/tcp
     build:
-      context: ./miner
+      context: ./geth-env
+      dockerfile: ./geth-env/miner
       args:
         privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46 # Please don't do something like this in production, okay?
         password: pass
@@ -43,7 +45,8 @@ services:
       - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
       - bootnodeIp=172.25.0.101
     build:
-      context: ./miner
+      context: ./geth-env
+      dockerfile: ./geth-env/miner
       args:
         privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
         password: word
@@ -63,7 +66,8 @@ services:
        - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
        - bootnodeIp=172.25.0.101
      build:
-       context: ./node
+       context: ./geth-env
+       dockerfile: ./geth-env/node
        args:
          privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
          password: word
@@ -91,7 +95,8 @@ services:
        - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
        - bootnodeIp=172.25.0.101
      build:
-       context: ./node
+       context: ./geth-env
+       dockerfile: ./geth-env/node
        args:
          privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
          password: word
@@ -117,7 +122,8 @@ services:
     ports:
       - 8080:8080
     build:
-      context: ./explorer
+      context: ./geth-env
+      dockerfile: ./geth-env/explorer
     container_name: geth-explorer
     networks:
       chainnet:
