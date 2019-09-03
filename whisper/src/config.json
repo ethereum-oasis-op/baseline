@@ -1,0 +1,10 @@
+{
+  "node_1": {
+    "whisper_port": "8546",
+    "origin": "mychat2"
+  },
+  "node_2": {
+    "whipser_port": "8548",
+    "origin": "mychat2"
+  }
+}
