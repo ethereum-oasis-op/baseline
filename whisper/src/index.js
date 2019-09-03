@@ -10,29 +10,26 @@ const PRIVATE_MESSAGE_REGEX = /^\/priv (0x[A-Za-z0-9]{130}) (.*)$/;
 const POW_TIME = 100;
 const TTL = 20;
 const POW_TARGET = 2;
+const nodeNum = process.argv[2];
 
 (async () => {
-    for (let j = 0; j < process.argv.length; j++) {
-        console.log(j + ' -> ' + (process.argv[j]));
-    }
-
     // Establish Web3 connection
     const web3 = new Web3();
 
     // Get whisper websocket port from config file
-    const contents = await fs.readFile('./config.json', (err, data) => {
-        if (err) throw err;
-        return JSON.parse(data);
-    });
-    let whisper_port = contents[`node_${process.argv[2]}`].whisper_port
-    if (!whisper_port) {
-        console.log('Error: whisper port is undefined. Check config file and command line args.');
+    let rawContents = await fs.readFileSync('../whisper/src/config.json');
+    let contents = JSON.parse(rawContents);
+
+    let whisper_port = contents[`node_${nodeNum}`].whisper_port;
+    let whisper_origin = contents[`node_${nodeNum}`].origin;
+    if (!whisper_port || !whisper_origin) {
+        console.log('Error: whisper parameter is undefined. Check config file and command line args.');
         process.exit();
     }
 
     // Connect to web3 websocket port
     try {
-        web3.setProvider(new Web3.providers.WebsocketProvider(`ws://localhost:${whisper_port}`, { headers: { Origin: "mychat2" } }));
+        web3.setProvider(new Web3.providers.WebsocketProvider(`ws://localhost:${whisper_port}`, { headers: { Origin: whisper_origin } }));
         await web3.eth.net.isListening();
     } catch (err) {
         process.exit();
@@ -45,7 +42,7 @@ const POW_TARGET = 2;
 
     // Obtain public key
     const pubKey = await web3.shh.getPublicKey(keyPair);
-    fs.writeFile('pubKey1.txt', pubKey, (err) => {
+    fs.writeFile(`../whisper/src/pubKey${nodeNum}.txt`, pubKey, (err) => {
         if (err) console.log(err);
     })
 

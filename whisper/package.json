@@ -5,7 +5,6 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "start2": "node src/index2.js"
   },
   "author": "Richard Ramos <richard@status.im>",
   "license": "MIT",

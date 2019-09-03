@@ -4,7 +4,7 @@
     "origin": "mychat2"
   },
   "node_2": {
-    "whipser_port": "8548",
+    "whisper_port": "8548",
     "origin": "mychat2"
   }
 }
