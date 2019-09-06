@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import store, { history } from './redux/store';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const theme = {};
+
+const initialStore = {};
+
+ReactDOM.render(
+  <Provider store={store(initialStore)}>
+    <ConnectedRouter history={history}>
+      <ThemeProvider theme={createMuiTheme(theme)}>
+        <CssBaseline />
+        <Suspense fallback={<div />}>
+          <App history={history} />
+        </Suspense>
+      </ThemeProvider>
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('root'),
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
