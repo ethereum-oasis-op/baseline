@@ -6,6 +6,9 @@
   "node_2": {
     "whisper_port": "8548",
     "origin": "mychat2"
+  },
+  "node_3": {
+    "whisper_port": "8550",
+    "origin": "mychat2"
   }
 }
-
