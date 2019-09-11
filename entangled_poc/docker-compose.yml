@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  buyer-1-web:
+    hostname: buyer-1-web
+    build: app
+    command: npm start
+    ports:
+      - 3000:3000/tcp
+    volumes:
+      - ${PWD}/config.buyer1.js:/usr/app/src/config.js
+
+  supplier-1-web:
+    hostname: supplier-1-web
+    build: app
+    command: npm start
+    ports:
+      - 3001:3000/tcp
+    volumes:
+      - ${PWD}/config.supplier1.js:/usr/app/src/config.js
+
+  supplier-2-web:
+    hostname: supplier-2-web
+    build: app
+    command: npm start
+    ports:
+      - 3002:3000/tcp
+    volumes:
+      - ${PWD}/config.supplier2.js:/usr/app/src/config.js
