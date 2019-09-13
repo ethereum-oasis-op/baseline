@@ -27,3 +27,21 @@ services:
       - 3002:3000/tcp
     volumes:
       - ${PWD}/config.supplier2.js:/usr/app/src/config.js
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017/tcp
+    volumes:
+      - mongo-volume:/data/db
+    logging:
+      options:
+        max-size: 10m
+
+  mongo-seed:
+    links: 
+      - mongo
+    build: ./mongo-seed
+
+volumes:
+  mongo-volume: {}
