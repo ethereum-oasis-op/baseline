@@ -72,7 +72,7 @@ services:
       - ./radish-api/.babelrc:/app/.babelrc
     logging:
       options:
-        max-size: 10mnetworks:
+        max-size: 10m
 
   mongo:
     image: mongo:latest
