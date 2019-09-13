@@ -13,7 +13,7 @@ contract VersionControl is IVersionControl {
 
     function versionRegistry(address _previousPublishedVersion) external returns (bool) {
         version = 3;
-        previousPublishedVersion = _previousPublishedVersion;
+        previousVersion = _previousPublishedVersion;
     }
 
     event Set(
@@ -24,7 +24,7 @@ contract VersionControl is IVersionControl {
 
     //create or update
     function setVersion(bytes32 registrationIdentifier, address issuee, bytes32 value) external returns (bool) {
-        emit Set(registrationIdentifier, msg.sender, issuee, now);
+        emit Set(registrationIdentifier, msg.sender, issuee, now); // solium-disable-line
         registryMap[registrationIdentifier][msg.sender][issuee] = value;
     }
 

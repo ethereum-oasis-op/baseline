@@ -13,8 +13,12 @@ contract Registry is ERC165Compatible {
 
     mapping (address => Org) orgMap;
 
-    constructor () public ERC165Compatible() {
+    constructor() public ERC165Compatible() {
         creator = msg.sender;
+        setInterfaces();
+    }
+
+    function setInterfaces() internal returns (bool) {
         supportedInterfaces[this.registerOrg.selector ^
                             this.getOrg.selector] = true;
     }
