@@ -46,9 +46,37 @@ services:
       options:
         max-size: 10m
 
-networks:
+  radish-api:
+    build:
+      context: ./radish-api/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    restart: on-failure
+    volumes:
+      - ./radish-api/build:/app/build:delegated
+      - ./radish-api/package.json:/app/package.json:delegated
+    depends_on:
+      - radish-api-watch
+      - ganache
+    environment:
+      VIRTUAL_HOST: radish-api.docker
+
+  radish-api-watch:
+    build:
+      context: ./radish-api/
+      dockerfile: dev.Dockerfile
+    command: npm run watch
+    volumes:
+      - ./radish-api/src:/app/src:delegated
+      - ./radish-api/build:/app/build:delegated
+      - ./radish-api/.babelrc:/app/.babelrc
+    logging:
+      options:
+        max-size: 10mnetworks:
+
   chainnet:
     driver: bridge
     ipam:
       config:
       - subnet: 172.25.0.0/24
+      
