@@ -74,6 +74,23 @@ services:
       options:
         max-size: 10mnetworks:
 
+  mongo:
+    image: mongo:latest
+    volumes:
+      - mongo-volume:/data/db
+    logging:
+      options:
+        max-size: 10m
+
+  mongo-seed:
+    build: ./mongo-seed
+    links:
+      - mongo
+
+volumes:
+  mongo-volume: {}
+
+networks:
   chainnet:
     driver: bridge
     ipam:

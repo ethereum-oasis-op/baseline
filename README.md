@@ -18,3 +18,7 @@ Endpoints are currently RESTful API endpoints. Future plans to convert them to g
 [Partner](http://radish-api.docker/partner)
 [SKU](http://radish-api.docker/sku)
 [RFQ](http://radish-api.docker/rfq)
+
+## Development DB
+
+Run `npm run seed` to generate/replace and populate the mongo db with the test data located in `./mongo-seed/collections`
