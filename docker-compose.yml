@@ -8,6 +8,13 @@ services:
       - ./contracts:/app/contracts:delegated
       - ./artifacts:/app/artifacts:cached
 
+  sol-migrate:
+    build: ./
+    command: build:watch
+    volumes:
+      - ./contracts:/app/contracts:delegated
+      - ./migrate_artifacts:/app/artifacts:delegated
+
   jest:
     build: ./
     command: test:watch
