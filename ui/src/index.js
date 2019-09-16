@@ -7,11 +7,12 @@ import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
 import store, { history } from './redux/store';
 import App from './App';
+import AppProviders from './contexts';
 import * as serviceWorker from './serviceWorker';
 
 const theme = {};
 
-const initialStore = {};
+const initialStore = { user: {} };
 
 ReactDOM.render(
   <Provider store={store(initialStore)}>
@@ -19,7 +20,9 @@ ReactDOM.render(
       <ThemeProvider theme={createMuiTheme(theme)}>
         <CssBaseline />
         <Suspense fallback={<div />}>
-          <App history={history} />
+          <AppProviders>
+            <App history={history} />
+          </AppProviders>
         </Suspense>
       </ThemeProvider>
     </ConnectedRouter>

@@ -1,4 +1,4 @@
 window.config = {
-    radishApiUrl: 'http://radish-api.docker',
-  };
+  radishApiUrl: 'http://radish-api.docker',
+};
   

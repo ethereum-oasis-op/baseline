@@ -1,8 +1,0 @@
-package.json
-package-lock.json
-node_modules
-build
-dist
-swagger.json
-public
-serviceWorker.js

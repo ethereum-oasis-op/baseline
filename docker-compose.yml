@@ -38,6 +38,7 @@ services:
       - ./ui/.env:/app/.env:delegated
       - ./ui/public/index.html:/app/public/index.html:delegated
       - ./ui/public/favicon.ico:/app/public/favicon.ico:delegated
+      - ./ui/public/config.js:/app/public/config.js:delegated
       - ./ui/public/manifest.json:/app/public/manifest.json:delegated
       - ./ui/public/logo.svg:/app/public/logo.svg:delegated
     environment:
