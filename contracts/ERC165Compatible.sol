@@ -5,6 +5,10 @@ contract ERC165Compatible is ERC165 {
     mapping (bytes4 => bool) supportedInterfaces;
 
     constructor() public {
+        setInterfaces();
+    }
+
+    function setInterfaces() internal returns (bool) {
         supportedInterfaces[this.supportsInterface.selector] = true;
     }
 

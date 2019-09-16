@@ -8,13 +8,6 @@ services:
       - ./contracts:/app/contracts:delegated
       - ./artifacts:/app/artifacts:cached
 
-  sol-migrate:
-    build: ./
-    command: build:watch
-    volumes:
-      - ./contracts:/app/contracts:delegated
-      - ./migrate_artifacts:/app/artifacts:delegated
-
   jest:
     build: ./
     command: test:watch
@@ -80,6 +73,18 @@ services:
     logging:
       options:
         max-size: 10m
+  
+  radish-sol-migrate:
+    build:
+      context: ./radish-api/
+      dockerfile: dev.Dockerfile
+    command: npm run migrations
+    volumes:
+      - ./radish-api/build:/app/build:delegated
+      - ./contracts:/app/contracts:delegated
+      - ./artifacts:/app/artifacts:delegated
+    depends_on:
+      - ganache
 
   mongo:
     image: mongo:latest

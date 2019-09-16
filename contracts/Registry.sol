@@ -1,4 +1,4 @@
-pragma solidity ^0.5.0;
+pragma solidity ^0.5.8;
 import "./ERC165Compatible.sol";
 
 contract Registry is ERC165Compatible {
