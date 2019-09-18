@@ -1,23 +1,47 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cors from 'cors';
-import healthCheck from './routes/healthCheck';
-import rfq from './routes/rfq';
-import partner from './routes/partner';
-import sku from './routes/sku';
+import { ApolloServer } from 'apollo-server';
 
-const app = express();
+import {
+  typeDef as Partner,
+  resolvers as partnerResolvers
+} from './schemas/partner';
 
-// cors & body parser middleware should come before any routes are handled
-app.use(cors({ exposedHeaders: ['Total-Count', 'Report-Total'] }));
-app.use(bodyParser.json({ limit: '2mb' }));
-app.use(bodyParser.urlencoded({ limit: '2mb', extended: false }));
+import {
+  typeDef as SKU,
+  resolvers as SKUResolvers
+} from './schemas/sku';
 
-// Routes
-app.use('/health-check', healthCheck);
-app.use('/rfq', rfq);
-app.use('/partner', partner);
-app.use('/sku', sku);
+import {
+  typeDef as RFQ,
+  resolvers as RFQResolvers
+} from './schemas/rfq';
 
-export default app;
-module.exports = app;
+const Query = `
+  type Query {
+    _empty: String
+  }
+`;
+
+export const startServer = () => {
+
+  const typeDefs = [
+    Query,
+    Partner,
+    SKU,
+    RFQ,
+  ];
+
+  const resolvers = [
+    partnerResolvers,
+    SKUResolvers,
+    RFQResolvers,
+  ]
+
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+  });
+
+  server.listen(80).then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`)
+  });
+}
