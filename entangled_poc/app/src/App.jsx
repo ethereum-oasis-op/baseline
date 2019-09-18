@@ -1,34 +1,34 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Link from '@material-ui/core/Link';
-import Button from '@material-ui/core/Button';
+import React, { Component } from 'react';
+import { Container, Typography, Paper, Grid } from '@material-ui/core';
+
+import DataViewer from './DataViewer';
+import Entanglers from './Entanglers';
 
 // Custom config for each user type
 import config from './config.js';
 
-function App() {
-  return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          {config.name}
-        </Typography>
-        <Typography variant="body2" color="textSecondary" align="center">
-          {'Copyright © '}
-          <Link color="inherit" href="https://material-ui.com/">
-            Your Website
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-        </Typography>
-        <Button variant="contained" color="primary">
-          Hello World
-        </Button>
-      </Box>
-    </Container>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Container maxWidth="sm">
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Paper>
+              <Typography variant="h4" component="h1" gutterBottom>
+                {config.name}
+              </Typography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12}>
+            <DataViewer />
+          </Grid>
+          <Grid item xs={12}>
+            <Entanglers members={config.entanglers} />
+          </Grid>
+        </Grid>
+      </Container>
+    );
+  }
 }
 
 export default App;
