@@ -1,7 +1,14 @@
-import app from './app';
+import db from './db';
+import { startServer } from './app';
 
 const main = async () => {
-  app.listen(80);
+  try {
+    await db.connect();
+    startServer();
+  }
+  catch (err) {
+    console.log(err);
+  }
 }
 
 main();
