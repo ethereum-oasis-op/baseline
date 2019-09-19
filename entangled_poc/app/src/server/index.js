@@ -3,7 +3,6 @@ const cors = require('cors');
 const graphqlHTTP = require('express-graphql');
 const gql = require('graphql-tag');
 const { buildASTSchema } = require('graphql');
-
 const RFQS = [{ itemQty: 10 }];
 
 const schema = buildASTSchema(gql`
@@ -21,8 +20,8 @@ const schema = buildASTSchema(gql`
 const mapRfq = (rfq, id) => rfq && { id, ...rfq };
 
 const root = {
-  rfqs: () => RFQS.map(mapPost),
-  rfq: ({ id }) => mapPost(RFQS[id], id)
+  rfqs: () => RFQS.map(mapRfq),
+  rfq: ({ id }) => mapRfq(RFQS[id], id)
 };
 
 const app = express();
