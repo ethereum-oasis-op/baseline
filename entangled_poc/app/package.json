@@ -6,6 +6,7 @@
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
     "apollo-boost": "^0.4.4",
+    "clsx": "^1.0.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",

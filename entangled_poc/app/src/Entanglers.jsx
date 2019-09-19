@@ -10,11 +10,30 @@ import {
   TableCell,
   TableRow
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import SettingsEthernet from '@material-ui/icons/SettingsEthernet';
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: theme.spacing(3, 2)
+  },
+  margin: {
+    marginLeft: theme.spacing(0),
+    marginRight: theme.spacing(1)
+  },
+  textField: {
+    width: 200
+  }
+}));
 
 const Entanglers = props => {
+  const classes = useStyles();
+
   return (
-    <Paper>
-      <Typography>Entangled</Typography>
+    <Paper className={classes.root}>
+      <Typography component="h5">Entangled</Typography>
       <Table>
         <TableHead>
           <TableRow>

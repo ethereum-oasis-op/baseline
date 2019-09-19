@@ -1,18 +1,29 @@
 import React from 'react';
-// import gql from 'graphql-tag';
-// import { Query } from 'react-apollo';
-import { Paper, Typography, Box, Fab, TextField } from '@material-ui/core';
+import clsx from 'clsx';
+import {
+  Paper,
+  Typography,
+  Box,
+  FormControl,
+  InputLabel,
+  Input,
+  InputAdornment,
+  IconButton
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import SettingsEthernet from '@material-ui/icons/SettingsEthernet';
 
 const useStyles = makeStyles(theme => ({
-  fab: {
-    margin: theme.spacing(1)
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    padding: theme.spacing(3, 2)
+  },
+  margin: {
+    marginLeft: theme.spacing(0),
+    marginRight: theme.spacing(1)
   },
   textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
     width: 200
   }
 }));
@@ -21,22 +32,31 @@ const DataViewer = () => {
   const classes = useStyles();
 
   return (
-    <Paper>
-      <Typography>RFQ #123</Typography>
-      <Box>
-        <TextField
-          label="Item Quantity"
+    <Paper className={classes.root}>
+      <Typography variant="h5" component="h3">
+        RFQ #123
+      </Typography>
+      <Typography component="p">
+        {' '}
+        This is an example RFQ document with one entangled field{' '}
+      </Typography>
+      <FormControl className={clsx(classes.margin, classes.textField)}>
+        <InputLabel htmlFor="rfq-input-qty">Item Quantity</InputLabel>
+        <Input
+          id="rfq-input-qty"
           value="11"
+          type="text"
           margin="normal"
           className={classes.textField}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton>
+                <SettingsEthernet />
+              </IconButton>
+            </InputAdornment>
+          }
         />
-        <Fab size="small" color="primary" className={classes.fab}>
-          <AddIcon />
-        </Fab>
-        <Fab size="small" color="secondary" className={classes.fab}>
-          <RemoveIcon />
-        </Fab>
-      </Box>
+      </FormControl>
     </Paper>
   );
 };

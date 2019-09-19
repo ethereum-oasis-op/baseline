@@ -11,13 +11,11 @@ class App extends Component {
   render() {
     return (
       <Container maxWidth="sm">
-        <Grid container spacing={3}>
+        <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Paper>
-              <Typography variant="h4" component="h1" gutterBottom>
-                {config.name}
-              </Typography>
-            </Paper>
+            <Typography variant="h4" component="h1" gutterBottom>
+              {config.name}
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <DataViewer />
