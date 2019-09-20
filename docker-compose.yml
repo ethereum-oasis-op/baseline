@@ -18,10 +18,14 @@ services:
       - ./compiler.json:/app/compiler.json:delegated
     depends_on:
       - ganache
+    networks:
+      - public
 
   ganache:
     image: trufflesuite/ganache-cli:latest
-    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --networkId '333' --gasLimit 80000000000
+    networks:
+      - public
 
   zok:
     image: kartheek14/zokrates_dev:081519
@@ -103,6 +107,7 @@ volumes:
   mongo-volume: {}
 
 networks:
+  public:
   chainnet:
     driver: bridge
     ipam:
