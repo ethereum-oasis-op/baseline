@@ -19,7 +19,7 @@ router.get('/identities', async (req, res) => {
 });
 
 router.post('/identities', async (req, res) => {
-  let result = await whisperWrapper.createIdentitiy();
+  let result = await whisperWrapper.createIdentity();
   res.status(200);
   res.send(result);
 });
@@ -36,7 +36,7 @@ router.post('/contacts', async (req, res) => {
   res.send(result);
 });
 
-// Fetch messages for private conversation
+// Fetch messages from private 1:1 conversation
 router.get('/messages/:myId/topic/:topicId/contact/:contactId', async (req, res) => {
   let result = await whisperWrapper.getMessages(req.params.myId, req.params.topic, req.params.contactId);
   res.status(200);
@@ -59,13 +59,17 @@ router.post('/messages/:senderKeyId', async (req, res) => {
   res.send(result);
 });
 
-router.post('/topics/:topicId', async (req, res) => {
-  let result;
-  if (req.body.private) {
-    result = await whisperWrapper.subscribeToPrivateMessages(req.body.keyId, req.params.topicId);
-  } else {
-    result = await whisperWrapper.subscribeToPublicMessages(req.body.keyId, req.params.topicId);
-  }
+//  req.body:
+//    dataField: {
+//      value: String,
+//      dataId: String,
+//      description: String
+//    },
+//    participants: []
+router.post('/entanglements/:senderKeyId', async (req, res) => {
+  // Will generate random topic and password to use for this entanglement,
+  // and share it with other participants via private Whisper messages
+  let result = await whisperWrapper.createEntanglement(req.params.senderKeyId, req.body);
   res.status(200);
   res.send(result);
 });

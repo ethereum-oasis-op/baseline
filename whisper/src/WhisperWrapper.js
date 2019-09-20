@@ -1,9 +1,13 @@
 const Web3 = require('web3');
+const mongoose = require('mongoose');
 const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
+const SymmetricKey = require('./mongoose_models/SymmetricKey');
+const Entanglement = require('./mongoose_models/Entanglement');
+const crypto = require("crypto");
+const utils = require("./generalUtils");
 
 // Useful constants
-const DEFAULT_CHANNEL = "default";
 const DEFAULT_TOPIC = "0x11223344";
 
 const POW_TIME = 100;
@@ -164,10 +168,73 @@ class WhisperWrapper {
     );
   }
 
-  async createSymmetricKey(password) {
+  async createSymmetricKey(password = '', topic = '') {
     // Set password to default if not provided
-    let pw = password || DEFAULT_CHANNEL;
-    const channelSymKey = await this.web3.shh.generateSymKeyFromPassword(pw);
+    let myTopic = topic || crypto.randomBytes(4).toString('hex')
+    let pw = password || crypto.randomBytes(20).toString('hex');
+    let keyId = await this.web3.shh.generateSymKeyFromPassword(pw);
+    await this.subscribeToPublicMessages(keyId, myTopic);
+    let time = await new Date();
+    return await SymmetricKey.findOneAndUpdate(
+      { _id: keyId },
+      {
+        _id: keyId,
+        keyId: keyId,
+        description: '',
+        topic: myTopic,
+        created: time
+      },
+      { upsert: true, new: true }
+    );
+  }
+
+  async createEntanglement(senderKeyId, doc) {
+    let topic = crypto.randomBytes(4).toString('hex');
+    topic = '0x' + topic; // web3.shh requires 0x prefix
+    let password = crypto.randomBytes(20).toString('hex');
+    let keyId = await this.web3.shh.generateSymKeyFromPassword(password);
+    await this.subscribeToPublicMessages(keyId, topic);
+    const mongooseId = mongoose.Types.ObjectId();
+    let participants = [];
+    doc.participants.forEach(contactId => {
+      participants.push({ contactId: contactId, acceptedRequest: false });
+    })
+    let time = await new Date();
+    let result = await Entanglement.findOneAndUpdate(
+      { _id: mongooseId },
+      {
+        _id: mongooseId,
+        whisper: {
+          topic: topic,
+          symmetricKeyId: keyId,
+          symmetricKey: password
+        },
+        dataField: {
+          value: doc.dataField.value,
+          dataId: doc.dataField.dataId,
+          description: doc.dataField.description
+        },
+        participants: participants,
+        created: time,
+        lastUpdated: time
+      },
+      { upsert: true, new: true }
+    );
+    // Create entangle request object to send as Whisper message
+    let entangleRequest = {
+      _id: mongooseId,
+      type: 'entanglement_request',
+      dataField: result.dataField,
+      whisper: {
+        topic: topic,
+        symmetricKey: password
+      }
+    };
+    // Send a private message to each participant inviting them to the entanglement channel
+    doc.participants.forEach(async (contactId) => {
+      await this.sendPrivateMessage(senderKeyId, contactId, result.whisper.topic, JSON.stringify(entangleRequest));
+    });
+    return result;
   }
 
   async subscribeToPublicMessages(keyId, topic = DEFAULT_TOPIC) {
@@ -186,31 +253,56 @@ class WhisperWrapper {
   }
 
   async subscribeToPrivateMessages(keyId, topic = DEFAULT_TOPIC) {
-    // Set default values if not provided
     // Subscribe to private messages
     this.web3.shh.subscribe("messages", {
       minPow: POW_TARGET,
       privateKeyID: keyId,
       topics: [topic]
     }).on('data', async (data) => {
-      // Store message in database
       let content = await this.web3.utils.toAscii(data.payload);
-      await Message.findOneAndUpdate(
-        { _id: data.hash },
-        {
-          _id: data.hash,
-          messageType: 'private',
-          recipientId: data.recipientPublicKey,
-          senderId: data.sig,
-          ttl: data.ttl,
-          topic: data.topic,
-          payload: content,
-          pow: data.pow,
-          ack_rcvd: false,
-          timestamp: data.timestamp
-        },
-        { upsert: true, new: true }
-      );
+      // Check if this is an entanglement_request message
+      let isJSON = await utils.hasJsonStructure(content);
+      if (isJSON && content.type === 'entanglement_request') {
+        // Store in Entanglements collection in Mongo
+        await Entanglement.findOneAndUpdate(
+          { _id: mongooseId },
+          {
+            _id: mongooseId,
+            whisper: {
+              topic: content.whisper.topic,
+              symmetricKeyId: content.whisper.symmetricKeyId,
+              symmetricKey: content.whisper.symmetricKey
+            },
+            dataField: {
+              value: content.dataField.value,
+              dataId: content.dataField.dataId,
+              description: content.dataField.description
+            },
+            participants: content.participants,
+            created: content.time,
+            lastUpdated: content.time
+          },
+          { upsert: true, new: true }
+        );
+      } else {
+        // Store regular messages in Messages collection in Mongo
+        await Message.findOneAndUpdate(
+          { _id: data.hash },
+          {
+            _id: data.hash,
+            messageType: 'private',
+            recipientId: data.recipientPublicKey,
+            senderId: data.sig,
+            ttl: data.ttl,
+            topic: data.topic,
+            payload: content,
+            pow: data.pow,
+            ack_rcvd: false,
+            timestamp: data.timestamp
+          },
+          { upsert: true, new: true }
+        );
+      }
       // TODO send acknowledgment
     }).on('error', (err) => {
       console.log(err);

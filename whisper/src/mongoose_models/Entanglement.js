@@ -13,6 +13,9 @@ const EntanglementSchema = new mongoose.Schema({
   // Radish engine will randomly generate the topic and key
   whisper: {
     topic: {
+      type: String  // Four bytes long: '0x11223344'
+    },
+    symmetricKeyId: {
       type: String
     },
     symmetricKey: {
@@ -20,16 +23,14 @@ const EntanglementSchema = new mongoose.Schema({
     }
   },
   dataField: {
-    value: {
-      type: Number
-    },
-    description: {
-      type: String
-    }
+    value: String,
+    dataId: String,
+    description: String
   },
   // If (acceptedRequest == true) for all participants, 
   // entanglement's state = yellow
   participants: [{
+    _id: false,
     contactId: {
       type: String
     },
@@ -40,8 +41,8 @@ const EntanglementSchema = new mongoose.Schema({
   // Store on-chain hashes to use as shared source of truth for data value
   blockchain: {
     contractAddress: String,
-    setFunctionId: String,
-    getFunctionId: String
+    setMethodId: String,  // Four bytes long: '0x11223344'
+    getMethodId: String   // Four bytes long: '0x11223344'
   },
   created: {
     instanceof: Date
