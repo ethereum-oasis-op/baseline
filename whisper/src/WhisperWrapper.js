@@ -34,11 +34,10 @@ class WhisperWrapper {
     const keyId = await this.web3.shh.newKeyPair();
     const pubKey = await this.web3.shh.getPublicKey(keyId);
     const privKey = await this.web3.shh.getPrivateKey(keyId);
-    this.subscribeToPrivateMessages(keyId, DEFAULT_TOPIC);
 
     // Store key's details in database
     let time = await new Date();
-    return await Identity.findOneAndUpdate(
+    let result = await Identity.findOneAndUpdate(
       { _id: pubKey },
       {
         _id: pubKey,
@@ -49,6 +48,9 @@ class WhisperWrapper {
       },
       { upsert: true, new: true }
     );
+
+    this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
+    return result;
   }
 
   // Fetch all of the Whisper Identities stored in database
@@ -63,8 +65,6 @@ class WhisperWrapper {
       try {
         const keyId = await this.web3.shh.addPrivateKey(id.privateKey);
         const pubKey = await this.web3.shh.getPublicKey(keyId);
-        await this.subscribeToPrivateMessages(keyId, DEFAULT_TOPIC);
-        console.log(`Added public key ${id.publicKey} with keyId ${keyId} to Whisper node.`);
         // keyId will change so need to update that in Mongo
         await Identity.findOneAndUpdate(
           { _id: pubKey },
@@ -73,6 +73,7 @@ class WhisperWrapper {
           },
           { upsert: true, new: true }
         );
+        await this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
       } catch (err) {
         console.error(`Error adding public key ${id.publicKey} to Whisper node: ${err}`);
       }
@@ -93,13 +94,14 @@ class WhisperWrapper {
   }
 
   // Send private message
-  async sendPrivateMessage(senderKeyId, recipientId, topic = DEFAULT_TOPIC, messageContent) {
+  async sendPrivateMessage(senderId, recipientId, topic = DEFAULT_TOPIC, messageContent) {
     let content = await this.web3.utils.fromAscii(messageContent);
+    let whisperId = await Identity.findOne({ _id: senderId });
     let hash;
     try {
       hash = await this.web3.shh.post({
         pubKey: recipientId,
-        sig: senderKeyId,
+        sig: whisperId.keyId,
         ttl: TTL,
         topic: topic,
         payload: content,
@@ -111,7 +113,6 @@ class WhisperWrapper {
     }
 
     // Store message in database
-    const senderId = await this.web3.shh.getPublicKey(senderKeyId);
     let time = await new Date();
     return await Message.findOneAndUpdate(
       { _id: hash },
@@ -188,17 +189,18 @@ class WhisperWrapper {
     );
   }
 
-  async createEntanglement(senderKeyId, doc) {
+  async createEntanglement(senderId, doc) {
     let topic = crypto.randomBytes(4).toString('hex');
     topic = '0x' + topic; // web3.shh requires 0x prefix
     let password = crypto.randomBytes(20).toString('hex');
     let keyId = await this.web3.shh.generateSymKeyFromPassword(password);
     await this.subscribeToPublicMessages(keyId, topic);
     const mongooseId = mongoose.Types.ObjectId();
-    let participants = [];
+    // Add self as a participant, then add rest of participants listed in req.body
+    let participants = [{ contactId: senderId, acceptedRequest: true }];
     doc.participants.forEach(contactId => {
       participants.push({ contactId: contactId, acceptedRequest: false });
-    })
+    });
     let time = await new Date();
     let result = await Entanglement.findOneAndUpdate(
       { _id: mongooseId },
@@ -220,7 +222,7 @@ class WhisperWrapper {
       },
       { upsert: true, new: true }
     );
-    // Create entangle request object to send as Whisper message
+    // Create Entanglement request object to send as Whisper private message
     let entangleRequest = {
       _id: mongooseId,
       type: 'entanglement_request',
@@ -228,17 +230,19 @@ class WhisperWrapper {
       whisper: {
         topic: topic,
         symmetricKey: password
-      }
+      },
+      participants: participants,
+      created: time,
+      lastUpdated: time
     };
     // Send a private message to each participant inviting them to the entanglement channel
     doc.participants.forEach(async (contactId) => {
-      await this.sendPrivateMessage(senderKeyId, contactId, result.whisper.topic, JSON.stringify(entangleRequest));
+      await this.sendPrivateMessage(senderId, contactId, result.whisper.topic, JSON.stringify(entangleRequest));
     });
     return result;
   }
 
   async subscribeToPublicMessages(keyId, topic = DEFAULT_TOPIC) {
-    // Set default values if not provided
     // Subscribe to public chat messages
     this.web3.shh.subscribe("messages", {
       minPow: POW_TARGET,
@@ -252,11 +256,13 @@ class WhisperWrapper {
     });
   }
 
-  async subscribeToPrivateMessages(keyId, topic = DEFAULT_TOPIC) {
+  async subscribeToPrivateMessages(userId, topic = DEFAULT_TOPIC) {
+    // Find this identity in Mongo so we can get the associated keyId
+    let whisperId = await Identity.findOne({ _id: userId });
     // Subscribe to private messages
     this.web3.shh.subscribe("messages", {
       minPow: POW_TARGET,
-      privateKeyID: keyId,
+      privateKeyID: whisperId.keyId,
       topics: [topic]
     }).on('data', async (data) => {
       let content = await this.web3.utils.toAscii(data.payload);
@@ -265,25 +271,18 @@ class WhisperWrapper {
       if (isJSON && content.type === 'entanglement_request') {
         // Store in Entanglements collection in Mongo
         await Entanglement.findOneAndUpdate(
-          { _id: mongooseId },
+          { _id: content._id },
           {
-            _id: mongooseId,
-            whisper: {
-              topic: content.whisper.topic,
-              symmetricKeyId: content.whisper.symmetricKeyId,
-              symmetricKey: content.whisper.symmetricKey
-            },
-            dataField: {
-              value: content.dataField.value,
-              dataId: content.dataField.dataId,
-              description: content.dataField.description
-            },
+            _id: content._id,
+            whisper: content.whisper,
+            dataField: content.dataField,
             participants: content.participants,
             created: content.time,
             lastUpdated: content.time
           },
           { upsert: true, new: true }
         );
+        // TODO subsribe to the public whisper channel here or wait until request is accepted?
       } else {
         // Store regular messages in Messages collection in Mongo
         await Message.findOneAndUpdate(

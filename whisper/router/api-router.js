@@ -43,7 +43,7 @@ router.get('/messages/:myId/topic/:topicId/contact/:contactId', async (req, res)
   res.send(result);
 });
 
-router.post('/messages/:senderKeyId', async (req, res) => {
+router.post('/messages/:senderId', async (req, res) => {
   let result;
   // private is a required field to ensure private messages aren't accidentally sent publicly
   if (typeof req.body.private == 'undefined' || !req.body.message) {
@@ -51,14 +51,15 @@ router.post('/messages/:senderKeyId', async (req, res) => {
     res.send({ error: 'Request body must contain following fiels: private, message' });
   }
   if (req.body.private) {
-    result = await whisperWrapper.sendPrivateMessage(req.params.senderKeyId, req.body.recipientId, req.body.topic, req.body.message);
+    result = await whisperWrapper.sendPrivateMessage(req.params.senderId, req.body.recipientId, req.body.topic, req.body.message);
   } else {
-    result = await whisperWrapper.sendPublicMessage(req.params.senderKeyId, req.body.topic, req.body.message);
+    result = await whisperWrapper.sendPublicMessage(req.params.senderId, req.body.topic, req.body.message);
   }
   res.status(200);
   res.send(result);
 });
 
+// ***** Generate a new Entanglement *****
 //  req.body:
 //    dataField: {
 //      value: String,
@@ -66,10 +67,17 @@ router.post('/messages/:senderKeyId', async (req, res) => {
 //      description: String
 //    },
 //    participants: []
-router.post('/entanglements/:senderKeyId', async (req, res) => {
+router.post('/entanglements/:senderId', async (req, res) => {
   // Will generate random topic and password to use for this entanglement,
   // and share it with other participants via private Whisper messages
-  let result = await whisperWrapper.createEntanglement(req.params.senderKeyId, req.body);
+  let result = await whisperWrapper.createEntanglement(req.params.senderId, req.body);
+  res.status(200);
+  res.send(result);
+});
+
+// ***** Accept an Entanglement request *****
+router.post('/entanglements/:senderId/', async (req, res) => {
+  let result = await whisperWrapper.createEntanglement(req.params.senderId, req.body);
   res.status(200);
   res.send(result);
 });
