@@ -8,7 +8,7 @@ contract ERC165Compatible is ERC165 {
         setInterfaces();
     }
 
-    function setInterfaces() internal returns (bool) {
+    function setInterfaces() public returns (bool) {
         supportedInterfaces[this.supportsInterface.selector] = true;
     }
 
