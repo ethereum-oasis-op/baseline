@@ -56,4 +56,3 @@ test('Should be able to retrieve registered org details', async () => {
     expect(role[0].toNumber()).toBe(2);
     expect(key[0]).toBe(utils.formatBytes32String("randomHex"));
 });
-
