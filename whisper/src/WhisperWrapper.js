@@ -71,7 +71,7 @@ class WhisperWrapper {
           {
             keyId: keyId
           },
-          { upsert: true, new: true }
+          { new: true }
         );
         await this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
       } catch (err) {
@@ -82,12 +82,12 @@ class WhisperWrapper {
 
   // Fetch messages for a given conversation
   // Private conversation = all messages with same topic and same two Whisper Ids
-  async getMessages(myId, topic = DEFAULT_TOPIC, contactId) {
+  async getMessages(myId, topic = DEFAULT_TOPIC, whisperId) {
     return await Message.aggregate([{
       $match: {
         $or: [
-          { topic: topic, recipientId: myId, senderId: contactId },
-          { topic: topic, recipientId: contactId, senderId: myId }
+          { topic: topic, recipientId: myId, senderId: whisperId },
+          { topic: topic, recipientId: whisperId, senderId: myId }
         ]
       }
     }]);
@@ -189,7 +189,7 @@ class WhisperWrapper {
     );
   }
 
-  async createEntanglement(senderId, doc) {
+  async createEntanglement(doc) {
     let topic = crypto.randomBytes(4).toString('hex');
     topic = '0x' + topic; // web3.shh requires 0x prefix
     let password = crypto.randomBytes(20).toString('hex');
@@ -197,9 +197,9 @@ class WhisperWrapper {
     await this.subscribeToPublicMessages(keyId, topic);
     const mongooseId = mongoose.Types.ObjectId();
     // Add self as a participant, then add rest of participants listed in req.body
-    let participants = [{ contactId: senderId, acceptedRequest: true }];
-    doc.participants.forEach(contactId => {
-      participants.push({ contactId: contactId, acceptedRequest: false });
+    let participants = [{ whisperId: doc.whisperId, acceptedRequest: true }];
+    doc.partnerIds.forEach(whisperId => {
+      participants.push({ whisperId: whisperId, acceptedRequest: false });
     });
     let time = await new Date();
     let result = await Entanglement.findOneAndUpdate(
@@ -236,8 +236,42 @@ class WhisperWrapper {
       lastUpdated: time
     };
     // Send a private message to each participant inviting them to the entanglement channel
-    doc.participants.forEach(async (contactId) => {
-      await this.sendPrivateMessage(senderId, contactId, result.whisper.topic, JSON.stringify(entangleRequest));
+    doc.partnerIds.forEach(async (partnerId) => {
+      await this.sendPrivateMessage(doc.whisperId, partnerId, undefined, JSON.stringify(entangleRequest));
+    });
+    return result;
+  }
+
+  // Set acceptedRequest for my whisperId to 'true'
+  //    whisperId: 0x... (required)
+  //    acceptedRequest: Boolean (optional)
+  async acceptEntanglement(entanglementId, doc) {
+    let time = await new Date();
+    let entangleObject = await Entanglement.findOne({ _id: entanglementId });
+    let userIndex = await entangleObject.participants.findIndex(({ whisperId }) => whisperId === doc.whisperId);
+    entangleObject.participants[userIndex].acceptedRequest = true;
+    let result = await Entanglement.findOneAndUpdate(
+      { _id: entanglementId },
+      {
+        participants: entangleObject.participants,
+        lastUpdated: time
+      },
+      { new: true }
+    );
+
+    // Create Entanglement request object to send as Whisper private message
+    let entangleMessage = {
+      _id: entanglementId,
+      type: 'entanglement_accept',
+      lastUpdated: time
+    };
+
+    // Send a private message to each participant inviting them to the entanglement channel
+    entangleObject.participants.forEach(async ({ whisperId }) => {
+      // Don't send message to self
+      if (whisperId !== doc.whisperId) {
+        await this.sendPrivateMessage(doc.whisperId, whisperId, undefined, JSON.stringify(entangleMessage));
+      }
     });
     return result;
   }
@@ -268,21 +302,40 @@ class WhisperWrapper {
       let content = await this.web3.utils.toAscii(data.payload);
       // Check if this is an entanglement_request message
       let isJSON = await utils.hasJsonStructure(content);
-      if (isJSON && content.type === 'entanglement_request') {
-        // Store in Entanglements collection in Mongo
-        await Entanglement.findOneAndUpdate(
-          { _id: content._id },
-          {
-            _id: content._id,
-            whisper: content.whisper,
-            dataField: content.dataField,
-            participants: content.participants,
-            created: content.time,
-            lastUpdated: content.time
-          },
-          { upsert: true, new: true }
-        );
-        // TODO subsribe to the public whisper channel here or wait until request is accepted?
+      if (isJSON) {
+        switch (content.type) {
+          case 'entanglement_request':
+            // Create/store new Entanglement in Mongo
+            await Entanglement.findOneAndUpdate(
+              { _id: content._id },
+              {
+                _id: content._id,
+                whisper: content.whisper,
+                dataField: content.dataField,
+                participants: content.participants,
+                created: content.time,
+                lastUpdated: content.time
+              },
+              { new: true }
+            );
+            break;
+          case 'entanglement_accept':
+            // Update a pre-existing Entanglement to set acceptedRequest to 'true'
+            let object = await Entanglement.find({ _id: content._id });
+            let userIndex = object.participants.findIndex(({ whisperId }) => whisperId === data.sig);
+            object.participants[userIndex].acceptedRequest = true;
+            await Entanglement.findOneAndUpdate(
+              { _id: content._id },
+              {
+                _id: content._id,
+                participants: object.participants,
+                lastUpdated: content.time
+              },
+              { new: true }
+            );
+            break;
+          default:
+        }
       } else {
         // Store regular messages in Messages collection in Mongo
         await Message.findOneAndUpdate(

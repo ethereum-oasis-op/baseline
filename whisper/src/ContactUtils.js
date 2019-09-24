@@ -11,7 +11,7 @@ class ContactUtils {
       { _id: mongooseId },
       {
         _id: mongooseId,
-        whisperPublicKey: doc.whisperPublicKey,
+        whisperId: doc.whisperId,
         description: doc.description || 'No description',
         created: time
       },

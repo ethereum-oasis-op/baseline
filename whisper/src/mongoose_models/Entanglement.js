@@ -31,7 +31,7 @@ const EntanglementSchema = new mongoose.Schema({
   // entanglement's state = yellow
   participants: [{
     _id: false,
-    contactId: {
+    whisperId: {
       type: String
     },
     acceptedRequest: {
