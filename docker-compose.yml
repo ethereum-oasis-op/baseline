@@ -18,14 +18,10 @@ services:
       - ./compiler.json:/app/compiler.json:delegated
     depends_on:
       - ganache
-    networks:
-      - public
 
   ganache:
     image: trufflesuite/ganache-cli:latest
     command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --networkId '333' --gasLimit 80000000000
-    networks:
-      - public
 
   zok:
     image: kartheek14/zokrates_dev:081519
@@ -77,18 +73,6 @@ services:
     logging:
       options:
         max-size: 10m
-  
-  radish-sol-migrate:
-    build:
-      context: ./radish-api/
-      dockerfile: dev.Dockerfile
-    command: npm run migrations
-    volumes:
-      - ./radish-api/build:/app/build:delegated
-      - ./contracts:/app/contracts:delegated
-      - ./artifacts:/app/artifacts:delegated
-    depends_on:
-      - ganache
 
   mongo:
     image: mongo:latest
@@ -107,7 +91,6 @@ volumes:
   mongo-volume: {}
 
 networks:
-  public:
   chainnet:
     driver: bridge
     ipam:

@@ -8,7 +8,6 @@ const { compilerOutput: { abi , evm: { bytecode } } } = RegistryArtifact;
 const Registry = new ethers.ContractFactory(abi, bytecode, wallet);
 
 let registry;
-let erc165Compatible;
 
 beforeAll(async () => {
     registry = await Registry.deploy();
@@ -35,7 +34,6 @@ test('Should be able to get 0 count at the beginning', async () => {
 test('Should be able to register an org and retrieve the event', async () => {
     const accounts = await getAccounts();
     const txReceipt = await registry.registerOrg(accounts[1], utils.formatBytes32String("Name"), 2, utils.formatBytes32String("randomHex"));
-    let e = await registry.once("OrgRegistered");
 });
 
 test('Should be able to retrieve the incremented org count', async () => {
