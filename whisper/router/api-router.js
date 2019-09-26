@@ -50,6 +50,7 @@ router.post('/messages/:senderId', async (req, res) => {
   if (typeof req.body.private == 'undefined' || !req.body.message) {
     res.status(400);
     res.send({ error: 'Request body must contain following fields: private, message' });
+    return;
   }
   if (req.body.private) {
     result = await whisperWrapper.sendPrivateMessage(req.params.senderId, req.body.recipientId, req.body.topic, req.body.message);
@@ -74,6 +75,7 @@ router.post('/entanglements', async (req, res) => {
   if (!doc.whisperId || !doc.dataField) {
     res.status(400);
     res.send({ error: 'Following fields must be provided in request body: whisperId, dataField' });
+    return;
   }
   // Will generate random topic and password to use for this entanglement,
   // and share it with other participants via private Whisper messages
@@ -95,6 +97,13 @@ router.get('/entanglements/:entanglementId', async (req, res) => {
   let result = await entangleUtils.getSingleEntanglement(req.params.entanglementId);
   res.status(200);
   res.send(result);
+});
+
+// Get an Entanglement's dataHash
+router.get('/entanglements/:entanglementId/hash', async (req, res) => {
+  let result = await entangleUtils.calculateHash(req.params.entanglementId);
+  res.status(200);
+  res.send({ hash: result });
 });
 
 // ***** Update an Entanglement *****

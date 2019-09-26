@@ -23,7 +23,7 @@ const options = {
 };
 
 conn.once('open', () => {
-  console.log('Successfully connnected to ' + Config.mongo.uri);
+  console.log('Successfully connected to ' + Config.mongo.uri);
 
   // When successfully connected
   conn.on('connected', () => {

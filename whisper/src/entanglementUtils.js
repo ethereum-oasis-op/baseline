@@ -1,4 +1,5 @@
 const Entanglement = require('./mongoose_models/Entanglement');
+const Web3 = require('web3');
 
 // Get all Entanglement objects for the given user
 // Get all Entanglements if no user is provided
@@ -24,8 +25,21 @@ async function updateEntanglement(entanglementId, doc) {
   return result;
 }
 
+// Calculate the hash of an Entanglement
+async function calculateHash(entanglementId) {
+  let web3 = new Web3();
+  let entanglement = await Entanglement.findOne({ _id: entanglementId });
+  let hashObject = {
+    dataField: entanglement.dataField,
+    created: entanglement.time
+  };
+  let hash = web3.utils.sha3(JSON.stringify(hashObject));
+  return hash;
+}
+
 module.exports = {
   getEntanglements,
   getSingleEntanglement,
-  updateEntanglement
+  updateEntanglement,
+  calculateHash
 };

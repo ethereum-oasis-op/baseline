@@ -4,8 +4,8 @@ const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
 const SymmetricKey = require('./mongoose_models/SymmetricKey');
 const Entanglement = require('./mongoose_models/Entanglement');
-const crypto = require("crypto");
 const utils = require("./generalUtils");
+const entangleUtils = require("./entanglementUtils");
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";
@@ -171,8 +171,8 @@ class WhisperWrapper {
 
   async createSymmetricKey(password = '', topic = '') {
     // Set password to default if not provided
-    let myTopic = topic || crypto.randomBytes(4).toString('hex')
-    let pw = password || crypto.randomBytes(20).toString('hex');
+    let myTopic = topic || this.web3.utils.randomHex(4)
+    let pw = password || this.web3.utils.randomHex(20);
     let keyId = await this.web3.shh.generateSymKeyFromPassword(pw);
     await this.subscribeToPublicMessages(keyId, myTopic);
     let time = await new Date();
@@ -190,9 +190,8 @@ class WhisperWrapper {
   }
 
   async createEntanglement(doc) {
-    let topic = crypto.randomBytes(4).toString('hex');
-    topic = '0x' + topic; // web3.shh requires 0x prefix
-    let password = crypto.randomBytes(20).toString('hex');
+    let topic = this.web3.utils.randomHex(4);
+    let password = this.web3.utils.randomHex(20);
     let keyId = await this.web3.shh.generateSymKeyFromPassword(password);
     await this.subscribeToPublicMessages(keyId, topic);
     const mongooseId = mongoose.Types.ObjectId();
@@ -239,6 +238,9 @@ class WhisperWrapper {
     doc.partnerIds.forEach(async (partnerId) => {
       await this.sendPrivateMessage(doc.whisperId, partnerId, undefined, JSON.stringify(entangleRequest));
     });
+    // TODO deploy Consistency smart contract and initiate dataHash
+    // Store hash in contract under my Eth address for this dataId
+    let hash = entangleUtils.calculateHash(mongooseId);
     return result;
   }
 
@@ -266,6 +268,45 @@ class WhisperWrapper {
       lastUpdated: time
     };
 
+    // Send a private message to each participant inviting them to the entanglement channel
+    entangleObject.participants.forEach(async ({ whisperId }) => {
+      // Don't send message to self
+      if (whisperId !== doc.whisperId) {
+        await this.sendPrivateMessage(doc.whisperId, whisperId, undefined, JSON.stringify(entangleMessage));
+      }
+    });
+    return result;
+  }
+
+  //  Update Entanglement dataField object
+  //    dataField: {
+  //      value: String,
+  //      dataId: String,
+  //      description: String
+  //    },
+  //    whisperId: 0x... (required)
+  async updateEntanglement(entanglementId, doc) {
+    let time = await new Date();
+    let entangleObject = await Entanglement.findOne({ _id: entanglementId });
+    let result = await Entanglement.findOneAndUpdate(
+      { _id: entanglementId },
+      {
+        "dataField.value": doc.dataField.value || entangleObject.dataField.value,
+        "dataField.description": doc.dataField.description || entangleObject.dataField.description,
+        lastUpdated: time
+      },
+      { new: true }
+    );
+
+    // Create Entanglement request object to send as Whisper private message
+    let entangleMessage = {
+      _id: entanglementId,
+      type: 'entanglement_update',
+      lastUpdated: time
+    };
+
+    // TODO: should we send one public message or a separate private message for each participant?
+    //     - Probably public so everyone can see the acks?
     // Send a private message to each participant inviting them to the entanglement channel
     entangleObject.participants.forEach(async ({ whisperId }) => {
       // Don't send message to self

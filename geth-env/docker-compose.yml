@@ -3,6 +3,7 @@ version: '3'
 services:
   geth-bootnode:
     hostname: geth-bootnode
+    container_name: geth-bootnode
     environment:
       - nodekeyhex=08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b #Needs to be fix, so that the miners know the resulting enode id
     build:
@@ -159,6 +160,20 @@ services:
       chainnet:
         ipv4_address: 172.25.0.125
 
+  mongo:
+    image: mongo:latest
+    container_name: mongo-db
+    volumes:
+      - radish-mongo:/data/db
+    ports:
+      - 27018:27017
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      chainnet:
+        ipv4_address: 172.25.0.126
+
 networks:
   chainnet:
     driver: bridge
@@ -172,3 +187,4 @@ volumes:
   eth-data-3:
   eth-data-4:
   eth-data-5:
+  radish-mongo:
