@@ -7,6 +7,7 @@ services:
     command: npm start
     ports:
       - 3000:3000/tcp
+      - 4000:4000/tcp
     volumes:
       - ${PWD}/config.buyer1.js:/usr/app/src/config.js
 
@@ -16,6 +17,7 @@ services:
     command: npm start
     ports:
       - 3001:3000/tcp
+      - 4001:4000/tcp
     volumes:
       - ${PWD}/config.supplier1.js:/usr/app/src/config.js
 
@@ -25,6 +27,7 @@ services:
     command: npm start
     ports:
       - 3002:3000/tcp
+      - 4002:4000/tcp
     volumes:
       - ${PWD}/config.supplier2.js:/usr/app/src/config.js
 

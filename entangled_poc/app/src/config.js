@@ -2,7 +2,7 @@ const config = {
   name: 'Buyer1 Demo',
   mongoHost: 'mongo:27017',
   databaseName: 'buyer1db',
-  entangledField: 'rfq-quantity',
+  entangledField: 'rfq-itemQty',
   entanglers: [
     {
       name: 'Supplier 1',
@@ -11,6 +11,12 @@ const config = {
     {
       name: 'Supplier 2',
       address: '0x31232113'
+    }
+  ],
+  rfqs: [
+    {
+      id: '123',
+      itemQty: 11
     }
   ]
 };

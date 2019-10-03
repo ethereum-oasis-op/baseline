@@ -1,5 +1,6 @@
 [
   {
-    "rfq-quantity": 10
+    "id": "123",
+    "itemQty": 10
   }
 ]

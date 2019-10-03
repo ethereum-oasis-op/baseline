@@ -50,7 +50,7 @@ const DataViewer = () => {
             {data.rfqs.map(rfq => (
               <Paper className={classes.root}>
                 <Typography variant="h5" component="h3">
-                  RFQ #123
+                  RFQ #{rfq.id}
                 </Typography>
                 <Typography component="p">
                   {' '}

@@ -3,7 +3,11 @@ const cors = require('cors');
 const graphqlHTTP = require('express-graphql');
 const gql = require('graphql-tag');
 const { buildASTSchema } = require('graphql');
-const RFQS = [{ itemQty: 10 }];
+
+// Custom config for each user type
+const config = require('./../config.js');
+
+const RFQS = config.rfqs;
 
 const schema = buildASTSchema(gql`
   type Query {
