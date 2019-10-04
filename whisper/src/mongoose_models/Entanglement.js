@@ -36,7 +36,8 @@ const EntanglementSchema = new mongoose.Schema({
     },
     acceptedRequest: {
       type: Boolean
-    }
+    },
+    dataHash: String
   }],
   // Store on-chain hashes to use as shared source of truth for data value
   blockchain: {

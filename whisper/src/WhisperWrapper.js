@@ -298,15 +298,17 @@ class WhisperWrapper {
       { new: true }
     );
 
-    // Create Entanglement request object to send as Whisper private message
+    // Create Entanglement update object to send as Whisper private message
     let entangleMessage = {
       _id: entanglementId,
       type: 'entanglement_update',
+      dataField: result.dataField,
       lastUpdated: time
     };
 
     // TODO: should we send one public message or a separate private message for each participant?
-    //     - Probably public so everyone can see the acks?
+    //     - Probably public so everyone can see the acks? Would have to assume all parties
+    //       parties are subscribed to the public channel
     // Send a private message to each participant inviting them to the entanglement channel
     entangleObject.participants.forEach(async ({ whisperId }) => {
       // Don't send message to self
@@ -341,41 +343,46 @@ class WhisperWrapper {
       topics: [topic]
     }).on('data', async (data) => {
       let content = await this.web3.utils.toAscii(data.payload);
-      // Check if this is an entanglement_request message
-      let isJSON = await utils.hasJsonStructure(content);
+      let time = await new Date();
+      // Check if this is a JSON structured entanglement message
+      let [isJSON, messageObj] = await utils.hasJsonStructure(content);
       if (isJSON) {
-        switch (content.type) {
+        switch (messageObj.type) {
           case 'entanglement_request':
-            // Create/store new Entanglement in Mongo
+            // Create new Entanglement in Mongo
             await Entanglement.findOneAndUpdate(
-              { _id: content._id },
+              { _id: messageObj._id },
               {
-                _id: content._id,
-                whisper: content.whisper,
-                dataField: content.dataField,
-                participants: content.participants,
-                created: content.time,
-                lastUpdated: content.time
+                _id: messageObj._id,
+                whisper: messageObj.whisper,
+                dataField: messageObj.dataField,
+                participants: messageObj.participants,
+                created: time,
+                lastUpdated: time
               },
-              { new: true }
+              { upsert: true, new: true }
             );
             break;
           case 'entanglement_accept':
             // Update a pre-existing Entanglement to set acceptedRequest to 'true'
-            let object = await Entanglement.find({ _id: content._id });
+            let object = await Entanglement.find({ _id: messageObj._id });
             let userIndex = object.participants.findIndex(({ whisperId }) => whisperId === data.sig);
             object.participants[userIndex].acceptedRequest = true;
             await Entanglement.findOneAndUpdate(
-              { _id: content._id },
+              { _id: messageObj._id },
               {
-                _id: content._id,
+                _id: messageObj._id,
                 participants: object.participants,
-                lastUpdated: content.time
+                lastUpdated: time
               },
               { new: true }
             );
             break;
+          case 'entanglement_update':
+            // TODO: check smart contract for updated hashes
+            break;
           default:
+            console.log('Did not recognize message object type: ', messageObj);
         }
       } else {
         // Store regular messages in Messages collection in Mongo

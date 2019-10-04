@@ -21,6 +21,7 @@ router.get('/identities', async (req, res) => {
 
 router.post('/identities', async (req, res) => {
   let result = await whisperWrapper.createIdentity();
+  // TODO: do we need to add this identity to the Registry smart contract?
   res.status(201);
   res.send(result);
 });
@@ -110,7 +111,6 @@ router.get('/entanglements/:entanglementId/hash', async (req, res) => {
 //  req.body:
 //    dataField: {
 //      value: String,
-//      dataId: String,
 //      description: String
 //    },
 //    whisperId: 0x... (required)

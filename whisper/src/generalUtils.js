@@ -4,10 +4,10 @@ function hasJsonStructure(str) {
   try {
     const result = JSON.parse(str);
     const type = Object.prototype.toString.call(result);
-    return type === '[object Object]'
-      || type === '[object Array]';
+    const isJSON = (type === '[object Object]' || type === '[object Array]');
+    return [isJSON, result];
   } catch (err) {
-    return false;
+    return [false, {}];
   }
 };
 
