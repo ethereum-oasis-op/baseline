@@ -21,7 +21,7 @@ services:
 
   ganache:
     image: trufflesuite/ganache-cli:latest
-    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --networkId '333' --gasLimit 80000000000
 
   zok:
     image: kartheek14/zokrates_dev:081519
@@ -46,8 +46,6 @@ services:
       options:
         max-size: 10m
 
-<<<<<<< Updated upstream
-=======
   radish-api:
     build:
       context: ./radish-api/
@@ -95,10 +93,10 @@ services:
 volumes:
   mongo-volume: {}
 
->>>>>>> Stashed changes
 networks:
   chainnet:
     driver: bridge
     ipam:
       config:
       - subnet: 172.25.0.0/24
+      

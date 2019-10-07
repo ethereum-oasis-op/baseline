@@ -11,9 +11,21 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "@material-ui/core": "^4.4.0",
+    "@material-ui/styles": "^4.3.3",
+    "connected-react-router": "^6.5.2",
+    "history": "^4.9.0",
+    "lodash": "^4.17.15",
+    "material-ui": "^0.20.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
-    "react-scripts": "3.1.1"
+    "react-redux": "^7.1.1",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.1.1",
+    "redux": "^4.0.4",
+    "redux-api-middleware": "^3.0.1",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.6.1",
