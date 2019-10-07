@@ -16,5 +16,9 @@
     "whisper_port": "8550",
     "api_port": "4003",
     "origin": "mychat2"
+  },
+  "test_params": {
+    "num_messages": 1000,
+    "delay_ms": 1
   }
 }
