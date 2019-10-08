@@ -3,7 +3,6 @@ const fs = require('fs');
 
 const POW_TIME = 5;
 const TTL = 20;
-const POW_TARGET = 2;
 const DEFAULT_TOPIC = "0x11223344";
 
 let web3_1, keyId_1, pubKey_1, privKey_1;
@@ -14,7 +13,7 @@ let received_2 = 0;
 // Config settings
 let whisper_port_1, whisper_origin_1, geth_ip_address_1, api_port_1;
 let whisper_port_2, whisper_origin_2, geth_ip_address_2, api_port_2;
-let num_messages, delay;
+let num_messages, delay, pow_target;
 
 // Statistics
 let durations = [];
@@ -36,6 +35,7 @@ async function getConfig() {
 
   num_messages = contents.test_params.num_messages;
   delay = contents.test_params.delay_ms;
+  pow_target = contents.test_params.pow_target;
 }
 
 async function setupNode1() {
@@ -46,7 +46,7 @@ async function setupNode1() {
   privKey_1 = await web3_1.shh.getPrivateKey(keyId_1);
   try {
     await web3_1.shh.subscribe("messages", {
-      minPow: POW_TARGET,
+      minPow: pow_target,
       privateKeyID: keyId_1,
       topics: [DEFAULT_TOPIC]
     }).on('data', async (data) => {
@@ -69,7 +69,7 @@ async function setupNode2() {
   privKey_2 = await web3_2.shh.getPrivateKey(keyId_2);
   try {
     await web3_2.shh.subscribe("messages", {
-      minPow: POW_TARGET,
+      minPow: pow_target,
       privateKeyID: keyId_2,
       topics: [DEFAULT_TOPIC]
     }).on('data', async (data) => {
@@ -102,7 +102,7 @@ async function sendMessage(messageJSON) {
       topic: DEFAULT_TOPIC,
       payload: content,
       powTime: POW_TIME,
-      powTarget: POW_TARGET
+      powTarget: pow_target
     });
   } catch (err) {
     console.error('Message send error: ', err);
@@ -145,13 +145,14 @@ runTest().then(async () => {
   console.log('');
   console.log('--------- Settings ---------------------------------------');
   console.log('*** Delay (ms): ', delay);
+  console.log('*** PoW target: ', pow_target);
   console.log('*** Messages sent: ', sent_1);
   console.log('');
   console.log('--------- Results ----------------------------------------');
   let ratio = (received_2 / sent_1) * 100;
   console.log(`*** Delivery %: ${ratio} (${messagesDropped} dropped)`);
   let avgTime = await calculateAvg();
-  console.log('*** Average delivery time (ms): ', avgTime);
+  console.log('*** Avg. delivery time, fastest 99% (ms): ', avgTime);
   console.log('');
   process.exit();
 });

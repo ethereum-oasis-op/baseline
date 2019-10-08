@@ -19,6 +19,7 @@
   },
   "test_params": {
     "num_messages": 1000,
-    "delay_ms": 1
+    "delay_ms": 1,
+    "pow_target": 0.2
   }
 }
