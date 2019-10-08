@@ -1,46 +1,75 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
+import { Formik, Form, Field } from 'formik';
+import { useMetaMask } from '../../contexts/metamask-context';
+import { UserContext } from '../../contexts/user-context';
+import TextField from '../TextField';
+import Select from '../Select';
 
 const useStyles = makeStyles(() => ({
-  select: {
-    width: '130px',
+  form: {
+    width: '50%',
   },
 }));
 
 const NotRegistered = () => {
   const classes = useStyles();
+  const { accounts } = useMetaMask();
+  const { register } = useContext(UserContext);
+  const currentAddress = accounts[0];
+
+  const onSubmit = async formValues => {
+    await register({ variables: { input: formValues }});
+  }
 
   return (
-    <div>
-      <h1>Register</h1>
-      <div>
-        <TextField
-          id="standard-name"
-          label="Organization Name"
-          value=""
-          onChange={() => {}}
-          margin="normal"
-        />
-      </div>
-      <div>
-        <Select
-          value={null}
-          className={classes.select}
-          onChange={() => {}}
-          inputProps={{
-            name: 'age',
-            id: 'age-simple',
-          }}
-        >
-          <MenuItem value={10}>Buyer</MenuItem>
-          <MenuItem value={20}>Seller</MenuItem>
-          <MenuItem value={30}>Sender</MenuItem>
-        </Select>
-      </div>
-    </div>
+    <Formik
+      onSubmit={onSubmit}
+      initialValues={{ name: '', role: 'buyer', address: currentAddress }}
+      render={({ handleChange }) => {
+        return (
+          <Form className={classes.form}>
+            <h1>Register Your Organization</h1>
+
+            <Field
+              required
+              name="name"
+              id="orgName"
+              onChange={handleChange}
+              label={'Organization Name'}
+              component={TextField}
+              fullWidth
+              margin="normal"
+              InputLabelProps={{ shrink: true }}
+            />
+
+            <Field
+              required
+              name="role"
+              id="orgRole"
+              onChange={handleChange}
+              label={'Organization Role'}
+              component={Select}
+              options={[
+                { label: 'Buyer', value: 'buyer' },
+                { label: 'Supplier', value: 'supplier' },
+                { label: 'Carrier', value: 'carrier' },
+              ]}
+            />
+
+            <Button
+              variant="outlined"
+              type="submit"
+              color="primary"
+              data-testid="register-button"
+            >
+              Register!
+            </Button>
+          </Form>
+        );
+      }}
+    />
   );
 };
 

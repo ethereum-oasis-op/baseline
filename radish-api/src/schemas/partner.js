@@ -26,21 +26,21 @@ export const typeDef = `
   }
 `;
 
-const getPartnerByID = async (address) => {
+const getPartnerByID = async address => {
   const partner = await db
     .collection('partners')
     .find({ address: address })
     .toArray();
   return partner;
-}
+};
 
 const getAllPartners = async () => {
   const partners = await db
-  .collection('partners')
-  .find({})
-  .toArray();
+    .collection('partners')
+    .find({})
+    .toArray();
   return partners;
-}
+};
 
 export const resolvers = {
   Query: {
@@ -49,10 +49,10 @@ export const resolvers = {
     },
     partners(parent, args, context, info) {
       return getAllPartners();
-    }
+    },
   },
   Partner: {
-    name: (root) => root.name,
-    address: (root) => root.address,
+    name: root => root.name,
+    address: root => root.address,
   },
 };

@@ -12,7 +12,7 @@ export default {
       return db;
     }
 
-    for (let i = 0; i < config.MONGO_CONNECTION_RETRIES ; i++) {
+    for (let i = 0; i < config.MONGO_CONNECTION_RETRIES; i += 1) {
       try {
         client = await MongoClient.connect(config.MONGO_URL);
         console.log('connected to db');
@@ -30,11 +30,11 @@ export default {
     return db;
   },
 
-  collection: (collectionName) => {
+  collection: collectionName => {
     return db.collection(collectionName);
   },
 
   get: () => {
     return db;
-  }
+  },
 };

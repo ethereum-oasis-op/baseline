@@ -37,7 +37,7 @@ const AuthenticatedRoute = ({ component: Component, ...rest }) => {
 };
 
 AuthenticatedRoute.propTypes = {
-  component: PropTypes.node.isRequired,
+  component: PropTypes.elementType.isRequired,
 };
 
 export default App;
