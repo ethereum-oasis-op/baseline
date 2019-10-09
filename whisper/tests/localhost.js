@@ -2,7 +2,7 @@ const Web3 = require('web3');
 const fs = require('fs');
 
 const POW_TIME = 5;
-const TTL = 20;
+const TTL = 10;
 const DEFAULT_TOPIC = "0x11223344";
 
 let web3_1, keyId_1, pubKey_1, privKey_1;
@@ -33,9 +33,9 @@ async function getConfig() {
   whisper_origin_2 = contents[`node_2`].origin;
   api_port_2 = contents[`node_2`].api_port;
 
-  num_messages = contents.test_params.num_messages;
-  delay = contents.test_params.delay_ms;
-  pow_target = contents.test_params.pow_target;
+  num_messages = contents.whisper_test_params.num_messages;
+  delay = contents.whisper_test_params.delay_ms;
+  pow_target = contents.whisper_test_params.pow_target;
 }
 
 async function setupNode1() {
@@ -78,7 +78,7 @@ async function setupNode2() {
       let messageObj = JSON.parse(content);
       let diff = time - messageObj.time;
       durations[messageObj.num] = diff;
-      console.log(`Received message ${messageObj.num}, time(ms): ${diff}`);
+      console.log(`Received message ${messageObj.num}, sent: ${messageObj.time}, delivery time(ms): ${diff}`);
       received_2++;
     }).on('error', (err) => {
       console.log('Message receive error: ', err);
@@ -90,12 +90,12 @@ async function setupNode2() {
 }
 
 async function sendMessage(messageJSON) {
-  messageJSON.time = new Date().getTime();
   let hash;
-  let message = JSON.stringify(messageJSON)
+  messageJSON.time = await new Date().getTime();
+  let message = await JSON.stringify(messageJSON)
   let content = await web3_1.utils.fromAscii(message);
   try {
-    hash = await web3_1.shh.post({
+    hash = web3_1.shh.post({
       pubKey: pubKey_2,
       sig: keyId_1,
       ttl: TTL,
@@ -104,10 +104,11 @@ async function sendMessage(messageJSON) {
       powTime: POW_TIME,
       powTarget: pow_target
     });
+    sent_1++;
   } catch (err) {
     console.error('Message send error: ', err);
+    return;
   }
-  sent_1++;
   return hash;
 }
 
@@ -119,7 +120,7 @@ async function runTest() {
   await setupNode2();
   for (let i = 1; i <= num_messages; i++) {
     // Delay before printing stats
-    await sendMessage({ num: i });
+    sendMessage({ num: i });
     await wait(delay);
   }
 }
@@ -140,7 +141,7 @@ function calculateAvg() {
 }
 
 runTest().then(async () => {
-  await wait(5000);
+  await wait(10000);
   let messagesDropped = sent_1 - received_2;
   console.log('');
   console.log('--------- Settings ---------------------------------------');
