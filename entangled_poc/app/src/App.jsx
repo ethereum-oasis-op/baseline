@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Typography, Paper, Grid } from '@material-ui/core';
+import { Container, Typography, Grid } from '@material-ui/core';
 
 import DataViewer from './DataViewer';
 import Entanglers from './Entanglers';

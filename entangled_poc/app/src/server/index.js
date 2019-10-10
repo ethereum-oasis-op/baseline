@@ -1,4 +1,7 @@
 const express = require('express');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
 const cors = require('cors');
 const graphqlHTTP = require('express-graphql');
 const gql = require('graphql-tag');
@@ -7,25 +10,61 @@ const { buildASTSchema } = require('graphql');
 // Custom config for each user type
 const config = require('./../config.js');
 
-const RFQS = config.rfqs;
+const mongoConn = mongoose.createConnection('mongodb://127.0.0.1/radish34', {
+  useFindAndModify: false,
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
+const RfqSchema = new Schema({
+  refNum: Number,
+  itemQty: Number
+});
+
+const RfqModel = mongoConn.model('Rfq', RfqSchema);
+
+// GraphQL schema
 const schema = buildASTSchema(gql`
   type Query {
     rfqs: [RfqObject]
-    rfq(id: ID!): RfqObject
+    findRfqByRef(refNum: Int!): RfqObject
   }
 
   type RfqObject {
-    id: ID
+    _id: ID
+    refNum: Int
     itemQty: Int
+  }
+
+  input RfqInput {
+    itemQty: Int
+  }
+
+  type Mutation {
+    updateRfq(_id: ID, input: RfqInput): RfqObject
   }
 `);
 
-const mapRfq = (rfq, id) => rfq && { id, ...rfq };
-
-const root = {
-  rfqs: () => RFQS.map(mapRfq),
-  rfq: ({ id }) => mapRfq(RFQS[id], id)
+const rootResolver = {
+  rfqs: () => RfqModel.find({}),
+  findRfqByRef: ({ refNum }) => RfqModel.findOne({ refNum: refNum }),
+  updateRfq: async ({ _id, input }) => {
+    RfqModel.findByIdAndUpdate(
+      _id,
+      { $set: { itemQty: input.itemQty } },
+      { new: true }
+    )
+      .then(docs => {
+        if (docs) {
+          console.log({ success: true, data: docs });
+        } else {
+          console.log({ success: false, data: 'no such document exists' });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
 };
 
 const app = express();
@@ -34,7 +73,7 @@ app.use(
   '/graphql',
   graphqlHTTP({
     schema,
-    rootValue: root,
+    rootValue: rootResolver,
     graphiql: true
   })
 );

@@ -11,7 +11,6 @@ import {
   TableRow
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import SettingsEthernet from '@material-ui/icons/SettingsEthernet';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,7 +42,7 @@ const Entanglers = props => {
         </TableHead>
         <TableBody>
           {props.members.map(member => (
-            <TableRow>
+            <TableRow key={member.address}>
               <TableCell>{member.name}</TableCell>
               <TableCell>{member.address}</TableCell>
             </TableRow>
