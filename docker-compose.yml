@@ -76,11 +76,15 @@ services:
 
   mongo:
     image: mongo:latest
+    container_name: mongo-db
     volumes:
-      - mongo-volume:/data/db
+      - radish-mongo:/data/db
     logging:
       options:
         max-size: 10m
+    networks:
+      chainnet:
+        ipv4_address: 172.25.0.126
 
   mongo-seed:
     build: ./mongo-seed
@@ -88,7 +92,7 @@ services:
       - mongo
 
 volumes:
-  mongo-volume: {}
+  radish-mongo:
 
 networks:
   chainnet:
