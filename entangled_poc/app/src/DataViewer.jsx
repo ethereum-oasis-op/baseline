@@ -14,16 +14,6 @@ export const GET_RFQS = gql`
   }
 `;
 
-export const UPDATE_RFQ = gql`
-  mutation($_id: ID, $itemQty: Int) {
-    updateRfq(_id: $_id, input: { itemQty: $itemQty }) {
-      _id
-      refNum
-      itemQty
-    }
-  }
-`;
-
 const DataViewer = () => {
   return (
     <Query query={GET_RFQS}>
