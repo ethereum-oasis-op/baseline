@@ -1,22 +1,30 @@
 {
   "scripts": {
-    "fix": "npm run format && npm run lint -- --fix",
-    "format": "prettier --write \"**/*.{json,css,scss,md,html}\"",
-    "lint": "eslint .",
+    "format": "cod-scripts format",
+    "lint": "cod-scripts lint",
     "lint:md": "markdownlint -i node_modules -i build .",
-    "validate": "npm run lint && npm run lint:md",
+    "validate": "cod-scripts validate",
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build": "cod-scripts build",
+    "build:watch": "npm run build -- --watch",
+    "test": "cod-scripts test"
   },
   "dependencies": {
+    "@babel/runtime": "^7.6.2",
+    "@daisypayments/react-metamask": "^0.4.1",
     "@material-ui/core": "^4.4.0",
+    "@material-ui/icons": "^4.4.1",
     "@material-ui/styles": "^4.3.3",
+    "classnames": "^2.2.6",
     "connected-react-router": "^6.5.2",
+    "ethers": "^4.0.37",
+    "formik": "^1.5.8",
     "history": "^4.9.0",
     "lodash": "^4.17.15",
     "material-ui": "^0.20.2",
+    "notistack": "^0.9.0",
+    "prop-types": "^15.7.2",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.1",
@@ -25,16 +33,24 @@
     "redux": "^4.0.4",
     "redux-api-middleware": "^3.0.1",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "web3": "^1.0.0-beta.37",
+    "yup": "^0.27.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.6.1",
-    "@commitlint/config-conventional": "^7.6.0",
-    "eslint": "^6.1.0",
-    "eslint-config-codfish": "^2.5.0",
-    "husky": "^1.3.1",
-    "lint-staged": "^8.2.1",
-    "markdownlint-cli": "^0.17.0",
-    "prettier": "^1.16.4"
+    "cod-scripts": "^3.2.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "markdownlint-cli": "^0.17.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "./node_modules/cod-scripts/eslint.js"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "cod-scripts pre-commit",
+      "commit-msg": "cod-scripts commitlint -E HUSKY_GIT_PARAMS"
+    }
   }
 }

@@ -6,6 +6,7 @@ const rootReducer = history =>
   combineReducers({
     router: connectRouter(history),
     entities,
+    user: (state = {}) => state,
   });
 
 export default rootReducer;
