@@ -1,6 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import client from './apollo';
+import client from './apollo_client';
 import { Form, Field } from 'react-final-form';
 import { TextField } from 'final-form-material-ui';
 import { Paper, Typography, IconButton } from '@material-ui/core';
@@ -51,7 +51,7 @@ const RfqEditor = ({ rfq }) => {
             </Typography>
             <Typography component="p">
               {' '}
-              This is an example RFQ document with one entangled field{' '}
+              This is an example RFQ with one entangled field id[{rfq._id}]
             </Typography>
             <Field
               name="itemQty"

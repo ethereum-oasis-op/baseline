@@ -1,19 +1,13 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const { ApolloServer, gql } = require('apollo-server');
+const { PubSub } = require('graphql-subscriptions');
 
-const cors = require('cors');
-const graphqlHTTP = require('express-graphql');
-const gql = require('graphql-tag');
-const { buildASTSchema } = require('graphql');
-const {
-  GraphQLDate,
-  GraphQLDateTime,
-  GraphQLTime
-} = require('graphql-iso-date');
+const pubsub = new PubSub();
 
 // Custom config for each user type
 const config = require('./../config.js');
+
+const mongoose = require('mongoose');
+const MongoSchema = mongoose.Schema;
 
 const mongoConn = mongoose.createConnection('mongodb://127.0.0.1/radish34', {
   useFindAndModify: false,
@@ -21,19 +15,39 @@ const mongoConn = mongoose.createConnection('mongodb://127.0.0.1/radish34', {
   useUnifiedTopology: true
 });
 
-const RfqSchema = new Schema({
+const RfqSchema = new MongoSchema({
   refNum: Number,
   itemQty: Number
 });
 
+// RfqSchema.post('update', (doc, next ) => {
+//   const updateMessage = { update: doc.getUpdate() };
+//   whisperObj = {
+//     _id: new mongoose.mongo.ObjectId(),
+//     deliverTo: 'Abc123',
+//     sentAt: new Date().toISOString(),
+//     receivedAt: null,
+//     message: JSON.stringify(updateMessage)
+//   };
+//   WhisperModel.create(whisperObj);
+//   console.log('Sent event', whisperObj);
+//   pubsub.publish(NEW_WHISPER_EVENT, { whisperAdded: whisperObj });
+//   next();
+// });
+
+const WhisperSchema = new MongoSchema({
+  deliverTo: String,
+  sentAt: String,
+  receivedAt: String,
+  message: String
+});
+
 const RfqModel = mongoConn.model('Rfq', RfqSchema);
+const WhisperModel = mongoConn.model('Whisper', WhisperSchema);
 
-// GraphQL schema
-const schema = buildASTSchema(gql`
-  scalar Date
-  scalar Time
-  scalar DateTime
+const NEW_WHISPER_EVENT = 'whisperAdded';
 
+const typeDefs = gql`
   type Query {
     rfqs: [RfqObject]
     findRfqByRef(refNum: Int!): RfqObject
@@ -54,6 +68,10 @@ const schema = buildASTSchema(gql`
     message: String
   }
 
+  type Subscription {
+    whisperAdded: WhisperObject
+  }
+
   input RfqInput {
     itemQty: Int
   }
@@ -61,52 +79,56 @@ const schema = buildASTSchema(gql`
   type Mutation {
     updateRfq(_id: ID, input: RfqInput): RfqObject
   }
-`);
+`;
 
-const DEMO_WHISPERS = [
-  {
-    _id: 123213,
-    deliverTo: '0x0123',
-    sentAt: '10/1/2010 12:02:30:30',
-    receivedAt: '10/2/2010 01:03:43:12',
-    message: 'Hello test 1 2 3'
-  }
-];
-
-const rootResolver = {
-  rfqs: () => RfqModel.find({}),
-  findRfqByRef: ({ refNum }) => RfqModel.findOne({ refNum: refNum }),
-  updateRfq: async ({ _id, input }) => {
-    RfqModel.findByIdAndUpdate(
-      _id,
-      { $set: { itemQty: input.itemQty } },
-      { new: true }
-    )
-      .then(docs => {
-        if (docs) {
-          console.log({ success: true, data: docs });
-        } else {
-          console.log({ success: false, data: 'no such document exists' });
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+const resolvers = {
+  Query: {
+    rfqs: () => RfqModel.find({}),
+    findRfqByRef: ({ refNum }) => RfqModel.findOne({ refNum: refNum }),
+    whispers: () => WhisperModel.find({})
   },
-  whispers: DEMO_WHISPERS
+  Mutation: {
+    updateRfq: async (root, args, context, info) => {
+      console.log(args.input);
+      const { _id, input } = args;
+      const query = { _id: _id };
+      RfqModel.updateOne(
+        query,
+        { $set: { itemQty: input.itemQty } },
+        { new: true }
+      )
+        .then(docs => {
+          if (docs) {
+            console.log({ success: true, data: docs });
+          } else {
+            console.log({ success: false, data: 'no such document exists' });
+          }
+          const updateMessage = { itemQty: input.itemQty };
+          whisperObj = {
+            _id: new mongoose.mongo.ObjectId(),
+            deliverTo: 'Abc123',
+            sentAt: new Date().toISOString(),
+            receivedAt: null,
+            message: JSON.stringify(updateMessage)
+          };
+          WhisperModel.create(whisperObj);
+          console.log('Sent event', whisperObj);
+          pubsub.publish(NEW_WHISPER_EVENT, { whisperAdded: whisperObj });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  },
+  Subscription: {
+    whisperAdded: {
+      subscribe: () => pubsub.asyncIterator(NEW_WHISPER_EVENT)
+    }
+  }
 };
 
-const app = express();
-app.use(cors());
-app.use(
-  '/graphql',
-  graphqlHTTP({
-    schema,
-    rootValue: rootResolver,
-    graphiql: true
-  })
-);
+const server = new ApolloServer({ typeDefs, resolvers });
 
-const port = process.env.PORT || 4000;
-app.listen(port);
-console.log(`Running a GraphQL API server at localhost:${port}/graphql`);
+server.listen().then(({ url }) => {
+  console.log(`🚀 Server ready at ${url}`);
+});

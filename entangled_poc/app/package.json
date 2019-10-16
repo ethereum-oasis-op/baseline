@@ -6,6 +6,14 @@
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
     "apollo-boost": "^0.4.4",
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-client": "^2.6.4",
+    "apollo-link": "^1.2.13",
+    "apollo-link-http": "^1.5.16",
+    "apollo-link-ws": "^1.0.19",
+    "apollo-server": "^2.9.7",
+    "apollo-server-express": "^2.9.6",
+    "backpack-core": "^0.8.4",
     "clsx": "^1.0.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -26,6 +34,7 @@
     "react-dom": "^16.9.0",
     "react-final-form": "^6.3.0",
     "react-scripts": "3.1.1",
+    "subscriptions-transport-ws": "^0.9.16",
     "typeface-roboto": "0.0.75"
   },
   "scripts": {

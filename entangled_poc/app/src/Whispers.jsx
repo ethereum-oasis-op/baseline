@@ -1,6 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { Query } from 'react-apollo';
+import { Query, Subscription } from 'react-apollo';
 
 import {
   Paper,
@@ -33,6 +33,18 @@ export const GET_WHISPERS = gql`
   }
 `;
 
+const LISTEN_WHISPERS = gql`
+  subscription WhisperAdded {
+    whisperAdded {
+      _id
+      deliverTo
+      sentAt
+      receivedAt
+      message
+    }
+  }
+`;
+
 const Whispers = () => {
   const classes = useStyles();
 
@@ -42,11 +54,10 @@ const Whispers = () => {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>ID</TableCell>
             <TableCell>To</TableCell>
             <TableCell>Sent At</TableCell>
-            <TableCell>Received At</TableCell>
             <TableCell>Message</TableCell>
+            <TableCell>Received At</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -55,15 +66,30 @@ const Whispers = () => {
               !loading &&
               data.whispers.map(whisper => (
                 <TableRow key={whisper._id}>
-                  <TableCell>{whisper._id}</TableCell>
                   <TableCell>{whisper.deliverTo}</TableCell>
                   <TableCell>{whisper.sentAt}</TableCell>
-                  <TableCell>{whisper.receivedAt}</TableCell>
                   <TableCell>{whisper.message}</TableCell>
+                  <TableCell>{whisper.receivedAt}</TableCell>
                 </TableRow>
               ))
             }
           </Query>
+          <Subscription subscription={LISTEN_WHISPERS}>
+            {({ data, loading }) => {
+              if (!loading && data) {
+                const { whisperAdded } = data;
+                return (
+                  <TableRow key={whisperAdded._id}>
+                    <TableCell>{whisperAdded.deliverTo}</TableCell>
+                    <TableCell>{whisperAdded.sentAt}</TableCell>
+                    <TableCell>{whisperAdded.message}</TableCell>
+                    <TableCell>{whisperAdded.receivedAt}</TableCell>
+                  </TableRow>
+                );
+              }
+              return null;
+            }}
+          </Subscription>
         </TableBody>
       </Table>
     </Paper>
