@@ -82,9 +82,6 @@ services:
     logging:
       options:
         max-size: 10m
-    networks:
-      chainnet:
-        ipv4_address: 172.25.0.126
 
   mongo-seed:
     build: ./mongo-seed

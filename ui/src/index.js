@@ -4,11 +4,10 @@ import { BrowserRouter as Router } from "react-router-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
+import theme from './theme';
 import App from './App';
 import AppProviders from './contexts';
 import * as serviceWorker from './serviceWorker';
-
-const theme = createMuiTheme({});
 
 ReactDOM.render(
   <Router>

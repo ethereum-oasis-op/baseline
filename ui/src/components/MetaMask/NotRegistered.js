@@ -1,5 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { Formik, Form, Field } from 'formik';
 import { useMetaMask } from '../../contexts/metamask-context';
@@ -8,10 +10,21 @@ import TextField from '../TextField';
 import Select from '../Select';
 
 const useStyles = makeStyles(() => ({
-  form: {
-    width: '50%',
+  select: {
+    width: '130px',
+  },
+  button: {
+    marginTop: '2rem',
+    marginBottom: '2rem',
+    border: '1px solid #CCCCCC',
+    boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#FFFFFF',
+    paddingRight: '.8rem',
   },
 }));
+
+const text =
+  'Add your company to the Radish34 Registry. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.';
 
 const NotRegistered = () => {
   const classes = useStyles();
@@ -30,7 +43,8 @@ const NotRegistered = () => {
       render={({ handleChange }) => {
         return (
           <Form className={classes.form}>
-            <h1>Register Your Organization</h1>
+            <Typography variant="h4">Register Your Company</Typography>
+            <Typography variant="body">{text}</Typography>
 
             <Field
               required
