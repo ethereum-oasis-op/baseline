@@ -5,8 +5,9 @@ const router = express.Router();
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
 const entangleUtils = require('../src/entanglementUtils');
+const Config = require('../config');
 
-let whisperWrapper, contactUtils;
+let messenger, contactUtils;
 
 router.get('/health-check', async (req, res) => {
   res.status(200);
@@ -14,13 +15,13 @@ router.get('/health-check', async (req, res) => {
 });
 
 router.get('/identities', async (req, res) => {
-  let result = await whisperWrapper.getWhisperIds();
+  let result = await messenger.getIdentities();
   res.status(200);
   res.send(result);
 });
 
 router.post('/identities', async (req, res) => {
-  let result = await whisperWrapper.createIdentity();
+  let result = await messenger.createIdentity();
   // TODO: do we need to add this identity to the Registry smart contract?
   res.status(201);
   res.send(result);
@@ -40,7 +41,7 @@ router.post('/contacts', async (req, res) => {
 
 // Fetch messages from private 1:1 conversation
 router.get('/messages/:myId/topics/:topicId/contacts/:contactId', async (req, res) => {
-  let result = await whisperWrapper.getMessages(req.params.myId, req.params.topicId, req.params.contactId);
+  let result = await messenger.getMessages(req.params.myId, req.params.topicId, req.params.contactId);
   res.status(200);
   res.send(result);
 });
@@ -54,9 +55,9 @@ router.post('/messages/:senderId', async (req, res) => {
     return;
   }
   if (req.body.private) {
-    result = await whisperWrapper.sendPrivateMessage(req.params.senderId, req.body.recipientId, req.body.topic, req.body.message);
+    result = await messenger.sendPrivateMessage(req.params.senderId, req.body.recipientId, req.body.topic, req.body.message);
   } else {
-    result = await whisperWrapper.sendPublicMessage(req.params.senderId, req.body.topic, req.body.message);
+    result = await messenger.sendPublicMessage(req.params.senderId, req.body.topic, req.body.message);
   }
   res.status(200);
   res.send(result);
@@ -80,7 +81,7 @@ router.post('/entanglements', async (req, res) => {
   }
   // Will generate random topic and password to use for this entanglement,
   // and share it with other participants via private Whisper messages
-  let result = await whisperWrapper.createEntanglement(doc);
+  let result = await messenger.createEntanglement(doc);
   res.status(201);
   res.send(result);
 });
@@ -119,10 +120,10 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
   let result;
   if (req.body.acceptedRequest === true) {
     // Set acceptedRequest for my whisperId to 'true'
-    result = await whisperWrapper.acceptEntanglement(req.params.entanglementId, req.body);
-    // TODO subsribe to the public whisper channel here
+    result = await messenger.acceptEntanglement(req.params.entanglementId, req.body);
+    // TODO subscribe to the public whisper channel here
   } else {
-    result = await whisperWrapper.updateEntanglement(req.params.entanglementId, req.body);
+    result = await messenger.updateEntanglement(req.params.entanglementId, req.body);
   }
   res.status(200);
   res.send(result);
@@ -130,9 +131,11 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
 
 async function initialize(ipAddress, port) {
   contactUtils = new ContactUtils();
-  whisperWrapper = new WhisperWrapper(ipAddress, port);
-  let connected = await whisperWrapper.isConnected();
-  await whisperWrapper.loadWhisperIds();
+  if (Config.messaging_type === "whisper") {
+    messenger = new WhisperWrapper(ipAddress, port);
+  }
+  let connected = await messenger.isConnected();
+  await messenger.loadIdentities();
   return connected;
 }
 

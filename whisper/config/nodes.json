@@ -18,7 +18,7 @@
     "origin": "mychat2"
   },
   "whisper_test_params": {
-    "num_messages": 100,
+    "num_messages": 1000,
     "delay_ms": 5,
     "pow_target": 0.2
   }
