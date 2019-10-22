@@ -42,7 +42,7 @@ const breakpoints = {
 };
 
 const typography = {
-  fontFamily: 'Helvetica',
+  fontFamily: 'Lato',
   useNextVariants: true,
 };
 
@@ -50,6 +50,11 @@ export default {
   palette: { primary, secondary, client },
   breakpoints,
   overrides: {
+    MuiInput: {
+      underline: {
+        color: '#007BFF'
+      }
+    },
     MuiButton: {
       root: {
         textTransform: 'none',
