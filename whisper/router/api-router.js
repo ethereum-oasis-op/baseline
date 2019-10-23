@@ -4,10 +4,12 @@ const express = require('express');
 const router = express.Router();
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
-const entangleUtils = require('../src/entanglementUtils');
+const EntangleUtils = require('../src/EntanglementUtils');
+const RFQUtils = require('../src/RFQUtils');
 const Config = require('../config');
+const { getDB } = require('../src/db');
 
-let messenger, contactUtils;
+let messenger, contactUtils, entangleUtils, rfqUtils;
 
 router.get('/health-check', async (req, res) => {
   res.status(200);
@@ -63,6 +65,33 @@ router.post('/messages/:senderId', async (req, res) => {
   res.send(result);
 });
 
+// Create a new RFQ
+router.post('/rfqs', async (req, res) => {
+  let doc = req.body;
+  if (!doc.sku || !doc.quantity || !doc.deliveryDate) {
+    res.status(400);
+    res.send({ error: 'Following fields must be provided in request body: sku, quantity, deliveryDate' });
+    return;
+  }
+  let result = await rfqUtils.createRFQ(doc);
+  res.status(201);
+  res.send(result);
+});
+
+// Get all RFQs
+router.get('/rfqs', async (req, res) => {
+  let result = await rfqUtils.getAllRFQs();
+  res.status(200);
+  res.send(result);
+});
+
+// Get a specific RFQ
+router.get('/rfqs/:rfqId', async (req, res) => {
+  let result = await rfqUtils.getSingleRFQ(req.params.rfqId);
+  res.status(200);
+  res.send(result);
+});
+
 // ***** Generate a new Entanglement *****
 //  req.body:
 //    dataField: {  (required)
@@ -74,9 +103,9 @@ router.post('/messages/:senderId', async (req, res) => {
 //    partnerIds: []
 router.post('/entanglements', async (req, res) => {
   let doc = req.body;
-  if (!doc.whisperId || !doc.dataField) {
+  if (!doc.databaseLocation.collection || !doc.databaseLocation.objectId) {
     res.status(400);
-    res.send({ error: 'Following fields must be provided in request body: whisperId, dataField' });
+    res.send({ error: 'Following fields must be provided in request body: databaseLocation.collection, databaseLocation.objectId' });
     return;
   }
   // Will generate random topic and password to use for this entanglement,
@@ -114,14 +143,13 @@ router.get('/entanglements/:entanglementId/hash', async (req, res) => {
 //      value: String,
 //      description: String
 //    },
-//    whisperId: 0x... (required)
+//    contactId: 0x... (required)
 //    acceptedRequest: Boolean (optional)
 router.put('/entanglements/:entanglementId', async (req, res) => {
   let result;
   if (req.body.acceptedRequest === true) {
     // Set acceptedRequest for my whisperId to 'true'
     result = await messenger.acceptEntanglement(req.params.entanglementId, req.body);
-    // TODO subscribe to the public whisper channel here
   } else {
     result = await messenger.updateEntanglement(req.params.entanglementId, req.body);
   }
@@ -130,12 +158,17 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
 });
 
 async function initialize(ipAddress, port) {
-  contactUtils = new ContactUtils();
+  // Retrieve the db connection and pass to helper classes
+  let db = await getDB();
   if (Config.messaging_type === "whisper") {
-    messenger = new WhisperWrapper(ipAddress, port);
+    messenger = await new WhisperWrapper(db, ipAddress, port);
   }
   let connected = await messenger.isConnected();
   await messenger.loadIdentities();
+
+  entangleUtils = new EntangleUtils(db, messenger);
+  rfqUtils = new RFQUtils(db);
+  contactUtils = new ContactUtils(db);
   return connected;
 }
 

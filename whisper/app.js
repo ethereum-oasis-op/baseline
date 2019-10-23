@@ -31,7 +31,7 @@ async function getConfig() {
 async function startApiRouter() {
   await getConfig();
   await apiRouter.initialize(geth_ip_address, whisper_port);
-  server = app.listen(api_port, () => console.log('Listening on port ' + api_port));
+  server = app.listen(api_port, () => console.log('Express server listening on port ' + api_port));
   return server;
 }
 
