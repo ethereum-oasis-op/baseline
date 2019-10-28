@@ -1,47 +1,19 @@
 import { ApolloServer } from 'apollo-server';
+import coreQuery from './schemas/core';
+import OrganizationSchema from './schemas/organization';
+import OrganizationResolver from './resolvers/organization';
+import ScalarsResolver from './resolvers/scalars';
+import ScalarsSchema from './schemas/scalars';
 
-import {
-  typeDef as Partner,
-  resolvers as partnerResolvers
-} from './schemas/partner';
-
-import {
-  typeDef as SKU,
-  resolvers as SKUResolvers
-} from './schemas/sku';
-
-import {
-  typeDef as RFQ,
-  resolvers as RFQResolvers
-} from './schemas/rfq';
-
-const Query = `
-  type Query {
-    _empty: String
-  }
-`;
-
-export const startServer = () => {
-
-  const typeDefs = [
-    Query,
-    Partner,
-    SKU,
-    RFQ,
-  ];
-
-  const resolvers = [
-    partnerResolvers,
-    SKUResolvers,
-    RFQResolvers,
-  ]
-
+export default function startServer() {
+  const typeDefs = [OrganizationSchema, ScalarsSchema];
+  const resolvers = [OrganizationResolver, ScalarsResolver];
   const server = new ApolloServer({
-    typeDefs,
+    typeDefs: [coreQuery, ...typeDefs],
     resolvers,
   });
 
   server.listen(80).then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`)
+    console.log(`🚀 Server ready at ${url}`);
   });
 }

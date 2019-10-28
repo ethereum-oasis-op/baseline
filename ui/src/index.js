@@ -1,32 +1,26 @@
 import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
+import { BrowserRouter as Router } from "react-router-dom";
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
-import store, { history } from './redux/store';
+import theme from './theme';
 import App from './App';
 import AppProviders from './contexts';
 import * as serviceWorker from './serviceWorker';
 
-const theme = {};
-
-const initialStore = { user: {} };
-
 ReactDOM.render(
-  <Provider store={store(initialStore)}>
-    <ConnectedRouter history={history}>
-      <ThemeProvider theme={createMuiTheme(theme)}>
-        <CssBaseline />
-        <Suspense fallback={<div />}>
-          <AppProviders>
-            <App history={history} />
-          </AppProviders>
-        </Suspense>
-      </ThemeProvider>
-    </ConnectedRouter>
-  </Provider>,
+  <Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Suspense fallback={<div />}>
+        <AppProviders>
+          <App />
+        </AppProviders>
+      </Suspense>
+    </ThemeProvider>
+  </Router>
+  ,
   document.getElementById('root'),
 );
 

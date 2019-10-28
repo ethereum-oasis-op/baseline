@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import PrimaryNavigation from '../components/PrimaryNavigation';
+import classNames from 'classnames';
+import PrimaryNavigation from './PrimaryNavigation';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,7 +17,6 @@ const useStyles = makeStyles(theme => ({
   content: {
     display: 'flex',
     maxHeight: 'calc(100vh - 3.5rem)',
-    overflowX: 'scroll',
     '@media (min-width: 0px) and (orientation: landscape)': {
       maxHeight: 'calc(100vh - 3rem)',
     },
@@ -24,24 +24,32 @@ const useStyles = makeStyles(theme => ({
       maxHeight: 'calc(100vh - 4rem)',
     },
   },
+  scroll: {
+    overflowX: 'scroll',
+  },
 }));
 
-
-const Layout = ({ children }) => {
+const Layout = ({ children, scroll, root, content }) => {
   const classes = useStyles();
+  const className = classNames({
+    [classes.root]: root,
+    [classes.content]: content,
+    [classes.scroll]: scroll,
+  });
 
   return (
-    <div className={classes.root}>
+    <div className={`${className} ${classes.root}`}>
       <PrimaryNavigation />
-      <div className={classes.content}>
-        {children}
-      </div>
+      <div className={`${className} ${classes.content}`}>{children}</div>
     </div>
   );
 };
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
+  scroll: PropTypes.bool.isRequired,
+  root: PropTypes.shape({}).isRequired,
+  content: PropTypes.shape({}).isRequired,
 };
 
 export default Layout;

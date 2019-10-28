@@ -1,14 +1,13 @@
 import db from './db';
-import { startServer } from './app';
+import startServer from './app';
 
 const main = async () => {
   try {
     await db.connect();
     startServer();
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
   }
-}
+};
 
 main();

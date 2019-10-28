@@ -54,7 +54,7 @@ services:
     command: npm run dev
     restart: on-failure
     volumes:
-      - ./radish-api/build:/app/build:delegated
+      - ./radish-api/dist:/app/dist:delegated
       - ./radish-api/package.json:/app/package.json:delegated
     depends_on:
       - radish-api-watch
@@ -66,11 +66,10 @@ services:
     build:
       context: ./radish-api/
       dockerfile: dev.Dockerfile
-    command: npm run watch
+    command: npm run build:watch
     volumes:
       - ./radish-api/src:/app/src:delegated
-      - ./radish-api/build:/app/build:delegated
-      - ./radish-api/.babelrc:/app/.babelrc
+      - ./radish-api/dist:/app/dist:delegated
     logging:
       options:
         max-size: 10m
@@ -83,9 +82,6 @@ services:
     logging:
       options:
         max-size: 10m
-    networks:
-      chainnet:
-        ipv4_address: 172.25.0.126
 
   mongo-seed:
     build: ./mongo-seed

@@ -4,6 +4,11 @@ import config from './config';
 let db = null;
 let client = null;
 
+const options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
 const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
 export default {
@@ -12,9 +17,9 @@ export default {
       return db;
     }
 
-    for (let i = 0; i < config.MONGO_CONNECTION_RETRIES ; i++) {
+    for (let i = 0; i < config.MONGO_CONNECTION_RETRIES; i += 1) {
       try {
-        client = await MongoClient.connect(config.MONGO_URL);
+        client = await MongoClient.connect(config.MONGO_URL, options);
         console.log('connected to db');
         break;
       } catch (error) {
@@ -30,11 +35,11 @@ export default {
     return db;
   },
 
-  collection: (collectionName) => {
+  collection: collectionName => {
     return db.collection(collectionName);
   },
 
   get: () => {
     return db;
-  }
+  },
 };

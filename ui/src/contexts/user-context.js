@@ -1,27 +1,32 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import gql from 'graphql-tag';
+import get from 'lodash/get';
+import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 import { useMetaMask } from './metamask-context';
 
 export const UserContext = React.createContext();
 
-const checkRegistry = async address => {
-  // Simulates a call to the API or Web3 to see if the contract contains a user with this address
-  if (address === '0xc1b8662A68F3eb66bC5e5C4DE7C1EF04Dc344d53') {
-    const accepted = await new Promise(resolve =>
-      setTimeout(
-        () =>
-          resolve({
-            role: 'Buyer',
-            name: 'Buyer1',
-            address,
-          }),
-        1000,
-      ),
-    );
-    return accepted;
+const GET_ORGANIZATION_QUERY = gql`
+  query GetOrganization($address: Address!){
+    organization(address: $address){
+      name
+      address
+      role
+    }
   }
-  const rejected = await new Promise(resolve => setTimeout(() => resolve(null), 1000));
-  return rejected;
-};
+`;
+
+const REGISTER_ORGANIZATION = gql`
+  mutation RegisterOrganization($input: RegisterOrganization!){
+    registerOrganization(input: $input){
+      organization {
+        name
+        address
+        role
+      }
+    }
+  }
+`;
 
 const storeUser = user => window.localStorage.setItem('user', JSON.stringify(user));
 const logoutUser = () => window.localStorage.removeItem('user');
@@ -35,38 +40,54 @@ export const UserProvider = props => {
   const { accounts } = useMetaMask();
   const [user, setUser] = useState(loadUser);
   const [userState, setUserState] = useState('loading');
-  const account = accounts[0];
-
-  const update = profile => {
-    if (profile) {
-      setUser(profile);
-      storeUser(profile);
-      setUserState('loggedIn');
-    } else {
-      setUser(null);
-      storeUser(null);
-      setUserState('notRegistered');
-    }
-  };
-
-  const login = useCallback(() => {
-    checkRegistry(accounts[0]).then(update);
-    setUserState('validating');
-  }, [accounts]);
+  const [register, { data: newProfile }] = useMutation(REGISTER_ORGANIZATION);
+  const [checkRegistry, { data: existingProfile }] = useLazyQuery(GET_ORGANIZATION_QUERY);
 
   const logout = () => {
     logoutUser();
-    setUser(null);
-    setUserState('loggedOut');
-  };
+    window.location.reload();
+  }
 
+  const loadProfile = profile => {
+    setUser(profile);
+    storeUser(profile);
+    setUserState('loggedIn');
+  }
+
+  // Current account is already registered
   useEffect(() => {
-    if (account) {
+    const profile = get(existingProfile, 'organization');
+    if(profile){
+      loadProfile(profile);
+    } else if (accounts[0]) {
+      setUserState('notRegistered');
+    }
+  }, [existingProfile, accounts]);
+
+  // Current account has just been registered
+  useEffect(() => {
+    const profile = get(newProfile, 'registerOrganization.organization');
+    if (profile) {
+      loadProfile(profile);
+    }
+  }, [newProfile]);
+
+  // Update login function if accounts change
+  const login = useCallback(() => {
+    setUserState('validating');
+    checkRegistry({ variables: { address: accounts[0] }});
+  }, [accounts, checkRegistry]);
+
+  // If the user switches accounts, re-attempt a login
+  useEffect(() => {
+    logoutUser();
+    setUser(null);
+    if (accounts[0]) {
       login();
     }
-  }, [account, login]);
+  }, [accounts, login]);
 
-  return <UserContext.Provider value={{ userState, user, logout, login }} {...props} />;
+  return <UserContext.Provider value={{ userState, user, logout, login, register }} {...props} />;
 };
 
 export const useUser = () => {

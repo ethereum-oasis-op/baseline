@@ -1,7 +1,6 @@
-module.exports = {
-  testEnvironment: 'node',
-  testPathIgnorePatterns: ['/node_modules/', '/__fixtures__/'],
-  coveragePathIgnorePatterns: ['/node_modules/', '/__fixtures__/'],
-  setupFilesAfterEnv: ['../jest.setup.js'],
-  rootDir: './build',
-};
+const { jest: jestConfig } = require('cod-scripts/config');
+
+module.exports = Object.assign(jestConfig, {
+  rootDir: './dist',
+  coverageThreshold: null,
+});
