@@ -1,24 +1,30 @@
-const hash = require('object-hash');
+const mongoose = require('mongoose');
+const randomstring = require("randomstring");
+const RFQSchema = require('./mongoose_schemas/RFQ');
+const Identity = require('./mongoose_models/Identity');
 
 class RFQutils {
-  constructor(db) {
-    this.db = db;
-    this.rfqs = db.collection('RFQs');
+  constructor(entangleUtilsInstance) {
+    this.entangleUtils = entangleUtilsInstance;
   }
 
-  // Get all Entanglement objects for the given user
-  // Get all Entanglements if no user is provided
   async createRFQ(doc) {
-    let time = await new Date();
+    let time = await Math.floor(Date.now() / 1000);
     // If buyerId not provided, use first id stored in Mongo
     let buyerId = doc.buyerId;
     if (!buyerId) {
-      buyerId = await this.db.collection('Identities').findOne({});
+      buyerId = await Identity.findOne({});
       buyerId = buyerId._id
     }
+    var rfqID = randomstring.generate({
+      length: 60,
+      charset: 'alphanumeric',
+      capitalization: 'lowercase'
+    });
     // TODO: If no ids in Mongo, throw error
-    let newRFQ = await this.rfqs.insertOne(
+    let newRFQ = await this.model.create(
       {
+        _id: rfqID,
         sku: doc.sku,
         quantity: doc.quantity,
         description: doc.description || '',
@@ -29,19 +35,32 @@ class RFQutils {
         updated: time
       }
     );
-    return newRFQ.value;
+    return newRFQ;
   }
 
-  // Get all Entanglement objects for the given user
+  // Get one RFQ
   async getSingleRFQ(rfqId) {
-    let result = await this.rfqs.findOne({ _id: rfqId });
+    let result = await this.model.findOne({ _id: rfqId });
     return result;
   }
 
-  // Get all Entanglement objects for the given user
+  // Get all RFQs
   async getAllRFQs() {
-    let result = await this.rfqs.find({}).toArray();
+    let result = await this.model.find({});
     return result;
+  }
+
+  async addListener() {
+    // If user updates their own RFQ instance, alert other Entangled parties
+    await RFQSchema.post('updateOne', async function (rfqDoc) {
+      // Check if this RFQ has an Entanglement
+      let entangledDoc = await this.entangleUtils.getSingleEntanglement({ databaseCollection: 'RFQs', databaseLocation: rfqDoc._id });
+      if (entangledDoc) {
+        console.info('Found Entanglement for RFQ. Updating now...');
+        await this.entangleUtils.selfUpdateEntanglement(entangledDoc._id, rfqDoc);
+      }
+    })
+    this.model = mongoose.model('RFQs', RFQSchema);
   }
 
 }

@@ -11,9 +11,7 @@ const ContactSchema = new mongoose.Schema({
   description: String,
   whisperPublicKey: String,
   ethereumPublicKey: String,
-  created: {
-    instanceof: Date
-  }
+  created: String
 },
   {
     collection: "Contacts",

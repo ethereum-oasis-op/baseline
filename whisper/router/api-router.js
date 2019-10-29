@@ -7,7 +7,6 @@ const ContactUtils = require('../src/ContactUtils');
 const EntangleUtils = require('../src/EntanglementUtils');
 const RFQUtils = require('../src/RFQUtils');
 const Config = require('../config');
-const { getDB } = require('../src/db');
 
 let messenger, contactUtils, entangleUtils, rfqUtils;
 
@@ -110,7 +109,7 @@ router.post('/entanglements', async (req, res) => {
   }
   // Will generate random topic and password to use for this entanglement,
   // and share it with other participants via private Whisper messages
-  let result = await messenger.createEntanglement(doc);
+  let result = await entangleUtils.createEntanglement(doc);
   res.status(201);
   res.send(result);
 });
@@ -125,7 +124,8 @@ router.get('/entanglements', async (req, res) => {
 
 // Get a specific Entanglement
 router.get('/entanglements/:entanglementId', async (req, res) => {
-  let result = await entangleUtils.getSingleEntanglement(req.params.entanglementId);
+  let query = { _id: entanglementId };
+  let result = await entangleUtils.getSingleEntanglement(query);
   res.status(200);
   res.send(result);
 });
@@ -149,26 +149,30 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
   let result;
   if (req.body.acceptedRequest === true) {
     // Set acceptedRequest for my whisperId to 'true'
-    result = await messenger.acceptEntanglement(req.params.entanglementId, req.body);
+    result = await entangleUtils.acceptEntanglement(req.params.entanglementId, req.body);
   } else {
-    result = await messenger.updateEntanglement(req.params.entanglementId, req.body);
+    result = await entangleUtils.updateEntanglement(req.params.entanglementId, req.body);
   }
   res.status(200);
   res.send(result);
 });
 
 async function initialize(ipAddress, port) {
-  // Retrieve the db connection and pass to helper classes
-  let db = await getDB();
+  // Retrieve messenger instance and pass to helper classes
+  // Modularized here to enable use of other messenger services in the future
   if (Config.messaging_type === "whisper") {
-    messenger = await new WhisperWrapper(db, ipAddress, port);
+    messenger = await new WhisperWrapper(ipAddress, port);
   }
   let connected = await messenger.isConnected();
   await messenger.loadIdentities();
 
-  entangleUtils = new EntangleUtils(db, messenger);
-  rfqUtils = new RFQUtils(db);
-  contactUtils = new ContactUtils(db);
+  contactUtils = new ContactUtils();
+  entangleUtils = await new EntangleUtils(messenger);
+  await messenger.addEntangleUtils(entangleUtils);
+
+  // Pass the EntangleUtils instance to each business object that is allowed to be entangled
+  rfqUtils = await new RFQUtils(entangleUtils);
+  rfqUtils.addListener();
   return connected;
 }
 

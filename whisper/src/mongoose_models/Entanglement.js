@@ -17,6 +17,7 @@ const EntanglementSchema = new mongoose.Schema({
   // entanglement's state = yellow
   participants: [{
     _id: false,
+    isSelf: Boolean,
     messengerId: {
       type: String
     },
@@ -34,9 +35,7 @@ const EntanglementSchema = new mongoose.Schema({
     setMethodId: String,  // Four bytes long: '0x11223344'
     getMethodId: String   // Four bytes long: '0x11223344'
   },
-  created: {
-    instanceof: Date
-  }
+  created: String
 },
   {
     collection: "Entanglements",

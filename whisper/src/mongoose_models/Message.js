@@ -20,9 +20,7 @@ const MessageSchema = new mongoose.Schema({
   payload: String,
   pow: Number,
   ack_rcvd: Boolean,
-  timestamp: {
-    instanceof: Date
-  }
+  timestamp: String
 },
   {
     collection: "Messages",
