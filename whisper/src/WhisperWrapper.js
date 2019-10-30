@@ -1,11 +1,10 @@
 const Web3 = require('web3');
-const mongoose = require('mongoose');
 const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
-const SymmetricKey = require('./mongoose_models/SymmetricKey');
 const Entanglement = require('./mongoose_models/Entanglement');
 const utils = require("./generalUtils");
-const entangleUtils = require("./entanglementUtils");
+//const rfqUtils = require("./RFQutils");
+const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";
@@ -16,10 +15,16 @@ const POW_TARGET = 2;
 
 class WhisperWrapper {
   constructor(gethNodeIP, gethNodePort, flags = {}) {
-    const web3 = new Web3();
-    // Connect to web3 websocket port
-    web3.setProvider(new Web3.providers.WebsocketProvider(`ws://${gethNodeIP}:${gethNodePort}`, { headers: { Origin: 'mychat2' } }));
-    this.web3 = web3;
+    // Singleton pattern: only ever need one instance of this class
+    // If one already exists, return it instead of creating a new one
+    if (!WhisperWrapper.instance) {
+      const web3 = new Web3();
+      // Connect to web3 websocket port
+      web3.setProvider(new Web3.providers.WebsocketProvider(`ws://${gethNodeIP}:${gethNodePort}`, { headers: { Origin: 'mychat2' } }));
+      this.web3 = web3;
+      WhisperWrapper.instance = this;
+    }
+    return WhisperWrapper.instance;
   }
 
   // Call this function before sending Whisper commands
@@ -29,6 +34,10 @@ class WhisperWrapper {
     return connected;
   }
 
+  async addEntangleUtils(entangleUtilsInstance) {
+    this.entangleUtils = entangleUtilsInstance;
+  }
+
   async createIdentity() {
     // Create new public/private key pair
     const keyId = await this.web3.shh.newKeyPair();
@@ -36,7 +45,7 @@ class WhisperWrapper {
     const privKey = await this.web3.shh.getPrivateKey(keyId);
 
     // Store key's details in database
-    let time = await new Date();
+    let time = await Math.floor(Date.now() / 1000);
     let result = await Identity.findOneAndUpdate(
       { _id: pubKey },
       {
@@ -54,13 +63,14 @@ class WhisperWrapper {
   }
 
   // Fetch all of the Whisper Identities stored in database
-  async getWhisperIds() {
-    return await Identity.find({});
+  async getIdentities() {
+    let identities = await Identity.find({});
+    return identities;
   }
 
   // Load previously created Whisper IDs from database into Whisper node
-  async loadWhisperIds() {
-    let identities = await this.getWhisperIds();
+  async loadIdentities() {
+    let identities = await this.getIdentities();
     identities.forEach(async (id) => {
       try {
         const keyId = await this.web3.shh.addPrivateKey(id.privateKey);
@@ -113,8 +123,8 @@ class WhisperWrapper {
     }
 
     // Store message in database
-    let time = await new Date();
-    return await Message.findOneAndUpdate(
+    let time = await Math.floor(Date.now() / 1000);
+    let doc = await Message.findOneAndUpdate(
       { _id: hash },
       {
         _id: hash,
@@ -130,6 +140,7 @@ class WhisperWrapper {
       },
       { upsert: true, new: true }
     );
+    return doc;
   }
 
   // Send a public message (group message using symmetric encryption key)
@@ -150,8 +161,8 @@ class WhisperWrapper {
     }
 
     // Store message in database
-    let time = await new Date();
-    return await Message.findOneAndUpdate(
+    let time = await Math.floor(Date.now() / 1000);
+    let doc = await Message.findOneAndUpdate(
       { _id: hash },
       {
         _id: hash,
@@ -167,6 +178,7 @@ class WhisperWrapper {
       },
       { upsert: true, new: true }
     );
+    return doc;
   }
 
   async createSymmetricKey(password = '', topic = '') {
@@ -175,8 +187,8 @@ class WhisperWrapper {
     let pw = password || this.web3.utils.randomHex(20);
     let keyId = await this.web3.shh.generateSymKeyFromPassword(pw);
     await this.subscribeToPublicMessages(keyId, myTopic);
-    let time = await new Date();
-    return await SymmetricKey.findOneAndUpdate(
+    let time = await Math.floor(Date.now() / 1000);
+    let doc = await SymmetricKey.findOneAndUpdate(
       { _id: keyId },
       {
         _id: keyId,
@@ -187,136 +199,7 @@ class WhisperWrapper {
       },
       { upsert: true, new: true }
     );
-  }
-
-  async createEntanglement(doc) {
-    let topic = this.web3.utils.randomHex(4);
-    let password = this.web3.utils.randomHex(20);
-    let keyId = await this.web3.shh.generateSymKeyFromPassword(password);
-    await this.subscribeToPublicMessages(keyId, topic);
-    const mongooseId = mongoose.Types.ObjectId();
-    // Add self as a participant, then add rest of participants listed in req.body
-    let participants = [{ whisperId: doc.whisperId, acceptedRequest: true }];
-    doc.partnerIds.forEach(whisperId => {
-      participants.push({ whisperId: whisperId, acceptedRequest: false });
-    });
-    let time = await new Date();
-    let result = await Entanglement.findOneAndUpdate(
-      { _id: mongooseId },
-      {
-        _id: mongooseId,
-        whisper: {
-          topic: topic,
-          symmetricKeyId: keyId,
-          symmetricKey: password
-        },
-        dataField: {
-          value: doc.dataField.value,
-          dataId: doc.dataField.dataId,
-          description: doc.dataField.description
-        },
-        participants: participants,
-        created: time,
-        lastUpdated: time
-      },
-      { upsert: true, new: true }
-    );
-    // Create Entanglement request object to send as Whisper private message
-    let entangleRequest = {
-      _id: mongooseId,
-      type: 'entanglement_request',
-      dataField: result.dataField,
-      whisper: {
-        topic: topic,
-        symmetricKey: password
-      },
-      participants: participants,
-      created: time,
-      lastUpdated: time
-    };
-    // Send a private message to each participant inviting them to the entanglement channel
-    doc.partnerIds.forEach(async (partnerId) => {
-      await this.sendPrivateMessage(doc.whisperId, partnerId, undefined, JSON.stringify(entangleRequest));
-    });
-    // TODO deploy Consistency smart contract and initiate dataHash
-    // Store hash in contract under my Eth address for this dataId
-    let hash = entangleUtils.calculateHash(mongooseId);
-    return result;
-  }
-
-  // Set acceptedRequest for my whisperId to 'true'
-  //    whisperId: 0x... (required)
-  //    acceptedRequest: Boolean (optional)
-  async acceptEntanglement(entanglementId, doc) {
-    let time = await new Date();
-    let entangleObject = await Entanglement.findOne({ _id: entanglementId });
-    let userIndex = await entangleObject.participants.findIndex(({ whisperId }) => whisperId === doc.whisperId);
-    entangleObject.participants[userIndex].acceptedRequest = true;
-    let result = await Entanglement.findOneAndUpdate(
-      { _id: entanglementId },
-      {
-        participants: entangleObject.participants,
-        lastUpdated: time
-      },
-      { new: true }
-    );
-
-    // Create Entanglement request object to send as Whisper private message
-    let entangleMessage = {
-      _id: entanglementId,
-      type: 'entanglement_accept',
-      lastUpdated: time
-    };
-
-    // Send a private message to each participant inviting them to the entanglement channel
-    entangleObject.participants.forEach(async ({ whisperId }) => {
-      // Don't send message to self
-      if (whisperId !== doc.whisperId) {
-        await this.sendPrivateMessage(doc.whisperId, whisperId, undefined, JSON.stringify(entangleMessage));
-      }
-    });
-    return result;
-  }
-
-  //  Update Entanglement dataField object
-  //    dataField: {
-  //      value: String,
-  //      dataId: String,
-  //      description: String
-  //    },
-  //    whisperId: 0x... (required)
-  async updateEntanglement(entanglementId, doc) {
-    let time = await new Date();
-    let entangleObject = await Entanglement.findOne({ _id: entanglementId });
-    let result = await Entanglement.findOneAndUpdate(
-      { _id: entanglementId },
-      {
-        "dataField.value": doc.dataField.value || entangleObject.dataField.value,
-        "dataField.description": doc.dataField.description || entangleObject.dataField.description,
-        lastUpdated: time
-      },
-      { new: true }
-    );
-
-    // Create Entanglement update object to send as Whisper private message
-    let entangleMessage = {
-      _id: entanglementId,
-      type: 'entanglement_update',
-      dataField: result.dataField,
-      lastUpdated: time
-    };
-
-    // TODO: should we send one public message or a separate private message for each participant?
-    //     - Probably public so everyone can see the acks? Would have to assume all parties
-    //       parties are subscribed to the public channel
-    // Send a private message to each participant inviting them to the entanglement channel
-    entangleObject.participants.forEach(async ({ whisperId }) => {
-      // Don't send message to self
-      if (whisperId !== doc.whisperId) {
-        await this.sendPrivateMessage(doc.whisperId, whisperId, undefined, JSON.stringify(entangleMessage));
-      }
-    });
-    return result;
+    return doc;
   }
 
   async subscribeToPublicMessages(keyId, topic = DEFAULT_TOPIC) {
@@ -343,35 +226,39 @@ class WhisperWrapper {
       topics: [topic]
     }).on('data', async (data) => {
       let content = await this.web3.utils.toAscii(data.payload);
-      let time = await new Date();
+      let time = await Math.floor(Date.now() / 1000);
       // Check if this is a JSON structured entanglement message
       let [isJSON, messageObj] = await utils.hasJsonStructure(content);
       if (isJSON) {
         switch (messageObj.type) {
           case 'entanglement_request':
             // Create new Entanglement in Mongo
+            await messageObj.participants.forEach(async (party) => {
+              if (party.messengerId === userId) {
+                party.isSelf = true;
+              } else {
+                party.isSelf = false;
+              }
+            });
             await Entanglement.findOneAndUpdate(
               { _id: messageObj._id },
               {
                 _id: messageObj._id,
-                whisper: messageObj.whisper,
-                dataField: messageObj.dataField,
                 participants: messageObj.participants,
-                created: time,
-                lastUpdated: time
+                blockchain: messageObj.blockchain,
+                created: time
               },
               { upsert: true, new: true }
             );
             break;
           case 'entanglement_accept':
             // Update a pre-existing Entanglement to set acceptedRequest to 'true'
-            let object = await Entanglement.find({ _id: messageObj._id });
-            let userIndex = object.participants.findIndex(({ whisperId }) => whisperId === data.sig);
+            let object = await Entanglement.findOne({ _id: messageObj._id });
+            let userIndex = object.participants.findIndex(({ messengerId }) => messengerId === data.sig);
             object.participants[userIndex].acceptedRequest = true;
             await Entanglement.findOneAndUpdate(
               { _id: messageObj._id },
               {
-                _id: messageObj._id,
                 participants: object.participants,
                 lastUpdated: time
               },
@@ -379,7 +266,13 @@ class WhisperWrapper {
             );
             break;
           case 'entanglement_update':
+            this.entangleUtils.updateEntanglement(messageObj);
             // TODO: check smart contract for updated hashes
+            break;
+          case 'rfq_create':
+            //let rfqUtils = await new RFQutils();
+            console.log('WW rfqUtils:', rfqUtils);
+            await rfqUtils.createRFQ(messageObj);
             break;
           default:
             console.log('Did not recognize message object type: ', messageObj);

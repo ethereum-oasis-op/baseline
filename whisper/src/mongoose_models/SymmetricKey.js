@@ -17,9 +17,7 @@ const SymmetricKeySchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  created: {
-    instanceof: Date
-  }
+  created: String
 },
   {
     collection: "SymmetricKeys",

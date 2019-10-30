@@ -8,7 +8,7 @@
     "eip158Block": 3,
     "byzantiumBlock": 4,
     "clique": {
-      "period": 5,
+      "period": 10,
       "epoch": 30000
     }
   },
@@ -31,4 +31,3 @@
   "gasUsed": "0x0",
   "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
 }
-

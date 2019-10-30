@@ -5,7 +5,7 @@ class ContactUtils {
 
   // Store a new contact in Mongo
   async createContact(doc) {
-    const time = await new Date();
+    let time = await Math.floor(Date.now() / 1000);
     const mongooseId = mongoose.Types.ObjectId();
     return await Contact.findOneAndUpdate(
       { _id: mongooseId },
