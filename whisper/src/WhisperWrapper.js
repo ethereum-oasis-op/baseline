@@ -3,8 +3,9 @@ const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
 const Entanglement = require('./mongoose_models/Entanglement');
 const utils = require("./generalUtils");
-//const rfqUtils = require("./RFQutils");
-const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
+//const rfqUtils = require('./RFQutils');
+//const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
+const rfqUtils = include('src/RFQUtils');
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";
@@ -270,8 +271,6 @@ class WhisperWrapper {
             // TODO: check smart contract for updated hashes
             break;
           case 'rfq_create':
-            //let rfqUtils = await new RFQutils();
-            console.log('WW rfqUtils:', rfqUtils);
             await rfqUtils.createRFQ(messageObj);
             break;
           default:

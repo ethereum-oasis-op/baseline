@@ -5,8 +5,7 @@ const router = express.Router();
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
 const EntangleUtils = require('../src/EntanglementUtils');
-//const rfqUtils = require('../src/RFQUtils');
-const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
+const rfqUtils = include('src/RFQUtils');
 const Config = require('../config');
 
 let messenger, contactUtils, entangleUtils;
@@ -175,11 +174,8 @@ async function initialize(ipAddress, port) {
   await messenger.addEntangleUtils(entangleUtils);
 
   // Pass the EntangleUtils instance to each business object that is allowed to be entangled
-  //rfqUtils = await new RFQUtils(entangleUtils);
-  //rfqUtils.addListener();
   await rfqUtils.addEntangleUtils(entangleUtils);
   await rfqUtils.addListener();
-  console.log('rfqUtils', rfqUtils);
   return connected;
 }
 

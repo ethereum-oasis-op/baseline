@@ -31,15 +31,18 @@ class RFQutils {
       buyerId = await Identity.findOne({});
       buyerId = buyerId._id
     }
-    var rfqID = randomstring.generate({
-      length: 60,
-      charset: 'alphanumeric',
-      capitalization: 'lowercase'
-    });
+    // Generate _id if this is a new rfq that doesn't have _id yet
+    if (!doc._id) {
+      doc._id = randomstring.generate({
+        length: 60,
+        charset: 'alphanumeric',
+        capitalization: 'lowercase'
+      });
+    }
     // TODO: If no ids in Mongo, throw error
     let newRFQ = await this.model.create(
       {
-        _id: rfqID,
+        _id: doc._id,
         sku: doc.sku,
         quantity: doc.quantity,
         description: doc.description || '',
