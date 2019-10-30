@@ -1,8 +1,8 @@
 FROM ubuntu:xenial
 
 RUN apt-get update \
-     && apt-get install -y wget software-properties-common \
-     && rm -rf /var/lib/apt/lists/*
+  && apt-get install -y wget software-properties-common \
+  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR "/root"
 
@@ -10,7 +10,7 @@ RUN add-apt-repository -y ppa:ethereum/ethereum
 
 ARG binary
 RUN apt-get update \
-     && apt-get install -y ethereum
+  && apt-get install -y ethereum
 
 ARG password
 ARG privatekey
@@ -24,6 +24,6 @@ ENV address=""
 ENV bootnodeId=""
 ENV bootnodeIp=""
 
-CMD exec geth --bootnodes "enode://$bootnodeId@$bootnodeIp:30301" --networkid "6660001" --verbosity=4  --syncmode=full --mine --shh  --rpc --rpcaddr "0.0.0.0" --rpcapi "eth,web3,net,admin,debug,db,shh" --gasprice "0" --etherbase $address --unlock $address --password ~/.accountpassword --allow-insecure-unlock
+CMD exec geth --bootnodes "enode://$bootnodeId@$bootnodeIp:30301" --nodekeyhex $nodekeyhex --networkid "6660001" --verbosity=4  --syncmode=full --mine --shh --rpc --rpcaddr "0.0.0.0" --rpcapi "eth,web3,net,admin,debug,db,shh" --gasprice "0" --etherbase $address --unlock $address --password ~/.accountpassword --allow-insecure-unlock
 
 EXPOSE 8545
