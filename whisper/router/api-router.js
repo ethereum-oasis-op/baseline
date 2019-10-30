@@ -5,10 +5,11 @@ const router = express.Router();
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
 const EntangleUtils = require('../src/EntanglementUtils');
-const RFQUtils = require('../src/RFQUtils');
+//const rfqUtils = require('../src/RFQUtils');
+const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
 const Config = require('../config');
 
-let messenger, contactUtils, entangleUtils, rfqUtils;
+let messenger, contactUtils, entangleUtils;
 
 router.get('/health-check', async (req, res) => {
   res.status(200);
@@ -67,12 +68,15 @@ router.post('/messages/:senderId', async (req, res) => {
 // Create a new RFQ
 router.post('/rfqs', async (req, res) => {
   let doc = req.body;
-  if (!doc.sku || !doc.quantity || !doc.deliveryDate) {
+  if (!doc.sku || !doc.quantity || !doc.deliveryDate || !doc.supplierId) {
     res.status(400);
-    res.send({ error: 'Following fields must be provided in request body: sku, quantity, deliveryDate' });
+    res.send({ error: 'Following fields must be provided in request body: sku, quantity, deliveryDate, supplierId' });
     return;
   }
   let result = await rfqUtils.createRFQ(doc);
+  result._doc.type = 'rfq_create';
+  console.log('result:', result);
+  await messenger.sendPrivateMessage(result.buyerId, result.supplierId, undefined, JSON.stringify(result));
   res.status(201);
   res.send(result);
 });
@@ -124,26 +128,26 @@ router.get('/entanglements', async (req, res) => {
 
 // Get a specific Entanglement
 router.get('/entanglements/:entanglementId', async (req, res) => {
-  let query = { _id: entanglementId };
-  let result = await entangleUtils.getSingleEntanglement(query);
+  let result = await entangleUtils.getSingleEntanglement({ _id: req.params.entanglementId });
   res.status(200);
   res.send(result);
 });
 
 // Get an Entanglement's dataHash
 router.get('/entanglements/:entanglementId/hash', async (req, res) => {
-  let result = await entangleUtils.calculateHash(req.params.entanglementId);
+  let entanglement = await entangleUtils.getSingleEntanglement({ _id: req.params.entanglementId });
+  let result = await entangleUtils.calculateHash(entanglement.databaseLocation.collection, entanglement.databaseLocation.objectId);
   res.status(200);
-  res.send({ hash: result });
+  res.send({ recalculated_hash: result });
 });
 
 // ***** Update an Entanglement *****
 //  req.body:
-//    dataField: {
-//      value: String,
-//      description: String
+//    databaseLocation: {
+//      collection: String,
+//      objectId: String
 //    },
-//    contactId: 0x... (required)
+//    messengerId: 0x...
 //    acceptedRequest: Boolean (optional)
 router.put('/entanglements/:entanglementId', async (req, res) => {
   let result;
@@ -171,8 +175,11 @@ async function initialize(ipAddress, port) {
   await messenger.addEntangleUtils(entangleUtils);
 
   // Pass the EntangleUtils instance to each business object that is allowed to be entangled
-  rfqUtils = await new RFQUtils(entangleUtils);
-  rfqUtils.addListener();
+  //rfqUtils = await new RFQUtils(entangleUtils);
+  //rfqUtils.addListener();
+  await rfqUtils.addEntangleUtils(entangleUtils);
+  await rfqUtils.addListener();
+  console.log('rfqUtils', rfqUtils);
   return connected;
 }
 

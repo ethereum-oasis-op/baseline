@@ -3,6 +3,8 @@ const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
 const Entanglement = require('./mongoose_models/Entanglement');
 const utils = require("./generalUtils");
+//const rfqUtils = require("./RFQutils");
+const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";
@@ -13,10 +15,16 @@ const POW_TARGET = 2;
 
 class WhisperWrapper {
   constructor(gethNodeIP, gethNodePort, flags = {}) {
-    const web3 = new Web3();
-    // Connect to web3 websocket port
-    web3.setProvider(new Web3.providers.WebsocketProvider(`ws://${gethNodeIP}:${gethNodePort}`, { headers: { Origin: 'mychat2' } }));
-    this.web3 = web3;
+    // Singleton pattern: only ever need one instance of this class
+    // If one already exists, return it instead of creating a new one
+    if (!WhisperWrapper.instance) {
+      const web3 = new Web3();
+      // Connect to web3 websocket port
+      web3.setProvider(new Web3.providers.WebsocketProvider(`ws://${gethNodeIP}:${gethNodePort}`, { headers: { Origin: 'mychat2' } }));
+      this.web3 = web3;
+      WhisperWrapper.instance = this;
+    }
+    return WhisperWrapper.instance;
   }
 
   // Call this function before sending Whisper commands
@@ -260,6 +268,11 @@ class WhisperWrapper {
           case 'entanglement_update':
             this.entangleUtils.updateEntanglement(messageObj);
             // TODO: check smart contract for updated hashes
+            break;
+          case 'rfq_create':
+            //let rfqUtils = await new RFQutils();
+            console.log('WW rfqUtils:', rfqUtils);
+            await rfqUtils.createRFQ(messageObj);
             break;
           default:
             console.log('Did not recognize message object type: ', messageObj);

@@ -49,6 +49,7 @@ class EntanglementUtils {
     let entangleRequest = {
       _id: entangleID,
       type: 'entanglement_request',
+      databaseLocation: databaseLocation,
       participants: participants,
       blockchain: doc.blockchain,
       created: time
@@ -141,17 +142,30 @@ class EntanglementUtils {
 
   // Set acceptedRequest for my messengerId to 'true'
   //    messengerId: 0x... (required)
-  //    acceptedRequest: Boolean (optional)
+  //    databaseLocation: { collection, objectId } (optional)
   async acceptEntanglement(entanglementId, doc) {
-    let time = await Math.floor(Date.now() / 1000);
+    if (!doc.messengerId) {
+      doc.messengerId = await Identity.findOne({});
+    }
     let entangleObject = await Entanglement.findOne({ _id: entanglementId });
+    // If user doesn't supply their databaseLocation, assume the same location as sent in the request
+    if (!doc.databaseLocation) {
+      doc.databaseLocation = entangleObject.databaseLocation;
+    }
     let userIndex = await entangleObject.participants.findIndex(({ messengerId }) => messengerId === doc.messengerId);
     entangleObject.participants[userIndex].acceptedRequest = true;
+    entangleObject.participants[userIndex].isSelf = true;
+
+    let time = await Math.floor(Date.now() / 1000);
+    let hash = await this.calculateHash(doc.databaseLocation.collection, doc.databaseLocation.objectId);
+    entangleObject.participants[userIndex].dataHash = hash;
+    entangleObject.participants[userIndex].lastUpdated = time;
+
     let result = await Entanglement.findOneAndUpdate(
       { _id: entanglementId },
       {
-        participants: entangleObject.participants,
-        lastUpdated: time
+        databaseLocation: doc.databaseLocation,
+        participants: entangleObject.participants
       },
       { new: true }
     );
@@ -160,7 +174,7 @@ class EntanglementUtils {
     let entangleMessage = {
       _id: entanglementId,
       type: 'entanglement_accept',
-      lastUpdated: time
+      participants: entangleObject.participants
     };
 
     // Send a private message to each participant inviting them to the entanglement channel
@@ -185,7 +199,7 @@ class EntanglementUtils {
         rfqUtils = null; // Done with this class instance so get rid of it
         break;
       default:
-        console.error('Did not find requested data object for entanglement:', collectionName);
+        console.error('Did not find requested database collection for entanglement:', collectionName);
     }
     // Apparently there are hidden fields returned by Mongo (?) so have to specify 'entangledObject._doc'
     // Otherwise hash() throws an error

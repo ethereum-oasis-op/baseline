@@ -4,7 +4,22 @@ const RFQSchema = require('./mongoose_schemas/RFQ');
 const Identity = require('./mongoose_models/Identity');
 
 class RFQutils {
-  constructor(entangleUtilsInstance) {
+  //constructor(entangleUtilsInstance) {
+  //if (!RFQutils.instance) {
+  //this.entangleUtils = entangleUtilsInstance;
+  //RFQutils.instance = this;
+  //}
+  //return RFQutils.instance;
+  //}
+
+  constructor() {
+    if (!RFQutils.instance) {
+      RFQutils.instance = this;
+    }
+    return RFQutils.instance;
+  }
+
+  async addEntangleUtils(entangleUtilsInstance) {
     this.entangleUtils = entangleUtilsInstance;
   }
 
@@ -29,10 +44,10 @@ class RFQutils {
         quantity: doc.quantity,
         description: doc.description || '',
         deliveryDate: doc.deliveryDate,
-        buyerId: buyerId || '',
-        supplierId: doc.supplierId || '',
-        created: time,
-        updated: time
+        buyerId: buyerId,
+        supplierId: doc.supplierId,
+        created: doc.created || time,
+        updated: doc.updated || time
       }
     );
     return newRFQ;
@@ -57,6 +72,7 @@ class RFQutils {
       let entangledDoc = await this.entangleUtils.getSingleEntanglement({ databaseCollection: 'RFQs', databaseLocation: rfqDoc._id });
       if (entangledDoc) {
         console.info('Found Entanglement for RFQ. Updating now...');
+        // Update hash in Entanglement and send a message to each participant
         await this.entangleUtils.selfUpdateEntanglement(entangledDoc._id, rfqDoc);
       }
     })
@@ -65,4 +81,6 @@ class RFQutils {
 
 }
 
-module.exports = RFQutils;
+const rfqUtils = new RFQutils();
+
+module.exports = rfqUtils;
