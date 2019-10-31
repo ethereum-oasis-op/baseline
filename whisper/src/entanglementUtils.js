@@ -2,7 +2,7 @@ const hash = require('object-hash');
 const randomstring = require("randomstring");
 const Identity = require('./mongoose_models/Identity');
 const Entanglement = require('./mongoose_models/Entanglement');
-const rfqUtils = include('src/RFQUtils');
+const rfqUtils = customRequire('src/RFQUtils');
 
 class EntanglementUtils {
   constructor(messengerInstance) {
@@ -202,7 +202,6 @@ class EntanglementUtils {
     switch (collectionName) {
       case 'RFQs':
         entangledObject = await rfqUtils.model.findOne({ _id: docId });
-        console.log('entangledObject:', entangledObject);
         break;
       default:
         console.error('Did not find requested database collection for entanglement:', collectionName);

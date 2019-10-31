@@ -5,7 +5,7 @@ const Entanglement = require('./mongoose_models/Entanglement');
 const utils = require("./generalUtils");
 //const rfqUtils = require('./RFQutils');
 //const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
-const rfqUtils = include('src/RFQUtils');
+const rfqUtils = customRequire('src/RFQUtils');
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";

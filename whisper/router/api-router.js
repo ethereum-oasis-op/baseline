@@ -2,11 +2,11 @@
 
 const express = require('express');
 const router = express.Router();
+const Config = require('../config');
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
 const EntangleUtils = require('../src/EntanglementUtils');
-const rfqUtils = include('src/RFQUtils');
-const Config = require('../config');
+const rfqUtils = customRequire('src/RFQUtils');
 
 let messenger, contactUtils, entangleUtils;
 
