@@ -56,6 +56,25 @@ class RFQutils {
     return newRFQ;
   }
 
+  async updateRFQ(rfqId, doc) {
+    let time = await Math.floor(Date.now() / 1000);
+    let oldRFQ = await this.model.findOne({ _id: rfqId });
+    console.log('rfq doc:', doc);
+    let newRFQ = {
+      sku: doc.sku || oldRFQ.sku,
+      quantity: doc.quantity || oldRFQ.quantity,
+      description: doc.description || oldRFQ.description,
+      deliveryDate: doc.deliveryDate || oldRFQ.deliveryDate,
+      updated: time
+    }
+    let result = await this.model.findOneAndUpdate(
+      { _id: oldRFQ._id },
+      newRFQ,
+      { new: true }
+    );
+    return result
+  }
+
   // Get one RFQ
   async getSingleRFQ(rfqId) {
     let result = await this.model.findOne({ _id: rfqId });
@@ -70,13 +89,23 @@ class RFQutils {
 
   async addListener() {
     // If user updates their own RFQ instance, alert other Entangled parties
-    await RFQSchema.post('updateOne', async function (rfqDoc) {
+    let that = this;
+    await RFQSchema.post('updateOne', async function () {
       // Check if this RFQ has an Entanglement
-      let entangledDoc = await this.entangleUtils.getSingleEntanglement({ databaseCollection: 'RFQs', databaseLocation: rfqDoc._id });
+      let entangledDoc = await that.entangleUtils.getSingleEntanglement({ databaseLocation: { collection: 'RFQs', objectId: this._conditions._id } });
       if (entangledDoc) {
         console.info('Found Entanglement for RFQ. Updating now...');
         // Update hash in Entanglement and send a message to each participant
-        await this.entangleUtils.selfUpdateEntanglement(entangledDoc._id, rfqDoc);
+        await that.entangleUtils.selfUpdateEntanglement(entangledDoc, 'RFQs', this._conditions._id);
+      }
+    })
+    await RFQSchema.post('findOneAndUpdate', async function () {
+      // Check if this RFQ has an Entanglement
+      let entangledDoc = await that.entangleUtils.getSingleEntanglement({ databaseLocation: { collection: 'RFQs', objectId: this._conditions._id } });
+      if (entangledDoc) {
+        console.info('Found Entanglement for RFQ. Updating now...');
+        // Update hash in Entanglement and send a message to each participant
+        await that.entangleUtils.selfUpdateEntanglement(entangledDoc, 'RFQs', this._conditions._id);
       }
     })
     this.model = mongoose.model('RFQs', RFQSchema);

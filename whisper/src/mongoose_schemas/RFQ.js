@@ -16,7 +16,7 @@ const RFQSchema = new mongoose.Schema(
     deliveryDate: String,
     buyerId: String,
     supplierId: String,
-    updated: String,
+    lastUpdated: String,
     created: String
   },
   {

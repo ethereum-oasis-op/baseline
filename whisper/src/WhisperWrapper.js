@@ -257,6 +257,8 @@ class WhisperWrapper {
             let object = await Entanglement.findOne({ _id: messageObj._id });
             let userIndex = object.participants.findIndex(({ messengerId }) => messengerId === data.sig);
             object.participants[userIndex].acceptedRequest = true;
+            object.participants[userIndex].dataHash = messageObj.participants[userIndex].dataHash;
+            object.participants[userIndex].lastUpdated = messageObj.participants[userIndex].lastUpdated;
             await Entanglement.findOneAndUpdate(
               { _id: messageObj._id },
               {
@@ -267,7 +269,7 @@ class WhisperWrapper {
             );
             break;
           case 'entanglement_update':
-            this.entangleUtils.updateEntanglement(messageObj);
+            this.entangleUtils.updateEntanglement(data.sig, messageObj);
             // TODO: check smart contract for updated hashes
             break;
           case 'rfq_create':

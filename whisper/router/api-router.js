@@ -80,6 +80,12 @@ router.post('/rfqs', async (req, res) => {
   res.send(result);
 });
 
+router.put('/rfqs/:rfqId', async (req, res) => {
+  let result = await rfqUtils.updateRFQ(req.params.rfqId, req.body);
+  res.status(200);
+  res.send(result);
+});
+
 // Get all RFQs
 router.get('/rfqs', async (req, res) => {
   let result = await rfqUtils.getAllRFQs();
@@ -112,7 +118,14 @@ router.post('/entanglements', async (req, res) => {
   }
   // Will generate random topic and password to use for this entanglement,
   // and share it with other participants via private Whisper messages
-  let result = await entangleUtils.createEntanglement(doc);
+  let result;
+  try {
+    result = await entangleUtils.createEntanglement(doc);
+  } catch (err) {
+    console.log('error: ', err);
+    res.status(404);
+    res.send({ error: err.message });
+  }
   res.status(201);
   res.send(result);
 });
