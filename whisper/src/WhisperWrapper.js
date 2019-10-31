@@ -3,8 +3,9 @@ const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
 const Entanglement = require('./mongoose_models/Entanglement');
 const utils = require("./generalUtils");
-//const rfqUtils = require("./RFQutils");
-const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
+//const rfqUtils = require('./RFQutils');
+//const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
+const rfqUtils = customRequire('src/RFQUtils');
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";
@@ -256,6 +257,8 @@ class WhisperWrapper {
             let object = await Entanglement.findOne({ _id: messageObj._id });
             let userIndex = object.participants.findIndex(({ messengerId }) => messengerId === data.sig);
             object.participants[userIndex].acceptedRequest = true;
+            object.participants[userIndex].dataHash = messageObj.participants[userIndex].dataHash;
+            object.participants[userIndex].lastUpdated = messageObj.participants[userIndex].lastUpdated;
             await Entanglement.findOneAndUpdate(
               { _id: messageObj._id },
               {
@@ -266,12 +269,10 @@ class WhisperWrapper {
             );
             break;
           case 'entanglement_update':
-            this.entangleUtils.updateEntanglement(messageObj);
+            this.entangleUtils.updateEntanglement(data.sig, messageObj);
             // TODO: check smart contract for updated hashes
             break;
           case 'rfq_create':
-            //let rfqUtils = await new RFQutils();
-            console.log('WW rfqUtils:', rfqUtils);
             await rfqUtils.createRFQ(messageObj);
             break;
           default:

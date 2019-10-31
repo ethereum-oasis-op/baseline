@@ -2,7 +2,7 @@ const hash = require('object-hash');
 const randomstring = require("randomstring");
 const Identity = require('./mongoose_models/Identity');
 const Entanglement = require('./mongoose_models/Entanglement');
-const RFQutils = require('./RFQutils');
+const rfqUtils = customRequire('src/RFQUtils');
 
 class EntanglementUtils {
   constructor(messengerInstance) {
@@ -10,6 +10,11 @@ class EntanglementUtils {
   }
 
   async createEntanglement(doc) {
+    let exists = await Entanglement.exists({ databaseLocation: doc.databaseLocation });
+    console.log('existingEntanglement:', exists);
+    if (exists) {
+      throw new Error('Entanglement for the database object already exists.');
+    }
     var entangleID = randomstring.generate({
       length: 60,
       charset: 'alphanumeric',
@@ -49,7 +54,7 @@ class EntanglementUtils {
     let entangleRequest = {
       _id: entangleID,
       type: 'entanglement_request',
-      databaseLocation: databaseLocation,
+      databaseLocation: doc.databaseLocation,
       participants: participants,
       blockchain: doc.blockchain,
       created: time
@@ -80,12 +85,12 @@ class EntanglementUtils {
   }
 
   // Update a single Entanglement (initiated by partner message)
-  async updateEntanglement(data, messageObj) {
+  async updateEntanglement(senderId, messageObj) {
     let result = await Entanglement.findOne({ _id: messageObj._id });
     // Verify sender of message is a participant in the Entanglement before allowing the update
-    let index = result.participants.findIndex(({ messengerId }) => messengerId === data.sig);
+    let index = result.participants.findIndex(({ messengerId }) => messengerId === senderId);
     if (index < 0) {
-      console.error(`Cannot update Entanglement. Invalid messengerId (${data.sig}) trying to make update.`);
+      console.error(`Cannot update Entanglement. Invalid messengerId (${senderId}) trying to make update.`);
       return;
     }
     let time = await Math.floor(Date.now() / 1000);
@@ -110,6 +115,7 @@ class EntanglementUtils {
       return;
     }
     let time = await Math.floor(Date.now() / 1000);
+    console.log('docId:', docId);
     let dataHash = await this.calculateHash(collectionName, docId);
     let myMessengerId = entanglementDoc.participants[index].messengerId;
     entanglementDoc.participants[index].dataHash = dataHash;
@@ -131,13 +137,13 @@ class EntanglementUtils {
     };
 
     // Send a private message to each participant inviting them to the entanglement channel
-    entanglementDoc.participants.forEach(async ({ partnerId, isSelf }) => {
+    entanglementDoc.participants.forEach(async ({ messengerId, isSelf }) => {
       // Don't send message to self
       if (!isSelf) {
-        await this.messenger.sendPrivateMessage(myMessengerId, partnerId, undefined, JSON.stringify(entangleMessage));
+        await this.messenger.sendPrivateMessage(myMessengerId, messengerId, undefined, JSON.stringify(entangleMessage));
       }
     });
-    return result;
+    return updated;
   }
 
   // Set acceptedRequest for my messengerId to 'true'
@@ -145,7 +151,9 @@ class EntanglementUtils {
   //    databaseLocation: { collection, objectId } (optional)
   async acceptEntanglement(entanglementId, doc) {
     if (!doc.messengerId) {
-      doc.messengerId = await Identity.findOne({});
+      let foundId = await Identity.findOne({});
+      console.log('foundId:', foundId);
+      doc.messengerId = foundId.publicKey;
     }
     let entangleObject = await Entanglement.findOne({ _id: entanglementId });
     // If user doesn't supply their databaseLocation, assume the same location as sent in the request
@@ -178,10 +186,10 @@ class EntanglementUtils {
     };
 
     // Send a private message to each participant inviting them to the entanglement channel
-    entangleObject.participants.forEach(async ({ partnerId, isSelf }) => {
+    entangleObject.participants.forEach(async ({ messengerId, isSelf }) => {
       // Don't send message to self
       if (!isSelf) {
-        await this.messenger.sendPrivateMessage(doc.messengerId, partnerId, undefined, JSON.stringify(entangleMessage));
+        await this.messenger.sendPrivateMessage(doc.messengerId, messengerId, undefined, JSON.stringify(entangleMessage));
       }
     });
     return result;
@@ -190,19 +198,17 @@ class EntanglementUtils {
   // Calculate the hash of a db object
   // TODO: modularize the db interaction so that this could work with other db types
   async calculateHash(collectionName, docId) {
-    let entangledObject = {};
+    let entangledObject;
     switch (collectionName) {
       case 'RFQs':
-        let rfqUtils = await new RFQutils(this);
-        await rfqUtils.addListener();
         entangledObject = await rfqUtils.model.findOne({ _id: docId });
-        rfqUtils = null; // Done with this class instance so get rid of it
         break;
       default:
         console.error('Did not find requested database collection for entanglement:', collectionName);
     }
     // Apparently there are hidden fields returned by Mongo (?) so have to specify 'entangledObject._doc'
     // Otherwise hash() throws an error
+    delete entangledObject._doc.lastUpdated;  // Do not include lastUpdated timestamp in hash bc it will always vary between participants
     let result = await hash(entangledObject._doc, { algorithm: 'sha256' });
     return result;
   }

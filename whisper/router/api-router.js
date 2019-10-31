@@ -2,12 +2,11 @@
 
 const express = require('express');
 const router = express.Router();
+const Config = require('../config');
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
 const EntangleUtils = require('../src/EntanglementUtils');
-//const rfqUtils = require('../src/RFQUtils');
-const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
-const Config = require('../config');
+const rfqUtils = customRequire('src/RFQUtils');
 
 let messenger, contactUtils, entangleUtils;
 
@@ -81,6 +80,12 @@ router.post('/rfqs', async (req, res) => {
   res.send(result);
 });
 
+router.put('/rfqs/:rfqId', async (req, res) => {
+  let result = await rfqUtils.updateRFQ(req.params.rfqId, req.body);
+  res.status(200);
+  res.send(result);
+});
+
 // Get all RFQs
 router.get('/rfqs', async (req, res) => {
   let result = await rfqUtils.getAllRFQs();
@@ -113,7 +118,14 @@ router.post('/entanglements', async (req, res) => {
   }
   // Will generate random topic and password to use for this entanglement,
   // and share it with other participants via private Whisper messages
-  let result = await entangleUtils.createEntanglement(doc);
+  let result;
+  try {
+    result = await entangleUtils.createEntanglement(doc);
+  } catch (err) {
+    console.log('error: ', err);
+    res.status(404);
+    res.send({ error: err.message });
+  }
   res.status(201);
   res.send(result);
 });
@@ -175,11 +187,8 @@ async function initialize(ipAddress, port) {
   await messenger.addEntangleUtils(entangleUtils);
 
   // Pass the EntangleUtils instance to each business object that is allowed to be entangled
-  //rfqUtils = await new RFQUtils(entangleUtils);
-  //rfqUtils.addListener();
   await rfqUtils.addEntangleUtils(entangleUtils);
   await rfqUtils.addListener();
-  console.log('rfqUtils', rfqUtils);
   return connected;
 }
 
