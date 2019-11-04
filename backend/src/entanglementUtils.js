@@ -84,6 +84,30 @@ class EntanglementUtils {
     return result;
   }
 
+  // Return the state of an entanglement ['pending', 'consistent', 'inconsistent']
+  async getState(query) {
+    let doc = await Entanglement.findOne(query);
+    let hashes = [];
+    let state = 'consistent';
+    // If any participant has not accepted, set state to 'pending'
+    await doc.participants.forEach(({ acceptedRequest, dataHash }) => {
+      if (!acceptedRequest) {
+        state = 'pending';
+        return;
+      }
+      hashes.push(dataHash);
+    });
+    if (state === 'pending') return state;
+    // If all dataHashes are not equal, set state to 'inconsistent'
+    await hashes.forEach(hash => {
+      if (hash != hashes[0]) {
+        state = 'inconsistent';
+        return;
+      }
+    })
+    return state;
+  }
+
   // Update a single Entanglement (initiated by partner message)
   async updateEntanglement(senderId, messageObj) {
     let result = await Entanglement.findOne({ _id: messageObj._id });

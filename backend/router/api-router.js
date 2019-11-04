@@ -145,12 +145,19 @@ router.get('/entanglements/:entanglementId', async (req, res) => {
   res.send(result);
 });
 
-// Get an Entanglement's dataHash
+// Recalculate hash for an Entanglement's underlying data object
 router.get('/entanglements/:entanglementId/hash', async (req, res) => {
   let entanglement = await entangleUtils.getSingleEntanglement({ _id: req.params.entanglementId });
   let result = await entangleUtils.calculateHash(entanglement.databaseLocation.collection, entanglement.databaseLocation.objectId);
   res.status(200);
   res.send({ recalculated_hash: result });
+});
+
+// Get the state of an entanglement ['pending', 'consistent', 'inconsistent']
+router.get('/entanglements/:entanglementId/state', async (req, res) => {
+  let result = await entangleUtils.getState({ _id: req.params.entanglementId });
+  res.status(200);
+  res.send({ state: result });
 });
 
 // ***** Update an Entanglement *****
