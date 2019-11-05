@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
 
 const SidebarButton = ({ to, label }) => {
   const classes = useStyles();
-  
+
   return (
     <ListSubheader className={classes.root}>
       <Button
@@ -33,13 +33,14 @@ const SidebarButton = ({ to, label }) => {
         component={Link}
         variant="outlined"
         color="primary"
-        to={to}>
-          <AddCircleOutlineIcon className={classes.icon} />
-          {label}
+        to={to}
+      >
+        <AddCircleOutlineIcon className={classes.icon} />
+        {label}
       </Button>
     </ListSubheader>
   );
-}
+};
 
 SidebarButton.propTypes = {
   children: PropTypes.node.isRequired,
@@ -51,6 +52,6 @@ SidebarButton.propTypes = {
 SidebarButton.defaultProps = {
   items: [],
   subheader: null,
-}
+};
 
 export default SidebarButton;

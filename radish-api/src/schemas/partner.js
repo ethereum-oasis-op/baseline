@@ -1,58 +1,38 @@
-import db from '../db';
+import gql from 'graphql-tag';
 
-/**
-  query($address: String!){
-    partner(address: $address) {
-      address
-      name
-    }
-  }
- */
-
-export const typeDef = `
+export default gql`
   extend type Query {
-    partner(address: String!): Partner,
-    partners: [Partner]
+    partner(address: Address!): Organization
+    "return all of the partners from the registry contract"
+    partners: [Organization]
+    "return the ones that are saved as a preference for the API"
+    myPartners: [Partner]
   }
 
-  """
-  A type that describes a partner
-  """
+  extend type Mutation {
+    addPartner (input: AddPartnerInput!): PartnerPayload
+    removePartner (input: RemovePartnerInput!): PartnerPayload
+  }
+
   type Partner {
-    "The partner's name"
-    name: String,
-    "the partner's ethereum address"
-    address: String,
+    name: String!
+    address: Address!
+    role: Role!
+  }
+
+  input AddPartnerInput {
+    name: String!
+    address: Address!
+    role: Role!
+  }
+
+  input RemovePartnerInput {
+    name: String!
+    address: Address!
+    role: Role!
+  }
+
+  type PartnerPayload {
+    partner: Partner
   }
 `;
-
-const getPartnerByID = async address => {
-  const partner = await db
-    .collection('partners')
-    .find({ address: address })
-    .toArray();
-  return partner;
-};
-
-const getAllPartners = async () => {
-  const partners = await db
-    .collection('partners')
-    .find({})
-    .toArray();
-  return partners;
-};
-
-export const resolvers = {
-  Query: {
-    partner(parent, args, context, info) {
-      return getPartnerByID(args.address).then(res => res[0]);
-    },
-    partners(parent, args, context, info) {
-      return getAllPartners();
-    },
-  },
-  Partner: {
-    name: root => root.name,
-    address: root => root.address,
-  },
-};

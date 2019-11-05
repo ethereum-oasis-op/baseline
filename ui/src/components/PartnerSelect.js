@@ -4,16 +4,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-  },
+  root: {},
 }));
 
 const PartnerSelect = ({ children }) => {
   const classes = useStyles();
 
-  return (
-    <div>Partner Select</div>
-  );
+  return <div>Partner Select</div>;
 };
 
 PartnerSelect.propTypes = {

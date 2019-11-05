@@ -33,8 +33,8 @@ const NotRegistered = () => {
   const currentAddress = accounts[0];
 
   const onSubmit = async formValues => {
-    await register({ variables: { input: formValues }});
-  }
+    await register({ variables: { input: formValues } });
+  };
 
   return (
     <Formik
@@ -51,7 +51,7 @@ const NotRegistered = () => {
               name="name"
               id="orgName"
               onChange={handleChange}
-              label={'Organization Name'}
+              label="Organization Name"
               component={TextField}
               fullWidth
               margin="normal"
@@ -63,7 +63,7 @@ const NotRegistered = () => {
               name="role"
               id="orgRole"
               onChange={handleChange}
-              label={'Organization Role'}
+              label="Organization Role"
               component={Select}
               options={[
                 { label: 'Buyer', value: 'buyer' },
@@ -72,12 +72,7 @@ const NotRegistered = () => {
               ]}
             />
 
-            <Button
-              variant="outlined"
-              type="submit"
-              color="primary"
-              data-testid="register-button"
-            >
+            <Button variant="outlined" type="submit" color="primary" data-testid="register-button">
               Register!
             </Button>
           </Form>

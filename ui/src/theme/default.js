@@ -52,8 +52,8 @@ export default {
   overrides: {
     MuiInput: {
       underline: {
-        color: '#007BFF'
-      }
+        color: '#007BFF',
+      },
     },
     MuiButton: {
       root: {

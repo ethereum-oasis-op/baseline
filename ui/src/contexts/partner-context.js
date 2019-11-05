@@ -1,52 +1,85 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag'
-import { useQuery, useLazyQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+import { useQuery, useMutation } from '@apollo/react-hooks';
 
-//const { Provider, Consumer } = React.createContext();
 export const PartnerContext = React.createContext();
 
-// const GET_ORGANIZATIONS_QUERY = gql`
-//   query GetOrganizations{
-//     organizations {
-//       name
-//       address
-//       role
-//     }
-//   }
-// `
+export const GET_ALLPARTNERS_QUERY = gql`
+  query {
+    organizations {
+      name
+      address
+      role
+    }
 
-// const GET_ORGANIZATIONS_QUERY = gql`
-//   {
-//     organizations {
-//       name
-//       address
-//       role
-//     }
-//   }
-// `;
+    myPartners {
+      name
+      address
+      role
+    }
+  }
+`;
 
-export const loadPartners = () => {
-  const partners = [];
-  return partners;
-};
+export const GET_PARTNER_QUERY = gql`
+  query partner($address: Address!) {
+    partner {
+      name
+      address
+      role
+    }
+  }
+`;
+
+export const GET_MYPARTNERS_QUERY = gql`
+  query myPartners {
+    name
+    address
+    role
+  }
+`;
+
+export const ADD_PARTNER = gql`
+  mutation addPartner($input: AddPartnerInput!) {
+    addPartner(input: $input) {
+      partner {
+        name
+        address
+        role
+      }
+    }
+  }
+`;
+
+export const REMOVE_PARTNER = gql`
+  mutation removePartner($input: RemovePartnerInput!) {
+    removePartner(input: $input) {
+      partner {
+        name
+        address
+        role
+      }
+    }
+  }
+`;
 
 export const PartnerProvider = ({ children }) => {
-  const [partners, setPartners] = useState(loadPartners());
-  // const { called, loading, data } = useQuery(GET_ORGANIZATIONS_QUERY);
-  // const [{ called, loading, data }] = useLazyQuery(GET_ORGANIZATIONS_QUERY);
+  const { data, loading, error } = useQuery(GET_ALLPARTNERS_QUERY, {
+    pollInterval: 100,
+  });
+  const [postPartner] = useMutation(ADD_PARTNER);
+  const [deletePartner] = useMutation(REMOVE_PARTNER);
 
-  // console.log('ORGANIZATIONS', called, loading, data)
+  if (loading) return <h1>Loading...</h1>;
+  if (error) return <h1>Error</h1>;
 
-  const update = partnerList => {
-    setPartners(partnerList);
-  };
-
-  return <PartnerContext.Provider value={{ partners, update }}>{children}</PartnerContext.Provider>;
+  return (
+    <PartnerContext.Provider value={{ data, postPartner, deletePartner }}>
+      {children}
+    </PartnerContext.Provider>
+  );
 };
 
 PartnerProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
-// export { Consumer as PartnerConsumer };

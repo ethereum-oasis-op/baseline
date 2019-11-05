@@ -1,25 +1,27 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
+import _ from 'lodash';
+import PropTypes from 'prop-types';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import {
   SortingState,
   IntegratedSorting,
   SelectionState,
   PagingState,
   IntegratedFiltering,
-  IntegratedPaging
-} from '@devexpress/dx-react-grid'
+  IntegratedPaging,
+} from '@devexpress/dx-react-grid';
 import {
   Grid,
   Table,
   TableHeaderRow,
   TableSelection,
-  PagingPanel
-} from '@devexpress/dx-react-grid-material-ui'
+  PagingPanel,
+} from '@devexpress/dx-react-grid-material-ui';
+import { PartnerContext } from '../contexts/partner-context';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -35,121 +37,161 @@ const useStyles = makeStyles(theme => ({
   },
   menu: {
     width: 200,
-    fontSize: '1rem'
+    fontSize: '1rem',
+  },
+  filter: {
+    display: 'flex',
+    justifyContent: 'flex-end',
   },
 }));
 
-const PartnerTable = ({ data, selections, update }) => {
-  const classes = useStyles();
-  const [organizations, setOrganizations] = useState(data.organizations)
-  let currentSelectionIndex
-  useEffect(
-    () => {
-      currentSelectionIndex = selections.map(selection => {
-        const index = organizations.findIndex(
-          organization => organization.name === selection.name
-        )
-        return index
-      })
-      setSelection(currentSelectionIndex)
-    },
-    [organizations]
-  )
+let currentSelectionsIndex;
+let filteredByRoleOrg;
+let filteredByInputOrg;
+let currentInput;
+let orgList;
 
-  const [currentSelection, setSelection] = useState(currentSelectionIndex)
-  const [rows, setRows] = useState(organizations)
+const PartnerTable = ({ partners, myPartners, deletePartner }) => {
+  const classes = useStyles();
+  const { postPartner } = useContext(PartnerContext);
+  const [organizations] = useState(partners);
+  const [rows, setRows] = useState(organizations);
   const [columns] = useState([
     {
       name: 'name',
       numeric: false,
       disablePadding: true,
-      title: 'Company'
+      title: 'Company',
     },
     {
       name: 'address',
       numeric: false,
       disablePadding: false,
-      title: 'Address'
+      title: 'Address',
     },
-    { name: 'role', numeric: false, disablePadding: false, title: 'Role' }
-  ])
-  const [filterSelection, setFilterSelection] = useState('')
-  const roles = ['all companies', 'buyer', 'supplier', 'carrier']
+    { name: 'role', numeric: false, disablePadding: false, title: 'Role' },
+  ]);
+  const roles = ['all companies', 'buyer', 'supplier', 'carrier'];
+  const [filterOption, setFilterOption] = useState('');
+  const [currentSelections, setSelection] = useState([]);
 
-  const handleSelection = selectedRows => {
-    setSelection(selectedRows)
-    const selectedPartners = selectedRows.map(row => {
-      return organizations[row]
-    })
-    update(selectedPartners)
+  // set the orgList to the most filtered list
+  if (filteredByRoleOrg && filteredByInputOrg) {
+    orgList =
+      filteredByRoleOrg.length >= filteredByInputOrg.length
+        ? filteredByInputOrg
+        : filteredByRoleOrg;
+  } else if (!filteredByRoleOrg && filteredByInputOrg) {
+    orgList = filteredByInputOrg;
+  } else if (filteredByRoleOrg && !filteredByInputOrg) {
+    orgList = filteredByRoleOrg;
+  } else {
+    orgList = organizations;
   }
-  //////////////////
-  let filteredOrgs;
-  const handleRoleChange = role => event => {
-    setFilterSelection(event.target.value)
-   filteredOrgs =
+
+  // in current orgList(filtered or whole list), see if partners there, if so, find index of it and put it in setSelection
+  useEffect(() => {
+    currentSelectionsIndex = myPartners
+      .map(partner => {
+        const index = orgList.findIndex(organization => {
+          return organization.address === partner.address;
+        });
+        return index;
+      })
+      .filter(ind => ind !== -1);
+    setSelection(currentSelectionsIndex);
+  }, [orgList]);
+
+  const handleSelection = async selectedRows => {
+    // checks if is unselect, then remove partner from the list
+    if (currentSelections.length > selectedRows.length) {
+      const removePartner = _.omit(orgList[_.difference(currentSelections, selectedRows)], [
+        '__typename',
+      ]);
+      await deletePartner({ variables: { input: removePartner } });
+    }
+    // checks if is select, then add partner to the list
+    if (currentSelections.length < selectedRows.length) {
+      const newPartner = _.omit(orgList[selectedRows[selectedRows.length - 1]], ['__typename']);
+      await postPartner({ variables: { input: newPartner } });
+    }
+    setSelection(selectedRows);
+  };
+
+  // for Search by Company
+  const handleInputChange = event => {
+    currentInput = event.target ? event.target.value : currentInput;
+    // If the organization list is already filtered by role, filter within that list
+    if (filteredByRoleOrg) {
+      filteredByInputOrg =
+        currentInput === ''
+          ? filteredByRoleOrg
+          : filteredByRoleOrg.filter(organization =>
+              organization.name.toLowerCase().includes(currentInput.toLowerCase()),
+            );
+    } else {
+      filteredByInputOrg =
+        currentInput === ''
+          ? organizations
+          : organizations.filter(organization =>
+              organization.name.toLowerCase().includes(currentInput.toLowerCase()),
+            );
+    }
+    setRows(filteredByInputOrg);
+  };
+
+  const handleRoleChange = event => {
+    setFilterOption(event.target.value);
+    filteredByRoleOrg =
       event.target.value === 'all companies'
-        ? data.organizations
-        : data.organizations.filter(organization => {
-          return organization.role === event.target.value
-        })
-    setRows(filteredOrgs)
-    setOrganizations(filteredOrgs)
-    console.log('after handleRoleChange org', organizations)
-  }
+        ? organizations
+        : organizations.filter(organization => {
+            return organization.role === event.target.value;
+          });
+    setRows(filteredByRoleOrg);
+    if (currentInput) {
+      handleInputChange(currentInput);
+    }
+  };
 
-  const handleInputChange = input => event => {
-  
-     filteredOrgs = event.target.value === '' ? data.organizations : data.organizations.filter(organization =>
-      organization.name.toLowerCase().includes(event.target.value.toLowerCase())
-    )
-    setRows(filteredOrgs)
-    setOrganizations(filteredOrgs)
-    console.log(setOrganizations(filteredOrgs))
-    console.log('ORG', organizations)   
-  }
-////////////////////
   return (
-    <React.Fragment>
+    <>
       <Typography variant="h4">Registry</Typography>
-      <TextField
-        id="standard-dense"
-        label="Search by Company"
-        className={classes.textField}
-        margin="normal"
-        onChange={handleInputChange('input')}
-      />
+      <div className={classes.filter}>
+        <TextField
+          id="standard-dense"
+          label="Search by Company"
+          className={classes.textField}
+          margin="normal"
+          onChange={handleInputChange}
+        />
 
         <TextField
-        id="outlined-select-role"
-        select
-        label="Sort By Role"
-        className={classes.textField}
-        value={filterSelection}
-        onChange={handleRoleChange('role')}
-        SelectProps={{
-          MenuProps: {
-            className: classes.menu,
-          },
-        }}
-        helperText="Please select filter option"
-        margin="normal"
-        // variant="outlined"
-      > 
-        {roles.map(role => (
-          <MenuItem key={role} value={role}>
-            {role}
-          </MenuItem>
-        ))}
-      </TextField>
-
+          id="outlined-select-role"
+          select
+          label="Sort By Role"
+          className={classes.textField}
+          value={filterOption}
+          onChange={handleRoleChange}
+          SelectProps={{
+            MenuProps: {
+              className: classes.menu,
+            },
+          }}
+          helperText="Please select filter option"
+          margin="normal"
+        >
+          {roles.map(role => (
+            <MenuItem key={role} value={role}>
+              {role}
+            </MenuItem>
+          ))}
+        </TextField>
+      </div>
 
       <Paper>
         <Grid rows={rows} columns={columns}>
-          <SelectionState
-            selection={currentSelection}
-            onSelectionChange={handleSelection}
-          />
+          <SelectionState selection={currentSelections} onSelectionChange={handleSelection} />
 
           <SortingState />
           <PagingState defaultCurrentPage={0} pageSize={10} />
@@ -165,16 +207,14 @@ const PartnerTable = ({ data, selections, update }) => {
           <TableSelection selectByRowClick />
         </Grid>
       </Paper>
-    </React.Fragment>
-  )
-}
+    </>
+  );
+};
 
 PartnerTable.propTypes = {
-  data: PropTypes.shape({
-    organizations: PropTypes.arrayOf(PropTypes.shape({})).isRequired
-  }).isRequired,
-  selections: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  update: PropTypes.func.isRequired
-}
+  partners: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  myPartners: PropTypes.func.isRequired,
+  deletePartner: PropTypes.func.isRequired,
+};
 
-export default PartnerTable
+export default PartnerTable;
