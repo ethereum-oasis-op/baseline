@@ -122,8 +122,11 @@ router.post('/entanglements', async (req, res) => {
   try {
     result = await entangleUtils.createEntanglement(doc);
   } catch (err) {
-    console.log('error: ', err);
+    console.log('Entanglement error: ', err);
     res.status(404);
+    if (err.message === 'Entanglement for the database object already exists.') {
+      res.status(409);
+    }
     res.send({ error: err.message });
   }
   res.status(201);
@@ -184,7 +187,8 @@ async function initialize(ipAddress, port) {
   // Retrieve messenger instance and pass to helper classes
   // Modularized here to enable use of other messenger services in the future
   if (Config.messaging_type === "whisper") {
-    messenger = await new WhisperWrapper(ipAddress, port);
+    messenger = await new WhisperWrapper();
+    await messenger.configureProvider(ipAddress, port);
   }
   let connected = await messenger.isConnected();
   await messenger.loadIdentities();

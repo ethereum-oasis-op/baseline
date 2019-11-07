@@ -3,7 +3,7 @@
 module.exports = {
   server: {
     listener: {
-      port: process.env.LEDGER_API_SERVER_PORT,
+      port: process.env.SERVER_PORT,
       internalPort: process.env.INTERNAL_PORT
     },
     queries: {
@@ -11,8 +11,8 @@ module.exports = {
     }
   },
   mongo: {
-    uri: process.env.LEDGER_MONGO_URI,
-    bufferMaxEntries: process.env.LEDGER_MONGO_BUFFER_MAX_ENTRIES || 8,
-    firstConnectRetryDelaySecs: process.env.LEDGER_MONGO_FIRST_CONNECT_RETRY_DELAY_SECS || 5
+    uri: process.env.MONGODB_URL || "mongodb://127.0.0.1:27017/radish34",
+    bufferMaxEntries: process.env.MONGO_BUFFER_MAX_ENTRIES || 8,
+    firstConnectRetryDelaySecs: process.env.MONGO_FIRST_CONNECT_RETRY_DELAY_SECS || 5
   }
 };

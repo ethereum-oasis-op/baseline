@@ -4,14 +4,6 @@ const RFQSchema = require('./mongoose_schemas/RFQ');
 const Identity = require('./mongoose_models/Identity');
 
 class RFQutils {
-  //constructor(entangleUtilsInstance) {
-  //if (!RFQutils.instance) {
-  //this.entangleUtils = entangleUtilsInstance;
-  //RFQutils.instance = this;
-  //}
-  //return RFQutils.instance;
-  //}
-
   constructor() {
     if (!RFQutils.instance) {
       RFQutils.instance = this;

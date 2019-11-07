@@ -3,8 +3,6 @@ const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
 const Entanglement = require('./mongoose_models/Entanglement');
 const utils = require("./generalUtils");
-//const rfqUtils = require('./RFQutils');
-//const rfqUtils = require('/Users/samuelstokes/repos/Web3Studio/radish-34/whisper/src/RFQUtils');
 const rfqUtils = customRequire('src/RFQUtils');
 
 // Useful constants
@@ -15,17 +13,20 @@ const TTL = 20;
 const POW_TARGET = 2;
 
 class WhisperWrapper {
-  constructor(gethNodeIP, gethNodePort, flags = {}) {
+  constructor() {
     // Singleton pattern: only ever need one instance of this class
     // If one already exists, return it instead of creating a new one
     if (!WhisperWrapper.instance) {
       const web3 = new Web3();
       // Connect to web3 websocket port
-      web3.setProvider(new Web3.providers.WebsocketProvider(`ws://${gethNodeIP}:${gethNodePort}`, { headers: { Origin: 'mychat2' } }));
       this.web3 = web3;
       WhisperWrapper.instance = this;
     }
     return WhisperWrapper.instance;
+  }
+
+  async configureProvider(gethNodeIP, gethNodePort) {
+    this.web3.setProvider(new Web3.providers.WebsocketProvider(`ws://${gethNodeIP}:${gethNodePort}`, { headers: { Origin: 'mychat2' } }));
   }
 
   // Call this function before sending Whisper commands
@@ -245,6 +246,7 @@ class WhisperWrapper {
               { _id: messageObj._id },
               {
                 _id: messageObj._id,
+                databaseLocation: messageObj.databaseLocation,
                 participants: messageObj.participants,
                 blockchain: messageObj.blockchain,
                 created: time

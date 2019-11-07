@@ -7,6 +7,7 @@ const firstConnectRetryDelaySecs = Config.mongo.firstConnectRetryDelaySecs;
 // Setup DB
 const mongoose = require('mongoose');
 const conn = mongoose.connection;
+let mongoURL;
 
 // Connection options
 const options = {
@@ -23,11 +24,11 @@ const options = {
 };
 
 conn.once('open', () => {
-  console.log('Successfully connected to ' + Config.mongo.uri);
+  console.log('Successfully connected to ' + mongoURL);
 
   // When successfully connected
   conn.on('connected', () => {
-    console.log('Mongoose default connection open to ' + Config.mongo.uri);
+    console.log('Mongoose default connection open to ' + mongoURL);
   });
 
   // If the connection throws an error
@@ -49,13 +50,15 @@ conn.once('open', () => {
   });
 });
 
-async function connect() {
+async function connect(nodeNum) {
+  // For production use environment variable, otherwise read from appropriate config file
+  mongoURL = process.env.MONGO_URL || Config.nodes[`node_${nodeNum}`].db_url;
   mongoose.set('debug', Boolean(Config.mongo.debug));
 
   let connected = false;
   while (!connected) {
     try {
-      await mongoose.connect(Config.mongo.uri, options);
+      await mongoose.connect(mongoURL, options);
       connected = true;
     } catch (error) {
       console.error(error.message);

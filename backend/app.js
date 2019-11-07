@@ -13,23 +13,24 @@ const app = express();
 const fs = require('fs');
 const db = require('./src/db');
 const bodyParser = require('body-parser');
+const Config = require('./config');
 
 const nodeNum = process.argv[2];
 
-const apiRouter = require('./router/api-router');
+const apiRouter = require('./api/rest-express');
 
 app.use(bodyParser.json({ limit: '2mb' }));
 app.use('/api/v1', apiRouter.router);
 
 // Get whisper websocket info from config file
 async function getConfig() {
-  let rawContents = await fs.readFileSync('../whisper/config/nodes.json');
-  let contents = JSON.parse(rawContents);
+  //let rawContents = await fs.readFileSync('../whisper/config/nodes.json');
+  //let contents = JSON.parse(rawContents);
 
-  whisper_port = contents[`node_${nodeNum}`].whisper_port;
-  geth_ip_address = contents[`node_${nodeNum}`].ip_address;
-  whisper_origin = contents[`node_${nodeNum}`].origin;
-  api_port = contents[`node_${nodeNum}`].api_port;
+  whisper_port = Config.nodes[`node_${nodeNum}`].whisper_port;
+  geth_ip_address = Config.nodes[`node_${nodeNum}`].ip_address;
+  whisper_origin = Config.nodes[`node_${nodeNum}`].origin;
+  api_port = Config.nodes[`node_${nodeNum}`].api_port;
   if (!whisper_port || !whisper_origin) {
     console.error('Whisper parameter is undefined. Check config/nodes.json file and command line args.');
     process.exit();
@@ -49,7 +50,7 @@ async function terminate() {
 }
 
 let server, whisper_port, whisper_origin, geth_ip_address, api_port;
-let dbPromise = db.connect();
+let dbPromise = db.connect(nodeNum);
 let apiPromise = dbPromise.then(startApiRouter);
 
 module.exports = {
