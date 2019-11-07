@@ -50,9 +50,8 @@ conn.once('open', () => {
   });
 });
 
-async function connect(nodeNum) {
-  // For production use environment variable, otherwise read from appropriate config file
-  mongoURL = process.env.MONGO_URL || Config.nodes[`node_${nodeNum}`].db_url;
+async function connect(db_url) {
+  mongoURL = db_url;
   mongoose.set('debug', Boolean(Config.mongo.debug));
 
   let connected = false;

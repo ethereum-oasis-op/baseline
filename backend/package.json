@@ -14,7 +14,7 @@
     ]
   },
   "scripts": {
-    "start": "node ./app.js",
+    "start": "cross-env NODE_ENV=production node ./start.js 1",
     "test": "jest --runInBand --forceExit"
   },
   "repository": {
