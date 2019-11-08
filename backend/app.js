@@ -26,6 +26,51 @@ const typeDefs = gql`
     publicKey: String
   }
 
+  type RFQ {
+    _id: ID
+    sku: String
+    quantity: String
+    description: String
+    deliveryDate: String
+    buyerId: String
+    supplierId: String
+    lastUpdated: String
+    created: String
+  }
+
+  type Message {
+    _id: ID
+    messageType: String
+    recipientId: String
+    senderId: String
+    ttl: Number
+    topic: String
+    payload: String
+    pow: Number
+    ack_rcvd: Boolean
+    timestamp: String
+  }
+
+  type Entanglement {
+    _id: ID
+    blockchain: {
+      contractAddress: String
+      setMethodId: String
+      getMethodId: String
+    }
+    created: String
+    databaseLocation: {
+      collection: String
+      objectId: String
+    }
+    participants: [
+      messengerId: String
+      isSelf: Boolean
+      acceptedRequest: Boolean
+      dataHash: String
+      lastUpdated: String
+    ]
+  }
 `;
 
 // Provide resolver functions for your schema fields
