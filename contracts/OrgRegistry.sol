@@ -8,7 +8,7 @@ import "openzeppelin-solidity/contracts/access/Roles.sol";
 /// Contract inherits from Ownable and ERC165Compatible
 /// Ownable contains ownership criteria of the organization registry
 /// ERC165Compatible contains interface compatibility checks
-contract Registry is Ownable, ERC165Compatible {
+contract OrgRegistry is Ownable, ERC165Compatible {
     /// @notice Leverages roles contract as imported above to assign different roles
     using Roles for Roles.Role;
 

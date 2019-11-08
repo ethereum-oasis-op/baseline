@@ -1,6 +1,6 @@
 import { ethers, utils } from 'ethers';
 import { getWallet, getAccounts } from '../wallet';
-import RegistryArtifact from '../../artifacts/Registry';
+import RegistryArtifact from '../../artifacts/OrgRegistry.json';
 
 const wallet = getWallet();
 
