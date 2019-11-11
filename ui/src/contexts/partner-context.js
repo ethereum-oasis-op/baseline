@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
@@ -64,11 +64,13 @@ export const REMOVE_PARTNER = gql`
 `;
 
 export const PartnerProvider = ({ children }) => {
-  const { data, loading, error } = useQuery(GET_ALLPARTNERS_QUERY, {
-    pollInterval: 100,
-  });
+  const { data, loading, error, refetch } = useQuery(GET_ALLPARTNERS_QUERY);
   const [postPartner] = useMutation(ADD_PARTNER);
   const [deletePartner] = useMutation(REMOVE_PARTNER);
+
+  useEffect(() => {
+    refetch();
+  });
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>Error</h1>;

@@ -45,12 +45,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-let currentSelectionsIndex;
-let filteredByRoleOrg;
-let filteredByInputOrg;
-let currentInput;
-let orgList;
-
 const PartnerTable = ({ partners, myPartners, deletePartner }) => {
   const classes = useStyles();
   const { postPartner } = useContext(PartnerContext);
@@ -74,24 +68,32 @@ const PartnerTable = ({ partners, myPartners, deletePartner }) => {
   const roles = ['all companies', 'buyer', 'supplier', 'carrier'];
   const [filterOption, setFilterOption] = useState('');
   const [currentSelections, setSelection] = useState([]);
+  const [filteredByRoleOrg, setFilteredByRoleOrg] = useState(null);
+  const [filteredByInputOrg, setFilteredByInputOrg] = useState('');
+  const [orgList, setOrgList] = useState([]);
+  const [currentInput, setCurrentInput] = useState('');
 
   // set the orgList to the most filtered list
-  if (filteredByRoleOrg && filteredByInputOrg) {
-    orgList =
-      filteredByRoleOrg.length >= filteredByInputOrg.length
-        ? filteredByInputOrg
-        : filteredByRoleOrg;
-  } else if (!filteredByRoleOrg && filteredByInputOrg) {
-    orgList = filteredByInputOrg;
-  } else if (filteredByRoleOrg && !filteredByInputOrg) {
-    orgList = filteredByRoleOrg;
-  } else {
-    orgList = organizations;
-  }
+  useEffect(() => {
+    let filteredOrgs;
+    if (filteredByRoleOrg && filteredByInputOrg) {
+      filteredOrgs =
+        filteredByRoleOrg.length >= filteredByInputOrg.length
+          ? filteredByInputOrg
+          : filteredByRoleOrg;
+    } else if (!filteredByRoleOrg && filteredByInputOrg) {
+      filteredOrgs = filteredByInputOrg;
+    } else if (filteredByRoleOrg && !filteredByInputOrg) {
+      filteredOrgs = filteredByRoleOrg;
+    } else {
+      filteredOrgs = organizations;
+    }
+    setOrgList(filteredOrgs);
+  }, [filteredByRoleOrg, filteredByInputOrg, organizations]);
 
   // in current orgList(filtered or whole list), see if partners there, if so, find index of it and put it in setSelection
   useEffect(() => {
-    currentSelectionsIndex = myPartners
+    const currentSelectionsIndex = myPartners
       .map(partner => {
         const index = orgList.findIndex(organization => {
           return organization.address === partner.address;
@@ -118,39 +120,40 @@ const PartnerTable = ({ partners, myPartners, deletePartner }) => {
     setSelection(selectedRows);
   };
 
-  // for Search by Company
-  const handleInputChange = event => {
-    currentInput = event.target ? event.target.value : currentInput;
+  useEffect(() => {
+    let filteredOrgs;
     // If the organization list is already filtered by role, filter within that list
     if (filteredByRoleOrg) {
-      filteredByInputOrg =
+      filteredOrgs =
         currentInput === ''
           ? filteredByRoleOrg
           : filteredByRoleOrg.filter(organization =>
               organization.name.toLowerCase().includes(currentInput.toLowerCase()),
             );
     } else {
-      filteredByInputOrg =
+      filteredOrgs =
         currentInput === ''
           ? organizations
           : organizations.filter(organization =>
               organization.name.toLowerCase().includes(currentInput.toLowerCase()),
             );
     }
-    setRows(filteredByInputOrg);
-  };
+    setFilteredByInputOrg(filteredOrgs);
+    setRows(filteredOrgs);
+  }, [currentInput, organizations, filteredByRoleOrg]);
 
   const handleRoleChange = event => {
     setFilterOption(event.target.value);
-    filteredByRoleOrg =
+    const filteredOrgs =
       event.target.value === 'all companies'
         ? organizations
         : organizations.filter(organization => {
             return organization.role === event.target.value;
           });
-    setRows(filteredByRoleOrg);
+    setFilteredByRoleOrg(filteredOrgs);
+    setRows(filteredOrgs);
     if (currentInput) {
-      handleInputChange(currentInput);
+      setCurrentInput(currentInput);
     }
   };
 
@@ -163,7 +166,7 @@ const PartnerTable = ({ partners, myPartners, deletePartner }) => {
           label="Search by Company"
           className={classes.textField}
           margin="normal"
-          onChange={handleInputChange}
+          onChange={event => setCurrentInput(event.target.value)}
         />
 
         <TextField

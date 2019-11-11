@@ -17,16 +17,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const removeMyOrg = (dataList, user) => {
-  const { organizations } = dataList;
-  const filteredData = organizations.filter(organization => {
-    return organization.address !== user.address;
-  });
-  return filteredData;
-};
-
 const Partner = () => {
   const classes = useStyles();
+
+  const removeMyOrg = (dataList, user) => {
+    const { organizations } = dataList;
+    const filteredData = organizations.filter(organization => {
+      return organization.address !== user.address;
+    });
+    return filteredData;
+  };
+
   return (
     <PartnerContext.Consumer>
       {({ data, postPartner, deletePartner }) => {
