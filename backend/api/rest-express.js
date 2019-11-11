@@ -186,6 +186,7 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
 async function initialize(ipAddress, port) {
   // Retrieve messenger instance and pass to helper classes
   // Modularized here to enable use of other messenger services in the future
+  console.log('IN INIT');
   if (Config.messaging_type === "whisper") {
     messenger = await new WhisperWrapper();
     await messenger.configureProvider(ipAddress, port);
