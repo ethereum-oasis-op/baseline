@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import { Route, Switch, NavLink } from 'react-router-dom';
-import Layout from '../components/Layout';
 import List from '@material-ui/core/List';
+import Layout from '../components/Layout';
 import Sidebar from '../components/Sidebar';
 import SidebarButton from '../components/SidebarButton';
 import PageWrapper from '../components/PageWrapper';
-import RFQDetail from '../pages/RFQDetail';
+import RFQDetail from './RFQDetail';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -59,26 +59,36 @@ const rfqs = [
 
 const RFQListItem = ({ rfqid, time, name, sent, received }) => {
   const classes = useStyles();
-  
+
   return (
     <NavLink exact to={`/rfq/${rfqid}`} className={classes.root} activeClassName={classes.selected}>
       <span className={classes.item}>
         <Typography color="textPrimary">
-          <Typography variant="caption" gutterBottom>RFQ ID - {rfqid}</Typography>
-          <Typography variant="caption" className={classes.time} gutterBottom>{time}</Typography>
-          <Typography variant="h6" gutterBottom>{name}</Typography>
-          <Typography variant="caption" gutterBottom>{sent} Sent</Typography>
-          <Typography variant="caption" gutterBottom>{received} Received</Typography>
+          <Typography variant="caption" gutterBottom>
+            RFQ ID - {rfqid}
+          </Typography>
+          <Typography variant="caption" className={classes.time} gutterBottom>
+            {time}
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            {name}
+          </Typography>
+          <Typography variant="caption" gutterBottom>
+            {sent} Sent
+          </Typography>
+          <Typography variant="caption" gutterBottom>
+            {received} Received
+          </Typography>
         </Typography>
       </span>
       <Divider />
     </NavLink>
   );
-}
+};
 
 const RFQ = () => {
   const classes = useStyles();
-  const items = rfqs.map(data => (<RFQListItem {...data} />));
+  const items = rfqs.map(data => <RFQListItem {...data} />);
 
   return (
     <Layout>

@@ -18,7 +18,7 @@ const Home = () => {
 
   return (
     <Layout scroll={false}>
-      <HalfColumn>
+      <HalfColumn rightColumn={false}>
         <div className={classes.login}>
           <LoginForm />
         </div>

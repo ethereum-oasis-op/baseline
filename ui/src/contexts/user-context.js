@@ -7,8 +7,8 @@ import { useMetaMask } from './metamask-context';
 export const UserContext = React.createContext();
 
 const GET_ORGANIZATION_QUERY = gql`
-  query GetOrganization($address: Address!){
-    organization(address: $address){
+  query GetOrganization($address: Address!) {
+    organization(address: $address) {
       name
       address
       role
@@ -17,8 +17,8 @@ const GET_ORGANIZATION_QUERY = gql`
 `;
 
 const REGISTER_ORGANIZATION = gql`
-  mutation RegisterOrganization($input: RegisterOrganization!){
-    registerOrganization(input: $input){
+  mutation RegisterOrganization($input: RegisterOrganization!) {
+    registerOrganization(input: $input) {
       organization {
         name
         address
@@ -46,18 +46,18 @@ export const UserProvider = props => {
   const logout = () => {
     logoutUser();
     window.location.reload();
-  }
+  };
 
   const loadProfile = profile => {
     setUser(profile);
     storeUser(profile);
     setUserState('loggedIn');
-  }
+  };
 
   // Current account is already registered
   useEffect(() => {
     const profile = get(existingProfile, 'organization');
-    if(profile){
+    if (profile) {
       loadProfile(profile);
     } else if (accounts[0]) {
       setUserState('notRegistered');
@@ -75,7 +75,7 @@ export const UserProvider = props => {
   // Update login function if accounts change
   const login = useCallback(() => {
     setUserState('validating');
-    checkRegistry({ variables: { address: accounts[0] }});
+    checkRegistry({ variables: { address: accounts[0] } });
   }, [accounts, checkRegistry]);
 
   // If the user switches accounts, re-attempt a login
