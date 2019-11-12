@@ -48,8 +48,8 @@ const Layout = ({ children, scroll, root, content }) => {
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   scroll: PropTypes.bool.isRequired,
-  root: PropTypes.shape({}).isRequired,
-  content: PropTypes.shape({}).isRequired,
+  root: PropTypes.shape({}),
+  content: PropTypes.shape({}),
 };
 
 export default Layout;

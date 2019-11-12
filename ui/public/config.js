@@ -1,4 +1,3 @@
 window.config = {
-  radishAPIURL: 'radish-api.docker',
-  ethNetworkId: 3,
+  radishAPIURL: 'radish-api-buyer.docker',
 };

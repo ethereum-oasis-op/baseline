@@ -22,6 +22,10 @@
   },
   "homepage": "https://github.com/EYBlockchain/radish-34#readme",
   "dependencies": {
+    "@devexpress/dx-react-core": "^2.2.1",
+    "@devexpress/dx-react-grid": "^2.2.1",
+    "@devexpress/dx-react-grid-material-ui": "^2.2.1",
+    "@material-ui/icons": "^4.5.1",
     "openzeppelin-solidity": "^2.3.0"
   },
   "devDependencies": {
