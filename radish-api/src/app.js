@@ -6,10 +6,17 @@ import ScalarsResolver from './resolvers/scalars';
 import ScalarsSchema from './schemas/scalars';
 import PartnerSchema from './schemas/partner';
 import PartnerResolver from './resolvers/partner';
+import healthcheck from './install/healthcheck';
 
-export default function startServer() {
-  const typeDefs = [PartnerSchema, OrganizationSchema, ScalarsSchema];
-  const resolvers = [PartnerResolver, OrganizationResolver, ScalarsResolver];
+const PORT = process.env.PORT || 8001;
+
+const typeDefs = [PartnerSchema, OrganizationSchema, ScalarsSchema];
+const resolvers = [PartnerResolver, OrganizationResolver, ScalarsResolver];
+
+export default async function startServer() {
+  const app = express();
+  await healthcheck();
+
   const server = new ApolloServer({
     typeDefs: [coreQuery, ...typeDefs],
     resolvers,

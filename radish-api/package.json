@@ -21,8 +21,12 @@
   "dependencies": {
     "@babel/runtime": "^7.6.2",
     "apollo-server": "^2.9.3",
+    "config": "^3.2.4",
+    "ethers": "^4.0.39",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
+    "graphql-subscriptions": "^1.1.0",
+    "lodash": "^4.17.15",
     "mongodb": "^3.3.2",
     "web3-utils": "^1.2.1"
   },
