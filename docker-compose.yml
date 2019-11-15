@@ -61,6 +61,8 @@ services:
       - ganache
     environment:
       VIRTUAL_HOST: radish-api.docker
+    ports:
+      - 8001:8001
 
   radish-api-watch:
     build:
