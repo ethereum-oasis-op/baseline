@@ -21,7 +21,6 @@ import {
   TableSelection,
   PagingPanel,
 } from '@devexpress/dx-react-grid-material-ui';
-import { PartnerContext } from '../contexts/partner-context';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -45,9 +44,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PartnerTable = ({ partners, myPartners, deletePartner }) => {
+const PartnerTable = ({ partners, myPartners, deletePartner, postPartner }) => {
   const classes = useStyles();
-  const { postPartner } = useContext(PartnerContext);
   const [organizations] = useState(partners);
   const [rows, setRows] = useState(organizations);
   const [columns] = useState([
@@ -216,8 +214,9 @@ const PartnerTable = ({ partners, myPartners, deletePartner }) => {
 
 PartnerTable.propTypes = {
   partners: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  myPartners: PropTypes.func.isRequired,
+  myPartners: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   deletePartner: PropTypes.func.isRequired,
+  postPartner: PropTypes.func.isRequired,
 };
 
 export default PartnerTable;
