@@ -10,6 +10,10 @@ export default gql`
     registerOrganization(input: RegisterOrganization!): OrganizationPayload
   }
 
+  extend type Subscription {
+    newOrganization: Organization
+  }
+
   type Organization {
     name: String!
     address: Address!

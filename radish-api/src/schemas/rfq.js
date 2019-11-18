@@ -1,58 +1,37 @@
-import db from '../db';
+import gql from 'graphql-tag';
 
-/**
-  query($address: String!){
-    partner(address: $address) {
-      address
-      name
-    }
-  }
- */
-
-export const typeDef = `
+const RFQSchema = gql`
   extend type Query {
-    rfq(id: Int!): RFQ,
+    rfq(id: Int!): RFQ
     rfqs: [RFQ]
   }
 
-  """
-  A type that describes an RFQ
-  """
+  extend type Mutation {
+    createRFQ(input: inputRFQ!): RFQ
+  }
+
+  extend type Subscription {
+    newRFQ: RFQ
+  }
+
   type RFQ {
-    sentBy: String,
-    sentDate: String,
-    neededBy: String,
-    supplier: String,
-    skus: [SKU]
+    _id: Int!
+    name: String!
+    dateDeadline: Int!
+    dateDelivery: Int!
+    sku: String!
+    suppliers: [Int]
+    quantity: Int
+  }
+
+  input inputRFQ {
+    name: String!
+    dateDeadline: Int!
+    dateDelivery: Int!
+    sku: String!
+    suppliers: [Int]
+    quantity: Int
   }
 `;
 
-const getRFQByID = async (id) => {
-  const rfq = await db
-    .collection('rfqs')
-    .find({ _id: id })
-    .toArray();
-  return rfq;
-}
-
-const getAllRFQs = async () => {
-  const rfqs = await db
-  .collection('rfqs')
-  .find({})
-  .toArray();
-  return rfqs;
-}
-
-export const resolvers = {
-  Query: {
-    rfq(parent, args, context, info) {
-      return getRFQByID(args.address).then(res => res[0]);
-    },
-    rfqs(parent, args, context, info) {
-      return getAllRFQs();
-    }
-  },
-  RFQ: {
-    skus: (root) => root.skus,
-  },
-};
+export default RFQSchema;
