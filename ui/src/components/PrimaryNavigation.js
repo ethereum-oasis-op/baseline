@@ -14,6 +14,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { UserContext } from '../contexts/user-context';
 import Link from './Link';
+import UserSelection from './UserSelection';
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -214,6 +215,7 @@ export default function PrimaryNavigation() {
           </Link>
           {user ? userMenu : <></>}
         </Toolbar>
+        <UserSelection />
       </AppBar>
       {renderMobileMenu}
       {renderMenu}

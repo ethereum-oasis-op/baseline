@@ -41,13 +41,14 @@ services:
       - ./ui/public/config.js:/app/public/config.js:delegated
       - ./ui/public/manifest.json:/app/public/manifest.json:delegated
       - ./ui/public/logo.svg:/app/public/logo.svg:delegated
+      - ./ui/public/images:/app/public/images:delegated
     environment:
       VIRTUAL_HOST: radish34-ui.docker
     logging:
       options:
         max-size: 10m
 
-  radish-api:
+  radish-api-buyer:
     build:
       context: ./radish-api/
       dockerfile: dev.Dockerfile
@@ -56,13 +57,68 @@ services:
     volumes:
       - ./radish-api/dist:/app/dist:delegated
       - ./radish-api/package.json:/app/package.json:delegated
+      - ./config/keystore/buyer.eth:/keystore/account.eth
+      - ./config/config.json:/app/config/default.json
     depends_on:
       - radish-api-watch
+      - mongo-buyer
       - ganache
     environment:
-      VIRTUAL_HOST: radish-api.docker
-    ports:
-      - 8001:8001
+      VIRTUAL_HOST: radish-api-buyer.docker
+
+  radish-api-supplier1:
+    build:
+      context: ./radish-api/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    restart: on-failure
+    volumes:
+      - ./radish-api/dist:/app/dist:delegated
+      - ./radish-api/package.json:/app/package.json:delegated
+      - ./config/keystore/supplier1.eth:/keystore/account.eth
+      - ./config/config.json:/app/config/default.json
+    depends_on:
+      - radish-api-watch
+      - mongo-supplier1
+      - ganache
+    environment:
+      VIRTUAL_HOST: radish-api-supplier1.docker
+
+  radish-api-supplier2:
+    build:
+      context: ./radish-api/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    restart: on-failure
+    volumes:
+      - ./radish-api/dist:/app/dist:delegated
+      - ./radish-api/package.json:/app/package.json:delegated
+      - ./config/keystore/supplier2.eth:/keystore/account.eth
+      - ./config/config.json:/app/config/default.json
+    depends_on:
+      - radish-api-watch
+      - mongo-supplier2
+      - ganache
+    environment:
+      VIRTUAL_HOST: radish-api-supplier2.docker
+
+  radish-api-supplier3:
+    build:
+      context: ./radish-api/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    restart: on-failure
+    volumes:
+      - ./radish-api/dist:/app/dist:delegated
+      - ./radish-api/package.json:/app/package.json:delegated
+      - ./config/keystore/supplier3.eth:/keystore/account.eth
+      - ./config/config.json:/app/config/default.json
+    depends_on:
+      - radish-api-watch
+      - mongo-supplier3
+      - ganache
+    environment:
+      VIRTUAL_HOST: radish-api-supplier3.docker
 
   radish-api-watch:
     build:
@@ -72,15 +128,44 @@ services:
     volumes:
       - ./radish-api/src:/app/src:delegated
       - ./radish-api/dist:/app/dist:delegated
+      - ./config/keystore:/keystore
+      - ./config/config.json:/app/config/default.json
     logging:
       options:
         max-size: 10m
 
-  mongo:
+  mongo-buyer:
     image: mongo:latest
-    container_name: mongo-db
+    container_name: mongo-buyer
     volumes:
-      - radish-mongo:/data/db
+      - mongo-buyer:/data/db
+    logging:
+      options:
+        max-size: 10m
+
+  mongo-supplier1:
+    image: mongo:latest
+    container_name: mongo-supplier1
+    volumes:
+      - mongo-supplier1:/data/db
+    logging:
+      options:
+        max-size: 10m
+
+  mongo-supplier2:
+    image: mongo:latest
+    container_name: mongo-supplier2
+    volumes:
+      - mongo-supplier2:/data/db
+    logging:
+      options:
+        max-size: 10m
+
+  mongo-supplier3:
+    image: mongo:latest
+    container_name: mongo-supplier3
+    volumes:
+      - mongo-supplier3:/data/db
     logging:
       options:
         max-size: 10m
@@ -88,10 +173,13 @@ services:
   mongo-seed:
     build: ./mongo-seed
     links:
-      - mongo
+      - mongo-buyer
 
 volumes:
-  radish-mongo:
+  mongo-buyer:
+  mongo-supplier1:
+  mongo-supplier2:
+  mongo-supplier3:
 
 networks:
   chainnet:
