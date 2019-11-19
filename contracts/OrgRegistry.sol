@@ -27,7 +27,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
     address[] public parties;
 
     /// @dev constructor function
-    constructor() public Ownable() ERC165Compatible() {
+    constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
         setInterfaces();
         setInterfaceImplementation("OrgRegistry", address(this));
     }
@@ -57,9 +57,9 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
         return supportedInterfaces[interfaceId];
     }
 
-    /* function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
         return ERC1820_ACCEPT_MAGIC;
-    } */
+    }
 
     /// @notice Function to register an organization
     /// @param _address ethereum address of the registered organization

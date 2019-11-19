@@ -6,6 +6,8 @@ contract Registrar is ERC1820Registry {
 
     ERC1820Registry ERC1820REGISTRY;
 
+    mapping(bytes32 => bytes32)labelToHash;
+
     constructor (address ERC1820RegistryAddress) public {
         // ERC1820Registry constant ERC1820REGISTRY = ERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
         ERC1820REGISTRY = ERC1820Registry(ERC1820RegistryAddress);
