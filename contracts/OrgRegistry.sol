@@ -1,6 +1,7 @@
 pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
 import "./ERC165Compatible.sol";
+import "./Registrar.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 
@@ -8,7 +9,7 @@ import "openzeppelin-solidity/contracts/access/Roles.sol";
 /// Contract inherits from Ownable and ERC165Compatible
 /// Ownable contains ownership criteria of the organization registry
 /// ERC165Compatible contains interface compatibility checks
-contract OrgRegistry is Ownable, ERC165Compatible {
+contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
     /// @notice Leverages roles contract as imported above to assign different roles
     using Roles for Roles.Role;
 
@@ -28,6 +29,7 @@ contract OrgRegistry is Ownable, ERC165Compatible {
     /// @dev constructor function
     constructor() public Ownable() ERC165Compatible() {
         setInterfaces();
+        setInterfaceImplementation("OrgRegistry", address(this));
     }
 
     /// @notice This is an implementation of setting interfaces for the organization
@@ -55,6 +57,10 @@ contract OrgRegistry is Ownable, ERC165Compatible {
         return supportedInterfaces[interfaceId];
     }
 
+    /* function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+        return ERC1820_ACCEPT_MAGIC;
+    } */
+
     /// @notice Function to register an organization
     /// @param _address ethereum address of the registered organization
     /// @param _name name of the registered organization
@@ -62,7 +68,7 @@ contract OrgRegistry is Ownable, ERC165Compatible {
     /// @param _key public keys required for message communication
     /// @dev Function to register an organization
     /// @return `true` upon successful registration of the organization
-    function registerOrg(address _address, bytes32 _name, uint _role, bytes calldata _key) external onlyOwner returns (bool) {
+    function registerOrg(address _address, bytes32 _name, uint _role, bytes calldata _key) external returns (bool) {
         Org memory org = Org(_address, _name, _role, _key);
         roleMap[_role].add(_address);
         orgMap[_address] = org;

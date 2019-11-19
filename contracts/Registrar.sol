@@ -16,7 +16,7 @@ contract Registrar is ERC1820Registry {
         ERC1820REGISTRY.setInterfaceImplementer(address(this), interfaceHash, _implementation);
     }
 
-    function interfaceAddr(address addr, string memory _interfaceLabel) internal view returns(address) {
+    function interfaceAddr(address addr, string calldata _interfaceLabel) external view returns(address) {
         bytes32 interfaceHash = keccak256(abi.encodePacked(_interfaceLabel));
         return ERC1820REGISTRY.getInterfaceImplementer(addr, interfaceHash);
     }
