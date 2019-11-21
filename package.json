@@ -8,7 +8,7 @@
     "build:watch": "sol-compiler --watch",
     "lint": "solhint \"contracts/**/*.sol\"",
     "test": "jest",
-    "test:watch": "jest --watchAll",
+    "test:watch": "jest --watchAll --runInBand",
     "seed": "docker-compose run --rm mongo-seed sh seed.sh"
   },
   "repository": {
