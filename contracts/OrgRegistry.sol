@@ -25,8 +25,13 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
     mapping (address => Org) orgMap;
     mapping (uint => Roles.Role) private roleMap;
     address[] public parties;
+    mapping(address => address) managerMap;
 
-    /// @dev constructor function
+
+    /// @dev constructor function that takes the address of a pre-deployed ERC1820
+    /// registry. Ideally, this contract is a publicly known address:
+    /// 0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24. Inherently, the constructor
+    /// sets the interfaces and registers the current contract with the global registry
     constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
         setInterfaces();
         setInterfaceImplementation("OrgRegistry", address(this));
@@ -41,6 +46,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
         supportedInterfaces[this.registerOrg.selector ^
                             this.getOrgCount.selector ^
                             this.getOrgs.selector] = true;
+        return true;
     }
 
     /// @notice This function is a helper function to be able to get the
@@ -57,8 +63,19 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
         return supportedInterfaces[interfaceId];
     }
 
+    /// @notice Indicates whether the contract implements the interface 'interfaceHash' for the address 'addr' or not.
+    /// @dev Below implementation is necessary to be able to have the ability to register with ERC1820
+    /// @param interfaceHash keccak256 hash of the name of the interface
+    /// @param addr Address for which the contract will implement the interface
+    /// @return ERC1820_ACCEPT_MAGIC only if the contract implements 'interfaceHash' for the address 'addr'.
     function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
         return ERC1820_ACCEPT_MAGIC;
+    }
+
+    /// @dev Since this is an inherited method from Registrar, it allows for a new manager to be set
+    /// for this contract instance
+    function assignManager(address _oldManager, address _newManager) external {
+        assignManagement(_oldManager, _newManager);
     }
 
     /// @notice Function to register an organization
