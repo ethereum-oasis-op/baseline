@@ -6,5 +6,5 @@ WORKDIR /app
 COPY ./package.json ./package-lock.json ./
 RUN npm ci
 
-EXPOSE 80
+EXPOSE 8001
 CMD npm start

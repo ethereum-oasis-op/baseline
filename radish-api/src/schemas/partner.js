@@ -10,8 +10,8 @@ export default gql`
   }
 
   extend type Mutation {
-    addPartner (input: AddPartnerInput!): PartnerPayload
-    removePartner (input: RemovePartnerInput!): PartnerPayload
+    addPartner(input: AddPartnerInput!): PartnerPayload
+    removePartner(input: RemovePartnerInput!): PartnerPayload
   }
 
   type Partner {
@@ -19,35 +19,20 @@ export default gql`
     address: Address!
     role: Role!
   }
+
+  input AddPartnerInput {
+    name: String!
+    address: Address!
+    role: Role!
+  }
+
+  input RemovePartnerInput {
+    name: String!
+    address: Address!
+    role: Role!
+  }
+
+  type PartnerPayload {
+    partner: Partner
+  }
 `;
-
-const getPartnerByID = async address => {
-  const partner = await db
-    .collection('partners')
-    .find({ address: address })
-    .toArray();
-  return partner;
-};
-
-const getAllPartners = async () => {
-  const partners = await db
-    .collection('partners')
-    .find({})
-    .toArray();
-  return partners;
-};
-
-export const resolvers = {
-  Query: {
-    partner(parent, args, context, info) {
-      return getPartnerByID(args.address).then(res => res[0]);
-    },
-    partners(parent, args, context, info) {
-      return getAllPartners();
-    },
-  },
-  Partner: {
-    name: root => root.name,
-    address: root => root.address,
-  },
-};

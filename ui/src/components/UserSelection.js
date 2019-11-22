@@ -7,7 +7,7 @@ import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 const useStyles = makeStyles(theme => ({
   root: {
-    position: "fixed",
+    position: 'fixed',
     bottom: 0,
     right: 0,
     background: 'white',
@@ -28,13 +28,13 @@ const useStyles = makeStyles(theme => ({
     width: '200px',
     color: 'black',
     marginLeft: '1rem',
-  }
+  },
 }));
 
 const UserSelection = () => {
   const classes = useStyles();
   const [data, setData] = useState({ status: 504 });
-  const apiURL = window.localStorage.getItem("api") || "radish-api-buyer.docker";
+  const apiURL = window.localStorage.getItem('api') || 'radish-api-buyer.docker';
 
   const fetchHealthCheck = async () => {
     const result = await fetch(`${apiURL}/healthcheck`);
@@ -45,25 +45,23 @@ const UserSelection = () => {
     fetchHealthCheck();
   }, []);
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     window.location.reload(false);
-    window.localStorage.setItem("api", event.target.value);
-  }
+    window.localStorage.setItem('api', event.target.value);
+  };
 
   return (
     <div className={classes.root}>
-      {data.status === 200 ?
-        (
-          <CheckIcon className={classes.connected}/>
-        ):(
-          <ErrorOutlineIcon className={classes.error} />
-        )
-      }
+      {data.status === 200 ? (
+        <CheckIcon className={classes.connected} />
+      ) : (
+        <ErrorOutlineIcon className={classes.error} />
+      )}
       <Select className={classes.userSelection} value={apiURL} onChange={handleChange}>
-        <MenuItem value={"radish-api-buyer.docker"}>Buyer</MenuItem>
-        <MenuItem value={"radish-api-supplier1.docker"}>Supplier1</MenuItem>
-        <MenuItem value={"radish-api-supplier2.docker"}>Supplier2</MenuItem>
-        <MenuItem value={"radish-api-supplier3.docker"}>Supplier3</MenuItem>
+        <MenuItem value="radish-api-buyer.docker">Buyer</MenuItem>
+        <MenuItem value="radish-api-supplier1.docker">Supplier1</MenuItem>
+        <MenuItem value="radish-api-supplier2.docker">Supplier2</MenuItem>
+        <MenuItem value="radish-api-supplier3.docker">Supplier3</MenuItem>
       </Select>
     </div>
   );
