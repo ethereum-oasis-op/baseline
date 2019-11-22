@@ -24,7 +24,7 @@ const RFQProvider = ({ children }) => {
   return <RFQContext.Provider value={{ rfqs, loading, error }}>{children}</RFQContext.Provider>;
 };
 
-RFQContext.propTypes = {
+RFQProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 

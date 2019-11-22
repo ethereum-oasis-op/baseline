@@ -31,9 +31,9 @@ const ChooseNetworkForm = () => {
   const classes = useStyles();
   const { setNetworkId } = useContext(ServerSettingsContext);
 
-  const onSubmit = async ({ networkId, customNetworkId }) => {
+  const onSubmit = async ({ networkId }) => {
     await setNetworkId({ variables: { networkId } });
-  }
+  };
 
   return (
     <FormWrapper>
@@ -50,43 +50,43 @@ const ChooseNetworkForm = () => {
                 name="networkId"
                 id="networkId"
                 onChange={handleChange}
-                label={'Ethereum Network'}
+                label="Ethereum Network"
                 component={Select}
                 placeholder="Mainnet"
                 margin="normal"
                 options={options}
               />
 
-            { values.networkId === 'other' ? (
-              <Grid container spacing={3}>
-                <Grid item xs={6}>
-                  <Field
-                    required
-                    name="customNetworkId"
-                    id="customNetworkId"
-                    onChange={handleChange}
-                    label={'Custom Network ID'}
-                    component={TextField}
-                    fullWidth
-                    placeholder="Ex: 333"
-                    margin="normal"
-                  />
+              {values.networkId === 'other' ? (
+                <Grid container spacing={3}>
+                  <Grid item xs={6}>
+                    <Field
+                      required
+                      name="customNetworkId"
+                      id="customNetworkId"
+                      onChange={handleChange}
+                      label="Custom Network ID"
+                      component={TextField}
+                      fullWidth
+                      placeholder="Ex: 333"
+                      margin="normal"
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Field
+                      required
+                      name="customRPCURL"
+                      id="customRPCURL"
+                      onChange={handleChange}
+                      label="Custom RPC URL"
+                      component={TextField}
+                      fullWidth
+                      placeholder="Ex: Placeholder"
+                      margin="normal"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={6}>
-                  <Field
-                    required
-                    name="customRPCURL"
-                    id="customRPCURL"
-                    onChange={handleChange}
-                    label={'Custom RPC URL'}
-                    component={TextField}
-                    fullWidth
-                    placeholder="Ex: Placeholder"
-                    margin="normal"
-                  />
-                </Grid>
-              </Grid>
-            ): null }
+              ) : null}
 
               <FormButtonWrapper>
                 <Button

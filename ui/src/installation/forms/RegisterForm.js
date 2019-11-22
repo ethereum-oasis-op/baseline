@@ -20,8 +20,7 @@ const useStyles = makeStyles(() => ({
 const RegisterForm = () => {
   const classes = useStyles();
 
-  const onSubmit = async formValues => {
-  }
+  const onSubmit = async () => {};
 
   return (
     <FormWrapper>
@@ -36,7 +35,7 @@ const RegisterForm = () => {
                 name="name"
                 id="orgName"
                 onChange={handleChange}
-                label={'Network Id'}
+                label="Network Id"
                 component={TextField}
                 fullWidth
                 placeholder="Mainnet"
@@ -49,7 +48,7 @@ const RegisterForm = () => {
                 name="name"
                 id="orgName"
                 onChange={handleChange}
-                label={'Organization Registry Address'}
+                label="Organization Registry Address"
                 component={TextField}
                 fullWidth
                 placeholder="Ex: 0x1234567890"

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
 import PrimaryNavigation from './PrimaryNavigation';
 
 const useStyles = makeStyles(theme => ({
@@ -29,27 +28,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Layout = ({ children, scroll, root, content }) => {
+const Layout = ({ children }) => {
   const classes = useStyles();
-  const className = classNames({
-    [classes.root]: root,
-    [classes.content]: content,
-    [classes.scroll]: scroll,
-  });
 
   return (
-    <div className={`${className} ${classes.root}`}>
+    <div className={classes.root}>
       <PrimaryNavigation />
-      <div className={`${className} ${classes.content}`}>{children}</div>
+      <div className={classes.content}>{children}</div>
     </div>
   );
 };
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
-  scroll: PropTypes.bool.isRequired,
-  root: PropTypes.shape({}),
-  content: PropTypes.shape({}),
 };
 
 export default Layout;

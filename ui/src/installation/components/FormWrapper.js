@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -6,8 +7,7 @@ const useStyles = makeStyles(() => ({
     // padding: '2rem',
     // border: '2px solid red',
   },
-  inner: {
-  }
+  inner: {},
 }));
 
 const FormWrapper = ({ children }) => {
@@ -15,11 +15,13 @@ const FormWrapper = ({ children }) => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.inner}>
-        { children }
-      </div>
+      <div className={classes.inner}>{children}</div>
     </div>
   );
+};
+
+FormWrapper.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default FormWrapper;

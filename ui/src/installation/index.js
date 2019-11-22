@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
+import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import OnboardingStatus from './components/OnboardingStatus';
@@ -33,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     background: 'white',
     height: '100%',
     position: 'relative',
-    paddingTop: '3rem', 
+    paddingTop: '3rem',
     paddingLeft: '2rem',
     overflowX: 'scroll',
   },
@@ -44,39 +46,39 @@ const useStyles = makeStyles(theme => ({
     padding: '.5rem',
     background: 'white',
     pointer: 'pointer',
-  }
+  },
 }));
 
 const steps = [
   {
-    label: "Choose Network",
+    label: 'Choose Network',
     content: <ChooseNetworkForm />,
     instructions: <ChooseNetworkInstructions />,
   },
   {
-    label: "Setup Metamask",
+    label: 'Setup Metamask',
     content: <SetupMetamaskForm />,
     instructions: <SetupMetamaskInstructions />,
   },
   {
-    label: "Connect to Registry",
+    label: 'Connect to Registry',
     content: <ConnectToRegistryForm />,
     instructions: <ConnectToRegistryInstructions />,
   },
   {
-    label: "Register",
+    label: 'Register',
     content: <RegisterForm />,
     instructions: <RegisterInstructions />,
   },
   {
-    label: "Admin Account Setup",
+    label: 'Admin Account Setup',
     content: <AdminAccountSetupForm />,
     instructions: <AdminAccountSetupInstructions />,
   },
 ];
 
-const getStateId = (state) => {
-  switch(state) {
+const getStateId = state => {
+  switch (state) {
     case 'nonetwork':
     case 'notconnected':
       return 0;
@@ -91,7 +93,7 @@ const getStateId = (state) => {
     default:
       return 0;
   }
-}
+};
 
 const Installation = ({ state }) => {
   const classes = useStyles();
@@ -107,13 +109,11 @@ const Installation = ({ state }) => {
         <OnboardingStatus />
         <Grid container spacing={3}>
           <Grid item xs={4}>
-            <Paper className={classes.paper}>
-              { steps[activeStep].instructions }
-            </Paper>
+            <Paper className={classes.paper}>{steps[activeStep].instructions}</Paper>
           </Grid>
           <Grid item xs={8}>
             <Stepper activeStep={activeStep} orientation="vertical">
-              { steps.map(({ label, content })=> (
+              {steps.map(({ label, content }) => (
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
                   <StepContent className={classes.stepContent}>{content}</StepContent>
@@ -124,11 +124,21 @@ const Installation = ({ state }) => {
         </Grid>
       </Paper>
       {steps.map((step, index) => {
-        const onClick = () => { setActiveStep(index) }
-        return (<span onClick={onClick} className={classes.buttonChangeActive}>{index+1}</span>);
+        const onClick = () => {
+          setActiveStep(index);
+        };
+        return (
+          <Button onClick={onClick} className={classes.buttonChangeActive}>
+            {index + 1}
+          </Button>
+        );
       })}
     </div>
   );
+};
+
+Installation.propTypes = {
+  state: PropTypes.string.isRequired,
 };
 
 export default Installation;

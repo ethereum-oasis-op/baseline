@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
@@ -10,7 +11,7 @@ import SidebarButton from '../components/SidebarButton';
 import PageWrapper from '../components/PageWrapper';
 import RFQDetail from './RFQDetail';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     textDecoration: 'none',
   },
@@ -84,6 +85,14 @@ const RFQListItem = ({ rfqid, time, name, sent, received }) => {
       <Divider />
     </NavLink>
   );
+};
+
+RFQListItem.propTypes = {
+  rfqid: PropTypes.string.isRequired,
+  time: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  sent: PropTypes.number.isRequired,
+  received: PropTypes.number.isRequired,
 };
 
 const RFQ = () => {

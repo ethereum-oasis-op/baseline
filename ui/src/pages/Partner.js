@@ -23,10 +23,10 @@ const Partner = () => {
   const { data, postPartner, deletePartner } = useContext(PartnerContext);
   const { user } = useContext(UserContext);
 
-  const removeMyOrg = (dataList, user) => {
+  const removeMyOrg = (dataList, currentUser) => {
     const { organizations } = dataList;
     const filteredData = organizations.filter(organization => {
-      return organization.address !== user.address;
+      return organization.address !== currentUser.address;
     });
     return filteredData;
   };

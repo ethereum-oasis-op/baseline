@@ -43,15 +43,8 @@ const SidebarButton = ({ to, label }) => {
 };
 
 SidebarButton.propTypes = {
-  children: PropTypes.node.isRequired,
-  items: PropTypes.array,
-  component: PropTypes.element.isRequired,
-  subheader: PropTypes.element,
-};
-
-SidebarButton.defaultProps = {
-  items: [],
-  subheader: null,
+  to: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
 };
 
 export default SidebarButton;

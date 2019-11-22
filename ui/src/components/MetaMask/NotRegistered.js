@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
-import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import { Formik, Form, Field } from 'formik';
 import { useMetaMask } from '../../contexts/metamask-context';

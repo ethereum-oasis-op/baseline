@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { withTheme } from '@material-ui/styles';
 import MetaMaskContext from '../../contexts/metamask-context';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     border: '1px soild red',
   },
@@ -43,6 +44,12 @@ const SetupMetamaskForm = ({ theme }) => {
       </Grid>
     </div>
   );
+};
+
+SetupMetamaskForm.propTypes = {
+  theme: PropTypes.objectOf({
+    metamaskLogo: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default withTheme(SetupMetamaskForm);

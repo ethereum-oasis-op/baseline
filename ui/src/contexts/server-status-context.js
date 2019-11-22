@@ -21,7 +21,7 @@ const ServerStatusProvider = ({ children }) => {
   );
 };
 
-ServerStatusContext.propTypes = {
+ServerStatusProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
