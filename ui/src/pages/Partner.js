@@ -42,9 +42,7 @@ const Partner = () => {
             ))}
           </List>
         ) : (
-          <Typography className={classes.textField}>
-            No active partners
-          </Typography>
+          <Typography className={classes.textField}>No active partners</Typography>
         )}
       </Sidebar>
       <Container fixed>

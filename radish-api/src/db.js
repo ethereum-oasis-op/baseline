@@ -1,5 +1,4 @@
 import { MongoClient } from 'mongodb';
-import config from './config';
 
 let db = null;
 let client = null;
@@ -17,9 +16,9 @@ export default {
       return db;
     }
 
-    for (let i = 0; i < config.MONGO_CONNECTION_RETRIES; i += 1) {
+    for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
-        client = await MongoClient.connect(config.MONGO_URL, options);
+        client = await MongoClient.connect(process.env.MONGO_URL, options);
         console.log('connected to db');
         break;
       } catch (error) {
@@ -31,7 +30,7 @@ export default {
       throw new Error('Could not establish Mongo connection');
     }
 
-    db = client.db(config.MONGO_DB_NAME);
+    db = client.db(process.env.MONGO_DB_NAME);
     return db;
   },
 

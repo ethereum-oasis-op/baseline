@@ -10,7 +10,7 @@ export const RFQ_ATTRIBUTES = gql`
     suppliers
     quantity
   }
-`
+`;
 
 export const GET_RFQ_UPDATE = gql`
   subscription onNewRFQ {

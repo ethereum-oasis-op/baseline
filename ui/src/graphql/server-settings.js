@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const GET_SERVER_STATE = gql`
-  query GetServerState{
+  query GetServerState {
     serverState {
       state
     }
@@ -26,8 +26,8 @@ export const GET_SERVER_SETTINGS = gql`
 `;
 
 export const SET_NETWORK_ID = gql`
-  mutation SetNetworkId($networkId: Int!){
-    setNetworkId(networkId: $networkId){
+  mutation SetNetworkId($networkId: Int!) {
+    setNetworkId(networkId: $networkId) {
       networkId
       organizationRegistryAddress
     }
@@ -35,8 +35,8 @@ export const SET_NETWORK_ID = gql`
 `;
 
 export const SET_ORGANIZATION_REGISTRY_ADDRESSS = gql`
-  mutation SetOrganizationRegistryAddress($organizationRegistryAddress: Address!){
-    setOrganizationRegistryAddress(organizationRegistryAddress: $organizationRegistryAddress){
+  mutation SetOrganizationRegistryAddress($organizationRegistryAddress: Address!) {
+    setOrganizationRegistryAddress(organizationRegistryAddress: $organizationRegistryAddress) {
       networkId
       organizationRegistryAddress
     }

@@ -65,6 +65,11 @@ services:
       - ganache
     environment:
       VIRTUAL_HOST: radish-api-buyer.docker
+      MONGO_URL: mongodb://mongo-buyer
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+    ports:
+      - 8001:8001
 
   radish-api-supplier1:
     build:
@@ -83,6 +88,11 @@ services:
       - ganache
     environment:
       VIRTUAL_HOST: radish-api-supplier1.docker
+      MONGO_URL: mongodb://mongo-supplier1
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+    ports:
+      - 8002:8001
 
   radish-api-supplier2:
     build:
@@ -101,6 +111,11 @@ services:
       - ganache
     environment:
       VIRTUAL_HOST: radish-api-supplier2.docker
+      MONGO_URL: mongodb://mongo-supplier2
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+    ports:
+      - 8003:8001
 
   radish-api-supplier3:
     build:
@@ -119,6 +134,11 @@ services:
       - ganache
     environment:
       VIRTUAL_HOST: radish-api-supplier3.docker
+      MONGO_URL: mongodb://mongo-supplier3
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+    ports:
+      - 8004:8001
 
   radish-api-watch:
     build:
