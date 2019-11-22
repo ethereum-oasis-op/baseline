@@ -25,11 +25,12 @@ services:
     ports:
       - 8545:8545
 
-  zok:
-    image: kartheek14/zokrates_dev:081519
+  radish-zok:
+    build:
+      context: ./zok/
+      dockerfile: dev.Dockerfile
     volumes:
-      - ./zok/code:/home/zokrates/zok_code
-      - ./zok/output:/home/zokrates/output
+      - ./zok/code:/app/code
       
   radish34-ui:
     build:
