@@ -25,30 +25,30 @@ export const typeDef = `
   }
 `;
 
-const getSKUByID = async (id) => {
+const getSKUByID = async id => {
   const sku = await db
     .collection('skus')
     .find({ sku: id })
     .toArray();
   return sku;
-}
+};
 
 const getAllSKUs = async () => {
   const skus = await db
-  .collection('skus')
-  .find({})
-  .toArray();
+    .collection('skus')
+    .find({})
+    .toArray();
   return skus;
-}
+};
 
 export const resolvers = {
   Query: {
-    sku(parent, args, context, info) {
+    sku(args) {
       return getSKUByID(args.sku).then(res => res[0]);
     },
-    skus(parent, args, context, info) {
+    skus() {
       return getAllSKUs();
-    }
+    },
   },
   SKU: {
     // name: (root) => root.name,

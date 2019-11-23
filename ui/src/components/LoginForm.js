@@ -20,6 +20,8 @@ export default function LoginForm() {
   const { userState, user } = useContext(UserContext);
   let contents;
 
+  console.log('USERSTATE is', userState);
+
   if (error && error.message === 'MetaMask not installed') {
     contents = <NotInstalled />;
   } else if (error) {

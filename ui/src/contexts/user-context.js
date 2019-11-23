@@ -43,6 +43,14 @@ export const UserProvider = props => {
   const [register, { data: newProfile }] = useMutation(REGISTER_ORGANIZATION);
   const [checkRegistry, { data: existingProfile }] = useLazyQuery(GET_ORGANIZATION_QUERY);
 
+  console.log('USERPROVIDER', {
+    user,
+    userState,
+    newProfile,
+    existingProfile,
+    accounts,
+  });
+
   const logout = () => {
     logoutUser();
     window.location.reload();
@@ -75,6 +83,8 @@ export const UserProvider = props => {
   // Update login function if accounts change
   const login = useCallback(() => {
     setUserState('validating');
+    console.log('NEW THING', { address: accounts[0] });
+
     checkRegistry({ variables: { address: accounts[0] } });
   }, [accounts, checkRegistry]);
 

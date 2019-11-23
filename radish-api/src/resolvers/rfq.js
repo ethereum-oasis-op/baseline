@@ -18,22 +18,22 @@ const getAllRFQs = async () => {
 
 const saveRFQ = async input => {
   const count = await db.collection('rfq').count({});
-  input._id = count + 1;
-  const rfq = await db.collection('rfq').insert(input);
+  const doc = Object.assign(input, { _id: count + 1 });
+  const rfq = await db.collection('rfq').insert(doc);
   return rfq;
 };
 
 export default {
   Query: {
-    rfq(parent, args, context, info) {
+    rfq(_parent, args) {
       return getRFQById(args.id).then(res => res);
     },
-    rfqs(parent, args, context, info) {
+    rfqs() {
       return getAllRFQs();
     },
   },
   Mutation: {
-    createRFQ: async (root, args, context, info) => {
+    createRFQ: async (_parent, args) => {
       const newRFQ = await saveRFQ(args.input);
       const rfq = newRFQ.ops[0];
       pubsub.publish(NEW_RFQ, { newRFQ: rfq });
@@ -42,7 +42,7 @@ export default {
   },
   Subscription: {
     newRFQ: {
-      subscribe: (root, args, context) => {
+      subscribe: () => {
         return pubsub.asyncIterator(NEW_RFQ);
       },
     },

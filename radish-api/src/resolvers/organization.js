@@ -25,10 +25,10 @@ const saveOrganization = async input => {
 
 export default {
   Query: {
-    organization(parent, args, context, info) {
+    organization(_parent, args) {
       return getOrganizationById(args.address).then(res => res);
     },
-    organizations(parent, args, context, info) {
+    organizations() {
       return getAllOrganizations();
     },
   },
@@ -38,7 +38,7 @@ export default {
     role: root => root.role,
   },
   Mutation: {
-    registerOrganization: async (root, args, context, info) => {
+    registerOrganization: async (_root, args) => {
       // Alert API that a user is attempting to set up the Organization in the registry
       // Listen for the transaction on that contract to make sure that it goes through
       // Emits an event
@@ -49,13 +49,13 @@ export default {
       await saveOrganization(args.input);
       const organization = await getOrganizationById(args.input.address);
       delete organization._id;
-      pubsub.publish(NEW_ORG, {newOrganization: organization});
+      pubsub.publish(NEW_ORG, { newOrganization: organization });
       return { organization };
     },
   },
   Subscription: {
     newOrganization: {
-      subscribe: (root, args, context) => {
+      subscribe: () => {
         return pubsub.asyncIterator(NEW_ORG);
       },
     },

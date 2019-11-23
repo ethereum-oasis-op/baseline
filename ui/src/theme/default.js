@@ -42,7 +42,7 @@ const breakpoints = {
 };
 
 const typography = {
-  fontFamily: 'Lato',
+  fontFamily: 'Helvetica',
   useNextVariants: true,
 };
 
