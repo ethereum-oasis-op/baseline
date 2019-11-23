@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
 const UserSelection = () => {
   const classes = useStyles();
   const [data, setData] = useState({ status: 504 });
-  const apiURL = window.localStorage.getItem('api') || 'radish-api-buyer.docker';
+  const apiURL = window.localStorage.getItem('api') || 'http://radish-api-buyer.docker/graphql';
 
   const fetchHealthCheck = useCallback(async () => {
     const result = await fetch(`${apiURL}/healthcheck`);
@@ -58,10 +58,10 @@ const UserSelection = () => {
         <ErrorOutlineIcon className={classes.error} />
       )}
       <Select className={classes.userSelection} value={apiURL} onChange={handleChange}>
-        <MenuItem value="radish-api-buyer.docker">Buyer</MenuItem>
-        <MenuItem value="radish-api-supplier1.docker">Supplier1</MenuItem>
-        <MenuItem value="radish-api-supplier2.docker">Supplier2</MenuItem>
-        <MenuItem value="radish-api-supplier3.docker">Supplier3</MenuItem>
+        <MenuItem value="radish-api-buyer.docker/graphql">Buyer</MenuItem>
+        <MenuItem value="radish-api-supplier1.docker/graphql">Supplier1</MenuItem>
+        <MenuItem value="radish-api-supplier2.docker/graphql">Supplier2</MenuItem>
+        <MenuItem value="radish-api-supplier3.docker/graphql">Supplier3</MenuItem>
       </Select>
     </div>
   );
