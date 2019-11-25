@@ -99,6 +99,11 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
         return parties.length;
     }
 
+    /// @notice Function to get a single organization's details
+    function getOrg(address _address) external view returns (address, bytes32, uint, bytes memory) {
+        return (orgMap[_address].orgAddress, orgMap[_address].name, orgMap[_address].role, orgMap[_address].messagingKey);
+    }
+    
     /// @notice Function to retrieve a page of registered organizations along with details
     /// @notice start and end indices here are a convenience for pagination
     /// @param start starting index of the array where organization addresses are stored

@@ -52,6 +52,19 @@ test('Should be able to register an org and retrieve the event', async () => {
     const txReceipt = await orgRegistry.registerOrg(accounts[1], utils.formatBytes32String("Name"), 2, utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
 });
 
+test('Should be able to get a single organizations details', async () => {
+    const {
+        0: address, 
+        1: name, 
+        2: role, 
+        3: key
+    } = await orgRegistry.getOrg(accounts[1]);
+    expect(address).toBe(accounts[1]);
+    expect(name).toBe(utils.formatBytes32String('Name'));
+    expect(role.toNumber()).toBe(2);
+    expect(key).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+});
+
 test('Should be able to retrieve the incremented org count', async () => {
     const orgCount = await orgRegistry.getOrgCount();
     expect(orgCount.toNumber()).toBe(1);
