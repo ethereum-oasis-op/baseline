@@ -5,7 +5,7 @@ const SERVER_STATUS_UPDATE = 'SERVER_STATUS_UPDATE';
 export default {
   Subscription: {
     serverStatusUpdate: {
-      subscribe: (root, args, context) => {
+      subscribe: () => {
         return pubsub.asyncIterator(SERVER_STATUS_UPDATE);
       },
     },

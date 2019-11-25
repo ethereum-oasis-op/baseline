@@ -13,9 +13,9 @@ export function generate(generator, n = 1) {
 }
 
 export function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  const cmin = Math.ceil(min);
+  const cmax = Math.floor(max);
+  return Math.floor(Math.random() * (cmax - cmin + 1)) + cmin;
 }
 
 export default generate;

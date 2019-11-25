@@ -1,5 +1,4 @@
 import config from 'config';
-import fs from 'fs';
 import { merge } from 'lodash';
 import db from '../db';
 

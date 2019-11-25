@@ -5,20 +5,20 @@ const SERVER_STATE_UPDATE = 'SERVER_STATE_UPDATE';
 
 export default {
   Query: {
-    serverState: async (parent, args, context, info) => {
+    serverState: async () => {
       const state = await getServerState();
       return { state };
     },
   },
   Mutation: {
-    setState: async (root, args, context, info) => {
+    setState: async (_parent, args) => {
       const state = await setServerState(args.state);
       return { state };
     },
   },
   Subscription: {
     serverStateUpdate: {
-      subscribe: (root, args, context) => {
+      subscribe: () => {
         return pubsub.asyncIterator(SERVER_STATE_UPDATE);
       },
     },
