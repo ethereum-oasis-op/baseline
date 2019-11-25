@@ -7,7 +7,6 @@ import ListItem from '@material-ui/core/ListItem';
 import Inbox from '@material-ui/icons/Inbox';
 import Send from '@material-ui/icons/Send';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import uniqid from 'uniqid';
 import ProfileSection from './ProfileSection';
 import Link from './Link';
 
@@ -61,7 +60,7 @@ const SideNav = props => {
       <hr />
       <List className={classes.filterList}>
         {filters.map(filter => (
-          <ListItem key={uniqid()}>
+          <ListItem key={filter.url}>
             {filter.component ? (
               filter.component
             ) : (

@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { ServerStatusContext } from '../../contexts/server-status-context';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import { get } from 'lodash';
+import { ServerStatusContext } from '../../contexts/server-status-context';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -13,22 +13,19 @@ const useStyles = makeStyles(() => ({
     color: 'white',
     padding: '.5rem 1rem',
   },
-  paper: {
-  },
+  paper: {},
   balance: {
     textAlign: 'right',
   },
   balanceLabel: {
     marginRight: '1rem',
   },
-  balanceValue: {
-
-  }
+  balanceValue: {},
 }));
 
 const OnboardingStatus = () => {
   const classes = useStyles();
-  const [ status ] = useContext(ServerStatusContext);
+  const [status] = useContext(ServerStatusContext);
   const balance = get(status, 'serverStatusUpdate.balance', 342.03002);
 
   return (

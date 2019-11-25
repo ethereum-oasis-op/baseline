@@ -19,30 +19,29 @@ const App = () => {
   const { state, loading } = useContext(ServerSettingsContext);
 
   return useMemo(() => {
-    if (loading && !state) { return <Loading /> }
+    if (loading && !state) {
+      return <Loading />;
+    }
 
     if (state !== 'ready') {
-      return (
-        <Installation state={state} />
-      );
-    } else {
-      return (
-        <div>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route exact path="/who" component={Who} />
-            <Route exact path="/what" component={What} />
-            <Route exact path="/how" component={How} />
-            <Route path="/rfq" component={RFQ} />
-            <AuthenticatedRoute exact path="/partner" component={Partner} />
-            <AuthenticatedRoute exact path="/invoice" component={Invoice} />
-            <AuthenticatedRoute exact path="/purchaseorder" component={PurchaseOrder} />
-            <Route component={NoMatch} />
-          </Switch>
-        </div>
-      )
+      return <Installation state={state} />;
     }
-  }, [state, loading])
+    return (
+      <div>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/who" component={Who} />
+          <Route exact path="/what" component={What} />
+          <Route exact path="/how" component={How} />
+          <Route path="/rfq" component={RFQ} />
+          <AuthenticatedRoute exact path="/partner" component={Partner} />
+          <AuthenticatedRoute exact path="/invoice" component={Invoice} />
+          <AuthenticatedRoute exact path="/purchaseorder" component={PurchaseOrder} />
+          <Route component={NoMatch} />
+        </Switch>
+      </div>
+    );
+  }, [state, loading]);
 };
 
 const AuthenticatedRoute = ({ component: Component, ...rest }) => {

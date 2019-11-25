@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import CheckIcon from '@material-ui/icons/Check';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   root: {
     position: 'fixed',
     bottom: 0,
@@ -36,14 +36,14 @@ const UserSelection = () => {
   const [data, setData] = useState({ status: 504 });
   const apiURL = window.localStorage.getItem('api') || 'radish-api-buyer.docker';
 
-  const fetchHealthCheck = async () => {
+  const fetchHealthCheck = useCallback(async () => {
     const result = await fetch(`${apiURL}/healthcheck`);
     setData(result);
-  };
+  }, [apiURL]);
 
   useEffect(() => {
     fetchHealthCheck();
-  }, []);
+  }, [fetchHealthCheck]);
 
   const handleChange = event => {
     window.location.reload(false);

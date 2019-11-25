@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
@@ -100,7 +100,7 @@ const PartnerTable = ({ partners, myPartners, deletePartner, postPartner }) => {
       })
       .filter(ind => ind !== -1);
     setSelection(currentSelectionsIndex);
-  }, [orgList]);
+  }, [orgList, myPartners]);
 
   const handleSelection = async selectedRows => {
     // checks if is unselect, then remove partner from the list

@@ -24,7 +24,7 @@ const ConnectToRegistryForm = () => {
 
   const onSubmit = async ({ organizationRegistryAddress }) => {
     await setOrganizationRegistryAddress({ variables: { organizationRegistryAddress } });
-  }
+  };
 
   return (
     <FormWrapper>
@@ -39,7 +39,7 @@ const ConnectToRegistryForm = () => {
                 name="organizationRegistryAddress"
                 id="organizationRegistryAddress"
                 onChange={handleChange}
-                label={'Organization Registry Address'}
+                label="Organization Registry Address"
                 component={TextField}
                 fullWidth
                 placeholder="Mainnet"
