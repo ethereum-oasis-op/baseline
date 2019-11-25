@@ -1,6 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import PropTypes from 'prop-types';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Partner from './pages/Partner';
 import RFQ from './pages/RFQ';
@@ -12,7 +11,6 @@ import How from './pages/How';
 import PurchaseOrder from './pages/PurchaseOrder';
 import Installation from './installation';
 import Loading from './components/Loading';
-import { useUser } from './contexts/user-context';
 import { ServerSettingsContext } from './contexts/server-settings-context';
 
 const App = () => {
@@ -34,26 +32,14 @@ const App = () => {
           <Route exact path="/what" component={What} />
           <Route exact path="/how" component={How} />
           <Route path="/rfq" component={RFQ} />
-          <AuthenticatedRoute exact path="/partner" component={Partner} />
-          <AuthenticatedRoute exact path="/invoice" component={Invoice} />
-          <AuthenticatedRoute exact path="/purchaseorder" component={PurchaseOrder} />
+          <Route exact path="/partner" component={Partner} />
+          <Route exact path="/invoice" component={Invoice} />
+          <Route exact path="/purchaseorder" component={PurchaseOrder} />
           <Route component={NoMatch} />
         </Switch>
       </div>
     );
   }, [state, loading]);
-};
-
-const AuthenticatedRoute = ({ component: Component, ...rest }) => {
-  const { user } = useUser();
-
-  return (
-    <Route {...rest} render={props => (user ? <Component {...props} /> : <Redirect to="/" />)} />
-  );
-};
-
-AuthenticatedRoute.propTypes = {
-  component: PropTypes.elementType.isRequired,
 };
 
 export default App;
