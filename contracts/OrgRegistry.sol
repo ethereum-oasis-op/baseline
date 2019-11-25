@@ -2,6 +2,7 @@ pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
 import "./ERC165Compatible.sol";
 import "./Registrar.sol";
+import "./IOrgRegistry.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/access/Roles.sol";
 
@@ -9,7 +10,7 @@ import "openzeppelin-solidity/contracts/access/Roles.sol";
 /// Contract inherits from Ownable and ERC165Compatible
 /// Ownable contains ownership criteria of the organization registry
 /// ERC165Compatible contains interface compatibility checks
-contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
+contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @notice Leverages roles contract as imported above to assign different roles
     using Roles for Roles.Role;
 
@@ -34,7 +35,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
     /// sets the interfaces and registers the current contract with the global registry
     constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
         setInterfaces();
-        setInterfaceImplementation("OrgRegistry", address(this));
+        setInterfaceImplementation("IOrgRegistry", address(this));
     }
 
     /// @notice This is an implementation of setting interfaces for the organization
@@ -43,18 +44,15 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar {
     /// which are the parsed 4 bytes of the function signature of each of the functions
     /// in the org registry contract
     function setInterfaces() public onlyOwner returns (bool) {
-        supportedInterfaces[this.registerOrg.selector ^
-                            this.getOrgCount.selector ^
-                            this.getOrgs.selector] = true;
+        /// 0x3ece76e8 is equivalent to the bytes4 of the function selectors in IOrgRegistry
+        supportedInterfaces[0x3ece76e8] = true;
         return true;
     }
 
     /// @notice This function is a helper function to be able to get the
     /// set interface id by the setInterfaces()
     function getInterfaces() external pure returns (bytes4) {
-        return this.registerOrg.selector ^
-                            this.getOrgCount.selector ^
-                            this.getOrgs.selector;
+        return 0x3ece76e8;
     }
 
     /// @dev Since this is an inherited method from ERC165 Compatible, it returns the value of the interface id

@@ -6,11 +6,12 @@ import "./ERC1820Registry.sol";
 contract Registrar is ERC1820Registry {
 
     ERC1820Registry ERC1820REGISTRY;
-
+    
     /// @notice Constructor that takes an argument of the ERC1820RegistryAddress
     /// @dev Upon actual deployment of a static registry contract, this argument can be removed
     /// @param ERC1820RegistryAddress pre-deployed ERC1820 registry address
     constructor (address ERC1820RegistryAddress) public {
+        // Below line is to be uncommented during actual deployment since mainnet has a version of this address
         // ERC1820Registry constant ERC1820REGISTRY = ERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
         ERC1820REGISTRY = ERC1820Registry(ERC1820RegistryAddress);
     }

@@ -39,6 +39,7 @@ test('Should be able to set interfaces for compatibility checks', async () => {
 
 test('Should be able to correctly set the interface id', async () => {
     const x = await orgRegistry.getInterfaces();
+    console.log(x);
     const y = await orgRegistry.supportsInterface(x);
     expect(y).toBe(true);
 });
@@ -84,7 +85,7 @@ test('Should be able to retrieve registered org details', async () => {
 });
 
 test('Should be able to get registrar info', async () => {
-    const address = await registrar.interfaceAddr(orgRegistry.address, "OrgRegistry");
+    const address = await registrar.interfaceAddr(orgRegistry.address, "IOrgRegistry");
     expect(address).toBe(orgRegistry.address);
 });
 
