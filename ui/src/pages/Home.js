@@ -2,12 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Layout from '../components/Layout';
 import HalfColumn from '../components/HalfColumn';
-import LoginForm from '../components/LoginForm';
 
 const useStyles = makeStyles(() => ({
-  login: {
-    margin: '9rem',
-  },
   image: {
     margin: '2rem',
   },
@@ -19,9 +15,7 @@ const Home = () => {
   return (
     <Layout scroll={false}>
       <HalfColumn rightColumn={false}>
-        <div className={classes.login}>
-          <LoginForm />
-        </div>
+        <div>Homepage</div>
       </HalfColumn>
 
       <HalfColumn rightColumn>

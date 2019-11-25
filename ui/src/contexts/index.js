@@ -7,8 +7,6 @@ import { ApolloLink, split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import MetaMaskContext from './metamask-context';
-import { loadUser, UserProvider } from './user-context';
 import { ServerStatusProvider } from './server-status-context';
 import { ServerSettingsProvider } from './server-settings-context';
 import { PartnerProvider } from './partner-context';
@@ -45,20 +43,13 @@ const client = new ApolloClient({
 });
 
 function AppProviders({ children }) {
-  const user = loadUser();
-  const immediate = !!user;
-
   return (
     <ApolloProvider client={client}>
-      <MetaMaskContext.Provider immediate={immediate}>
-        <ServerSettingsProvider>
-          <ServerStatusProvider>
-            <PartnerProvider>
-              <UserProvider>{children}</UserProvider>
-            </PartnerProvider>
-          </ServerStatusProvider>
-        </ServerSettingsProvider>
-      </MetaMaskContext.Provider>
+      <ServerSettingsProvider>
+        <ServerStatusProvider>
+          <PartnerProvider>{children}</PartnerProvider>
+        </ServerStatusProvider>
+      </ServerSettingsProvider>
     </ApolloProvider>
   );
 }

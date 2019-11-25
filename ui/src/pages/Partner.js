@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
-import { UserContext } from '../contexts/user-context';
 import { PartnerContext } from '../contexts/partner-context';
 import Sidebar from '../components/Sidebar';
 import Layout from '../components/Layout';
@@ -19,17 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 const Partner = () => {
   const classes = useStyles();
-
   const { data, postPartner, deletePartner } = useContext(PartnerContext);
-  const { user } = useContext(UserContext);
-
-  const removeMyOrg = (dataList, currentUser) => {
-    const { organizations } = dataList;
-    const filteredData = organizations.filter(organization => {
-      return organization.address !== currentUser.address;
-    });
-    return filteredData;
-  };
 
   return (
     <Layout scroll>
@@ -47,7 +36,7 @@ const Partner = () => {
       </Sidebar>
       <Container fixed>
         <PartnerTable
-          partners={removeMyOrg(data, user)}
+          partners={data.organizations}
           myPartners={data.myPartners}
           postPartner={postPartner}
           deletePartner={deletePartner}
