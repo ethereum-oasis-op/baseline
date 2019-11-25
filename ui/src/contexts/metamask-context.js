@@ -8,7 +8,6 @@ export const useMetaMask = () => {
   if (context === undefined) {
     throw new Error(`useUser must be used within a UserProvider`);
   }
-  console.log('useMetamask', context);
   return context;
 };
 

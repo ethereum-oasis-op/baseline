@@ -13,12 +13,14 @@ import { ServerStatusProvider } from './server-status-context';
 import { ServerSettingsProvider } from './server-settings-context';
 import { PartnerProvider } from './partner-context';
 
+const uri = window.localStorage.getItem('api') || 'radish-api-buyer.docker/graphql';
+
 const httpLink = new HttpLink({
-  uri: 'http://radish-api-buyer.docker:8001/graphql',
+  uri: `http://${uri}`,
 });
 
 const wsLink = new WebSocketLink({
-  uri: `ws://radish-api-buyer.docker:8001/graphql`,
+  uri: `ws://${uri}`,
   options: {
     reconnect: true,
   },
