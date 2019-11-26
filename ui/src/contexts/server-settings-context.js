@@ -32,7 +32,7 @@ const GET_SERVER_SETTINGS = gql`
 `;
 
 const SET_NETWORK_ID = gql`
-  mutation SetNetworkId($networkId: Int!) {
+  mutation SetNetworkId($networkId: String!) {
     setNetworkId(networkId: $networkId) {
       networkId
       organizationRegistryAddress
