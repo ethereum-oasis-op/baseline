@@ -31,6 +31,9 @@ services:
       dockerfile: dev.Dockerfile
     volumes:
       - ./zok/code:/app/code
+      - ./zok/init.js:/app/init.js
+      - ./zok/dist:/app/dist:delegated
+    command: tail -F /dev/null
       
   radish34-ui:
     build:
