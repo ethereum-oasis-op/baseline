@@ -20,10 +20,20 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+/*
+//  - "homestead"
+//  - "rinkeby"
+//  - "ropsten"
+//  - "kovan"
+//  - "goerli"
+*/
+
 const options = [
-  { label: 'Mainnet', value: 1 },
-  { label: 'Ropsten', value: 3 },
-  { label: 'Rinkeby', value: 4 },
+  { label: 'Mainnet (Homestead)', value: 'homestead' },
+  { label: 'Rinkeby', value: 'rinkeby' },
+  { label: 'Ropsten', value: 'ropsten' },
+  { label: 'Kovan', value: 'kovan' },
+  { label: 'Goerli', value: 'goerli' },
   { label: 'Other', value: 'other' },
 ];
 
@@ -31,8 +41,13 @@ const ChooseNetworkForm = () => {
   const classes = useStyles();
   const { setNetworkId } = useContext(ServerSettingsContext);
 
-  const onSubmit = async ({ networkId }) => {
-    await setNetworkId({ variables: { networkId } });
+  const onSubmit = async ({ networkId, customRPCURL }) => {
+    const id = networkId === 'other' ? customRPCURL : networkId;
+    await setNetworkId({
+      variables: {
+        networkId: id,
+      },
+    });
   };
 
   return (
@@ -62,26 +77,13 @@ const ChooseNetworkForm = () => {
                   <Grid item xs={6}>
                     <Field
                       required
-                      name="customNetworkId"
-                      id="customNetworkId"
-                      onChange={handleChange}
-                      label="Custom Network ID"
-                      component={TextField}
-                      fullWidth
-                      placeholder="Ex: 333"
-                      margin="normal"
-                    />
-                  </Grid>
-                  <Grid item xs={6}>
-                    <Field
-                      required
                       name="customRPCURL"
                       id="customRPCURL"
                       onChange={handleChange}
                       label="Custom RPC URL"
                       component={TextField}
                       fullWidth
-                      placeholder="Ex: Placeholder"
+                      placeholder="Ex: http://ganache:8545"
                       margin="normal"
                     />
                   </Grid>

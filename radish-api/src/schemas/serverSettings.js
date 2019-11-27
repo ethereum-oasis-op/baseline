@@ -6,12 +6,12 @@ export default gql`
   }
 
   extend type Mutation {
-    setNetworkId(networkId: Int!): ServerSettings
+    setNetworkId(networkId: String!): ServerSettings
     setOrganizationRegistryAddress(organizationRegistryAddress: Address): ServerSettings
   }
 
   type ServerSettings {
-    networkId: Int
+    networkId: String
     organizationRegistryAddress: Address
   }
 `;
