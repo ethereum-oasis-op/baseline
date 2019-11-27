@@ -13,13 +13,15 @@ export default async () => {
     connection = await getProvider(config.networkId);
   }
 
-  connection.getNetwork().then(network => {
-    console.log('Connected to network:', network);
-  });
+  connection
+    .getNetwork()
+    .then(network => {
+      console.log('Connected to network:', network);
+    })
+    .catch(err => {
+      console.error(`Could not connect to RPC server at '${config.networkId}'`, err);
+      return false;
+    });
 
-  connection.getBlockNumber().then(blockNumber => {
-    console.log('Current block:', blockNumber);
-  });
-
-  return false;
+  return true;
 };
