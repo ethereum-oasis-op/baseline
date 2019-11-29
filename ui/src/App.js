@@ -1,6 +1,5 @@
 import React, { useContext, useMemo } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Home from './pages/Home';
 import Partner from './pages/Partner';
 import RFQ from './pages/RFQ';
 import Invoice from './pages/Invoice';
@@ -8,6 +7,7 @@ import NoMatch from './pages/NoMatch';
 import Who from './pages/Who';
 import What from './pages/What';
 import How from './pages/How';
+import MessagesList from './pages/MessagesList';
 import PurchaseOrder from './pages/PurchaseOrder';
 import Installation from './installation';
 import Loading from './components/Loading';
@@ -27,7 +27,7 @@ const App = () => {
     return (
       <div>
         <Switch>
-          <Route exact path="/" component={Home} />
+          <Route exact path="/" component={MessagesList} />
           <Route exact path="/who" component={Who} />
           <Route exact path="/what" component={What} />
           <Route exact path="/how" component={How} />

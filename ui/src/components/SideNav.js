@@ -14,9 +14,8 @@ const useStyles = makeStyles(() => ({
   root: {
     overflowX: 'scroll',
     maxHeight: '100%',
-    width: '25%',
+    width: '100%',
     background: '#f8fafb',
-    borderRight: '1px solid #5f747f',
     height: '100vh',
     marginTop: '10%',
   },
