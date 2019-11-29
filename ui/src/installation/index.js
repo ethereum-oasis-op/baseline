@@ -6,48 +6,15 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import OnboardingStatus from './components/OnboardingStatus';
 import AdminAccountSetupForm from './forms/AdminAccountSetupForm';
 import ChooseNetworkForm from './forms/ChooseNetworkForm';
 import ConnectToRegistryForm from './forms/ConnectToRegistryForm';
 import RegisterForm from './forms/RegisterForm';
-import SetupMetamaskForm from './forms/SetupMetamaskForm';
 import AdminAccountSetupInstructions from './instructions/AdminAccountSetupInstructions';
 import ChooseNetworkInstructions from './instructions/ChooseNetworkInstructions';
 import ConnectToRegistryInstructions from './instructions/ConnectToRegistryInstructions';
 import RegisterInstructions from './instructions/RegisterInstructions';
-import SetupMetamaskInstructions from './instructions/SetupMetamaskInstructions';
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: '4rem',
-    width: '100%',
-    height: '100vh',
-    background: 'linear-gradient(#878787, #9e9e9e)',
-    backgroundImage: 'url("/images/onboarding/bg.svg"), linear-gradient(#878787, #9e9e9e)',
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  wrapper: {
-    background: 'white',
-    height: '100%',
-    position: 'relative',
-    paddingTop: '3rem',
-    paddingLeft: '2rem',
-    overflowX: 'scroll',
-  },
-  paper: {
-    padding: theme.spacing(2),
-  },
-  buttonChangeActive: {
-    padding: '.5rem',
-    background: 'white',
-    pointer: 'pointer',
-  },
-}));
+import InstallationLayout from './components/InstallationLayout';
 
 const steps = [
   {
@@ -55,11 +22,11 @@ const steps = [
     content: <ChooseNetworkForm />,
     instructions: <ChooseNetworkInstructions />,
   },
-  {
-    label: 'Setup Metamask',
-    content: <SetupMetamaskForm />,
-    instructions: <SetupMetamaskInstructions />,
-  },
+  // {
+  //   label: 'Setup Metamask',
+  //   content: <SetupMetamaskForm />,
+  //   instructions: <SetupMetamaskInstructions />,
+  // },
   {
     label: 'Connect to Registry',
     content: <ConnectToRegistryForm />,
@@ -95,6 +62,50 @@ const getStateId = state => {
   }
 };
 
+const useStyles = makeStyles(theme => ({
+  instructions: {
+    background: '#F4F6F8',
+    width: '500px',
+    borderRight: '2px solid #61737f',
+    padding: theme.spacing(8),
+  },
+  content: {
+    padding: theme.spacing(4),
+    width: '100%',
+    minWidth: '500px',
+    background: 'white',
+    '& .MuiStepContent-root': {
+      borderColor: 'transparent',
+    },
+    '& .MuiStepConnector-line': {
+      borderColor: 'transparent',
+    },
+    '& .MuiStepLabel-root.Mui-disabled': {
+      '& .MuiStepIcon-root': {
+        color: '#DFE3E8',
+      },
+    },
+    '& .MuiStepIcon-root': {
+      color: '#444F59',
+      transition: 'color .5s ease',
+      width: '48px',
+      '&.MuiStepIcon-completed': {
+        color: '#28D295',
+      },
+    },
+    '& .MuiStepLabel-labelContainer': {
+      marginLeft: theme.spacing(2),
+    },
+    '& .MuiStepLabel-completed': {
+      fontSize: '1rem',
+    },
+    '& .MuiStepLabel-active': {
+      fontSize: '1.5rem',
+      fontWeight: 'bold',
+    },
+  },
+}));
+
 const Installation = ({ state }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(getStateId(state));
@@ -104,36 +115,31 @@ const Installation = ({ state }) => {
   }, [state]);
 
   return (
-    <div className={classes.root}>
-      <Paper elevation={3} className={classes.wrapper} square>
-        <OnboardingStatus />
-        <Grid container spacing={3}>
-          <Grid item xs={4}>
-            <Paper className={classes.paper}>{steps[activeStep].instructions}</Paper>
-          </Grid>
-          <Grid item xs={8}>
-            <Stepper activeStep={activeStep} orientation="vertical">
-              {steps.map(({ label, content }) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                  <StepContent className={classes.stepContent}>{content}</StepContent>
-                </Step>
-              ))}
-            </Stepper>
-          </Grid>
-        </Grid>
-      </Paper>
-      {steps.map((step, index) => {
-        const onClick = () => {
-          setActiveStep(index);
-        };
-        return (
-          <Button onClick={onClick} className={classes.buttonChangeActive}>
-            {index + 1}
-          </Button>
-        );
-      })}
-    </div>
+    <InstallationLayout>
+      <div className={classes.instructions}>{steps[activeStep].instructions}</div>
+
+      <div className={classes.content}>
+        <Stepper activeStep={activeStep} orientation="vertical">
+          {steps.map(({ label, content }) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+              <StepContent className={classes.stepContent}>{content}</StepContent>
+            </Step>
+          ))}
+        </Stepper>
+
+        {steps.map((step, index) => {
+          const onClick = () => {
+            setActiveStep(index);
+          };
+          return (
+            <Button onClick={onClick} className={classes.buttonChangeActive}>
+              {index + 1}
+            </Button>
+          );
+        })}
+      </div>
+    </InstallationLayout>
   );
 };
 
