@@ -5,24 +5,20 @@ import { NEW_MESSAGE, GET_ALL_MESSAGES } from '../graphql/messages';
 
 const MessageContext = React.createContext([{}, () => {}]);
 
-let listener;
-
 const MessageProvider = ({ children }) => {
   const { subscribeToMore, loading, data, error } = useQuery(GET_ALL_MESSAGES);
   const messages = data ? data.messages : [];
 
   useEffect(() => {
-    if (!listener) {
-      listener = subscribeToMore({
-        document: NEW_MESSAGE,
-        variables: {},
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          const { newMessage } = subscriptionData.data;
-          return { messages: [newMessage, ...prev.messages] };
-        },
-      });
-    }
+    subscribeToMore({
+      document: NEW_MESSAGE,
+      variables: {},
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const { newMessage } = subscriptionData.data;
+        return { messages: [newMessage, ...prev.messages] };
+      },
+    });
   }, [subscribeToMore]);
 
   return (

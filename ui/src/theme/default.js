@@ -122,10 +122,6 @@ export default {
         fontWeight: 'normal',
         color: '#fff',
       },
-      body: {
-        fontSize: '.9rem',
-        lineHeight: '1.5',
-      },
       body1: {
         fontSize: '.9rem',
         lineHeight: '1.5',

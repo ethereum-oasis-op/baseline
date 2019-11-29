@@ -1,83 +1,93 @@
 
 [
   {
-    "new": true,
+    "resolved": true,
     "category": "msa",
     "subject": "100,000 Gorilla Glass Screens very long and unneccessary label name that should eventually turn into an ellipsis or something like that",
     "from": "Jessica Lin",
-    "status": "Requires Approval",
-    "lastModified": 123
+    "statusText": "Requires Approval",
+    "lastModified": 123,
+    "status": "incoming"
   },
   {
-    "new": true,
+    "resolved": true,
     "category": "msa",
     "subject": "3D Microprocessor",
     "from": "Domenic Frost",
-    "status": "Invoice Delivered",
-    "lastModified": 123
+    "statusText": "Invoice Delivered",
+    "lastModified": 123,
+    "status": "outgoing"
   },
   {
-    "new": false,
+    "resolved": false,
     "category": "msa",
     "subject": "IS-136",
     "from": "Fiona Smith",
-    "status": "Received",
-    "lastModified": 123
+    "statusText": "Received",
+    "lastModified": 123,
+    "status": "outgoing"
   },
   {
-    "new": false,
+    "resolved": false,
     "category": "msa",
     "subject": "100,000 Gorilla Glass Screens",
     "from": "Patrick broadstreet",
-    "status": "Accepted",
-    "lastModified": 123
+    "statusText": "Accepted",
+    "lastModified": 123,
+    "status": "incoming"
   },
   {
-    "new": false,
+    "resolved": false,
     "category": "msa",
     "subject": "Magna Int'l",
     "from": "Fiona Smith",
-    "status": "Notification",
-    "lastModified": 123
+    "statusText": "Notification",
+    "lastModified": 123,
+    "status": "incoming"
   },
   {
-    "new": true,
-    "category": "procurementRequest",
+    "resolved": true,
+    "category": "procurementrequest",
     "subject": "100,000 Gorilla Glass Screens very long and unneccessary label name that should eventually turn into an ellipsis or something like that",
     "from": "Jessica Lin",
-    "status": "Pending",
-    "lastModified": 123
+    "statusText": "Pending",
+    "lastModified": 123,
+    "status": "outgoing"
   },
   {
-    "new": true,
+    "resolved": true,
     "category": "invoice",
     "subject": "3D Microprocessor",
     "from": "Domenic Frost",
-    "status": "Invoice Delivered",
-    "lastModified": 123
+    "statusText": "Invoice Delivered",
+    "lastModified": 123,
+    "status": "incoming"
   },
   {
-    "new": false,
+    "resolved": false,
     "category": "rfq",
     "subject": "IS-136",
     "from": "Fiona Smith",
-    "status": "Received",
-    "lastModified": 123
+    "statusText": "Received",
+    "lastModified": 123,
+    "status": "outgoing"
   },
   {
-    "new": false,
-    "category": "purchaseOrder",
+    "resolved": false,
+    "category": "purchaseorder",
     "subject": "100,000 Gorilla Glass Screens",
     "from": "Patrick broadstreet",
-    "status": "Accepted",
-    "lastModified": 123
+    "statusText": "Accepted",
+    "lastModified": 123,
+    "status": "incoming"
   },
   {
-    "new": false,
+    "resolved": false,
     "category": "msa",
     "subject": "Magna Int'l",
     "from": "Fiona Smith",
-    "status": "Notification",
-    "lastModified": 123
+    "statusText": "Notification",
+    "lastModified": 123,
+    "status": "incoming"
   }
 ]

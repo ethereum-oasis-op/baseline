@@ -16,6 +16,30 @@ const getAllMessages = async () => {
   return messages;
 };
 
+const getMessagesByCategory = async category => {
+  const messages = await db
+    .collection('messages')
+    .find({ category })
+    .toArray();
+  return messages;
+};
+
+const getInbox = async () => {
+  const messages = await db
+    .collection('messages')
+    .find({ status: 'incoming' })
+    .toArray();
+  return messages;
+};
+
+const getOutbox = async () => {
+  const messages = await db
+    .collection('messages')
+    .find({ status: 'outgoing' })
+    .toArray();
+  return messages;
+};
+
 const saveMessage = async input => {
   console.log('Saving the message');
   const count = await db.collection('messages').count({});
@@ -31,6 +55,23 @@ export default {
     },
     messages() {
       return getAllMessages();
+    },
+    getMessagesByCategory(_parent, args) {
+      return getMessagesByCategory(args.category).then(res => res);
+    },
+    getInbox() {
+      return getInbox();
+    },
+    getOutbox() {
+      return getOutbox();
+    },
+    getMessageCount() {
+      return {
+        msa: 5,
+        rfq: 2,
+        invoice: 3,
+        purchaseorder: 4,
+      };
     },
   },
   Mutation: {
