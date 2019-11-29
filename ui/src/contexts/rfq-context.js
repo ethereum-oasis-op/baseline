@@ -5,20 +5,24 @@ import { GET_RFQ_UPDATE, GET_ALL_RFQS } from '../graphql/rfq';
 
 const RFQContext = React.createContext([{}, () => {}]);
 
+let listener;
+
 const RFQProvider = ({ children }) => {
   const { subscribeToMore, loading, data, error } = useQuery(GET_ALL_RFQS);
   const rfqs = data ? data.rfqs : [];
 
   useEffect(() => {
-    subscribeToMore({
-      document: GET_RFQ_UPDATE,
-      variables: {},
-      updateQuery: (prev, { subscriptionData }) => {
-        if (!subscriptionData.data) return prev;
-        const { newRFQ } = subscriptionData.data;
-        return { ...prev, rfqs: [newRFQ, ...prev.rfqs] };
-      },
-    });
+    if (!listener) {
+      listener = subscribeToMore({
+        document: GET_RFQ_UPDATE,
+        variables: {},
+        updateQuery: (prev, { subscriptionData }) => {
+          if (!subscriptionData.data) return prev;
+          const { newRFQ } = subscriptionData.data;
+          return { ...prev, rfqs: [newRFQ, ...prev.rfqs] };
+        },
+      });
+    }
   }, []);
 
   return <RFQContext.Provider value={{ rfqs, loading, error }}>{children}</RFQContext.Provider>;

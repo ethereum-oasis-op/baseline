@@ -10,6 +10,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ServerStatusProvider } from './server-status-context';
 import { ServerSettingsProvider } from './server-settings-context';
 import { PartnerProvider } from './partner-context';
+import { MessageProvider } from './message-context';
 
 const uri = window.localStorage.getItem('api') || 'radish-api-buyer.docker/graphql';
 
@@ -45,11 +46,13 @@ const client = new ApolloClient({
 function AppProviders({ children }) {
   return (
     <ApolloProvider client={client}>
-      <ServerSettingsProvider>
-        <ServerStatusProvider>
-          <PartnerProvider>{children}</PartnerProvider>
-        </ServerStatusProvider>
-      </ServerSettingsProvider>
+      <MessageProvider>
+        <ServerSettingsProvider>
+          <ServerStatusProvider>
+            <PartnerProvider>{children}</PartnerProvider>
+          </ServerStatusProvider>
+        </ServerSettingsProvider>
+      </MessageProvider>
     </ApolloProvider>
   );
 }

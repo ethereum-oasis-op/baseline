@@ -16,6 +16,8 @@ import PartnerSchema from './schemas/partner';
 import PartnerResolver from './resolvers/partner';
 import RFQSchema from './schemas/rfq';
 import RFQResolver from './resolvers/rfq';
+import MessageSchema from './schemas/message';
+import MessageResolver from './resolvers/message';
 import healthcheck from './install/healthcheck';
 
 const PORT = process.env.PORT || 8001;
@@ -28,6 +30,7 @@ const typeDefs = [
   ServerSettingsSchema,
   RFQSchema,
   PartnerSchema,
+  MessageSchema,
 ];
 const resolvers = [
   OrganizationResolver,
@@ -37,6 +40,7 @@ const resolvers = [
   ServerSettingsResolver,
   RFQResolver,
   PartnerResolver,
+  MessageResolver,
 ];
 
 export default async function startServer() {
