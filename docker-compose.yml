@@ -29,11 +29,28 @@ services:
     build:
       context: ./zok/
       dockerfile: dev.Dockerfile
+    command: npm run dev
     volumes:
-      - ./zok/code:/app/code
-      - ./zok/init.js:/app/init.js
+      - ./zok/code:/app/code:delegated
+      - ./zok/src:/app/src:delegated
       - ./zok/dist:/app/dist:delegated
-    command: tail -F /dev/null
+      - ./zok/output:/app/output:delegated
+    environment:
+      PROVING_SCHEME: 'g16'
+      VIRTUAL_HOST: radish-zok.docker
+    depends_on:
+      - radish-zok-watch
+    ports:
+      - 8080:80
+
+  radish-zok-watch:
+    build:
+      context: ./zok/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./zok/src:/app/src:delegated
+      - ./zok/dist:/app/dist:delegated
+    command: npm run build:watch
       
   radish34-ui:
     build:
