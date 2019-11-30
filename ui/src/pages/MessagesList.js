@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
-import { groupBy } from 'lodash';
+import { groupBy, filter } from 'lodash';
 import Layout from '../components/Layout';
 import Sidebar from '../components/Sidebar';
 import PageWrapper from '../components/PageWrapper';
@@ -37,10 +37,10 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
   },
   row: {
-    background: 'rgba(242,245,245,0.8)',
+    background: 'white',
   },
-  new: {
-    // background: 'white',
+  resolved: {
+    background: 'rgba(242,245,245,0.8)',
   },
   categoryColumn: {
     width: '210px',
@@ -126,9 +126,9 @@ const MessagesList = ({ match }) => {
 
   if (category === 'inbox' || category === 'outbox') {
     if (category === 'inbox') {
-      rows = mailboxes.incoming;
+      rows = filter(mailboxes.incoming, ['resolved', false]);
     } else if (category === 'outbox') {
-      rows = mailboxes.outgoing;
+      rows = filter(mailboxes.outgoing, ['resolved', false]);
     }
   }
 
@@ -175,13 +175,19 @@ const MessagesList = ({ match }) => {
         [classes.bold]: (value, { row }) => row.new,
       },
     },
+    {
+      name: 'resolved',
+      label: 'Resolved',
+      align: 'right',
+      formatter: value => (value ? 'yes' : 'no'),
+    },
   ];
 
   const options = {
     key: '_id',
     rowClasses: {
       [classes.row]: true,
-      [classes.new]: (value, { row }) => row.new,
+      [classes.resolved]: (value, { row }) => row.resolved,
     },
   };
 

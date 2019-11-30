@@ -1,5 +1,6 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import TableRow from '@material-ui/core/TableRow';
@@ -13,17 +14,25 @@ const useStyles = makeStyles(() => ({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
+  row: {
+    cursor: 'pointer',
+  },
 }));
 
 const Row = props => {
   const { columns, row, rows, options } = props;
   const classes = useStyles();
+  const history = useHistory();
   const key = row[options.key];
   const rowClassnames = checkClasses(options.rowClasses, { row });
   const rowClasses = classNames(classes.row, rowClassnames);
 
+  const handleClick = () => {
+    history.push(`/${row.category}/${row._id}`); // eslint-disable-line no-underscore-dangle
+  };
+
   return (
-    <TableRow className={rowClasses}>
+    <TableRow className={rowClasses} onClick={handleClick}>
       {columns.map(column => {
         const data = { column, columns, row, rows, options };
         const columnClassnames = checkClasses(column.columnClasses, data);
@@ -57,7 +66,10 @@ const Row = props => {
 };
 
 Row.propTypes = {
-  row: PropTypes.shape({}).isRequired,
+  row: PropTypes.shape({
+    _id: PropTypes.string, // eslint-disable-line no-underscore-dangle
+    category: PropTypes.string,
+  }).isRequired,
   rows: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   options: PropTypes.shape({
@@ -65,4 +77,5 @@ Row.propTypes = {
     rowClasses: PropTypes.shape({}),
   }).isRequired,
 };
+
 export default Row;

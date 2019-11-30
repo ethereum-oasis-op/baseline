@@ -11,7 +11,7 @@ import ReceiptIcon from '@material-ui/icons/Receipt';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { groupBy } from 'lodash';
+import { groupBy, filter } from 'lodash';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -79,17 +79,19 @@ const categories = [
   { label: 'Invoices', key: 'invoice', url: '/messages/invoice', icon: LibraryBooksIcon },
   { label: 'RFQs', key: 'rfq', url: '/messages/rfq', icon: AssignmentIcon },
   { label: 'MSA', key: 'msa', url: '/messages/msa', icon: DescriptionIcon },
-  // { label: "Procurement Requests", key: "procurementRequest", url: "/messages/procurementrequest" },
+  // { label: "Procurement Requests", key: "procurementRequest", url: "/messages/procurementrequest", icon: LibraryBooksIcon },
 ];
 
 const Category = ({ icon: Icon, label, category = [], url }) => {
   const classes = useStyles();
+  const unresolved = filter(category, ['resolved', false]);
+
   return (
     <ListItem className={classes.linkItem}>
       <NavLink exact to={url} className={classes.link} activeClassName={classes.selected}>
         <Icon className={classes.icon} />
         <div className={classes.label}>{label}</div>
-        <div className={classes.count}>{category.length}</div>
+        <div className={classes.count}>{unresolved.length ? unresolved.length : null}</div>
       </NavLink>
     </ListItem>
   );
