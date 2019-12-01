@@ -3,12 +3,22 @@ import gql from 'graphql-tag';
 export const MESSAGE_ATTRIBUTES = gql`
   fragment MESSAGE_ATTRIBUTES on Message {
     _id
-    new
+    resolved
     category
     subject
     from
-    status
+    statusText
     lastModified
+    status
+  }
+`;
+
+export const CATEGORIES = gql`
+  fragment CATEGORIES on MessageCount {
+    msa
+    invoice
+    purchaseorder
+    rfq
   }
 `;
 
@@ -28,4 +38,13 @@ export const GET_ALL_MESSAGES = gql`
     }
   }
   ${MESSAGE_ATTRIBUTES}
+`;
+
+export const GET_MESSAGE_COUNT = gql`
+  query getMessageCount{
+    getMessageCount {
+      ...CATEGORIES
+    }
+  }
+  ${CATEGORIES}
 `;

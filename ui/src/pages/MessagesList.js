@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
+import { groupBy, filter } from 'lodash';
 import Layout from '../components/Layout';
 import Sidebar from '../components/Sidebar';
 import PageWrapper from '../components/PageWrapper';
 import SideNav from '../components/SideNav';
-import { MessageProvider } from '../contexts/message-context';
-import MessagesTable from '../components/MessagesTable';
+import { MessageContext } from '../contexts/message-context';
+import MessagesTable from '../components/MessageList/MessagesTable';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -36,10 +37,10 @@ const useStyles = makeStyles(() => ({
     fontWeight: 'bold',
   },
   row: {
-    background: 'rgba(242,245,245,0.8)',
-  },
-  new: {
     background: 'white',
+  },
+  resolved: {
+    background: 'rgba(242,245,245,0.8)',
   },
   categoryColumn: {
     width: '210px',
@@ -54,13 +55,6 @@ const useStyles = makeStyles(() => ({
     width: '200px',
   },
 }));
-
-const navItems = [
-  {
-    url: '/blah',
-    label: 'Blah',
-  },
-];
 
 const chipStyles = makeStyles(() => ({
   default: {
@@ -88,15 +82,15 @@ const ChipMaker = ({ value, row }) => {
 
   const labels = {
     msa: 'MSA',
-    procurementRequest: 'PRO',
+    procurementrequest: 'PRO',
     invoice: 'INV',
     rfq: 'RFQ',
-    purchaseOrder: 'PO',
+    purchaseorder: 'PO',
   };
 
   return (
     <Chip
-      variant="outline"
+      variant="outlined"
       size="small"
       className={classes[value]}
       label={`${labels[value]}: ${row.status}`}
@@ -111,11 +105,32 @@ ChipMaker.propTypes = {
     PropTypes.node,
     PropTypes.element,
   ]).isRequired,
-  row: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  row: PropTypes.shape({
+    status: PropTypes.string,
+  }).isRequired,
 };
 
-const MessagesList = () => {
+const categories = ['msa', 'purchaseorder', 'invoice', 'rfq', 'inbox', 'outbox'];
+
+const MessagesList = ({ match }) => {
   const classes = useStyles();
+  const { messages } = useContext(MessageContext);
+  const { category } = match.params || null;
+  const groups = groupBy(messages, 'category');
+  const mailboxes = groupBy(messages, 'status');
+  let rows = [];
+
+  if (categories.includes(category)) {
+    rows = groups[category];
+  }
+
+  if (category === 'inbox' || category === 'outbox') {
+    if (category === 'inbox') {
+      rows = filter(mailboxes.incoming, ['resolved', false]);
+    } else if (category === 'outbox') {
+      rows = filter(mailboxes.outgoing, ['resolved', false]);
+    }
+  }
 
   const columns = [
     {
@@ -160,28 +175,38 @@ const MessagesList = () => {
         [classes.bold]: (value, { row }) => row.new,
       },
     },
+    {
+      name: 'resolved',
+      label: 'Resolved',
+      align: 'right',
+      formatter: value => (value ? 'yes' : 'no'),
+    },
   ];
 
   const options = {
     key: '_id',
     rowClasses: {
       [classes.row]: true,
-      [classes.new]: (value, { row }) => row.new,
+      [classes.resolved]: (value, { row }) => row.resolved,
     },
   };
 
   return (
-    <MessageProvider>
-      <Layout>
-        <Sidebar>
-          <SideNav filters={navItems} />
-        </Sidebar>
-        <PageWrapper>
-          <MessagesTable columns={columns} options={options} />
-        </PageWrapper>
-      </Layout>
-    </MessageProvider>
+    <Layout>
+      <Sidebar>
+        <SideNav messages={messages} />
+      </Sidebar>
+      <PageWrapper>
+        <MessagesTable columns={columns} options={options} messages={rows} />
+      </PageWrapper>
+    </Layout>
   );
+};
+
+MessagesList.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({}).isRequired,
+  }).isRequired,
 };
 
 export default MessagesList;
