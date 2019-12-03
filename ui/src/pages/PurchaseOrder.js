@@ -1,13 +1,13 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import Layout from '../components/Layout';
+import MessageLayout from '../components/MessageLayout';
+import PurchaseOrderDetail from './PurchaseOrderDetail';
 
-const PurchaseOrderList = () => (
-  <Layout>
-    <Container fixed>
-      <h1>PurchaseOrder List</h1>
-    </Container>
-  </Layout>
-);
+const PurchaseOrder = () => {
+  return (
+    <MessageLayout selected="purchaseorder">
+      <PurchaseOrderDetail />
+    </MessageLayout>
+  );
+};
 
-export default PurchaseOrderList;
+export default PurchaseOrder;

@@ -1,10 +1,10 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 
-const RFQDetail = () => (
+const PurchaseOrderDetail = () => (
   <Container>
-    <h1>RFQDetail</h1>
+    <h1>PurchaseOrderDetail</h1>
   </Container>
 );
 
-export default RFQDetail;
+export default PurchaseOrderDetail;
