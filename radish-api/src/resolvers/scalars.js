@@ -14,23 +14,6 @@ const Address = new GraphQLScalarType({
   },
 });
 
-const roles = ['buyer', 'supplier', 'carrier'];
-const Role = new GraphQLScalarType({
-  name: 'Role',
-  description: 'A user role',
-  serialize: String,
-  parseValue: input => {
-    return roles.includes(input.toLowerCase()) ? input : undefined;
-  },
-  parseLiteral: ast => {
-    if (ast.kind !== Kind.STRING) {
-      return undefined;
-    }
-    return String(ast.value);
-  },
-});
-
 export default {
   Address,
-  Role,
 };

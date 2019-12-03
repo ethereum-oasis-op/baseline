@@ -18,3 +18,7 @@ export const checkClasses = (classes, props = {}) => {
   }
   return classnames;
 };
+
+export default {
+  checkClasses,
+};

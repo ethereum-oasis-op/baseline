@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
 
 const MessagesTable = props => {
   const classes = useStyles();
-  const { columns, options, messages } = props;
+  const { columns, options, messages = [] } = props;
 
   if (!messages.length) {
     return <NoMessages />;

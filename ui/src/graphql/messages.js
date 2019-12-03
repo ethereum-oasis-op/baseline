@@ -41,7 +41,7 @@ export const GET_ALL_MESSAGES = gql`
 `;
 
 export const GET_MESSAGE_COUNT = gql`
-  query getMessageCount{
+  query getMessageCount {
     getMessageCount {
       ...CATEGORIES
     }
