@@ -82,13 +82,19 @@ const categories = [
   // { label: "Procurement Requests", key: "procurementRequest", url: "/messages/procurementrequest", icon: LibraryBooksIcon },
 ];
 
-const Category = ({ icon: Icon, label, category = [], url }) => {
+const Category = ({ icon: Icon, label, category = [], url, selected }) => {
   const classes = useStyles();
   const unresolved = filter(category, ['resolved', false]);
 
   return (
     <ListItem className={classes.linkItem}>
-      <NavLink exact to={url} className={classes.link} activeClassName={classes.selected}>
+      <NavLink
+        exact
+        to={url}
+        className={classes.link}
+        activeClassName={classes.selected}
+        isActive={() => selected}
+      >
         <Icon className={classes.icon} />
         <div className={classes.label}>{label}</div>
         <div className={classes.count}>{unresolved.length ? unresolved.length : null}</div>
@@ -98,13 +104,18 @@ const Category = ({ icon: Icon, label, category = [], url }) => {
 };
 
 Category.propTypes = {
+  selected: PropTypes.bool,
   icon: PropTypes.element.isRequired,
   label: PropTypes.string.isRequired,
   category: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
 };
 
-const SideNav = ({ messages }) => {
+Category.defaultProps = {
+  selected: false,
+};
+
+const SideNav = ({ messages, selected }) => {
   const classes = useStyles();
   const groups = groupBy(messages, 'category');
   const results = groupBy(messages, 'status');
@@ -120,7 +131,13 @@ const SideNav = ({ messages }) => {
 
       <List className={classes.filterList}>
         {categories.map(({ label, key, url, icon }) => (
-          <Category icon={icon} label={label} category={groups[key]} url={url} />
+          <Category
+            icon={icon}
+            label={label}
+            category={groups[key]}
+            url={url}
+            selected={key === selected}
+          />
         ))}
       </List>
     </div>
@@ -128,7 +145,12 @@ const SideNav = ({ messages }) => {
 };
 
 SideNav.propTypes = {
+  selected: PropTypes.string,
   messages: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+};
+
+SideNav.defaultProps = {
+  selected: '',
 };
 
 export default SideNav;

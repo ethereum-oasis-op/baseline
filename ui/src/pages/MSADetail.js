@@ -1,10 +1,10 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 
-const RFQDetail = () => (
+const MSADetail = () => (
   <Container>
-    <h1>RFQDetail</h1>
+    <h1>MSA Detail</h1>
   </Container>
 );
 
-export default RFQDetail;
+export default MSADetail;
