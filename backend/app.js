@@ -43,33 +43,39 @@ const typeDefs = gql`
     messageType: String
     recipientId: String
     senderId: String
-    ttl: Number
+    ttl: String
     topic: String
     payload: String
-    pow: Number
+    pow: String
     ack_rcvd: Boolean
     timestamp: String
   }
 
-  type Entanglement {
-    _id: ID
-    blockchain: {
-      contractAddress: String
-      setMethodId: String
-      getMethodId: String
-    }
-    created: String
-    databaseLocation: {
+  type Participant {
+    messengerId: String
+    isSelf: Boolean
+    acceptedRequest: Boolean
+    dataHash: String
+    lastUpdated: String
+  }
+
+  type Blockchain {
+    contractAddress: String
+    setMethodId: String
+    getMethodId: String
+  }
+
+  type DatabaseLocation {
       collection: String
       objectId: String
-    }
-    participants: [
-      messengerId: String
-      isSelf: Boolean
-      acceptedRequest: Boolean
-      dataHash: String
-      lastUpdated: String
-    ]
+  }
+
+  type Entanglement {
+    _id: ID
+    blockchain: Blockchain
+    created: String
+    databaseLocation: DatabaseLocation
+    participants: [Participant]
   }
 `;
 
@@ -77,6 +83,7 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     hello: () => 'world!',
+    identities: () => 'world!',
   },
 };
 

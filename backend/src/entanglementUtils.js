@@ -2,7 +2,7 @@ const hash = require('object-hash');
 const randomstring = require("randomstring");
 const Identity = require('./mongoose_models/Identity');
 const Entanglement = require('./mongoose_models/Entanglement');
-const rfqUtils = customRequire('src/RFQUtils');
+const rfpUtils = customRequire('src/RFPUtils');
 
 class EntanglementUtils {
   constructor(messengerInstance) {
@@ -139,7 +139,6 @@ class EntanglementUtils {
       return;
     }
     let time = await Math.floor(Date.now() / 1000);
-    console.log('docId:', docId);
     let dataHash = await this.calculateHash(collectionName, docId);
     let myMessengerId = entanglementDoc.participants[index].messengerId;
     entanglementDoc.participants[index].dataHash = dataHash;
@@ -224,8 +223,8 @@ class EntanglementUtils {
   async calculateHash(collectionName, docId) {
     let entangledObject;
     switch (collectionName) {
-      case 'RFQs':
-        entangledObject = await rfqUtils.model.findOne({ _id: docId });
+      case 'RFPs':
+        entangledObject = await rfpUtils.model.findOne({ _id: docId });
         break;
       default:
         console.error('Did not find requested database collection for entanglement:', collectionName);
@@ -233,6 +232,7 @@ class EntanglementUtils {
     // Apparently there are hidden fields returned by Mongo (?) so have to specify 'entangledObject._doc'
     // Otherwise hash() throws an error
     delete entangledObject._doc.lastUpdated;  // Do not include lastUpdated timestamp in hash bc it will always vary between participants
+    delete entangledObject._doc._id;  // Do not include lastUpdated timestamp in hash bc it will always vary between participants
     let result = await hash(entangledObject._doc, { algorithm: 'sha256' });
     return result;
   }

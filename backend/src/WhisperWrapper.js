@@ -3,7 +3,7 @@ const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
 const Entanglement = require('./mongoose_models/Entanglement');
 const utils = require("./generalUtils");
-const rfqUtils = customRequire('src/RFQUtils');
+const rfpUtils = customRequire('src/RFPUtils');
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";
@@ -274,8 +274,8 @@ class WhisperWrapper {
             this.entangleUtils.updateEntanglement(data.sig, messageObj);
             // TODO: check smart contract for updated hashes
             break;
-          case 'rfq_create':
-            await rfqUtils.createRFQ(messageObj);
+          case 'rfp_create':
+            await rfpUtils.createRFP(messageObj);
             break;
           default:
             console.log('Did not recognize message object type: ', messageObj);
