@@ -1,13 +1,13 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import Layout from '../components/Layout';
+import MessageLayout from '../components/MessageLayout';
+import InvoiceDetail from './InvoiceDetail';
 
-const InvoiceList = () => (
-  <Layout>
-    <Container fixed>
-      <h1>Invoice List</h1>
-    </Container>
-  </Layout>
-);
+const Invoice = () => {
+  return (
+    <MessageLayout selected="invoice">
+      <InvoiceDetail />
+    </MessageLayout>
+  );
+};
 
-export default InvoiceList;
+export default Invoice;

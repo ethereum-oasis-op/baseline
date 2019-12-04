@@ -50,6 +50,11 @@ export default {
   palette: { primary, secondary, client },
   breakpoints,
   overrides: {
+    MuiInput: {
+      underline: {
+        color: '#007BFF',
+      },
+    },
     MuiButton: {
       root: {
         textTransform: 'none',
@@ -116,10 +121,6 @@ export default {
         fontSize: '.9rem',
         fontWeight: 'normal',
         color: '#fff',
-      },
-      body: {
-        fontSize: '.9rem',
-        lineHeight: '1.5',
       },
       body1: {
         fontSize: '.9rem',

@@ -1,24 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ApolloProvider } from 'react-apollo';
-import ApolloClient from 'apollo-boost';
-import MetaMaskContext from './metamask-context';
-import { loadUser, UserProvider } from './user-context';
+import { ApolloClient } from 'apollo-client';
+import { getMainDefinition } from 'apollo-utilities';
+import { ApolloLink, split } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ServerStatusProvider } from './server-status-context';
+import { ServerSettingsProvider } from './server-settings-context';
+import { PartnerProvider } from './partner-context';
+import { MessageProvider } from './message-context';
 
-// TODO: Replace with config
+const uri = window.localStorage.getItem('api') || 'radish-api-buyer.docker/graphql';
+
+const httpLink = new HttpLink({
+  uri: `http://${uri}`,
+});
+
+const wsLink = new WebSocketLink({
+  uri: `ws://${uri}`,
+  options: {
+    reconnect: true,
+  },
+});
+
+const terminatingLink = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === 'OperationDefinition' && operation === 'subscription';
+  },
+  wsLink,
+  httpLink,
+);
+
+const link = ApolloLink.from([terminatingLink]);
+
+const cache = new InMemoryCache();
+
 const client = new ApolloClient({
-  uri: 'http://radish-api.docker/',
- });
+  link,
+  cache,
+});
 
 function AppProviders({ children }) {
-  const user = loadUser();
-  const immediate = !!user;
-
   return (
     <ApolloProvider client={client}>
-      <MetaMaskContext.Provider immediate={immediate}>
-        <UserProvider>{children}</UserProvider>
-      </MetaMaskContext.Provider>
+      <MessageProvider>
+        <ServerSettingsProvider>
+          <ServerStatusProvider>
+            <PartnerProvider>{children}</PartnerProvider>
+          </ServerStatusProvider>
+        </ServerSettingsProvider>
+      </MessageProvider>
     </ApolloProvider>
   );
 }

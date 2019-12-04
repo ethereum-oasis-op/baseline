@@ -28,13 +28,6 @@ providerEngine.addProvider(coverageSubprovider);
 providerUtils.startProviderEngine(providerEngine);
 const rpcProvider = new ethers.providers.Web3Provider(providerEngine);
 walletWithProvider = wallet.connect(rpcProvider);
-// ALTERNATELY BELOW CAN BE USED AS WELL
-// --->> const rpcProvider = new ethers.providers.JsonRpcProvider('http://ganache:8545');
-// --->> console.log(rpcProvider);
-// --->> walletWithProvider = wallet.connect(rpcProvider);
-// --->> rpcProvider.listAccounts().then((accounts) => { console.log(accounts); });
-// --->> const w = rpcProvider.getSigner(0);
-// --->> console.log(w.getAddress().then(a => {console.log(a)}));
 
 export const getWallet = () => {
   return walletWithProvider;

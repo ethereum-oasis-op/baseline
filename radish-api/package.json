@@ -1,0 +1,49 @@
+{
+  "name": "radish34-api",
+  "version": "1.0.0",
+  "description": "Organization API for Radish34 project",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ./dist/index.js",
+    "dev": "nodemon ./dist/index.js",
+    "build": "cod-scripts build",
+    "build:watch": "npm run build -- --watch",
+    "test": "jest --watchAll --verbose=true --silent",
+    "test:ci": "jest --verbose=true --silent --ci --coverage",
+    "fix": "npm run format && npm run lint -- --fix",
+    "format": "prettier --write \"**/*.{json,css,scss,md}\"",
+    "lint": "eslint .",
+    "lint:md": "markdownlint -i node_modules -i dist .",
+    "validate": "npm run lint && npm run lint:md"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/runtime": "^7.6.2",
+    "apollo-server": "^2.9.3",
+    "apollo-server-express": "^2.9.12",
+    "config": "^3.2.4",
+    "ethers": "^4.0.39",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "graphql-subscriptions": "^1.1.0",
+    "graphql-tag": "^2.10.1",
+    "lodash": "^4.17.15",
+    "mongodb": "^3.3.2",
+    "web3-utils": "^1.2.1"
+  },
+  "devDependencies": {
+    "cod-scripts": "^3.2.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "faker": "git+https://git@github.com/Marak/faker.js.git#d3ce6f1",
+    "markdownlint-cli": "^0.15.0",
+    "nodemon": "^1.18.9",
+    "solhint": "2.0.0-alpha.3",
+    "supertest": "^3.4.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "./node_modules/cod-scripts/eslint.js"
+    ]
+  }
+}

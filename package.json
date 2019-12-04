@@ -8,7 +8,7 @@
     "build:watch": "sol-compiler --watch",
     "lint": "solhint \"contracts/**/*.sol\"",
     "test": "jest",
-    "test:watch": "jest --watchAll",
+    "test:watch": "jest --watchAll --runInBand",
     "seed": "docker-compose run --rm mongo-seed sh seed.sh"
   },
   "repository": {
@@ -22,6 +22,10 @@
   },
   "homepage": "https://github.com/EYBlockchain/radish-34#readme",
   "dependencies": {
+    "@devexpress/dx-react-core": "^2.2.1",
+    "@devexpress/dx-react-grid": "^2.2.1",
+    "@devexpress/dx-react-grid-material-ui": "^2.2.1",
+    "@material-ui/icons": "^4.5.1",
     "openzeppelin-solidity": "^2.3.0"
   },
   "devDependencies": {
@@ -29,9 +33,15 @@
     "@0x/sol-coverage": "^3.0.5",
     "@0x/sol-profiler": "^3.1.7",
     "@0x/sol-trace": "^2.0.13",
+    "eslint": "^6.7.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
     "ethereum-doppelganger": "0.0.7",
     "ethers": "^4.0.31",
     "jest": "^24.8.0",
+    "prettier-eslint": "^9.0.1",
     "solhint": "2.1.0",
     "web3-provider-engine": "^15.0.0"
   },

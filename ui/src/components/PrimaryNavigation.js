@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -12,8 +12,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { UserContext } from '../contexts/user-context';
 import Link from './Link';
+import UserSelection from './UserSelection';
 
 const useStyles = makeStyles(theme => ({
   buttons: {
@@ -48,29 +48,21 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const getNavItems = user => {
-  const defaultItems = [
+const getNavItems = () => {
+  return [
     { label: 'What', url: '/what' },
     { label: 'How', url: '/how' },
     { label: 'Who', url: '/who' },
+    { label: 'Partners', url: '/partner' },
+    { label: 'RFQs', url: '/rfq' },
+    { label: 'Invoices', url: '/invoice' },
+    { label: 'Purchase Orders', url: '/purchaseorder' },
   ];
-
-  if (user) {
-    return [
-      ...defaultItems,
-      { label: 'Partners', url: '/partner' },
-      { label: 'RFQs', url: '/rfq' },
-      { label: 'Invoices', url: '/invoice' },
-      { label: 'Purchase Orders', url: '/purchaseorder' },
-    ];
-  }
-  return defaultItems;
 };
 
 export default function PrimaryNavigation() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const { user } = useContext(UserContext);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -121,7 +113,7 @@ export default function PrimaryNavigation() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {getNavItems(user).map(item => (
+      {getNavItems().map(item => (
         <MenuItem key={item.url}>
           <Link to={item.url}>
             <p>{item.label}</p>
@@ -161,7 +153,7 @@ export default function PrimaryNavigation() {
   const userMenu = (
     <>
       <div className={classes.buttons}>
-        {getNavItems(user).map(item => (
+        {getNavItems().map(item => (
           <Link key={item.url} to={item.url}>
             <Button className={classes.button}>{item.label}</Button>
           </Link>
@@ -212,8 +204,9 @@ export default function PrimaryNavigation() {
               Radish34
             </Typography>
           </Link>
-          {user ? userMenu : <></>}
+          {userMenu}
         </Toolbar>
+        <UserSelection />
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
