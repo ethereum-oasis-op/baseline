@@ -1,4 +1,0 @@
-# Entanglment POC App
-
-
-
