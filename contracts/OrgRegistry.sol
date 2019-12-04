@@ -23,7 +23,15 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         bytes messagingKey;
     }
 
+    struct OrgInterfaces {
+        bytes32 tokenFactoryInterface;
+        bytes32 shieldRegistryInterface;
+        bytes32 verifierRegistryInterface;
+        bytes32 contractCatalogInterface;
+    }
+
     mapping (address => Org) orgMap;
+    mapping (address => OrgInterfaces) orgInterfaceMap;
     mapping (uint => Roles.Role) private roleMap;
     address[] public parties;
     mapping(address => address) managerMap;
@@ -91,6 +99,20 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         return true;    
     }
 
+    /// @notice Function to register the names of the interfaces associated with the OrgRegistry
+    /// @param _address ethereum address of the registered organization
+    /// @param _tokenFactoryInterface name of the registered token interface
+    /// @param _shieldRegistryInterface name of the registered shield registry interface
+    /// @param _verifierRegistryInterface name of the verifier registry interface
+    /// @param _contractCatalogInterface name of the contract catalog interface
+    /// @dev Function to register an organization's interfaces for easy lookup
+    /// @return `true` upon successful registration of the organization's interfaces
+    function registerInterfaces(address _address, bytes32 _tokenFactoryInterface, bytes32 _shieldRegistryInterface, bytes32 _verifierRegistryInterface, bytes32 _contractCatalogInterface) external returns (bool) {
+        OrgInterfaces memory orgInterfaceSetting = OrgInterfaces(_tokenFactoryInterface, _shieldRegistryInterface, _verifierRegistryInterface, _contractCatalogInterface);
+        orgInterfaceMap[_address] = orgInterfaceSetting;
+        return true;
+    }
+
     /// @dev Function to get the count of number of organizations to help with extraction
     /// @return length of the array containing organization addresses
     function getOrgCount() external view returns (uint) {
@@ -100,6 +122,11 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @notice Function to get a single organization's details
     function getOrg(address _address) external view returns (address, bytes32, uint, bytes memory) {
         return (orgMap[_address].orgAddress, orgMap[_address].name, orgMap[_address].role, orgMap[_address].messagingKey);
+    }
+
+    /// @notice Function to get a single organization's interface details
+    function getInterfaceNames(address _address) external view returns (bytes32, bytes32, bytes32, bytes32) {
+        return(orgInterfaceMap[_address].tokenFactoryInterface, orgInterfaceMap[_address].shieldRegistryInterface, orgInterfaceMap[_address].verifierRegistryInterface, orgInterfaceMap[_address].contractCatalogInterface);
     }
     
     /// @notice Function to retrieve a page of registered organizations along with details
