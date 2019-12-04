@@ -1,19 +1,8 @@
-const mongoose = require('mongoose');
 const randomstring = require("randomstring");
-const RFPSchema = require('./mongoose_schemas/RFP');
+const RFP = require('./mongoose_models/RFP');
 const Identity = require('./mongoose_models/Identity');
 
 class RFPutils {
-  constructor() {
-    if (!RFPutils.instance) {
-      RFPutils.instance = this;
-    }
-    return RFPutils.instance;
-  }
-
-  async addEntangleUtils(entangleUtilsInstance) {
-    this.entangleUtils = entangleUtilsInstance;
-  }
 
   async createRFP(doc) {
     let time = await Math.floor(Date.now() / 1000);
@@ -31,7 +20,7 @@ class RFPutils {
         capitalization: 'lowercase'
       });
     }
-    let newRFP = await this.model.create(
+    let newRFP = await RFP.create(
       {
         _id: doc.uuid,
         uuid: doc.uuid,
@@ -55,7 +44,7 @@ class RFPutils {
     let time = await Math.floor(Date.now() / 1000);
     // lean() option forces Mongoose to return plain javascript object. Without it,
     // a schema-less document makes object's fields look undefined
-    let oldRFP = await this.model.findOne({ uuid: rfpId }).lean();
+    let oldRFP = await RFP.findOne({ uuid: rfpId }).lean();
     let newRFP = {
       name: doc.name || oldRFP.name,
       item: doc.item || oldRFP.item,
@@ -63,7 +52,7 @@ class RFPutils {
       updated: time
     };
 
-    let result = await this.model.findOneAndUpdate(
+    let result = await RFP.findOneAndUpdate(
       { uuid: rfpId },
       newRFP,
       { new: true }
@@ -73,66 +62,16 @@ class RFPutils {
 
   // Get one RFP
   async getSingleRFP(rfpId) {
-    let result = await this.model.findOne({ uuid: rfpId });
+    let result = await RFP.findOne({ uuid: rfpId });
     return result;
   }
 
   // Get all RFPs
   async getAllRFPs() {
-    let result = await this.model.find({});
+    let result = await RFP.find({});
     return result;
-  }
-
-  //async addListener() {
-  //// If user updates their own RFP instance, alert other Entangled parties
-  //let that = this;
-  //await RFPSchema.post('updateOne', async function (doc) {
-  //// Check if this RFP has an Entanglement
-  //let entangledDoc = await that.entangleUtils.getSingleEntanglement({ databaseLocation: { collection: 'RFPs', objectId: doc._id } });
-  //if (entangledDoc) {
-  //console.info('Found Entanglement for RFP. Updating now...');
-  //// Update hash in Entanglement and send a message to each participant
-  //await that.entangleUtils.selfUpdateEntanglement(entangledDoc, 'RFPs', doc._id);
-  //}
-  //})
-  //await RFPSchema.post('findOneAndUpdate', async function (doc) {
-  //// Check if this RFP has an Entanglement
-  //let entangledDoc = await that.entangleUtils.getSingleEntanglement({ databaseLocation: { collection: 'RFPs', objectId: doc._id } });
-  //if (entangledDoc) {
-  //console.info('Found Entanglement for RFP. Updating now...');
-  //// Update hash in Entanglement and send a message to each participant
-  //await that.entangleUtils.selfUpdateEntanglement(entangledDoc, 'RFPs', doc._id);
-  //}
-  //})
-  //this.model = mongoose.model('RFPs', RFPSchema);
-  //}
-
-  async addListener() {
-    // If user updates their own RFP instance, alert other Entangled parties
-    let that = this;
-    await RFPSchema.post('updateOne', async function (doc) {
-      // Check if this RFP has an Entanglement
-      let entangledDoc = await that.entangleUtils.getSingleEntanglement({ databaseLocation: { collection: 'RFPs', objectId: doc._id } });
-      if (entangledDoc) {
-        console.info('Found Entanglement for RFP. Updating now...');
-        // Update hash in Entanglement and send a message to each participant
-        await that.entangleUtils.selfUpdateEntanglement(entangledDoc, 'RFPs', doc._id);
-      }
-    })
-    await RFPSchema.post('findOneAndUpdate', async function (doc) {
-      // Check if this RFP has an Entanglement
-      let entangledDoc = await that.entangleUtils.getSingleEntanglement({ databaseLocation: { collection: 'RFPs', objectId: doc._id } });
-      if (entangledDoc) {
-        console.info('Found Entanglement for RFP. Updating now...');
-        // Update hash in Entanglement and send a message to each participant
-        await that.entangleUtils.selfUpdateEntanglement(entangledDoc, 'RFPs', doc._id);
-      }
-    })
-    this.model = mongoose.model('RFPs', RFPSchema);
   }
 
 }
 
-const rfpUtils = new RFPutils();
-
-module.exports = rfpUtils;
+module.exports = RFPutils;

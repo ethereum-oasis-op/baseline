@@ -5,10 +5,10 @@ const router = express.Router();
 const Config = require('../config');
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
-const EntangleUtils = require('../src/entanglementUtils');
-const rfpUtils = customRequire('src/RFPUtils');
+const RFPutils = require('../src/RFPutils');
+const entangleUtils = require('../src/entanglementUtils')
 
-let messenger, contactUtils, entangleUtils;
+let messenger, contactUtils;
 
 router.get('/health-check', async (req, res) => {
   res.status(200);
@@ -72,6 +72,7 @@ router.post('/rfps', async (req, res) => {
     res.send({ error: 'Following fields must be provided in request body: sku, estimatedQty, recipients' });
     return;
   }
+  let rfpUtils = new RFPutils();
   let result = await rfpUtils.createRFP(doc);
   result._doc.type = 'rfp_create';
   await result.recipients.forEach(async (party) => {
@@ -82,6 +83,7 @@ router.post('/rfps', async (req, res) => {
 });
 
 router.put('/rfps/:rfpId', async (req, res) => {
+  let rfpUtils = new RFPutils();
   let result = await rfpUtils.updateRFP(req.params.rfpId, req.body);
   res.status(200);
   res.send(result);
@@ -89,6 +91,7 @@ router.put('/rfps/:rfpId', async (req, res) => {
 
 // Get all RFPs
 router.get('/rfps', async (req, res) => {
+  let rfpUtils = new RFPutils();
   let result = await rfpUtils.getAllRFPs();
   res.status(200);
   res.send(result);
@@ -96,6 +99,7 @@ router.get('/rfps', async (req, res) => {
 
 // Get a specific RFP
 router.get('/rfps/:rfpId', async (req, res) => {
+  let rfpUtils = new RFPutils();
   let result = await rfpUtils.getSingleRFP(req.params.rfpId);
   res.status(200);
   res.send(result);
@@ -121,7 +125,7 @@ router.post('/entanglements', async (req, res) => {
   // and share it with other participants via private Whisper messages
   let result;
   try {
-    result = await entangleUtils.createEntanglement(doc);
+    result = await entangleUtils.createEntanglement(messenger, doc);
   } catch (err) {
     console.log('Entanglement error: ', err);
     res.status(404);
@@ -176,7 +180,7 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
   let result;
   if (req.body.acceptedRequest === true) {
     // Set acceptedRequest for my whisperId to 'true'
-    result = await entangleUtils.acceptEntanglement(req.params.entanglementId, req.body);
+    result = await entangleUtils.acceptEntanglement(messenger, req.params.entanglementId, req.body);
   } else {
     result = await entangleUtils.updateEntanglement(req.params.entanglementId, req.body);
   }
@@ -195,12 +199,6 @@ async function initialize(ipAddress, port) {
   await messenger.loadIdentities();
 
   contactUtils = new ContactUtils();
-  entangleUtils = await new EntangleUtils(messenger);
-  await messenger.addEntangleUtils(entangleUtils);
-
-  // Pass the EntangleUtils instance to each business object that is allowed to be entangled
-  await rfpUtils.addEntangleUtils(entangleUtils);
-  await rfpUtils.addListener();
 
   return connected;
 }

@@ -1,13 +1,5 @@
 'use strict';
 
-global.base_dir = __dirname;
-global.abs_path = function (path) {
-  return base_dir + path;
-}
-global.customRequire = function (file) {
-  return require(abs_path('/' + file));
-}
-
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
 
