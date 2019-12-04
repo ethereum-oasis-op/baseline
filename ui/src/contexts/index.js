@@ -11,6 +11,7 @@ import { ServerStatusProvider } from './server-status-context';
 import { ServerSettingsProvider } from './server-settings-context';
 import { PartnerProvider } from './partner-context';
 import { MessageProvider } from './message-context';
+import { RFQProvider } from './rfq-context';
 
 const uri = window.localStorage.getItem('api') || 'radish-api-buyer.docker/graphql';
 
@@ -49,7 +50,9 @@ function AppProviders({ children }) {
       <MessageProvider>
         <ServerSettingsProvider>
           <ServerStatusProvider>
-            <PartnerProvider>{children}</PartnerProvider>
+            <PartnerProvider>
+              <RFQProvider>{children}</RFQProvider>
+            </PartnerProvider>
           </ServerStatusProvider>
         </ServerSettingsProvider>
       </MessageProvider>

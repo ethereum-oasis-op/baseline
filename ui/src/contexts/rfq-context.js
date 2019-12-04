@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useQuery } from '@apollo/react-hooks';
-import { GET_RFQ_UPDATE, GET_ALL_RFQS } from '../graphql/rfq';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import { GET_RFQ_UPDATE, GET_ALL_RFQS, CREATE_RFQ } from '../graphql/rfq';
 
 const RFQContext = React.createContext([{}, () => {}]);
 
@@ -9,6 +9,7 @@ let listener;
 
 const RFQProvider = ({ children }) => {
   const { subscribeToMore, loading, data, error } = useQuery(GET_ALL_RFQS);
+  const [postRFQ] = useMutation(CREATE_RFQ);
   const rfqs = data ? data.rfqs : [];
 
   useEffect(() => {
@@ -25,7 +26,9 @@ const RFQProvider = ({ children }) => {
     }
   }, []);
 
-  return <RFQContext.Provider value={{ rfqs, loading, error }}>{children}</RFQContext.Provider>;
+  return (
+    <RFQContext.Provider value={{ rfqs, loading, error, postRFQ }}>{children}</RFQContext.Provider>
+  );
 };
 
 RFQProvider.propTypes = {

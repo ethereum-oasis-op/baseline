@@ -29,3 +29,13 @@ export const GET_ALL_RFQS = gql`
   }
   ${RFQ_ATTRIBUTES}
 `;
+
+export const CREATE_RFQ = gql`
+  mutation createRFQ($input: inputRFQ!) {
+    createRFQ(input: $input) {
+      RFQ {
+        ...RFQ_ATTRIBUTES
+      }
+    }
+  }
+`;
