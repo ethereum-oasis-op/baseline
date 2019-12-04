@@ -6,7 +6,7 @@ const supplier_api_port = Config.nodes.node_2.api_port;
 const buyerURL = `http://localhost:${buyer_api_port}`;
 const supplierURL = `http://localhost:${supplier_api_port}`;
 let buyerId, supplierId;
-let rfqId, entanglementId;
+let rfpId, entanglementId;
 
 describe('Whisper Identities', () => {
   test('should create a new buyer identity: POST /identities', async () => {
@@ -28,40 +28,51 @@ describe('Whisper Identities', () => {
   });
 });
 
-describe('RFQs', () => {
-  test('buyer creates a new RFQ: POST /rfqs', async () => {
+describe('RFPs', () => {
+  test('buyer creates a new RFP: POST /rfps', async () => {
     const res = await request(buyerURL)
-      .post('/api/v1/rfqs')
+      .post('/api/v1/rfps')
       .send({
-        sku: 'abc123456',
-        quantity: '75',
-        deliveryDate: '1572276965272',
-        description: 'Widgets',
-        supplierId: supplierId
+        item: {
+          sku: 'abc123456',
+          name: 'Automatic Widget 2000'
+        },
+        estimatedQty: {
+          quantity: '75',
+          unit: 'piece'
+        },
+        buyerId: buyerId,
+        name: 'Widgets',
+        recipients: [
+          {
+            uuid: supplierId,
+            receiptDate: null
+          }
+        ]
       });
     expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('sku');
-    rfqId = res.body._id;
+    expect(res.body).toHaveProperty('uuid');
+    rfpId = res.body.uuid;
   });
 
-  test('supplier should have new RFQ: GET /rfqs/:rfqId', async () => {
+  test('supplier should have new RFP: GET /rfps/:rfpId', async () => {
     // Wait for db to update
     await new Promise((r) => setTimeout(r, 2000));
     let res = await request(supplierURL)
-      .get(`/api/v1/rfqs/${rfqId}`);
+      .get(`/api/v1/rfps/${rfpId}`);
     expect(res.statusCode).toEqual(200);
-    expect(res.body._id).toEqual(rfqId);
+    expect(res.body.uuid).toEqual(rfpId);
   });
 });
 
-describe('Buyer Entangles RFQ', () => {
-  test('buyer adds Entanglement to RFQ: POST /entanglements', async () => {
+describe('Buyer Entangles RFP', () => {
+  test('buyer adds Entanglement to RFP: POST /entanglements', async () => {
     let res = await request(buyerURL)
       .post(`/api/v1/entanglements`)
       .send({
         databaseLocation: {
-          collection: 'RFQs',
-          objectId: rfqId
+          collection: 'RFPs',
+          objectId: rfpId
         },
         partnerIds: [
           supplierId
@@ -72,15 +83,15 @@ describe('Buyer Entangles RFQ', () => {
     expect(res.body).toHaveProperty('databaseLocation');
   });
 
-  test('throws error if buyer tries to create second Entanglement for same RFQ: POST /entanglements', async () => {
+  test('throws error if buyer tries to create second Entanglement for same RFP: POST /entanglements', async () => {
     // Wait for db to update
     await new Promise((r) => setTimeout(r, 2000));
     let res = await request(buyerURL)
       .post(`/api/v1/entanglements`)
       .send({
         databaseLocation: {
-          collection: 'RFQs',
-          objectId: rfqId
+          collection: 'RFPs',
+          objectId: rfpId
         },
         partnerIds: [
           supplierId
@@ -140,15 +151,18 @@ describe('Supplier accepts Entanglement', () => {
   });
 });
 
-describe('RFQ updates detected', () => {
-  test('supplier updates RFQ: PUT /rfqs/:id', async () => {
-    let res = await request(buyerURL)
-      .put(`/api/v1/rfqs/${rfqId}`)
+describe('RFP updates detected', () => {
+  test('supplier updates RFP: PUT /rfps/:id', async () => {
+    let res = await request(supplierURL)
+      .put(`/api/v1/rfps/${rfpId}`)
       .send({
-        quantity: '100'
+        estimatedQty: {
+          quantity: '100',
+          unit: 'piece'
+        }
       });
     expect(res.statusCode).toEqual(200);
-    expect(res.body.quantity).toEqual('100');
+    expect(res.body.estimatedQty.quantity).toEqual('100');
   });
 
   test('state of buyer Entanglement is "inconsistent": GET /entanglements/:id/state', async () => {

@@ -16,6 +16,12 @@ if [[ $1 != "test" && $1 != "dev" ]]
     environment=$1
 fi
 
+# Convert "dev" to "development"
+if [ $environment == "dev" ]
+  then
+    environment="development"
+fi
+
 for (( node_num=1; node_num<=$count; node_num++))
 do
   # Set MONGODB_URL environment variable so that each node has its own database within the same local Mongo

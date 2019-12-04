@@ -2,8 +2,9 @@ const Web3 = require('web3');
 const Identity = require('./mongoose_models/Identity');
 const Message = require('./mongoose_models/Message');
 const Entanglement = require('./mongoose_models/Entanglement');
+const entangleUtils = require('./entanglementUtils');
 const utils = require("./generalUtils");
-const rfqUtils = customRequire('src/RFQUtils');
+const RFPutils = require('./RFPutils');
 
 // Useful constants
 const DEFAULT_TOPIC = "0x11223344";
@@ -34,10 +35,6 @@ class WhisperWrapper {
     let connected = await this.web3.eth.net.isListening();
     this.connected = connected;
     return connected;
-  }
-
-  async addEntangleUtils(entangleUtilsInstance) {
-    this.entangleUtils = entangleUtilsInstance;
   }
 
   async createIdentity() {
@@ -271,11 +268,12 @@ class WhisperWrapper {
             );
             break;
           case 'entanglement_update':
-            this.entangleUtils.updateEntanglement(data.sig, messageObj);
+            entangleUtils.updateEntanglement(data.sig, messageObj);
             // TODO: check smart contract for updated hashes
             break;
-          case 'rfq_create':
-            await rfqUtils.createRFQ(messageObj);
+          case 'rfp_create':
+            let rfpUtils = await new RFPutils();
+            await rfpUtils.createRFP(messageObj);
             break;
           default:
             console.log('Did not recognize message object type: ', messageObj);

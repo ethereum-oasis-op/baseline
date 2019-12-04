@@ -5,10 +5,10 @@ const router = express.Router();
 const Config = require('../config');
 const WhisperWrapper = require('../src/WhisperWrapper');
 const ContactUtils = require('../src/ContactUtils');
-const EntangleUtils = require('../src/entanglementUtils');
-const rfqUtils = customRequire('src/RFQUtils');
+const RFPutils = require('../src/RFPutils');
+const entangleUtils = require('../src/entanglementUtils')
 
-let messenger, contactUtils, entangleUtils;
+let messenger, contactUtils;
 
 router.get('/health-check', async (req, res) => {
   res.status(200);
@@ -64,38 +64,43 @@ router.post('/messages/:senderId', async (req, res) => {
   res.send(result);
 });
 
-// Create a new RFQ
-router.post('/rfqs', async (req, res) => {
+// Create a new RFP
+router.post('/rfps', async (req, res) => {
   let doc = req.body;
-  if (!doc.sku || !doc.quantity || !doc.deliveryDate || !doc.supplierId) {
+  if (!doc.item.sku || !doc.estimatedQty || !doc.recipients) {
     res.status(400);
-    res.send({ error: 'Following fields must be provided in request body: sku, quantity, deliveryDate, supplierId' });
+    res.send({ error: 'Following fields must be provided in request body: sku, estimatedQty, recipients' });
     return;
   }
-  let result = await rfqUtils.createRFQ(doc);
-  result._doc.type = 'rfq_create';
-  console.log('result:', result);
-  await messenger.sendPrivateMessage(result.buyerId, result.supplierId, undefined, JSON.stringify(result));
+  let rfpUtils = new RFPutils();
+  let result = await rfpUtils.createRFP(doc);
+  result._doc.type = 'rfp_create';
+  await result.recipients.forEach(async (party) => {
+    await messenger.sendPrivateMessage(result.buyerId, party.uuid, undefined, JSON.stringify(result));
+  });
   res.status(201);
   res.send(result);
 });
 
-router.put('/rfqs/:rfqId', async (req, res) => {
-  let result = await rfqUtils.updateRFQ(req.params.rfqId, req.body);
+router.put('/rfps/:rfpId', async (req, res) => {
+  let rfpUtils = new RFPutils();
+  let result = await rfpUtils.updateRFP(req.params.rfpId, req.body);
   res.status(200);
   res.send(result);
 });
 
-// Get all RFQs
-router.get('/rfqs', async (req, res) => {
-  let result = await rfqUtils.getAllRFQs();
+// Get all RFPs
+router.get('/rfps', async (req, res) => {
+  let rfpUtils = new RFPutils();
+  let result = await rfpUtils.getAllRFPs();
   res.status(200);
   res.send(result);
 });
 
-// Get a specific RFQ
-router.get('/rfqs/:rfqId', async (req, res) => {
-  let result = await rfqUtils.getSingleRFQ(req.params.rfqId);
+// Get a specific RFP
+router.get('/rfps/:rfpId', async (req, res) => {
+  let rfpUtils = new RFPutils();
+  let result = await rfpUtils.getSingleRFP(req.params.rfpId);
   res.status(200);
   res.send(result);
 });
@@ -120,7 +125,7 @@ router.post('/entanglements', async (req, res) => {
   // and share it with other participants via private Whisper messages
   let result;
   try {
-    result = await entangleUtils.createEntanglement(doc);
+    result = await entangleUtils.createEntanglement(messenger, doc);
   } catch (err) {
     console.log('Entanglement error: ', err);
     res.status(404);
@@ -175,7 +180,7 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
   let result;
   if (req.body.acceptedRequest === true) {
     // Set acceptedRequest for my whisperId to 'true'
-    result = await entangleUtils.acceptEntanglement(req.params.entanglementId, req.body);
+    result = await entangleUtils.acceptEntanglement(messenger, req.params.entanglementId, req.body);
   } else {
     result = await entangleUtils.updateEntanglement(req.params.entanglementId, req.body);
   }
@@ -195,12 +200,7 @@ async function initialize(ipAddress, port) {
   await messenger.loadIdentities();
 
   contactUtils = new ContactUtils();
-  entangleUtils = await new EntangleUtils(messenger);
-  await messenger.addEntangleUtils(entangleUtils);
 
-  // Pass the EntangleUtils instance to each business object that is allowed to be entangled
-  await rfqUtils.addEntangleUtils(entangleUtils);
-  await rfqUtils.addListener();
   return connected;
 }
 
