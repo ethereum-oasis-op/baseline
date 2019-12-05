@@ -4,11 +4,8 @@ const { BigNumber } = require('ethers/utils');
 let instance = null;
 let networkId = null;
 
-const getProvider = async uri => {
-  if (networkId === uri && instance) {
-    return instance;
-  }
-  networkId = uri;
+const getProvider = uri => {
+  if (instance) return instance;
   instance = new ethers.providers.JsonRpcProvider(uri);
   return instance;
 };

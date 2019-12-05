@@ -21,7 +21,9 @@ services:
 
   ganache:
     image: trufflesuite/ganache-cli:latest
-    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --networkId '333' --gasLimit 80000000000
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --networkId '333' --gasLimit 80000000000
+    ports:
+      - 8545:8545
 
   zok:
     image: kartheek14/zokrates_dev:081519
@@ -59,6 +61,7 @@ services:
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/buyer.eth:/keystore/account.eth
       - ./config/config.json:/app/config/default.json
+      - ./artifacts:/app/artifacts:delegated
     depends_on:
       - radish-api-watch
       - mongo-buyer
@@ -82,6 +85,7 @@ services:
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier1.eth:/keystore/account.eth
       - ./config/config.json:/app/config/default.json
+      - ./artifacts:/app/artifacts:delegated      
     depends_on:
       - radish-api-watch
       - mongo-supplier1
@@ -105,6 +109,7 @@ services:
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier2.eth:/keystore/account.eth
       - ./config/config.json:/app/config/default.json
+      - ./artifacts:/app/artifacts:delegated      
     depends_on:
       - radish-api-watch
       - mongo-supplier2
@@ -128,6 +133,7 @@ services:
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier3.eth:/keystore/account.eth
       - ./config/config.json:/app/config/default.json
+      - ./artifacts:/app/artifacts:delegated      
     depends_on:
       - radish-api-watch
       - mongo-supplier3
@@ -162,7 +168,9 @@ services:
     logging:
       options:
         max-size: 10m
-
+    ports:
+      - 27017:27017
+      
   mongo-supplier1:
     image: mongo:latest
     container_name: mongo-supplier1
@@ -191,7 +199,7 @@ services:
         max-size: 10m
     networks:
       chainnet:
-        ipv4_address: 172.25.0.125
+        ipv4_address: 172.25.0.125        
 
   mongo-seed:
     build: ./mongo-seed
