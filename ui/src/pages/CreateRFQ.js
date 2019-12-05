@@ -37,14 +37,18 @@ const CreateRFQ = () => {
       skuDescription: '',
       suppliers: [],
     },
-    onSubmit: values => {
-      postRFQ(values);
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: async values => {
+      await postRFQ({ variables: { input: values } });
     },
     validationSchema: Yup.object().shape({
       description: Yup.string().required('RFQ Description required'),
       sku: Yup.string().required('Input SKU number'),
-      suppliers: Yup.array().min(1, 'Must add at least 1 supplier'),
+      suppliers: Yup.array()
+        .of(
+          Yup.string()
+          .required('Cannot submit empty supplier field')
+        )
+        .min(1, 'Must add at least 1 supplier'),
     }),
   });
 

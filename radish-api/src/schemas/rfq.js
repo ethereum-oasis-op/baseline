@@ -16,21 +16,19 @@ const RFQSchema = gql`
 
   type RFQ {
     _id: Int!
-    name: String!
-    dateDeadline: Int!
-    dateDelivery: Int!
+    description: String!
+    dateDeadline: Date!
     sku: String!
-    suppliers: [Int]
-    quantity: Int
+    skuDescription: String!
+    suppliers: [String!]!
   }
 
   input inputRFQ {
-    name: String!
-    dateDeadline: Int!
-    dateDelivery: Int!
+    description: String!
+    dateDeadline: Date!
     sku: String!
-    suppliers: [Int]
-    quantity: Int
+    skuDescription: String!
+    suppliers: [String!]!
   }
 `;
 
