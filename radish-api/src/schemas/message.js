@@ -25,7 +25,7 @@ const MessageSchema = gql`
     subject: String!
     from: String!
     statusText: String!
-    lastModified: Int!
+    lastModified: Date!
     status: String!
   }
 
@@ -35,7 +35,7 @@ const MessageSchema = gql`
     subject: String!
     from: String!
     statusText: String!
-    lastModified: Int!
+    lastModified: Date!
     status: String!
   }
 
