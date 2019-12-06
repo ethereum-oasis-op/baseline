@@ -23,7 +23,21 @@ function safeJsonParse(str) {
   }
 };
 
+async function addDbListener(doc, collectionName) {
+  // Check if this RFP has an Entanglement
+  const entangleUtils = require('./entanglementUtils');
+  let entangledDoc = await entangleUtils.getSingleEntanglement({ databaseLocation: { collection: collectionName, objectId: doc._id } });
+  if (entangledDoc) {
+    console.info('Found Entanglement for RFP. Updating now...');
+    // Update hash in Entanglement and send a message to each participant
+    const WhisperWrapper = require('./WhisperWrapper');
+    let messenger = await new WhisperWrapper();
+    await entangleUtils.selfUpdateEntanglement(messenger, entangledDoc, collectionName, doc._id);
+  }
+}
+
 module.exports = {
   hasJsonStructure,
-  safeJsonParse
+  safeJsonParse,
+  addDbListener
 };

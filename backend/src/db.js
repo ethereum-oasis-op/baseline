@@ -15,10 +15,7 @@ const options = {
   useNewUrlParser: true,
   useFindAndModify: false,
   useCreateIndex: true,
-  reconnectTries: Number.MAX_VALUE, // Keep trying to reconnect
-  reconnectInterval: 1000, // Per 1 sec
   poolSize: 5, // Number of simultaneous connections to maintain
-  bufferMaxEntries: Config.mongo.bufferMaxEntries, // Configurable and set to 8 by default, delays notification if connection drops for any reason
   socketTimeoutMS: 0, // Use os-default, only useful when a network issue occurs and the peer becomes unavailable
   keepAlive: true // KEEP ALIVE!
 };

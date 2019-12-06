@@ -8,7 +8,7 @@ const ContactUtils = require('../src/ContactUtils');
 const RFPutils = require('../src/RFPutils');
 const entangleUtils = require('../src/entanglementUtils')
 
-let messenger, contactUtils;
+let messenger;
 
 router.get('/health-check', async (req, res) => {
   res.status(200);
@@ -29,12 +29,14 @@ router.post('/identities', async (req, res) => {
 });
 
 router.get('/contacts', async (req, res) => {
+  let contactUtils = new ContactUtils();
   let result = await contactUtils.getAllContacts();
   res.status(200);
   res.send(result);
 });
 
 router.post('/contacts', async (req, res) => {
+  let contactUtils = new ContactUtils();
   let result = await contactUtils.createContact(req.body);
   res.status(201);
   res.send(result);
@@ -191,15 +193,13 @@ router.put('/entanglements/:entanglementId', async (req, res) => {
 async function initialize(ipAddress, port) {
   // Retrieve messenger instance and pass to helper classes
   // Modularized here to enable use of other messenger services in the future
-  console.log('IN INIT');
+  console.log('Initializing server...');
   if (Config.messaging_type === "whisper") {
     messenger = await new WhisperWrapper();
     await messenger.configureProvider(ipAddress, port);
   }
   let connected = await messenger.isConnected();
   await messenger.loadIdentities();
-
-  contactUtils = new ContactUtils();
 
   return connected;
 }
