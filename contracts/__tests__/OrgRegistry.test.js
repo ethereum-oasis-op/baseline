@@ -39,7 +39,6 @@ test('Should be able to set interfaces for compatibility checks', async () => {
 
 test('Should be able to correctly set the interface id', async () => {
     const x = await orgRegistry.getInterfaces();
-    console.log(x);
     const y = await orgRegistry.supportsInterface(x);
     expect(y).toBe(true);
 });
@@ -49,21 +48,25 @@ test('Should be able to get 0 count at the beginning', async () => {
     expect(orgCount.toNumber()).toBe(0);
 });
 
-test('Should be able to register an org and retrieve the event', async () => {
+test('Should be able to register an org', async () => {
     const txReceipt = await orgRegistry.registerOrg(accounts[1], utils.formatBytes32String("Name"), 2, utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
 });
 
-test('Should be able to get a single organizations details', async () => {
+test('Should be able to register an orgs interfaces', async () => {
+    const txReceipt = await orgRegistry.registerInterfaces(accounts[1], utils.formatBytes32String("IERC721MetadataEnumerable"), utils.formatBytes32String("IShieldRegistry"), utils.formatBytes32String("IVerifierRegistry"), utils.formatBytes32String("IContractCatalog"));
+});
+
+test('Should be able to get a single organizations interface details', async () => {
     const {
-        0: address, 
-        1: name, 
-        2: role, 
-        3: key
-    } = await orgRegistry.getOrg(accounts[1]);
-    expect(address).toBe(accounts[1]);
-    expect(name).toBe(utils.formatBytes32String('Name'));
-    expect(role.toNumber()).toBe(2);
-    expect(key).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+        0: tokenInterface, 
+        1: shieldInterface, 
+        2: verifierInterface, 
+        3: contractCatalogInterface
+    } = await orgRegistry.getInterfaceNames(accounts[1]);
+    expect(tokenInterface).toBe(utils.formatBytes32String('IERC721MetadataEnumerable'));
+    expect(shieldInterface).toBe(utils.formatBytes32String('IShieldRegistry'));
+    expect(verifierInterface).toBe(utils.formatBytes32String('IVerifierRegistry'));
+    expect(contractCatalogInterface).toBe(utils.formatBytes32String('IContractCatalog'));
 });
 
 test('Should be able to retrieve the incremented org count', async () => {
