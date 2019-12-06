@@ -3,12 +3,11 @@ import gql from 'graphql-tag';
 export const RFQ_ATTRIBUTES = gql`
   fragment RFQ_ATTRIBUTES on RFQ {
     _id
-    name
+    description
     dateDeadline
-    dateDelivery
     sku
+    skuDescription
     suppliers
-    quantity
   }
 `;
 
@@ -24,6 +23,15 @@ export const GET_RFQ_UPDATE = gql`
 export const GET_ALL_RFQS = gql`
   query getAllRFQs {
     rfqs {
+      ...RFQ_ATTRIBUTES
+    }
+  }
+  ${RFQ_ATTRIBUTES}
+`;
+
+export const CREATE_RFQ = gql`
+  mutation createRFQ($input: inputRFQ!) {
+    createRFQ(input: $input) {
       ...RFQ_ATTRIBUTES
     }
   }

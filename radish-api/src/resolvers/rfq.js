@@ -1,5 +1,6 @@
 import { pubsub } from '../subscriptions';
 import db from '../db';
+import { saveMessage } from './message';
 
 const NEW_RFQ = 'NEW_RFQ';
 
@@ -36,6 +37,15 @@ export default {
     createRFQ: async (_parent, args) => {
       const newRFQ = await saveRFQ(args.input);
       const rfq = newRFQ.ops[0];
+      await saveMessage({
+        resolved: false,
+        category: 'RFQ',
+        subject: `New RFQ: ${rfq.description}`,
+        from: 'Buyer',
+        statusText: 'Pending',
+        status: 'Pending',
+        lastModified: new Date(Date.now()),
+      });
       pubsub.publish(NEW_RFQ, { newRFQ: rfq });
       return { ...rfq };
     },

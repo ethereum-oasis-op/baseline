@@ -40,11 +40,12 @@ const getOutbox = async () => {
   return messages;
 };
 
-const saveMessage = async input => {
+export const saveMessage = async input => {
   console.log('Saving the message');
   const count = await db.collection('messages').count({});
   const doc = Object.assign(input, { _id: count + 1 });
   const message = await db.collection('messages').insert(doc);
+  pubsub.publish(NEW_MESSAGE, { newMessage: message.ops[0] });
   return message;
 };
 

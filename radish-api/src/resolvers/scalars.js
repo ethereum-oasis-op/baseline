@@ -14,6 +14,20 @@ const Address = new GraphQLScalarType({
   },
 });
 
+const DateScalar = new GraphQLScalarType({
+  name: 'Date',
+  description: 'Date type scalar',
+  parseValue: input => new Date(input),
+  serialize: input => input.getTime(),
+  parseLiteral: ast => {
+    if (ast.kind === Kind.INT) {
+      return new Date(ast.value)
+    }
+    return null;
+  },
+})
+
 export default {
   Address,
+  Date: DateScalar,
 };
