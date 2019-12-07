@@ -1,4 +1,10 @@
 import { pubsub } from '../subscriptions';
+import {
+  registerToOrgRegistry,
+  listOrganizations,
+  getRegisteredOrganization,
+  getOrganizationCount,
+} from '../services/organization';
 import db from '../db';
 
 const NEW_ORG = 'NEW_ORG';
@@ -31,6 +37,15 @@ export default {
     organizations() {
       return getAllOrganizations();
     },
+    organizationList(_parent, args) {
+      return listOrganizations(args.start, args.count);
+    },
+    registeredOrganization(_parent, args) {
+      return getRegisteredOrganization(args.address);
+    },
+    organizationCount() {
+      return getOrganizationCount();
+    },
   },
   Organization: {
     name: root => root.name,
@@ -51,6 +66,15 @@ export default {
       delete organization._id;
       pubsub.publish(NEW_ORG, { newOrganization: organization });
       return { organization };
+    },
+    registerToOrgRegistry: async (root, args) => {
+      const transactionHash = registerToOrgRegistry(
+        args.input.address,
+        args.input.name,
+        args.input.role,
+        args.input.key,
+      );
+      return transactionHash;
     },
   },
   Subscription: {

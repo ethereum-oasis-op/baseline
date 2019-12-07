@@ -1,14 +1,44 @@
-import { getServerSettings, setOrganizationRegistryAddress } from '../utils/serverSettings';
+import fs from 'fs';
+import {
+  getServerSettings,
+  setERC1820RegistryAddress,
+  setRegistrarAddress,
+  setOrganizationRegistryAddress,
+} from '../utils/serverSettings';
 import db from '../db';
 import { getPrivateKey } from '../utils/wallet';
 import { getProvider, getWallet, deployContract } from '../utils/ethers';
 
-// eslint-disable-next-line
-const ERC1820RegistryJson = require('/app/artifacts/ERC1820Registry.json');
-// eslint-disable-next-line
-const RegistrarJson = require('/app/artifacts/Registrar.json');
-// eslint-disable-next-line
-const OrgRegistryJson = require('/app/artifacts/OrgRegistry.json');
+const ERC1820RegistryPath = '/app/artifacts/ERC1820Registry.json';
+const RegistrarPath = '/app/artifacts/Registrar.json';
+const OrgRegistryPath = '/app/artifacts/OrgRegistry.json';
+
+export const getERC1820RegistryJson = () => {
+  if (fs.existsSync(ERC1820RegistryPath)) {
+    const erc1820Registry = fs.readFileSync(ERC1820RegistryPath);
+    return JSON.parse(erc1820Registry);
+  }
+  console.log('Unable to locate file: ', ERC1820RegistryPath);
+  throw ReferenceError('ERC1820Registry.json not found');
+};
+
+export const getRegistarJson = () => {
+  if (fs.existsSync(RegistrarPath)) {
+    const registrar = fs.readFileSync(RegistrarPath);
+    return JSON.parse(registrar);
+  }
+  console.log('Unable to locate file: ', RegistrarPath);
+  throw ReferenceError('OrgRegistry.json not found');
+};
+
+export const getOrgRegistryJson = () => {
+  if (fs.existsSync(OrgRegistryPath)) {
+    const orgRegistry = fs.readFileSync(OrgRegistryPath);
+    return JSON.parse(orgRegistry);
+  }
+  console.log('Unable to locate file: ', OrgRegistryPath);
+  throw ReferenceError('Registrar.json not found');
+};
 
 export const getContractById = async transactionHash => {
   const contract = await db.collection('smartcontract').findOne({ _id: transactionHash });
@@ -67,7 +97,7 @@ export const deployERC1820Registry = async contractName => {
   const uri = config.blockchainProvider;
   const privateKey = await getPrivateKey();
   const wallet = await getWallet(uri, privateKey);
-  const returnData = await deployContract(ERC1820RegistryJson, uri, privateKey, null);
+  const returnData = await deployContract(getERC1820RegistryJson(), uri, privateKey, null);
   const blockchainTransactionRecord = {
     transactionHash: returnData.hash,
     status: 'pending',
@@ -80,6 +110,7 @@ export const deployERC1820Registry = async contractName => {
     transactionHash: returnData.hash,
   };
   await saveSmartContract(inputWithContractAddress);
+  await setERC1820RegistryAddress(returnData.address);
   const provider = getProvider(uri);
   let receiptSatus;
   provider.waitForTransaction(returnData.hash).then(receipt => {
@@ -103,19 +134,20 @@ export const deployRegistrar = async addressOfERC1820 => {
   const uri = config.blockchainProvider;
   const privateKey = await getPrivateKey();
   const wallet = await getWallet(uri, privateKey);
-  const returnData = await deployContract(RegistrarJson, uri, privateKey, addressOfERC1820);
+  const returnData = await deployContract(getRegistarJson(), uri, privateKey, addressOfERC1820);
   const pendingRecord = {
     transactionHash: returnData.hash,
     status: 'pending',
   };
   await saveBlockchainTransaction(pendingRecord);
   const inputWithContractAddress = {
-    contractName: config.registrarNameInDB,
+    contractName: 'Registrar',
     contractOwner: wallet.signingKey.address,
     contractAddress: returnData.address,
     transactionHash: returnData.hash,
   };
   await saveSmartContract(inputWithContractAddress);
+  await setRegistrarAddress(returnData.address);
   const provider = getProvider(uri);
   let receiptSatus;
   provider.waitForTransaction(returnData.hash).then(receipt => {
@@ -139,14 +171,19 @@ export const deployOrgRegistry = async addressOfRegistrar => {
   const uri = config.blockchainProvider;
   const privateKey = await getPrivateKey();
   const wallet = await getWallet(uri, privateKey);
-  const returnData = await deployContract(OrgRegistryJson, uri, privateKey, addressOfRegistrar);
+  const returnData = await deployContract(
+    getOrgRegistryJson(),
+    uri,
+    privateKey,
+    addressOfRegistrar,
+  );
   const pendingRecord = {
     transactionHash: returnData.hash,
     status: 'pending',
   };
   await saveBlockchainTransaction(pendingRecord);
   const inputWithContractAddress = {
-    contractName: config.orgRegistryNameInDB,
+    contractName: 'Organization Registry Smart Contract',
     contractOwner: wallet.signingKey.address,
     contractAddress: returnData.address,
     transactionHash: returnData.hash,
@@ -186,4 +223,7 @@ export default {
   getContractById,
   getTxReceipt,
   getAllContracts,
+  getERC1820RegistryJson,
+  getRegistarJson,
+  getOrgRegistryJson,
 };

@@ -1,6 +1,3 @@
 {
-    "blockchainProvider": "http://ganache:8545",
-    "orgRegistryNameInDB": "Organization Registry Smart Contract",
-    "erc1820RegistryNameInDB" : "ERC1820Registry",
-    "registrarNameInDB": "Registrar"
+    "blockchainProvider": "http://ganache:8545"
 }
