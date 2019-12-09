@@ -37,3 +37,12 @@ export const CREATE_RFQ = gql`
   }
   ${RFQ_ATTRIBUTES}
 `;
+
+export const GET_RFQ = gql`
+  query rfq($id: Int!) {
+    rfq(id: $id) {
+      ...RFQ_ATTRIBUTES
+    }
+  }
+  ${RFQ_ATTRIBUTES}
+`;
