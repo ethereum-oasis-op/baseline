@@ -13,6 +13,17 @@ export const getWallet = () => {
   return wallet;
 };
 
+export const getPrivateKey = () => {
+  if (fs.existsSync(walletPath)) {
+    const wallet = fs.readFileSync(walletPath);
+    return JSON.parse(wallet).signingKey.privateKey;
+  }
+  const wallet = Wallet.createRandom();
+  fs.writeFileSync(walletPath, JSON.stringify(wallet));
+  return wallet.signingKey.privateKey;
+};
+
 export default {
   getWallet,
+  getPrivateKey,
 };

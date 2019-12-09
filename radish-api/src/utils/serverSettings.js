@@ -25,6 +25,20 @@ export const setNetworkId = async networkId => {
   return settings;
 };
 
+export const setERC1820RegistryAddress = async erc1820RegistryAddress => {
+  const doc = { erc1820RegistryAddress };
+  await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
+  const settings = await getServerSettings();
+  return settings;
+};
+
+export const setRegistrarAddress = async registrarAddress => {
+  const doc = { registrarAddress };
+  await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
+  const settings = await getServerSettings();
+  return settings;
+};
+
 export const setOrganizationRegistryAddress = async organizationRegistryAddress => {
   const doc = { organizationRegistryAddress };
   await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
@@ -36,5 +50,7 @@ export default {
   loadServerSettingsFromFile,
   getServerSettings,
   setNetworkId,
+  setERC1820RegistryAddress,
+  setRegistrarAddress,
   setOrganizationRegistryAddress,
 };

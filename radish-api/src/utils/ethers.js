@@ -4,11 +4,8 @@ const { BigNumber } = require('ethers/utils');
 let instance = null;
 let networkId = null;
 
-const getProvider = async uri => {
-  if (networkId === uri && instance) {
-    return instance;
-  }
-  networkId = uri;
+const getProvider = uri => {
+  if (instance) return instance;
   instance = new ethers.providers.JsonRpcProvider(uri);
   return instance;
 };
@@ -48,7 +45,6 @@ const deployContract = async (contractJson, uri, privateKey, controllerAddress) 
     contractJson.compilerOutput.evm.bytecode,
     wallet,
   );
-  // const factory = new ethers.ContractFactory(contractJson.abi, contractJson.bytecode, wallet);
   if (!controllerAddress) {
     contract = await factory.deploy();
   } else {
@@ -56,8 +52,6 @@ const deployContract = async (contractJson, uri, privateKey, controllerAddress) 
   }
   const { address } = contract;
   const { hash } = contract.deployTransaction;
-  // const receipt = await contract.deployed();
-  // return receipt;
   return { address: address, hash: hash };
 };
 

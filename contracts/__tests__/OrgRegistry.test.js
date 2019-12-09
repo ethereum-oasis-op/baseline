@@ -97,3 +97,9 @@ test('Should be able to assign new manager', async () => {
     const newManager = await erc1820Registry.getManager(orgRegistry.address);
     expect(newManager).toBe(accounts[0]);
 });
+
+test('Should be able to get registrar info as new manager', async () => {
+    const out = await erc1820Registry.setInterfaceImplementer(accounts[0], utils.id("IOrgRegistry"), orgRegistry.address);
+    const address = await registrar.interfaceAddr(accounts[0], "IOrgRegistry");
+    expect(address).toBe(orgRegistry.address);
+});

@@ -18,6 +18,10 @@ import RFQSchema from './schemas/rfq';
 import RFQResolver from './resolvers/rfq';
 import MessageSchema from './schemas/message';
 import MessageResolver from './resolvers/message';
+import ContractSchema from './schemas/contract';
+import ContractResolver from './resolvers/contract';
+import WalletSchema from './schemas/wallet';
+import WalletResolver from './resolvers/wallet';
 import healthcheck from './install/healthcheck';
 
 const PORT = process.env.PORT || 8001;
@@ -31,6 +35,8 @@ const typeDefs = [
   RFQSchema,
   PartnerSchema,
   MessageSchema,
+  ContractSchema,
+  WalletSchema,
 ];
 const resolvers = [
   OrganizationResolver,
@@ -41,6 +47,8 @@ const resolvers = [
   RFQResolver,
   PartnerResolver,
   MessageResolver,
+  ContractResolver,
+  WalletResolver,
 ];
 
 export default async function startServer() {
