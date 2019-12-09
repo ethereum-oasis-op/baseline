@@ -5,8 +5,9 @@ export default gql`
     organization(address: Address!): Organization
     organizations: [Organization]
     organizationList(start: Int!, count: Int!): Organizations
-    registeredOrganization(address: String!): RegisteredOrganization
+    registeredOrganization(address: Address!): RegisteredOrganization
     organizationCount: Int!
+    orgRegistryAddress(registrarAddress: Address!, managerAddress: Address!): Address!
   }
 
   extend type Mutation {
@@ -46,14 +47,14 @@ export default gql`
   }
 
   type RegisteredOrganization {
-    address: String!
+    address: Address!
     name: String!
     role: Int!
     key: String!
   }
 
   type Organizations {
-    addresses: [String!]!
+    addresses: [Address!]!
     names: [String!]!
     roles: [Int!]!
     keys: [String!]!

@@ -4,6 +4,7 @@ import {
   listOrganizations,
   getRegisteredOrganization,
   getOrganizationCount,
+  getInterfaceAddress,
 } from '../services/organization';
 import db from '../db';
 
@@ -45,6 +46,9 @@ export default {
     },
     organizationCount() {
       return getOrganizationCount();
+    },
+    orgRegistryAddress(_parent, args) {
+      return getInterfaceAddress(args.registrarAddress, args.managerAddress, 'IOrgRegistry');
     },
   },
   Organization: {

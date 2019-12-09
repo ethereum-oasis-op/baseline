@@ -14,9 +14,11 @@ import {
   getInterfaceAddress,
   getRegisteredOrganization,
 } from './services/organization';
+import { getServerSettings } from './utils/serverSettings';
 
 const main = async () => {
   await db.connect();
+  const config = await getServerSettings();
   console.log('accounts in the network are: ', await getAccounts());
   const walletAddress = await getAddress();
   console.log('the account used in this container is: ', walletAddress);
@@ -47,9 +49,9 @@ const main = async () => {
   console.log('OrgRegistry Address retrieved from Registrar is: ', orgRegistryAddress);
   const registerOrgTxHash = await registerToOrgRegistry(
     walletAddress,
-    'Buyer',
-    1,
-    '0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128',
+    config.myOrganizationName,
+    config.myOrganizationRole,
+    config.myOrganizationKey,
   );
   console.log('transactionHash for registering the buyer is: ', registerOrgTxHash);
   const orgRecord = await getRegisteredOrganization(walletAddress);
