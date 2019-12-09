@@ -10,6 +10,7 @@ export const MESSAGE_ATTRIBUTES = gql`
     statusText
     lastModified
     status
+    categoryId
   }
 `;
 

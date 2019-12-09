@@ -20,6 +20,7 @@ const MessageSchema = gql`
 
   type Message {
     _id: String!
+    categoryId: Int!
     resolved: Boolean!
     category: String!
     subject: String!
@@ -31,6 +32,7 @@ const MessageSchema = gql`
 
   input inputMessage {
     resolved: Boolean!
+    categoryId: Int!
     category: String!
     subject: String!
     from: String!

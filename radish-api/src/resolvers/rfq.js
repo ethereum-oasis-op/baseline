@@ -39,11 +39,12 @@ export default {
       const rfq = newRFQ.ops[0];
       await saveMessage({
         resolved: false,
-        category: 'RFQ',
+        category: 'rfq',
         subject: `New RFQ: ${rfq.description}`,
         from: 'Buyer',
         statusText: 'Pending',
-        status: 'Pending',
+        status: 'outgoing',
+        categoryId: rfq._id,
         lastModified: new Date(Date.now()),
       });
       pubsub.publish(NEW_RFQ, { newRFQ: rfq });
