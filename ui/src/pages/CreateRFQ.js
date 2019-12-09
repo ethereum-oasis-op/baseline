@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useFormik, Field, FormikProvider, ErrorMessage } from 'formik';
+import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -28,6 +29,7 @@ const CreateRFQ = () => {
   const classes = useStyles();
   const { postRFQ } = useContext(RFQContext);
   const { data } = useContext(PartnerContext);
+  const history = useHistory();
 
   const formik = useFormik({
     initialValues: {
@@ -39,6 +41,7 @@ const CreateRFQ = () => {
     },
     onSubmit: async values => {
       await postRFQ({ variables: { input: values } });
+      history.push('/messages/outbox');
     },
     validationSchema: Yup.object().shape({
       description: Yup.string().required('RFQ Description required'),

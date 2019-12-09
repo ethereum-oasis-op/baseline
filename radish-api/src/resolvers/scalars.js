@@ -18,7 +18,7 @@ const DateScalar = new GraphQLScalarType({
   name: 'Date',
   description: 'Date type scalar',
   parseValue: input => new Date(input),
-  serialize: input => input.getTime(),
+  serialize: input => new Date(input).getTime(),
   parseLiteral: ast => {
     if (ast.kind === Kind.INT) {
       return new Date(ast.value)

@@ -28,7 +28,7 @@ const Row = props => {
   const rowClasses = classNames(classes.row, rowClassnames);
 
   const handleClick = () => {
-    history.push(`/${row.category}/${row._id}`); // eslint-disable-line no-underscore-dangle
+    history.push(`/${row.category}/${row.categoryId}`);
   };
 
   return (
