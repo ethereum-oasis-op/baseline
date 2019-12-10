@@ -1,8 +1,7 @@
 {
-  "name": "radish34-backend",
+  "name": "messenger-service",
   "version": "0.0.1",
-  "description": "Backend code for Radish34 client",
-  "main": "src/index.js",
+  "description": "REST Based API for sending and receiving structured JSON messages delivered via Whisper",
   "jest": {
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
@@ -17,7 +16,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node ./start.js 1",
-    "test": "jest --verbose --runInBand --forceExit",
+    "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:integration": "jest --verbose --runInBand --forceExit ./__tests__/integration.test.js"
   },
   "repository": {

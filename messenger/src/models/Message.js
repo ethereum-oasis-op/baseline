@@ -10,7 +10,7 @@ const MessageSchema = new mongoose.Schema({
   },
   messageType: {
     type: String,
-    enum: ['private', 'public'],
+    enum: ['individual', 'group'],
     required: true
   },
   recipientId: String,

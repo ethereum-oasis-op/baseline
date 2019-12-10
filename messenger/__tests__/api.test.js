@@ -1,178 +1,142 @@
 const request = require('supertest');
 const Config = require('../config');
-const buyer_api_port = Config.nodes.node_1.api_port;
-const supplier_api_port = Config.nodes.node_2.api_port;
+const mongoose = require('mongoose');
+const Identity = require('../src/models/Identity.js')
 
-const buyerURL = `http://localhost:${buyer_api_port}`;
-const supplierURL = `http://localhost:${supplier_api_port}`;
-let buyerId, supplierId;
-let rfpId, entanglementId;
+const { setupDB } = require('./test-setup');
 
-describe('Whisper Identities', () => {
+const buyerURL = `http://localhost:4001`;
+let buyerId;
+
+describe('/identities', () => {
   let identityCount;
-  test('should retrieve all buyer identities: GET /identities', async () => {
-    const res = await request(buyerURL)
-      .get('/api/v1/identities');
-    expect(res.statusCode).toEqual(200);
-    identityCount = res.body.length;
-  });
+  // Setup a Test Database
+  setupDB('mongodb://localhost:27017/radish34_test');
 
-  test('should create a new buyer identity: POST /identities', async () => {
-    const res = await request(buyerURL)
-      .post('/api/v1/identities')
-      .send({});
-    expect(res.statusCode).toEqual(201);
-    expect(res.body).toHaveProperty('publicKey');
-    buyerId = res.body.publicKey;
-  });
 
-  test('number of buyer identities should have incremented: GET /identities', async () => {
-    const res = await request(buyerURL)
-      .get('/api/v1/identities');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toEqual(identityCount + 1);
-  });
+  // GET
+    // when no identities exist
+    // it should return []
+    
+    // when one or more identities exist
+    // it should return the identity in an array
+    // - the identity should be structured json
+    // - it should at least have the following fields: { publicKey, createdDate }
+ 
+  // POST
+
+    // it creates a new identity
+    // - returns a new ID fields { publicKey, createdDate }
+
+  describe('No identities exist', () => {
+    beforeEach(async () => {
+      await Identity.deleteMany(); 
+    });
+
+    test('GET /identities returns an empty array', async () => {
+      const res = await request(buyerURL)
+        .get('/api/v1/identities');
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toEqual([]);
+      expect(res.body.length).toEqual(0);
+    });
+   
+    afterEach(async () => {
+      await Identity.deleteMany() 
+    });
 });
 
-describe('Messages', () => {
-  let messageId;
-  test('buyer sends message to self', async () => {
-    const res = await request(buyerURL)
-      .post('/api/v1/messages')
-      .set('x-messenger-id', buyerId)
-      .send({
-        recipientId: buyerId,
-        message: 'Message 1'
-      });
-    expect(res.statusCode).toEqual(201);
-    expect(res.body.payload).toEqual('Message 1');
-    messageId = res.body._id;
-  });
+//   test('GET /identities returns an identity', async () => {
+//     const res = await request(buyerURL)
+//       .get('/api/v1/identities');
+//     expect(res.statusCode).toEqual(200);
+//     identityCount = res.body.length;
+//   });
 
-  test('buyer retrieves message to self', async () => {
-    const res = await request(buyerURL)
-      .get(`/api/v1/messages/${messageId}`)
-      .set('x-messenger-id', buyerId);
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.payload).toEqual('Message 1');
-  });
+//   test('POST /identities to create a new one', async () => {
+//     const res = await request(buyerURL)
+//       .post('/api/v1/identities')
+//       .send({});
+//     expect(res.statusCode).toEqual(201);
+//     expect(res.body).toHaveProperty('publicKey');
+//     buyerId = res.body.publicKey;
+//   });
 
-  //   test('supplier should have new RFP: GET /rfps/:rfpId', async () => {
-  //     // Wait for db to update
-  //     await new Promise((r) => setTimeout(r, 2000));
-  //     let res = await request(supplierURL)
-  //       .get(`/api/v1/rfps/${rfpId}`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.uuid).toEqual(rfpId);
-  //   });
-  // });
-
-  // describe('Buyer Entangles RFP', () => {
-  //   test('buyer adds Entanglement to RFP: POST /entanglements', async () => {
-  //     let res = await request(buyerURL)
-  //       .post(`/api/v1/entanglements`)
-  //       .send({
-  //         databaseLocation: {
-  //           collection: 'RFPs',
-  //           objectId: rfpId
-  //         },
-  //         partnerIds: [
-  //           supplierId
-  //         ]
-  //       });
-  //     entanglementId = res.body._id;
-  //     expect(res.statusCode).toEqual(201);
-  //     expect(res.body).toHaveProperty('databaseLocation');
-  //   });
-
-  //   test('throws error if buyer tries to create second Entanglement for same RFP: POST /entanglements', async () => {
-  //     // Wait for db to update
-  //     await new Promise((r) => setTimeout(r, 2000));
-  //     let res = await request(buyerURL)
-  //       .post(`/api/v1/entanglements`)
-  //       .send({
-  //         databaseLocation: {
-  //           collection: 'RFPs',
-  //           objectId: rfpId
-  //         },
-  //         partnerIds: [
-  //           supplierId
-  //         ]
-  //       });
-  //     expect(res.statusCode).toEqual(409);
-  //   });
-
-  //   test('supplier sees Entanglement request: GET /entanglements/:id', async () => {
-  //     let res = await request(supplierURL)
-  //       .get(`/api/v1/entanglements/${entanglementId}`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body._id).toEqual(entanglementId);
-  //     expect(res.body.participants[1].messengerId).toEqual(supplierId);
-  //     expect(res.body.participants[1].acceptedRequest).toBe(false);
-  //     expect(res.body.participants[1].isSelf).toBe(true);
-  //     expect(res.body.participants[0].isSelf).toBe(false);
-  //   });
-
-  //   test('state of buyer Entanglement is "pending": GET /entanglements/:id/state', async () => {
-  //     let res = await request(buyerURL)
-  //       .get(`/api/v1/entanglements/${entanglementId}/state`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.state).toEqual('pending');
-  //   });
-  // });
-
-
-  // describe('Supplier accepts Entanglement', () => {
-  //   test('supplier accepts Entanglement request: PUT /entanglements/:id', async () => {
-  //     let res = await request(supplierURL)
-  //       .put(`/api/v1/entanglements/${entanglementId}`)
-  //       .send({
-  //         acceptedRequest: true,
-  //         messengerId: supplierId
-  //       });
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body._id).toEqual(entanglementId);
-  //   });
-
-  //   test('state of supplier Entanglement is "consistent": GET /entanglements/:id/state', async () => {
-  //     // Wait for db to update
-  //     await new Promise((r) => setTimeout(r, 1000));
-  //     let res = await request(supplierURL)
-  //       .get(`/api/v1/entanglements/${entanglementId}/state`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.state).toEqual('consistent');
-  //   });
-
-  //   test('state of buyer Entanglement is "consistent": GET /entanglements/:id/state', async () => {
-  //     // Wait for db to update
-  //     await new Promise((r) => setTimeout(r, 1000));
-  //     let res = await request(buyerURL)
-  //       .get(`/api/v1/entanglements/${entanglementId}/state`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.state).toEqual('consistent');
-  //   });
-  // });
-
-  // describe('RFP updates detected', () => {
-  //   test('supplier updates RFP: PUT /rfps/:id', async () => {
-  //     let res = await request(supplierURL)
-  //       .put(`/api/v1/rfps/${rfpId}`)
-  //       .send({
-  //         estimatedQty: {
-  //           quantity: '100',
-  //           unit: 'piece'
-  //         }
-  //       });
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.estimatedQty.quantity).toEqual('100');
-  //   });
-
-  //   test('state of buyer Entanglement is "inconsistent": GET /entanglements/:id/state', async () => {
-  //     // Wait for db to update
-  //     await new Promise((r) => setTimeout(r, 2000));
-  //     let res = await request(buyerURL)
-  //       .get(`/api/v1/entanglements/${entanglementId}/state`);
-  //     expect(res.statusCode).toEqual(200);
-  //     expect(res.body.state).toEqual('inconsistent');
-  //   });
+//   test('number of buyer identities should have incremented: GET /identities', async () => {
+//     const res = await request(buyerURL)
+//       .get('/api/v1/identities');
+//     expect(res.statusCode).toEqual(200);
+//     expect(res.body.length).toEqual(identityCount + 1);
+//   });
 });
+
+// describe('/messages', () => {
+//   let messageId;
+  
+//   // When no Identity is passed in header
+//   // it should return a 400 
+//   // it should have a error message that says ""'X-messenger-id' header is required"
+
+//   // When there is an messenger-id header
+
+//   // GET /messages
+//   // When there are no messages
+//   // it should return an empty array []
+
+//   // When there are one or more messages
+//   // it returns non-empty array of messages
+
+//   // describe: filter params
+
+//   // when query param 'since' is passed
+//   // it returns messages sent or received on or after that date
+
+//   // when query param 'since' is NOT passed
+//   // it returns messages sent or received less that 24 hrs old
+
+//   // when query param 'partnerId' is passed
+//   // it returns messages that are both to, and from this partnerId
+
+//   // GET /messages/:messagesId
+
+//   // when a message exists with the requested ID
+//   // it returns a json object
+//   // the returned message has the following fields: {id, scope, senderId, sentDate, recipientId, deliveredDate, payload} 
+
+//   // when the message does not exist
+//   // it returns a 404
+
+//   // POST
+
+//   // when the post body has the required fields
+//   // the required fields are { recipientID, and payload }
+//   // it returns the new message object
+//   // the returned message has the following fields: {id, scope, senderId, sentDate, recipientId, deliveredDate, payload} 
+
+//   // when the post body does not have the required fields
+//   // it returns a 400 error
+//   // it has an error message that lists the required fields
+
+
+//   test('buyer sends message to self', async () => {
+//     const res = await request(buyerURL)
+//       .post('/api/v1/messages')
+//       .set('x-messenger-id', buyerId)
+//       .send({
+//         recipientId: buyerId,
+//         message: 'Message 1'
+//       });
+//     expect(res.statusCode).toEqual(201);
+//     expect(res.body.payload).toEqual('Message 1');
+//     messageId = res.body._id;
+//   });
+
+//   test('buyer retrieves message to self', async () => {
+//     const res = await request(buyerURL)
+//       .get(`/api/v1/messages/${messageId}`)
+//       .set('x-messenger-id', buyerId);
+//     expect(res.statusCode).toEqual(200);
+//     expect(res.body.payload).toEqual('Message 1');
+//   });
+
+// });
