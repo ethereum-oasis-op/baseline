@@ -5,9 +5,10 @@ const router = express.Router();
 
 router.post('/', async (req, res, next) => {
   const { name } = req.body;
+  const vars = req.body.witness;
   try {
-    await zokrates.compile(`./code/${name}.code`, `./output`, `${name}_out`);
-    return res.send('Compiled');
+    await zokrates.computeWitness(`./output/${name}_out`, './output', `${name}_witness`, vars);
+    return res.send('ComputeWitness');
   } catch (err) {
     return next(err);
   }

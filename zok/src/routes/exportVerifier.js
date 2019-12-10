@@ -6,8 +6,13 @@ const router = express.Router();
 router.post('/', async (req, res, next) => {
   const { name } = req.body;
   try {
-    await zokrates.compile(`./code/${name}.code`, `./output`, `${name}_out`);
-    return res.send('Compiled');
+    await zokrates.exportVerifier(
+      `./output/${name}_vk.key`,
+      `./output`,
+      `Verifier_${name}.sol`,
+      `${process.env.PROVING_SCHEME}`,
+    );
+    return res.send('ExportedVerifier');
   } catch (err) {
     return next(err);
   }
