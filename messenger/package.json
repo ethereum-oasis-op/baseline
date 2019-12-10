@@ -8,7 +8,8 @@
     "testPathIgnorePatterns": [
       "/config/",
       "/__tests__/test-setup.js",
-      "/__tests__/README.md"
+      "/__tests__/README.md",
+      "/__tests__/integration.test.js"
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/"
@@ -16,7 +17,8 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node ./start.js 1",
-    "test": "jest --verbose --runInBand --forceExit"
+    "test": "jest --verbose --runInBand --forceExit",
+    "test:integration": "jest --verbose --runInBand --forceExit ./__tests__/integration.test.js"
   },
   "repository": {
     "type": "git",

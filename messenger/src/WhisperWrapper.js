@@ -127,7 +127,7 @@ class WhisperWrapper {
   }
 
   async getSingleMessage(messageId) {
-    return await Message.find({ _id: messageId });
+    return await Message.findOne({ _id: messageId });
   }
 
   // Send private message
