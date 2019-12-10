@@ -28,27 +28,14 @@ describe('Whisper Identities', () => {
   });
 });
 
-describe('RFPs', () => {
-  test('buyer creates a new RFP: POST /rfps', async () => {
+describe('Messages', () => {
+  test('buyer sends message to supplier', async () => {
     const res = await request(buyerURL)
-      .post('/api/v1/rfps')
+      .post('/api/v1/messages')
+      .set('x-messenger-id', buyerId)
       .send({
-        item: {
-          sku: 'abc123456',
-          name: 'Automatic Widget 2000'
-        },
-        estimatedQty: {
-          quantity: '75',
-          unit: 'piece'
-        },
-        buyerId: buyerId,
-        name: 'Widgets',
-        recipients: [
-          {
-            uuid: supplierId,
-            receiptDate: null
-          }
-        ]
+        recipientId: supplierId,
+        message: 'Message 1'
       });
     expect(res.statusCode).toEqual(201);
     expect(res.body).toHaveProperty('uuid');

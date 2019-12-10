@@ -64,6 +64,11 @@ class WhisperWrapper {
     return identities;
   }
 
+  // Find single identity in database
+  async findIdentity(myId) {
+    return await Identity.exists({ _id: myId });
+  }
+
   // Load previously created Whisper IDs from database into Whisper node
   async loadIdentities() {
     let identities = await this.getIdentities();
@@ -119,6 +124,10 @@ class WhisperWrapper {
         ]
       }
     }]);
+  }
+
+  async getSingleMessage(messageId) {
+    return await Message.find({ _id: messageId });
   }
 
   // Send private message
@@ -245,35 +254,29 @@ class WhisperWrapper {
     }).on('data', async (data) => {
       // TODO check if sender is in my contacts before processing
       let content = await this.web3.utils.toAscii(data.payload);
-      let time = await Math.floor(Date.now() / 1000);
+      await Message.findOneAndUpdate(
+        { _id: data.hash },
+        {
+          _id: data.hash,
+          messageType: 'private',
+          recipientId: data.recipientPublicKey,
+          senderId: data.sig,
+          ttl: data.ttl,
+          topic: data.topic,
+          payload: content,
+          pow: data.pow,
+          ack_rcvd: false,
+          timestamp: data.timestamp
+        },
+        { upsert: true, new: true }
+      );
       // Check if this is a JSON structured message
       let [isJSON, messageObj] = await utils.hasJsonStructure(content);
       if (isJSON) {
-        switch (messageObj.type) {
-          case 'rfp_create':
-            // POST radish-api/rfps
-            break;
-          default:
-            console.log('Did not recognize message object type: ', messageObj);
-        }
+        console.log('Did not recognize message object type: ', messageObj);
+        // POST radish-api/documents
       } else {
-        // Store regular messages in Messages collection in Mongo
-        await Message.findOneAndUpdate(
-          { _id: data.hash },
-          {
-            _id: data.hash,
-            messageType: 'private',
-            recipientId: data.recipientPublicKey,
-            senderId: data.sig,
-            ttl: data.ttl,
-            topic: data.topic,
-            payload: content,
-            pow: data.pow,
-            ack_rcvd: false,
-            timestamp: data.timestamp
-          },
-          { upsert: true, new: true }
-        );
+        // POST radish-api/messages
       }
       // TODO send acknowledgment
     }).on('error', (err) => {

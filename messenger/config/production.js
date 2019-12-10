@@ -7,11 +7,11 @@ module.exports = {
   },
   nodes: {
     node_1: {
-      ip_address: "127.0.0.1",
+      ip_address: "geth-node",
       whisper_port: "8546",
       api_port: "4001",
       origin: "mychat2",
-      db_url: "mongodb://127.0.0.1:27018/radish34"
+      db_url: "mongodb://mongo:27017/radish34"
     }
   }
 };

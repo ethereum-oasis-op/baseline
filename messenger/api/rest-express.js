@@ -25,28 +25,49 @@ router.post('/identities', async (req, res) => {
   res.send(result);
 });
 
-// Fetch messages from private 1:1 conversation
-router.get('/messages/:myId', async (req, res) => {
-  let result = await messenger.getMessages(req.params.myId, undefined, undefined, req.query.since);
+// Fetch messages from all conversations
+router.get('/messages', async (req, res) => {
+  let myId = req.headers['x-messenger-id'];
+  let validId = await messenger.findIdentity(myId);
+  if (!validId) {
+    res.status(400);
+    res.send({ message: "Valid messenger identity not provider in 'x-messenger-id' header." })
+    return;
+  }
+  let result = await messenger.getMessages(myId, undefined, req.query.partnerId, req.query.since);
   res.status(200);
   res.send(result);
 });
 
-// Fetch messages from private 1:1 conversation
-router.get('/messages/:myId/contacts/:contactId', async (req, res) => {
-  let result = await messenger.getMessages(req.params.myId, undefined, req.params.contactId, req.query.since);
+// Fetch messages from all conversations
+router.get('/messages/:messageId', async (req, res) => {
+  let myId = req.headers['x-messenger-id'];
+  let validId = await messenger.findIdentity(myId);
+  if (!validId) {
+    res.status(400);
+    res.send({ message: "Valid messenger identity not provider in 'x-messenger-id' header." })
+    return;
+  }
+  let result = await messenger.getSingleMessage(req.params.messageId);
   res.status(200);
   res.send(result);
 });
 
-router.post('/messages/:senderId', async (req, res) => {
+router.post('/messages', async (req, res) => {
+  let myId = req.headers['x-messenger-id'];
+  let validId = await messenger.findIdentity(myId);
+  if (!validId) {
+    res.status(400);
+    res.send({ message: "Valid messenger identity not provider in 'x-messenger-id' header." })
+    return;
+  }
   if (!req.body.message) {
     res.status(400);
     res.send({ error: 'Request body must contain following fields: message' });
     return;
   }
-  let result = await messenger.sendPrivateMessage(req.params.senderId, req.body.recipientId, undefined, req.body.message);
-  res.status(200);
+  let result = await messenger.sendPrivateMessage(myId, req.body.recipientId, undefined, req.body.message);
+  res.status(201);
   res.send(result);
 });
 
