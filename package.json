@@ -10,6 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watchAll --runInBand",
     "seed": "docker-compose run --rm mongo-seed sh seed.sh",
+    "deploy": "docker-compose exec radish-api-buyer node dist/deploy.js",
     "init-buyer": "docker-compose exec radish-api-buyer node dist/init-buyer.js",
     "init-supplier1": "docker-compose exec radish-api-supplier1 node dist/init-supplier.js",
     "init-supplier2": "docker-compose exec radish-api-supplier2 node dist/init-supplier.js",
