@@ -6,7 +6,6 @@
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
       "/config/",
-      "/__tests__/test-setup.js",
       "/__tests__/README.md",
       "/__tests__/integration.test.js"
     ],
