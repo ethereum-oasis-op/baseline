@@ -1,0 +1,19 @@
+{
+  "name": "radish-deploy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "check": "node ./src/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.2.4",
+    "ethers": "^4.0.40"
+  },
+  "devDependencies": {
+    "cod-scripts": "^3.2.0"
+  }
+}

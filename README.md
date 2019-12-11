@@ -12,14 +12,16 @@ Note that, the license is under an MoU signed between EY, MSFT and ConsenSys. No
     `dotdocker start`
 
 ## Development/Test Environment
-In order to run local environments for testing and developing within the Radish34 repo, there is a scripts folder. Depending on your needs, you can choose a script or a combination of scripts to run a subset of containers instead of running `docker-compose up`, which starts all containers and therefore uses significant processing power.
+
+1. run `npm run deploy`
+	- This docker container first deploys both the Registry contract and the OrgRegistry contract.
+	- Then it registers a Buyer and 3 Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
+1. run `docker-compose up`
+
+
 
 ### Front-end development
-Run the following commands from the repo root directory. This will start several docker containers including `radish-ui`, `radish-api`, and `mongo`. It purposefully excludes all `geth` node containers.
-```
-cd scripts
-./frontend.sh
-```
+
 
 ## API
 
