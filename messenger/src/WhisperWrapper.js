@@ -1,6 +1,6 @@
 const Web3 = require('web3');
-const Identity = require('./mongoose_models/Identity');
-const Message = require('./mongoose_models/Message');
+const Identity = require('./models/Identity');
+const Message = require('./models/Message');
 const utils = require("./generalUtils");
 
 // Useful constants
@@ -49,18 +49,18 @@ class WhisperWrapper {
         publicKey: pubKey,
         privateKey: privKey,
         keyId: keyId,
-        created: time
+        createdDate: time
       },
       { upsert: true, new: true }
     );
 
     this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
-    return result;
+    return { publicKey: result.publicKey, createdDate: result.createdDate };
   }
 
   // Fetch all of the Whisper Identities stored in database
   async getIdentities() {
-    let identities = await Identity.find({});
+    let identities = await Identity.find({}, 'publicKey createdDate');
     return identities;
   }
 

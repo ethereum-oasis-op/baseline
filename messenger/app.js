@@ -2,7 +2,7 @@
 
 const express = require('express');
 const { ApolloServer, gql } = require('apollo-server-express');
-const Identities = require('./src/mongoose_models/Identity');
+const Identities = require('./src/models/Identity');
 const WhisperWrapper = require('./src/WhisperWrapper');
 
 // Construct a schema, using GraphQL schema language

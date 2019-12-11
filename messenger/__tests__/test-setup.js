@@ -36,9 +36,9 @@ module.exports = {
     })
 
     // Cleans up database between each test
-    afterEach(async () => {
-      await removeAllCollections()
-    })
+    //afterEach(async () => {
+    //await removeAllCollections()
+    //})
 
     // Disconnect Mongoose
     afterAll(async () => {

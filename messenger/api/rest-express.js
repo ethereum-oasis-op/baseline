@@ -31,7 +31,7 @@ router.get('/messages', async (req, res) => {
   let validId = await messenger.findIdentity(myId);
   if (!validId) {
     res.status(400);
-    res.send({ message: "Valid messenger identity not provider in 'x-messenger-id' header." })
+    res.send({ error: "Valid messenger identity not provider in 'x-messenger-id' header." })
     return;
   }
   let result = await messenger.getMessages(myId, undefined, req.query.partnerId, req.query.since);
@@ -45,10 +45,15 @@ router.get('/messages/:messageId', async (req, res) => {
   let validId = await messenger.findIdentity(myId);
   if (!validId) {
     res.status(400);
-    res.send({ message: "Valid messenger identity not provider in 'x-messenger-id' header." })
+    res.send({ error: "Valid messenger identity not provider in 'x-messenger-id' header." })
     return;
   }
   let result = await messenger.getSingleMessage(req.params.messageId);
+  if (!result) {
+    res.status(404);
+    res.send({ error: `Message with id ${req.params.messageId} was not found.` });
+    return;
+  }
   res.status(200);
   res.send(result);
 });
@@ -58,12 +63,12 @@ router.post('/messages', async (req, res) => {
   let validId = await messenger.findIdentity(myId);
   if (!validId) {
     res.status(400);
-    res.send({ message: "Valid messenger identity not provider in 'x-messenger-id' header." })
+    res.send({ error: "Valid messenger identity not provider in 'x-messenger-id' header." })
     return;
   }
   if (!req.body.message) {
     res.status(400);
-    res.send({ error: 'Request body must contain following fields: message' });
+    res.send({ error: 'Request body must contain following fields: message, recipientId' });
     return;
   }
   let result = await messenger.sendPrivateMessage(myId, req.body.recipientId, undefined, req.body.message);

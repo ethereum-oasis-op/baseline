@@ -21,7 +21,7 @@ const IdentitySchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  created: String
+  createdDate: String
 },
   {
     collection: "Identities",
