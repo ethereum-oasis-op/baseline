@@ -20,6 +20,7 @@ const MessageSchema = new mongoose.Schema({
   payload: String,
   pow: Number,
   ack_rcvd: Boolean,
+  ackDate: String,
   timestamp: String
 },
   {

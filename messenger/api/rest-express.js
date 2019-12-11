@@ -55,7 +55,7 @@ router.get('/messages/:messageId', async (req, res) => {
     return;
   }
   res.status(200);
-  res.send(result);
+  res.send(formatMessageHelper(result));
 });
 
 router.post('/messages', async (req, res) => {
@@ -66,15 +66,27 @@ router.post('/messages', async (req, res) => {
     res.send({ error: "Valid messenger identity not provider in 'x-messenger-id' header." })
     return;
   }
-  if (!req.body.message) {
+  if (!req.body.payload) {
     res.status(400);
-    res.send({ error: 'Request body must contain following fields: message, recipientId' });
+    res.send({ error: 'Request body must contain following fields: payload, recipientId' });
     return;
   }
-  let result = await messenger.sendPrivateMessage(myId, req.body.recipientId, undefined, req.body.message);
+  let result = await messenger.sendPrivateMessage(myId, req.body.recipientId, undefined, req.body.payload);
   res.status(201);
   res.send(result);
 });
+
+function formatMessageHelper(message){
+  return({
+    id: message._id,
+    scope: message.messageType,
+    senderId: message.senderId,
+    sentDate: message.timestamp,
+    recipientId: message.recipientId,
+    deliveredDate: message.ackDate,
+    payload: message.payload
+  });
+}
 
 async function initialize(ipAddress, port) {
   // Retrieve messenger instance and pass to helper classes
