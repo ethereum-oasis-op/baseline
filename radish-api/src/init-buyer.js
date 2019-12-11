@@ -3,7 +3,6 @@ import db from './db';
 import { getAccounts, getAddress, getBalance } from './services/wallet';
 import {
   deployERC1820Registry,
-  deployRegistrar,
   deployOrgRegistry,
   getOrganizationRegistryAddress,
 } from './services/contract';
@@ -23,11 +22,9 @@ const main = async () => {
   const walletAddress = await getAddress();
   console.log('the account used in this container is: ', walletAddress);
   console.log('the balance of the account used in this container is: ', await getBalance());
-  const returnValue0 = await deployERC1820Registry('ERC1820Registry');
-  console.log('data stored in db for ERC1820Registry Smartcontract: ', returnValue0);
-  const registrarRecord = await deployRegistrar(returnValue0.contract.contractAddress);
-  console.log('data stored in db for Registrar Smartcontract: ', registrarRecord);
-  const orgRegistryRecord = await deployOrgRegistry(registrarRecord.contract.contractAddress);
+  const erc1820Address = await deployERC1820Registry('ERC1820Registry');
+  console.log('data stored in db for ERC1820Registry Smartcontract: ', erc1820Address);
+  const orgRegistryRecord = await deployOrgRegistry(erc1820Address.contract.contractAddress);
   console.log('data stored in db for OrgRegistry Smartcontract: ', orgRegistryRecord);
   const txHashAssignManager = await assignManager(orgRegistryRecord.contract.contractAddress);
   console.log('transactionHash for assigning new manager of OrgRegistry: ', txHashAssignManager);
@@ -42,9 +39,9 @@ const main = async () => {
   );
   console.log('OrgRegistry Address in db is: ', await getOrganizationRegistryAddress());
   const orgRegistryAddress = await getInterfaceAddress(
-    registrarRecord.contract.contractAddress,
+    erc1820Address.contract.contractAddress,
     walletAddress,
-    'IOrgRegistry',
+    utils.id('IOrgRegistry'),
   );
   console.log('OrgRegistry Address retrieved from Registrar is: ', orgRegistryAddress);
   const registerOrgTxHash = await registerToOrgRegistry(

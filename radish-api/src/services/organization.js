@@ -100,10 +100,10 @@ export const getRegisteredOrganization = async walletAddress => {
 export const getInterfaceAddress = async (registrarAddress, managerAddress, interfaceName) => {
   const config = await getServerSettings();
   const interfaceAddress = await getContract(
-    getRegistarJson(),
+    getERC1820RegistryJson(),
     config.blockchainProvider,
     registrarAddress,
-  ).interfaceAddr(managerAddress, interfaceName);
+  ).getInterfaceImplementer(managerAddress, interfaceName);
 
   return interfaceAddress;
 };
