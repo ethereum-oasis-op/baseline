@@ -23,6 +23,8 @@ import ContractResolver from './resolvers/contract';
 import WalletSchema from './schemas/wallet';
 import WalletResolver from './resolvers/wallet';
 import healthcheck from './install/healthcheck';
+import QuoteSchema from './schemas/quote';
+import QuoteResolver from './resolvers/quote';
 
 const PORT = process.env.PORT || 8001;
 
@@ -37,6 +39,7 @@ const typeDefs = [
   MessageSchema,
   ContractSchema,
   WalletSchema,
+  QuoteSchema,
 ];
 const resolvers = [
   OrganizationResolver,
@@ -49,6 +52,7 @@ const resolvers = [
   MessageResolver,
   ContractResolver,
   WalletResolver,
+  QuoteResolver,
 ];
 
 export default async function startServer() {
