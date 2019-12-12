@@ -25,11 +25,32 @@ services:
     ports:
       - 8545:8545
 
-  zok:
-    image: kartheek14/zokrates_dev:081519
+  radish-zok:
+    build:
+      context: ./zok/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
     volumes:
-      - ./zok/code:/home/zokrates/zok_code
-      - ./zok/output:/home/zokrates/output
+      - ./zok/code:/app/code:delegated
+      - ./zok/src:/app/src:delegated
+      - ./zok/dist:/app/dist:delegated
+      - ./zok/output:/app/output:delegated
+    environment:
+      PROVING_SCHEME: 'g16'
+      VIRTUAL_HOST: radish-zok.docker
+    depends_on:
+      - radish-zok-watch
+    ports:
+      - 8080:80
+
+  radish-zok-watch:
+    build:
+      context: ./zok/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./zok/src:/app/src:delegated
+      - ./zok/dist:/app/dist:delegated
+    command: npm run build:watch
       
   radish34-ui:
     build:
