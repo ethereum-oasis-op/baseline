@@ -85,6 +85,14 @@ describe('/messages', () => {
 
     describe('Creating a new message', () => {
 
+      test('POST /messages returns 400 without id in header', async () => {
+        const res = await request(buyerURL)
+          .post('/api/v1/messages')
+          .send({});
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual("Valid messenger identity not provider in 'x-messenger-id' header.");
+      });
+
       test('POST /messages returns 400 withOUT required attributes', async () => {
         const res = await request(buyerURL)
           .post('/api/v1/messages')
@@ -118,9 +126,15 @@ describe('/messages', () => {
             recipientId: buyerId,
             payload: 'Message 123'
           });
-
         messageId = newRes.body._id;
         done();
+      });
+
+      test('GET /messages/:messageId returns 400 without id in header', async () => {
+        const res = await request(buyerURL)
+          .get(`/api/v1/messages/${messageId}`);
+        expect(res.statusCode).toEqual(400);
+        expect(res.body.error).toEqual("Valid messenger identity not provider in 'x-messenger-id' header.");
       });
 
       test('GET /messages/:messageId returns 404 if message doesnt exist', async () => {
@@ -151,32 +165,22 @@ describe('/messages', () => {
 
     describe('Retrieving and filtering multiple messages', () => {
 
-      beforeAll(async () => {
-        // create one 
-        let res = await request(buyerURL)
+      test('the returned messages have the expected structure', async () => {
+        // create a message
+        let cRes = await request(buyerURL)
           .post('/api/v1/messages')
           .set('x-messenger-id', buyerId)
           .send({
             recipientId: buyerId,
             payload: `Message Test 1`
           });
-        // create another
-        res = await request(buyerURL)
-          .post('/api/v1/messages')
-          .set('x-messenger-id', buyerId)
-          .send({
-            recipientId: buyerId,
-            payload: `Message Test 2`
-          });
-      });
 
-      test('the returned messages have the expected structure', async () => {
         const res = await request(buyerURL)
           .get(`/api/v1/messages`)
           .set('x-messenger-id', buyerId);
 
         expect(res.statusCode).toEqual(200);
-        // expect(res.body.length).toBeGreaterThan(0)
+        //expect(res.body.length).toBeGreaterThan(0)
         // const message = res.body[0];
         // expect(message).toHaveProperty('id');
         // expect(message).toHaveProperty('id');

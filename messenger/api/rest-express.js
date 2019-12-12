@@ -25,15 +25,19 @@ router.post('/identities', async (req, res) => {
   res.send(result);
 });
 
-// Fetch messages from all conversations
-router.get('/messages', async (req, res) => {
-  let myId = req.headers['x-messenger-id'];
-  let validId = await messenger.findIdentity(myId);
+router.all('/messages*', async (req, res, next) => {
+  let validId = await messenger.findIdentity(req.headers['x-messenger-id']);
   if (!validId) {
     res.status(400);
     res.send({ error: "Valid messenger identity not provider in 'x-messenger-id' header." })
     return;
   }
+  next();
+});
+
+// Fetch messages from all conversations
+router.get('/messages', async (req, res) => {
+  let myId = req.headers['x-messenger-id'];
   let result = await messenger.getMessages(myId, undefined, req.query.partnerId, req.query.since);
   res.status(200);
   res.send(result);
@@ -41,13 +45,6 @@ router.get('/messages', async (req, res) => {
 
 // Fetch messages from all conversations
 router.get('/messages/:messageId', async (req, res) => {
-  let myId = req.headers['x-messenger-id'];
-  let validId = await messenger.findIdentity(myId);
-  if (!validId) {
-    res.status(400);
-    res.send({ error: "Valid messenger identity not provider in 'x-messenger-id' header." })
-    return;
-  }
   let result = await messenger.getSingleMessage(req.params.messageId);
   if (!result) {
     res.status(404);
@@ -60,12 +57,6 @@ router.get('/messages/:messageId', async (req, res) => {
 
 router.post('/messages', async (req, res) => {
   let myId = req.headers['x-messenger-id'];
-  let validId = await messenger.findIdentity(myId);
-  if (!validId) {
-    res.status(400);
-    res.send({ error: "Valid messenger identity not provider in 'x-messenger-id' header." })
-    return;
-  }
   if (!req.body.payload) {
     res.status(400);
     res.send({ error: 'Request body must contain following fields: payload, recipientId' });

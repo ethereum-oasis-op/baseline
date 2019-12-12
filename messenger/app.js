@@ -3,7 +3,7 @@ var morgan = require('morgan')
  
 var app = express()
  
-app.use(morgan('combined'))
+app.use(morgan('dev'))
 
 const bodyParser = require('body-parser');
 const apiRouter = require('./api/rest-express');

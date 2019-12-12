@@ -15,7 +15,8 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node ./start.js 1",
-    "start:test": "NODE_ENV=test node ./start.js 1",
+    "start:dev": "NODE_ENV=development nodemon ./start.js 1",
+    "start:test": "NODE_ENV=test nodemon ./start.js 1",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:integration": "jest --verbose --runInBand --forceExit ./__tests__/integration.test.js"
   },
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "jest": "^24.9.0",
+    "nodemon": "^2.0.2",
     "supertest": "^4.0.2"
   }
 }
