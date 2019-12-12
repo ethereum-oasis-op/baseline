@@ -11,8 +11,8 @@ app.use(bodyParser.json({ limit: '2mb' }));
 app.use(bodyParser.urlencoded({ limit: '2mb', extended: false }));
 
 app.get('/healthcheck', (req, res) => res.sendStatus(200));
-app.use('/generate_keys', generateKeys);
-app.use('/generate_proof', generateProof);
+app.use('/generate-keys', generateKeys);
+app.use('/generate-proof', generateProof);
 
 export default app;
 module.exports = app;

@@ -38,11 +38,11 @@ radish-zok-watch_1      | Successfully compiled 6 files with Babel.
 
 `generateKeys`: This is a POST instruction that runs composite instructions, that takes in a request body of `name`, for the name of the `.code` file, and runs `compile`, `setup` and `exportVerifier` instructions. The `zok/output` has the outputs of these steps copied from within the container. Replace `test` with the name of the file to be computed
 
-Example: `curl -d '{"name": "test}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate_keys`
+Example: `curl -d '{"name": "test}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate-keys`
 
 `generateProof`: This is a POST instruction that runs composite instructions, that takes in a request body of `name`, for the name of the `.code` file, and the witness arguments and thereafter, runs `compute-witness` instructions. The `zok/output` has the outputs of these steps copied from within the container. Replace `test` with the name of the file to be computed. Subsequently, the `generate-proof` is run to produce the corresponding `proof.json` in the `/output`.
 
-Example: `curl -d '{"name": "test", "witness": "[5, 5]"}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate_proof`
+Example: `curl -d '{"name": "test", "witness": "[5, 5]"}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate-proof`
 
 Alternately, POSTMAN application can be used to run these curl requests.
 
