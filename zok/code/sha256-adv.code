@@ -1,0 +1,39 @@
+import "hashes/sha256/1024bit.code" as sha256of1024
+import "utils/pack/unpack128.code" as unpack128
+
+def concatenate256x256x256(field[256] a, field[256] b, field[256] c)->(field[768]):
+	return [...a, ...b, ...c]
+
+def shaPad768To1024()->(field[256]):
+	return [1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	1,	1,	0,	0,	0,	0,	0,	0,	0,	0]
+
+def main(field commitmentHigh, field commitmentLow, private field valueHigh, private field  valueLow, private field publicKeyHigh, private field publicKeyLow, private field saltHigh, private field saltLow)->(field):
+
+	/* Unpack inputs */
+	field[128] commitmentHighBits = unpack128(commitmentHigh)
+	field[128] commitmentLowBits = unpack128(commitmentLow)
+	field[256] commitmentBits = [...commitmentHighBits, ...commitmentLowBits]
+
+	field[128] valueHighBits = unpack128(valueHigh)
+	field[128] valueLowBits = unpack128(valueLow)
+	field[256] valueBits = [...valueHighBits, ...valueLowBits]
+
+	field[128] saltHighBits = unpack128(saltHigh)
+	field[128] saltLowBits = unpack128(saltLow)
+	field[256] saltBits = [...saltHighBits, ...saltLowBits]
+
+	field[128] publicKeyHighBits = unpack128(publicKeyHigh)
+	field[128] publicKeyLowBits = unpack128(publicKeyLow)
+	field[256] publicKeyBits = [...publicKeyHighBits, ...publicKeyLowBits]
+
+	field[256] padding768To1024 = shaPad768To1024()
+
+	/* Compute commitment = H(value|publicKey|salt) */
+	field[768] preimage768 = concatenate256x256x256(valueBits, publicKeyBits, saltBits)
+
+	/* Check equality */
+	field[256] commitmentBitsCheck = sha256of1024(preimage768[0..256], preimage768[256..512], preimage768[512..768], padding768To1024)
+
+  commitmentBitsCheck == commitmentBits
+
+	return 1
