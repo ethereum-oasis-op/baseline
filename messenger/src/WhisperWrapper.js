@@ -71,7 +71,7 @@ class WhisperWrapper {
 
   // Load previously created Whisper IDs from database into Whisper node
   async loadIdentities() {
-    let identities = await this.getIdentities();
+    let identities = await Identity.find({});
     identities.forEach(async (id) => {
       try {
         const keyId = await this.web3.shh.addPrivateKey(id.privateKey);

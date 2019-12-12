@@ -9,7 +9,7 @@ const Message = require('../src/models/Message');
 const buyerURL = `http://localhost:4001`;
 
 beforeAll(async () => {
-  mongoose.connect('mongodb://localhost:27017/radish34');
+  mongoose.connect('mongodb://localhost:27017/radish34', { useUnifiedTopology: true, useNewUrlParser: true });
   await Identity.deleteMany();
   await Message.deleteMany();
 });
@@ -62,10 +62,10 @@ describe('/messages', () => {
   describe('Using an identityId header in the request', () => {
     let buyerId;
 
-    beforeAll(async(done) => {
+    beforeAll(async (done) => {
       const res = await request(buyerURL)
-      .post('/api/v1/identities')
-      .send({}); //no attributes required
+        .post('/api/v1/identities')
+        .send({}); //no attributes required
       // Setting the buyerID used as context for the rest of the tests below
       buyerId = res.body.publicKey;
       done();
@@ -108,7 +108,7 @@ describe('/messages', () => {
     });
 
     describe('Retrieving an existing message', () => {
-      let messageId; 
+      let messageId;
 
       beforeAll(async (done) => {
         const newRes = await request(buyerURL)
@@ -134,8 +134,8 @@ describe('/messages', () => {
 
       test('GET /messages/:messageId retrieves created message', async () => {
         const res = await request(buyerURL)
-                .get(`/api/v1/messages/${messageId}`)
-                .set('x-messenger-id', buyerId);
+          .get(`/api/v1/messages/${messageId}`)
+          .set('x-messenger-id', buyerId);
 
         expect(res.statusCode).toEqual(200);
         const message = res.body;
@@ -175,7 +175,6 @@ describe('/messages', () => {
           .get(`/api/v1/messages`)
           .set('x-messenger-id', buyerId);
 
-        console.log('Result', res.body);
         expect(res.statusCode).toEqual(200);
         // expect(res.body.length).toBeGreaterThan(0)
         // const message = res.body[0];
@@ -186,16 +185,16 @@ describe('/messages', () => {
         // expect(message).toHaveProperty('id');
       });
 
-    // TODO: Implement these features/tests later
+      // TODO: Implement these features/tests later
 
-    // when query param 'since' is passed
-    // it returns messages sent or received on or after that date
+      // when query param 'since' is passed
+      // it returns messages sent or received on or after that date
 
-    // when query param 'since' is NOT passed
-    // it returns messages sent or received less that 24 hrs old
+      // when query param 'since' is NOT passed
+      // it returns messages sent or received less that 24 hrs old
 
-    // when query param 'partnerId' is passed
-    // it returns messages that are both to, and from this partnerId
+      // when query param 'partnerId' is passed
+      // it returns messages that are both to, and from this partnerId
 
     });
 
