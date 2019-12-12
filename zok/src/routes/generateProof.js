@@ -7,14 +7,19 @@ router.post('/', async (req, res, next) => {
   const { name, witness, outputDirectoryPath, proofFileName } = req.body;
   const opts = {};
   opts.createFile = true;
-  opts.directory = './output' || outputDirectoryPath;
+  opts.directory = `./output/${name}` || outputDirectoryPath;
   opts.fileName = `${name}_proof.json` || proofFileName;
   try {
-    await zokrates.computeWitness(`./output/${name}_out`, './output', `${name}_witness`, witness);
+    await zokrates.computeWitness(
+      `./output/${name}/${name}_out`,
+      `./output/${name}`,
+      `${name}_witness`,
+      witness,
+    );
     await zokrates.generateProof(
-      `./output/${name}_pk.key`,
-      `./output/${name}_out`,
-      `./output/${name}_witness`,
+      `./output/${name}/${name}_pk.key`,
+      `./output/${name}/${name}_out`,
+      `./output/${name}/${name}_witness`,
       `${process.env.PROVING_SCHEME}`,
       opts,
     );

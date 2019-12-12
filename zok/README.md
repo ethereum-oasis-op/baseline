@@ -34,15 +34,17 @@ radish-zok-watch_1      |
 radish-zok-watch_1      | Successfully compiled 6 files with Babel.
 ```
 
-`radish-zok` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.code` file(s) at `zok/code`, and run each of the instructions below per file. This service can be called from other containers using `http://zok` or expose a port in the `docker-compose.yml` (for example 8080, as in this case)
+`radish-zok` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.code` file(s) at `zok/code`, and run each of the instructions below per file. This service can be called from other containers using `http://radish-zok.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
 
-`generateFiles`: This is a composite POST instruction, that takes in a request body of `name`, for the name of the `.code` file, and runs `compile`, `setup` and `exportVerifier` instructions. The `zok/output` has the outputs of these steps copied from within the container. Replace `test` with the name of the file to be computed
+`generateKeys`: This is a POST instruction that runs composite instructions, that takes in a request body of `name`, for the name of the `.code` file, and runs `compile`, `setup` and `exportVerifier` instructions. The `zok/output` has the outputs of these steps copied from within the container. Replace `test` with the name of the file to be computed
 
-Example: `curl -d "name=test" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:3000/generateFiles`
+Example: `curl -d '{"name": "test}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate_keys`
 
-`generateProof`: This is a composite POST instruction, that takes in a request body of `name`, for the name of the `.code` file, and the witness arguments and thereafter, runs `compute-witness` instructions. The `zok/output` has the outputs of these steps copied from within the container. Replace `test` with the name of the file to be computed. Subsequently, the `generate-proof` is run to produce the corresponding `proof.json` in the `/output`.
+`generateProof`: This is a POST instruction that runs composite instructions, that takes in a request body of `name`, for the name of the `.code` file, and the witness arguments and thereafter, runs `compute-witness` instructions. The `zok/output` has the outputs of these steps copied from within the container. Replace `test` with the name of the file to be computed. Subsequently, the `generate-proof` is run to produce the corresponding `proof.json` in the `/output`.
 
-Example: `curl -d "{"name": "test", "witness" = "[5, 5]" -H "Content-Type: application/json" -X POST http://localhost:3000/generateProof`
+Example: `curl -d '{"name": "test", "witness": "[5, 5]"}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate_proof`
 
 Alternately, POSTMAN application can be used to run these curl requests.
+
+Note: All the resultant files from the above steps/processes are created in a sub-directory named with the input parameter, `name`.
 

@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "cod-scripts": "^3.2.0",
-    "faker": "git+https://git@github.com/Marak/faker.js.git#d3ce6f1",
     "markdownlint-cli": "^0.15.0",
     "nodemon": "^1.18.9"
   },

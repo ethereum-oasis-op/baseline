@@ -6,7 +6,7 @@ const main = async () => {
   } catch (err) {
     // eslint-disable-next-line no-console
     console.log(err);
-    process.exitCode = 1;
+    process.exit(1);
     process.kill(process.pid, 'SIGTERM');
   }
 };
