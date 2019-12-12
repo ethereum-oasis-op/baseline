@@ -28,12 +28,14 @@ const QuoteSchema = gql`
   }
 
   type RateTable {
-    volume: Int!
+    startRange: Int!
+    endRange: Int!
     ppu: Float!
   }
 
   input inputRateTable {
-    volume: Int!
+    startRange: Int!
+    endRange: Int!
     ppu: Float!
   }
 `;

@@ -6,7 +6,8 @@ export const QUOTE_ATTRIBUTES = gql`
     rfqId
     terminationDate
     rates {
-      volume
+      startRange
+      endRange
       ppu
     }
   }

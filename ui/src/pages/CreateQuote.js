@@ -64,17 +64,30 @@ const CreateQuote = () => {
         rates: Yup.array()
           .of(
             Yup.object().shape({
-              volume: Yup.number()
-                .required('Volume required')
-                .min(1, 'Volume must be at least 1')
+              startRange: Yup.number()
+                .required('Minimum volume required')
+                .min(1, 'Min volume must be at least 1')
                 .test({
-                  name: 'volume-amount-test',
+                  name: 'min-volume-amount-test',
                   test: item => {
-                    const index = findIndex(values.rates, value => value ? Number(value.volume) === item : false);
+                    const index = findIndex(values.rates, value => value ? Number(value.startRange) === item : false);
                     const prevItem = values.rates[index - 1];
-                    return prevItem ? prevItem.volume < item : true;
+                    return prevItem ? prevItem.endRange < item : true;
                   },
-                  message: 'Volume must be higher than previous row',
+                  message: 'Min volume must be higher than previous row',
+                  exclusive: false,
+                }),
+              endRange: Yup.number()
+                .required('Maximum volume required')
+                .min(1, 'Max volume must be at least 1')
+                .test({
+                  name: 'max-volume-amount-test',
+                  test: item => {
+                    const index = findIndex(values.rates, value => value ? Number(value.endRange) === item : false);
+                    const prevItem = values.rates[index - 1];
+                    return prevItem ? prevItem.endRange < item : true;
+                  },
+                  message: 'Max volume must be higher than previous row',
                   exclusive: false,
                 }),
               ppu: Yup.number()
@@ -100,7 +113,8 @@ const CreateQuote = () => {
             <Table className={classes.table}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Volume</TableCell>
+                  <TableCell>Min Volume</TableCell>
+                  <TableCell>Max Volume</TableCell>
                   <TableCell>Price Per Unit (PPU)</TableCell>
                 </TableRow>
               </TableHead>
@@ -115,7 +129,17 @@ const CreateQuote = () => {
                           <TableRow>
                             <TableCell>
                               <Field
-                                id={`rates.${index}.volume`}
+                                id={`rates.${index}.startRange`}
+                                component={TextField}
+                                onChange={formik.handleChange}
+                                disabled={disabled[index]}
+                                className={classes.field}
+                                type="number"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Field
+                                id={`rates.${index}.endRange`}
                                 component={TextField}
                                 onChange={formik.handleChange}
                                 disabled={disabled[index]}
@@ -147,7 +171,7 @@ const CreateQuote = () => {
                                 <Button
                                   type="button"
                                   onClick={() =>
-                                    Boolean(formik.values.rates[index].volume) && Boolean(formik.values.rates[index].ppu) &&
+                                    Boolean(formik.values.rates[index].startRange && formik.values.rates[index].endRange && formik.values.rates[index].ppu) &&
                                     setDisabled({ ...disabled, [index]: true })
                                   }
                                 >
@@ -167,7 +191,14 @@ const CreateQuote = () => {
                             <TableCell className={classes.tableCell}>
                               <ErrorMessage
                                 className={classes.errorMessage}
-                                name={`rates.${index}.volume`}
+                                name={`rates.${index}.startRange`}
+                                render={msg => <Typography>{msg}</Typography>}
+                              />
+                            </TableCell>
+                            <TableCell className={classes.tableCell}>
+                              <ErrorMessage
+                                className={classes.errorMessage}
+                                name={`rates.${index}.endRange`}
                                 render={msg => <Typography>{msg}</Typography>}
                               />
                             </TableCell>
