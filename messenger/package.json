@@ -9,6 +9,10 @@
       "/__tests__/README.md",
       "/__tests__/integration.test.js"
     ],
+    "collectCoverageFrom": [
+      "**/*.js"
+    ],
+    "coverageReporters": [],
     "coveragePathIgnorePatterns": [
       "/node_modules/"
     ]

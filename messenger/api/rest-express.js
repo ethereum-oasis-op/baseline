@@ -67,14 +67,14 @@ router.post('/messages', async (req, res) => {
   res.send(result);
 });
 
-function formatMessageHelper(message){
-  return({
+function formatMessageHelper(message) {
+  return ({
     id: message._id,
     scope: message.messageType,
     senderId: message.senderId,
-    sentDate: message.timestamp,
+    sentDate: message.sentDate,
     recipientId: message.recipientId,
-    deliveredDate: message.ackDate,
+    deliveredDate: message.deliveredDate,
     payload: message.payload
   });
 }

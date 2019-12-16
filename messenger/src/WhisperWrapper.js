@@ -60,7 +60,7 @@ class WhisperWrapper {
 
   // Fetch all of the Whisper Identities stored in database
   async getIdentities() {
-    let identities = await Identity.find({}, 'publicKey createdDate');
+    let identities = await Identity.find({}, '-_id publicKey createdDate').lean();
     return identities;
   }
 
@@ -105,7 +105,7 @@ class WhisperWrapper {
       return await Message.aggregate([{
         $match: {
           topic: topic,
-          timestamp: { $gte: timeThreshold },
+          sentDate: { $gte: timeThreshold },
           $or: [
             { recipientId: myId },
             { senderId: myId }
@@ -117,7 +117,7 @@ class WhisperWrapper {
     return await Message.aggregate([{
       $match: {
         topic: topic,
-        timestamp: { $gte: timeThreshold },
+        sentDate: { $gte: timeThreshold },
         $or: [
           { topic: topic, recipientId: myId, senderId: partnerId },
           { topic: topic, recipientId: partnerId, senderId: myId }
@@ -132,6 +132,9 @@ class WhisperWrapper {
 
   // Send private message
   async sendPrivateMessage(senderId, recipientId, topic = DEFAULT_TOPIC, messageContent) {
+    if ((typeof messageContent) === 'object') {
+      messageContent = JSON.stringify(messageContent);
+    }
     let content = await this.web3.utils.fromAscii(messageContent);
     let whisperId = await Identity.findOne({ _id: senderId });
     let hash;
@@ -146,27 +149,33 @@ class WhisperWrapper {
         powTarget: POW_TARGET
       });
     } catch (err) {
-      return console.error(err);
+      console.error('Whisper error:', err);
+      return;
     }
 
     // Store message in database
     let time = await Math.floor(Date.now() / 1000);
-    let doc = await Message.findOneAndUpdate(
-      { _id: hash },
-      {
-        _id: hash,
-        messageType: 'private',
-        recipientId: recipientId,
-        senderId: senderId,
-        ttl: TTL,
-        topic: topic,
-        payload: messageContent,
-        pow: POW_TARGET,
-        ack_rcvd: false,
-        timestamp: time
-      },
-      { upsert: true, new: true }
-    );
+    let doc;
+    try {
+      doc = await Message.findOneAndUpdate(
+        { _id: hash },
+        {
+          _id: hash,
+          messageType: 'private',
+          recipientId: recipientId,
+          senderId: senderId,
+          ttl: TTL,
+          topic: topic,
+          payload: messageContent,
+          pow: POW_TARGET,
+          sentDate: time
+        },
+        { upsert: true, new: true }
+      );
+    } catch (err) {
+      console.error('Mongoose error:', err);
+      return;
+    }
     return doc;
   }
 
@@ -200,8 +209,7 @@ class WhisperWrapper {
         topic: topic,
         payload: messageContent,
         pow: POW_TARGET,
-        ack_rcvd: false,
-        timestamp: time
+        sentDate: time
       },
       { upsert: true, new: true }
     );
@@ -229,6 +237,52 @@ class WhisperWrapper {
     return doc;
   }
 
+  async checkMessageContent(data) {
+    let content = await this.web3.utils.toAscii(data.payload);
+    // Check if this is a JSON structured message
+    let [isJSON, messageObj] = await utils.hasJsonStructure(content);
+    if (isJSON && messageObj.type === 'delivery_receipt') {
+      // Check if receipt came from original recipient
+      let originalMessage = await Message.findOne({ _id: messageObj.messageId });
+      if (!originalMessage) {
+        throw new Error(`Original message id (${messageObj.messageId}) not found. Cannot add delivery receipt.`);
+      } else if (originalMessage.recipientId === data.sig) {
+        return await Message.findOneAndUpdate(
+          { _id: messageObj.messageId },
+          { deliveredDate: messageObj.deliveredDate },
+          { upsert: false, new: true }
+        );
+      }
+    } else {
+      let doc = await Message.findOneAndUpdate(
+        { _id: data.hash },
+        {
+          _id: data.hash,
+          messageType: 'individual',
+          recipientId: data.recipientPublicKey,
+          senderId: data.sig,
+          ttl: data.ttl,
+          topic: data.topic,
+          payload: content,
+          pow: data.pow,
+          sentDate: data.timestamp
+        },
+        { upsert: true, new: true }
+      );
+
+      // Send delivery receipt back to sender
+      let time = await Math.floor(Date.now() / 1000);
+      let receiptObject = {
+        type: 'delivery_receipt',
+        deliveredDate: time,
+        messageId: data.hash,
+      };
+      let receiptString = JSON.stringify(receiptObject);
+      await this.sendPrivateMessage(data.recipientPublicKey, data.sig, undefined, receiptString);
+      return doc;
+    }
+  }
+
   async subscribeToPublicMessages(keyId, topic = DEFAULT_TOPIC) {
     // Subscribe to public chat messages
     this.web3.shh.subscribe("messages", {
@@ -236,8 +290,8 @@ class WhisperWrapper {
       symKeyID: keyId,
       topics: [topic]
     }).on('data', async (data) => {
-      // TODO store message in database
-      console.log(data.sig, this.web3.utils.toAscii(data.payload));
+      // TODO check if sender is in my contacts before processing
+      await this.checkMessageContent(data);
     }).on('error', (err) => {
       console.log(err);
     });
@@ -253,32 +307,7 @@ class WhisperWrapper {
       topics: [topic]
     }).on('data', async (data) => {
       // TODO check if sender is in my contacts before processing
-      let content = await this.web3.utils.toAscii(data.payload);
-      await Message.findOneAndUpdate(
-        { _id: data.hash },
-        {
-          _id: data.hash,
-          messageType: 'private',
-          recipientId: data.recipientPublicKey,
-          senderId: data.sig,
-          ttl: data.ttl,
-          topic: data.topic,
-          payload: content,
-          pow: data.pow,
-          ack_rcvd: false,
-          timestamp: data.timestamp
-        },
-        { upsert: true, new: true }
-      );
-      // Check if this is a JSON structured message
-      let [isJSON, messageObj] = await utils.hasJsonStructure(content);
-      if (isJSON) {
-        console.log('Did not recognize message object type: ', messageObj);
-        // POST radish-api/documents
-      } else {
-        // POST radish-api/messages
-      }
-      // TODO send acknowledgment
+      await this.checkMessageContent(data);
     }).on('error', (err) => {
       console.log(err);
     });

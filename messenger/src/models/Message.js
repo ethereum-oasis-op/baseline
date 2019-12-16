@@ -19,9 +19,8 @@ const MessageSchema = new mongoose.Schema({
   topic: String,
   payload: String,
   pow: Number,
-  ack_rcvd: Boolean,
-  ackDate: String,
-  timestamp: String
+  sentDate: String,
+  deliveredDate: String
 },
   {
     collection: "Messages",
