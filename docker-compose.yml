@@ -71,6 +71,24 @@ services:
       options:
         max-size: 10m
 
+  radish-deploy:
+    build:
+      context: ./radish-deploy/
+    depends_on:
+      - mongo-buyer
+      - mongo-supplier1
+      - mongo-supplier2
+      - mongo-supplier3
+      - ganache
+    environment:
+      RPC_PROVIDER: http://ganache:8545
+    volumes:
+      - ./radish-deploy/src:/app/src:delegated
+      - ./radish-deploy/package.json:/app/package.json:delegated
+      - ./artifacts:/app/artifacts:delegated
+      - ./config/keystore:/keystore:delegated
+      - ./config:/app/src/config
+
   radish-api-buyer:
     build:
       context: ./radish-api/
@@ -81,7 +99,7 @@ services:
       - ./radish-api/dist:/app/dist:delegated
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/buyer.eth:/keystore/account.eth
-      - ./config/config-buyerA.json:/app/config/default.json
+      - ./config/config-buyer.json:/app/config/default.json
       - ./artifacts:/app/artifacts:delegated
     depends_on:
       - radish-api-watch

@@ -2,28 +2,38 @@ import { utils } from 'ethers';
 import { getServerSettings } from '../utils/serverSettings';
 import { getPrivateKey } from '../utils/wallet';
 import {
-  getWallet,
   getContractWithWallet,
   getContract,
   parseBytes32ToStringArray,
   parseBigNumbersToIntArray,
 } from '../utils/ethers';
-import { getERC1820RegistryJson, getRegistarJson, getOrgRegistryJson } from './contract';
+import { getERC1820RegistryJson, getOrgRegistryJson } from './contract';
 
-export const assignManager = async fromAddress => {
+export const assignManager = async (fromAddress, toAddress) => {
   const config = await getServerSettings();
   const privateKey = await getPrivateKey();
-  const wallet = await getWallet(config.blockchainProvider, privateKey);
-  const walletAddress = wallet.signingKey.address;
 
   const tx = await getContractWithWallet(
     getOrgRegistryJson(),
     config.organizationRegistryAddress,
     config.blockchainProvider,
     privateKey,
-  ).assignManager(fromAddress, walletAddress);
+  ).assignManager(fromAddress, toAddress);
   const transactionHash = { transactionHash: tx.hash };
   return transactionHash;
+};
+
+export const getManager = async fromAddress => {
+  const config = await getServerSettings();
+  const privateKey = await getPrivateKey();
+
+  const tx = await getContractWithWallet(
+    getERC1820RegistryJson(),
+    config.erc1820RegistryAddress,
+    config.blockchainProvider,
+    privateKey,
+  ).getManager(fromAddress);
+  return tx;
 };
 
 export const setInterfaceImplementer = async (
@@ -44,12 +54,12 @@ export const setInterfaceImplementer = async (
   return transactionHash;
 };
 
-export const registerToOrgRegistry = async (address, name, role, key) => {
+export const registerToOrgRegistry = async (iAddress, address, name, role, key) => {
   const config = await getServerSettings();
   const privateKey = await getPrivateKey();
   const tx = await getContractWithWallet(
     getOrgRegistryJson(),
-    config.organizationRegistryAddress,
+    iAddress,
     config.blockchainProvider,
     privateKey,
   ).registerOrg(address, utils.formatBytes32String(name), role, utils.hexlify(key));
@@ -57,22 +67,22 @@ export const registerToOrgRegistry = async (address, name, role, key) => {
   return transactionHash;
 };
 
-export const getOrganizationCount = async () => {
+export const getOrganizationCount = async iAddress => {
   const config = await getServerSettings();
   const organizationCount = await getContract(
     getOrgRegistryJson(),
     config.blockchainProvider,
-    config.organizationRegistryAddress,
+    iAddress,
   ).getOrgCount();
   return organizationCount.toNumber();
 };
 
-export const listOrganizations = async (start, count) => {
+export const listOrganizations = async (iAddress, start, count) => {
   const config = await getServerSettings();
   const organizationList = await getContract(
     getOrgRegistryJson(),
     config.blockchainProvider,
-    config.organizationRegistryAddress,
+    iAddress,
   ).getOrgs(start, count);
   return {
     addresses: organizationList[0],
@@ -82,12 +92,12 @@ export const listOrganizations = async (start, count) => {
   };
 };
 
-export const getRegisteredOrganization = async walletAddress => {
+export const getRegisteredOrganization = async (iAddress, walletAddress) => {
   const config = await getServerSettings();
   const organization = await getContract(
     getOrgRegistryJson(),
     config.blockchainProvider,
-    config.organizationRegistryAddress,
+    iAddress,
   ).getOrg(walletAddress);
   return {
     address: organization[0],
@@ -97,13 +107,17 @@ export const getRegisteredOrganization = async walletAddress => {
   };
 };
 
-export const getInterfaceAddress = async (registrarAddress, managerAddress, interfaceName) => {
+export const getInterfaceAddress = async (
+  globalRegistrarAddress,
+  managerAddress,
+  interfaceName,
+) => {
   const config = await getServerSettings();
   const interfaceAddress = await getContract(
-    getRegistarJson(),
+    getERC1820RegistryJson(),
     config.blockchainProvider,
-    registrarAddress,
-  ).interfaceAddr(managerAddress, interfaceName);
+    globalRegistrarAddress,
+  ).getInterfaceImplementer(managerAddress, interfaceName);
 
   return interfaceAddress;
 };
