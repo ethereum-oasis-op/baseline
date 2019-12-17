@@ -69,7 +69,7 @@ const chipStyles = makeStyles(() => ({
   invoice: {
     borderColor: 'blue',
   },
-  rfq: {
+  rfp: {
     borderColor: 'lime',
   },
   purchaseOrder: {
@@ -84,8 +84,9 @@ const ChipMaker = ({ value, row }) => {
     msa: 'MSA',
     procurementrequest: 'PRO',
     invoice: 'INV',
-    rfq: 'RFQ',
+    rfp: 'RFP',
     purchaseorder: 'PO',
+    proposal: 'Proposal',
   };
 
   return (
@@ -110,7 +111,7 @@ ChipMaker.propTypes = {
   }).isRequired,
 };
 
-const categories = ['msa', 'purchaseorder', 'invoice', 'rfq', 'inbox', 'outbox'];
+const categories = ['msa', 'purchaseorder', 'invoice', 'rfp', 'inbox', 'outbox'];
 
 const MessagesList = ({ match }) => {
   const classes = useStyles();

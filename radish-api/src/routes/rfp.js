@@ -1,12 +1,12 @@
 import express from 'express';
-import generateRFQ from '../__fixtures__/rfq';
+import generateRFP from '../__fixtures__/rfp';
 
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    const rfq = await generateRFQ(10);
-    return res.append('Total-Count', rfq.length).json(rfq);
+    const rfp = await generateRFP(10);
+    return res.append('Total-Count', rfp.length).json(rfp);
   } catch (err) {
     return next(err);
   }

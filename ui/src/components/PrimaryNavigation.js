@@ -54,7 +54,7 @@ const getNavItems = () => {
     { label: 'How', url: '/how' },
     { label: 'Who', url: '/who' },
     { label: 'Partners', url: '/partner' },
-    { label: 'RFQs', url: '/rfq' },
+    { label: 'RFPs', url: '/rfp' },
     { label: 'Invoices', url: '/invoice' },
     { label: 'Purchase Orders', url: '/purchaseorder' },
   ];

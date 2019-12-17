@@ -3,7 +3,7 @@ import { generate, getRandomInt } from './helpers';
 import generateSKU from './sku';
 import generatePartner from './partner';
 
-const generateRFQ = overrides => ({
+const generateRFP = overrides => ({
   sentBy: company.companyName(),
   sentDate: date.recent(),
   neededBy: date.recent(),
@@ -12,4 +12,4 @@ const generateRFQ = overrides => ({
   ...overrides,
 });
 
-export default (n = 1, overrides = {}) => generate(() => generateRFQ(overrides), n);
+export default (n = 1, overrides = {}) => generate(() => generateRFP(overrides), n);

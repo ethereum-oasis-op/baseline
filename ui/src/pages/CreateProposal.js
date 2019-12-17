@@ -17,7 +17,7 @@ import findIndex from 'lodash/findIndex';
 import { useHistory, useParams } from 'react-router-dom';
 import DatePickerField from '../components/DatePickerField';
 import MessageLayout from '../components/MessageLayout';
-import { QuoteContext } from '../contexts/quote-context';
+import { ProposalContext } from '../contexts/proposal-context';
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -40,21 +40,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CreateQuote = () => {
+const CreateProposal = () => {
   const classes = useStyles();
   const history = useHistory();
-  const { rfqId } = useParams();
+  const { rfpId } = useParams();
   const [disabled, setDisabled] = useState({});
-  const { postQuote } = useContext(QuoteContext);
+  const { postProposal } = useContext(ProposalContext);
 
   const formik = useFormik({
     initialValues: {
       terminationDate: moment(Date.now()),
       rates: [],
-      rfqId: Number(rfqId),
+      rfpId: Number(rfpId),
     },
     onSubmit: async values => {
-      await postQuote({ variables: { input: values } });
+      await postProposal({ variables: { input: values } });
       history.push('/messages/outbox');
     },
     validationSchema: Yup.lazy(values => {
@@ -98,10 +98,11 @@ const CreateQuote = () => {
         })
     })
   });
+
   return (
     <MessageLayout>
       <Container>
-        <h1>Create a new Quote</h1>
+        <h1>Create a new Proposal</h1>
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit} style={{ margin: '2rem' }}>
             <Field name="terminationDate" label="Termination Date" component={DatePickerField} />
@@ -236,7 +237,7 @@ const CreateQuote = () => {
                 )}
               />
             </Table>
-            <Button type="submit">Send Quote</Button>
+            <Button type="submit">Send Proposal</Button>
           </form>
         </FormikProvider>
       </Container>
@@ -244,4 +245,4 @@ const CreateQuote = () => {
   );
 };
 
-export default CreateQuote;
+export default CreateProposal;

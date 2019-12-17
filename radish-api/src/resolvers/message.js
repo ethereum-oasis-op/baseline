@@ -69,7 +69,7 @@ export default {
     getMessageCount() {
       return {
         msa: 5,
-        rfq: 2,
+        rfp: 2,
         invoice: 3,
         purchaseorder: 4,
       };
