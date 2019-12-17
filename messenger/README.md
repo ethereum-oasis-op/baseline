@@ -9,11 +9,8 @@
 
 ## Integration
 
-## API Testing
+## API, Unit Testing
 
-Requires running `docker-compose up` to build the services needed to test the REST API. 
+Requires running `docker-compose up` to build the services needed to run unit tests and test the REST API.
 
 To run the tests execute `npm test`
-
-## Unit Testing
-

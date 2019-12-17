@@ -6,6 +6,7 @@ import checkIsRegistered from './checkIsRegistered';
 import checkIsRegistering from './checkIsRegistering';
 import checkAdminAccount from './checkAdminAccount';
 import checkConnectedToRPC from './checkConnectedToRPC';
+import checkMessengerGethConnection from './checkMessengerGethConnection';
 
 export default async () => {
   let state;
@@ -26,11 +27,14 @@ export default async () => {
     console.log('Checking If Registered ...');
     state = 'isregistered';
   } else if (await checkIsRegistering()) {
-    console.log('Checking If Regestering ...');
+    console.log('Checking If Registering ...');
     state = 'isregistering';
   } else if ((await checkAdminAccount()) === false) {
     console.log('Checking Admin Account ...');
     state = 'noadmin';
+  } else if ((await checkMessengerGethConnection()) === false) {
+    console.log('Checking Messenger Service Connection To Geth Client ...');
+    state = 'nomessenger';
   } else {
     console.log('All systems go.');
     state = 'ready';

@@ -8,8 +8,9 @@ const WhisperWrapper = require('../src/WhisperWrapper');
 let messenger;
 
 router.get('/health-check', async (req, res) => {
+  let result = await messenger.isConnected();
   res.status(200);
-  res.send({ message: 'Everything is good! Thanks for checking.' });
+  res.send({ connectedToEthClient: result });
 });
 
 router.get('/identities', async (req, res) => {
