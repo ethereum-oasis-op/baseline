@@ -4,7 +4,7 @@ const Config = require('./config');
 
 let server, whisper_port, whisper_origin, geth_ip_address, api_port;
 
-const nodeNum = process.argv[2];
+const nodeNum = process.argv[2] || 1;
 
 function getConfig() {
   db_url = Config.nodes[`node_${nodeNum}`].db_url;

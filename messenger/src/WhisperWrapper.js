@@ -94,14 +94,16 @@ class WhisperWrapper {
   // Private conversation = all messages with same topic and same two Whisper Ids
   async getMessages(myId, topic = DEFAULT_TOPIC, partnerId, since) {
     let currentTime = await Math.floor(Date.now() / 1000);
-    let timeThreshold = since;
+    let timeThreshold = parseInt(since);
     // Default to showing last 24 hours of messages
     if (!since) {
       timeThreshold = currentTime - 86400; // 86400 seconds in a day
     }
+    console.log('timeThreshold=', timeThreshold);
+    console.log('typeof timeThreshold=', typeof timeThreshold);
     // If no partnerId provided, get messages from all conversations
     if (!partnerId) {
-      return await Message.aggregate([{
+      let messages = await Message.aggregate([{
         $match: {
           topic: topic,
           sentDate: { $gte: timeThreshold },
@@ -111,6 +113,8 @@ class WhisperWrapper {
           ]
         },
       }]);
+      console.log('found messages=', messages);
+      return messages;
     }
     // If partnerId provided, only get messages involving that whisperId
     return await Message.aggregate([{

@@ -19,8 +19,8 @@ const MessageSchema = new mongoose.Schema({
   topic: String,
   payload: String,
   pow: Number,
-  sentDate: String,
-  deliveredDate: String
+  sentDate: Number,
+  deliveredDate: Number
 },
   {
     collection: "Messages",

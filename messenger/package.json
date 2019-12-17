@@ -18,9 +18,9 @@
     ]
   },
   "scripts": {
-    "start": "NODE_ENV=production node ./start.js 1",
-    "start:dev": "NODE_ENV=development nodemon ./start.js 1",
-    "start:test": "NODE_ENV=test nodemon ./start.js 1",
+    "start": "NODE_ENV=production node ./start.js",
+    "start:dev": "NODE_ENV=development nodemon ./start.js",
+    "start:test": "NODE_ENV=test nodemon ./start.js",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:integration": "jest --verbose --runInBand --forceExit ./__tests__/integration.test.js"
   },

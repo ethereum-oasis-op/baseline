@@ -39,9 +39,13 @@ router.all('/messages*', async (req, res, next) => {
 // Fetch messages from all conversations
 router.get('/messages', async (req, res) => {
   let myId = req.headers['x-messenger-id'];
-  let result = await messenger.getMessages(myId, undefined, req.query.partnerId, req.query.since);
+  let messages = await messenger.getMessages(myId, undefined, req.query.partnerId, req.query.since);
+  let formattedMessages = [];
+  await messages.forEach(async (message) => {
+    await formattedMessages.push(formatMessageHelper(message));
+  });
   res.status(200);
-  res.send(result);
+  res.send(formattedMessages);
 });
 
 // Fetch messages from all conversations

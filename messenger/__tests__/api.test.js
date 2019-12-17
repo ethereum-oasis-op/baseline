@@ -18,6 +18,16 @@ afterAll(async () => {
   mongoose.connection.close();
 });
 
+describe('/health-check', () => {
+
+  test('GET /health-check returns 200', async () => {
+    const res = await request(buyerURL)
+      .get('/api/v1/health-check');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.connectedToEthClient).toEqual(true);
+  });
+});
+
 describe('/identities', () => {
 
   // Assumption that the test DB is empty from setupDB test helper
@@ -164,8 +174,9 @@ describe('/messages', () => {
     });
 
     describe('Retrieving and filtering multiple messages', () => {
+      let messageCount;
 
-      test('the returned messages have the expected structure', async () => {
+      test('GET /messages returns messages withOUT "since" query param', async () => {
         // create a message
         let cRes = await request(buyerURL)
           .post('/api/v1/messages')
@@ -179,26 +190,45 @@ describe('/messages', () => {
           .get(`/api/v1/messages`)
           .set('x-messenger-id', buyerId);
 
+        messageCount = res.body.length;
         expect(res.statusCode).toEqual(200);
-        //expect(res.body.length).toBeGreaterThan(0)
-        // const message = res.body[0];
-        // expect(message).toHaveProperty('id');
-        // expect(message).toHaveProperty('id');
-        // expect(message).toHaveProperty('id');
-        // expect(message).toHaveProperty('id');
-        // expect(message).toHaveProperty('id');
+        expect(messageCount).toBeGreaterThan(0)
+        const message = res.body[0];
+        expect(message).toHaveProperty('id');
+        expect(message).toHaveProperty('scope');
+        expect(message).toHaveProperty('senderId');
+        expect(message).toHaveProperty('sentDate');
+        expect(message).toHaveProperty('recipientId');
+        expect(message).toHaveProperty('payload');
       });
 
-      // TODO: Implement these features/tests later
+      test('GET /messages returns messages WITH "since" query param', async () => {
+        const res = await request(buyerURL)
+          .get(`/api/v1/messages?since=0`)
+          .set('x-messenger-id', buyerId);
 
-      // when query param 'since' is passed
-      // it returns messages sent or received on or after that date
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.length).toEqual(messageCount)
+      });
 
-      // when query param 'since' is NOT passed
-      // it returns messages sent or received less that 24 hrs old
+      test('GET /messages returns messages WITH "since" AND "partnerId" query param', async () => {
+        let newPartner = '0x04d54e2219adad9576cee1684b6f9a609ab29cc1a4ec3dfc0f1746b05aba99fb208f58771f4f9a1390d0cabede08ae115f6f1806ccabc4681677fd7d5bdf13b03e';
+        // create a message for new recipientId
+        let cRes = await request(buyerURL)
+          .post('/api/v1/messages')
+          .set('x-messenger-id', buyerId)
+          .send({
+            recipientId: newPartner,
+            payload: `Hello new partner, nice to meet you!`
+          });
 
-      // when query param 'partnerId' is passed
-      // it returns messages that are both to, and from this partnerId
+        const res = await request(buyerURL)
+          .get(`/api/v1/messages?since=0&partnerId=${newPartner}`)
+          .set('x-messenger-id', buyerId);
+
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.length).toEqual(1)
+      });
 
     });
 
