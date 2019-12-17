@@ -12,6 +12,7 @@ import RFQ from './pages/RFQ';
 import Invoice from './pages/Invoice';
 import MSA from './pages/MSA';
 import CreateRFQ from './pages/CreateRFQ';
+import CreateQuote from './pages/CreateQuote';
 
 import Installation from './installation';
 import Loading from './components/Loading';
@@ -37,6 +38,7 @@ const App = () => {
           <Route exact path="/what" component={What} />
           <Route exact path="/how" component={How} />
           <Route exact path="/partner" component={Partner} />
+          <Route path="/quote/:rfqId/create/" component={CreateQuote} />
           <Route path="/rfq/create" component={CreateRFQ} />
           <Route path="/rfq/:id" component={RFQ} />
           <Route path="/invoice/:id" component={Invoice} />
