@@ -1,4 +1,3 @@
-'use strict';
 
 const mongoose = require('mongoose');
 
@@ -15,18 +14,18 @@ const IdentitySchema = new mongoose.Schema({
   description: String,
   publicKey: {
     type: String,
-    required: true
+    required: true,
   },
   privateKey: {
     type: String,
-    required: true
+    required: true,
   },
-  createdDate: String
+  createdDate: String,
 },
-  {
-    collection: "Identities",
-    versionKey: false,
-  });
+{
+  collection: 'Identities',
+  versionKey: false,
+});
 
 const Identities = mongoose.model('Identities', IdentitySchema);
 

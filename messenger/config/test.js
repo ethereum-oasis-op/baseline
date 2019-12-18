@@ -1,18 +1,17 @@
-'use strict';
 
 module.exports = {
   mongo: {
     debug: true,
     bufferMaxEntries: 8,
-    firstConnectRetryDelaySecs: 5
+    firstConnectRetryDelaySecs: 5,
   },
   nodes: {
     node_1: {
-      ip_address: "127.0.0.1",
-      whisper_port: "8546",
-      api_port: "4001",
-      origin: "mychat2",
-      db_url: "mongodb://127.0.0.1:27017/radish34_test"
-    }
-  }
+      ipAddress: '127.0.0.1',
+      whisperPort: '8546',
+      apiPort: '4001',
+      origin: 'mychat2',
+      dbUrl: 'mongodb://127.0.0.1:27017/radish34_test',
+    },
+  },
 };

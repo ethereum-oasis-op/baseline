@@ -1,26 +1,25 @@
-'use strict';
+const mongoose = require('mongoose');
 
 const Config = require('../config');
 
-const firstConnectRetryDelaySecs = Config.mongo.firstConnectRetryDelaySecs;
+const { firstConnectRetryDelaySecs } = Config.mongo;
 
 // Setup DB
-const mongoose = require('mongoose');
 const conn = mongoose.connection;
-let mongoURL;
+let mongoUrl;
 
 // Registering db connection event listeners
 conn.once('open', () => {
-  console.log('Successfully connected to ' + mongoURL);
+  console.log(`Successfully connected to ${mongoUrl}`);
 
   // When successfully connected
   conn.on('connected', () => {
-    console.log('Mongoose default connection open to ' + mongoURL);
+    console.log(`Mongoose default connection open to ${mongoUrl}`);
   });
 
   // If the connection throws an error
-  conn.on('error', err => {
-    console.error('Mongoose default connection error: ' + err);
+  conn.on('error', (err) => {
+    console.error(`Mongoose default connection error: ${err}`);
   });
 
   // When the connection is disconnected
@@ -31,32 +30,35 @@ conn.once('open', () => {
   // If the Node process ends, close the Mongoose connection
   process.on('SIGINT', () => {
     conn.close(() => {
-      console.log('Mongoose default connection disconnected through app termination');
+      console.log(
+        'Mongoose default connection disconnected through app termination',
+      );
       process.exit(0);
     });
   });
 });
 
-async function connect(db_url) {
-  mongoURL = db_url;
+function simpleSleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+async function connect(url) {
+  mongoUrl = url;
   mongoose.set('debug', Config.mongo.debug);
 
   let connected = false;
   while (!connected) {
     try {
-      await mongoose.connect(mongoURL, Config.mongoose);
+      // eslint-disable-next-line no-await-in-loop
+      await mongoose.connect(mongoUrl, Config.mongoose);
       connected = true;
     } catch (error) {
       console.error(error.message);
-      console.log('Retrying connection in ' + firstConnectRetryDelaySecs + ' secs');
+      console.log(`Retrying connection in ${firstConnectRetryDelaySecs} secs`);
     }
 
-    await sleep(firstConnectRetryDelaySecs * 1000);
+    // eslint-disable-next-line no-await-in-loop
+    await simpleSleep(firstConnectRetryDelaySecs * 1000);
   }
-}
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function close() {
@@ -65,6 +67,6 @@ function close() {
 }
 
 module.exports = {
-  close: close,
-  connect: connect
+  close,
+  connect,
 };

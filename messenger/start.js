@@ -2,17 +2,18 @@ const { app, apiRouter } = require('./app.js');
 const db = require('./src/db');
 const Config = require('./config');
 
-let server, whisper_port, whisper_origin, geth_ip_address, api_port;
+let server; let whisperPort; let whisperOrigin; let gethIpAddress; let
+  apiPort;
 
 const nodeNum = process.env.NODE_NUM || 1;
 
 function getConfig() {
-  db_url = Config.nodes[`node_${nodeNum}`].db_url;
-  whisper_port = Config.nodes[`node_${nodeNum}`].whisper_port;
-  geth_ip_address = Config.nodes[`node_${nodeNum}`].ip_address;
-  whisper_origin = Config.nodes[`node_${nodeNum}`].origin;
-  api_port = Config.nodes[`node_${nodeNum}`].api_port;
-  if (!whisper_port || !whisper_origin) {
+  dbUrl = Config.nodes[`node_${nodeNum}`].dbUrl;
+  whisperPort = Config.nodes[`node_${nodeNum}`].whisperPort;
+  gethIpAddress = Config.nodes[`node_${nodeNum}`].ipAddress;
+  whisperOrigin = Config.nodes[`node_${nodeNum}`].origin;
+  apiPort = Config.nodes[`node_${nodeNum}`].apiPort;
+  if (!whisperPort || !whisperOrigin) {
     console.error('Whisper parameter is undefined. Check config/nodes.json file and command line args.');
     process.exit();
   }
@@ -20,8 +21,8 @@ function getConfig() {
 
 async function startApiRouter() {
   await getConfig();
-  await apiRouter.initialize(geth_ip_address, whisper_port);
-  server = app.listen(api_port, () => console.log('Express server listening on port ' + api_port));
+  await apiRouter.initialize();
+  server = app.listen(apiPort, () => console.log(`Express server listening on port ${apiPort}`));
   return server;
 }
 
@@ -30,11 +31,11 @@ async function terminate() {
   await db.close();
 }
 
-let db_url = Config.nodes[`node_${nodeNum}`].db_url;
-let dbPromise = db.connect(db_url);
-let serverPromise = dbPromise.then(startApiRouter);
+let { dbUrl } = Config.nodes[`node_${nodeNum}`];
+const dbPromise = db.connect(dbUrl);
+const serverPromise = dbPromise.then(startApiRouter);
 
 module.exports = {
   serverPromise,
-  terminate
+  terminate,
 };

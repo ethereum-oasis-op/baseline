@@ -1,15 +1,14 @@
-
 function hasJsonStructure(str) {
   if (typeof str !== 'string') return false;
   try {
     const result = JSON.parse(str);
     const type = Object.prototype.toString.call(result);
-    const isJSON = (type === '[object Object]' || type === '[object Array]');
+    const isJSON = type === '[object Object]' || type === '[object Array]';
     return [isJSON, result];
   } catch (err) {
     return [false, {}];
   }
-};
+}
 
 // ***** Usage *****
 // const [err, result] = safeJsonParse('[Invalid JSON}');
@@ -21,9 +20,9 @@ function safeJsonParse(str) {
   } catch (err) {
     return [err];
   }
-};
+}
 
 module.exports = {
   hasJsonStructure,
-  safeJsonParse
+  safeJsonParse,
 };

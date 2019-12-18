@@ -1,4 +1,3 @@
-'use strict';
 
 const mongoose = require('mongoose');
 
@@ -11,7 +10,7 @@ const MessageSchema = new mongoose.Schema({
   messageType: {
     type: String,
     enum: ['individual', 'group'],
-    required: true
+    required: true,
   },
   recipientId: String,
   senderId: String,
@@ -20,12 +19,12 @@ const MessageSchema = new mongoose.Schema({
   payload: String,
   pow: Number,
   sentDate: Number,
-  deliveredDate: Number
+  deliveredDate: Number,
 },
-  {
-    collection: "Messages",
-    versionKey: false,
-  });
+{
+  collection: 'Messages',
+  versionKey: false,
+});
 
 const Messages = mongoose.model('Messages', MessageSchema);
 
