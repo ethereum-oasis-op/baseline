@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const Config = require('../config');
 const WhisperWrapper = require('../src/WhisperWrapper');
+const web3utils = require('../src/web3Utils.js');
 
 let messenger;
 
@@ -90,7 +91,6 @@ async function initialize(ipAddress, port) {
   console.log('Initializing server...');
   if (Config.messaging_type === "whisper") {
     messenger = await new WhisperWrapper();
-    await messenger.configureProvider(ipAddress, port);
   }
   let connected = await messenger.isConnected();
   await messenger.loadIdentities();

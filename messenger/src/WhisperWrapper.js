@@ -1,7 +1,7 @@
-const Web3 = require('web3');
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
 const utils = require("./generalUtils");
+const web3utils = require("./web3Utils.js");
 
 // Useful constants
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || "0x11223344";
@@ -14,30 +14,24 @@ class WhisperWrapper {
     // Singleton pattern: only ever need one instance of this class
     // If one already exists, return it instead of creating a new one
     if (!WhisperWrapper.instance) {
-      const web3 = new Web3();
-      // Connect to web3 websocket port
-      this.web3 = web3;
       WhisperWrapper.instance = this;
     }
     return WhisperWrapper.instance;
   }
 
-  async configureProvider(gethNodeIP, gethNodePort) {
-    this.web3.setProvider(new Web3.providers.WebsocketProvider(`ws://${gethNodeIP}:${gethNodePort}`, { headers: { Origin: 'mychat2' } }));
-  }
-
   // Call this function before sending Whisper commands
   async isConnected() {
-    let connected = await this.web3.eth.net.isListening();
-    this.connected = connected;
+    let web3 = await web3utils.getWeb3();
+    let connected = await web3.eth.net.isListening();
     return connected;
   }
 
   async createIdentity() {
     // Create new public/private key pair
-    const keyId = await this.web3.shh.newKeyPair();
-    const pubKey = await this.web3.shh.getPublicKey(keyId);
-    const privKey = await this.web3.shh.getPrivateKey(keyId);
+    let web3 = await web3utils.getWeb3();
+    const keyId = await web3.shh.newKeyPair();
+    const pubKey = await web3.shh.getPublicKey(keyId);
+    const privKey = await web3.shh.getPrivateKey(keyId);
 
     // Store key's details in database
     let time = await Math.floor(Date.now() / 1000);
@@ -73,8 +67,9 @@ class WhisperWrapper {
     let identities = await Identity.find({});
     identities.forEach(async (id) => {
       try {
-        const keyId = await this.web3.shh.addPrivateKey(id.privateKey);
-        const pubKey = await this.web3.shh.getPublicKey(keyId);
+        let web3 = await web3utils.getWeb3();
+        const keyId = await web3.shh.addPrivateKey(id.privateKey);
+        const pubKey = await web3.shh.getPublicKey(keyId);
         // keyId will change so need to update that in Mongo
         await Identity.findOneAndUpdate(
           { _id: pubKey },
@@ -99,8 +94,6 @@ class WhisperWrapper {
     if (!since) {
       timeThreshold = currentTime - 86400; // 86400 seconds in a day
     }
-    console.log('timeThreshold=', timeThreshold);
-    console.log('typeof timeThreshold=', typeof timeThreshold);
     // If no partnerId provided, get messages from all conversations
     if (!partnerId) {
       let messages = await Message.aggregate([{
@@ -113,7 +106,6 @@ class WhisperWrapper {
           ]
         },
       }]);
-      console.log('found messages=', messages);
       return messages;
     }
     // If partnerId provided, only get messages involving that whisperId
@@ -138,11 +130,12 @@ class WhisperWrapper {
     if ((typeof messageContent) === 'object') {
       messageContent = JSON.stringify(messageContent);
     }
-    let content = await this.web3.utils.fromAscii(messageContent);
+    let web3 = await web3utils.getWeb3();
+    let content = await web3.utils.fromAscii(messageContent);
     let whisperId = await Identity.findOne({ _id: senderId });
     let hash;
     try {
-      hash = await this.web3.shh.post({
+      hash = await web3.shh.post({
         pubKey: recipientId,
         sig: whisperId.keyId,
         ttl: TTL,
@@ -184,9 +177,10 @@ class WhisperWrapper {
 
   // Send a public message (group message using symmetric encryption key)
   async sendPublicMessage(senderId, topic = DEFAULT_TOPIC, messageContent) {
-    let content = await this.web3.utils.fromAscii(messageContent);
+    let web3 = await web3utils.getWeb3();
+    let content = await web3.utils.fromAscii(messageContent);
     try {
-      this.web3.shh.post({
+      web3.shh.post({
         symKeyID: channelSymKey,
         sig: senderId,
         ttl: TTL,
@@ -221,9 +215,10 @@ class WhisperWrapper {
 
   async createSymmetricKey(password = '', topic = '') {
     // Set password to default if not provided
-    let myTopic = topic || this.web3.utils.randomHex(4)
-    let pw = password || this.web3.utils.randomHex(20);
-    let keyId = await this.web3.shh.generateSymKeyFromPassword(pw);
+    let web3 = await web3utils.getWeb3();
+    let myTopic = topic || web3.utils.randomHex(4)
+    let pw = password || web3.utils.randomHex(20);
+    let keyId = await web3.shh.generateSymKeyFromPassword(pw);
     await this.subscribeToPublicMessages(keyId, myTopic);
     let time = await Math.floor(Date.now() / 1000);
     let doc = await SymmetricKey.findOneAndUpdate(
@@ -241,7 +236,8 @@ class WhisperWrapper {
   }
 
   async checkMessageContent(data) {
-    let content = await this.web3.utils.toAscii(data.payload);
+    let web3 = await web3utils.getWeb3();
+    let content = await web3.utils.toAscii(data.payload);
     // Check if this is a JSON structured message
     let [isJSON, messageObj] = await utils.hasJsonStructure(content);
     if (isJSON && messageObj.type === 'delivery_receipt') {
@@ -287,8 +283,9 @@ class WhisperWrapper {
   }
 
   async subscribeToPublicMessages(keyId, topic = DEFAULT_TOPIC) {
+    let web3 = await web3utils.getWeb3();
     // Subscribe to public chat messages
-    this.web3.shh.subscribe("messages", {
+    web3.shh.subscribe("messages", {
       minPow: POW_TARGET,
       symKeyID: keyId,
       topics: [topic]
@@ -304,7 +301,8 @@ class WhisperWrapper {
     // Find this identity in Mongo so we can get the associated keyId
     let whisperId = await Identity.findOne({ _id: userId });
     // Subscribe to private messages
-    this.web3.shh.subscribe("messages", {
+    let web3 = await web3utils.getWeb3();
+    web3.shh.subscribe("messages", {
       minPow: POW_TARGET,
       privateKeyID: whisperId.keyId,
       topics: [topic]

@@ -1,6 +1,7 @@
 // TODO: Use config to pass db config for test env to setupDb
 const Config = require('../config');
 const WhisperWrapper = require('../src/WhisperWrapper.js');
+const web3utils = require('../src/web3Utils.js');
 
 const mongoose = require('mongoose')
 const Identity = require('../src/models/Identity');
@@ -21,10 +22,7 @@ let messenger, whisperId;
 describe('WhisperWrapper', () => {
 
   beforeAll(async () => {
-    let geth_ip_address = Config.nodes['node_1'].ip_address;
-    let whisper_port = Config.nodes['node_1'].whisper_port;
     messenger = await new WhisperWrapper();
-    await messenger.configureProvider(geth_ip_address, whisper_port);
   })
 
   describe('Identities', () => {
@@ -77,7 +75,8 @@ describe('WhisperWrapper', () => {
 
       test('checkMessageContent() processes message with string payload', async () => {
         let messageString = 'testing 456';
-        let messageHex = await messenger.web3.utils.fromAscii(messageString);
+        let web3 = await web3utils.getWeb3();
+        let messageHex = await web3.utils.fromAscii(messageString);
         let messageObj = {
           sig: fakeWhisperId,
           ttl: 20,
@@ -100,7 +99,8 @@ describe('WhisperWrapper', () => {
           deliveredDate: 1576249522,
           messageId: '0x123'
         };
-        let messageHex = await messenger.web3.utils.fromAscii(JSON.stringify(rawObj));
+        let web3 = await web3utils.getWeb3();
+        let messageHex = await web3.utils.fromAscii(JSON.stringify(rawObj));
         let messageObj = {
           sig: fakeWhisperId,
           ttl: 20,
@@ -131,7 +131,8 @@ describe('WhisperWrapper', () => {
           deliveredDate: 1576249522,
           messageId: messageId
         };
-        let messageHex = await messenger.web3.utils.fromAscii(JSON.stringify(rawObj));
+        let web3 = await web3utils.getWeb3();
+        let messageHex = await web3.utils.fromAscii(JSON.stringify(rawObj));
         let messageObj = {
           sig: fakeWhisperId,
           ttl: 20,
