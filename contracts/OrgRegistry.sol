@@ -36,6 +36,11 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     address[] public parties;
     mapping(address => address) managerMap;
 
+    event RegisterOrg(
+        bytes32 _name,
+        address _address,
+        uint _role
+    );
 
     /// @dev constructor function that takes the address of a pre-deployed ERC1820
     /// registry. Ideally, this contract is a publicly known address:
@@ -96,6 +101,11 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         roleMap[_role].add(_address);
         orgMap[_address] = org;
         parties.push(_address);
+        emit RegisterOrg(
+            _name,
+            _address,
+            _role
+        );
         return true;    
     }
 

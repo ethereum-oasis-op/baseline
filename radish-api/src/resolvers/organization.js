@@ -5,6 +5,7 @@ import {
   getRegisteredOrganization,
   getOrganizationCount,
   getInterfaceAddress,
+  saveOrganization,
 } from '../services/organization';
 import db from '../db';
 
@@ -21,13 +22,6 @@ const getAllOrganizations = async () => {
     .find({})
     .toArray();
   return organizations;
-};
-
-const saveOrganization = async input => {
-  const organization = await db
-    .collection('organization')
-    .updateOne({ _id: input.address }, { $set: input }, { upsert: true });
-  return organization;
 };
 
 export default {

@@ -8,6 +8,7 @@ import {
   parseBigNumbersToIntArray,
 } from '../utils/ethers';
 import { getERC1820RegistryJson, getOrgRegistryJson } from './contract';
+import db from '../db';
 
 export const assignManager = async (fromAddress, toAddress) => {
   const config = await getServerSettings();
@@ -54,35 +55,35 @@ export const setInterfaceImplementer = async (
   return transactionHash;
 };
 
-export const registerToOrgRegistry = async (iAddress, address, name, role, key) => {
+export const registerToOrgRegistry = async (address, name, role, key) => {
   const config = await getServerSettings();
   const privateKey = await getPrivateKey();
   const tx = await getContractWithWallet(
     getOrgRegistryJson(),
-    iAddress,
-    config.blockchainProvider,
+    config.organizationRegistryAddress,
+    config.rpcProvider,
     privateKey,
   ).registerOrg(address, utils.formatBytes32String(name), role, utils.hexlify(key));
   const transactionHash = { transactionHash: tx.hash };
   return transactionHash;
 };
 
-export const getOrganizationCount = async iAddress => {
+export const getOrganizationCount = async () => {
   const config = await getServerSettings();
   const organizationCount = await getContract(
     getOrgRegistryJson(),
-    config.blockchainProvider,
-    iAddress,
+    config.rpcProvider,
+    config.organizationRegistryAddress,
   ).getOrgCount();
   return organizationCount.toNumber();
 };
 
-export const listOrganizations = async (iAddress, start, count) => {
+export const listOrganizations = async (start, count) => {
   const config = await getServerSettings();
   const organizationList = await getContract(
     getOrgRegistryJson(),
-    config.blockchainProvider,
-    iAddress,
+    config.rpcProvider,
+    config.organizationRegistryAddress,
   ).getOrgs(start, count);
   return {
     addresses: organizationList[0],
@@ -92,12 +93,12 @@ export const listOrganizations = async (iAddress, start, count) => {
   };
 };
 
-export const getRegisteredOrganization = async (iAddress, walletAddress) => {
+export const getRegisteredOrganization = async walletAddress => {
   const config = await getServerSettings();
   const organization = await getContract(
     getOrgRegistryJson(),
-    config.blockchainProvider,
-    iAddress,
+    config.rpcProvider,
+    config.organizationRegistryAddress,
   ).getOrg(walletAddress);
   return {
     address: organization[0],
@@ -115,11 +116,27 @@ export const getInterfaceAddress = async (
   const config = await getServerSettings();
   const interfaceAddress = await getContract(
     getERC1820RegistryJson(),
-    config.blockchainProvider,
-    globalRegistrarAddress,
+    config.rpcProvider,
+    config.globalRegistryAddress,
   ).getInterfaceImplementer(managerAddress, interfaceName);
 
   return interfaceAddress;
+};
+
+export const saveOrganization = async input => {
+  const organization = await db
+    .collection('organization')
+    .updateOne({ _id: input.address }, { $set: input }, { upsert: true });
+  return organization;
+};
+
+export const saveOrganizations = async () => {
+  const orgCount = await getOrganizationCount();
+  for (let i = 0; i < orgCount; i += 1) {
+    const org = await listOrganizations(i, 1);
+    const record = { address: org.addresses[0], name: org.names[0], role: org.roles[0] };
+    saveOrganization(record);
+  }
 };
 
 export default {
@@ -130,4 +147,6 @@ export default {
   getInterfaceAddress,
   getRegisteredOrganization,
   getOrganizationCount,
+  saveOrganization,
+  saveOrganizations,
 };
