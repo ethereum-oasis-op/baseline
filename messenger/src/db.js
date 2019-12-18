@@ -9,17 +9,7 @@ const mongoose = require('mongoose');
 const conn = mongoose.connection;
 let mongoURL;
 
-// Connection options
-const options = {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-  poolSize: 5, // Max. number of simultaneous connections to maintain
-  socketTimeoutMS: 0, // Use os-default, only useful when a network issue occurs and the peer becomes unavailable
-  keepAlive: true // KEEP ALIVE!
-};
-
+// Registering db connection event listeners
 conn.once('open', () => {
   console.log('Successfully connected to ' + mongoURL);
 
@@ -54,7 +44,7 @@ async function connect(db_url) {
   let connected = false;
   while (!connected) {
     try {
-      await mongoose.connect(mongoURL, options);
+      await mongoose.connect(mongoURL, Config.mongoose);
       connected = true;
     } catch (error) {
       console.error(error.message);
