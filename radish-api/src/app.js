@@ -14,8 +14,8 @@ import ServerSettingsSchema from './schemas/serverSettings';
 import ServerSettingsResolver from './resolvers/serverSettings';
 import PartnerSchema from './schemas/partner';
 import PartnerResolver from './resolvers/partner';
-import RFQSchema from './schemas/rfq';
-import RFQResolver from './resolvers/rfq';
+import RFPSchema from './schemas/rfp';
+import RFPResolver from './resolvers/rfp';
 import MessageSchema from './schemas/message';
 import MessageResolver from './resolvers/message';
 import ContractSchema from './schemas/contract';
@@ -23,8 +23,8 @@ import ContractResolver from './resolvers/contract';
 import WalletSchema from './schemas/wallet';
 import WalletResolver from './resolvers/wallet';
 import healthcheck from './install/healthcheck';
-import QuoteSchema from './schemas/quote';
-import QuoteResolver from './resolvers/quote';
+import ProposalSchema from './schemas/proposal';
+import ProposalResolver from './resolvers/proposal';
 
 const PORT = process.env.PORT || 8001;
 
@@ -34,12 +34,12 @@ const typeDefs = [
   ScalarsSchema,
   ServerStateSchema,
   ServerSettingsSchema,
-  RFQSchema,
+  RFPSchema,
   PartnerSchema,
   MessageSchema,
   ContractSchema,
   WalletSchema,
-  QuoteSchema,
+  ProposalSchema,
 ];
 const resolvers = [
   OrganizationResolver,
@@ -47,12 +47,12 @@ const resolvers = [
   ScalarsResolver,
   ServerStateResolver,
   ServerSettingsResolver,
-  RFQResolver,
+  RFPResolver,
   PartnerResolver,
   MessageResolver,
   ContractResolver,
   WalletResolver,
-  QuoteResolver,
+  ProposalResolver,
 ];
 
 export default async function startServer() {

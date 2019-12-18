@@ -19,7 +19,7 @@ export const CATEGORIES = gql`
     msa
     invoice
     purchaseorder
-    rfq
+    rfp
   }
 `;
 

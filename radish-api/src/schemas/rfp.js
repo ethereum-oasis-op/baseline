@@ -1,20 +1,20 @@
 import gql from 'graphql-tag';
 
-const RFQSchema = gql`
+const RFPSchema = gql`
   extend type Query {
-    rfq(id: Int!): RFQ
-    rfqs: [RFQ]
+    rfp(id: Int!): RFP
+    rfps: [RFP]
   }
 
   extend type Mutation {
-    createRFQ(input: inputRFQ!): RFQ
+    createRFP(input: inputRFP!): RFP
   }
 
   extend type Subscription {
-    newRFQ: RFQ
+    newRFP: RFP
   }
 
-  type RFQ {
+  type RFP {
     _id: Int!
     description: String!
     dateDeadline: Date!
@@ -23,7 +23,7 @@ const RFQSchema = gql`
     suppliers: [String!]!
   }
 
-  input inputRFQ {
+  input inputRFP {
     description: String!
     dateDeadline: Date!
     sku: String!
@@ -32,4 +32,4 @@ const RFQSchema = gql`
   }
 `;
 
-export default RFQSchema;
+export default RFPSchema;

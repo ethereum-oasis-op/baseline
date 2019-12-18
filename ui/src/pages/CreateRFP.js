@@ -11,7 +11,7 @@ import moment from 'moment';
 import DatePickerField from '../components/DatePickerField';
 import AddSKUField from '../components/AddSKUField';
 import AddSuppliersField from '../components/AddSuppliersField';
-import { RFQContext } from '../contexts/rfq-context';
+import { RFPContext } from '../contexts/rfp-context';
 import { PartnerContext } from '../contexts/partner-context';
 import MessageLayout from '../components/MessageLayout';
 
@@ -25,9 +25,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CreateRFQ = () => {
+const CreateRFP = () => {
   const classes = useStyles();
-  const { postRFQ } = useContext(RFQContext);
+  const { postRFP } = useContext(RFPContext);
   const { data } = useContext(PartnerContext);
   const history = useHistory();
 
@@ -40,11 +40,11 @@ const CreateRFQ = () => {
       suppliers: [],
     },
     onSubmit: async values => {
-      await postRFQ({ variables: { input: values } });
+      await postRFP({ variables: { input: values } });
       history.push('/messages/outbox');
     },
     validationSchema: Yup.object().shape({
-      description: Yup.string().required('RFQ Description required'),
+      description: Yup.string().required('RFP Description required'),
       sku: Yup.string().required('Input SKU number'),
       suppliers: Yup.array()
         .of(
@@ -58,11 +58,11 @@ const CreateRFQ = () => {
   return (
     <MessageLayout>
       <Container>
-        <h1>Create a new RFQ</h1>
+        <h1>Create a new RFP</h1>
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
             <TextField
-              label="RFQ Description"
+              label="RFP Description"
               onChange={formik.handleChange}
               value={formik.values.description}
               name="description"
@@ -72,10 +72,10 @@ const CreateRFQ = () => {
               name="description"
               render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
             />
-            <Field name="dateDeadline" label="Quote Deadline" component={DatePickerField} />
+            <Field name="dateDeadline" label="Proposal Deadline" component={DatePickerField} />
             <AddSKUField formik={formik} />
             <AddSuppliersField formik={formik} partners={data.myPartners} />
-            <Button type="submit">Send RFQ</Button>
+            <Button type="submit">Send RFP</Button>
           </form>
         </FormikProvider>
       </Container>
@@ -83,4 +83,4 @@ const CreateRFQ = () => {
   );
 };
 
-export default CreateRFQ;
+export default CreateRFP;

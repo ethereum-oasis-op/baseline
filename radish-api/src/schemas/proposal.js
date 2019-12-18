@@ -1,28 +1,28 @@
 import gql from 'graphql-tag';
 
-const QuoteSchema = gql`
+const ProposalSchema = gql`
   extend type Query {
-    quote(id: Int!): Quote
-    quotes: [Quote]
+    proposal(id: Int!): Proposal
+    proposals: [Proposal]
   }
 
   extend type Mutation {
-    createQuote(input: inputQuote!): Quote
+    createProposal(input: inputProposal!): Proposal
   }
 
   extend type Subscription {
-    newQuote: Quote
+    newProposal: Proposal
   }
 
-  type Quote {
+  type Proposal {
     _id: Int!
-    rfqId: Int!
+    rfpId: Int!
     rates: [RateTable!]!
     terminationDate: Date!
   }
 
-  input inputQuote {
-    rfqId: Int!
+  input inputProposal {
+    rfpId: Int!
     rates: [inputRateTable!]!
     terminationDate: Date!
   }
@@ -40,4 +40,4 @@ const QuoteSchema = gql`
   }
 `;
 
-export default QuoteSchema;
+export default ProposalSchema;

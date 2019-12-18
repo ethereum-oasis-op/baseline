@@ -43,7 +43,7 @@ const MessageSchema = gql`
 
   type MessageCount {
     msa: Int!
-    rfq: Int!
+    rfp: Int!
     invoice: Int!
     purchaseorder: Int!
   }

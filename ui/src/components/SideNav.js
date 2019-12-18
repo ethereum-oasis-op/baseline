@@ -77,7 +77,8 @@ const categories = [
     icon: ReceiptIcon,
   },
   { label: 'Invoices', key: 'invoice', url: '/messages/invoice', icon: LibraryBooksIcon },
-  { label: 'RFQs', key: 'rfq', url: '/messages/rfq', icon: AssignmentIcon },
+  { label: 'RFPs', key: 'rfp', url: '/messages/rfp', icon: AssignmentIcon },
+  { label: 'Proposals', key: 'proposal', url: '/messages/proposal', icon: DescriptionIcon },
   { label: 'MSA', key: 'msa', url: '/messages/msa', icon: DescriptionIcon },
   // { label: "Procurement Requests", key: "procurementRequest", url: "/messages/procurementrequest", icon: LibraryBooksIcon },
 ];
