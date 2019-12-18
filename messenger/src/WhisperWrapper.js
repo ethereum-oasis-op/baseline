@@ -21,8 +21,7 @@ class WhisperWrapper {
 
   // Call this function before sending Whisper commands
   async isConnected() {
-    let web3 = await web3utils.getWeb3();
-    let connected = await web3.eth.net.isListening();
+    let connected = await web3utils.isConnected();
     return connected;
   }
 

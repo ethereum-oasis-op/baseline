@@ -25,5 +25,5 @@ fi
 for (( node_num=1; node_num<=$count; node_num++))
 do
   # Set MONGODB_URL environment variable so that each node has its own database within the same local Mongo
-  ttab -G -t "Whisper Node $node_num" exec env NODE_ENV=$environment node ../messenger/start.js $node_num
+  ttab -G -t "Whisper Node $node_num" exec env NODE_ENV=$environment NODE_NUM=$node_num node ../messenger/start.js
 done

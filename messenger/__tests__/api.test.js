@@ -8,13 +8,13 @@ const Message = require('../src/models/Message');
 const buyerURL = `http://localhost:4001`;
 
 beforeAll(async () => {
-  mongoose.connect(Config.nodes.node_1.db_url, Config.mongoose);
+  await mongoose.connect(Config.nodes.node_1.db_url, Config.mongoose);
   await Identity.deleteMany();
   await Message.deleteMany();
 });
 
 afterAll(async () => {
-  mongoose.connection.close();
+  await mongoose.connection.close();
 });
 
 describe('/health-check', () => {

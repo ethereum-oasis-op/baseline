@@ -92,6 +92,7 @@ async function initialize(ipAddress, port) {
   if (Config.messaging_type === "whisper") {
     messenger = await new WhisperWrapper();
   }
+  await web3utils.getWeb3();
   let connected = await messenger.isConnected();
   await messenger.loadIdentities();
 
