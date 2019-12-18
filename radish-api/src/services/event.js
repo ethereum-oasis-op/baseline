@@ -23,11 +23,12 @@ export const subscribeRegisterOrgEvent = async () => {
     config.rpcProvider,
     config.organizationRegistryAddress,
   );
-  orgRegistryContract.on('RegisterOrg', (name, address, role) => {
+  orgRegistryContract.on('RegisterOrg', (name, address, role, key) => {
     saveOrganization({
       name: utils.parseBytes32String(name),
       address: address,
       role: role.toNumber(),
+      key: key,
     });
   });
 };

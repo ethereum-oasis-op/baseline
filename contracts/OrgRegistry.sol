@@ -39,7 +39,8 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     event RegisterOrg(
         bytes32 _name,
         address _address,
-        uint _role
+        uint _role,
+        bytes _key
     );
 
     /// @dev constructor function that takes the address of a pre-deployed ERC1820
@@ -104,9 +105,10 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         emit RegisterOrg(
             _name,
             _address,
-            _role
+            _role,
+            _key
         );
-        return true;    
+        return true;
     }
 
     /// @notice Function to register the names of the interfaces associated with the OrgRegistry

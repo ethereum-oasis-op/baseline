@@ -134,7 +134,12 @@ export const saveOrganizations = async () => {
   const orgCount = await getOrganizationCount();
   for (let i = 0; i < orgCount; i += 1) {
     const org = await listOrganizations(i, 1);
-    const record = { address: org.addresses[0], name: org.names[0], role: org.roles[0] };
+    const record = {
+      address: org.addresses[0],
+      name: org.names[0],
+      role: org.roles[0],
+      key: org.keys[0],
+    };
     saveOrganization(record);
   }
 };
