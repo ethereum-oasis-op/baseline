@@ -1,86 +1,54 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
 import { useQuery, useMutation } from '@apollo/react-hooks';
+import {
+  GET_ALLPARTNERS_QUERY,
+  ADD_PARTNER,
+  REMOVE_PARTNER,
+  GET_PARTNER_UPDATE,
+} from '../graphql/partners';
 
 export const PartnerContext = React.createContext();
+let partnerListener;
 
-export const GET_ALLPARTNERS_QUERY = gql`
-  query {
-    organizations {
-      name
-      address
-      role
-    }
-
-    myPartners {
-      name
-      address
-      role
-      identity
-    }
-  }
-`;
-
-export const GET_PARTNER_QUERY = gql`
-  query partner($address: Address!) {
-    partner {
-      name
-      address
-      role
-      identity
-    }
-  }
-`;
-
-export const GET_MYPARTNERS_QUERY = gql`
-  query myPartners {
-    name
-    address
-    role
-    identity
-  }
-`;
-
-export const ADD_PARTNER = gql`
-  mutation addPartner($input: AddPartnerInput!) {
-    addPartner(input: $input) {
-      partner {
-        name
-        address
-        role
-        identity
-      }
-    }
-  }
-`;
-
-export const REMOVE_PARTNER = gql`
-  mutation removePartner($input: RemovePartnerInput!) {
-    removePartner(input: $input) {
-      partner {
-        name
-        address
-        role
-      }
-    }
-  }
-`;
+const partnerUpdateQuery = (prev, { subscriptionData }) => {
+  if (!subscriptionData.data) return prev;
+  const { serverSettingsUpdate } = subscriptionData.data;
+  return { prev, getServerSettings: serverSettingsUpdate };
+}
 
 export const PartnerProvider = ({ children }) => {
-  const { data, loading, error, refetch } = useQuery(GET_ALLPARTNERS_QUERY);
-  const [postPartner] = useMutation(ADD_PARTNER);
-  const [deletePartner] = useMutation(REMOVE_PARTNER);
+  const {
+    subscribeToMore,
+    data,
+    error,
+    loading,
+  } = useQuery(GET_ALLPARTNERS_QUERY);
+
+  const options = { fetchPolicy: 'no-cache' };
+  const [addPartner] = useMutation(ADD_PARTNER, options);
+  const [removePartner] = useMutation(REMOVE_PARTNER, options);
 
   useEffect(() => {
-    refetch();
-  });
+    if (!partnerListener) {
+      partnerListener = subscribeToMore({
+        document: GET_PARTNER_UPDATE,
+        updateQuery: partnerUpdateQuery,
+        fetchPolicy: 'no-cache',
+      });
+    }
+  }, [subscribeToMore]);
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>Error</h1>;
 
   return (
-    <PartnerContext.Provider value={{ data, postPartner, deletePartner }}>
+    <PartnerContext.Provider value={{
+      partners: data.myPartners,
+      organizations: data.organizations,
+      addPartner,
+      removePartner,
+    }}>
       {children}
     </PartnerContext.Provider>
   );

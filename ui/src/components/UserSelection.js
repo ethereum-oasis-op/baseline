@@ -2,21 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import CheckIcon from '@material-ui/icons/Check';
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 
 const useStyles = makeStyles(() => ({
   root: {
     position: 'fixed',
-    bottom: 0,
-    right: 0,
-    background: 'white',
-    padding: '.5rem',
+    top: '1rem',
+    right: '1rem',
     display: 'flex',
-    margin: '1rem',
     borderRadius: '.2rem',
     color: 'black',
-    boxShadow: '-1px 10px 6px -11px rgba(0,0,0,0.39)',
   },
   connected: {
     color: 'lime',
@@ -36,6 +30,8 @@ const UserSelection = () => {
   const [data, setData] = useState({ status: 504 });
   const apiURL = window.localStorage.getItem('api') || 'http://radish-api-buyer.docker/graphql';
 
+  console.log(`UI attached to ${data}`);
+  
   const fetchHealthCheck = useCallback(async () => {
     const result = await fetch(`${apiURL}/healthcheck`);
     setData(result);
@@ -52,11 +48,6 @@ const UserSelection = () => {
 
   return (
     <div className={classes.root}>
-      {data.status === 200 ? (
-        <CheckIcon className={classes.connected} />
-      ) : (
-        <ErrorOutlineIcon className={classes.error} />
-      )}
       <Select className={classes.userSelection} value={apiURL} onChange={handleChange}>
         <MenuItem value="radish-api-buyer.docker/graphql">Buyer</MenuItem>
         <MenuItem value="radish-api-supplier1.docker/graphql">Supplier1</MenuItem>

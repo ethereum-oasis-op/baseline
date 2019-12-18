@@ -1,9 +1,13 @@
 import healthcheck from '../install/healthcheck';
+import { pubsub } from '../subscriptions';
 import {
-  setNetworkId,
+  setRPCProvider,
   setOrganizationRegistryAddress,
   getServerSettings,
 } from '../utils/serverSettings';
+import { createWalletFromMnemonic } from '../utils/wallet';
+
+const SERVER_SETTINGS_UPDATE = 'SERVER_SETTINGS_UPDATE';
 
 export default {
   Query: {
@@ -14,15 +18,30 @@ export default {
     },
   },
   Mutation: {
-    setNetworkId: async (_parent, args) => {
-      const settings = await setNetworkId(args.networkId);
+    setRPCProvider: async (_parent, args) => {
+      await setRPCProvider(args.uri);
       healthcheck();
+      const settings = await getServerSettings();
       return settings;
     },
     setOrganizationRegistryAddress: async (_parent, args) => {
-      const settings = await setOrganizationRegistryAddress(args.organizationRegistryAddress);
+      await setOrganizationRegistryAddress(args.organizationRegistryAddress);
       healthcheck();
+      const settings = await getServerSettings();
       return settings;
+    },
+    setWalletFromMnemonic: async (_parent, args) => {
+      await createWalletFromMnemonic(args.mnemonic, args.path);
+      healthcheck();
+      const settings = await getServerSettings();
+      return settings;
+    },
+  },
+  Subscription: {
+    serverSettingsUpdate: {
+      subscribe: () => {
+        return pubsub.asyncIterator(SERVER_SETTINGS_UPDATE);
+      },
     },
   },
 };

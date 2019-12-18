@@ -20,7 +20,7 @@ export default {
     for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
         client = await MongoClient.connect(process.env.MONGO_URL, options);
-        console.log('connected to db');
+        console.log('Connected to db');
         break;
       } catch (error) {
         await wait(500);
@@ -43,19 +43,20 @@ export default {
     return db;
   },
 
+  // TODO: Make this more generic
   connectMongoose: async () => {
-    let dbFullName = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
+    const dbFullName = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
     for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
         await mongoose.connect(dbFullName, options);
         console.log('Mongoose connected to db');
         break;
       } catch (error) {
-        let delayTime = 500;
+        const delayTime = 500;
         console.error(error.message);
         console.log(`Retrying Mongoose connection in ${delayTime} ms`);
         await wait(delayTime);
       }
     }
-  }
+  },
 };

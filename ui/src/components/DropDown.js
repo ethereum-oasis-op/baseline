@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -9,19 +9,23 @@ import uniqid from 'uniqid';
 const useStyles = makeStyles(theme => ({
   formControl: {
     margin: theme.spacing(1),
-    width: '10rem',
+    marginBottom: '1rem',
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
   select: {
-    maxHeight: '2.5rem',
+    maxHeight: '2.25rem',
+    marginLeft: '.5rem',
+    overflow: 'hidden',
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: '#50A75D',
     }
   },
   icon: {
     fill: '#50A75D',
+    position: 'relative',
+    top: '.1rem',
   },
 }));
 
@@ -43,6 +47,7 @@ const DropDown = (props) => {
         value={value}
         onChange={handleChange}
         IconComponent={KeyboardArrowDown}
+        autoWidth={true}
         className={classes.select}
         inputProps={{
           classes: {

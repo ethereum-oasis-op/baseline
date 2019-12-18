@@ -1,5 +1,7 @@
 import db from '../db';
 
+const PARTNERS_UPDATE = 'PARTNERS_UPDATE';
+
 const getPartnerByID = async address => {
   const partner = await db.collection('organization').findOne({ address: address });
   return partner;
@@ -60,6 +62,13 @@ export default {
       await deletePartner(args.input);
       const partners = await getMyPartners();
       return partners;
+    },
+  },
+  Subscription: {
+    getPartnerUpdate: {
+      subscribe: () => {
+        return pubsub.asyncIterator(PARTNERS_UPDATE);
+      },
     },
   },
 };

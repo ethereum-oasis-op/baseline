@@ -1,215 +1,81 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import Badge from '@material-ui/core/Badge';
-import Button from '@material-ui/core/Button';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import Chip from '@material-ui/core/Chip';
 import Link from './Link';
 import UserSelection from './UserSelection';
+import Balance from './Balance';
+import { ServerSettingsContext } from '../contexts/server-settings-context';
+import RadishLogoDark from '../images/radish-logo-dark.svg';
+import RadishLogoLight from '../images/radish-logo-light.svg';
 
 const useStyles = makeStyles(theme => ({
-  buttons: {
-    flexGrow: 1,
-    textAlign: 'center',
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'inline-block',
+  appBar: {
+    boxShadow: '0px 1px 0px #909EA9',
+  },
+  dark: {
+    background: 'linear-gradient(177.98deg, #212B34 3.6%, #62737F 100%)',
+
+  },
+  light: {
+    background: 'white',
+
+    '& .logo-text': {
+      color: 'black',
     },
+    '& .org-address': {
+      color: '#62737F',
+      background: '#E3EBE8',
+    }
   },
-  button: {
-    margin: theme.spacing(1),
-    color: 'white',
+  logoWrapper: {
+    display: 'flex',
   },
-  title: {
+  logoImage: {
+    marginRight: '.5rem',
+    paddingRight: '.5rem',
+    borderRight: '1px solid #C3CDD3',
+  },
+  logoText: {
     display: 'none',
+    fontWeight: 'bold',
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
   },
-  sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
-    },
-  },
-  sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
-    },
-  },
+  orgAddress: {
+    marginLeft: theme.spacing(2),
+    background: '#212B34',
+    color: 'white',
+  }
 }));
-
-const getNavItems = () => {
-  return [
-    { label: 'What', url: '/what' },
-    { label: 'How', url: '/how' },
-    { label: 'Who', url: '/who' },
-    { label: 'Partners', url: '/partner' },
-    { label: 'RFPs', url: '/rfp' },
-    { label: 'Invoices', url: '/invoice' },
-    { label: 'Purchase Orders', url: '/purchaseorder' },
-  ];
-};
 
 export default function PrimaryNavigation() {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  function handleProfileMenuOpen(event) {
-    setAnchorEl(event.currentTarget);
-  }
-
-  function handleMobileMenuClose() {
-    setMobileMoreAnchorEl(null);
-  }
-
-  function handleMenuClose() {
-    setAnchorEl(null);
-    handleMobileMenuClose();
-  }
-
-  function handleMobileMenuOpen(event) {
-    setMobileMoreAnchorEl(event.currentTarget);
-  }
-
-  function handleLogOut() {}
-
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={handleLogOut}>Log out</MenuItem>
-    </Menu>
-  );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      {getNavItems().map(item => (
-        <MenuItem key={item.url}>
-          <Link to={item.url}>
-            <p>{item.label}</p>
-          </Link>
-        </MenuItem>
-      ))}
-      <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
-
-  const userMenu = (
-    <>
-      <div className={classes.buttons}>
-        {getNavItems().map(item => (
-          <Link key={item.url} to={item.url}>
-            <Button className={classes.button}>{item.label}</Button>
-          </Link>
-        ))}
-      </div>
-      <div className={classes.sectionDesktop}>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <IconButton aria-label="show 17 new notifications" color="inherit">
-          <Badge badgeContent={17} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <IconButton
-          edge="end"
-          aria-label="account of current user"
-          aria-controls={menuId}
-          aria-haspopup="true"
-          onClick={handleProfileMenuOpen}
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-      </div>
-      <div className={classes.sectionMobile}>
-        <IconButton
-          aria-label="show more"
-          aria-controls={mobileMenuId}
-          aria-haspopup="true"
-          onClick={handleMobileMenuOpen}
-          color="inherit"
-        >
-          <MoreIcon />
-        </IconButton>
-      </div>
-    </>
-  );
+  const { settings } = useContext(ServerSettingsContext);
+  const { organizationAddress, organizationName, organizationRole } = settings;
+  const theme = organizationRole === 1 ? 'dark' : 'light';
+  const logo = theme === 'dark' ? RadishLogoDark : RadishLogoLight;
 
   return (
     <div>
-      <AppBar position="fixed">
+      <AppBar className={`${classes.appBar} ${classes[theme]}`} position="fixed" elevation={0}>
         <Toolbar>
           <Link to="/">
-            <Typography className={classes.title} variant="h6" noWrap>
-              Radish34
-            </Typography>
+            <div className={`logo-wrapper ${classes.logoWrapper}`}>
+              <img className={`logo-image ${classes.logoImage}`} src={logo} alt="Radish Logo" />
+              <Typography className={`logo-text ${classes.logoText}`} variant="h6" noWrap>
+                {organizationName}
+              </Typography>
+              <Chip className={`org-address ${classes.orgAddress}`} size="small" label={organizationAddress} />
+              <Balance />
+            </div>
           </Link>
-          {userMenu}
         </Toolbar>
         <UserSelection />
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
     </div>
   );
 }

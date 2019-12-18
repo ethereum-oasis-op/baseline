@@ -15,8 +15,13 @@
     "lint": "solhint \"contracts/**/*.sol\"",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:watch": "jest --watchAll --runInBand",
-    "seed": "docker-compose run --rm mongo-seed sh seed.sh",
-    "deploy": "docker-compose run --rm radish-deploy sh deploy.sh"
+    "seed": "npm run seed:buyer && npm run seed:supplier1 && npm run seed:supplier2 && npm run seed:supplier3",
+    "seed:buyer": "docker-compose run --rm -e ROLE='buyer' mongo-seed sh seed.sh",
+    "seed:supplier1": "docker-compose run --rm -e ROLE='supplier1' mongo-seed sh seed.sh",
+    "seed:supplier2": "docker-compose run --rm -e ROLE='supplier2' mongo-seed sh seed.sh",
+    "seed:supplier3": "docker-compose run --rm -e ROLE='supplier3' mongo-seed sh seed.sh",
+    "deploy": "docker-compose run --rm radish-deploy sh deploy.sh",
+    "deploy:all": "docker-compose run -e MODE='register-all' --rm radish-deploy sh deploy.sh"
   },
   "repository": {
     "type": "git",

@@ -6,57 +6,62 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import StepContent from '@material-ui/core/StepContent';
 import Button from '@material-ui/core/Button';
-import AdminAccountSetupForm from './forms/AdminAccountSetupForm';
-import ChooseNetworkForm from './forms/ChooseNetworkForm';
-import ConnectToRegistryForm from './forms/ConnectToRegistryForm';
-import RegisterForm from './forms/RegisterForm';
-import AdminAccountSetupInstructions from './instructions/AdminAccountSetupInstructions';
-import ChooseNetworkInstructions from './instructions/ChooseNetworkInstructions';
-import ConnectToRegistryInstructions from './instructions/ConnectToRegistryInstructions';
-import RegisterInstructions from './instructions/RegisterInstructions';
 import InstallationLayout from './components/InstallationLayout';
+import NetworkSettings from './settings/NetworkSettings';
+import RegistrySettings from './settings/RegistrySettings';
+import RegisterSettings from './settings/RegisterSettings';
+import WalletSettings from './settings/WalletSettings';
+import NetworkForm from './forms/NetworkForm';
+import RegistryForm from './forms/RegistryForm';
+import RegisterForm from './forms/RegisterForm';
+import WalletForm from './forms/WalletForm';
+import RegisteryInstructions from './instructions/RegistryInstructions';
+import RegisterInstructions from './instructions/RegisterInstructions';
+import NetworkInstructions from './instructions/NetworkInstructions';
+import WalletInstructions from './instructions/WalletInstructions';
+import UserSelection from '../components/UserSelection';
 
 const steps = [
   {
-    label: 'Choose Network',
-    content: <ChooseNetworkForm />,
-    instructions: <ChooseNetworkInstructions />,
-  },
-  // {
-  //   label: 'Setup Metamask',
-  //   content: <SetupMetamaskForm />,
-  //   instructions: <SetupMetamaskInstructions />,
-  // },
-  {
-    label: 'Connect to Registry',
-    content: <ConnectToRegistryForm />,
-    instructions: <ConnectToRegistryInstructions />,
+    label: 'Choose an Ethereum Network',
+    content: <NetworkForm />,
+    settings: <NetworkSettings />,
+    instructions: <NetworkInstructions />,
   },
   {
-    label: 'Register',
+    label: 'Set Up Corporate Wallet',
+    content: <WalletForm />,
+    settings: <WalletSettings />,
+    instructions: <WalletInstructions />,
+  },
+  {
+    label: 'Connect to a Registry',
+    content: <RegistryForm />,
+    settings: <RegistrySettings />,
+    instructions: <RegisteryInstructions />,
+  },
+  {
+    label: 'Register Your Company',
     content: <RegisterForm />,
+    settings: <RegisterSettings />,
     instructions: <RegisterInstructions />,
-  },
-  {
-    label: 'Admin Account Setup',
-    content: <AdminAccountSetupForm />,
-    instructions: <AdminAccountSetupInstructions />,
   },
 ];
 
 const getStateId = state => {
+  console.log('STATE', state);
   switch (state) {
     case 'nonetwork':
     case 'notconnected':
       return 0;
+    case 'nowallet':
+    case 'nobalance':
+      return 1;
     case 'noregistry':
-    case 'deploying':
-      return 2;
     case 'isregistered':
-    case 'isregistering':
-      return 3;
-    case 'noadmin':
-      return 4;
+      return 2;
+    case 'nomessenger':
+      return 0;
     default:
       return 0;
   }
@@ -65,34 +70,57 @@ const getStateId = state => {
 const useStyles = makeStyles(theme => ({
   instructions: {
     background: '#F4F6F8',
-    width: '500px',
-    borderRight: '2px solid #61737f',
+    width: '468px',
+    borderRight: '1px solid #909ea9',
     padding: theme.spacing(8),
+  },
+  settings: {
+    height: 0,
+    overflow: 'hidden',
+    '&.active': {
+      height: 'auto',
+    },
+  },
+  settingsContent: {
+    padding: theme.spacing(4),
   },
   content: {
     padding: theme.spacing(4),
     width: '100%',
     minWidth: '500px',
     background: 'white',
+
+    // Root
+    '& .MuiStep-root': {
+      background: '#F4F6F8',
+      padding: '1rem',
+      borderBottom: '1px solid #c3cdd2',
+    },
+
+    // Content
     '& .MuiStepContent-root': {
       borderColor: 'transparent',
+      padding: 0,
+      marginLeft: '50px',
+      paddingRight: '50px',
     },
-    '& .MuiStepConnector-line': {
-      borderColor: 'transparent',
+
+    // Connector
+    '& .MuiStepConnector-vertical': {
+      display: 'none',
     },
-    '& .MuiStepLabel-root.Mui-disabled': {
-      '& .MuiStepIcon-root': {
-        color: '#DFE3E8',
-      },
-    },
+
+    // Icon
     '& .MuiStepIcon-root': {
       color: '#444F59',
       transition: 'color .5s ease',
-      width: '48px',
+      width: '40px',
       '&.MuiStepIcon-completed': {
         color: '#28D295',
       },
     },
+
+    // Label
     '& .MuiStepLabel-labelContainer': {
       marginLeft: theme.spacing(2),
     },
@@ -106,7 +134,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Installation = ({ state }) => {
+const Installation = ({ state, settings }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(getStateId(state));
 
@@ -119,14 +147,21 @@ const Installation = ({ state }) => {
       <div className={classes.instructions}>{steps[activeStep].instructions}</div>
 
       <div className={classes.content}>
-        <Stepper activeStep={activeStep} orientation="vertical">
-          {steps.map(({ label, content }) => (
+        <h1>{ state }</h1>
+        <Stepper activeStep={activeStep} orientation="vertical" connector={null} nonLinear>
+          {steps.map(({ label, settings, content }, index) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
+              <div className={activeStep > index ? `${classes.settings} active` : classes.settings}>
+                <div className={classes.settingsContent}>
+                  {settings}
+                </div>
+              </div>
               <StepContent className={classes.stepContent}>{content}</StepContent>
             </Step>
           ))}
         </Stepper>
+        <UserSelection />
 
         {steps.map((step, index) => {
           const onClick = () => {

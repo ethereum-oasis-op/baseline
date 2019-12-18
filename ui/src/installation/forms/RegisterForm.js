@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import FormWrapper from '../components/FormWrapper';
 import FormButtonWrapper from '../components/FormButtonWrapper';
 import TextField from '../../components/TextField';
+import Select from '../../components/Select';
+import { ServerSettingsContext } from '../../contexts/server-settings-context';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -17,44 +20,66 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const roles = [
+  { label: 'Buyer', value: 1, disabled: false, },
+  { label: 'Supplier', value: 2, disabled: false, },
+  { label: 'Carrier', value: 3, disabled: true, },
+];
+
 const RegisterForm = () => {
   const classes = useStyles();
+  const { registerOrganizationInfo } = useContext(ServerSettingsContext);
 
-  const onSubmit = async () => {};
+  const onSubmit = async ({ organizationName, role }) => {
+    await registerOrganizationInfo({
+      variables: {
+        input: {
+          name: organizationName,
+          role: role,
+        },
+      },
+    });
+  };
 
   return (
     <FormWrapper>
       <Formik
         onSubmit={onSubmit}
-        initialValues={{}}
+        initialValues={{
+          role: 1,
+        }}
         render={({ handleChange }) => {
           return (
             <Form className={classes.form}>
-              <Field
-                required
-                name="name"
-                id="orgName"
-                onChange={handleChange}
-                label="Network Id"
-                component={TextField}
-                fullWidth
-                placeholder="Mainnet"
-                margin="normal"
-                // InputLabelProps={{ shrink: true }}
-              />
-
-              <Field
-                required
-                name="name"
-                id="orgName"
-                onChange={handleChange}
-                label="Organization Registry Address"
-                component={TextField}
-                fullWidth
-                placeholder="Ex: 0x1234567890"
-                margin="normal"
-                // InputLabelProps={{ shrink: true }}
-              />
+              <Grid container spacing={3}>
+                <Grid item xs={6}>
+                  <Field
+                    required
+                    name="organizationName"
+                    id="organizationName"
+                    onChange={handleChange}
+                    label="Organization Name"
+                    component={TextField}
+                    fullWidth
+                    placeholder="Ex: Radish Man Co."
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Field
+                    required
+                    name="role"
+                    id="role"
+                    onChange={handleChange}
+                    label="Role"
+                    component={Select}
+                    placeholder={1}
+                    defaultValue={1}
+                    margin="normal"
+                    options={roles}
+                  />
+                </Grid>
+              </Grid>
 
               <FormButtonWrapper>
                 <Button
@@ -63,7 +88,7 @@ const RegisterForm = () => {
                   color="primary"
                   data-testid="register-button"
                 >
-                  Continue
+                  Next
                 </Button>
               </FormButtonWrapper>
             </Form>

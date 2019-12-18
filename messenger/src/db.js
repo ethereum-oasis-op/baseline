@@ -50,6 +50,7 @@ async function connect(url) {
   while (!connected) {
     try {
       // eslint-disable-next-line no-await-in-loop
+      console.log('mongoURL', mongoUrl);
       await mongoose.connect(mongoUrl, Config.mongoose);
       connected = true;
     } catch (error) {

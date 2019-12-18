@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Clear from '@material-ui/icons/Clear';
 import * as Yup from 'yup';
@@ -49,7 +48,7 @@ const useStyles = makeStyles(() => ({
 const CreateRFP = () => {
   const classes = useStyles();
   const { postRFP } = useContext(RFPContext);
-  const { data } = useContext(PartnerContext);
+  const { partners } = useContext(PartnerContext);
   const history = useHistory();
 
   const formik = useFormik({
@@ -98,7 +97,7 @@ const CreateRFP = () => {
             />
             <Field name="proposalDeadline" label="Proposal Deadline" component={DatePickerField} />
             <AddSKUField formik={formik} />
-            <AddSuppliersField formik={formik} partners={data.myPartners} />
+            <AddSuppliersField formik={formik} partners={partners} />
             <Button className={classes.submitButton} type="submit">Send RFP</Button>
           </form>
         </FormikProvider>

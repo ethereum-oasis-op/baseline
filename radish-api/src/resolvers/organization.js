@@ -5,8 +5,8 @@ import {
   getRegisteredOrganization,
   getOrganizationCount,
   getInterfaceAddress,
-  saveOrganization,
 } from '../services/organization';
+import { getServerSettings } from '../utils/serverSettings';
 import db from '../db';
 
 const NEW_ORG = 'NEW_ORG';
@@ -52,27 +52,17 @@ export default {
   },
   Mutation: {
     registerOrganization: async (_root, args) => {
-      // Alert API that a user is attempting to set up the Organization in the registry
-      // Listen for the transaction on that contract to make sure that it goes through
-      // Emits an event
+      const settings = await getServerSettings();
+      const { organizationWhisperKey, organizationAddress } = settings;
 
-      // When the event happens. It's going to take the current user's ETH address (0xc11)
-      // Make this the first user (Admin user)
-
-      await saveOrganization(args.input);
-      const organization = await getOrganizationById(args.input.address);
-      delete organization._id;
-      pubsub.publish(NEW_ORG, { newOrganization: organization });
-      return { organization };
-    },
-    registerToOrgRegistry: async (root, args) => {
-      const transactionHash = registerToOrgRegistry(
-        args.input.address,
-        args.input.name,
-        args.input.role,
-        args.input.key,
+      const orgRegistryTxHash = await registerToOrgRegistry(
+        organizationAddress,
+        args.organizationName,
+        args.organizationRole,
+        organizationWhisperKey,
       );
-      return transactionHash;
+
+      console.log('Registering Organization with tx:', orgRegistryTxHash);
     },
   },
   Subscription: {

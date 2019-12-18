@@ -7,10 +7,6 @@ import Divider from '@material-ui/core/Divider';
 import { NavLink, useHistory } from 'react-router-dom';
 import Inbox from '@material-ui/icons/Inbox';
 import Send from '@material-ui/icons/Send';
-import ReceiptIcon from '@material-ui/icons/Receipt';
-import AssignmentIcon from '@material-ui/icons/Assignment';
-import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import DescriptionIcon from '@material-ui/icons/Description';
 import { groupBy, filter } from 'lodash';
 import DropDown from './DropDown';
 
@@ -21,10 +17,17 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     background: '#f8fafb',
     height: '100vh',
-    marginTop: '10%',
+    marginTop: '1rem',
   },
   filterList: {
     marginTop: 0,
+    paddingTop: 0,
+    '.MuiFormControl-root': {
+      margin: 0,
+    }
+  },
+  createNewButton: {
+    border: '1px solid red',
   },
   text: {
     fontWeight: 'bold',
@@ -61,6 +64,7 @@ const useStyles = makeStyles(() => ({
   },
   icon: {
     marginRight: '1rem',
+    marginLeft: '1rem',
   },
   label: {
     flexGrow: 1,
@@ -68,25 +72,43 @@ const useStyles = makeStyles(() => ({
   count: {
     fontWeight: 'normal',
   },
+  dot: {
+    width: '1rem',
+    height: '1rem',
+    background: 'silver',
+    borderRadius: '10rem',
+    margin: '0 .5rem 0 1rem',
+    '&.dot-rfp': {
+      background: '#F09085',
+    },
+    '&.dot-proposal': {
+      background: '#F9D448',
+    },
+    '&.dot-purchaseorder': {
+      background: '#A6CA72',
+    },
+    '&.dot-invoice': {
+      background: '#5186ED',
+    },
+  },
 }));
 
 const categories = [
+  { label: 'RFPs', key: 'rfp', url: '/messages/rfp' },
+  { label: 'Proposals', key: 'proposal', url: '/messages/proposal'},
   {
     label: 'Purchase Orders',
     key: 'purchaseorder',
     url: '/messages/purchaseorder',
-    icon: ReceiptIcon,
   },
-  { label: 'Invoices', key: 'invoice', url: '/messages/invoice', icon: LibraryBooksIcon },
-  { label: 'RFPs', key: 'rfp', url: '/messages/rfp', icon: AssignmentIcon },
-  { label: 'Proposals', key: 'proposal', url: '/messages/proposal', icon: DescriptionIcon },
-  { label: 'MSA', key: 'msa', url: '/messages/msa', icon: DescriptionIcon },
+  { label: 'Invoices', key: 'invoice', url: '/messages/invoice'},
+  // { label: 'MSA', key: 'msa', url: '/messages/msa', icon: DescriptionIcon },
   // { label: "Procurement Requests", key: "procurementRequest", url: "/messages/procurementrequest", icon: LibraryBooksIcon },
 ];
 
-const Category = ({ icon: Icon, label, category = [], url, selected }) => {
+const Category = ({ icon: Icon, label, items = [], name, url, selected }) => {
   const classes = useStyles();
-  const unresolved = filter(category, ['resolved', false]);
+  const unresolved = filter(items, ['resolved', false]);
 
   return (
     <ListItem className={classes.linkItem}>
@@ -97,7 +119,10 @@ const Category = ({ icon: Icon, label, category = [], url, selected }) => {
         activeClassName={classes.selected}
         isActive={() => selected}
       >
-        <Icon className={classes.icon} />
+        { Icon
+          ? <Icon className={classes.icon} />
+          : <div className={`${classes.dot} dot-${name}`} />
+        }
         <div className={classes.label}>{label}</div>
         <div className={classes.count}>{unresolved.length ? unresolved.length : null}</div>
       </NavLink>
@@ -109,7 +134,8 @@ Category.propTypes = {
   selected: PropTypes.bool,
   icon: PropTypes.element.isRequired,
   label: PropTypes.string.isRequired,
-  category: PropTypes.string.isRequired,
+  items: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
 };
 
@@ -131,7 +157,7 @@ const SideNav = ({ messages, selected }) => {
   return (
     <div className={classes.root}>
       <List className={classes.filterList}>
-        <DropDown items={createForms} onChange={dropdownOnChange} defaultItem="Create New Item" />
+        <DropDown items={createForms} onChange={dropdownOnChange} className={classes.createNewButton} defaultItem="Create New Item" />
         <Category icon={Inbox} label="Inbox" category={results.incoming} url="/messages/inbox" />
         <Category icon={Send} label="Outbox" category={results.outgoing} url="/messages/outbox" />
       </List>
@@ -143,11 +169,20 @@ const SideNav = ({ messages, selected }) => {
           <Category
             icon={icon}
             label={label}
-            category={groups[key]}
+            items={groups[key]}
+            name={key}
             url={url}
             selected={key === selected}
           />
         ))}
+      </List>
+
+      <Divider />
+
+      <List className={classes.filterList}>
+        <Category icon={null} label="Products" url="/products" />
+        <Category icon={null} label="Partners" url="/partners" />
+        <Category icon={null} label="Contracts" url="/contracts" />
       </List>
     </div>
   );

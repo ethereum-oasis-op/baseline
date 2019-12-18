@@ -19,34 +19,67 @@ export const GET_SERVER_STATE_UPDATE = gql`
 export const GET_SERVER_SETTINGS = gql`
   query GetServerSettings {
     getServerSettings {
-      networkId
+      globalRegistryAddress
       organizationRegistryAddress
+      organizationName
+      organizationRole
+      organizationAddress
+      organizationWhisperKey
+      rpcProvider
     }
   }
 `;
 
-export const SET_NETWORK_ID = gql`
-  mutation SetNetworkId($networkId: Int!) {
-    setNetworkId(networkId: $networkId) {
-      networkId
+export const GET_SERVER_SETTINGS_UPDATE = gql`
+  subscription GetServerSettingsUpdate{
+    serverSettingsUpdate {
+      globalRegistryAddress
       organizationRegistryAddress
+      organizationName
+      organizationRole
+      organizationAddress
+      organizationWhisperKey
+      rpcProvider
     }
   }
 `;
 
-export const SET_ORGANIZATION_REGISTRY_ADDRESSS = gql`
-  mutation SetOrganizationRegistryAddress($organizationRegistryAddress: Address!) {
-    setOrganizationRegistryAddress(organizationRegistryAddress: $organizationRegistryAddress) {
-      networkId
+export const SET_RPC_PROVIDER = gql`
+  mutation SetRPCProvider($uri: String!) {
+    setRPCProvider(uri: $uri) {
+      globalRegistryAddress
       organizationRegistryAddress
+      organizationName
+      organizationRole
+      organizationAddress
+      organizationWhisperKey
+      rpcProvider
     }
   }
 `;
 
-export const GET_SERVER_STATUS_UPDATE = gql`
-  subscription onServerStateUpdate {
-    serverStatusUpdate {
-      balance
+
+export const SET_WALLET_FROM_MNEMONIC = gql`
+  mutation SetWalletFromMnemonic($mnemonic: String!, $path: String){
+    setWalletFromMnemonic(mnemonic: $mnemonic, path: $path){
+      globalRegistryAddress
+      organizationRegistryAddress
+      organizationName
+      organizationRole
+      organizationWhisperKey
+      rpcProvider
+    }
+  }
+`;
+
+export const REGISTER_ORGANIZATION = gql`
+  mutation RegisterOrganization($input: RegisterOrganization!){
+    registerOrganization(input: $input){
+      organization {
+        name
+        address
+        role
+      }
     }
   }
 `;

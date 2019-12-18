@@ -6,12 +6,22 @@ export default gql`
   }
 
   extend type Mutation {
-    setNetworkId(networkId: String!): ServerSettings
+    setRPCProvider(uri: String!): ServerSettings
     setOrganizationRegistryAddress(organizationRegistryAddress: Address): ServerSettings
+    setWalletFromMnemonic(mnemonic: String!, path: String): ServerSettings
+  }
+
+  extend type Subscription {
+    serverSettingsUpdate: ServerSettings
   }
 
   type ServerSettings {
-    networkId: String
+    rpcProvider: String
+    organizationName: String
+    organizationRole: Int
+    organizationWhisperKey: String
+    organizationAddress: String
+    globalRegistryAddress: Address
     organizationRegistryAddress: Address
   }
 `;

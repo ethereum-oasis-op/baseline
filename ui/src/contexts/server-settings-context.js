@@ -1,78 +1,82 @@
 import React, { useEffect } from 'react';
-import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
-import { get } from 'lodash';
-import { useSubscription, useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks';
+import { useQuery, useMutation } from '@apollo/react-hooks';
+import {
+  GET_SERVER_STATE,
+  GET_SERVER_STATE_UPDATE,
+  GET_SERVER_SETTINGS,
+  GET_SERVER_SETTINGS_UPDATE,
+  SET_RPC_PROVIDER,
+  SET_WALLET_FROM_MNEMONIC,
+  REGISTER_ORGANIZATION
+} from '../graphql/server-settings';
 
 const ServerSettingsContext = React.createContext([{}, () => {}]);
+let stateListener;
+let settingListener;
 
-const GET_SERVER_STATE = gql`
-  query GetServerState {
-    serverState {
-      state
-    }
-  }
-`;
+const stateUpdateQuery = (prev, { subscriptionData }) => {
+  if (!subscriptionData.data) return prev;
+  const { serverStateUpdate } = subscriptionData.data;
+  return { prev, serverState: serverStateUpdate };
+}
 
-const GET_SERVER_STATE_UPDATE = gql`
-  subscription onServerStateUpdate {
-    serverStateUpdate {
-      state
-    }
-  }
-`;
-
-const GET_SERVER_SETTINGS = gql`
-  query GetServerSettings {
-    getServerSettings {
-      networkId
-      organizationRegistryAddress
-    }
-  }
-`;
-
-const SET_NETWORK_ID = gql`
-  mutation SetNetworkId($networkId: String!) {
-    setNetworkId(networkId: $networkId) {
-      networkId
-      organizationRegistryAddress
-    }
-  }
-`;
-
-const SET_ORGANIZATION_REGISTRY_ADDRESSS = gql`
-  mutation SetOrganizationRegistryAddress($organizationRegistryAddress: Address!) {
-    setOrganizationRegistryAddress(organizationRegistryAddress: $organizationRegistryAddress) {
-      networkId
-      organizationRegistryAddress
-    }
-  }
-`;
+const settingsUpdateQuery = (prev, { subscriptionData }) => {
+  if (!subscriptionData.data) return prev;
+  const { serverSettingsUpdate } = subscriptionData.data;
+  return { prev, getServerSettings: serverSettingsUpdate };
+}
 
 const ServerSettingsProvider = ({ children }) => {
-  const { loading, data: initState } = useQuery(GET_SERVER_STATE);
-  const { data: updateState } = useSubscription(GET_SERVER_STATE_UPDATE);
-  const [getServerState, { data: lazyState }] = useLazyQuery(GET_SERVER_STATE, {
-    fetchPolicy: 'no-cache',
-  });
-  const [getSettings, { data: settings }] = useLazyQuery(GET_SERVER_SETTINGS);
-  const [setNetworkId, { data: networkId }] = useMutation(SET_NETWORK_ID);
-  const [setOrganizationRegistryAddress, { data: organizationRegistryAddress }] = useMutation(
-    SET_ORGANIZATION_REGISTRY_ADDRESSS,
-  );
-  const state =
-    get(updateState, 'serverStateUpdate.state') ||
-    get(lazyState, 'serverState.state') ||
-    get(initState, 'serverState.state');
+  const {
+    subscribeToMore: subscribeToStateUpdates,
+    data: initState,
+    loading,
+  } = useQuery(GET_SERVER_STATE);
+
+  const {
+    subscribeToMore: subscribeToSettingsUpdates,
+    data: initSettings,
+  } = useQuery(GET_SERVER_SETTINGS);
+
+  const options = { fetchPolicy: 'no-cache' };
+
+  const [setRPCProvider] = useMutation(SET_RPC_PROVIDER, options);
+  const [setWalletFromMnemonic] = useMutation(SET_WALLET_FROM_MNEMONIC, options);
+  const [registerOrganizationInfo] = useMutation(REGISTER_ORGANIZATION, options);
 
   useEffect(() => {
-    getServerState();
-    getSettings();
-  }, [networkId, organizationRegistryAddress, getServerState, getSettings]);
+    if (!stateListener) {
+      stateListener = subscribeToStateUpdates({
+        document: GET_SERVER_STATE_UPDATE,
+        updateQuery: stateUpdateQuery,
+        fetchPolicy: 'no-cache',
+      });
+    }
+  }, [subscribeToStateUpdates]);
+
+  useEffect(() => {
+    if (!settingListener) {
+      settingListener = subscribeToSettingsUpdates({
+        document: GET_SERVER_SETTINGS_UPDATE,
+        updateQuery: settingsUpdateQuery,
+      });
+    }
+  }, [subscribeToSettingsUpdates]);
+
+  const state = initState ? initState.serverState.state : 'nostate';
+  const settings = initSettings ? initSettings.getServerSettings : null;
 
   return (
     <ServerSettingsContext.Provider
-      value={{ state, settings, loading, setNetworkId, setOrganizationRegistryAddress }}
+      value={{
+        state,
+        settings,
+        loading,
+        setRPCProvider,
+        registerOrganizationInfo ,
+        setWalletFromMnemonic
+      }}
     >
       {children}
     </ServerSettingsContext.Provider>

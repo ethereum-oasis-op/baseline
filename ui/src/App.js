@@ -37,7 +37,7 @@ const App = () => {
           <Route exact path="/who" component={Who} />
           <Route exact path="/what" component={What} />
           <Route exact path="/how" component={How} />
-          <Route exact path="/partner" component={Partner} />
+          <Route exact path="/partners" component={Partner} />
           <Route path="/proposal/:rfpId/create/" component={CreateProposal} />
           <Route path="/rfp/create" component={CreateRFP} />
           <Route path="/rfp/:id" component={RFP} />

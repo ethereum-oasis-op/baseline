@@ -1,5 +1,7 @@
 {
   "ERC1820RegistryPath" : "/app/artifacts/ERC1820Registry.json",
   "RegistrarPath" : "/app/artifacts/Registrar.json",
-  "OrgRegistryPath" : "/app/artifacts/OrgRegistry.json"
+  "OrgRegistryPath" : "/app/artifacts/OrgRegistry.json",
+  "KeystorePath": "/app/src/config/keystore",
+  "ConfigPath": "/app/src/config"
 }
