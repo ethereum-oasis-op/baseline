@@ -4,7 +4,7 @@ import { getServerSettings } from '../utils/serverSettings';
 import { getContract } from '../utils/ethers';
 import { saveOrganization } from './organization';
 
-const OrgRegistryPath = '/app/artifacts/OrgRegistry.json';
+const OrgRegistryPath = `${process.cwd()}/artifacts/OrgRegistry.json`;
 
 export const getOrgRegistryJson = () => {
   if (fs.existsSync(OrgRegistryPath)) {
@@ -17,9 +17,9 @@ export const getOrgRegistryJson = () => {
 
 export const subscribeRegisterOrgEvent = async () => {
   const config = await getServerSettings();
-  const orgRegistryJason = getOrgRegistryJson();
+  const orgRegistryJson = getOrgRegistryJson();
   const orgRegistryContract = getContract(
-    orgRegistryJason,
+    orgRegistryJson,
     config.rpcProvider,
     config.organizationRegistryAddress,
   );
