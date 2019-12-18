@@ -13,6 +13,7 @@ import Invoice from './pages/Invoice';
 import MSA from './pages/MSA';
 import CreateRFP from './pages/CreateRFP';
 import CreateProposal from './pages/CreateProposal';
+import ProposalDetail from './pages/ProposalDetail';
 
 import Installation from './installation';
 import Loading from './components/Loading';
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/proposal/:rfpId/create/" component={CreateProposal} />
           <Route path="/rfp/create" component={CreateRFP} />
           <Route path="/rfp/:id" component={RFP} />
+          <Route path="/proposal/:id" component={ProposalDetail} />
           <Route path="/invoice/:id" component={Invoice} />
           <Route path="/purchaseorder/:id" component={PurchaseOrder} />
           <Route path="/msa/:id" component={MSA} />

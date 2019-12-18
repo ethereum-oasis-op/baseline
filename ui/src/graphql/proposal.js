@@ -39,3 +39,12 @@ export const CREATE_PROPOSAL = gql`
   }
   ${PROPOSAL_ATTRIBUTES}
 `;
+
+export const GET_PROPOSAL = gql`
+  query proposal($id: Int!) {
+    proposal(id: $id) {
+      ...PROPOSAL_ATTRIBUTES
+    }
+  }
+  ${PROPOSAL_ATTRIBUTES}
+`;
