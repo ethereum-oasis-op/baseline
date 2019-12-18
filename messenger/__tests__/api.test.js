@@ -1,5 +1,4 @@
 const request = require('supertest');
-// TODO: Use config to pass db config for test env to setupDb
 const Config = require('../config');
 
 const mongoose = require('mongoose')
@@ -9,7 +8,7 @@ const Message = require('../src/models/Message');
 const buyerURL = `http://localhost:4001`;
 
 beforeAll(async () => {
-  mongoose.connect('mongodb://localhost:27017/radish34', { useUnifiedTopology: true, useNewUrlParser: true });
+  mongoose.connect(Config.nodes.node_1.db_url, Config.mongoose);
   await Identity.deleteMany();
   await Message.deleteMany();
 });

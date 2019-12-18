@@ -49,7 +49,7 @@ conn.once('open', () => {
 
 async function connect(db_url) {
   mongoURL = db_url;
-  mongoose.set('debug', Boolean(Config.mongo.debug));
+  mongoose.set('debug', Config.mongo.debug);
 
   let connected = false;
   while (!connected) {

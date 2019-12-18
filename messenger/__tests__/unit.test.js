@@ -8,7 +8,7 @@ const Identity = require('../src/models/Identity');
 const Message = require('../src/models/Message');
 
 beforeAll(async () => {
-  mongoose.connect('mongodb://localhost:27017/radish34', { useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false });
+  mongoose.connect(Config.nodes.node_1.db_url, Config.mongoose);
   await Identity.deleteMany();
   await Message.deleteMany();
 });

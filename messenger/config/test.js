@@ -12,7 +12,7 @@ module.exports = {
       whisper_port: "8546",
       api_port: "4001",
       origin: "mychat2",
-      db_url: "mongodb://127.0.0.1:27017/radish34_test"
+      db_url: "mongodb://127.0.0.1:27017/radish34"
     }
   }
 };
