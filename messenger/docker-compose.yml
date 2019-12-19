@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  mongo:
+    hostname: mongo
+    image: mongo:latest
+    volumes:
+      - radish-mongo:/data/db
+    ports:
+     - 27017:27017
+
+  geth-bootnode:
+    hostname: geth-bootnode
+    environment:
+      - nodekeyhex=08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b #Needs to be fix, so that the miners know the resulting enode id
+    build:
+      context: ../geth-env
+      dockerfile: ./bootnode/Dockerfile
+    ports:
+      - 30301:30301/udp
+ 
+  geth-miner:
+    hostname: geth-miner
+    depends_on:
+      - geth-bootnode
+    environment:
+      - nodekeyhex=8eb666d3e8a42bfc7d9e829af60b6d9142d65bef1ecb5897622b4c3ef93377e2 # This sets the enode so light nodes can use static-nodes.json to add as peer
+      - address=0x8cc5a1a0802db41db826c2fcb72423744338dcb0 # derived from the private key which is passed in the args
+      - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
+      - bootnodeIp=172.25.0.101
+    ports:
+      - 8544:8545/tcp
+    build:
+      context: ../geth-env
+      dockerfile: ./miner/Dockerfile
+      args:
+        privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46 # Please don't do something like this in production, okay?
+        password: pass
+
+  geth-node:
+    hostname: geth-node
+    depends_on:
+       - geth-miner
+    environment:
+       - nodeType=full
+       - address=0x3590aca93338b0721966a8d0c96ebf2c4c87c544 # derived from the private key which is passed in the args
+       - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c # derived from the nodekeyhex of the bootnode
+       - bootnodeIp=172.25.0.101
+    build:
+      context: ../geth-env
+      dockerfile: ./node/Dockerfile
+      args:
+        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
+        password: word
+    ports:
+       - 8545:8545
+       - 8546:8546
+
+volumes:
+  radish-mongo:
