@@ -1,3 +1,12 @@
+const Identity = require('./models/Identity');
+const Message = require('./models/Message');
+
+// Useful constants
+const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
+const POW_TIME = process.env.WHISPER_POW_TIME || 100;
+const TTL = process.env.WHISPER_TTL || 20;
+const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
+
 function hasJsonStructure(str) {
   if (typeof str !== 'string') return false;
   try {
@@ -22,7 +31,70 @@ function safeJsonParse(str) {
   }
 }
 
+// Fetch all of the Whisper Identities stored in database
+async function getIdentities() {
+  const identities = await Identity.find(
+    {},
+    '-_id publicKey createdDate',
+  ).lean();
+  return identities;
+}
+
+// Find single identity in database
+async function findIdentity(myId) {
+  return Identity.exists({ _id: myId });
+}
+
+// Fetch messages for a given conversation
+// Private conversation = all messages with same topic and same two Whisper Ids
+async function getMessages(myId, topic = DEFAULT_TOPIC, partnerId, since) {
+  const currentTime = await Math.floor(Date.now() / 1000);
+  let timeThreshold = parseInt(since, 10);
+  // Default to showing last 24 hours of messages
+  if (!since) {
+    timeThreshold = currentTime - 86400; // 86400 seconds in a day
+  }
+  // If no partnerId provided, get messages from all conversations
+  if (!partnerId) {
+    const messages = await Message.aggregate([
+      {
+        $match: {
+          topic,
+          sentDate: { $gte: timeThreshold },
+          $or: [{ recipientId: myId }, { senderId: myId }],
+        },
+      },
+    ]);
+    return messages;
+  }
+  // If partnerId provided, only get messages involving that whisperId
+  return Message.aggregate([
+    {
+      $match: {
+        topic,
+        sentDate: { $gte: timeThreshold },
+        $or: [
+          { topic, recipientId: myId, senderId: partnerId },
+          { topic, recipientId: partnerId, senderId: myId },
+        ],
+      },
+    },
+  ]);
+}
+
+async function getSingleMessage(messageId) {
+  return Message.findOne({ _id: messageId });
+}
+
 module.exports = {
   hasJsonStructure,
   safeJsonParse,
+  getIdentities,
+  findIdentity,
+  getMessages,
+  getSingleMessage,
+  DEFAULT_TOPIC,
+  POW_TIME,
+  TTL,
+  POW_TARGET,
 };

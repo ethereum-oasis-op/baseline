@@ -107,8 +107,8 @@ async function initialize() {
   console.log('Initializing server...');
   if (Config.messagingType === 'whisper') {
     messenger = await new WhisperWrapper();
+    await web3utils.getWeb3();
   }
-  await web3utils.getWeb3();
   const connected = await messenger.isConnected();
   await messenger.loadIdentities();
 

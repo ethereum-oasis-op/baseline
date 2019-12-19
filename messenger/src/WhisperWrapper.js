@@ -1,28 +1,23 @@
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
 const utils = require('./generalUtils');
+const whisperUtils = require('./whisperUtils');
 const web3utils = require('./web3Utils.js');
 
 // Useful constants
-const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
-const POW_TIME = process.env.WHISPER_POW_TIME || 100;
-const TTL = process.env.WHISPER_TTL || 20;
-const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
+const {
+  DEFAULT_TOPIC,
+  POW_TARGET,
+} = utils;
 
 class WhisperWrapper {
   constructor() {
-    // Singleton pattern: only ever need one instance of this class
-    // If one already exists, return it instead of creating a new one
-    if (!WhisperWrapper.instance) {
-      WhisperWrapper.instance = this;
-    }
-    return WhisperWrapper.instance;
-  }
-
-  // Call this function before sending Whisper commands
-  async isConnected() {
-    const connected = await web3utils.isConnected();
-    return connected;
+    this.isConnected = whisperUtils.isConnected;
+    this.sendPrivateMessage = whisperUtils.sendPrivateMessage;
+    this.getIdentities = utils.getIdentities;
+    this.findIdentity = utils.findIdentity;
+    this.getMessages = utils.getMessages;
+    this.getSingleMessage = utils.getSingleMessage;
   }
 
   async createIdentity() {
@@ -50,20 +45,6 @@ class WhisperWrapper {
     return { publicKey: result.publicKey, createdDate: result.createdDate };
   }
 
-  // Fetch all of the Whisper Identities stored in database
-  async getIdentities() {
-    const identities = await Identity.find(
-      {},
-      '-_id publicKey createdDate',
-    ).lean();
-    return identities;
-  }
-
-  // Find single identity in database
-  async findIdentity(myId) {
-    return await Identity.exists({ _id: myId });
-  }
-
   // Load previously created Whisper IDs from database into Whisper node
   async loadIdentities() {
     const identities = await Identity.find({});
@@ -89,167 +70,13 @@ class WhisperWrapper {
     });
   }
 
-  // Fetch messages for a given conversation
-  // Private conversation = all messages with same topic and same two Whisper Ids
-  async getMessages(myId, topic = DEFAULT_TOPIC, partnerId, since) {
-    const currentTime = await Math.floor(Date.now() / 1000);
-    let timeThreshold = parseInt(since);
-    // Default to showing last 24 hours of messages
-    if (!since) {
-      timeThreshold = currentTime - 86400; // 86400 seconds in a day
-    }
-    // If no partnerId provided, get messages from all conversations
-    if (!partnerId) {
-      const messages = await Message.aggregate([
-        {
-          $match: {
-            topic,
-            sentDate: { $gte: timeThreshold },
-            $or: [{ recipientId: myId }, { senderId: myId }],
-          },
-        },
-      ]);
-      return messages;
-    }
-    // If partnerId provided, only get messages involving that whisperId
-    return await Message.aggregate([
-      {
-        $match: {
-          topic,
-          sentDate: { $gte: timeThreshold },
-          $or: [
-            { topic, recipientId: myId, senderId: partnerId },
-            { topic, recipientId: partnerId, senderId: myId },
-          ],
-        },
-      },
-    ]);
-  }
-
-  async getSingleMessage(messageId) {
-    return await Message.findOne({ _id: messageId });
-  }
-
-  // Send private message
-  async sendPrivateMessage(
-    senderId,
-    recipientId,
-    topic = DEFAULT_TOPIC,
-    messageContent,
-  ) {
-    if (typeof messageContent === 'object') {
-      messageContent = JSON.stringify(messageContent);
-    }
-    const web3 = await web3utils.getWeb3();
-    const content = await web3.utils.fromAscii(messageContent);
-    const whisperId = await Identity.findOne({ _id: senderId });
-    let hash;
-    try {
-      hash = await web3.shh.post({
-        pubKey: recipientId,
-        sig: whisperId.keyId,
-        ttl: TTL,
-        topic,
-        payload: content,
-        powTime: POW_TIME,
-        powTarget: POW_TARGET,
-      });
-    } catch (err) {
-      console.error('Whisper error:', err);
-      return;
-    }
-
-    // Store message in database
-    const time = await Math.floor(Date.now() / 1000);
-    let doc;
-    try {
-      doc = await Message.findOneAndUpdate(
-        { _id: hash },
-        {
-          _id: hash,
-          messageType: 'private',
-          recipientId,
-          senderId,
-          ttl: TTL,
-          topic,
-          payload: messageContent,
-          pow: POW_TARGET,
-          sentDate: time,
-        },
-        { upsert: true, new: true },
-      );
-    } catch (err) {
-      console.error('Mongoose error:', err);
-      return;
-    }
-    return doc;
-  }
-
-  // Send a public message (group message using symmetric encryption key)
-  async sendPublicMessage(senderId, topic = DEFAULT_TOPIC, messageContent) {
-    const web3 = await web3utils.getWeb3();
-    const content = await web3.utils.fromAscii(messageContent);
-    try {
-      web3.shh.post({
-        symKeyID: channelSymKey,
-        sig: senderId,
-        ttl: TTL,
-        topic,
-        payload: content,
-        powTime: POW_TIME,
-        powTarget: POW_TARGET,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-
-    // Store message in database
-    const time = await Math.floor(Date.now() / 1000);
-    const doc = await Message.findOneAndUpdate(
-      { _id: hash },
-      {
-        _id: hash,
-        messageType: 'public',
-        recipientId: channelSymKey,
-        senderId,
-        ttl: TTL,
-        topic,
-        payload: messageContent,
-        pow: POW_TARGET,
-        sentDate: time,
-      },
-      { upsert: true, new: true },
-    );
-    return doc;
-  }
-
-  async createSymmetricKey(password = '', topic = '') {
-    // Set password to default if not provided
-    const web3 = await web3utils.getWeb3();
-    const myTopic = topic || web3.utils.randomHex(4);
-    const pw = password || web3.utils.randomHex(20);
-    const keyId = await web3.shh.generateSymKeyFromPassword(pw);
-    await this.subscribeToPublicMessages(keyId, myTopic);
-    const time = await Math.floor(Date.now() / 1000);
-    const doc = await SymmetricKey.findOneAndUpdate(
-      { _id: keyId },
-      {
-        _id: keyId,
-        keyId,
-        description: '',
-        topic: myTopic,
-        created: time,
-      },
-      { upsert: true, new: true },
-    );
-    return doc;
-  }
 
   async checkMessageContent(data) {
     const web3 = await web3utils.getWeb3();
     const content = await web3.utils.toAscii(data.payload);
     // Check if this is a JSON structured message
     const [isJSON, messageObj] = await utils.hasJsonStructure(content);
+    let doc;
     if (isJSON && messageObj.type === 'delivery_receipt') {
       // Check if receipt came from original recipient
       const originalMessage = await Message.findOne({
@@ -260,14 +87,14 @@ class WhisperWrapper {
           `Original message id (${messageObj.messageId}) not found. Cannot add delivery receipt.`,
         );
       } else if (originalMessage.recipientId === data.sig) {
-        return await Message.findOneAndUpdate(
+        doc = await Message.findOneAndUpdate(
           { _id: messageObj.messageId },
           { deliveredDate: messageObj.deliveredDate },
           { upsert: false, new: true },
         );
       }
     } else {
-      const doc = await Message.findOneAndUpdate(
+      doc = await Message.findOneAndUpdate(
         { _id: data.hash },
         {
           _id: data.hash,
@@ -297,26 +124,8 @@ class WhisperWrapper {
         undefined,
         receiptString,
       );
-      return doc;
     }
-  }
-
-  async subscribeToPublicMessages(keyId, topic = DEFAULT_TOPIC) {
-    const web3 = await web3utils.getWeb3();
-    // Subscribe to public chat messages
-    web3.shh
-      .subscribe('messages', {
-        minPow: POW_TARGET,
-        symKeyID: keyId,
-        topics: [topic],
-      })
-      .on('data', async (data) => {
-        // TODO check if sender is in my contacts before processing
-        await this.checkMessageContent(data);
-      })
-      .on('error', (err) => {
-        console.log(err);
-      });
+    return doc;
   }
 
   async subscribeToPrivateMessages(userId, topic = DEFAULT_TOPIC) {
