@@ -19,14 +19,26 @@ const MSASchema = gql`
     _id: Int!
     proposalId: Int!
     rfpId: Int!
-    buyerApproved: Boolean
-    supplierApproved: Boolean
+    buyerSignature: Signature
+    supplierSignature: Signature
   }
 
   input inputMSA {
     proposalId: Int!
     rfpId: Int!
-    buyerApproved: Boolean
+    buyerSignature: inputSignature,
+  }
+
+  type Signature {
+    name: String!
+    signature: String!
+    signatureDate: Date!
+  }
+
+  input inputSignature {
+    name: String!
+    signature: String!
+    signatureDate: Date!
   }
 `;
 

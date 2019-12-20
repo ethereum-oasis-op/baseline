@@ -13,6 +13,7 @@ const SignatureItem = props => {
         <>
           <Typography>{details.name}</Typography>
           <Typography>{details.signatureDate}</Typography>
+          <Typography>{details.signature}</Typography>
         </>
         :
         <Typography>Awaiting Signature</Typography>
@@ -22,23 +23,21 @@ const SignatureItem = props => {
 };
 
 const Signatures = props => {
-  const { buyerStatus, buyerDetails, supplierStatus, supplierDetails} = props;
+  const { buyerSignature, supplierSignature } = props;
   return (
     <>
       <h3>Signatures</h3>
       <Grid container direction="row">
-        <SignatureItem role="Buyer" status={buyerStatus} details={buyerDetails} />
-        <SignatureItem role="Supplier" status={supplierStatus} details={supplierDetails} />
+        <SignatureItem role="Buyer" status={buyerSignature ? 'Approved' : 'Pending'} details={buyerSignature} />
+        <SignatureItem role="Supplier" status={supplierSignature ? 'Approved' : 'Pending'} details={supplierSignature} />
       </Grid>
     </>
   );
 };
 
 Signatures.propTypes = {
-  buyerStatus: PropTypes.string.isRequired,
-  supplierStatus: PropTypes.string.isRequired,
-  buyerDetails: PropTypes.shape({}).isRequired,
-  supplierDetails: PropTypes.shape({}).isRequired,
+  buyerSignature: PropTypes.shape({}).isRequired,
+  supplierSignature: PropTypes.shape({}).isRequired,
 }
 
 SignatureItem.propTypes = {

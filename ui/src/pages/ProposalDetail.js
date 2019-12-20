@@ -44,7 +44,6 @@ const ProposalDetail = () => {
           input: {
             rfpId: Number(proposal.rfpId),
             proposalId: Number(id),
-            buyerApproved: true,
           },
         },
       });
@@ -78,23 +77,15 @@ const ProposalDetail = () => {
             })}
           </TableBody>
         </Table>
-        {!msaData ? (
+        {!msaData || !Object.keys(msaData).length ? (
           <>
             <Button onClick={() => approveProposal()}>Accept</Button>
             <Button>Reject</Button>
           </>
         ) : (
           <Signatures
-            buyerStatus={msaData.buyerApproved ? 'Approved' : 'Pending'}
-            supplierStatus={msaData.supplierApproved ? 'Approved' : 'Pending'}
-            buyerDetails={{
-              name: 'Buyer A',
-              signatureDate: moment(Date.now()).format('MM/DD/YYYY')
-            }}
-            supplierDetails={{
-              name: 'Supplier A',
-              signatureDate: moment(Date.now()).format('MM/DD/YYYY')
-            }}
+            buyerSignature={msaData.buyerSignature}
+            supplierSignature={msaData.supplierSignature}
           />
         )}
         {postError && <Typography>{postError}</Typography>}
