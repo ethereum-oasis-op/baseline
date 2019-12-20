@@ -2,15 +2,13 @@
 # -*- coding: utf-8 -*-
 
 def curve_params():
-
-    # Order of the curve E
-    JUBJUBE = 21888242871839275222246405745257275088614511777268538073601725287587578984328    
+    JUBJUBE = 21888242871839275222246405745257275088614511777268538073601725287587578984328 # Order of the curve E
     JUBJUBC = 8         # Cofactor
     JUBJUBA = 168700    # Coefficient A
     JUBJUBD = 168696    # Coefficient D
     MONTA = 168698      # int(2*(JUBJUB_A+JUBJUB_D)/(JUBJUB_A-JUBJUB_D))
     MONTB = 1           # int(4/(JUBJUB_A-JUBJUB_D))
-    
+
     # Point at infinity
     infinity = (0, 1)
 
@@ -24,5 +22,3 @@ def curve_params():
 
 context = curve_params()
 print(context)
-
-
