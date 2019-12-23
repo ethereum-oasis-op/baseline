@@ -6,5 +6,7 @@
   "organizationRole": 2,
   "organizationWhisperKey": "0x9872345dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128",
   "orgRegistryAddress": "0xC5d828f2110323Fa6EBb387173Fc4318c5bAc9fF",
-  "registryAddress": "0x40364ff01aBCeb7E5D6BCB79121616f81930b4E0"
+  "registryAddress": "0x40364ff01aBCeb7E5D6BCB79121616f81930b4E0",
+  "organizationRegistryAddress": "0xfaDa78aACe0c8a09fAe7D68AA2ed1B5f85113309",
+  "globalRegistryAddress": "0x498E0fc163214B515702245b0A4053BB0a0D9ff7"
 }
