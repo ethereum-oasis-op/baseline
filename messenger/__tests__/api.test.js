@@ -21,7 +21,14 @@ describe('/health-check', () => {
   test('GET /health-check returns 200', async () => {
     const res = await request(buyerURL).get('/api/v1/health-check');
     expect(res.statusCode).toEqual(200);
-    expect(res.body.connectedToEthClient).toEqual(true);
+    expect(res.body.serverAlive).toEqual(true);
+  });
+
+  test('GET /health-check/client returns 200', async () => {
+    const res = await request(buyerURL).get('/api/v1/health-check/client');
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.connected).toEqual(true);
+    expect(res.body.type).toEqual(Config.messagingType);
   });
 });
 
