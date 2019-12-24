@@ -96,4 +96,4 @@ typings/
 artifacts/
 build
 dist
-config/config-*.json
+*config*/config-*.json
