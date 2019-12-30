@@ -8,9 +8,14 @@ const web3utils = require('../src/web3Utils.js');
 let messenger;
 
 router.get('/health-check', async (req, res) => {
+  res.status(200);
+  res.send({ serverAlive: true });
+});
+
+router.get('/health-check/client', async (req, res) => {
   const result = await messenger.isConnected();
   res.status(200);
-  res.send({ connectedToEthClient: result });
+  res.send({ connected: result, type: Config.messagingType });
 });
 
 router.get('/identities', async (req, res) => {
