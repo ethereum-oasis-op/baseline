@@ -11,7 +11,7 @@ module.exports = {
       whisperPort: '8546',
       apiPort: '4001',
       origin: 'mychat2',
-      dbUrl: 'mongodb://mongo:27017/radish34',
+      dbUrl: `${process.env.MONGO_URL}/radish34` || 'mongodb://mongo-messenger:27017/radish34',
     },
   },
 };
