@@ -1,6 +1,7 @@
 import express from 'express';
 import zokrates from '@eyblockchain/zokrates.js';
 import fs from 'fs';
+import { saveVerificationKeyToDB } from '../utils/fileToDB';
 
 const router = express.Router();
 
@@ -22,7 +23,9 @@ router.post('/', async (req, res, next) => {
       `Verifier_${name}.sol`,
       `${process.env.PROVING_SCHEME}`,
     );
-    return res.send('Generated Keys');
+    const keyID = await saveVerificationKeyToDB(name, `./output/${name}/${name}_vk.key`);
+    const response = { keyID: keyID }; 
+    return res.send(response);
   } catch (err) {
     return next(err);
   }
