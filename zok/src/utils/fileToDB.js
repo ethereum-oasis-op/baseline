@@ -26,13 +26,31 @@ export const saveVerificationKeyToDB = async (keyID, filePath) => {
     const currentElement = array[i].split('=');
     formattedObject[currentElement[0].trim()] = formatArray(currentElement[1].trim());
   }
-  const vk = await db
+  await db
     .collection('verificationKey')
     .updateOne({ _id: keyID }, { $set: formattedObject }, { upsert: true });
-  console.log('the saved data is: ', JSON.stringify(formattedObject));
   return keyID;
+};
+
+const readJsonFile = filePath => {
+  if (fs.existsSync(filePath)) {
+    const file = fs.readFileSync(filePath);
+    return JSON.parse(file);
+  }
+  console.log('Unable to locate file: ', filePath);
+  throw ReferenceError('file not found');
+};
+
+export const saveProofToDB = async (docID, keyID, filePath) => {
+  const proof = readJsonFile(filePath);
+  const formattedObject = { docID: docID, keyId: keyID, data: proof };
+  await db
+    .collection('proof')
+    .updateOne({ _id: docID }, { $set: formattedObject }, { upsert: true });
+  return docID;
 };
 
 export default {
   saveVerificationKeyToDB,
+  saveProofToDB,
 };
