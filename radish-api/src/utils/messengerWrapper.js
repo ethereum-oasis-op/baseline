@@ -2,12 +2,9 @@ const axios = require('axios');
 const messengerUrl = process.env.MESSENGER_URL || 'http://localhost:4001/api/v1';
 
 const getMessages = async (since, partnerId) => {
-  let params = {
-    since: since,
-    partnerId: partnerId
-  };
+  const params = { since, partnerId };
   try {
-    return await axios.get(`${messengerUrl}/messages`, { params: params });
+    return await axios.get(`${messengerUrl}/messages`, { params });
   } catch (error) {
     console.error(error)
   };
@@ -22,15 +19,10 @@ const getSingleMessage = async (messageId) => {
 }
 
 const createMessage = async (myId, partnerId, payload) => {
-  let data = {
-    payload: payload,
-    partnerId: partnerId
-  };
-  let headers = {
-    'x-messenger-id': myId
-  };
+  const data = { payload, partnerId };
+  const headers = { 'x-messenger-id': myId };
   try {
-    return await axios.post(`${messengerUrl}/messages`, data, { headers: headers });
+    return await axios.post(`${messengerUrl}/messages`, data, { headers });
   } catch (error) {
     console.error(error)
   };
@@ -45,12 +37,10 @@ const getIdentities = async () => {
 }
 
 const createIdentity = async (myId) => {
-  let data = {};
-  let headers = {
-    'x-messenger-id': myId
-  };
+  const data = {};
+  const headers = { 'x-messenger-id': myId };
   try {
-    return await axios.post(`${messengerUrl}/identities`, data, { headers: headers });
+    return await axios.post(`${messengerUrl}/identities`, data, { headers });
   } catch (error) {
     console.error(error)
   };
