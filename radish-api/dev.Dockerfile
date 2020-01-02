@@ -7,4 +7,6 @@ COPY ./package.json ./package-lock.json ./
 RUN npm ci
 
 EXPOSE 8001
+EXPOSE 8101
+
 CMD npm start

@@ -20,10 +20,6 @@ ADD ./genesis.json ./genesis.json
 RUN geth init genesis.json
 RUN geth account import --password ~/.accountpassword  ~/.privatekey
 
-ENV address=""
-ENV bootnodeId=""
-ENV bootnodeIp=""
-
 CMD exec geth --bootnodes "enode://$bootnodeId@$bootnodeIp:30301" --nodekeyhex $nodekeyhex --networkid "6660001" --verbosity=4  --syncmode=full --mine --shh --rpc --rpcaddr "0.0.0.0" --rpcapi "eth,web3,net,admin,debug,db,shh" --gasprice "0" --etherbase $address --unlock $address --password ~/.accountpassword --allow-insecure-unlock
 
 EXPOSE 8545

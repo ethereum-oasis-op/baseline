@@ -1,4 +1,4 @@
-import db from './db';
+import db from './db.js';
 import startServer from './app';
 import { loadServerSettingsFromFile } from './utils/serverSettings';
 import { subscribeRegisterOrgEvent } from './services/event';
