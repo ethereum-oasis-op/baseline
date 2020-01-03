@@ -8,10 +8,16 @@ router.post('/documents', async (req, res) => {
   let docId;
   switch (messageObj.type) {
     case 'rfp_create':
-      docId = await rfpUtils.partnerCreateRFP(messageObj);
+      try {
+        docId = await rfpUtils.partnerCreateRFP(messageObj);
+      } catch (error) {
+        res.status(400);
+        res.send({ message: 'Could not create new RFP. Required fields: uuid' })
+        return;
+      }
       break;
     case 'rfp_update':
-      docId = await rfpUtils.updateRFP(messageObj);
+      docId = await rfpUtils.partnerUpdateRFP(messageObj);
       break;
     //case 'msa_create':
     //docId = await msaUtils.createMSA(messageObj);

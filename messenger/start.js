@@ -9,7 +9,7 @@ const { dbUrl, apiPort } = Config.nodes[`node_${nodeNum}`];
 
 async function startApiRouter() {
   await apiRouter.initialize();
-  server = app.listen(apiPort, () => console.log(`Express server listening on port ${apiPort}`));
+  server = app.listen(apiPort, () => console.log(`REST-Express server listening on port ${apiPort}`));
   return server;
 }
 

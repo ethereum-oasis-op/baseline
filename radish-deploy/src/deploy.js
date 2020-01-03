@@ -4,6 +4,12 @@ const Contract = require('./utils/contract');
 const Organization = require('./utils/organization');
 const Settings = require('./utils/settings');
 
+const axios = require('axios');
+const MESSENGER_BUYER_URI = process.env.MESSENGER_BUYER_URI;
+const MESSENGER_SUPPLIER1_URI = process.env.MESSENGER_SUPPLIER1_URI;
+const MESSENGER_SUPPLIER2_URI = process.env.MESSENGER_SUPPLIER2_URI;
+const MESSENGER_SUPPLIER3_URI = process.env.MESSENGER_SUPPLIER3_URI;
+
 const buyerWallet = Wallet.getWallet('buyer');
 const supplier1Wallet = Wallet.getWallet('supplier1');
 const supplier2Wallet = Wallet.getWallet('supplier2');
@@ -39,6 +45,30 @@ const main = async () => {
   );
   console.log('✅  Set OrgReg as Interface Implementer for buyer:', setInterfaceImplementerTxHash);
 
+  console.log('------------- Retrieve Whisper Identities -------------');
+  let whisperId_buyer;
+  let whisperId_supplier1;
+  let whisperId_supplier2;
+  let whisperId_supplier3;
+  try {
+    let result = await axios.get(`${MESSENGER_BUYER_URI}/identities`);
+    whisperId_buyer = result.data[0].publicKey;
+    console.log('whisperId_buyer =', whisperId_buyer);
+    let result2 = await axios.get(`${MESSENGER_SUPPLIER1_URI}/identities`);
+    whisperId_supplier1 = result2.data[0].publicKey;
+    console.log('whisperId_supplier1 =', whisperId_supplier1);
+    result = await axios.get(`${MESSENGER_SUPPLIER2_URI}/identities`);
+    whisperId_supplier2 = result.data[0].publicKey;
+    console.log('whisperId_supplier2 =', whisperId_supplier2);
+    result = await axios.get(`${MESSENGER_SUPPLIER3_URI}/identities`);
+    whisperId_supplier3 = result.data[0].publicKey;
+    console.log('whisperId_supplier3 =', whisperId_supplier3);
+  } catch (error) {
+    console.log('Could not retrieve Whisper ID. Check health of MESSENGER services:', error);
+    return process.exit(1);
+  };
+  console.log('✅  Retrieved all Whisper Identity for each user');
+
   // Registering buyer in the OrganizationRegistry
   const buyerSettings = await getBuyerSettings();
   const { transactionHash: buyerRegistrationTxHash } = await Organization.registerToOrgRegistry(
@@ -47,7 +77,7 @@ const main = async () => {
     buyerWallet.signingKey.address,
     buyerSettings.organizationName,
     buyerSettings.organizationRole,
-    buyerSettings.organizationWhisperKey,
+    whisperId_buyer,
   );
   console.log('✅  Registered Buyer in the OrgReg', buyerRegistrationTxHash);
 
@@ -59,7 +89,7 @@ const main = async () => {
     supplier1Wallet.signingKey.address,
     supplier1Settings.organizationName,
     supplier1Settings.organizationRole,
-    supplier1Settings.organizationWhisperKey,
+    whisperId_supplier1,
   );
   console.log('✅  Registered Supplier1 in the OrgReg', supplier1RegistrationTxHash);
 
@@ -71,7 +101,7 @@ const main = async () => {
     supplier2Wallet.signingKey.address,
     supplier2Settings.organizationName,
     supplier2Settings.organizationRole,
-    supplier2Settings.organizationWhisperKey,
+    whisperId_supplier2,
   );
   console.log('✅  Registered Supplier2 in the OrgReg', supplier2RegistrationTxHash);
 
@@ -83,7 +113,7 @@ const main = async () => {
     supplier3Wallet.signingKey.address,
     supplier3Settings.organizationName,
     supplier3Settings.organizationRole,
-    supplier3Settings.organizationWhisperKey,
+    whisperId_supplier2,
   );
   console.log('✅  Registered Supplier3 in the OrgReg', supplier3RegistrationTxHash);
 
@@ -109,10 +139,10 @@ const main = async () => {
   });
 
   console.log('----------------- Updating config files  -----------------');
-  Settings.setServerSettings('buyer', { organizationRegistryAddress, globalRegistryAddress });
-  Settings.setServerSettings('supplier1', { organizationRegistryAddress, globalRegistryAddress });
-  Settings.setServerSettings('supplier2', { organizationRegistryAddress, globalRegistryAddress });
-  Settings.setServerSettings('supplier3', { organizationRegistryAddress, globalRegistryAddress });
+  Settings.setServerSettings('buyer', { organizationRegistryAddress, globalRegistryAddress, organizationWhisperKey: whisperId_buyer });
+  Settings.setServerSettings('supplier1', { organizationRegistryAddress, globalRegistryAddress, organizationWhisperKey: whisperId_supplier1 });
+  Settings.setServerSettings('supplier2', { organizationRegistryAddress, globalRegistryAddress, organizationWhisperKey: whisperId_supplier2 });
+  Settings.setServerSettings('supplier3', { organizationRegistryAddress, globalRegistryAddress, organizationWhisperKey: whisperId_supplier3 });
 
   console.log('----------------- Done  -----------------');
   console.log(`

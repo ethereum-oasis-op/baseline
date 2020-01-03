@@ -41,6 +41,7 @@ conn.once('open', () => {
 function simpleSleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
 async function connect(url) {
   mongoUrl = url;
   mongoose.set('debug', Config.mongo.debug);

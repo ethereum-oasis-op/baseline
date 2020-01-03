@@ -66,7 +66,7 @@ export default async function startServer() {
   app.use(bodyParser.json({ limit: '2mb' }));
   app.use('/api/v1', messageRoutes);
   app.use('/api/v1', healthRoutes);
-  app.listen(REST_PORT, () => console.log(`Internal Express server listening on port ${REST_PORT}`));
+  app.listen(REST_PORT, () => console.log(`🚀 Internal REST-Express server listening at http://localhost:${REST_PORT}`));
 
   await healthcheck();
 

@@ -116,6 +116,7 @@ async function initialize() {
   }
   const connected = await messenger.isConnected();
   await messenger.loadIdentities();
+  await messenger.createFirstIdentity();
 
   return connected;
 }

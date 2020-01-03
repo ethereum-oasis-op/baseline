@@ -15,12 +15,18 @@ const RFPSchema = gql`
   }
 
   type RFP {
-    _id: Int!
+    _id: String!
     description: String!
-    dateDeadline: Date!
     sku: String!
     skuDescription: String!
-    suppliers: [String!]!
+    recipients: [Recipient!]!
+    sender: String!
+    onchainAttrs: OnChain!
+    zkpAttrs: Zkp!
+    dateDeadline: Date!
+    createdDate: Date!
+    publishDate: Date!
+    closedDate: Date!
   }
 
   input inputRFP {
@@ -29,6 +35,23 @@ const RFPSchema = gql`
     sku: String!
     skuDescription: String!
     suppliers: [String!]!
+  }
+
+  type Recipient {
+    identity: String!
+    receiptDate: Date!
+  }
+  
+  type OnChain {
+    rfpAddress: String!
+    txHash: String!
+    rfpId: Int!
+  }
+  
+  type Zkp {
+    proof: String!
+    verificationKey: String!
+    verifierABI: String!
   }
 `;
 
