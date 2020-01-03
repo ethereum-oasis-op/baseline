@@ -123,15 +123,14 @@ class WhisperWrapper {
       // Send non 'delivery_receipt' JSON objects to radish-api service to store/update 
       if (isJSON) {
         console.log(`Forwarding doc to radish-api: POST ${radishApiUrl}/documents`);
-        axios.post(`${radishApiUrl}/documents`, messageObj)
-          .then(function (response) {
-            console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
-            console.log(`${response.status} -`, response.data);
-          })
-          .catch(function (error) {
-            console.error(`ERROR: POST ${radishApiUrl}/documents`);
-            console.log(`${error.response.status} -`, error.response.data);
-          });
+        try {
+          let response = await axios.post(`${radishApiUrl}/documents`, messageObj);
+          console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
+          console.log(`${response.status} -`, response.data);
+        } catch (error) {
+          console.error(`ERROR: POST ${radishApiUrl}/documents`);
+          console.log(`${error.response.status} -`, error.response.data);
+        };
       }
 
       // Send delivery receipt back to sender
