@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
 let db = null;
 let client = null;
@@ -41,4 +42,20 @@ export default {
   get: () => {
     return db;
   },
+
+  connectMongoose: async () => {
+    let dbFullName = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
+    for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
+      try {
+        await mongoose.connect(dbFullName, options);
+        console.log('Mongoose connected to db');
+        break;
+      } catch (error) {
+        let delayTime = 500;
+        console.error(error.message);
+        console.log(`Retrying Mongoose connection in ${delayTime} ms`);
+        await wait(delayTime);
+      }
+    }
+  }
 };

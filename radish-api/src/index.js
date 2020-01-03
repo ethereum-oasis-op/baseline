@@ -7,6 +7,7 @@ import { saveOrganizations } from './services/organization';
 const main = async () => {
   try {
     await db.connect();
+    await db.connectMongoose();
     await loadServerSettingsFromFile();
     await saveOrganizations();
     await subscribeRegisterOrgEvent();

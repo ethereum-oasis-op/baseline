@@ -22,6 +22,14 @@ class WhisperWrapper {
     this.getSingleMessage = utils.getSingleMessage;
   }
 
+  // If the Identities collection is empty, create a new Identity
+  async createFirstIdentity() {
+    const identities = await Identity.find({});
+    if (identities.length === 0) {
+      await this.createIdentity();
+    }
+  }
+
   async createIdentity() {
     // Create new public/private key pair
     const web3 = await web3utils.getWeb3();
@@ -114,11 +122,16 @@ class WhisperWrapper {
 
       // Send non 'delivery_receipt' JSON objects to radish-api service to store/update 
       if (isJSON) {
-        try {
-          await axios.post(`${radishApiUrl}/documents`, messageObj);
-        } catch (error) {
-          console.error(error)
-        };
+        console.log(`Forwarding doc to radish-api: POST ${radishApiUrl}/documents`);
+        axios.post(`${radishApiUrl}/documents`, messageObj)
+          .then(function (response) {
+            console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
+            console.log(`${response.status} -`, response.data);
+          })
+          .catch(function (error) {
+            console.error(`ERROR: POST ${radishApiUrl}/documents`);
+            console.log(`${error.response.status} -`, error.response.data);
+          });
       }
 
       // Send delivery receipt back to sender
