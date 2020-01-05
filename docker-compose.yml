@@ -38,8 +38,12 @@ services:
     environment:
       PROVING_SCHEME: 'g16'
       VIRTUAL_HOST: radish-zok.docker
+      MONGO_URL: mongodb://mongo-buyer
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
     depends_on:
       - radish-zok-watch
+      - mongo-buyer
     ports:
       - 8080:80
 
