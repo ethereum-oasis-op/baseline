@@ -17,6 +17,7 @@ export const GET_ALLPARTNERS_QUERY = gql`
       name
       address
       role
+      identity
     }
   }
 `;
@@ -27,6 +28,7 @@ export const GET_PARTNER_QUERY = gql`
       name
       address
       role
+      identity
     }
   }
 `;
@@ -36,6 +38,7 @@ export const GET_MYPARTNERS_QUERY = gql`
     name
     address
     role
+    identity
   }
 `;
 
@@ -46,6 +49,7 @@ export const ADD_PARTNER = gql`
         name
         address
         role
+        identity
       }
     }
   }

@@ -4,10 +4,17 @@ export const RFP_ATTRIBUTES = gql`
   fragment RFP_ATTRIBUTES on RFP {
     _id
     description
-    dateDeadline
+    proposalDeadline
     sku
     skuDescription
-    suppliers
+    recipients {
+      partner {
+        identity
+        name
+        address
+        role
+      }
+    }
   }
 `;
 

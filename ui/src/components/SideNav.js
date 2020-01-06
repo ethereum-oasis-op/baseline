@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import Inbox from '@material-ui/icons/Inbox';
 import Send from '@material-ui/icons/Send';
 import ReceiptIcon from '@material-ui/icons/Receipt';
@@ -12,6 +12,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
 import DescriptionIcon from '@material-ui/icons/Description';
 import { groupBy, filter } from 'lodash';
+import DropDown from './DropDown';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -118,12 +119,19 @@ Category.defaultProps = {
 
 const SideNav = ({ messages, selected }) => {
   const classes = useStyles();
+  const history = useHistory();
   const groups = groupBy(messages, 'category');
   const results = groupBy(messages, 'status');
+  const createForms = [
+    { value: '/rfp/create', label: 'Create New RFP '},
+  ];
+
+  const dropdownOnChange = (e) => history.push(e.target.value);
 
   return (
     <div className={classes.root}>
       <List className={classes.filterList}>
+        <DropDown items={createForms} onChange={dropdownOnChange} defaultItem="Create New Item" />
         <Category icon={Inbox} label="Inbox" category={results.incoming} url="/messages/inbox" />
         <Category icon={Send} label="Outbox" category={results.outgoing} url="/messages/outbox" />
       </List>
