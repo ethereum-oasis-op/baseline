@@ -67,6 +67,7 @@ export const partnerCreateRFP = async (doc) => {
   // 2.) Save RFP to local db
   let newRFP = doc;
   newRFP._id = doc.uuid;
+  console.log(`Saving new RFP (uuid: ${doc.uuid}) from partner...`);
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   // 3.) Check blockchain for verifying the zkp information sent by buyer
   // 4.) Notify this user of a new RFP

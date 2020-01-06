@@ -6,6 +6,7 @@ const router = express.Router();
 router.post('/documents', async (req, res) => {
   let messageObj = req.body;
   let docId;
+  console.log('Received new document. Parsing now...')
   switch (messageObj.type) {
     case 'rfp_create':
       try {

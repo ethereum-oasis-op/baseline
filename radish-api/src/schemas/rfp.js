@@ -23,23 +23,27 @@ const RFPSchema = gql`
     sender: String!
     onchainAttrs: OnChain!
     zkpAttrs: Zkp!
-    dateDeadline: Date!
-    createdDate: Date!
-    publishDate: Date!
-    closedDate: Date!
+    dateDeadline: Int!
+    createdDate: Int!
+    publishDate: Int!
+    closedDate: Int!
   }
 
   input inputRFP {
     description: String!
-    dateDeadline: Date!
+    dateDeadline: Int!
     sku: String!
     skuDescription: String!
-    suppliers: [String!]!
+    recipients: [inputRecipient!]!
+  }
+
+  input inputRecipient {
+    identity: String!
   }
 
   type Recipient {
     identity: String!
-    receiptDate: Date!
+    receiptDate: Int!
   }
   
   type OnChain {

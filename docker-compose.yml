@@ -120,6 +120,7 @@ services:
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-buyer:4001/api/v1
     ports:
       - 8001:8001
       - 8101:8101
@@ -147,6 +148,7 @@ services:
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-supplier1:4001/api/v1
     ports:
       - 8002:8001
 
@@ -173,6 +175,7 @@ services:
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-supplier2:4001/api/v1
     ports:
       - 8003:8001
 
@@ -199,6 +202,7 @@ services:
       MONGO_URL: mongodb://mongo-supplier3
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-supplier3:4001/api/v1
     ports:
       - 8004:8001
 

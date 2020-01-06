@@ -19,7 +19,7 @@ const getSingleMessage = async (messageId) => {
 }
 
 const createMessage = async (myId, partnerId, payload) => {
-  const data = { payload, partnerId };
+  const data = { payload, recipientId: partnerId };
   const headers = { 'x-messenger-id': myId };
   try {
     return await axios.post(`${messengerUrl}/messages`, data, { headers });
