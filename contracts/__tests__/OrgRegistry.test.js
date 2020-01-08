@@ -53,20 +53,21 @@ test('Should be able to register an org', async () => {
 });
 
 test('Should be able to register an orgs interfaces', async () => {
-    const txReceipt = await orgRegistry.registerInterfaces(accounts[1], utils.formatBytes32String("IERC721MetadataEnumerable"), utils.formatBytes32String("IShieldRegistry"), utils.formatBytes32String("IVerifierRegistry"), utils.formatBytes32String("IContractCatalog"));
+    const txReceipt = await orgRegistry.registerInterfaces(utils.formatBytes32String("RandomInterface"), accounts[0], accounts[1], accounts[2]);
 });
 
-test('Should be able to get a single organizations interface details', async () => {
+test('Should be able to get all interface details for an org', async () => {    
+    const interfaceObjects = await orgRegistry.getInterfaceAddresses();
     const {
-        0: tokenInterface, 
-        1: shieldInterface, 
-        2: verifierInterface, 
-        3: contractCatalogInterface
-    } = await orgRegistry.getInterfaceNames(accounts[1]);
-    expect(tokenInterface).toBe(utils.formatBytes32String('IERC721MetadataEnumerable'));
-    expect(shieldInterface).toBe(utils.formatBytes32String('IShieldRegistry'));
-    expect(verifierInterface).toBe(utils.formatBytes32String('IVerifierRegistry'));
-    expect(contractCatalogInterface).toBe(utils.formatBytes32String('IContractCatalog'));
+        0: names,
+        1: tokens,
+        2: shields,
+        3: verifiers
+    } = interfaceObjects;
+    expect(names[0]).toBe(utils.formatBytes32String('RandomInterface'));
+    expect(tokens[0]).toBe(accounts[0]);
+    expect(shields[0]).toBe(accounts[1]);
+    expect(verifiers[0]).toBe(accounts[2]);
 });
 
 test('Should be able to retrieve the incremented org count', async () => {
