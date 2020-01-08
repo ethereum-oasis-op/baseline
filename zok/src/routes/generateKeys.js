@@ -23,8 +23,8 @@ router.post('/', async (req, res, next) => {
       `Verifier_${name}.sol`,
       `${process.env.PROVING_SCHEME}`,
     );
-    const keyID = await saveVerificationKeyToDB(name, `./output/${name}/${name}_vk.key`);
-    const response = { keyID: keyID }; 
+    const vk = await saveVerificationKeyToDB(name, `./output/${name}/${name}_vk.key`);
+    const response = { verificationKeyID: vk._id, verificationKey: vk.vk };
     return res.send(response);
   } catch (err) {
     return next(err);

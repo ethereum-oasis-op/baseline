@@ -24,9 +24,8 @@ router.post('/', async (req, res, next) => {
       `${process.env.PROVING_SCHEME}`,
       opts,
     );
-    const docID = await saveProofToDB(docId, name, `./output/${name}/${name}_proof.json`);
-    const response = { docID: docID };
-    return res.send(response);
+    const storedProof = await saveProofToDB(docId, name, `./output/${name}/${name}_proof.json`);
+    return res.send(storedProof);
   } catch (err) {
     return next(err);
   }

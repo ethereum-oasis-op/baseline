@@ -26,12 +26,22 @@
     "cors": "2.8.5",
     "eslint-plugin-react-hooks": "^1.7.0",
     "express": "^4.17.1",
-    "mongodb": "^3.3.2"
+    "mongodb": "^3.3.2",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "cod-scripts": "^3.2.0",
     "markdownlint-cli": "^0.15.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.18.9"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "/output/*"
+    ]
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "eslintConfig": {
     "extends": [
