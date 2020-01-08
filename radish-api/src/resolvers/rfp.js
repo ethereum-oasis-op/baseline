@@ -6,8 +6,8 @@ import messenger from '../utils/messengerWrapper.js';
 
 const NEW_RFP = 'NEW_RFP';
 
-const getRFPById = async id => {
-  const rfp = await db.collection('RFPs').findOne({ _id: id });
+const getRFPById = async uuid => {
+  const rfp = await db.collection('RFPs').findOne({ _id: uuid });
   return rfp;
 };
 
@@ -29,7 +29,7 @@ const saveRFP = async input => {
 export default {
   Query: {
     rfp(_parent, args) {
-      return getRFPById(args.id).then(res => res);
+      return getRFPById(args.uuid).then(res => res);
     },
     rfps() {
       return getAllRFPs();
@@ -37,9 +37,12 @@ export default {
   },
   Mutation: {
     createRFP: async (_parent, args) => {
-      const newRFP = await saveRFP(args.input);
-      const rfp = newRFP.ops[0];
       const currentTime = await Math.floor(Date.now() / 1000);
+      let myRFP = args.input;
+      myRFP.createdDate = currentTime;
+      myRFP.sender = process.env.MESSENGER_ID;
+      const newRFP = await saveRFP(myRFP);
+      const rfp = newRFP.ops[0];
       await saveMessage({
         resolved: false,
         category: 'rfp',
@@ -51,13 +54,12 @@ export default {
         lastModified: currentTime,
       });
       pubsub.publish(NEW_RFP, { newRFP: rfp });
-      console.log(`Sending RFP (uuid: ${rfp._id}) to recipients...`)
-      rfp.type = 'rfp_create';
-      rfp.sender = process.env.MESSENGER_ID;
-      rfp.uuid = rfp._id;
-      rfp.createdDate = currentTime;
-      rfp.recipients.forEach(async (partner) => {
-        messenger.createMessage(process.env.MESSENGER_ID, partner.identity, rfp);
+      console.log(`Sending RFP (uuid: ${rfp._id}) to recipients...`);
+      const { recipients, ...rfpDetails } = rfp
+      rfpDetails.type = 'rfp_create';
+      rfpDetails.uuid = rfp._id;
+      recipients.forEach(async (partner) => {
+        messenger.createMessage(process.env.MESSENGER_ID, partner.identity, rfpDetails);
       })
       return { ...rfp };
     },

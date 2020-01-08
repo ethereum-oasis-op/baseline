@@ -3,11 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/__tests__/**"
+    ]
+  },
   "scripts": {
     "build": "sol-compiler",
     "build:watch": "sol-compiler --watch",
     "lint": "solhint \"contracts/**/*.sol\"",
-    "test": "jest",
+    "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:watch": "jest --watchAll --runInBand",
     "seed": "docker-compose run --rm mongo-seed sh seed.sh",
     "deploy": "docker-compose run --rm radish-deploy sh deploy.sh"
@@ -23,6 +29,7 @@
   },
   "homepage": "https://github.com/EYBlockchain/radish-34#readme",
   "dependencies": {
+    "@babel/preset-env": "^7.7.7",
     "@devexpress/dx-react-core": "^2.2.1",
     "@devexpress/dx-react-grid": "^2.2.1",
     "@devexpress/dx-react-grid-material-ui": "^2.2.1",
@@ -44,9 +51,7 @@
     "jest": "^24.8.0",
     "prettier-eslint": "^9.0.1",
     "solhint": "2.1.0",
+    "supertest": "^4.0.2",
     "web3-provider-engine": "^15.0.4"
-  },
-  "jest": {
-    "testEnvironment": "node"
   }
 }

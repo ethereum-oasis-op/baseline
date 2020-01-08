@@ -11,9 +11,7 @@
   "jest": {
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
-      "/config/",
-      "/__tests__/README.md",
-      "/__tests__/integration.test.js"
+      "/config/"
     ],
     "collectCoverageFrom": [
       "**/*.js"

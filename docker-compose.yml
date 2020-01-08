@@ -151,6 +151,7 @@ services:
       MESSENGER_URL: http://messenger-supplier1:4001/api/v1
     ports:
       - 8002:8001
+      - 8102:8101
 
   radish-api-supplier2:
     container_name: radish-api-supplier2

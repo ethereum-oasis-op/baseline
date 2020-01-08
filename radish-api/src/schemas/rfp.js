@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 const RFPSchema = gql`
   extend type Query {
-    rfp(id: Int!): RFP
+    rfp(uuid: String!): RFP
     rfps: [RFP]
   }
 
