@@ -124,6 +124,7 @@ services:
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-buyer:4001/api/v1
     ports:
       - 8001:8001
       - 8101:8101
@@ -151,8 +152,10 @@ services:
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-supplier1:4001/api/v1
     ports:
       - 8002:8001
+      - 8102:8101
 
   radish-api-supplier2:
     container_name: radish-api-supplier2
@@ -177,6 +180,7 @@ services:
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-supplier2:4001/api/v1
     ports:
       - 8003:8001
 
@@ -203,6 +207,7 @@ services:
       MONGO_URL: mongodb://mongo-supplier3
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URL: http://messenger-supplier3:4001/api/v1
     ports:
       - 8004:8001
 
@@ -273,25 +278,28 @@ services:
     hostname: geth-bootnode
     container_name: geth-bootnode
     environment:
-      VIRTUAL_HOST: geth-bootnode.docker
-      nodekeyhex: 08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b #Needs to be fix, so that the miners know the resulting enode id
+      - VIRTUAL_HOST=geth-bootnode.docker
+      - nodekeyhex=08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b #Needs to be fix, so that the miners know the resulting enode id
     build:
       context: ./geth-env
       dockerfile: ./bootnode/Dockerfile
     ports:
       - 30301:30301/udp
+    networks:
+      default:
+        ipv4_address: 172.25.0.101 # geth-miner and geth-node need to know the IP address at startup
 
-  geth-miner-1:
-    hostname: geth-miner-1
-    container_name: geth-miner-1
+  geth-miner1:
+    hostname: geth-miner1
+    container_name: geth-miner1
     depends_on:
       - geth-bootnode
     environment:
-      VIRTUAL_HOST: geth-miner-1.docker
-      nodekeyhex: 8eb666d3e8a42bfc7d9e829af60b6d9142d65bef1ecb5897622b4c3ef93377e2 # This sets the enode so light nodes can use static-nodes.json to add as peer
-      address: '0x8cc5a1a0802db41db826c2fcb72423744338dcb0' # derived from the private key which is passed in the args
-      bootnodeId: 76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
-      bootnodeIp: geth-bootnode
+      - VIRTUAL_HOST=geth-miner1.docker
+      - nodekeyhex=8eb666d3e8a42bfc7d9e829af60b6d9142d65bef1ecb5897622b4c3ef93377e2 # sets the enode so we can use static-nodes.json to add as peer
+      - address=0x8cc5a1a0802db41db826c2fcb72423744338dcb0 # derived from the private key which is passed in the args
+      - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
+      - bootnodeIp=172.25.0.101
     ports:
       - 8544:8545/tcp
     build:
@@ -300,18 +308,20 @@ services:
       args:
         privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46 # Please don't do something like this in production, okay?
         password: pass
+    networks:
+      default:
+        ipv4_address: 172.25.0.102 # geth-node needs this to automatically peer
 
-  geth-miner-2:
-    hostname: geth-miner-2
-    container_name: geth-miner-2
+  geth-miner2:
+    hostname: geth-miner2
+    container_name: geth-miner2
     depends_on:
-      - geth-bootnode
+      - geth-miner1
     environment:
-      VIRTUAL_HOST: geth-miner-2.docker
-      nodekeyhex: 8861389742e9ee2669855a4928a712cec0f275241a359647772df689840c3c6c # This sets the enode so light nodes can use static-nodes.json to add as peer
-      address: '0x3590aca93338b0721966a8d0c96ebf2c4c87c544' # derived from the private key which is passed in the args
-      bootnodeId: 76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
-      bootnodeIp: geth-bootnode
+      - nodekeyhex=8861389742e9ee2669855a4928a712cec0f275241a359647772df689840c3c6c # sets the enode so we can use static-nodes.json to add as peer
+      - address=0x3590aca93338b0721966a8d0c96ebf2c4c87c544 # derived from the private key which is passed in the args
+      - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
+      - bootnodeIp=172.25.0.101
     ports:
       - 8542:8545/tcp
     build:
@@ -320,34 +330,45 @@ services:
       args:
         privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
         password: word
+    networks:
+      default:
+        ipv4_address: 172.25.0.104
 
   geth-node:
-    hostname: geth-node
-    container_name: geth-node
-    depends_on:
-       - geth-miner-1
-    environment:
-      VIRTUAL_HOST: geth-node.docker
-      nodeType: full
-      address: '0x3590aca93338b0721966a8d0c96ebf2c4c87c544' # derived from the private key which is passed in the args
-      bootnodeId: 76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c # derived from the nodekeyhex of the bootnode
-      bootnodeIp: geth-bootnode
-    build:
-      context: ./geth-env
-      dockerfile: ./node/Dockerfile
-      args:
-        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
-        password: word
-    ports:
+     hostname: geth-node
+     container_name: geth-node
+     depends_on:
+       - geth-miner1
+     environment:
+       VIRTUAL_HOST: geth-node.docker
+       nodeType: full
+       address: '0x3590aca93338b0721966a8d0c96ebf2c4c87c544' # derived from the private key which is passed in the args
+       bootnodeId: 76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
+       bootnodeIp: '172.25.0.101'
+     build:
+       context: ./geth-env
+       dockerfile: ./node/Dockerfile
+       args:
+         privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
+         password: word
+     ports:
        - 8547:8545
        - 8548:8546
+     healthcheck:
+       test: wget http://localhost:8545
+       interval: 2s
+       timeout: 5s
+       retries: 30
+     networks:
+       default:
+         ipv4_address: 172.25.0.110
 
   messenger-buyer:
     hostname: messenger-buyer
     container_name: messenger-buyer
-    depends_on:
-       - mongo-buyer
-       - geth-node
+    links:
+      - mongo-buyer
+      - geth-node
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
@@ -361,9 +382,9 @@ services:
   messenger-supplier1:
     hostname: messenger-supplier1
     container_name: messenger-supplier1
-    depends_on:
-       - mongo-supplier1
-       - geth-node
+    links:
+      - mongo-supplier1
+      - geth-node
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
@@ -377,9 +398,9 @@ services:
   messenger-supplier2:
     hostname: messenger-supplier2
     container_name: messenger-supplier2
-    depends_on:
-       - mongo-supplier2
-       - geth-node
+    links:
+      - mongo-supplier2
+      - geth-node
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
@@ -388,14 +409,14 @@ services:
       MONGO_URL: mongodb://mongo-supplier2
       RADISH_API_URL: http://radish-api-supplier2:8101/api/v1
     ports:
-     - 4003:4001
+      - 4003:4001
 
   messenger-supplier3:
     hostname: messenger-supplier3
     container_name: messenger-supplier3
-    depends_on:
-       - mongo-supplier3
-       - geth-node
+    links:
+      - mongo-supplier3
+      - geth-node
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
@@ -405,6 +426,13 @@ services:
       RADISH_API_URL: http://radish-api-supplier3:8101/api/v1
     ports:
      - 4004:4001
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.25.0.0/24
 
 volumes:
   mongo-buyer:

@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 const RFPSchema = gql`
   extend type Query {
-    rfp(id: Int!): RFP
+    rfp(uuid: String!): RFP
     rfps: [RFP]
   }
 
@@ -23,15 +23,15 @@ const RFPSchema = gql`
     sender: String!
     onchainAttrs: OnChain!
     zkpAttrs: Zkp!
-    proposalDeadline: Date!
-    createdDate: Date!
-    publishDate: Date!
-    closedDate: Date!
+    proposalDeadline: Int!
+    createdDate: Int!
+    publishDate: Int!
+    closedDate: Int!
   }
 
   input inputRFP {
     description: String!
-    proposalDeadline: Date!
+    proposalDeadline: Int!
     sku: String!
     skuDescription: String!
     recipients: [InputRecipient!]!
@@ -43,7 +43,7 @@ const RFPSchema = gql`
 
   type Recipient {
     partner: Partner!
-    receiptDate: Date
+    receiptDate: Int!
   }
   
   type OnChain {
