@@ -9,6 +9,7 @@ import PageWrapper from '../components/PageWrapper';
 import SideNav from '../components/SideNav';
 import { MessageContext } from '../contexts/message-context';
 import MessagesTable from '../components/MessageList/MessagesTable';
+import DropDown from '../components/DropDown';
 
 const useStyles = makeStyles(() => ({
   root: {

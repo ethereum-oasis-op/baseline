@@ -53,12 +53,12 @@ const RFPDetail = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.rfp.suppliers.map(supplier => {
+          {data.rfp.recipients.map(recipient => {
             return (
               <TableRow key={uniqid()}>
-                <TableCell>{supplier}</TableCell>
-                {/* TODO: integrate 3 table cells below */}
-                <TableCell>Sent (awaiting response)</TableCell>
+                <TableCell>{recipient.partner.name}</TableCell>
+                <TableCell>{recipient.receiptDate ? `Sent: ${recipient.receiptDate}` : 'Pending'}</TableCell>
+                {/* TODO: integrate 2 table cells below */}
                 <TableCell>N/A</TableCell>
                 <TableCell>N/A</TableCell>
               </TableRow>
