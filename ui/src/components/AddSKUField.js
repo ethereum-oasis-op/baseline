@@ -10,13 +10,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import { makeStyles } from '@material-ui/core/styles';
+import Add from '@material-ui/icons/Add';
 
 const useStyles = makeStyles(() => ({
   table: {
     marginBottom: '2rem',
     marginTop: '2rem',
   },
-  tableCell: {
+  borderlessTableCell: {
     borderBottom: 'none',
   },
   field: {
@@ -28,11 +29,18 @@ const useStyles = makeStyles(() => ({
   errorMessage: {
     color: 'red',
   },
+  icon: {
+    margin: '0.5rem',
+  },
+  button: {
+    color: '#007BFF',
+  },
 }));
 
 const AddSKUField = ({ formik }) => {
   const classes = useStyles();
   const [disabled, setDisabled] = useState(false);
+  const [display, setDisplay] = useState(false);
 
   return (
     <Table className={classes.table}>
@@ -43,49 +51,68 @@ const AddSKUField = ({ formik }) => {
         </TableRow>
       </TableHead>
       <TableBody>
+        {display ?
         <TableRow>
-          <TableCell className={classes.tableCell}>
-            <Field
-              id="sku"
-              component={TextField}
-              onChange={formik.handleChange}
-              disabled={disabled}
-              className={classes.field}
-            />
-          </TableCell>
-          <TableCell className={classes.tableCell}>
-            <Field
-              id="skuDescription"
-              component={TextField}
-              onChange={formik.handleChange}
-              disabled={disabled}
-              className={classes.field}
-            />
-          </TableCell>
-          <TableCell className={`${classes.tableCell} ${classes.tableCellButton}`}>
-            {!disabled ? (
-              <Button
-                type="button"
-                onClick={() => setDisabled(true)}
-                disabled={formik.values.sku === ''}
-              >
-                ADD
-              </Button>
-            ) : (
-              <Button type="button" onClick={() => setDisabled(false)}>
-                EDIT
-              </Button>
-            )}
+        <TableCell>
+          <Field
+            id="sku"
+            component={TextField}
+            onChange={formik.handleChange}
+            disabled={disabled}
+            className={classes.field}
+          />
+        </TableCell>
+        <TableCell>
+          <Field
+            id="skuDescription"
+            component={TextField}
+            onChange={formik.handleChange}
+            disabled={disabled}
+            className={classes.field}
+          />
+        </TableCell>
+        <TableCell className={classes.tableCellButton}>
+          {!disabled ? (
+            <Button
+              type="button"
+              onClick={() => setDisabled(true)}
+              disabled={formik.values.sku === ''}
+            >
+              ADD
+            </Button>
+          ) : (
+            <Button type="button" onClick={() => setDisabled(false)}>
+              EDIT
+            </Button>
+          )}
+          <Button
+            type="button"
+            onClick={() => setDisplay(false)}
+          >
+            Remove
+          </Button>
+        </TableCell>
+      </TableRow>
+        : 
+        <TableRow>
+          <TableCell className={classes.borderlessTableCell}>
+            <Button className={classes.button} type="button" onClick={() => setDisplay(true)}>
+              <Add className={classes.icon} />
+              Add Item
+            </Button>
           </TableCell>
         </TableRow>
-        <TableRow>
-          <TableCell className={classes.tableCell}>
-            <ErrorMessage
-              name="sku"
-              render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
-            />
-          </TableCell>
-        </TableRow>
+        }
+        {formik.errors.sku &&
+          <TableRow>
+            <TableCell className={classes.borderlessTableCell}>
+              <ErrorMessage
+                name="sku"
+                render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
+              />
+            </TableCell>
+          </TableRow>
+        }
       </TableBody>
     </Table>
   );

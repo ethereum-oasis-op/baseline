@@ -1,10 +1,11 @@
 import express from 'express';
 import zokrates from '@eyblockchain/zokrates.js';
+import { saveProofToDB } from '../utils/fileToDB';
 
 const router = express.Router();
 
 router.post('/', async (req, res, next) => {
-  const { name, witness, outputDirectoryPath, proofFileName } = req.body;
+  const { docId, name, witness, outputDirectoryPath, proofFileName } = req.body;
   const opts = {};
   opts.createFile = true;
   opts.directory = `./output/${name}` || outputDirectoryPath;
@@ -23,7 +24,8 @@ router.post('/', async (req, res, next) => {
       `${process.env.PROVING_SCHEME}`,
       opts,
     );
-    return res.send('Generated Proof');
+    const storedProof = await saveProofToDB(docId, name, `./output/${name}/${name}_proof.json`);
+    return res.send(storedProof);
   } catch (err) {
     return next(err);
   }

@@ -10,8 +10,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
-import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
+import Add from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import find from 'lodash/find';
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -26,12 +27,15 @@ const useStyles = makeStyles(() => ({
   tableCellButton: {
     borderTop: '1px solid rgba(224, 224, 224, 1)',
   },
-  circleIcon: {
+  icon: {
     margin: '0.5rem',
   },
   errorMessage: {
     color: 'red',
   },
+  button: {
+    color: '#007BFF',
+  }
 }));
 
 const AddSuppliersField = ({ formik, partners }) => {
@@ -46,22 +50,24 @@ const AddSuppliersField = ({ formik, partners }) => {
         </TableRow>
       </TableHead>
       <FieldArray
-        name="suppliers"
+        name="recipients"
         render={arrayHelpers => (
           <TableBody>
-            {formik.values.suppliers &&
-              formik.values.suppliers.length > 0 && 
-              formik.values.suppliers.map((supplier, index) => (
+            {formik.values.recipients &&
+              formik.values.recipients.length > 0 && 
+              formik.values.recipients.map((supplier, index) => (
                 <TableRow key={index}>
                   <TableCell className={classes.tableCell}>
                     <Autocomplete
                       options={partners}
                       getOptionLabel={partner => partner.name}
                       disabled={disabled[index]}
-                      onChange={e =>
-                        !formik.values.suppliers.includes(e.target.textContent) &&
-                        formik.setFieldValue(`suppliers.${index}`, e.target.textContent)
-                      } 
+                      onChange={(e, v) => {
+                        const { __typename, ...partner } = v;
+                        if (!find(formik.values.recipients, partner.name)) {
+                          formik.setFieldValue(`recipients.${index}.partner`, partner);
+                        }
+                      }}
                       renderInput={params => <TextField {...params} fullWidth />}
                     />
                   </TableCell>
@@ -85,10 +91,10 @@ const AddSuppliersField = ({ formik, partners }) => {
                       <Button
                         type="button"
                         onClick={() =>
-                          formik.values.suppliers[index] !== '' &&
+                          formik.values.recipients[index] !== '' &&
                           setDisabled({ ...disabled, [index]: true })
                         }
-                        disabled={formik.values.suppliers[index] === ''}
+                        disabled={formik.values.recipients[index] === ''}
                       >
                         ADD
                       </Button>
@@ -107,9 +113,10 @@ const AddSuppliersField = ({ formik, partners }) => {
               <TableCell className={classes.tableCell}>
                 <Button
                   type="button"
-                  onClick={() => !formik.values.suppliers.includes('') && arrayHelpers.push('')}
+                  className={classes.button}
+                  onClick={() => !formik.values.recipients.includes('') && arrayHelpers.push('')}
                 >
-                  <AddCircleOutline className={classes.circleIcon} />
+                  <Add className={classes.icon} />
                   Add Supplier
                 </Button>
               </TableCell>
@@ -117,7 +124,7 @@ const AddSuppliersField = ({ formik, partners }) => {
             <TableRow>
               <TableCell className={classes.tableCell}>
                 <ErrorMessage
-                  name="suppliers"
+                  name="recipients"
                   render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
                 />
               </TableCell>
