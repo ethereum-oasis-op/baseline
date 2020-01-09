@@ -45,7 +45,7 @@ describe('Buyer sends new RFP to supplier', () => {
           createRFP( input: {
             skuDescription: "Widget 200",
             description: "Widget order for SuperWidget",
-            dateDeadline: 1578065104,
+            proposalDeadline: 1578065104,
             recipients: [ { identity: "${supplierMessengerId}" } ]
           })
           { _id } 
@@ -62,8 +62,15 @@ describe('Buyer sends new RFP to supplier', () => {
             sku: "${sku}",
             skuDescription: "Widget 200",
             description: "Widget order for SuperWidget",
-            dateDeadline: 1578065104,
-            recipients: [ { identity: "${supplierMessengerId}" } ]
+            proposalDeadline: 1578065104,
+            recipients: [{ 
+              partner: { 
+                identity: "${supplierMessengerId}",
+                name: "FakeName",
+                address: "0x0D8c04aCd7c417D412fe4c4dbB713f842dcd3A65",
+                role: "supplier"
+              }
+            }]
           })
           { _id, sku } 
         } `
