@@ -76,7 +76,6 @@ describe('Generate Keys', () => {
       const res = await supertest.post('/generate-keys').send({ name: 'test' });
       expect(res.statusCode).toEqual(200);
       expect(res.body.verificationKeyID).toEqual(keyID);
-      // expect(res.body).haveProperty('verificationKey');
     });
 
     it('should respond with 500 on other errors', async () => {
