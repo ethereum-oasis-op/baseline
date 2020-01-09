@@ -18,9 +18,10 @@ async function isConnected() {
 async function getWeb3() {
   if (typeof web3client === 'undefined') {
     // set the provider you want from Web3.providers
-    console.log('Creating initial Web3 connection');
+    const nodeUrl = `ws://${ipAddress}:${whisperPort}`;
+    console.log(`Creating initial Web3 connection to ${nodeUrl}`);
     const newClient = await new Web3.providers.WebsocketProvider(
-      `ws://${ipAddress}:${whisperPort}`,
+      nodeUrl,
       { headers: { Origin: 'mychat2' } },
     );
     web3client = await new Web3(newClient);

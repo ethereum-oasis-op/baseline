@@ -67,7 +67,7 @@ const main = async () => {
     console.log('Could not retrieve Whisper ID. Check health of MESSENGER services:', error);
     return process.exit(1);
   };
-  console.log('✅  Retrieved all Whisper Identity for each user');
+  console.log('✅  Retrieved Whisper identity for each user');
 
   // Registering buyer in the OrganizationRegistry
   const buyerSettings = await getBuyerSettings();

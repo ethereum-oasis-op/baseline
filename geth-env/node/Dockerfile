@@ -21,7 +21,7 @@ ADD ./static-nodes.json ./.ethereum/geth/static-nodes.json
 RUN geth init genesis.json
 RUN geth account import --password ~/.accountpassword  ~/.privatekey
 
-CMD exec geth --bootnodes "enode://$bootnodeId@$bootnodeIp:30301" --networkid "6660001" --nousb --verbosity=3 --ws --wsport 8546 --wsaddr "0.0.0.0" --wsorigins="*" --wsapi=web3,shh,net,admin --rpc --rpcaddr "0.0.0.0" --rpcapi "eth,web3,net,admin,debug,db,shh" --rpccorsdomain "*" --syncmode="$nodeType" --shh
+CMD exec geth --bootnodes "enode://$bootnodeId@$bootnodeIp:30301" --networkid "6660001" --nousb --verbosity=3 --ws --wsport 8546 --wsaddr "0.0.0.0" --wsorigins="*" --wsapi=web3,shh,net,admin --rpc --rpcaddr "0.0.0.0" --rpcapi "eth,web3,net,admin,debug,db,shh" --rpccorsdomain "*" --syncmode="$nodeType" --etherbase $address --unlock $address --password ~/.accountpassword --allow-insecure-unlock --shh
 
 EXPOSE 8545
 EXPOSE 8546
