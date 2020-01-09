@@ -24,14 +24,15 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     }
 
     struct OrgInterfaces {
-        bytes32 tokenFactoryInterface;
-        bytes32 shieldRegistryInterface;
-        bytes32 verifierRegistryInterface;
-        bytes32 contractCatalogInterface;
+        bytes32 groupName;
+        address tokenFactoryAddress;
+        address shieldAddress;
+        address verifierRegistryAddress;
     }
 
     mapping (address => Org) orgMap;
-    mapping (address => OrgInterfaces) orgInterfaceMap;
+    mapping (uint => OrgInterfaces) orgInterfaceMap;
+    uint orgInterfaceCount;
     mapping (uint => Roles.Role) private roleMap;
     address[] public parties;
     mapping(address => address) managerMap;
@@ -112,16 +113,15 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     }
 
     /// @notice Function to register the names of the interfaces associated with the OrgRegistry
-    /// @param _address ethereum address of the registered organization
-    /// @param _tokenFactoryInterface name of the registered token interface
-    /// @param _shieldRegistryInterface name of the registered shield registry interface
-    /// @param _verifierRegistryInterface name of the verifier registry interface
-    /// @param _contractCatalogInterface name of the contract catalog interface
+    /// @param _groupName name of the working group registered by an organization
+    /// @param _tokenFactoryAddress name of the registered token interface
+    /// @param _shieldAddress name of the registered shield registry interface
+    /// @param _verifierRegistryAddress name of the verifier registry interface
     /// @dev Function to register an organization's interfaces for easy lookup
     /// @return `true` upon successful registration of the organization's interfaces
-    function registerInterfaces(address _address, bytes32 _tokenFactoryInterface, bytes32 _shieldRegistryInterface, bytes32 _verifierRegistryInterface, bytes32 _contractCatalogInterface) external returns (bool) {
-        OrgInterfaces memory orgInterfaceSetting = OrgInterfaces(_tokenFactoryInterface, _shieldRegistryInterface, _verifierRegistryInterface, _contractCatalogInterface);
-        orgInterfaceMap[_address] = orgInterfaceSetting;
+    function registerInterfaces(bytes32 _groupName, address _tokenFactoryAddress, address _shieldAddress, address _verifierRegistryAddress) external returns (bool) {
+        orgInterfaceMap[orgInterfaceCount] = OrgInterfaces(_groupName, _tokenFactoryAddress, _shieldAddress, _verifierRegistryAddress);
+        orgInterfaceCount++;
         return true;
     }
 
@@ -137,8 +137,20 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     }
 
     /// @notice Function to get a single organization's interface details
-    function getInterfaceNames(address _address) external view returns (bytes32, bytes32, bytes32, bytes32) {
-        return(orgInterfaceMap[_address].tokenFactoryInterface, orgInterfaceMap[_address].shieldRegistryInterface, orgInterfaceMap[_address].verifierRegistryInterface, orgInterfaceMap[_address].contractCatalogInterface);
+    function getInterfaceAddresses() external view returns (bytes32[] memory, address[] memory, address[] memory, address[] memory) {
+        bytes32[] memory gName = new bytes32[](orgInterfaceCount);
+        address[] memory tfAddress = new address[](orgInterfaceCount);
+        address[] memory sAddress = new address[](orgInterfaceCount);
+        address[] memory vrAddress = new address[](orgInterfaceCount);
+
+        for(uint i = 0; i < orgInterfaceCount; i++) {
+            OrgInterfaces storage orgInterfaces = orgInterfaceMap[i];
+            gName[i] = orgInterfaces.groupName;
+            tfAddress[i] = orgInterfaces.tokenFactoryAddress;
+            sAddress[i] = orgInterfaces.shieldAddress;
+            vrAddress[i] = orgInterfaces.verifierRegistryAddress;
+        }
+        return (gName, tfAddress, sAddress, vrAddress);
     }
     
     /// @notice Function to retrieve a page of registered organizations along with details
