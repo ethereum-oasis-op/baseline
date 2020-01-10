@@ -24,6 +24,7 @@ where:
 
 the sizes of these field will be defined in the sequel according to the technical choices rationale.
 
+
 ## Buisiness logic rationale
 See Radish34 Privacy Design document.
 
