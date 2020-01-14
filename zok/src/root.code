@@ -1,0 +1,7 @@
+import "hashes/pedersen/512bit" as pedersen_hash
+
+def main(private field[512] e, field[256] d) -> (field):
+
+	field[256] d_zok = pedersen_hash(e)
+	d_zok == d
+	return 1
