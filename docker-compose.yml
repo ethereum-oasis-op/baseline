@@ -21,9 +21,11 @@ services:
 
   ganache:
     image: trufflesuite/ganache-cli:v6.7.0
-    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 80000000000
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 80000000000
     ports:
       - 8545:8545
+    volumes:
+      - chaindata:/chaindata
 
   radish-zok:
     build:
@@ -440,3 +442,4 @@ volumes:
   mongo-supplier2:
   mongo-supplier3:
   mongo-messenger:
+  chaindata:
