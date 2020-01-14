@@ -51,14 +51,16 @@ Note: All the resultant files from the above steps/processes are created in a su
 # ZoKrates circuits
 
 ## Requirements
-Install `cargo` by `curl https://sh.rustup.rs -sSf | sh`
+Cargo is pre-installed on the container. Following instructions are for development utilities to run quick commands from terminal/console.
 
 ## build
-```
-./do build
-```
+
+This instruction builds cargo to be able to run native instructions: `docker-compose exec radish-zok cd src && ./do build`
 
 ## example
+
+Following examples can be run, or custom written as scripts that could be mounted to the container to run one-off instructions.
+
 ```
 cat examples/square.code > root.code
 ./do compile
