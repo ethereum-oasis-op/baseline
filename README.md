@@ -13,6 +13,8 @@ Note that, the license is under an MoU signed between EY, MSFT and ConsenSys. No
 
 ## Development/Test Environment
 
+0. run `npm run build` to create the JSON files in the `artifacts` folder needed for deployment.
+1. Make sure you download and have available locally the config files: `config-buyer.json`, `config-supplier1.json`, `config-supplier2.json`, `config-supplier3.json`. 
 1. run `npm run deploy`
    - This docker container first deploys both the Registry contract and the OrgRegistry contract.
    - Then it registers a Buyer and 3 Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.

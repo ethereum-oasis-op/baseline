@@ -8,17 +8,20 @@ router.post('/documents', async (req, res) => {
   let docId;
   console.log('Received new document. Parsing now...')
   switch (messageObj.type) {
-    case 'rfp_create':
+    case 'rfp_create': // inbound RFP from partner
       try {
-        docId = await rfpUtils.partnerCreateRFP(messageObj);
+        docId = (await rfpUtils.partnerCreateRFP(messageObj))._id;
       } catch (error) {
         res.status(400);
         res.send({ message: 'Could not create new RFP. Required fields: uuid' })
         return;
       }
       break;
-    case 'rfp_update':
-      docId = await rfpUtils.partnerUpdateRFP(messageObj);
+    case 'rfp_update': // i.e. supplier signs RFP and sends back to buyer
+      docId = (await rfpUtils.partnerUpdateRFP(messageObj))._id;
+      break;
+    case 'delivery_receipt': // i.e. supplier signs RFP and sends back to buyer
+      docId = (await rfpUtils.deliveryUpdateRFP(messageObj))._id;
       break;
     //case 'msa_create':
     //docId = await msaUtils.createMSA(messageObj);

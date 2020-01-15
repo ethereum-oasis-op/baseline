@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
+import { UI } from 'bull-board';
 import bodyParser from 'body-parser';
 import coreQuery from './schemas/core';
 import OrganizationSchema from './schemas/organization';
@@ -29,8 +30,8 @@ import ProposalResolver from './resolvers/proposal';
 import MSASchema from './schemas/msa';
 import MSAResolver from './resolvers/msa';
 
-import messageRoutes from './routes/messenger.js';
-import healthRoutes from './routes/healthCheck.js';
+import messageRoutes from './routes/messenger';
+import healthRoutes from './routes/healthCheck';
 
 const GRAPHQL_PORT = process.env.GRAPHQL_PORT || 8001;
 const REST_PORT = process.env.REST_PORT || 8101;
@@ -70,10 +71,11 @@ export default async function startServer() {
   app.use(bodyParser.json({ limit: '2mb' }));
   app.use('/api/v1', messageRoutes);
   app.use('/api/v1', healthRoutes);
+  app.use('/bulls', UI);
+
   app.listen(REST_PORT, () =>
     console.log(`🚀 Internal REST-Express server listening at http://localhost:${REST_PORT}`),
   );
-
   await healthcheck();
 
   const server = new ApolloServer({
@@ -84,6 +86,8 @@ export default async function startServer() {
 
   const httpServer = createServer(app);
   server.installSubscriptionHandlers(httpServer);
+
+  // Spin up workers
 
   httpServer.listen({ port: GRAPHQL_PORT }, () => {
     console.log(`🚀 Server ready at http://localhost:${GRAPHQL_PORT}${server.graphqlPath}`);

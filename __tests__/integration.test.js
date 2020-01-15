@@ -81,11 +81,37 @@ describe('Buyer sends new RFP to supplier', () => {
     rfpId = res.body.data.createRFP._id;
   });
 
+  test('Buyer graphql query rfp() returns 200', async () => {
+    const queryBody = `{ rfp(uuid: "${rfpId}") { _id, sku } } `
+    // Wait for db to update
+    let res;
+    for (let retry = 0; retry < 3; retry++) {
+      res = await request(buyerApiURL)
+        .post('/graphql')
+        .send({ query: queryBody });
+      if (res.body.data.rfp !== null) {
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 1000));
+    }
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.data.rfp._id).toEqual(rfpId);
+    expect(res.body.data.rfp.sku).toEqual(sku);
+  });
+
   test('Supplier graphql query rfp() returns 200', async () => {
     const queryBody = `{ rfp(uuid: "${rfpId}") { _id, sku } } `
-    const res = await request(buyerApiURL)
-      .post('/graphql')
-      .send({ query: queryBody });
+    // Wait for db to update
+    let res;
+    for (let retry = 0; retry < 3; retry++) {
+      res = await request(supplierApiURL)
+        .post('/graphql')
+        .send({ query: queryBody });
+      if (res.body.data.rfp !== null) {
+        break;
+      }
+      await new Promise((r) => setTimeout(r, 1000));
+    }
     expect(res.statusCode).toEqual(200);
     expect(res.body.data.rfp._id).toEqual(rfpId);
     expect(res.body.data.rfp.sku).toEqual(sku);

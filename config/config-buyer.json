@@ -1,8 +1,0 @@
-{
-  "rpcProvider": "http://ganache:8545",
-  "organizationName": "Org1",
-  "organizationRole": 1,
-  "organizationRegistryAddress": "0xC5d828f2110323Fa6EBb387173Fc4318c5bAc9fF",
-  "globalRegistryAddress": "0x40364ff01aBCeb7E5D6BCB79121616f81930b4E0",
-  "organizationWhisperKey": "0x04777caeff0e7fa847d23749fc7a879a76786521c067f19f3c1dbbfa007ddea6c5601303f2cc8a6080f998e10a12bf8f93f5a9363e29933d522f8b51ae67235cb4"
-}

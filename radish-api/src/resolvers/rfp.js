@@ -1,8 +1,8 @@
-import { pubsub } from '../subscriptions';
 import db from '../db';
-import { uuid } from 'uuidv4';
 import { saveMessage } from './message';
-import messenger from '../utils/messengerWrapper.js';
+import { pubsub } from '../subscriptions';
+import msgDeliveryQueue from '../queues/message_delivery';
+import { onCreateRFP } from '../integrations/rfp.js';
 
 const NEW_RFP = 'NEW_RFP';
 
@@ -19,13 +19,6 @@ const getAllRFPs = async () => {
   return rfps;
 };
 
-const saveRFP = async input => {
-  const rfpId = await uuid();
-  const doc = Object.assign(input, { _id: rfpId });
-  const rfp = await db.collection('RFPs').insertOne(doc);
-  return rfp;
-};
-
 export default {
   Query: {
     rfp(_parent, args) {
@@ -38,11 +31,10 @@ export default {
   Mutation: {
     createRFP: async (_parent, args) => {
       const currentTime = await Math.floor(Date.now() / 1000);
-      let myRFP = args.input;
+      const myRFP = args.input;
       myRFP.createdDate = currentTime;
       myRFP.sender = process.env.MESSENGER_ID;
-      const newRFP = await saveRFP(myRFP);
-      const rfp = newRFP.ops[0];
+      const rfp = (await onCreateRFP(myRFP))._doc;
       await saveMessage({
         resolved: false,
         category: 'rfp',
@@ -55,11 +47,17 @@ export default {
       });
       pubsub.publish(NEW_RFP, { newRFP: rfp });
       console.log(`Sending RFP (uuid: ${rfp._id}) to recipients...`);
-      const { recipients, ...rfpDetails } = rfp
+      const { recipients, ...rfpDetails } = rfp;
       rfpDetails.type = 'rfp_create';
       rfpDetails.uuid = rfp._id;
-      recipients.forEach(async (partner) => {
-        messenger.createMessage(process.env.MESSENGER_ID, partner.identity, rfpDetails);
+      recipients.forEach(recipient => {
+        // Add to BullJS queue
+        msgDeliveryQueue.add({
+          documentId: rfp._id,
+          senderId: process.env.MESSENGER_ID,
+          recipientId: recipient.partner.identity,
+          payload: rfpDetails,
+        });
       })
       return { ...rfp };
     },
