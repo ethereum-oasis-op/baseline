@@ -26,6 +26,8 @@ import WalletResolver from './resolvers/wallet';
 import healthcheck from './install/healthcheck';
 import ProposalSchema from './schemas/proposal';
 import ProposalResolver from './resolvers/proposal';
+import MSASchema from './schemas/msa';
+import MSAResolver from './resolvers/msa';
 
 import messageRoutes from './routes/messenger.js';
 import healthRoutes from './routes/healthCheck.js';
@@ -45,6 +47,7 @@ const typeDefs = [
   ContractSchema,
   WalletSchema,
   ProposalSchema,
+  MSASchema,
 ];
 const resolvers = [
   OrganizationResolver,
@@ -58,6 +61,7 @@ const resolvers = [
   ContractResolver,
   WalletResolver,
   ProposalResolver,
+  MSAResolver,
 ];
 
 export default async function startServer() {

@@ -12,6 +12,7 @@ import { PartnerProvider } from './partner-context';
 import { MessageProvider } from './message-context';
 import { RFPProvider } from './rfp-context';
 import { ProposalProvider } from './proposal-context';
+import { MSAProvider } from './msa-context';
 
 const uri = window.localStorage.getItem('api');
 
@@ -52,7 +53,9 @@ function AppProviders({ children }) {
   
             <PartnerProvider>
               <RFPProvider>
-                <ProposalProvider>{children}</ProposalProvider>
+                <ProposalProvider>
+                  <MSAProvider>{children}</MSAProvider>
+                </ProposalProvider>
               </RFPProvider>
             </PartnerProvider>
 
