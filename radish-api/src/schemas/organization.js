@@ -12,7 +12,6 @@ export default gql`
 
   extend type Mutation {
     registerOrganization(input: RegisterOrganization!): OrganizationPayload
-    registerToOrgRegistry(input: OrgRegistryInput!): RegisterToOrgRegistryPayload!
   }
 
   extend type Subscription {
@@ -22,24 +21,16 @@ export default gql`
   type Organization {
     name: String!
     address: Address!
-    role: Role!
+    role: Int!
   }
 
   input RegisterOrganization {
     name: String!
-    address: Address!
-    role: Role!
+    role: Int!
   }
 
   type OrganizationPayload {
     organization: Organization
-  }
-
-  input OrgRegistryInput {
-    address: Address!
-    name: String!
-    role: Int!
-    key: String!
   }
 
   type RegisterToOrgRegistryPayload {

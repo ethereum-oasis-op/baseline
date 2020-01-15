@@ -7,10 +7,10 @@ export default async () => {
   const config = await getServerSettings();
   let connection;
 
-  if (providers.includes(config.networkId)) {
-    connection = await getDefaultProvider(config.networkId);
+  if (providers.includes(config.rpcProvider)) {
+    connection = await getDefaultProvider(config.rpcProvider);
   } else {
-    connection = await getProvider(config.networkId);
+    connection = await getProvider(config.rpcProvider);
   }
 
   connection
@@ -19,7 +19,7 @@ export default async () => {
       console.log('Connected to network:', network);
     })
     .catch(err => {
-      console.error(`Could not connect to RPC server at '${config.networkId}'`, err);
+      console.error(`Could not connect to RPC server at '${config.rpcProvider}'`, err);
       return false;
     });
 

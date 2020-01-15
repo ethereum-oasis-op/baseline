@@ -39,16 +39,23 @@ const options = [
 
 const ChooseNetworkForm = () => {
   const classes = useStyles();
-  const { setNetworkId } = useContext(ServerSettingsContext);
+  const { setRPCProvider, settings } = useContext(ServerSettingsContext);
+  if (!settings) { return <div>No settings</div>}
+  
+  const { rpcProvider } = settings;
 
   const onSubmit = async ({ networkId, customRPCURL }) => {
     const id = networkId === 'other' ? customRPCURL : networkId;
-    await setNetworkId({
+    await setRPCProvider({
       variables: {
-        networkId: id,
+        uri: id,
       },
+      fetchPolicy: 'no-cache',
     });
   };
+
+  console.log('NETWORK FORM', { settings })
+  console.log({ rpcProvider });
 
   return (
     <FormWrapper>
@@ -68,6 +75,7 @@ const ChooseNetworkForm = () => {
                 label="Ethereum Network"
                 component={Select}
                 placeholder="Mainnet"
+                defaultValue="kovan"
                 margin="normal"
                 options={options}
               />

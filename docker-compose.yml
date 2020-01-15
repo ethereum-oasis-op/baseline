@@ -7,6 +7,11 @@ services:
     volumes:
       - ./contracts:/app/contracts:delegated
       - ./artifacts:/app/artifacts:cached
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
 
   jest:
     build: ./
@@ -16,6 +21,11 @@ services:
       - ./artifacts:/app/artifacts:delegated
       - ./.babelrc:/app/.babelrc:delegated
       - ./compiler.json:/app/compiler.json:delegated
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     depends_on:
       - ganache
 
@@ -24,6 +34,11 @@ services:
     command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 80000000000
     ports:
       - 8545:8545
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     volumes:
       - chaindata:/chaindata
 
@@ -46,6 +61,11 @@ services:
     depends_on:
       - radish-zok-watch
       - mongo-buyer
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     ports:
       - 8080:80
 
@@ -56,6 +76,11 @@ services:
     volumes:
       - ./zok/src:/app/src:delegated
       - ./zok/dist:/app/dist:delegated
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     command: npm run build:watch
       
   radish34-ui:
@@ -71,8 +96,14 @@ services:
       - ./ui/public/manifest.json:/app/public/manifest.json:delegated
       - ./ui/public/logo.svg:/app/public/logo.svg:delegated
       - ./ui/public/images:/app/public/images:delegated
+      - ./ui/public/fonts:/app/public/fonts:delegated
     environment:
       VIRTUAL_HOST: radish34-ui.docker
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     logging:
       options:
         max-size: 10m
@@ -96,6 +127,11 @@ services:
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001/api/v1
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001/api/v1
       MESSENGER_SUPPLIER3_URI: http://messenger-supplier3:4001/api/v1
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     volumes:
       - ./radish-deploy/src:/app/src:delegated
       - ./radish-deploy/package.json:/app/package.json:delegated
@@ -114,6 +150,7 @@ services:
       - ./radish-api/dist:/app/dist:delegated
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/buyer.eth:/keystore/account.eth
+      # - ./config/keystore:/keystore
       - ./config/config-buyer.json:/app/config/default.json
       - ./artifacts:/app/artifacts:delegated
     depends_on:
@@ -126,7 +163,9 @@ services:
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URL: http://messenger-buyer:4001/api/v1
+      MESSENGER_URI: 'http://messenger-buyer:4001/api/v1'
+    networks:
+      - network-buyer
     ports:
       - 8001:8001
       - 8101:8101
@@ -154,7 +193,9 @@ services:
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URL: http://messenger-supplier1:4001/api/v1
+      MESSENGER_URI: 'http://messenger-supplier1:4001/api/v1'
+    networks:
+      - network-supplier1
     ports:
       - 8002:8001
       - 8102:8101
@@ -182,7 +223,9 @@ services:
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URL: http://messenger-supplier2:4001/api/v1
+      MESSENGER_URI: 'http://messenger-supplier2:4001/api/v1'
+    networks:
+      - network-supplier2
     ports:
       - 8003:8001
 
@@ -196,7 +239,8 @@ services:
     volumes:
       - ./radish-api/dist:/app/dist:delegated
       - ./radish-api/package.json:/app/package.json:delegated
-      - ./config/keystore/supplier3.eth:/keystore/account.eth
+      #- ./config/keystore/supplier3.eth:/keystore/account.eth
+      - ./config/keystore:/keystore
       - ./config/config-supplier3.json:/app/config/default.json
       - ./artifacts:/app/artifacts:delegated      
     depends_on:
@@ -209,7 +253,9 @@ services:
       MONGO_URL: mongodb://mongo-supplier3
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URL: http://messenger-supplier3:4001/api/v1
+      MESSENGER_URI: 'http://messenger-supplier3:4001/api/v1'
+    networks:
+      - network-supplier3
     ports:
       - 8004:8001
 
@@ -223,6 +269,11 @@ services:
       - ./radish-api/dist:/app/dist:delegated
       - ./config/keystore:/keystore
       - ./config/config.json:/app/config/default.json
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     logging:
       options:
         max-size: 10m
@@ -235,6 +286,8 @@ services:
     logging:
       options:
         max-size: 10m
+    networks:
+      - network-buyer
     ports:
       - 27017:27017
       
@@ -246,6 +299,8 @@ services:
     logging:
       options:
         max-size: 10m
+    networks:
+      - network-supplier1
     ports:
       - 27117:27017
 
@@ -257,6 +312,8 @@ services:
     logging:
       options:
         max-size: 10m
+    networks:
+      - network-supplier2
     ports:
       - 27217:27017
 
@@ -268,13 +325,23 @@ services:
     logging:
       options:
         max-size: 10m
+    networks:
+      - network-supplier3
     ports:
       - 27317:27017
 
   mongo-seed:
     build: ./mongo-seed
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
     links:
       - mongo-buyer
+      - mongo-supplier1
+      - mongo-supplier2
+      - mongo-supplier3
 
   geth-bootnode:
     hostname: geth-bootnode
@@ -285,11 +352,14 @@ services:
     build:
       context: ./geth-env
       dockerfile: ./bootnode/Dockerfile
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
+      - network-geth
     ports:
       - 30301:30301/udp
-    networks:
-      default:
-        ipv4_address: 172.25.0.101 # geth-miner and geth-node need to know the IP address at startup
 
   geth-miner1:
     hostname: geth-miner1
@@ -304,15 +374,18 @@ services:
       - bootnodeIp=172.25.0.101
     ports:
       - 8544:8545/tcp
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
+      - network-geth
     build:
       context: ./geth-env
       dockerfile: ./miner/Dockerfile
       args:
         privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46 # Please don't do something like this in production, okay?
         password: pass
-    networks:
-      default:
-        ipv4_address: 172.25.0.102 # geth-node needs this to automatically peer
 
   geth-miner2:
     hostname: geth-miner2
@@ -326,44 +399,50 @@ services:
       - bootnodeIp=172.25.0.101
     ports:
       - 8542:8545/tcp
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
+      - network-geth
     build:
       context: ./geth-env
       dockerfile: ./miner/Dockerfile
       args:
         privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
         password: word
-    networks:
-      default:
-        ipv4_address: 172.25.0.104
 
   geth-node:
-     hostname: geth-node
-     container_name: geth-node
-     depends_on:
+    hostname: geth-node
+    container_name: geth-node
+    depends_on:
        - geth-miner1
-     environment:
-       VIRTUAL_HOST: geth-node.docker
-       nodeType: full
-       address: '0x3590aca93338b0721966a8d0c96ebf2c4c87c544' # derived from the private key which is passed in the args
-       bootnodeId: 76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
-       bootnodeIp: '172.25.0.101'
-     build:
-       context: ./geth-env
-       dockerfile: ./node/Dockerfile
-       args:
-         privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
-         password: word
-     ports:
+    environment:
+      VIRTUAL_HOST: geth-node.docker
+      nodeType: full
+      address: '0x3590aca93338b0721966a8d0c96ebf2c4c87c544' # derived from the private key which is passed in the args
+      bootnodeId: 76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c # derived from the nodekeyhex of the bootnode
+      bootnodeIp: geth-bootnode
+    build:
+      context: ./geth-env
+      dockerfile: ./node/Dockerfile
+      args:
+        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
+        password: word
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-supplier3
+      - network-geth
+    ports:
        - 8547:8545
        - 8548:8546
-     healthcheck:
-       test: wget http://localhost:8545
-       interval: 2s
-       timeout: 5s
-       retries: 30
-     networks:
-       default:
-         ipv4_address: 172.25.0.110
+    healthcheck:
+      test: wget http://localhost:8545
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
   messenger-buyer:
     hostname: messenger-buyer
@@ -378,6 +457,8 @@ services:
       VIRTUAL_HOST: messenger-buyer.docker
       MONGO_URL: mongodb://mongo-buyer
       RADISH_API_URL: http://radish-api-buyer:8101/api/v1
+    networks:
+      - network-buyer
     ports:
      - 4001:4001
 
@@ -394,6 +475,8 @@ services:
       VIRTUAL_HOST: messenger-supplier1.docker
       MONGO_URL: mongodb://mongo-supplier1
       RADISH_API_URL: http://radish-api-supplier1:8101/api/v1
+    networks:
+      - network-supplier1
     ports:
      - 4002:4001
 
@@ -410,6 +493,8 @@ services:
       VIRTUAL_HOST: messenger-supplier2.docker
       MONGO_URL: mongodb://mongo-supplier2
       RADISH_API_URL: http://radish-api-supplier2:8101/api/v1
+    networks:
+      - network-supplier2
     ports:
       - 4003:4001
 
@@ -426,15 +511,10 @@ services:
       VIRTUAL_HOST: messenger-supplier3.docker
       MONGO_URL: mongodb://mongo-supplier3
       RADISH_API_URL: http://radish-api-supplier3:8101/api/v1
+    networks:
+      - network-supplier3
     ports:
      - 4004:4001
-
-networks:
-  default:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.25.0.0/24
 
 volumes:
   mongo-buyer:
@@ -443,3 +523,10 @@ volumes:
   mongo-supplier3:
   mongo-messenger:
   chaindata:
+
+networks:
+  network-buyer:
+  network-supplier1:
+  network-supplier2:
+  network-supplier3:
+  network-geth:

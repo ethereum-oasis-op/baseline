@@ -1,23 +1,45 @@
-import React from 'react';
-import gql from 'graphql-tag';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSubscription } from '@apollo/react-hooks';
+import { useQuery } from '@apollo/react-hooks';
+import { GET_SERVER_STATUS, GET_SERVER_STATUS_UPDATE } from '../graphql/server-status';
 
 const ServerStatusContext = React.createContext([{}, () => {}]);
+let statusListener;
 
-const GET_SERVER_STATUS_UPDATE = gql`
-  subscription onServerStateUpdate {
-    serverStatusUpdate {
-      balance
-    }
-  }
-`;
+const statusUpdateQuery = (prev, { subscriptionData }) => {
+  if (!subscriptionData.data) return prev;
+  const { serverStatusUpdate } = subscriptionData.data;
+  return { prev, serverStatus: serverStatusUpdate };
+}
 
 const ServerStatusProvider = ({ children }) => {
-  const { loading, data } = useSubscription(GET_SERVER_STATUS_UPDATE);
+  const {
+    subscribeToMore: subscribeToStatusUpdates,
+    data: initStatus,
+    loading,
+  } = useQuery(GET_SERVER_STATUS);
+
+  useEffect(() => {
+    if (!statusListener) {
+      statusListener = subscribeToStatusUpdates({
+        document: GET_SERVER_STATUS_UPDATE,
+        updateQuery: statusUpdateQuery,
+        fetchPolicy: 'no-cache',
+      });
+    }
+  }, [subscribeToStatusUpdates]);
+
+  const status = initStatus ? initStatus.serverStatus : {};
 
   return (
-    <ServerStatusContext.Provider value={[data, loading]}>{children}</ServerStatusContext.Provider>
+    <ServerStatusContext.Provider
+      value={{
+        status,
+        loading,
+      }}
+    >
+      {children}
+    </ServerStatusContext.Provider>
   );
 };
 

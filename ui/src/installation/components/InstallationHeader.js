@@ -7,8 +7,8 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
-import { get } from 'lodash';
-import { ServerStatusContext } from '../../contexts/server-status-context';
+import { ServerSettingsContext } from '../../contexts/server-settings-context';
+import Balance from '../../components/Balance';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,10 +43,10 @@ const useStyles = makeStyles(theme => ({
 
 const InstallationHeader = () => {
   const classes = useStyles();
-  const [status] = useContext(ServerStatusContext);
-  const balance = get(status, 'serverStatusUpdate.balance', 342.03002);
+  const { settings } = useContext(ServerSettingsContext);
 
-  const orgAddress = '0x123';
+  if (!settings) { return <div>No settings</div>}
+  const { organizationAddress } = settings;
 
   return (
     <div className={classes.root}>
@@ -56,28 +56,18 @@ const InstallationHeader = () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            Organization Address
-            <Chip className={classes.orgAddress} size="small" label={orgAddress} />
+            Radish34 Installation
+            {
+              organizationAddress
+              ? <Chip className={classes.orgAddress} size="small" label={organizationAddress} />
+              : null
+            }
           </Typography>
-          <Button color="inherit">Balance: {balance} </Button>
+          <Button color="inherit">Balance: <Balance /></Button>
         </Toolbar>
       </AppBar>
     </div>
   );
-
-  // return (
-  //   <Grid container className={classes.root}>
-  //     <Grid item xs={8}>
-  //       Radish34 Installation ( OrganizationAddress: 0xc1b8662A68F3eb66bC5e5C4DE7C1EF04Dc344d53 )
-  //     </Grid>
-  //     <Grid item xs={4}>
-  //       <div className={classes.balance}>
-  //         <span className={classes.balanceLabel}>Balance:</span>
-  //         <span className={classes.balanceValue}>{balance}</span>
-  //       </div>
-  //     </Grid>
-  //   </Grid>
-  // );
 };
 
 export default InstallationHeader;

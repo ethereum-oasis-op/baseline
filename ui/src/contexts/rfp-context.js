@@ -24,7 +24,7 @@ const RFPProvider = ({ children }) => {
         },
       });
     }
-  }, []);
+  }, [subscribeToMore]);
 
   return (
     <RFPContext.Provider value={{ rfps, loading, error, postRFP }}>{children}</RFPContext.Provider>

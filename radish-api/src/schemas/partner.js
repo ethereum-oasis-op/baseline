@@ -14,6 +14,10 @@ export default gql`
     removePartner(input: RemovePartnerInput!): PartnerPayload
   }
 
+  extend type Subscription {
+    getPartnerUpdate: PartnerPayload
+  }
+
   type Partner {
     name: String!
     address: Address!

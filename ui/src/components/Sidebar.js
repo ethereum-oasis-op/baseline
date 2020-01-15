@@ -6,9 +6,9 @@ const useStyles = makeStyles(() => ({
   root: {
     overflowX: 'scroll',
     maxHeight: '100%',
-    width: '255px',
+    width: '348px',
     background: '#f8fafb',
-    borderRight: '1px solid #5f747f',
+    borderRight: '1px solid #909ea9',
   },
 }));
 

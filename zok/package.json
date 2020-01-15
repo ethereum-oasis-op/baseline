@@ -37,7 +37,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "/output/*"
+      "output/*"
     ]
   },
   "jest": {

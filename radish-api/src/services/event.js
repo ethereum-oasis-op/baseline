@@ -18,6 +18,9 @@ export const getOrgRegistryJson = () => {
 export const subscribeRegisterOrgEvent = async () => {
   const config = await getServerSettings();
   const orgRegistryJson = getOrgRegistryJson();
+  if (!config.organizationRegistryAddress) {
+    return;
+  }
   const orgRegistryContract = getContract(
     orgRegistryJson,
     config.rpcProvider,

@@ -15,7 +15,7 @@ import RadishLogo from '../components/RadishLogo';
 
 const RFPDetail = () => {
   const { id } = useParams();
-  const { loading, error, data } = useQuery(GET_RFP, {
+  const { loading, data } = useQuery(GET_RFP, {
     variables: { id: Number(id) },
   });
 

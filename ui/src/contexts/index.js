@@ -7,14 +7,13 @@ import { ApolloLink, split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ServerStatusProvider } from './server-status-context';
 import { ServerSettingsProvider } from './server-settings-context';
 import { PartnerProvider } from './partner-context';
 import { MessageProvider } from './message-context';
 import { RFPProvider } from './rfp-context';
 import { ProposalProvider } from './proposal-context';
 
-const uri = window.localStorage.getItem('api') || 'radish-api-buyer.docker/graphql';
+const uri = window.localStorage.getItem('api');
 
 const httpLink = new HttpLink({
   uri: `http://${uri}`,
@@ -50,13 +49,13 @@ function AppProviders({ children }) {
     <ApolloProvider client={client}>
       <MessageProvider>
         <ServerSettingsProvider>
-          <ServerStatusProvider>
+  
             <PartnerProvider>
               <RFPProvider>
                 <ProposalProvider>{children}</ProposalProvider>
               </RFPProvider>
             </PartnerProvider>
-          </ServerStatusProvider>
+
         </ServerSettingsProvider>
       </MessageProvider>
     </ApolloProvider>

@@ -1,13 +1,11 @@
 const fs = require('fs');
 const { Wallet } = require('ethers');
+const Paths = require('../paths.json');
 
-const absoluteFilepath = '/app/src/config/keystore';
-
-const getWalletPath = role => `${absoluteFilepath}/${role}.eth`;
+const getWalletPath = role => `${Paths.KeystorePath}/${role}.eth`;
 
 const getWallet = role => {
   const walletFilePath = getWalletPath(role);
-  console.log(`📁  Loading ${role} wallet :`, walletFilePath);
   if (fs.existsSync(walletFilePath)) {
     const wallet = fs.readFileSync(walletFilePath);
     return JSON.parse(wallet);

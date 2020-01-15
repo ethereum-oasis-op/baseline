@@ -1,0 +1,12 @@
+{
+  "rpcProvider": "http://ganache:8545",
+  "registrarAddress": "0xC5d828f2110323Fa6EBb387173Fc4318c5bAc9fF",
+  "buyerAddress": "0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41",
+  "organizationName": "Supplier 2",
+  "organizationRole": 2,
+  "organizationWhisperKey": "0x04c62b9ecd891514fdb8c02d67f4107aac9c78178f421b70b5c9f0007ae403af8f60002e4c2e5d49dee9bcd3340deeee0ba321fc837db4ea47e6449eda86c94665",
+  "orgRegistryAddress": "0xd5A108eD4a9236717026cc008831BD0B6a87Adab",
+  "registryAddress": "0x701f5a3724d9e940cA22C1DBaA15dA910F7f398a",
+  "globalRegistryAddress": "0x0E257c2302fE485458Af4F177aA441695dce0Fe4",
+  "organizationRegistryAddress": "0xd5A108eD4a9236717026cc008831BD0B6a87Adab"
+}

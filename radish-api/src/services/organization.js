@@ -70,6 +70,9 @@ export const registerToOrgRegistry = async (address, name, role, key) => {
 
 export const getOrganizationCount = async () => {
   const config = await getServerSettings();
+  if (!config.organizationRegistryAddress) {
+    return 0;
+  }
   const organizationCount = await getContract(
     getOrgRegistryJson(),
     config.rpcProvider,
@@ -100,6 +103,7 @@ export const getRegisteredOrganization = async walletAddress => {
     config.rpcProvider,
     config.organizationRegistryAddress,
   ).getOrg(walletAddress);
+
   return {
     address: organization[0],
     name: utils.parseBytes32String(organization[1]),
@@ -131,16 +135,20 @@ export const saveOrganization = async input => {
 };
 
 export const saveOrganizations = async () => {
-  const orgCount = await getOrganizationCount();
-  for (let i = 0; i < orgCount; i += 1) {
-    const org = await listOrganizations(i, 1);
-    const record = {
-      address: org.addresses[0],
-      name: org.names[0],
-      role: org.roles[0],
-      key: org.keys[0],
-    };
-    saveOrganization(record);
+  const { rpcProvider } = await getServerSettings();
+  if (rpcProvider) {
+    const orgCount = await getOrganizationCount();
+    for (let i = 0; i < orgCount; i += 1) {
+      const org = await listOrganizations(i, 1);
+      const record = {
+        _id: org.addresses[0],
+        address: org.addresses[0],
+        name: org.names[0],
+        role: org.roles[0],
+        key: org.keys[0],
+      };
+      saveOrganization(record);
+    }
   }
 };
 
