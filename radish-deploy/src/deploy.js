@@ -87,27 +87,18 @@ const main = async () => {
   await register('buyer');
   await register('supplier1');
   await register('supplier2');
-  if (registerAll) {
-    await register('supplier3');
-  }
+
   await checkOrgCount();
   await checkOrgInfo('buyer');
   await checkOrgInfo('supplier1');
   await checkOrgInfo('supplier2');
-  if (registerAll) {
-    await checkOrgInfo('supplier3');
-  }
+
   await saveSettings('buyer');
   await saveSettings('supplier1');
   await saveSettings('supplier2');
-  if (!registerAll) {
-    await saveSettings('supplier3');
-  }
 
   console.log('----------------- Completed  -----------------');
-  console.log(`
-    Please restart the radish-apis for the config to take effect
-  `);
+  console.log(`Please restart the radish-apis for the config to take effect`);
 };
 
 console.log('Patiently waiting 10 seconds for ganache container to init ...');

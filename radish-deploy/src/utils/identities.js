@@ -6,7 +6,6 @@ const {
   MESSENGER_BUYER_URI,
   MESSENGER_SUPPLIER1_URI,
   MESSENGER_SUPPLIER2_URI,
-  MESSENGER_SUPPLIER3_URI,
 } = process.env;
 
 const getIdentity = url => axios.get(url).then(response => response.data[0].publicKey);
@@ -20,13 +19,11 @@ const getIdentities = async () => {
     const buyer = await getIdentity(`${MESSENGER_BUYER_URI}/identities`);
     const supplier1 = await getIdentity(`${MESSENGER_SUPPLIER1_URI}/identities`);
     const supplier2 = await getIdentity(`${MESSENGER_SUPPLIER2_URI}/identities`);
-    const supplier3 = await getIdentity(`${MESSENGER_SUPPLIER3_URI}/identities`);
     console.log('✅  Retrieved all Whisper Identity for each user');
     whisperIdentities = {
       buyer,
       supplier1,
       supplier2,
-      supplier3,
     };
     return whisperIdentities;
   } catch (error) {
