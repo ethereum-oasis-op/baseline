@@ -31,7 +31,7 @@ const UserSelection = () => {
   const apiURL = window.localStorage.getItem('api') || 'http://radish-api-buyer.docker/graphql';
 
   console.log(`UI attached to ${data}`);
-  
+
   const fetchHealthCheck = useCallback(async () => {
     const result = await fetch(`${apiURL}/healthcheck`);
     setData(result);
@@ -52,7 +52,6 @@ const UserSelection = () => {
         <MenuItem value="radish-api-buyer.docker/graphql">Buyer</MenuItem>
         <MenuItem value="radish-api-supplier1.docker/graphql">Supplier1</MenuItem>
         <MenuItem value="radish-api-supplier2.docker/graphql">Supplier2</MenuItem>
-        <MenuItem value="radish-api-supplier3.docker/graphql">Supplier3</MenuItem>
       </Select>
     </div>
   );

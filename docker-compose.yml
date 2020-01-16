@@ -11,7 +11,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
 
   jest:
     build: ./
@@ -25,7 +24,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     depends_on:
       - ganache
 
@@ -38,7 +36,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     volumes:
       - chaindata:/chaindata
 
@@ -65,7 +62,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     ports:
       - 8080:80
 
@@ -80,7 +76,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     command: npm run build:watch
       
   radish34-ui:
@@ -103,7 +98,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     logging:
       options:
         max-size: 10m
@@ -116,22 +110,18 @@ services:
       - messenger-buyer
       - messenger-supplier1
       - messenger-supplier2
-      - messenger-supplier3
       - mongo-buyer
       - mongo-supplier1
       - mongo-supplier2
-      - mongo-supplier3
     environment:
       RPC_PROVIDER: http://ganache:8545
       MESSENGER_BUYER_URI: http://messenger-buyer:4001/api/v1
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001/api/v1
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001/api/v1
-      MESSENGER_SUPPLIER3_URI: http://messenger-supplier3:4001/api/v1
     networks:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     volumes:
       - ./radish-deploy/src:/app/src:delegated
       - ./radish-deploy/package.json:/app/package.json:delegated
@@ -229,36 +219,6 @@ services:
     ports:
       - 8003:8001
 
-  radish-api-supplier3:
-    container_name: radish-api-supplier3
-    build:
-      context: ./radish-api/
-      dockerfile: dev.Dockerfile
-    command: npm run dev
-    restart: on-failure
-    volumes:
-      - ./radish-api/dist:/app/dist:delegated
-      - ./radish-api/package.json:/app/package.json:delegated
-      #- ./config/keystore/supplier3.eth:/keystore/account.eth
-      - ./config/keystore:/keystore
-      - ./config/config-supplier3.json:/app/config/default.json
-      - ./artifacts:/app/artifacts:delegated      
-    depends_on:
-      - radish-api-watch
-      - mongo-supplier3
-      - ganache
-      - messenger-supplier3
-    environment:
-      VIRTUAL_HOST: radish-api-supplier3.docker
-      MONGO_URL: mongodb://mongo-supplier3
-      MONGO_DB_NAME: 'radish34'
-      MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URI: 'http://messenger-supplier3:4001/api/v1'
-    networks:
-      - network-supplier3
-    ports:
-      - 8004:8001
-
   radish-api-watch:
     build:
       context: ./radish-api/
@@ -273,7 +233,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     logging:
       options:
         max-size: 10m
@@ -317,31 +276,16 @@ services:
     ports:
       - 27217:27017
 
-  mongo-supplier3:
-    image: mongo:latest
-    container_name: mongo-supplier3
-    volumes:
-      - mongo-supplier3:/data/db
-    logging:
-      options:
-        max-size: 10m
-    networks:
-      - network-supplier3
-    ports:
-      - 27317:27017
-
   mongo-seed:
     build: ./mongo-seed
     networks:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
     links:
       - mongo-buyer
       - mongo-supplier1
       - mongo-supplier2
-      - mongo-supplier3
 
   geth-bootnode:
     hostname: geth-bootnode
@@ -356,7 +300,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
       - network-geth
     ports:
       - 30301:30301/udp
@@ -378,7 +321,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
       - network-geth
     build:
       context: ./geth-env
@@ -403,7 +345,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
       - network-geth
     build:
       context: ./geth-env
@@ -433,7 +374,6 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
-      - network-supplier3
       - network-geth
     ports:
        - 8547:8545
@@ -498,35 +438,14 @@ services:
     ports:
       - 4003:4001
 
-  messenger-supplier3:
-    hostname: messenger-supplier3
-    container_name: messenger-supplier3
-    links:
-      - mongo-supplier3
-      - geth-node
-    build:
-      context: ./messenger
-      dockerfile: ./Dockerfile
-    environment:
-      VIRTUAL_HOST: messenger-supplier3.docker
-      MONGO_URL: mongodb://mongo-supplier3
-      RADISH_API_URL: http://radish-api-supplier3:8101/api/v1
-    networks:
-      - network-supplier3
-    ports:
-     - 4004:4001
-
 volumes:
   mongo-buyer:
   mongo-supplier1:
   mongo-supplier2:
-  mongo-supplier3:
-  mongo-messenger:
   chaindata:
 
 networks:
   network-buyer:
   network-supplier1:
   network-supplier2:
-  network-supplier3:
   network-geth:
