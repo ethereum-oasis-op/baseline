@@ -21,7 +21,8 @@ router.post('/documents', async (req, res) => {
       docId = (await rfpUtils.partnerUpdateRFP(messageObj))._id;
       break;
     case 'delivery_receipt': // i.e. supplier signs RFP and sends back to buyer
-      docId = (await rfpUtils.deliveryUpdateRFP(messageObj))._id;
+      //docId = (await rfpUtils.deliveryReceiptUpdate(messageObj))._id;
+      docId = 'FAIL'
       break;
     //case 'msa_create':
     //docId = await msaUtils.createMSA(messageObj);

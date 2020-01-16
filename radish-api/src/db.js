@@ -7,6 +7,11 @@ let client = null;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+  poolSize: 5, // Max. number of simultaneous connections to maintain
+  socketTimeoutMS: 0, // Use os-default, only useful when a network issue occurs and the peer becomes unavailable
+  keepAlive: true, // KEEP ALIVE!
 };
 
 const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout));
@@ -48,6 +53,7 @@ export default {
     const dbFullName = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
     for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
+        await mongoose.set('debug', true);
         await mongoose.connect(dbFullName, options);
         console.log('Mongoose connected to db');
         break;

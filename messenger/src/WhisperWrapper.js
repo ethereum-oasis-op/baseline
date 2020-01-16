@@ -3,8 +3,6 @@ const Message = require('./models/Message');
 const utils = require('./generalUtils');
 const whisperUtils = require('./whisperUtils');
 const web3utils = require('./web3Utils.js');
-const axios = require('axios');
-const radishApiUrl = process.env.RADISH_API_URL || 'http://localhost:8101/api/v1';
 
 // Useful constants
 const {
@@ -19,6 +17,7 @@ class WhisperWrapper {
     this.getIdentities = utils.getIdentities;
     this.findIdentity = utils.findIdentity;
     this.getMessages = utils.getMessages;
+    this.forwardMessage = utils.forwardMessage;
     this.getSingleMessage = utils.getSingleMessage;
   }
 
@@ -86,69 +85,71 @@ class WhisperWrapper {
     // Check if this is a JSON structured message
     const [isJSON, messageObj] = await utils.hasJsonStructure(content);
     let doc;
-    if (isJSON && messageObj.type === 'delivery_receipt') {
-      // Check if receipt came from original recipient
-      const originalMessage = await Message.findOne({
-        _id: messageObj.messageId,
-      });
-      if (!originalMessage) {
-        throw new Error(
-          `Original message id (${messageObj.messageId}) not found. Cannot add delivery receipt.`,
-        );
-      } else if (originalMessage.recipientId === data.sig) {
-        doc = await Message.findOneAndUpdate(
-          { _id: messageObj.messageId },
-          { deliveredDate: messageObj.deliveredDate },
-          { upsert: false, new: true },
-        );
+    if (isJSON) {
+      if (messageObj.type === 'delivery_receipt') {
+        // Check if receipt came from original recipient
+        const originalMessage = await Message.findOne({
+          _id: messageObj.messageId,
+        });
+        if (!originalMessage) {
+          throw new Error(
+            `Original message id (${messageObj.messageId}) not found. Cannot add delivery receipt.`,
+          );
+        } else if (originalMessage.recipientId === data.sig) {
+          doc = await Message.findOneAndUpdate(
+            { _id: messageObj.messageId },
+            { deliveredDate: messageObj.deliveredDate },
+            { upsert: false, new: true },
+          );
+        }
+      } else {
+        // Store raw message
+        doc = await this.storeNewMessage(data, content);
+        await this.sendDeliveryReceipt(data);
       }
+      // Send all JSON messages to radish-api
+      await this.forwardMessage(messageObj);
     } else {
-      // Always store raw messages
-      doc = await Message.findOneAndUpdate(
-        { _id: data.hash },
-        {
-          _id: data.hash,
-          messageType: 'individual',
-          recipientId: data.recipientPublicKey,
-          senderId: data.sig,
-          ttl: data.ttl,
-          topic: data.topic,
-          payload: content,
-          pow: data.pow,
-          sentDate: data.timestamp,
-        },
-        { upsert: true, new: true },
-      );
-
-      // Send non 'delivery_receipt' JSON objects to radish-api service to store/update 
-      if (isJSON) {
-        console.log(`Forwarding doc to radish-api: POST ${radishApiUrl}/documents`);
-        try {
-          let response = await axios.post(`${radishApiUrl}/documents`, messageObj);
-          console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
-          console.log(`${response.status} -`, response.data);
-        } catch (error) {
-          console.error(`ERROR: POST ${radishApiUrl}/documents`);
-          console.log(`${error.response.status} -`, error.response.data);
-        };
-      }
-
-      // Send delivery receipt back to sender
-      const time = await Math.floor(Date.now() / 1000);
-      const receiptObject = {
-        type: 'delivery_receipt',
-        deliveredDate: time,
-        messageId: data.hash,
-      };
-      const receiptString = JSON.stringify(receiptObject);
-      await this.sendPrivateMessage(
-        data.recipientPublicKey,
-        data.sig,
-        undefined,
-        receiptString,
-      );
+      // Text message
+      doc = await this.storeNewMessage(data, content);
+      await this.sendDeliveryReceipt(data);
     }
     return doc;
+  }
+
+  async storeNewMessage(messageData, content) {
+    return Message.findOneAndUpdate(
+      { _id: messageData.hash },
+      {
+        _id: messageData.hash,
+        messageType: 'individual',
+        recipientId: messageData.recipientPublicKey,
+        senderId: messageData.sig,
+        ttl: messageData.ttl,
+        topic: messageData.topic,
+        payload: content,
+        pow: messageData.pow,
+        sentDate: messageData.timestamp,
+      },
+      { upsert: true, new: true },
+    );
+  }
+
+  async sendDeliveryReceipt(data) {
+    // Send delivery receipt back to sender
+    const time = await Math.floor(Date.now() / 1000);
+    const receiptObject = {
+      type: 'delivery_receipt',
+      deliveredDate: time,
+      messageId: data.hash,
+    };
+    const receiptString = JSON.stringify(receiptObject);
+    await this.sendPrivateMessage(
+      data.recipientPublicKey,
+      data.sig,
+      undefined,
+      receiptString,
+    );
   }
 
   async subscribeToPrivateMessages(userId, topic = DEFAULT_TOPIC) {

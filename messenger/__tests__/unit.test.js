@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Config = require('../config');
 const WhisperWrapper = require('../src/WhisperWrapper.js');
 const web3utils = require('../src/web3Utils.js');
+const generalUtils = require('../src/generalUtils.js');
 
 const Identity = require('../src/models/Identity');
 const Message = require('../src/models/Message');
@@ -139,6 +140,8 @@ describe('WhisperWrapper', () => {
       });
 
       test("checkMessageContent() processes 'delivery_receipt' if original message exists", async () => {
+        // Stub out function with HTTP request to radish-api
+        messenger.forwardMessage = jest.fn();
         const rawObj = {
           type: 'delivery_receipt',
           deliveredDate: 1576249522,

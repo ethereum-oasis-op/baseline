@@ -34,6 +34,12 @@ export default {
       const myRFP = args.input;
       myRFP.createdDate = currentTime;
       myRFP.sender = process.env.MESSENGER_ID;
+      await myRFP.recipients.forEach(recipient => {
+        recipient.origination = {
+          receiptDate: null,
+          messageId: null
+        }
+      })
       const rfp = (await onCreateRFP(myRFP))._doc;
       await saveMessage({
         resolved: false,
@@ -52,13 +58,18 @@ export default {
       rfpDetails.uuid = rfp._id;
       recipients.forEach(recipient => {
         // Add to BullJS queue
-        msgDeliveryQueue.add({
-          documentId: rfp._id,
-          senderId: process.env.MESSENGER_ID,
-          recipientId: recipient.partner.identity,
-          payload: rfpDetails,
-        });
-      })
+        msgDeliveryQueue.add(
+          {
+            documentId: rfp._id,
+            senderId: process.env.MESSENGER_ID,
+            recipientId: recipient.partner.identity,
+            payload: rfpDetails,
+          },
+          {
+            timeout: 20000 // Mark job as failed after 20sec so subsequent jobs are not stalled
+          }
+        );
+      });
       return { ...rfp };
     },
   },

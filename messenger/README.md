@@ -9,7 +9,7 @@ This service sends and receives messages using Whisper identities. `messenger` c
 ```
 npm install
 ```
-2. Build the ancillary services needed to run unit tests and test the REST API.
+2. Build/run the ancillary services needed to run unit tests and test the REST API.
 ```
 docker-compose -f ../docker-compose.yml up --build geth-bootnode geth-miner1 geth-miner2 geth-node mongo-buyer
 ```

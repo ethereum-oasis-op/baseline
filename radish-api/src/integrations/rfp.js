@@ -96,14 +96,44 @@ export const partnerCreateRFP = async (doc) => {
 };
 
 /**
+ * When a partners messenger receives an RFP I sent, it will return a delivery receipt.
+ * Update the RFP to show that recipient has received the RFP.
+ */
+export const deliveryReceiptUpdate = async (doc) => {
+  console.log('delivery_receipt doc=', doc)
+  const result = await RFP.findOneAndUpdate(
+    { 'recipients.origination.messageId': doc.messageId },
+    { $set: { "recipients.$.origination.receiptDate": doc.deliveredDate } },
+    { upsert: false, new: true }
+  );
+  console.log('deliveryReceiptUpdate=', result);
+  return result;
+};
+
+/**
+ * Set the messageId for a recipient's origination object
+ */
+export const originationUpdate = async (messageId, recipientId, rfpId) => {
+  let origination = {
+    messageId
+  }
+  //let result = await RFP.findOneAndUpdate(
+  //{ _id: rfpId, "recipients.partner.identity": recipientId },
+  //{ $set: { "recipients.0.origination": origination } },
+  //{ upsert: false, new: true }
+  //);
+  console.log('hello? rfpId=', rfpId);
+  //const result = await RFP.find({ _id: rfpId });
+  const result = await RFP.exists({ _id: rfpId });
+  console.log('sam result=', result);
+  return result;
+};
+
+/**
  * When a user on a Partners API updates a RFP (Whisper?)
  */
 export const partnerUpdateRFP = async (doc) => {
-  // Gets notified of a new RFP
-  // 1.) Checks blockchain txHash for the RFP and compares it with the hashed content from Buyer
-  // 2.) Save RFP to local db
   const result = await RFP.findOneAndUpdate({ '_id': doc.uuid }, { doc }, { upsert: false, new: true });
-  // 3.) Check blockchain for verifying the zkp information sent by buyer
   return result;
 };
 
