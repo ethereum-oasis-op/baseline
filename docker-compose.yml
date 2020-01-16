@@ -148,12 +148,14 @@ services:
       - mongo-buyer
       - ganache
       - messenger-buyer
+      - redis-buyer
     environment:
       VIRTUAL_HOST: radish-api-buyer.docker
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-buyer:4001/api/v1'
+      REDIS_URL: redis://redis-buyer:6379
     networks:
       - network-buyer
     ports:
@@ -178,12 +180,14 @@ services:
       - mongo-supplier1
       - ganache
       - messenger-supplier1
+      - redis-supplier1
     environment:
       VIRTUAL_HOST: radish-api-supplier1.docker
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier1:4001/api/v1'
+      REDIS_URL: redis://redis-supplier1:6379
     networks:
       - network-supplier1
     ports:
@@ -383,6 +387,30 @@ services:
       interval: 2s
       timeout: 5s
       retries: 30
+
+  redis-buyer:
+    image: redis
+    container_name: redis-buyer
+    networks:
+      - network-buyer
+    expose:
+      - 6379
+
+  redis-supplier1:
+    image: redis
+    container_name: redis-supplier1
+    networks:
+      - network-supplier1
+    expose:
+      - 6379
+
+  redis-supplier2:
+    image: redis
+    container_name: redis-supplier2
+    networks:
+      - network-supplier2
+    expose:
+      - 6379
 
   messenger-buyer:
     hostname: messenger-buyer

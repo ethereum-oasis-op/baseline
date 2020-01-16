@@ -17,22 +17,42 @@ const RFPSchema = new mongoose.Schema({
   recipients: [
     {
       _id: false, // Tells Mongoose not to auto-create subdoc object Id
-      identity: String, // Messenger Id of partner
-      receiptDate: Number, // Date of confirmed receipt
+      partner: {
+        name: String, // Organization name
+        address: String, // Ethereum address
+        identity: String, // Messenger Id of partner
+        role: String, // Organization role within supply chain
+      },
+      onchainAttrs: {
+        rfpAddress: String, // address of the registry contract for this RFP object
+        txHash: String, // the origination transaction (first created onchain)
+        rfpId: Number, // The immutable anonymous token ID for this RFP object
+      },
+      zkpAttrs: {
+        proof: String, // ID of the proving object
+        verificationKey: String, // Key used for on-chain verification by verifier contract
+        verifierABI: String, // base64 encoded binary ABI for the verifier contract
+      },
+      origination: { // Filled by buyer
+        receiptDate: Number, // Date of confirmed receipt
+        messageId: String, // Hash of message used to send RFP via messenger service
+      },
+      signature: { // Filled by buyer/supplier
+        receiptDate: Number, // Date of confirmed receipt
+        messageId: String, // Hash of message used to send RFP via messenger service
+      },
+      baseline: { // Filled by buyer
+        receiptDate: Number, // Date of confirmed receipt
+        messageId: String, // Hash of message used to send RFP via messenger service
+      },
+      verification: { // Filled by supplier
+        receiptDate: Number, // Date of confirmed receipt
+        messageId: String, // Hash of message used to send RFP via messenger service
+      }
     }
   ],
   sender: String, // Messenger ID of RFP creator
-  onchainAttrs: {
-    rfpAddress: String, // address of the registry contract for this RFP object
-    txHash: String, // the origination transaction (first created onchain)
-    rfpId: Number, // The immutable anonymous token ID for this RFP object
-  },
-  zkpAttrs: {
-    proof: String, // ID of the proving object
-    verificationKey: String, // Key used for on-chain verification by verifier contract
-    verifierABI: String, // base64 encoded binary ABI for the verifier contract
-  },
-  dateDeadline: Number, // Epoch of when responses from recipients are due
+  proposalDeadline: Number, // Epoch of when responses from recipients are due
   createdDate: Number, // Epoch create date of the RFP object
   publishDate: Number, // Epoch date when first published
   closedDate: Number,	// Epoch date when RFP was closed
@@ -55,8 +75,9 @@ export const onCreateRFP = async (doc) => {
   // 4.) Save current RFP to local db (Mongo) - Sets state to 'pending'
   let newRFP = doc;
   newRFP._id = await uuid();
+  console.log(`Saving new RFP (uuid: ${newRFP._id})...`);
   const result = await RFP.create([newRFP], { upsert: true, new: true });
-  return result._id;
+  return result[0];
 };
 
 /**
@@ -71,7 +92,7 @@ export const partnerCreateRFP = async (doc) => {
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   // 3.) Check blockchain for verifying the zkp information sent by buyer
   // 4.) Notify this user of a new RFP
-  return result[0]._id;
+  return result[0];
 };
 
 /**
@@ -83,7 +104,7 @@ export const partnerUpdateRFP = async (doc) => {
   // 2.) Save RFP to local db
   const result = await RFP.findOneAndUpdate({ '_id': doc.uuid }, { doc }, { upsert: false, new: true });
   // 3.) Check blockchain for verifying the zkp information sent by buyer
-  return result._id;
+  return result;
 };
 
 export const whisperListener = event => {

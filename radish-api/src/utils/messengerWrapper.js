@@ -1,5 +1,5 @@
 const axios = require('axios');
-const messengerUrl = process.env.MESSENGER_URL || 'http://localhost:4001/api/v1';
+const messengerUrl = process.env.MESSENGER_URI || 'http://localhost:4001/api/v1';
 
 const getMessages = async (since, partnerId) => {
   const params = { since, partnerId };
@@ -12,7 +12,7 @@ const getMessages = async (since, partnerId) => {
 
 const getSingleMessage = async (messageId) => {
   try {
-    return await axios.get(`${messengerUrl}/messages/${messageId}`);
+    return (await axios.get(`${messengerUrl}/messages/${messageId}`)).body;
   } catch (error) {
     console.error(error)
   };
