@@ -1,5 +1,6 @@
 import messenger from '../utils/messengerWrapper';
-import { originationUpdate } from '../integrations/rfp';
+import { originationUpdate, RFP } from '../integrations/rfp';
+import mongoose from 'mongoose';
 
 module.exports = async (job, done) => {
   const { data: doc } = job;
@@ -8,7 +9,13 @@ module.exports = async (job, done) => {
   job.progress(50);
 
   console.log('BullJS updating the origination messageId to', message._id);
+  const dbFullName = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
+  await mongoose.connect(dbFullName, { useNewUrlParser: true });
+
   await originationUpdate(message._id, message.recipientId, doc.documentId);
+  job.progress(90);
+
+  await mongoose.connection.close();
   job.progress(100);
   done();
 };

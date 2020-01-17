@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { uuid } from 'uuidv4';
+import db from '../db';
 
 const RFPSchema = new mongoose.Schema({
   _id: {
@@ -16,7 +17,6 @@ const RFPSchema = new mongoose.Schema({
   skuDescription: String, // Human readable product name
   recipients: [
     {
-      _id: false, // Tells Mongoose not to auto-create subdoc object Id
       partner: {
         name: String, // Organization name
         address: String, // Ethereum address
@@ -62,7 +62,7 @@ const RFPSchema = new mongoose.Schema({
     versionKey: false,
   });
 
-const RFP = mongoose.model('RFPs', RFPSchema);
+export const RFP = mongoose.model('RFPs', RFPSchema);
 
 /**
  * When a user on the current API generates a new RFP
@@ -116,16 +116,12 @@ export const deliveryReceiptUpdate = async (doc) => {
 export const originationUpdate = async (messageId, recipientId, rfpId) => {
   let origination = {
     messageId
-  }
-  //let result = await RFP.findOneAndUpdate(
-  //{ _id: rfpId, "recipients.partner.identity": recipientId },
-  //{ $set: { "recipients.0.origination": origination } },
-  //{ upsert: false, new: true }
-  //);
-  console.log('hello? rfpId=', rfpId);
-  //const result = await RFP.find({ _id: rfpId });
-  const result = await RFP.exists({ _id: rfpId });
-  console.log('sam result=', result);
+  };
+  let result = await RFP.findOneAndUpdate(
+    { _id: rfpId, "recipients.partner.identity": recipientId },
+    { $set: { "recipients.$.origination": origination } },
+    { upsert: false, new: true }
+  );
   return result;
 };
 
