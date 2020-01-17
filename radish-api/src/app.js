@@ -3,6 +3,7 @@ import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
 import { UI } from 'bull-board';
 import bodyParser from 'body-parser';
+import axios from 'axios';
 import coreQuery from './schemas/core';
 import OrganizationSchema from './schemas/organization';
 import OrganizationResolver from './resolvers/organization';
@@ -81,6 +82,11 @@ export default async function startServer() {
   const server = new ApolloServer({
     typeDefs: [coreQuery, ...typeDefs],
     resolvers,
+    context: async ({ req }) => {
+      const { data } = await axios.get(`${process.env.MESSENGER_URI}/identities`);
+      const identity = data && data[0] ? data[0].publicKey : null;
+      return { identity };
+    }
   });
   server.applyMiddleware({ app, path: '/graphql' });
 

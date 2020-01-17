@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 const ProposalSchema = gql`
   extend type Query {
     proposal(id: Int!): Proposal
+    getProposalByRFPId(rfpId: String!): Proposal
     proposals: [Proposal]
   }
 
@@ -16,27 +17,27 @@ const ProposalSchema = gql`
 
   type Proposal {
     _id: Int!
-    rfpId: Int!
+    rfpId: String!
     rates: [RateTable!]!
-    terminationDate: Date!
   }
 
   input inputProposal {
-    rfpId: Int!
+    rfpId: String!
     rates: [inputRateTable!]!
-    terminationDate: Date!
   }
 
   type RateTable {
     startRange: Int!
     endRange: Int!
-    ppu: Float!
+    price: Float!
+    unitOfMeasure: String!
   }
 
   input inputRateTable {
     startRange: Int!
     endRange: Int!
-    ppu: Float!
+    price: Float!
+    unitOfMeasure: String!
   }
 `;
 

@@ -7,6 +7,7 @@ export const RFP_ATTRIBUTES = gql`
     proposalDeadline
     sku
     skuDescription
+    sender
     recipients {
       partner {
         identity
@@ -46,8 +47,8 @@ export const CREATE_RFP = gql`
 `;
 
 export const GET_RFP = gql`
-  query rfp($id: Int!) {
-    rfp(id: $id) {
+  query rfp($uuid: String!) {
+    rfp(uuid: $uuid) {
       ...RFP_ATTRIBUTES
     }
   }

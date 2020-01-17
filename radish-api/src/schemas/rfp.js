@@ -20,7 +20,7 @@ const RFPSchema = gql`
     sku: String!
     skuDescription: String!
     recipients: [Recipient!]!
-    sender: String!
+    sender: String
     onchainAttrs: OnChain!
     zkpAttrs: Zkp!
     proposalDeadline: Int!
@@ -49,7 +49,7 @@ const RFPSchema = gql`
   type OnChain {
     rfpAddress: String!
     txHash: String!
-    rfpId: Int!
+    rfpId: String!
   }
   
   type Zkp {

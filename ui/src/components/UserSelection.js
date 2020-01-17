@@ -42,16 +42,23 @@ const UserSelection = () => {
   }, [fetchHealthCheck]);
 
   const handleChange = event => {
+    const users = {
+      Org1: { url: 'radish-api-buyer.docker/graphql', role: 1 },
+      'Supplier 1': { url: 'radish-api-supplier1.docker/graphql', role: 2 },
+      'Supplier 2': { url: 'radish-api-supplier2.docker/graphql', role: 2 },
+    };
     window.location.reload(false);
-    window.localStorage.setItem('api', event.target.value);
+    window.localStorage.setItem('api', users[event.target.value].url);
+    window.localStorage.setItem('userRole', users[event.target.value].role);
+    window.localStorage.setItem('username', event.target.value);
   };
 
   return (
     <div className={classes.root}>
-      <Select className={classes.userSelection} value={apiURL} onChange={handleChange}>
-        <MenuItem value="radish-api-buyer.docker/graphql">Buyer</MenuItem>
-        <MenuItem value="radish-api-supplier1.docker/graphql">Supplier1</MenuItem>
-        <MenuItem value="radish-api-supplier2.docker/graphql">Supplier2</MenuItem>
+      <Select className={classes.userSelection} value="Org1" onChange={handleChange}>
+        <MenuItem value="Org1">Buyer</MenuItem>
+        <MenuItem value="Supplier 1">Supplier1</MenuItem>
+        <MenuItem value="Supplier 2">Supplier2</MenuItem>
       </Select>
     </div>
   );

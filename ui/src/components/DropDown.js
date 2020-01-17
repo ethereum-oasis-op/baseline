@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
     overflow: 'hidden',
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: '#50A75D',
-    }
+    },
   },
   icon: {
     fill: '#50A75D',
@@ -29,8 +29,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const DropDown = (props) => {
-  const { items, onChange } = props;
+const DropDown = props => {
+  const { items, onChange, defaultItem } = props;
   const classes = useStyles();
   const [value, setValue] = React.useState('');
 
@@ -47,7 +47,7 @@ const DropDown = (props) => {
         value={value}
         onChange={handleChange}
         IconComponent={KeyboardArrowDown}
-        autoWidth={true}
+        autoWidth
         className={classes.select}
         inputProps={{
           classes: {
@@ -56,10 +56,12 @@ const DropDown = (props) => {
         }}
       >
         <MenuItem value="" disabled>
-          Create New Item
+          {defaultItem}
         </MenuItem>
         {items.map(item => (
-          <MenuItem key={uniqid()} value={item.value}>{item.label}</MenuItem>
+          <MenuItem key={uniqid()} value={item.value} disabled={item.disabled}>
+            {item.label}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

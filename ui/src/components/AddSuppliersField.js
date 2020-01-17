@@ -13,6 +13,7 @@ import TableCell from '@material-ui/core/TableCell';
 import Add from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import find from 'lodash/find';
+import uniqid from 'uniqid';
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -35,10 +36,10 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     color: '#007BFF',
-  }
+  },
 }));
 
-const AddSuppliersField = ({ formik, partners }) => {
+const AddSuppliersField = ({ formik, suppliers }) => {
   const classes = useStyles();
   const [disabled, setDisabled] = useState({});
 
@@ -54,12 +55,12 @@ const AddSuppliersField = ({ formik, partners }) => {
         render={arrayHelpers => (
           <TableBody>
             {formik.values.recipients &&
-              formik.values.recipients.length > 0 && 
+              formik.values.recipients.length > 0 &&
               formik.values.recipients.map((supplier, index) => (
-                <TableRow key={index}>
+                <TableRow key={uniqid}>
                   <TableCell className={classes.tableCell}>
                     <Autocomplete
-                      options={partners}
+                      options={suppliers}
                       getOptionLabel={partner => partner.name}
                       disabled={disabled[index]}
                       onChange={(e, v) => {
@@ -138,11 +139,11 @@ const AddSuppliersField = ({ formik, partners }) => {
 
 AddSuppliersField.propTypes = {
   formik: PropTypes.shape({}).isRequired,
-  partners: PropTypes.arrayOf(PropTypes.shape({})),
+  suppliers: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 AddSuppliersField.defaultProps = {
-  partners: [],
+  suppliers: [],
 };
 
 export default AddSuppliersField;
