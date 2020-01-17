@@ -3,7 +3,6 @@ import fs from 'fs';
 import { getServerSettings } from '../utils/serverSettings';
 import { getContract } from '../utils/ethers';
 import { saveOrganization } from './organization';
-import { savePartner } from '../resolvers/partner';
 
 const OrgRegistryPath = '/app/artifacts/OrgRegistry.json';
 

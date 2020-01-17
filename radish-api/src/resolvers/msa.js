@@ -1,35 +1,13 @@
+import {
+  getMSAById,
+  getAllMSAs,
+  getMSAByProposalId,
+  saveMSA,
+} from '../services/msa';
 import { pubsub } from '../subscriptions';
-import db from '../db';
-import { saveMessage } from './message';
+import { saveMessage } from '../services/message';
 
 const NEW_MSA = 'NEW_MSA';
-
-const getMSAById = async id => {
-  const msa = await db.collection('msa').findOne({ _id: id });
-  return msa;
-};
-
-const getMSAByProposalId = async id => {
-  const msa = await db.collection('msa').findOne({ proposalId: id });
-  return msa;
-}
-
-const getAllMSAs = async () => {
-  const msas = await db
-    .collection('msa')
-    .find({})
-    .toArray();
-  return msas;
-};
-
-const saveMSA = async input => {
-  const exists = await getMSAByProposalId(input.proposalId);
-  if (exists) throw new Error(`MSA already exists for Proposal ${input.proposalId}`);
-  const count = await db.collection('msa').count({});
-  const doc = Object.assign(input, { _id: count + 1 });
-  const msa = await db.collection('msa').insert(doc);
-  return msa;
-};
 
 export default {
   Query: {

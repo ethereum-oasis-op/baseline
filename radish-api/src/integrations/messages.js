@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { getPartnerByIdentity } from '../resolvers/partner';
+import { getPartnerByIdentity } from '../services/partner';
 
 const MessageSchema = new mongoose.Schema({
   categoryId: {
