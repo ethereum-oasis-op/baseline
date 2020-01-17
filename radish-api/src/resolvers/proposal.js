@@ -9,6 +9,11 @@ const getProposalById = async id => {
   return proposals;
 };
 
+const getProposalByRFPId = async rfpId => {
+  const proposal = await db.collection('proposal').findOne({ rfpId });
+  return proposal;
+}
+
 const getAllProposals = async () => {
   const proposals = await db
     .collection('proposal')
@@ -28,6 +33,9 @@ export default {
   Query: {
     proposal(_parent, args) {
       return getProposalById(args.id).then(res => res);
+    },
+    getProposalByRFPId(_parent, args) {
+      return getProposalByRFPId(args.rfpId).then(res => res);
     },
     proposals() {
       return getAllProposals();

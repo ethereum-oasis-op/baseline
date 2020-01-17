@@ -7,6 +7,11 @@ const getPartnerByID = async address => {
   return partner;
 };
 
+export const getPartnerByIdentity = async identity => {
+  const partner = await db.collection('organization').findOne({ identity });
+  return partner;
+}
+
 const getAllPartners = async () => {
   const organizations = await db
     .collection('organization')
@@ -37,8 +42,11 @@ const deletePartner = async input => {
 
 export default {
   Query: {
-    partner(args) {
+    partner(_parent, args) {
       return getPartnerByID(args.address).then(res => res);
+    },
+    getPartnerByIdentity(_parent, args) {
+      return getPartnerByIdentity(args.identity).then(res => res);
     },
     partners() {
       return getAllPartners();

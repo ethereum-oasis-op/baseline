@@ -22,6 +22,7 @@ export default gql`
     name: String!
     address: Address!
     role: Int!
+    identity: String!
   }
 
   input RegisterOrganization {
@@ -41,13 +42,13 @@ export default gql`
     address: Address!
     name: String!
     role: Int!
-    key: String!
+    identity: String!
   }
 
   type Organizations {
     addresses: [Address!]!
     names: [String!]!
     roles: [Int!]!
-    keys: [String!]!
+    identities: [String!]!
   }
 `;

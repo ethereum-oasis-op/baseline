@@ -145,7 +145,7 @@ export const saveOrganizations = async () => {
         address: org.addresses[0],
         name: org.names[0],
         role: org.roles[0],
-        key: org.keys[0],
+        identity: org.keys[0],
       };
       saveOrganization(record);
     }

@@ -20,13 +20,13 @@ const MessageSchema = gql`
 
   type Message {
     _id: String!
-    categoryId: Int!
+    categoryId: String!
     resolved: Boolean!
     category: String!
     subject: String!
     from: String!
     statusText: String!
-    lastModified: Date!
+    lastModified: Int!
     status: String!
   }
 
@@ -37,7 +37,7 @@ const MessageSchema = gql`
     subject: String!
     from: String!
     statusText: String!
-    lastModified: Date!
+    lastModified: Int!
     status: String!
   }
 

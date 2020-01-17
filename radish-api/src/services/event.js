@@ -3,6 +3,7 @@ import fs from 'fs';
 import { getServerSettings } from '../utils/serverSettings';
 import { getContract } from '../utils/ethers';
 import { saveOrganization } from './organization';
+import { savePartner } from '../resolvers/partner';
 
 const OrgRegistryPath = '/app/artifacts/OrgRegistry.json';
 
@@ -31,7 +32,7 @@ export const subscribeRegisterOrgEvent = async () => {
       name: utils.parseBytes32String(name),
       address: address,
       role: role.toNumber(),
-      key: key,
+      identity: key,
     });
   });
 };

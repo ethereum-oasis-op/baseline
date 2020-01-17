@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
     padding: '2rem',
     margin: '0 auto',
     width: '95%',
-    height: '100%'
+    height: '100%',
   },
   clearIcon: {
     position: 'absolute',
@@ -41,14 +41,16 @@ const useStyles = makeStyles(() => ({
     right: '2rem',
     '&:hover': {
       cursor: 'pointer',
-    }
-  }
+    },
+  },
 }));
 
 const CreateRFP = () => {
   const classes = useStyles();
   const { postRFP } = useContext(RFPContext);
-  const { partners } = useContext(PartnerContext);
+  const { organizations } = useContext(PartnerContext);
+  const currentUser = localStorage.getItem('username') || 'Org 1';
+  const suppliers = organizations.filter(org => org.name !== currentUser);
   const history = useHistory();
 
   const formik = useFormik({
@@ -60,17 +62,22 @@ const CreateRFP = () => {
       recipients: [],
     },
     onSubmit: async values => {
-      await postRFP({ variables: { input: values } });
+      const { proposalDeadline } = values;
+      await postRFP({
+        variables: {
+          input: {
+            ...values,
+            proposalDeadline: moment(proposalDeadline).unix(),
+          },
+        },
+      });
       history.push('/messages/outbox');
     },
     validationSchema: Yup.object().shape({
       description: Yup.string().required('RFP Description required'),
       sku: Yup.string().required('Input SKU number'),
       recipients: Yup.array()
-        .of(
-          Yup.string()
-          .required('Cannot submit empty supplier field')
-        )
+        .of(Yup.string().required('Cannot submit empty supplier field'))
         .min(1, 'Must add at least 1 supplier'),
     }),
   });
@@ -97,8 +104,10 @@ const CreateRFP = () => {
             />
             <Field name="proposalDeadline" label="Proposal Deadline" component={DatePickerField} />
             <AddSKUField formik={formik} />
-            <AddSuppliersField formik={formik} partners={partners} />
-            <Button className={classes.submitButton} type="submit">Send RFP</Button>
+            <AddSuppliersField formik={formik} suppliers={suppliers} />
+            <Button className={classes.submitButton} type="submit">
+              Send RFP
+            </Button>
           </form>
         </FormikProvider>
       </Paper>
