@@ -7,7 +7,7 @@ module.exports = {
   },
   nodes: {
     node_1: {
-      ipAddress: '127.0.0.1',
+      ipAddress: 'localhost',
       whisperPort: '8548',
       apiPort: '4001',
       origin: 'mychat2',
