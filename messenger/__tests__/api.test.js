@@ -170,7 +170,7 @@ describe('/messages', () => {
         expect(res.statusCode).toEqual(200);
         const message = res.body;
         expect(message.id).not.toBeUndefined();
-        expect(message.scope).toEqual('private');
+        expect(message.scope).toEqual('individual');
         expect(message.senderId).toEqual(buyerId);
         expect(message.sentDate).not.toBeUndefined();
         expect(message.recipientId).toEqual(buyerId); // sent message to self

@@ -54,7 +54,7 @@ async function sendPrivateMessage(
       { _id: hash },
       {
         _id: hash,
-        messageType: 'private',
+        messageType: 'individual',
         recipientId,
         senderId,
         ttl: TTL,
