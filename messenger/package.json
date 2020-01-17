@@ -22,13 +22,13 @@
     ]
   },
   "scripts": {
-    "start": "NODE_ENV=production node ./start.js",
-    "start:dev": "NODE_ENV=development nodemon ./start.js",
-    "start:test": "NODE_ENV=test nodemon ./start.js",
+    "start": "NODE_ENV=production node ./src/start.js",
+    "start:dev": "NODE_ENV=development nodemon ./src/start.js",
+    "start:test": "NODE_ENV=test nodemon ./src/start.js",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:integration": "jest --verbose --runInBand --forceExit ./__tests__/integration.test.js",
-    "lint:fix": "eslint --fix",
-    "lint": "eslint",
+    "lint:fix": "eslint --fix .",
+    "lint": "eslint .",
     "prettify": "prettier --write **/*.js"
   },
   "dependencies": {

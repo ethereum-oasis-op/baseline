@@ -185,7 +185,7 @@ describe('/messages', () => {
 
       test('GET /messages returns messages withOUT "since" query param', async () => {
         // create a message
-        const cRes = await buyerRequest
+        await buyerRequest
           .post('/api/v1/messages')
           .set('x-messenger-id', buyerId)
           .send({
@@ -221,7 +221,7 @@ describe('/messages', () => {
       test('GET /messages returns messages WITH "since" AND "partnerId" query param', async () => {
         const newPartner = '0x04d54e2219adad9576cee1684b6f9a609ab29cc1a4ec3dfc0f1746b05aba99fb208f58771f4f9a1390d0cabede08ae115f6f1806ccabc4681677fd7d5bdf13b03e';
         // create a message for new recipientId
-        const cRes = await buyerRequest
+        await buyerRequest
           .post('/api/v1/messages')
           .set('x-messenger-id', buyerId)
           .send({
