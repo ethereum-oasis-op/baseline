@@ -47,7 +47,7 @@ const ProposalForm = ({ rfpId }) => {
     },
     onSubmit: async values => {
       await postProposal({ variables: { input: values } });
-      history.push('/messages/outbox');
+      history.push('/notices/outbox');
     },
     validationSchema: Yup.lazy(values => {
       return Yup.object().shape({

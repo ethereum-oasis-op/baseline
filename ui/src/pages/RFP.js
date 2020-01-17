@@ -1,12 +1,12 @@
 import React from 'react';
-import MessageLayout from '../components/MessageLayout';
+import NoticeLayout from '../components/NoticeLayout';
 import RFPDetail from './RFPDetail';
 
 const RFP = () => {
   return (
-    <MessageLayout selected="rfp">
+    <NoticeLayout selected="rfp">
       <RFPDetail />
-    </MessageLayout>
+    </NoticeLayout>
   );
 };
 

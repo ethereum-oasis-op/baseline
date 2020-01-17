@@ -14,7 +14,7 @@ import AddSKUField from '../components/AddSKUField';
 import AddSuppliersField from '../components/AddSuppliersField';
 import { RFPContext } from '../contexts/rfp-context';
 import { PartnerContext } from '../contexts/partner-context';
-import MessageLayout from '../components/MessageLayout';
+import NoticeLayout from '../components/NoticeLayout';
 
 const useStyles = makeStyles(() => ({
   field: {
@@ -71,7 +71,7 @@ const CreateRFP = () => {
           },
         },
       });
-      history.push('/messages/outbox');
+      history.push('/notices/outbox');
     },
     validationSchema: Yup.object().shape({
       description: Yup.string().required('RFP Description required'),
@@ -82,10 +82,10 @@ const CreateRFP = () => {
     }),
   });
 
-  const onClear = () => history.push('/messages/rfp');
+  const onClear = () => history.push('/notices/rfp');
 
   return (
-    <MessageLayout>
+    <NoticeLayout>
       <Paper className={classes.paper} elevation={3}>
         <h1>Create a new RFP</h1>
         <Clear className={classes.clearIcon} onClick={() => onClear()} />
@@ -111,7 +111,7 @@ const CreateRFP = () => {
           </form>
         </FormikProvider>
       </Paper>
-    </MessageLayout>
+    </NoticeLayout>
   );
 };
 

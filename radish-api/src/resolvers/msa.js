@@ -1,11 +1,6 @@
-import {
-  getMSAById,
-  getAllMSAs,
-  getMSAByProposalId,
-  saveMSA,
-} from '../services/msa';
+import { getMSAById, getAllMSAs, getMSAByProposalId, saveMSA } from '../services/msa';
 import { pubsub } from '../subscriptions';
-import { saveMessage } from '../services/message';
+import { saveNotice } from '../services/notice';
 
 const NEW_MSA = 'NEW_MSA';
 
@@ -25,7 +20,7 @@ export default {
     createMSA: async (_parent, args) => {
       const newMSA = await saveMSA(args.input);
       const msa = newMSA.ops[0];
-      await saveMessage({
+      await saveNotice({
         resolved: false,
         category: 'msa',
         subject: `MSA established for proposal ${msa.proposalId}`,

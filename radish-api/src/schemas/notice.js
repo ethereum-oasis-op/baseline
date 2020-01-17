@@ -1,24 +1,24 @@
 import gql from 'graphql-tag';
 
-const MessageSchema = gql`
+const NoticeSchema = gql`
   extend type Query {
-    message(id: Int!): Message
-    messages: [Message]
-    getMessagesByCategory(category: String!): [Message]
-    getInbox: [Message]
-    getOutbox: [Message]
-    getMessageCount: MessageCount
+    notice(id: Int!): Notice
+    notices: [Notice]
+    getNoticesByCategory(category: String!): [Notice]
+    getInbox: [Notice]
+    getOutbox: [Notice]
+    getNoticeCount: NoticeCount
   }
 
   extend type Mutation {
-    createMessage(input: inputMessage!): Message
+    createNotice(input: inputNotice!): Notice
   }
 
   extend type Subscription {
-    newMessage: Message
+    newNotice: Notice
   }
 
-  type Message {
+  type Notice {
     _id: String!
     categoryId: String!
     resolved: Boolean!
@@ -30,7 +30,7 @@ const MessageSchema = gql`
     status: String!
   }
 
-  input inputMessage {
+  input inputNotice {
     resolved: Boolean!
     categoryId: Int!
     category: String!
@@ -41,7 +41,7 @@ const MessageSchema = gql`
     status: String!
   }
 
-  type MessageCount {
+  type NoticeCount {
     msa: Int!
     rfp: Int!
     invoice: Int!
@@ -49,4 +49,4 @@ const MessageSchema = gql`
   }
 `;
 
-export default MessageSchema;
+export default NoticeSchema;

@@ -6,7 +6,7 @@ import TableBody from '@material-ui/core/TableBody';
 import Paper from '@material-ui/core/Paper';
 import HeaderRow from './HeaderRow';
 import Row from './Row';
-import NoMessages from './NoMessages';
+import NoNotices from './NoNotices';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -28,12 +28,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MessagesTable = props => {
+const NoticesTable = props => {
   const classes = useStyles();
-  const { columns, options, messages = [] } = props;
+  const { columns, options, notices = [] } = props;
 
-  if (!messages.length) {
-    return <NoMessages />;
+  if (!notices.length) {
+    return <NoNotices />;
   }
 
   return (
@@ -41,8 +41,8 @@ const MessagesTable = props => {
       <Table className={classes.table} size="small" stickyHeader aria-label="sticky table">
         <HeaderRow columns={columns} options={options} />
         <TableBody>
-          {messages.map(row => {
-            return <Row key={`row-${row[options.key]}`} row={row} rows={messages} {...props} />;
+          {notices.map(row => {
+            return <Row key={`row-${row[options.key]}`} row={row} rows={notices} {...props} />;
           })}
         </TableBody>
       </Table>
@@ -50,12 +50,12 @@ const MessagesTable = props => {
   );
 };
 
-MessagesTable.propTypes = {
-  messages: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+NoticesTable.propTypes = {
+  notices: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   options: PropTypes.shape({
     key: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default MessagesTable;
+export default NoticesTable;
