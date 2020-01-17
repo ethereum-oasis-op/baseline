@@ -1,44 +1,13 @@
-import db from '../db';
+import {
+  getPartnerByID,
+  getPartnerByIdentity,
+  getAllPartners,
+  getMyPartners,
+  savePartner,
+  deletePartner,
+} from '../services/partner';
 
 const PARTNERS_UPDATE = 'PARTNERS_UPDATE';
-
-const getPartnerByID = async address => {
-  const partner = await db.collection('organization').findOne({ address: address });
-  return partner;
-};
-
-export const getPartnerByIdentity = async identity => {
-  const partner = await db.collection('organization').findOne({ identity });
-  return partner;
-}
-
-const getAllPartners = async () => {
-  const organizations = await db
-    .collection('organization')
-    .find({})
-    .toArray();
-  return organizations;
-};
-
-const getMyPartners = async () => {
-  const partners = await db
-    .collection('partner')
-    .find({})
-    .toArray();
-  return partners;
-};
-
-const savePartner = async input => {
-  const partner = await db
-    .collection('partner')
-    .updateOne({ _id: input.address }, { $set: input }, { upsert: true });
-  return partner;
-};
-
-const deletePartner = async input => {
-  const partner = await db.collection('partner').deleteOne({ _id: input.address });
-  return partner;
-};
 
 export default {
   Query: {

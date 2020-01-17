@@ -1,53 +1,14 @@
+import {
+  getMessageById,
+  getAllMessages,
+  getMessagesByCategory,
+  getInbox,
+  getOutbox,
+  saveMessage,
+} from '../services/message';
 import { pubsub } from '../subscriptions';
-import db from '../db';
 
 const NEW_MESSAGE = 'NEW_MESSAGE';
-
-const getMessageById = async id => {
-  const message = await db.collection('messages').findOne({ _id: id });
-  return message;
-};
-
-const getAllMessages = async () => {
-  const messages = await db
-    .collection('messages')
-    .find({})
-    .toArray();
-  return messages;
-};
-
-const getMessagesByCategory = async category => {
-  const messages = await db
-    .collection('messages')
-    .find({ category })
-    .toArray();
-  return messages;
-};
-
-const getInbox = async () => {
-  const messages = await db
-    .collection('messages')
-    .find({ status: 'incoming' })
-    .toArray();
-  return messages;
-};
-
-const getOutbox = async () => {
-  const messages = await db
-    .collection('messages')
-    .find({ status: 'outgoing' })
-    .toArray();
-  return messages;
-};
-
-export const saveMessage = async input => {
-  console.log('Saving the message');
-  const count = await db.collection('messages').estimatedDocumentCount();
-  const doc = Object.assign(input, { _id: count + 1 });
-  const message = await db.collection('messages').insertOne(doc);
-  pubsub.publish(NEW_MESSAGE, { newMessage: message.ops[0] });
-  return message;
-};
 
 export default {
   Query: {

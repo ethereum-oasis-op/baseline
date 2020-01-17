@@ -1,24 +1,11 @@
-import db from '../db';
-import { saveMessage } from './message';
+import { getRFPById, getAllRFPs } from '../services/rfp';
+import { saveMessage } from '../services/message';
 import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../queues/message_delivery';
 import { onCreateRFP } from '../integrations/rfp.js';
-import { getPartnerByIdentity } from './partner';
+import { getPartnerByIdentity } from '../services/partner';
 
 const NEW_RFP = 'NEW_RFP';
-
-const getRFPById = async uuid => {
-  const rfp = await db.collection('RFPs').findOne({ _id: uuid });
-  return rfp;
-};
-
-const getAllRFPs = async () => {
-  const rfps = await db
-    .collection('RFPs')
-    .find({})
-    .toArray();
-  return rfps;
-};
 
 export default {
   Query: {
