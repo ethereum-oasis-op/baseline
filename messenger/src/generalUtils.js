@@ -1,6 +1,6 @@
+const axios = require('axios');
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
-const axios = require('axios');
 
 // Useful constants
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
@@ -88,16 +88,36 @@ async function getSingleMessage(messageId) {
   return Message.findOne({ _id: messageId });
 }
 
+async function storeNewMessage(messageData, content) {
+  return Message.findOneAndUpdate(
+    { _id: messageData.hash },
+    {
+      _id: messageData.hash,
+      messageType: 'individual',
+      recipientId: messageData.recipientPublicKey,
+      senderId: messageData.sig,
+      ttl: messageData.ttl,
+      topic: messageData.topic,
+      payload: content,
+      pow: messageData.pow,
+      sentDate: messageData.timestamp,
+    },
+    { upsert: true, new: true },
+  );
+}
+
 async function forwardMessage(messageObj) {
   console.log(`Forwarding message to radish-api: POST ${radishApiUrl}/documents`);
   try {
-    let response = await axios.post(`${radishApiUrl}/documents`, messageObj);
+    const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
     console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
     console.log(`${response.status} -`, response.data);
   } catch (error) {
     console.error(`ERROR: POST ${radishApiUrl}/documents`);
-    console.log(`${error.response.status} -`, error.response.data);
-  };
+    if (error.response) {
+      console.log(`${error.response.status} -`, error.response.data);
+    }
+  }
 }
 
 module.exports = {
@@ -108,6 +128,7 @@ module.exports = {
   getMessages,
   getSingleMessage,
   forwardMessage,
+  storeNewMessage,
   DEFAULT_TOPIC,
   POW_TIME,
   TTL,

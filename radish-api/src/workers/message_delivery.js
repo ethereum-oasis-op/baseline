@@ -1,6 +1,6 @@
+import mongoose from 'mongoose';
 import messenger from '../utils/messengerWrapper';
 import { originationUpdate } from '../integrations/rfp';
-import mongoose from 'mongoose';
 
 module.exports = async (job, done) => {
   const { data: doc } = job;

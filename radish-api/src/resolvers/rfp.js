@@ -50,8 +50,8 @@ export default {
           },
           {
             // Mark job as failed after 20sec so subsequent jobs are not stalled
-            timeout: 20000
-          }
+            timeout: 20000,
+          },
         );
       });
       return { ...rfp };

@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 import { uuid } from 'uuidv4';
-import db from '../db';
 import { createNotice } from './notices';
 
 const RFPSchema = new mongoose.Schema(
@@ -107,12 +106,12 @@ export const partnerCreateRFP = async doc => {
  * When a partners messenger receives an RFP I sent, it will return a delivery receipt.
  * Update the RFP to show that recipient has received the RFP.
  */
-export const deliveryReceiptUpdate = async (doc) => {
-  console.log(`Updating deliveryReceipt date for messageId ${doc.messageId}`)
+export const deliveryReceiptUpdate = async doc => {
+  console.log(`Updating deliveryReceipt date for messageId ${doc.messageId}`);
   const result = await RFP.findOneAndUpdate(
     { 'recipients.origination.messageId': doc.messageId },
-    { $set: { "recipients.$.origination.receiptDate": doc.deliveredDate } },
-    { upsert: false, new: true }
+    { $set: { 'recipients.$.origination.receiptDate': doc.deliveredDate } },
+    { upsert: false, new: true },
   );
   return result;
 };
@@ -121,13 +120,13 @@ export const deliveryReceiptUpdate = async (doc) => {
  * Set the messageId for a recipient's origination object
  */
 export const originationUpdate = async (messageId, recipientId, rfpId) => {
-  let origination = {
-    messageId
+  const origination = {
+    messageId,
   };
-  let result = await RFP.findOneAndUpdate(
-    { _id: rfpId, "recipients.partner.identity": recipientId },
-    { $set: { "recipients.$.origination": origination } },
-    { upsert: false, new: true }
+  const result = await RFP.findOneAndUpdate(
+    { _id: rfpId, 'recipients.partner.identity': recipientId },
+    { $set: { 'recipients.$.origination': origination } },
+    { upsert: false, new: true },
   );
   return result;
 };
@@ -135,7 +134,7 @@ export const originationUpdate = async (messageId, recipientId, rfpId) => {
 /**
  * When a user on a Partners API updates a RFP (Whisper?)
  */
-export const partnerUpdateRFP = async (doc) => {
+export const partnerUpdateRFP = async doc => {
   // Gets notified of a new RFP
   // 1.) Checks blockchain txHash for the RFP and compares it with the hashed content from Buyer
   // 2.) Save RFP to local db
@@ -146,10 +145,4 @@ export const partnerUpdateRFP = async (doc) => {
   );
   // 3.) Check blockchain for verifying the zkp information sent by buyer
   return result;
-};
-
-export const whisperListener = event => {
-  // Waiting for some sort of whisper response
-  // 1.) Whisper message comes in from onCreateRFP(2);
-  // 2.) Check local db for RFP state
 };

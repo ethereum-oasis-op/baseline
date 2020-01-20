@@ -1,4 +1,3 @@
-const axios = require('axios');
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
 const utils = require('./generalUtils');
@@ -105,35 +104,17 @@ class WhisperWrapper {
         }
       } else {
         // Store raw message
-        doc = await this.storeNewMessage(data, content);
+        doc = await utils.storeNewMessage(data, content);
         await this.sendDeliveryReceipt(data);
       }
       // Send all JSON messages to radish-api
       await this.forwardMessage(messageObj);
     } else {
       // Text message
-      doc = await this.storeNewMessage(data, content);
+      doc = await utils.storeNewMessage(data, content);
       await this.sendDeliveryReceipt(data);
     }
     return doc;
-  }
-
-  async storeNewMessage(messageData, content) {
-    return Message.findOneAndUpdate(
-      { _id: messageData.hash },
-      {
-        _id: messageData.hash,
-        messageType: 'individual',
-        recipientId: messageData.recipientPublicKey,
-        senderId: messageData.sig,
-        ttl: messageData.ttl,
-        topic: messageData.topic,
-        payload: content,
-        pow: messageData.pow,
-        sentDate: messageData.timestamp,
-      },
-      { upsert: true, new: true },
-    );
   }
 
   async sendDeliveryReceipt(data) {

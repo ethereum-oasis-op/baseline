@@ -50,7 +50,6 @@ export default {
     const dbFullName = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
     for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
-        //await mongoose.set('debug', true);
         await mongoose.connect(dbFullName, options);
         console.log('Mongoose connected to db');
         break;
