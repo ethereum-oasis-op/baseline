@@ -2,11 +2,10 @@ import gql from 'graphql-tag';
 
 export default gql`
   extend type Query {
-    partner(address: Address!): Organization
-    "return all of the partners from the registry contract"
-    partners: [Organization]
-    "return the ones that are saved as a preference for the API"
+    partner(address: Address!): Partner
+    partners: [Partner]
     myPartners: [Partner]
+    getPartnerByIdentity(identity: String!): Partner
   }
 
   extend type Mutation {

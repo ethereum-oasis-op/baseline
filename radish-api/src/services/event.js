@@ -31,7 +31,7 @@ export const subscribeRegisterOrgEvent = async () => {
       name: utils.parseBytes32String(name),
       address: address,
       role: role.toNumber(),
-      key: key,
+      identity: key,
     });
   });
 };

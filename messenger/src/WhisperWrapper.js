@@ -1,3 +1,4 @@
+const axios = require('axios');
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
 const utils = require('./generalUtils');

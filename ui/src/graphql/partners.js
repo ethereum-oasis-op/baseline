@@ -6,6 +6,7 @@ export const GET_ALLPARTNERS_QUERY = gql`
       name
       address
       role
+      identity
     }
 
     myPartners {
@@ -18,12 +19,13 @@ export const GET_ALLPARTNERS_QUERY = gql`
 `;
 
 export const GET_PARTNER_UPDATE = gql`
-  subscription GetPartnerUpdate{
+  subscription GetPartnerUpdate {
     getPartnerUpdate {
       organizations {
         name
         address
         role
+        identity
       }
 
       myPartners {
@@ -77,6 +79,17 @@ export const REMOVE_PARTNER = gql`
         address
         role
       }
+    }
+  }
+`;
+
+export const GET_PARTNER_BY_IDENTITY = gql`
+  query($identity: String!) {
+    getPartnerByIdentity(identity: $identity) {
+      name
+      address
+      role
+      identity
     }
   }
 `;

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { uuid } from 'uuidv4';
 import db from '../db';
+import { createMessage } from './messages';
 
 const RFPSchema = new mongoose.Schema({
   _id: {
@@ -90,6 +91,7 @@ export const partnerCreateRFP = async (doc) => {
   newRFP._id = doc.uuid;
   console.log(`Saving new RFP (uuid: ${doc.uuid}) from partner...`);
   const result = await RFP.create([newRFP], { upsert: true, new: true });
+  await createMessage('rfp', result[0]);
   // 3.) Check blockchain for verifying the zkp information sent by buyer
   // 4.) Notify this user of a new RFP
   return result[0];

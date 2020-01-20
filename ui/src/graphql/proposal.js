@@ -4,11 +4,11 @@ export const PROPOSAL_ATTRIBUTES = gql`
   fragment PROPOSAL_ATTRIBUTES on Proposal {
     _id
     rfpId
-    terminationDate
     rates {
       startRange
       endRange
-      ppu
+      price
+      unitOfMeasure
     }
   }
 `;
@@ -25,6 +25,15 @@ export const GET_PROPOSAL_UPDATE = gql`
 export const GET_ALL_PROPOSALS = gql`
   query getAllProposals {
     proposals {
+      ...PROPOSAL_ATTRIBUTES
+    }
+  }
+  ${PROPOSAL_ATTRIBUTES}
+`;
+
+export const GET_PROPOSAL_BY_RFPID = gql`
+  query proposal($rfpId: String!) {
+    getProposalByRFPId(rfpId: $rfpId) {
       ...PROPOSAL_ATTRIBUTES
     }
   }

@@ -10,7 +10,7 @@ COPY --from=builder /home/zokrates/.zokrates* /app/stdlib
 
 COPY ./package.json ./package-lock.json ./
 RUN npm ci
-RUN curl https://sh.rustup.rs -sSf | sh
+RUN curl https://sh.rustup.rs -sSf -y | sh
 
 EXPOSE 80
 CMD npm start

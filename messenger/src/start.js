@@ -1,6 +1,6 @@
 const { app, apiRouter } = require('./app.js');
-const db = require('./src/db');
-const Config = require('./config');
+const db = require('./db');
+const Config = require('../config');
 
 const nodeNum = process.env.NODE_NUM || 1;
 
