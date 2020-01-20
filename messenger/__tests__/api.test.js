@@ -1,6 +1,7 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const Config = require('../config');
+const generalUtils = require('../src/generalUtils.js');
 
 const Identity = require('../src/models/Identity');
 const Message = require('../src/models/Message');
@@ -12,6 +13,7 @@ beforeAll(async () => {
   await mongoose.connect(Config.nodes.node_1.dbUrl, Config.mongoose);
   await Identity.deleteMany();
   await Message.deleteMany();
+  generalUtils.forwardMessage = jest.fn();
 });
 
 afterAll(async () => {

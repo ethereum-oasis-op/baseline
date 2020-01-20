@@ -23,6 +23,8 @@ let messenger; let
 describe('WhisperWrapper', () => {
   beforeAll(async () => {
     messenger = await new WhisperWrapper();
+    // Stub out function with HTTP request to radish-api
+    messenger.forwardMessage = jest.fn();
   });
 
   describe('Identities', () => {

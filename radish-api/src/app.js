@@ -82,7 +82,7 @@ export default async function startServer() {
   const server = new ApolloServer({
     typeDefs: [coreQuery, ...typeDefs],
     resolvers,
-    context: async ({ req }) => {
+    context: async () => {
       const { data } = await axios.get(`${process.env.MESSENGER_URI}/identities`);
       const identity = data && data[0] ? data[0].publicKey : null;
       return { identity };

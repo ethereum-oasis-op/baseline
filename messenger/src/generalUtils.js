@@ -1,3 +1,4 @@
+const axios = require('axios');
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
 
@@ -6,6 +7,7 @@ const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
 const POW_TIME = process.env.WHISPER_POW_TIME || 100;
 const TTL = process.env.WHISPER_TTL || 20;
 const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
+const radishApiUrl = process.env.RADISH_API_URL || 'http://localhost:8101/api/v1';
 
 function hasJsonStructure(str) {
   if (typeof str !== 'string') return false;
@@ -86,6 +88,38 @@ async function getSingleMessage(messageId) {
   return Message.findOne({ _id: messageId });
 }
 
+async function storeNewMessage(messageData, content) {
+  return Message.findOneAndUpdate(
+    { _id: messageData.hash },
+    {
+      _id: messageData.hash,
+      messageType: 'individual',
+      recipientId: messageData.recipientPublicKey,
+      senderId: messageData.sig,
+      ttl: messageData.ttl,
+      topic: messageData.topic,
+      payload: content,
+      pow: messageData.pow,
+      sentDate: messageData.timestamp,
+    },
+    { upsert: true, new: true },
+  );
+}
+
+async function forwardMessage(messageObj) {
+  console.log(`Forwarding message to radish-api: POST ${radishApiUrl}/documents`);
+  try {
+    const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
+    console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
+    console.log(`${response.status} -`, response.data);
+  } catch (error) {
+    console.error(`ERROR: POST ${radishApiUrl}/documents`);
+    if (error.response) {
+      console.log(`${error.response.status} -`, error.response.data);
+    }
+  }
+}
+
 module.exports = {
   hasJsonStructure,
   safeJsonParse,
@@ -93,6 +127,8 @@ module.exports = {
   findIdentity,
   getMessages,
   getSingleMessage,
+  forwardMessage,
+  storeNewMessage,
   DEFAULT_TOPIC,
   POW_TIME,
   TTL,

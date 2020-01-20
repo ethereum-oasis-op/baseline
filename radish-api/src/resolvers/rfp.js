@@ -41,12 +41,18 @@ export default {
       rfpDetails.uuid = rfp._id;
       recipients.forEach(recipient => {
         // Add to BullJS queue
-        msgDeliveryQueue.add({
-          documentId: rfp._id,
-          senderId: context.identity,
-          recipientId: recipient.partner.identity,
-          payload: rfpDetails,
-        });
+        msgDeliveryQueue.add(
+          {
+            documentId: rfp._id,
+            senderId: context.identity,
+            recipientId: recipient.partner.identity,
+            payload: rfpDetails,
+          },
+          {
+            // Mark job as failed after 20sec so subsequent jobs are not stalled
+            timeout: 20000,
+          },
+        );
       });
       return { ...rfp };
     },

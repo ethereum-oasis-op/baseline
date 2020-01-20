@@ -7,6 +7,8 @@ let client = null;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
 };
 
 const wait = timeout => new Promise(resolve => setTimeout(resolve, timeout));

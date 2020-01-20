@@ -4,24 +4,25 @@ const rfpUtils = require('../integrations/rfp.js');
 const router = express.Router();
 
 router.post('/documents', async (req, res) => {
-  let messageObj = req.body;
+  const messageObj = req.body;
   let docId;
-  console.log('Received new document. Parsing now...')
+  console.log('Received new document. Parsing now...');
   switch (messageObj.type) {
     case 'rfp_create': // inbound RFP from partner
       try {
         docId = (await rfpUtils.partnerCreateRFP(messageObj))._id;
       } catch (error) {
         res.status(400);
-        res.send({ message: 'Could not create new RFP. Required fields: uuid' })
+        res.send({ message: 'Could not create new RFP. Required fields: uuid' });
         return;
       }
       break;
     case 'rfp_update': // i.e. supplier signs RFP and sends back to buyer
       docId = (await rfpUtils.partnerUpdateRFP(messageObj))._id;
       break;
-    case 'delivery_receipt': // i.e. supplier signs RFP and sends back to buyer
-      docId = (await rfpUtils.deliveryUpdateRFP(messageObj))._id;
+    case 'delivery_receipt':
+      // ex: supplier's messenger automatically sends this message type after receiving buyer's RFP
+      docId = (await rfpUtils.deliveryReceiptUpdate(messageObj))._id;
       break;
     //case 'msa_create':
     //docId = await msaUtils.createMSA(messageObj);
@@ -45,7 +46,7 @@ router.post('/documents', async (req, res) => {
       console.log('Did not recognize message object type:', messageObj);
   }
   res.status(200);
-  res.send({ message: `Document (ID: ${docId}) added or updated in radish-api` })
+  res.send({ message: `Document (ID: ${docId}) added or updated in radish-api` });
 });
 
 export default router;

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import fetch from 'node-fetch';
 
 delete process.env.http_proxy;
 delete process.env.HTTP_PROXY;

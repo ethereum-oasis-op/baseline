@@ -18,7 +18,6 @@ const RFPSchema = new mongoose.Schema(
     skuDescription: String, // Human readable product name
     recipients: [
       {
-        _id: false, // Tells Mongoose not to auto-create subdoc object Id
         partner: {
           name: String, // Organization name
           address: String, // Ethereum address
@@ -69,7 +68,7 @@ const RFPSchema = new mongoose.Schema(
   },
 );
 
-const RFP = mongoose.model('RFPs', RFPSchema);
+export const RFP = mongoose.model('RFPs', RFPSchema);
 
 /**
  * When a user on the current API generates a new RFP
@@ -104,6 +103,35 @@ export const partnerCreateRFP = async doc => {
 };
 
 /**
+ * When a partners messenger receives an RFP I sent, it will return a delivery receipt.
+ * Update the RFP to show that recipient has received the RFP.
+ */
+export const deliveryReceiptUpdate = async doc => {
+  console.log(`Updating deliveryReceipt date for messageId ${doc.messageId}`);
+  const result = await RFP.findOneAndUpdate(
+    { 'recipients.origination.messageId': doc.messageId },
+    { $set: { 'recipients.$.origination.receiptDate': doc.deliveredDate } },
+    { upsert: false, new: true },
+  );
+  return result;
+};
+
+/**
+ * Set the messageId for a recipient's origination object
+ */
+export const originationUpdate = async (messageId, recipientId, rfpId) => {
+  const origination = {
+    messageId,
+  };
+  const result = await RFP.findOneAndUpdate(
+    { _id: rfpId, 'recipients.partner.identity': recipientId },
+    { $set: { 'recipients.$.origination': origination } },
+    { upsert: false, new: true },
+  );
+  return result;
+};
+
+/**
  * When a user on a Partners API updates a RFP (Whisper?)
  */
 export const partnerUpdateRFP = async doc => {
@@ -117,10 +145,4 @@ export const partnerUpdateRFP = async doc => {
   );
   // 3.) Check blockchain for verifying the zkp information sent by buyer
   return result;
-};
-
-export const whisperListener = event => {
-  // Waiting for some sort of whisper response
-  // 1.) Whisper message comes in from onCreateRFP(2);
-  // 2.) Check local db for RFP state
 };

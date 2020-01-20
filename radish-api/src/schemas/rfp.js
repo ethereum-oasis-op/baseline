@@ -43,15 +43,20 @@ const RFPSchema = gql`
 
   type Recipient {
     partner: Partner!
+    origination: Origination!
+  }
+
+  type Origination {
+    messageId: String!
     receiptDate: Int!
   }
-  
+
   type OnChain {
     rfpAddress: String!
     txHash: String!
     rfpId: String!
   }
-  
+
   type Zkp {
     proof: String!
     verificationKey: String!
