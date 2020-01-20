@@ -37,6 +37,7 @@ const ServerSettingsProvider = ({ children }) => {
   const {
     subscribeToMore: subscribeToSettingsUpdates,
     data: initSettings,
+    loadingSettings,
   } = useQuery(GET_SERVER_SETTINGS);
 
   const options = { fetchPolicy: 'no-cache' };
@@ -73,6 +74,7 @@ const ServerSettingsProvider = ({ children }) => {
         state,
         settings,
         loading,
+        loadingSettings,
         setRPCProvider,
         registerOrganizationInfo ,
         setWalletFromMnemonic
