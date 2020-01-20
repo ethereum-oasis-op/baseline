@@ -1,9 +1,10 @@
+const axios = require('axios');
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
 const utils = require('./generalUtils');
 const whisperUtils = require('./whisperUtils');
 const web3utils = require('./web3Utils.js');
-const axios = require('axios');
+
 const radishApiUrl = process.env.RADISH_API_URL || 'http://localhost:8101/api/v1';
 
 // Useful constants
@@ -120,17 +121,17 @@ class WhisperWrapper {
         { upsert: true, new: true },
       );
 
-      // Send non 'delivery_receipt' JSON objects to radish-api service to store/update 
+      // Send non 'delivery_receipt' JSON objects to radish-api service to store/update
       if (isJSON) {
         console.log(`Forwarding doc to radish-api: POST ${radishApiUrl}/documents`);
         try {
-          let response = await axios.post(`${radishApiUrl}/documents`, messageObj);
+          const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
           console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
           console.log(`${response.status} -`, response.data);
         } catch (error) {
           console.error(`ERROR: POST ${radishApiUrl}/documents`);
           console.log(`${error.response.status} -`, error.response.data);
-        };
+        }
       }
 
       // Send delivery receipt back to sender

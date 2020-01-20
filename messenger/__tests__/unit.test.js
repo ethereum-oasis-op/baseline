@@ -27,13 +27,11 @@ describe('WhisperWrapper', () => {
 
   describe('Identities', () => {
     test('getIdentities() returns empty array', async () => {
-      const messenger = await new WhisperWrapper();
       const result = await messenger.getIdentities();
       expect(result).toEqual([]);
     });
 
     test('createIdentity() returns new identity', async () => {
-      const messenger = await new WhisperWrapper();
       const result = await messenger.createIdentity();
       expect(result).toHaveProperty('publicKey');
       expect(result).toHaveProperty('createdDate');
@@ -41,7 +39,6 @@ describe('WhisperWrapper', () => {
     });
 
     test('getIdentities() returns identity', async () => {
-      const messenger = await new WhisperWrapper();
       const result = await messenger.getIdentities();
       expect(result[0]).toEqual(whisperId);
     });
