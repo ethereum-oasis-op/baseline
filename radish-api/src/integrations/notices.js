@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { getPartnerByIdentity } from '../services/partner';
 
-const MessageSchema = new mongoose.Schema({
+const NoticeSchema = new mongoose.Schema({
   categoryId: {
     type: String,
     required: true,
@@ -33,20 +33,20 @@ const MessageSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-  }
+  },
 });
 
-const Message = mongoose.model('messages', MessageSchema);
+const Notice = mongoose.model('notices', NoticeSchema);
 
 /**
- * Creates a new incoming message for a partner based on data sent from a different partner
- * @param {String} category - the category this message should fall under (RFP/MSA/Proposal...)
+ * Creates a new incoming notice for a partner based on data sent from a different partner
+ * @param {String} category - the category this notice should fall under (RFP/MSA/Proposal...)
  * @param {Object} payload - the payload/object sent through whisper that was stored in partner db
  */
-export const createMessage = async (category, payload) => {
+export const createNotice = async (category, payload) => {
   try {
     const sender = await getPartnerByIdentity(payload.sender);
-    const newMessage = {
+    const newNotice = {
       categoryId: payload._id,
       category,
       subject: `New ${category}: ${payload._id}`,
@@ -55,9 +55,13 @@ export const createMessage = async (category, payload) => {
       lastModified: Math.floor(Date.now() / 1000),
       status: 'incoming',
     };
-    const message = await Message.create([newMessage], { upsert: true, new: true });
-    return message;
+    const notice = await Notice.create([newNotice], { upsert: true, new: true });
+    return notice;
   } catch (e) {
-    console.log('Error creating message: ', e);
+    console.log('Error creating notice: ', e);
   }
-}
+};
+
+export default {
+  createNotice,
+};

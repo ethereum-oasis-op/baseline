@@ -30,7 +30,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const NoMessages = () => {
+const NoNotices = () => {
   const classes = useStyles();
 
   return (
@@ -46,4 +46,4 @@ const NoMessages = () => {
   );
 };
 
-export default NoMessages;
+export default NoNotices;

@@ -1,8 +1,8 @@
 import { getRFPById, getAllRFPs } from '../services/rfp';
-import { saveMessage } from '../services/message';
+import { saveNotice } from '../services/notice';
 import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../queues/message_delivery';
-import { onCreateRFP } from '../integrations/rfp.js';
+import { onCreateRFP } from '../integrations/rfp';
 import { getPartnerByIdentity } from '../services/partner';
 
 const NEW_RFP = 'NEW_RFP';
@@ -20,11 +20,11 @@ export default {
     createRFP: async (_parent, args, context) => {
       const currentUser = context.identity ? await getPartnerByIdentity(context.identity) : null;
       const currentTime = Math.floor(Date.now() / 1000);
-      let myRFP = args.input;
+      const myRFP = args.input;
       myRFP.createdDate = currentTime;
       myRFP.sender = context.identity;
       const rfp = (await onCreateRFP(myRFP))._doc;
-      await saveMessage({
+      await saveNotice({
         resolved: false,
         category: 'rfp',
         subject: `New RFP: ${rfp.description}`,
@@ -54,7 +54,6 @@ export default {
           }
         );
       });
-
       return { ...rfp };
     },
   },

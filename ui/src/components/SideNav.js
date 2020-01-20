@@ -94,16 +94,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 const categories = [
-  { label: 'RFPs', key: 'rfp', url: '/messages/rfp' },
-  { label: 'Proposals', key: 'proposal', url: '/messages/proposal'},
+  { label: 'RFPs', key: 'rfp', url: '/notices/rfp' },
+  { label: 'Proposals', key: 'proposal', url: '/notices/proposal'},
   {
     label: 'Purchase Orders',
     key: 'purchaseorder',
-    url: '/messages/purchaseorder',
+    url: '/notices/purchaseorder',
   },
-  { label: 'Invoices', key: 'invoice', url: '/messages/invoice'},
-  // { label: 'MSA', key: 'msa', url: '/messages/msa', icon: DescriptionIcon },
-  // { label: "Procurement Requests", key: "procurementRequest", url: "/messages/procurementrequest", icon: LibraryBooksIcon },
+  { label: 'Invoices', key: 'invoice', url: '/notices/invoice'},
+  // { label: 'MSA', key: 'msa', url: '/notices/msa', icon: DescriptionIcon },
+  // { label: "Procurement Requests", key: "procurementRequest", url: "/notices/procurementrequest", icon: LibraryBooksIcon },
 ];
 
 const Category = ({ icon: Icon, label, items = [], name, url, selected }) => {
@@ -143,11 +143,11 @@ Category.defaultProps = {
   selected: false,
 };
 
-const SideNav = ({ messages, selected }) => {
+const SideNav = ({ notices, selected }) => {
   const classes = useStyles();
   const history = useHistory();
-  const groups = groupBy(messages, 'category');
-  const results = groupBy(messages, 'status');
+  const groups = groupBy(notices, 'category');
+  const results = groupBy(notices, 'status');
   const createForms = [
     { value: '/rfp/create', label: 'Create New RFP '},
   ];
@@ -158,8 +158,8 @@ const SideNav = ({ messages, selected }) => {
     <div className={classes.root}>
       <List className={classes.filterList}>
         <DropDown items={createForms} onChange={dropdownOnChange} className={classes.createNewButton} defaultItem="Create New Item" />
-        <Category icon={Inbox} label="Inbox" category={results.incoming} url="/messages/inbox" />
-        <Category icon={Send} label="Outbox" category={results.outgoing} url="/messages/outbox" />
+        <Category icon={Inbox} label="Inbox" category={results.incoming} url="/notices/inbox" />
+        <Category icon={Send} label="Outbox" category={results.outgoing} url="/notices/outbox" />
       </List>
 
       <Divider />
@@ -190,7 +190,7 @@ const SideNav = ({ messages, selected }) => {
 
 SideNav.propTypes = {
   selected: PropTypes.string,
-  messages: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  notices: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 SideNav.defaultProps = {

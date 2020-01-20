@@ -1,12 +1,12 @@
 import React from 'react';
-import MessageLayout from '../components/MessageLayout';
+import NoticeLayout from '../components/NoticeLayout';
 import MSADetail from './MSADetail';
 
 const MSA = () => {
   return (
-    <MessageLayout selected="msa">
+    <NoticeLayout selected="msa">
       <MSADetail />
-    </MessageLayout>
+    </NoticeLayout>
   );
 };
 
