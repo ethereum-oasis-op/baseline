@@ -4,24 +4,24 @@ import Layout from './Layout';
 import Sidebar from './Sidebar';
 import PageWrapper from './PageWrapper';
 import SideNav from './SideNav';
-import { MessageContext } from '../contexts/message-context';
+import { NoticeContext } from '../contexts/notice-context';
 
-const MessageLayout = ({ selected, children }) => {
-  const { messages } = useContext(MessageContext);
+const NoticeLayout = ({ selected, children }) => {
+  const { notices } = useContext(NoticeContext);
 
   return (
     <Layout>
       <Sidebar>
-        <SideNav messages={messages} selected={selected} />
+        <SideNav notices={notices} selected={selected} />
       </Sidebar>
       <PageWrapper>{children}</PageWrapper>
     </Layout>
   );
 };
 
-MessageLayout.propTypes = {
+NoticeLayout.propTypes = {
   selected: PropTypes.string.isRequired,
   children: PropTypes.arrayOf(PropTypes.node).isRequired,
 };
 
-export default MessageLayout;
+export default NoticeLayout;

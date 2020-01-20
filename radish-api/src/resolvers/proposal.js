@@ -5,7 +5,7 @@ import {
   saveProposal,
 } from '../services/proposal';
 import { pubsub } from '../subscriptions';
-import { saveMessage } from '../services/message';
+import { saveNotice } from '../services/notice';
 
 const NEW_PROPOSAL = 'NEW_PROPOSAL';
 
@@ -25,7 +25,7 @@ export default {
     createProposal: async (_parent, args) => {
       const newProposal = await saveProposal(args.input);
       const proposal = newProposal.ops[0];
-      await saveMessage({
+      await saveNotice({
         resolved: false,
         category: 'proposal',
         subject: `New Proposal: for RFP ${proposal.rfpId}`,

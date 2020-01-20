@@ -57,7 +57,7 @@ const AddSuppliersField = ({ formik, suppliers }) => {
             {formik.values.recipients &&
               formik.values.recipients.length > 0 &&
               formik.values.recipients.map((supplier, index) => (
-                <TableRow key={uniqid}>
+                <TableRow key={uniqid()}>
                   <TableCell className={classes.tableCell}>
                     <Autocomplete
                       options={suppliers}

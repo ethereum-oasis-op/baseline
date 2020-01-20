@@ -15,9 +15,9 @@ import Divider from '@material-ui/core/Divider';
 import SearchIcon from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Table from '../components/Table/Table';
+import NoticesTable from '../components/NoticeList/NoticesTable';
 import { PartnerContext } from '../contexts/partner-context';
-import MessageLayout from '../components/MessageLayout';
+import NoticeLayout from '../components/NoticeLayout';
 
 const useStyles = makeStyles(() => ({
   searchPartners: {
@@ -250,7 +250,7 @@ const Partner = () => {
   if(role) {
     items = filter(items, { role }, []);
   }
-  const messages = items;
+  const notices = items;
 
   const columns = [
     {
@@ -294,20 +294,20 @@ const Partner = () => {
   const companyCount = organizations.length;
 
   return (
-    <MessageLayout selected="partners">
+    <NoticeLayout selected="partners">
       <SortPartnerTable actions={{ setSearch, setCategory, setRole, setSort }} values={{ search, category, role, sort }} />
       <Typography variant="h2" className={classes.companyCount}>
         {companyCount} Companies
       </Typography>
       <Divider />
-      <Table
-        messages={messages}
+      <NoticesTable
+        notices={notices}
         columns={columns}
         options={{
           key: 'name',
         }}
       />
-    </MessageLayout>
+    </NoticeLayout>
   );
 };
 

@@ -6,7 +6,7 @@ import Who from './pages/Who';
 import What from './pages/What';
 import How from './pages/How';
 
-import MessagesList from './pages/MessagesList';
+import NoticesList from './pages/NoticesList';
 import PurchaseOrder from './pages/PurchaseOrder';
 import RFP from './pages/RFP';
 import Invoice from './pages/Invoice';
@@ -32,8 +32,8 @@ const App = () => {
     return (
       <div>
         <Switch>
-          <Route exact path="/" component={MessagesList} />
-          <Route exact path="/messages/:category" component={MessagesList} />
+          <Route exact path="/" component={NoticesList} />
+          <Route exact path="/notices/:category" component={NoticesList} />
           <Route exact path="/who" component={Who} />
           <Route exact path="/what" component={What} />
           <Route exact path="/how" component={How} />

@@ -1,12 +1,12 @@
 import React from 'react';
-import MessageLayout from '../components/MessageLayout';
+import NoticeLayout from '../components/NoticeLayout';
 import InvoiceDetail from './InvoiceDetail';
 
 const Invoice = () => {
   return (
-    <MessageLayout selected="invoice">
+    <NoticeLayout selected="invoice">
       <InvoiceDetail />
-    </MessageLayout>
+    </NoticeLayout>
   );
 };
 

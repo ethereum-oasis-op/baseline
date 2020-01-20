@@ -7,8 +7,8 @@ import Layout from '../components/Layout';
 import Sidebar from '../components/Sidebar';
 import PageWrapper from '../components/PageWrapper';
 import SideNav from '../components/SideNav';
-import { MessageContext } from '../contexts/message-context';
-import MessagesTable from '../components/MessageList/MessagesTable';
+import { NoticeContext } from '../contexts/notice-context';
+import NoticesTable from '../components/NoticeList/NoticesTable';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -113,12 +113,12 @@ ChipMaker.propTypes = {
 
 const categories = ['msa', 'purchaseorder', 'invoice', 'rfp', 'inbox', 'outbox'];
 
-const MessagesList = ({ match }) => {
+const NoticesList = ({ match }) => {
   const classes = useStyles();
-  const { messages } = useContext(MessageContext);
+  const { notices } = useContext(NoticeContext);
   const { category } = match.params || null;
-  const groups = groupBy(messages, 'category');
-  const mailboxes = groupBy(messages, 'status');
+  const groups = groupBy(notices, 'category');
+  const mailboxes = groupBy(notices, 'status');
   let rows = [];
 
   if (categories.includes(category)) {
@@ -195,19 +195,19 @@ const MessagesList = ({ match }) => {
   return (
     <Layout>
       <Sidebar>
-        <SideNav messages={messages} />
+        <SideNav notices={notices} />
       </Sidebar>
       <PageWrapper>
-        <MessagesTable columns={columns} options={options} messages={rows} />
+        <NoticesTable columns={columns} options={options} notices={rows} />
       </PageWrapper>
     </Layout>
   );
 };
 
-MessagesList.propTypes = {
+NoticesList.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({}).isRequired,
   }).isRequired,
 };
 
-export default MessagesList;
+export default NoticesList;

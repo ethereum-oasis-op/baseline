@@ -19,8 +19,8 @@ import PartnerSchema from './schemas/partner';
 import PartnerResolver from './resolvers/partner';
 import RFPSchema from './schemas/rfp';
 import RFPResolver from './resolvers/rfp';
-import MessageSchema from './schemas/message';
-import MessageResolver from './resolvers/message';
+import NoticeSchema from './schemas/notice';
+import NoticeResolver from './resolvers/notice';
 import ContractSchema from './schemas/contract';
 import ContractResolver from './resolvers/contract';
 import WalletSchema from './schemas/wallet';
@@ -45,7 +45,7 @@ const typeDefs = [
   ServerSettingsSchema,
   RFPSchema,
   PartnerSchema,
-  MessageSchema,
+  NoticeSchema,
   ContractSchema,
   WalletSchema,
   ProposalSchema,
@@ -59,7 +59,7 @@ const resolvers = [
   ServerSettingsResolver,
   RFPResolver,
   PartnerResolver,
-  MessageResolver,
+  NoticeResolver,
   ContractResolver,
   WalletResolver,
   ProposalResolver,
@@ -86,7 +86,7 @@ export default async function startServer() {
       const { data } = await axios.get(`${process.env.MESSENGER_URI}/identities`);
       const identity = data && data[0] ? data[0].publicKey : null;
       return { identity };
-    }
+    },
   });
   server.applyMiddleware({ app, path: '/graphql' });
 

@@ -11,7 +11,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { useQuery } from '@apollo/react-hooks';
 import moment from 'moment';
 import uniqid from 'uniqid';
-import MessageLayout from '../components/MessageLayout';
+import NoticeLayout from '../components/NoticeLayout';
 import Signatures from '../components/Signatures';
 import { GET_PROPOSAL } from '../graphql/proposal';
 import { formatCurrency } from '../utils';
@@ -47,14 +47,14 @@ const ProposalDetail = () => {
           },
         },
       });
-      history.push('/messages/outbox');
+      history.push('/notices/outbox');
     } catch (e) {
       setPostError(e.message.split(':')[1]);
     }
   }
 
   return (
-    <MessageLayout selected="proposal">
+    <NoticeLayout selected="proposal">
       <Container>
         <h1>Proposal for RFP {proposal.rfpId}</h1>
         <Typography>Termination Date: {moment(proposal.terminationDate).format('MM/DD/YYYY')}</Typography>
@@ -90,7 +90,7 @@ const ProposalDetail = () => {
         )}
         {postError && <Typography>{postError}</Typography>}
       </Container>
-    </MessageLayout>
+    </NoticeLayout>
   );
 };
 

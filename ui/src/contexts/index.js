@@ -9,7 +9,7 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ServerSettingsProvider } from './server-settings-context';
 import { PartnerProvider } from './partner-context';
-import { MessageProvider } from './message-context';
+import { NoticeProvider } from './notice-context';
 import { RFPProvider } from './rfp-context';
 import { ProposalProvider } from './proposal-context';
 import { MSAProvider } from './msa-context';
@@ -48,7 +48,7 @@ const client = new ApolloClient({
 function AppProviders({ children }) {
   return (
     <ApolloProvider client={client}>
-      <MessageProvider>
+      <NoticeProvider>
         <ServerSettingsProvider>
   
             <PartnerProvider>
@@ -60,7 +60,7 @@ function AppProviders({ children }) {
             </PartnerProvider>
 
         </ServerSettingsProvider>
-      </MessageProvider>
+      </NoticeProvider>
     </ApolloProvider>
   );
 }
