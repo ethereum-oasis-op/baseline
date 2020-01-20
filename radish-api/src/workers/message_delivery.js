@@ -1,5 +1,5 @@
 import messenger from '../utils/messengerWrapper';
-import { originationUpdate, RFP } from '../integrations/rfp';
+import { originationUpdate } from '../integrations/rfp';
 import mongoose from 'mongoose';
 
 module.exports = async (job, done) => {
@@ -9,9 +9,18 @@ module.exports = async (job, done) => {
   job.progress(50);
 
   console.log('BullJS updating the origination messageId to', message._id);
+  // Cannot use pre-established mongoose connection because this code runs in
+  // a separate sandbox process
   const dbFullName = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
-  await mongoose.connect(dbFullName, { useNewUrlParser: true });
+  const dbOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  };
+  await mongoose.connect(dbFullName, dbOptions);
 
+  // Assume we're only working with RFPs for now ??
   await originationUpdate(message._id, message.recipientId, doc.documentId);
   job.progress(90);
 

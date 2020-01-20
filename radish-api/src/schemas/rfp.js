@@ -43,6 +43,11 @@ const RFPSchema = gql`
 
   type Recipient {
     partner: Partner!
+    origination: Origination!
+  }
+  
+  type Origination {
+    messageId: String!
     receiptDate: Int!
   }
   

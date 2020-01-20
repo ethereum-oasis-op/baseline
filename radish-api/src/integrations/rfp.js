@@ -100,13 +100,12 @@ export const partnerCreateRFP = async (doc) => {
  * Update the RFP to show that recipient has received the RFP.
  */
 export const deliveryReceiptUpdate = async (doc) => {
-  console.log('delivery_receipt doc=', doc)
+  console.log(`Updating deliveryReceipt date for messageId ${doc.messageId}`)
   const result = await RFP.findOneAndUpdate(
     { 'recipients.origination.messageId': doc.messageId },
     { $set: { "recipients.$.origination.receiptDate": doc.deliveredDate } },
     { upsert: false, new: true }
   );
-  console.log('deliveryReceiptUpdate=', result);
   return result;
 };
 
