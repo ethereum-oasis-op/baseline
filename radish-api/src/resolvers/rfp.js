@@ -40,6 +40,9 @@ export default {
       rfpDetails.type = 'rfp_create';
       rfpDetails.uuid = rfp._id;
       recipients.forEach(recipient => {
+        // For data structure parity between buyer/supplier systems
+        // put the recipient back as the only entry in the array
+        rfpDetails.recipients = [recipient];
         // Add to BullJS queue
         msgDeliveryQueue.add(
           {

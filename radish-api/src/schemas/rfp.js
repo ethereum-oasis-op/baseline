@@ -43,12 +43,19 @@ const RFPSchema = gql`
 
   type Recipient {
     partner: Partner!
-    origination: Origination!
+    origination: Origination
+    signature: RFPSignature
   }
 
   type Origination {
-    messageId: String!
-    receiptDate: Int!
+    messageId: String
+    receiptDate: Int
+  }
+
+  type RFPSignature{
+    sentDate: Int
+    receivedDate: Int
+    messageId: String
   }
 
   type OnChain {
