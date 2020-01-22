@@ -75,6 +75,10 @@ describe('Generate Keys', () => {
       saveVerificationKeyToDB.mockReturnValue(dbResponse);
       const res = await supertest.post('/generate-keys').send({ filepath: 'examples/test.zok' });
       expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('verificationKeyID');
+      expect(res.body).toHaveProperty('verificationKey.alpha');
+      expect(res.body).toHaveProperty('verificationKey.beta');
+      expect(res.body).toHaveProperty('verificationKey.delta');
       expect(res.body.verificationKeyID).toEqual(keyID);
     });
 
