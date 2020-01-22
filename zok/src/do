@@ -16,7 +16,7 @@ clean() {
 
 compile() {
     export ZOKRATES_HOME=../zokrates_stdlib/stdlib/
-    ../target/release/zokrates compile -i root.code
+    ../target/release/zokrates compile -i test.zok
 }
 
 setup() {

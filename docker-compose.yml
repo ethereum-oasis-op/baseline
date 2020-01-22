@@ -45,7 +45,7 @@ services:
       dockerfile: dev.Dockerfile
     command: npm run dev
     volumes:
-      - ./zok/code:/app/code:delegated
+      - ./zok/zok:/app/zok:delegated
       - ./zok/src:/app/src:delegated
       - ./zok/dist:/app/dist:delegated
       - ./zok/output:/app/output:delegated
@@ -77,7 +77,7 @@ services:
       - network-supplier1
       - network-supplier2
     command: npm run build:watch
-      
+
   radish34-ui:
     build:
       context: ./ui/
@@ -174,7 +174,7 @@ services:
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier1.eth:/keystore/account.eth
       - ./config/config-supplier1.json:/app/config/default.json
-      - ./artifacts:/app/artifacts:delegated      
+      - ./artifacts:/app/artifacts:delegated
     depends_on:
       - radish-api-watch
       - mongo-supplier1
@@ -206,7 +206,7 @@ services:
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier2.eth:/keystore/account.eth
       - ./config/config-supplier2.json:/app/config/default.json
-      - ./artifacts:/app/artifacts:delegated      
+      - ./artifacts:/app/artifacts:delegated
     depends_on:
       - radish-api-watch
       - mongo-supplier2
@@ -253,7 +253,7 @@ services:
       - network-buyer
     ports:
       - 27017:27017
-      
+
   mongo-supplier1:
     image: mongo:latest
     container_name: mongo-supplier1
