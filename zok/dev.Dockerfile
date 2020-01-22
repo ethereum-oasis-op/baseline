@@ -1,4 +1,4 @@
-FROM zokrates/zokrates:0.4.11 as builder
+FROM zokrates/zokrates:0.5.1 as builder
 
 FROM node:11.13
 
