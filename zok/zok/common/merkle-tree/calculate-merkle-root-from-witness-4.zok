@@ -14,7 +14,7 @@
 
 // IMPORTS
 
-import "utils/pack/unpack128.code" as unpack128
+import "utils/pack/unpack128.zok" as unpack128
 
 import "../hashes/mimc/mimc-hash-2.zok" as hash2 // can swap with other hash function
 import "./order-left-and-right.zok" as orderLeftAndRight

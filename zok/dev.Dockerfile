@@ -1,6 +1,6 @@
 FROM zokrates/zokrates:0.5.1 as builder
 
-FROM node:11.13
+FROM node:11.15
 
 RUN mkdir /app
 WORKDIR /app
