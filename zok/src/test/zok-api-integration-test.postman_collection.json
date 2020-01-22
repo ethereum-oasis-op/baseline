@@ -59,14 +59,14 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "50b8fe2e-0ed3-457e-a00b-4b6c5ac9f998",
+						"id": "7d670239-5d05-40dd-b799-f9131c28b247",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"var res = JSON.parse(responseBody);",
 							"var req = JSON.parse(request.data);",
+							"var res = JSON.parse(responseBody);",
 							"",
 							"pm.test('should return a valid response', () => {",
 							"    pm.response.to.not.be.error;",
@@ -103,15 +103,13 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"name\": \"test\"}"
+					"raw": "{\"filepath\": \"examples/test.zok\"}"
 				},
 				"url": {
-					"raw": "http://localhost:8080/generate-keys",
-					"protocol": "http",
+					"raw": "{{API_URL}}/generate-keys",
 					"host": [
-						"localhost"
+						"{{API_URL}}"
 					],
-					"port": "8080",
 					"path": [
 						"generate-keys"
 					]
@@ -176,7 +174,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"docId\": \"test1234\", \n\t\"name\": \"test\", \n\t\"witness\": [5, 25]\n}"
+					"raw": "{\n\t\"docId\": \"test1234\", \n\t\"filename\": \"test\", \n\t\"witness\": [5, 25]\n}"
 				},
 				"url": {
 					"raw": "{{API_URL}}/generate-proof",
