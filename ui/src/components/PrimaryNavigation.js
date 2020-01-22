@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
+import Loading from './Loading';
 import Link from './Link';
 import UserSelection from './UserSelection';
 import Balance from './Balance';
@@ -53,8 +54,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function PrimaryNavigation() {
   const classes = useStyles();
-  const { settings } = useContext(ServerSettingsContext);
-  const { organizationAddress, organizationName, organizationRole } = settings || {};
+  const { settings, loadingSettings } = useContext(ServerSettingsContext);
+  if (loadingSettings || !settings) { return <Loading/> }
+  const { organizationAddress, organizationName, organizationRole } = settings;
   const theme = organizationRole === 1 ? 'dark' : 'light';
   const logo = theme === 'dark' ? RadishLogoDark : RadishLogoLight;
 
