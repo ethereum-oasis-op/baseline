@@ -6,7 +6,7 @@ const SIGNATURE_ATTRIBUTES = gql`
     signature
     signatureDate
   }
-`
+`;
 
 export const MSA_ATTRIBUTES = gql`
   fragment MSA_ATTRIBUTES on MSA {
@@ -54,10 +54,10 @@ export const CREATE_MSA = gql`
 `;
 
 export const GET_MSA_BY_PROPOSAL = gql`
-  query getMSAByProposal($proposalId: Int!) {
+  query getMSAByProposal($proposalId: String!) {
     msaByProposal(proposalId: $proposalId) {
       ...MSA_ATTRIBUTES
     }
   }
   ${MSA_ATTRIBUTES}
-`
+`;

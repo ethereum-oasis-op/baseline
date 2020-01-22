@@ -28,7 +28,7 @@ export default {
         statusText: 'Active',
         status: 'outgoing',
         categoryId: msa._id,
-        lastModified: new Date(Date.now()),
+        lastModified: Math.floor(Date.now() / 1000),
       });
       pubsub.publish(NEW_MSA, { newMSA: msa });
       return { ...msa };

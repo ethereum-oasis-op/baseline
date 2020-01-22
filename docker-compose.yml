@@ -218,6 +218,7 @@ services:
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier2:4001/api/v1'
+      REDIS_URL: redis://redis-supplier2:6379
     networks:
       - network-supplier2
     ports:

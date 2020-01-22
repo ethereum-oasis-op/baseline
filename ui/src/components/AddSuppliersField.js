@@ -13,7 +13,6 @@ import TableCell from '@material-ui/core/TableCell';
 import Add from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import find from 'lodash/find';
-import uniqid from 'uniqid';
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -57,7 +56,7 @@ const AddSuppliersField = ({ formik, suppliers }) => {
             {formik.values.recipients &&
               formik.values.recipients.length > 0 &&
               formik.values.recipients.map((supplier, index) => (
-                <TableRow key={uniqid()}>
+                <TableRow key={index}>
                   <TableCell className={classes.tableCell}>
                     <Autocomplete
                       options={suppliers}

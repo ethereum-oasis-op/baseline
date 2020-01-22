@@ -24,7 +24,7 @@ export const CATEGORIES = gql`
 `;
 
 export const NEW_NOTICE = gql`
-  subscription onNewNotice {
+  subscription newNotice {
     newNotice {
       ...NOTICE_ATTRIBUTES
     }
