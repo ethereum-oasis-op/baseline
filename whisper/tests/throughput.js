@@ -5,14 +5,14 @@ const POW_TIME = 5;
 const TTL = 10;
 const DEFAULT_TOPIC = "0x11223344";
 
-let web3_1, keyId_1, pubKey_1, privKey_1;
+let web3_1, keyId_1;
 let sent_1 = 0;
-let web3_2, keyId_2, pubKey_2, privKey_2;
+let web3_2, keyId_2, pubKey_2;
 let received_2 = 0;
 
 // Config settings
-let whisper_port_1, whisper_origin_1, geth_ip_address_1, api_port_1;
-let whisper_port_2, whisper_origin_2, geth_ip_address_2, api_port_2;
+let whisper_port_1, geth_ip_address_1;
+let whisper_port_2, geth_ip_address_2;
 let num_messages, delay, pow_target;
 
 // Statistics
@@ -20,18 +20,16 @@ let durations = [];
 
 // Get whisper websocket info from config file
 async function getConfig() {
-  let rawContents = await fs.readFileSync('../config/nodes.json');
+  let rawContents = await fs.readFileSync('./config/nodes.json');
   let contents = JSON.parse(rawContents);
 
   whisper_port_1 = contents[`node_1`].whisper_port;
   geth_ip_address_1 = contents[`node_1`].ip_address;
   whisper_origin_1 = contents[`node_1`].origin;
-  api_port_1 = contents[`node_1`].api_port;
 
   whisper_port_2 = contents[`node_2`].whisper_port;
   geth_ip_address_2 = contents[`node_2`].ip_address;
   whisper_origin_2 = contents[`node_2`].origin;
-  api_port_2 = contents[`node_2`].api_port;
 
   num_messages = contents.whisper_test_params.num_messages;
   delay = contents.whisper_test_params.delay_ms;
@@ -51,7 +49,6 @@ async function setupNode1() {
       topics: [DEFAULT_TOPIC]
     }).on('data', async (data) => {
       received_1++;
-      let time = await new Date();
     }).on('error', (err) => {
       console.log('Message receive error: ', err);
     });
