@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { getPartnerByIdentity } from '../services/partner';
+import { pubsub } from '../subscriptions';
 
 const NoticeSchema = new mongoose.Schema({
   categoryId: {
@@ -43,11 +44,11 @@ const Notice = mongoose.model('notices', NoticeSchema);
  * @param {String} category - the category this notice should fall under (RFP/MSA/Proposal...)
  * @param {Object} payload - the payload/object sent through whisper that was stored in partner db
  */
-export const createNotice = async (category, payload) => {
+export const createNotice = async (category, payload, categoryId = null) => {
   try {
     const sender = await getPartnerByIdentity(payload.sender);
     const newNotice = {
-      categoryId: payload._id,
+      categoryId: categoryId || payload._id,
       category,
       subject: `New ${category}: ${payload._id}`,
       from: sender.name,
@@ -56,6 +57,7 @@ export const createNotice = async (category, payload) => {
       status: 'incoming',
     };
     const notice = await Notice.create([newNotice], { upsert: true, new: true });
+    pubsub.publish('NEW_NOTICE', { newNotice: notice[0] });
     return notice;
   } catch (e) {
     console.log('Error creating notice: ', e);

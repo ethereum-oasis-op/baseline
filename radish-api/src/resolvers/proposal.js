@@ -1,11 +1,14 @@
+import { uuid } from 'uuidv4';
 import {
   getProposalById,
-  getProposalByRFPId,
+  getProposalsByRFPId,
   getAllProposals,
   saveProposal,
 } from '../services/proposal';
 import { pubsub } from '../subscriptions';
 import { saveNotice } from '../services/notice';
+import { getPartnerByIdentity } from '../services/partner';
+import msgDeliveryQueue from '../queues/message_delivery';
 
 const NEW_PROPOSAL = 'NEW_PROPOSAL';
 
@@ -14,28 +17,39 @@ export default {
     proposal(_parent, args) {
       return getProposalById(args.id).then(res => res);
     },
-    getProposalByRFPId(_parent, args) {
-      return getProposalByRFPId(args.rfpId).then(res => res);
+    getProposalsByRFPId(_parent, args) {
+      return getProposalsByRFPId(args.rfpId).then(res => res);
     },
     proposals() {
       return getAllProposals();
     },
   },
   Mutation: {
-    createProposal: async (_parent, args) => {
-      const newProposal = await saveProposal(args.input);
+    createProposal: async (_parent, args, context) => {
+      const { recipient, ...input } = args.input;
+      const currentUser = await getPartnerByIdentity(context.identity);
+      input._id = uuid();
+      input.sender = context.identity;
+      const newProposal = await saveProposal(input);
       const proposal = newProposal.ops[0];
       await saveNotice({
         resolved: false,
         category: 'proposal',
         subject: `New Proposal: for RFP ${proposal.rfpId}`,
-        from: 'Supplier',
+        from: currentUser.name,
         statusText: 'Pending',
         status: 'outgoing',
-        categoryId: proposal._id,
-        lastModified: new Date(Date.now()),
+        categoryId: proposal.rfpId,
+        lastModified: Math.floor(Date.now() / 1000),
       });
       pubsub.publish(NEW_PROPOSAL, { newProposal: proposal });
+      proposal.type = 'proposal_create';
+      msgDeliveryQueue.add({
+        documentId: proposal._id,
+        senderId: context.identity,
+        recipientId: recipient,
+        payload: proposal,
+      });
       return { ...proposal };
     },
   },

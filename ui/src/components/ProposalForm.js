@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ProposalForm = ({ rfpId }) => {
+const ProposalForm = ({ rfp }) => {
   const classes = useStyles();
   const history = useHistory();
   const [disabled, setDisabled] = useState({});
@@ -43,7 +43,8 @@ const ProposalForm = ({ rfpId }) => {
   const formik = useFormik({
     initialValues: {
       rates: [],
-      rfpId,
+      rfpId: rfp._id,
+      recipient: rfp.sender,
     },
     onSubmit: async values => {
       await postProposal({ variables: { input: values } });

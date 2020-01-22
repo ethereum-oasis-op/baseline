@@ -14,7 +14,7 @@ import RadishLogo from '../components/RadishLogo';
 import RFPSuppliersTable from '../components/RFPSuppliersTable';
 import ProposalForm from '../components/ProposalForm';
 import { GET_PARTNER_BY_IDENTITY } from '../graphql/partners';
-import { GET_PROPOSAL_BY_RFPID } from '../graphql/proposal';
+import { GET_PROPOSALS_BY_RFPID } from '../graphql/proposal';
 import RateTable from '../components/RateTable';
 
 const RFPDetail = () => {
@@ -25,14 +25,14 @@ const RFPDetail = () => {
   const [getPartnerByIdentity, { loading: partnerLoading, data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
-  const [getProposalByRFPId, { loading: proposalLoading, data: proposalData }] = useLazyQuery(
-    GET_PROPOSAL_BY_RFPID,
+  const [getProposalsByRFPId, { loading: proposalLoading, data: proposalData }] = useLazyQuery(
+    GET_PROPOSALS_BY_RFPID,
   );
 
   useEffect(() => {
     if (data && data.rfp) {
       getPartnerByIdentity({ variables: { identity: data.rfp.sender } });
-      getProposalByRFPId({ variables: { rfpId: id } });
+      getProposalsByRFPId({ variables: { rfpId: id } });
     }
   }, [data]);
 
@@ -70,11 +70,15 @@ const RFPDetail = () => {
           </TableRow>
         </TableBody>
       </Table>
-      {userRole === 1 && <RFPSuppliersTable suppliers={data.rfp.recipients} />}
-      {proposalData && proposalData.getProposalByRFPId ? (
-        <RateTable rates={proposalData.getProposalByRFPId.rates} />
-      ) : (
-        userRole === 2 && <ProposalForm rfpId={id} />
+      {userRole === 1 && (
+        <RFPSuppliersTable
+          rfp={data.rfp}
+          proposals={proposalData ? proposalData.getProposalsByRFPId : []}
+        />
+      )}
+      {userRole === 2 && proposalData && !proposalData.getProposalsByRFPId.length && <ProposalForm rfp={data.rfp} />}
+      {userRole === 2 && proposalData && proposalData.getProposalsByRFPId.length > 0 && (
+        <RateTable proposals={proposalData.getProposalsByRFPId} />
       )}
     </Container>
   );

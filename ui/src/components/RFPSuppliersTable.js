@@ -5,9 +5,25 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
 import uniqid from 'uniqid';
+import find from 'lodash/find';
+import { formatCurrency } from '../utils';
 
-const RFPSuppliersTable = ({ suppliers }) => {
+const RFPSuppliersTable = ({ rfp, proposals }) => {
+  const recipients = rfp.recipients.map(recipient => {
+    const recipientProposal = find(
+      proposals,
+      proposal => proposal.sender === recipient.partner.identity,
+    );
+    return { ...recipient, ...recipientProposal };
+  });
+
+  const createContract = () => {
+    console.log('approved, redirecting to contract creation page');
+    //TODO: redirect to a new page? open a modal?
+  };
+
   return (
     <>
       <Typography variant="h2" style={{ margin: '2rem' }}>
@@ -20,19 +36,36 @@ const RFPSuppliersTable = ({ suppliers }) => {
             <TableCell>Status</TableCell>
             <TableCell>Volume</TableCell>
             <TableCell>Price Per Unit</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
-          {suppliers.map(supplier => {
+          {recipients.map(recipient => {
             return (
               <TableRow key={uniqid()}>
-                <TableCell>{supplier.partner.name}</TableCell>
+                <TableCell>{recipient.partner.name}</TableCell>
                 <TableCell>
-                  {supplier.receiptDate ? `Sent: ${supplier.receiptDate}` : 'Pending'}
+                  {recipient.receiptDate ? `Sent: ${recipient.receiptDate}` : 'Pending'}
                 </TableCell>
-                {/* TODO: integrate 2 table cells below */}
-                <TableCell>N/A</TableCell>
-                <TableCell>N/A</TableCell>
+                <TableCell>
+                  {recipient.rates &&
+                    recipient.rates.map(rate => (
+                      <Typography>{`${rate.startRange}-${rate.endRange}`}</Typography>
+                    ))}
+                </TableCell>
+                <TableCell>
+                  {recipient.rates &&
+                    recipient.rates.map(rate => (
+                      <Typography>{`${formatCurrency(rate.price)}`}</Typography>
+                    ))}
+                </TableCell>
+                <TableCell>
+                  {recipient.rates && (
+                    <Button variant="primary" onClick={() => createContract()}>
+                      Approve
+                    </Button>
+                  )}
+                </TableCell>
               </TableRow>
             );
           })}

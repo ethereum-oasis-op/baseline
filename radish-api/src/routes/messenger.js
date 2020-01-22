@@ -1,5 +1,6 @@
 const express = require('express');
 const rfpUtils = require('../integrations/rfp.js');
+const proposalUtils = require('../integrations/proposal.js');
 
 const router = express.Router();
 
@@ -23,6 +24,14 @@ router.post('/documents', async (req, res) => {
     case 'delivery_receipt':
       // ex: supplier's messenger automatically sends this message type after receiving buyer's RFP
       docId = (await rfpUtils.deliveryReceiptUpdate(messageObj))._id;
+      break;
+    case 'proposal_create':
+      try {
+        docId = (await proposalUtils.partnerCreateProposal(messageObj))._id;
+      } catch (error) {
+        res.status(400);
+        return res.send({ message: error });
+      }
       break;
     //case 'msa_create':
     //docId = await msaUtils.createMSA(messageObj);

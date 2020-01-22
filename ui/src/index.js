@@ -10,8 +10,6 @@ import App from './App';
 import AppProviders from './contexts';
 import * as serviceWorker from './serviceWorker';
 
-
-
 ReactDOM.render(
   <Router>
     <ThemeProvider theme={theme}>

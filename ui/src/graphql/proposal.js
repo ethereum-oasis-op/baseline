@@ -10,6 +10,7 @@ export const PROPOSAL_ATTRIBUTES = gql`
       price
       unitOfMeasure
     }
+    sender
   }
 `;
 
@@ -31,9 +32,9 @@ export const GET_ALL_PROPOSALS = gql`
   ${PROPOSAL_ATTRIBUTES}
 `;
 
-export const GET_PROPOSAL_BY_RFPID = gql`
+export const GET_PROPOSALS_BY_RFPID = gql`
   query proposal($rfpId: String!) {
-    getProposalByRFPId(rfpId: $rfpId) {
+    getProposalsByRFPId(rfpId: $rfpId) {
       ...PROPOSAL_ATTRIBUTES
     }
   }
@@ -50,7 +51,7 @@ export const CREATE_PROPOSAL = gql`
 `;
 
 export const GET_PROPOSAL = gql`
-  query proposal($id: Int!) {
+  query proposal($id: String!) {
     proposal(id: $id) {
       ...PROPOSAL_ATTRIBUTES
     }

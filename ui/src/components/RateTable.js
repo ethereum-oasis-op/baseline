@@ -6,8 +6,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import Typography from '@material-ui/core/Typography';
 import GreaterThanIcon from './GreaterThanIcon';
+import { formatCurrency } from '../utils';
 
-const RateTable = ({ rates }) => {
+const RateTable = ({ proposals }) => {
   return (
     <>
       <Typography variant="h3">Pricing</Typography>
@@ -20,16 +21,18 @@ const RateTable = ({ rates }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rates.map(rate => (
-            <TableRow>
-              <TableCell>
-                <GreaterThanIcon />
-                {rate.endRange}
-              </TableCell>
-              <TableCell>{rate.price}</TableCell>
-              <TableCell>{rate.unitOfMeasure}</TableCell>
-            </TableRow>
-          ))}
+          {proposals.map(proposal =>
+            proposal.rates.map(rate => (
+              <TableRow>
+                <TableCell>
+                  <GreaterThanIcon />
+                  {rate.endRange}
+                </TableCell>
+                <TableCell>{formatCurrency(rate.price)}</TableCell>
+                <TableCell>{rate.unitOfMeasure}</TableCell>
+              </TableRow>
+            )),
+          )}
         </TableBody>
       </Table>
     </>

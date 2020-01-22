@@ -2,8 +2,8 @@ import gql from 'graphql-tag';
 
 const ProposalSchema = gql`
   extend type Query {
-    proposal(id: Int!): Proposal
-    getProposalByRFPId(rfpId: String!): Proposal
+    proposal(id: String!): Proposal
+    getProposalsByRFPId(rfpId: String!): [Proposal]
     proposals: [Proposal]
   }
 
@@ -16,14 +16,16 @@ const ProposalSchema = gql`
   }
 
   type Proposal {
-    _id: Int!
+    _id: String!
     rfpId: String!
     rates: [RateTable!]!
+    sender: String!
   }
 
   input inputProposal {
     rfpId: String!
     rates: [inputRateTable!]!
+    recipient: String!
   }
 
   type RateTable {

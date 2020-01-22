@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Row = props => {
-  const { columns, row, rows, options } = props;
+  const { columns, row, rows, options, categoryOverrides } = props;
   const classes = useStyles();
   const history = useHistory();
   const key = row[options.key];
@@ -28,7 +28,11 @@ const Row = props => {
   const rowClasses = classNames(classes.row, rowClassnames);
 
   const handleClick = () => {
-    history.push(`/${row.category}/${row.categoryId}`);
+    history.push(
+      `/${categoryOverrides[row.category] ? categoryOverrides[row.category] : row.category}/${
+        row.categoryId
+      }`,
+    );
   };
 
   return (
@@ -65,6 +69,10 @@ const Row = props => {
   );
 };
 
+Row.defaultProps = {
+  categoryOverrides: {},
+};
+
 Row.propTypes = {
   row: PropTypes.shape({
     _id: PropTypes.string, // eslint-disable-line no-underscore-dangle
@@ -76,6 +84,7 @@ Row.propTypes = {
     key: PropTypes.string.isRequired,
     rowClasses: PropTypes.shape({}),
   }).isRequired,
+  categoryOverrides: PropTypes.shape({}),
 };
 
 export default Row;
