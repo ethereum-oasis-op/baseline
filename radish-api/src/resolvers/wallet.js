@@ -14,7 +14,7 @@ export default {
     signature(_parent, args) {
       return sign(args.hashInHex);
     },
-    signitureVerification(_parent, args) {
+    signatureVerification(_parent, args) {
       return verify(args.publicKey, args.hashInHex, args.signature);
     },
   },

@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "83bdbfd7-8960-4e81-892a-2f24379d6b24",
+		"name": "messager-integration-test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "health-check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6b541692-c302-42d0-a1aa-38cacff19fb7",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4001/api/v1/health-check",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4001",
+					"path": [
+						"api",
+						"v1",
+						"health-check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "identities",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "63b093a3-f6e6-427c-92eb-586507fbc8ec",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var res = JSON.parse(responseBody);",
+							"",
+							"pm.test('should return a valid response', () => {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test('should return verificationKeyID', () => {",
+							"    pm.expect(res[0].createdDate).to.exist;",
+							"});",
+							"",
+							"pm.test('should return verificationKey', () => {",
+							"    pm.expect(res[0].publicKey).to.exist;",
+							"});",
+							"",
+							"pm.globals.set(\"publicKey\", res[0].publicKey);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:4001/api/v1/identities",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4001",
+					"path": [
+						"api",
+						"v1",
+						"identities"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "graphql",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4322c789-ef0b-4923-b926-95cb7b094e73",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var res = JSON.parse(responseBody);",
+							"",
+							"var publicKey = pm.globals.get(\"publicKey\");",
+							"",
+							"pm.test('should return a valid response', () => {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test('should return createRFP._id', () => {",
+							"    pm.expect(res.data.createRFP._id).to.exist;",
+							"});",
+							"",
+							"pm.test('should return createRFP.sku', () => {",
+							"    pm.expect(res.data.createRFP.sku).to.exist;",
+							"    pm.expect(res.data.createRFP.sku).to.equal(\"FAKE-SKU-1234\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($supplierMessengerId:String!){\n          createRFP( input: {\n            sku: \"FAKE-SKU-1234\",\n            skuDescription: \"Widget 200\",\n            description: \"Widget order for SuperWidget\",\n            proposalDeadline: 1578065104,\n            recipients: [{ \n              partner: { \n                identity: $supplierMessengerId,\n                name: \"FakeName\",\n                address: \"0x0D8c04aCd7c417D412fe4c4dbB713f842dcd3A65\",\n                role: \"supplier\"\n              }\n            }]\n          })\n          { _id, sku } \n        } \n",
+						"variables": "{\n\t\"supplierMessengerId\":\"{{publicKey}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

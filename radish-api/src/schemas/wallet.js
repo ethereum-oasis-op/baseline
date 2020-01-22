@@ -6,6 +6,6 @@ export default gql`
     myWalletAddress: Address!
     myPublicKey: String!
     signature(hashInHex: String!): String!
-    signitureVerification(publicKey: String!, hashInHex: String!, signature: String!): String!
+    signatureVerification(publicKey: String!, hashInHex: String!, signature: String!): String!
   }
 `;
