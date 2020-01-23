@@ -92,21 +92,15 @@ export const onCreateRFP = async doc => {
   return result[0];
 };
 
-const signRFP = async doc => {
-  // Run EdDSA code on document
-
-  return signature;
-}
-
 const verifyRFPSignature = async (signature, doc) => {
-  //const docHash = await hash(doc, { algorithm: 'sha256' });
+  // const docHash = await hash(doc, { algorithm: 'sha256' });
   // TODO: Need to get public key from sender from somewhere
-  //const isVerified = await verify('123456', docHash, signature);
+  // const isVerified = await verify('123456', docHash, signature);
   return true;
 };
 
 /**
- * Set the receivedDate and Message Id for the local documents 'signature' field 
+ * Set the receivedDate and Message Id for the local documents 'signature' field
  * on the receiver side.
  */
 export const signatureReceivedUpdate = async (messageId, senderId, rfpId) => {
@@ -125,7 +119,7 @@ export const signatureReceivedUpdate = async (messageId, senderId, rfpId) => {
   );
   console.log('Update result', result);
   return result;
-}
+};
 
 /**
  * Set the sentDate and Message for the local documents 'signature' field
@@ -150,7 +144,6 @@ export const signatureSentUpdate = async (messageId, myId, rfpId) => {
   console.log('Update result', result);
   return result;
 };
-
 
 /**
  * Signs and enqueue delivery for the RFP document
@@ -188,8 +181,6 @@ const signAndReturnRFP = async doc => {
   console.log('Signed RFP and enqueued it', doc._id);
 };
 
-
-
 /**
  * Handles inbound call from the supplier with the signed RFP object.
  * Pulls out the payload components, validates the signature, and kicks off
@@ -223,7 +214,7 @@ export const partnerCreateRFP = async doc => {
   console.log(`Saving new RFP (uuid: ${doc.uuid}) from partner...`);
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   await createNotice('rfp', result[0]);
-  console.log('Got RFP as supplier')
+  console.log('Got RFP as supplier');
   // Deliver signed RFP document to back sender
   await signAndReturnRFP(doc);
 
@@ -258,8 +249,6 @@ export const originationUpdate = async (messageId, recipientId, rfpId) => {
   );
   return result;
 };
-
-
 
 /**
  * When a user on a Partners API updates a RFP (Whisper?)

@@ -12,7 +12,7 @@ const getMessages = async (since, partnerId) => {
   }
 };
 
-const getSingleMessage = async (messageId) => {
+const getSingleMessage = async messageId => {
   try {
     return (await axios.get(`${messengerUrl}/messages/${messageId}`)).body;
   } catch (error) {
@@ -41,7 +41,7 @@ const getIdentities = async () => {
   }
 };
 
-const createIdentity = async (myId) => {
+const createIdentity = async myId => {
   const data = {};
   const headers = { 'x-messenger-id': myId };
   try {
@@ -67,5 +67,5 @@ module.exports = {
   createMessage,
   getIdentities,
   createIdentity,
-  healthCheck
+  healthCheck,
 };
