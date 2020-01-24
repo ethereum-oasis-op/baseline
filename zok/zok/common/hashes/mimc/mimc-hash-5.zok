@@ -1,0 +1,10 @@
+// MiMC hashing function for five input fields
+
+import "./mimc-encryption.zok" as mimcpe7
+
+def main(field[5] a)->(field):
+  field r = 0
+  for field i in 0..5 do
+    r = r + a[i] + mimcpe7(a[i], r)
+  endfor
+  return r

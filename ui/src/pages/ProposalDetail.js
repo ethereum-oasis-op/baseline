@@ -22,10 +22,10 @@ const ProposalDetail = () => {
   const { id } = useParams();
   const history = useHistory();
   const { loading, data } = useQuery(GET_PROPOSAL, {
-    variables: { id: Number(id) }
+    variables: { id: id },
   });
   const { data: msa } = useQuery(GET_MSA_BY_PROPOSAL, {
-    variables: { proposalId: Number(id) }
+    variables: { proposalId: id },
   });
 
   const msaData = msa ? msa.msaByProposal : {};
@@ -42,8 +42,8 @@ const ProposalDetail = () => {
       await postMSA({
         variables: {
           input: {
-            rfpId: Number(proposal.rfpId),
-            proposalId: Number(id),
+            rfpId: proposal.rfpId,
+            proposalId: id,
           },
         },
       });
@@ -51,13 +51,15 @@ const ProposalDetail = () => {
     } catch (e) {
       setPostError(e.message.split(':')[1]);
     }
-  }
+  };
 
   return (
     <NoticeLayout selected="proposal">
       <Container>
         <h1>Proposal for RFP {proposal.rfpId}</h1>
-        <Typography>Termination Date: {moment(proposal.terminationDate).format('MM/DD/YYYY')}</Typography>
+        <Typography>
+          Termination Date: {moment(proposal.terminationDate).format('MM/DD/YYYY')}
+        </Typography>
         <h3>Rate Table</h3>
         <Table>
           <TableHead>
@@ -70,10 +72,12 @@ const ProposalDetail = () => {
             {proposal.rates.map(rate => {
               return (
                 <TableRow key={uniqid()}>
-                  <TableCell>{rate.startRange} - {rate.endRange}</TableCell>
+                  <TableCell>
+                    {rate.startRange} - {rate.endRange}
+                  </TableCell>
                   <TableCell>{formatCurrency(rate.ppu)}</TableCell>
                 </TableRow>
-              )
+              );
             })}
           </TableBody>
         </Table>

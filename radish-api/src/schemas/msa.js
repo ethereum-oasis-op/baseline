@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 const MSASchema = gql`
   extend type Query {
     msa(id: Int!): MSA
-    msaByProposal(proposalId: Int!): MSA
+    msaByProposal(proposalId: String!): MSA
     msas: [MSA]
   }
 
@@ -17,15 +17,15 @@ const MSASchema = gql`
 
   type MSA {
     _id: Int!
-    proposalId: Int!
-    rfpId: Int!
+    proposalId: String!
+    rfpId: String!
     buyerSignature: Signature
     supplierSignature: Signature
   }
 
   input inputMSA {
-    proposalId: Int!
-    rfpId: Int!
+    proposalId: String!
+    rfpId: String!
     buyerSignature: inputSignature,
   }
 

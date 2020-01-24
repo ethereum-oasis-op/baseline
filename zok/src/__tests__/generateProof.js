@@ -108,6 +108,10 @@ describe('Generate Proof', () => {
       const response = await supertest.post('/generate-proof').send(body);
       expect(response.statusCode).toEqual(200);
       expect(response.body.docID).toEqual(docID);
+      expect(response.body).toHaveProperty('docID');
+      expect(response.body).toHaveProperty('proof');
+      expect(response.body).toHaveProperty('verificationKey');
+      expect(response.body).toHaveProperty('verificationKeyID');
     });
   });
 });

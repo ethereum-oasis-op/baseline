@@ -1,4 +1,5 @@
 import db from '../db';
+import { pubsub } from '../subscriptions';
 
 export const getNoticeById = async id => {
   const notice = await db.collection('notices').findOne({ _id: id });
@@ -42,5 +43,6 @@ export const saveNotice = async input => {
   const count = await db.collection('notices').estimatedDocumentCount();
   const doc = Object.assign(input, { _id: count + 1 });
   const notice = await db.collection('notices').insertOne(doc);
+  pubsub.publish('NEW_NOTICE', { newNotice: notice.ops[0] });
   return notice;
 };

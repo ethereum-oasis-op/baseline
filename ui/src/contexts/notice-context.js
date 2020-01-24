@@ -15,8 +15,8 @@ const NoticeProvider = ({ children }) => {
       variables: {},
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData.data) return prev;
-        const { newNotices } = subscriptionData.data;
-        return { notices: [newNotices, ...prev.notices] };
+        const { newNotice } = subscriptionData.data;
+        return { notices: [newNotice, ...prev.notices] };
       },
     });
   }, [subscribeToMore]);

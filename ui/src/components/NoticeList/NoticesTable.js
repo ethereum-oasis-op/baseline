@@ -36,13 +36,25 @@ const NoticesTable = props => {
     return <NoNotices />;
   }
 
+  const categoryOverrides = {
+    proposal: 'rfp',
+  };
+
   return (
     <Paper className={classes.root}>
       <Table className={classes.table} size="small" stickyHeader aria-label="sticky table">
         <HeaderRow columns={columns} options={options} />
         <TableBody>
           {notices.map(row => {
-            return <Row key={`row-${row[options.key]}`} row={row} rows={notices} {...props} />;
+            return (
+              <Row
+                key={`row-${row[options.key]}`}
+                categoryOverrides={categoryOverrides}
+                row={row}
+                rows={notices}
+                {...props}
+              />
+            );
           })}
         </TableBody>
       </Table>

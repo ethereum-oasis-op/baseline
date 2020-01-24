@@ -1,0 +1,17 @@
+{
+  "name": "whisper",
+  "version": "0.0.1",
+  "description": "Module for testing whisper specs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EYBlockchain/radish-34.git"
+  },
+  "author": "Sam Stokes <sam.stokes@consensys.net>",
+  "license": "CC0 1.0 Universal",
+  "scripts": {
+    "test": "node ./tests/throughput.js"
+  },
+  "dependencies": {
+    "web3": "1.0.0-beta.36"
+  }
+}

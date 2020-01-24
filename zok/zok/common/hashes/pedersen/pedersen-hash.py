@@ -13,7 +13,7 @@ recipientAdress = '0x126586834567'
 recipientSignature = '0x123986984567'
 
 inputlist = [phi, idx, idEntangled, metadata, logicVerifier, state, ownerAdress, recipientAdress, recipientSignature]
-universal_input = ''.join([format(int(c, 16), '02X') for c in reversed(inputlist)]) 
+universal_input = ''.join([format(int(c, 16), '02X') for c in reversed(inputlist)])
 
 preimage = bytes.fromhex(str(universal_input))
 # create an instance with personalisation string
@@ -23,7 +23,7 @@ digest = hasher.hash_bytes(preimage)
 print(digest)
 
 # write ZoKrates DSL code to disk
-path = "pedersen.code"
+path = "pedersen.zok"
 hasher.write_dsl_code(path)
 
 # write witness arguments to disk

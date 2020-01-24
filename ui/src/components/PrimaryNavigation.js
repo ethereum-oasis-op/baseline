@@ -4,6 +4,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
+import Loading from './Loading';
 import Link from './Link';
 import UserSelection from './UserSelection';
 import Balance from './Balance';
@@ -17,7 +18,6 @@ const useStyles = makeStyles(theme => ({
   },
   dark: {
     background: 'linear-gradient(177.98deg, #212B34 3.6%, #62737F 100%)',
-
   },
   light: {
     background: 'white',
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     '& .org-address': {
       color: '#62737F',
       background: '#E3EBE8',
-    }
+    },
   },
   logoWrapper: {
     display: 'flex',
@@ -49,12 +49,13 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(2),
     background: '#212B34',
     color: 'white',
-  }
+  },
 }));
 
 export default function PrimaryNavigation() {
   const classes = useStyles();
-  const { settings } = useContext(ServerSettingsContext);
+  const { settings, loadingSettings } = useContext(ServerSettingsContext);
+  if (loadingSettings || !settings) { return <Loading/> }
   const { organizationAddress, organizationName, organizationRole } = settings;
   const theme = organizationRole === 1 ? 'dark' : 'light';
   const logo = theme === 'dark' ? RadishLogoDark : RadishLogoLight;
@@ -69,7 +70,11 @@ export default function PrimaryNavigation() {
               <Typography className={`logo-text ${classes.logoText}`} variant="h6" noWrap>
                 {organizationName}
               </Typography>
-              <Chip className={`org-address ${classes.orgAddress}`} size="small" label={organizationAddress} />
+              <Chip
+                className={`org-address ${classes.orgAddress}`}
+                size="small"
+                label={organizationAddress}
+              />
               <Balance />
             </div>
           </Link>

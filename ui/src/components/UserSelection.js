@@ -29,6 +29,7 @@ const UserSelection = () => {
   const classes = useStyles();
   const [data, setData] = useState({ status: 504 });
   const apiURL = window.localStorage.getItem('api') || 'http://radish-api-buyer.docker/graphql';
+  const user = window.localStorage.getItem('username') || 'Org1';
 
   console.log(`UI attached to ${data}`);
 
@@ -44,9 +45,10 @@ const UserSelection = () => {
   const handleChange = event => {
     const users = {
       Org1: { url: 'radish-api-buyer.docker/graphql', role: 1 },
-      'Supplier 1': { url: 'radish-api-supplier1.docker/graphql', role: 2 },
-      'Supplier 2': { url: 'radish-api-supplier2.docker/graphql', role: 2 },
+      'Supplier1': { url: 'radish-api-supplier1.docker/graphql', role: 2 },
+      'Supplier2': { url: 'radish-api-supplier2.docker/graphql', role: 2 },
     };
+
     window.location.reload(false);
     window.localStorage.setItem('api', users[event.target.value].url);
     window.localStorage.setItem('userRole', users[event.target.value].role);
@@ -55,10 +57,10 @@ const UserSelection = () => {
 
   return (
     <div className={classes.root}>
-      <Select className={classes.userSelection} value="Org1" onChange={handleChange}>
+      <Select className={classes.userSelection} value={user} onChange={handleChange}>
         <MenuItem value="Org1">Buyer</MenuItem>
-        <MenuItem value="Supplier 1">Supplier1</MenuItem>
-        <MenuItem value="Supplier 2">Supplier2</MenuItem>
+        <MenuItem value="Supplier1">Supplier1</MenuItem>
+        <MenuItem value="Supplier2">Supplier2</MenuItem>
       </Select>
     </div>
   );
