@@ -1,6 +1,6 @@
-const express = require('express');
-const rfpUtils = require('../integrations/rfp.js');
-const proposalUtils = require('../integrations/proposal.js');
+import express from 'express';
+import { partnerCreateRFP, partnerSignedRfp, deliveryReceiptUpdate } from '../integrations/rfp';
+import { partnerCreateProposal } from '../integrations/proposal.js';
 
 const router = express.Router();
 
@@ -11,23 +11,24 @@ router.post('/documents', async (req, res) => {
   switch (messageObj.type) {
     case 'rfp_create': // inbound RFP from partner
       try {
-        docId = (await rfpUtils.partnerCreateRFP(messageObj))._id;
+        docId = (await partnerCreateRFP(messageObj))._id;
       } catch (error) {
         res.status(400);
         res.send({ message: 'Could not create new RFP. Required fields: uuid' });
         return;
       }
       break;
-    case 'rfp_update': // i.e. supplier signs RFP and sends back to buyer
-      docId = (await rfpUtils.partnerUpdateRFP(messageObj))._id;
+    case 'rfp_signature': // i.e. supplier signs RFP and sends back to buyer
+      console.log('RPF SIGNATURE post body', messageObj);
+      docId = (await partnerSignedRfp(messageObj))._id;
       break;
     case 'delivery_receipt':
       // ex: supplier's messenger automatically sends this message type after receiving buyer's RFP
-      docId = (await rfpUtils.deliveryReceiptUpdate(messageObj))._id;
+      docId = (await deliveryReceiptUpdate(messageObj))._id;
       break;
     case 'proposal_create':
       try {
-        docId = (await proposalUtils.partnerCreateProposal(messageObj))._id;
+        docId = (await partnerCreateProposal(messageObj))._id;
       } catch (error) {
         res.status(400);
         return res.send({ message: error });

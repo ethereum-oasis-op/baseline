@@ -107,6 +107,11 @@ class WhisperWrapper {
         doc = await utils.storeNewMessage(data, content);
         await this.sendDeliveryReceipt(data);
       }
+      // Append source message ID to the object for tracking inbound
+      // messages from partners via the messenger API
+      messageObj.messageId = data.hash;
+      // Adding sender Id to message to know who sent the message
+      messageObj.senderId = data.sig;
       // Send all JSON messages to radish-api
       await this.forwardMessage(messageObj);
     } else {

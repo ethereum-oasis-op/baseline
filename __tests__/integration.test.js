@@ -39,7 +39,7 @@ describe('Buyer sends new RFP to supplier', () => {
   let rfpId;
   const sku = 'FAKE-SKU-123';
 
-  describe('Retreive identities from messenger', () => {
+  describe('Retrieve identities from messenger', () => {
     test('Supplier messenger GET /identities', async () => {
       const res = await request(supplierMessengerURL).get('/api/v1/identities');
       expect(res.statusCode).toEqual(200);
@@ -166,4 +166,42 @@ describe('Buyer sends new RFP to supplier', () => {
     });
   });
 
+  describe('As a buyer, receiving the auto-generated signature of the RFP from the supplier', () => {
+
+    test('Supplier has updated their RFP document with the signature date', async () => {
+      const queryBody = `{ rfp(uuid: "${rfpId}") { _id, sku, recipients { signature { sentDate receivedDate messageId } } } } `
+      // Wait for db to update
+      let res;
+      for (let retry = 0; retry < 3; retry++) {
+        res = await request(supplierApiURL)
+          .post('/graphql')
+          .send({ query: queryBody });
+        if (res.body.data.rfp.recipients[0].signature !== null) {
+          break;
+        }
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.data.rfp.recipients[0].signature.sentDate).not.toBeUndefined();
+      expect(res.body.data.rfp.recipients[0].signature.messageId).not.toBeUndefined();
+    });
+
+    test('Buyer receives signature and updates their signature date on their RFP', async () => {
+      const queryBody = `{ rfp(uuid: "${rfpId}") { _id, sku, recipients { signature { sentDate receivedDate messageId } } } } `
+      // Wait for db to update
+      let res;
+      for (let retry = 0; retry < 3; retry++) {
+        res = await request(buyerApiURL)
+          .post('/graphql')
+          .send({ query: queryBody });
+        if (res.body.data.rfp.recipients[0].signature !== null) {
+          break;
+        }
+        await new Promise((r) => setTimeout(r, 1000));
+      }
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.data.rfp.recipients[0].signature.receivedDate).not.toBeUndefined();
+      expect(res.body.data.rfp.recipients[0].signature.messageId).not.toBeUndefined();
+    });
+  });
 });
