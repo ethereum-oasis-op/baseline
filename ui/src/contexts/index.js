@@ -14,7 +14,15 @@ import { RFPProvider } from './rfp-context';
 import { ProposalProvider } from './proposal-context';
 import { MSAProvider } from './msa-context';
 
-const uri = window.localStorage.getItem('api');
+let uri = 'radish-api-buyer.docker/graphql';
+
+if (window.localStorage.getItem('api')) {
+  uri = window.localStorage.getItem('api');
+} else {
+  window.localStorage.setItem('api', uri);
+  window.localStorage.setItem('username', 'Org1');
+  window.localStorage.setItem('userRole', 1);
+}
 
 const httpLink = new HttpLink({
   uri: `http://${uri}`,
@@ -50,15 +58,13 @@ function AppProviders({ children }) {
     <ApolloProvider client={client}>
       <NoticeProvider>
         <ServerSettingsProvider>
-  
-            <PartnerProvider>
-              <RFPProvider>
-                <ProposalProvider>
-                  <MSAProvider>{children}</MSAProvider>
-                </ProposalProvider>
-              </RFPProvider>
-            </PartnerProvider>
-
+          <PartnerProvider>
+            <RFPProvider>
+              <ProposalProvider>
+                <MSAProvider>{children}</MSAProvider>
+              </ProposalProvider>
+            </RFPProvider>
+          </PartnerProvider>
         </ServerSettingsProvider>
       </NoticeProvider>
     </ApolloProvider>
