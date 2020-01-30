@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -8,20 +8,35 @@ import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import uniqid from 'uniqid';
 import find from 'lodash/find';
+import CreateContract from './CreateContract';
 import { formatCurrency } from '../utils';
+import { MSAContext } from '../contexts/msa-context';
 
-const RFPSuppliersTable = ({ rfp, proposals }) => {
-  const recipients = rfp.recipients.map(recipient => {
+const RFPSuppliersTable = ({ rfp, proposals, msas, refetch }) => {
+  const { postMSA } = useContext(MSAContext);
+  const [open, setOpen] = useState({});
+
+  const recipientProposals = rfp.recipients.map(recipient => {
     const recipientProposal = find(
       proposals,
       proposal => proposal.sender === recipient.partner.identity,
-    );
-    return { ...recipient, ...recipientProposal };
+    ) || {};
+    const msa = find(msas, msa => msa.proposalId === recipientProposal._id) || {};
+    return { ...recipient, ...recipientProposal, msaId: msa._id };
   });
 
-  const createContract = () => {
-    console.log('approved, redirecting to contract creation page');
-    //TODO: redirect to a new page? open a modal?
+  const createContract = async (rfpId, proposalId, recipient, index) => {
+    await postMSA({
+      variables: {
+        input: {
+          rfpId,
+          proposalId,
+          recipient,
+        },
+      },
+    });
+    setOpen({ [index]: false });
+    refetch();
   };
 
   return (
@@ -40,32 +55,48 @@ const RFPSuppliersTable = ({ rfp, proposals }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {recipients.map(recipient => {
+          {recipientProposals.map((proposal, index) => {
             return (
               <TableRow key={uniqid()}>
-                <TableCell>{recipient.partner.name}</TableCell>
+                <TableCell>{proposal.partner.name}</TableCell>
                 <TableCell>
-                  {recipient.receiptDate ? `Sent: ${recipient.receiptDate}` : 'Pending'}
+                  {proposal.receiptDate ? `Sent: ${proposal.receiptDate}` : 'Pending'}
                 </TableCell>
                 <TableCell>
-                  {recipient.rates &&
-                    recipient.rates.map(rate => (
-                      <Typography>{`${rate.startRange}-${rate.endRange}`}</Typography>
+                  {proposal.rates &&
+                    proposal.rates.map((rate, i) => (
+                      <Typography key={uniqid()}>
+                        {`${rate.startRange}-${rate.endRange}${proposal.rates[i + 1] ? '' : '+'}`}
+                      </Typography>
                     ))}
                 </TableCell>
                 <TableCell>
-                  {recipient.rates &&
-                    recipient.rates.map(rate => (
-                      <Typography>{`${formatCurrency(rate.price)}`}</Typography>
+                  {proposal.rates &&
+                    proposal.rates.map(rate => (
+                      <Typography key={uniqid()}>{`${formatCurrency(rate.price)}`}</Typography>
                     ))}
                 </TableCell>
                 <TableCell>
-                  {recipient.rates && (
-                    <Button variant="primary" onClick={() => createContract()}>
-                      Approve
-                    </Button>
-                  )}
+                  {proposal.rates &&
+                    (proposal.msaId ? (
+                      <Typography>Contract Established</Typography>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        style={{ color: '#fff', background: 'blue' }}
+                        onClick={() => setOpen({ [index]: true })}
+                      >
+                        Create Contract
+                      </Button>
+                    ))}
                 </TableCell>
+                <CreateContract
+                  rfp={rfp}
+                  proposal={proposal}
+                  open={open[index]}
+                  handleClose={() => setOpen({ [index]: false })}
+                  createContract={() => createContract(rfp._id, proposal._id, proposal.sender, index)}
+                />
               </TableRow>
             );
           })}

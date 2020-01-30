@@ -1,28 +1,10 @@
 import gql from 'graphql-tag';
 
-const SIGNATURE_ATTRIBUTES = gql`
-  fragment SIGNATURE_ATTRIBUTES on Signature {
-    name
-    signature
-    signatureDate
-  }
-`;
-
 export const MSA_ATTRIBUTES = gql`
   fragment MSA_ATTRIBUTES on MSA {
     _id
     rfpId
     proposalId
-    buyerSignature {
-      name
-      signature
-      signatureDate
-    }
-    supplierSignature {
-      name
-      signature
-      signatureDate
-    }
   }
 `;
 
@@ -56,6 +38,15 @@ export const CREATE_MSA = gql`
 export const GET_MSA_BY_PROPOSAL = gql`
   query getMSAByProposal($proposalId: String!) {
     msaByProposal(proposalId: $proposalId) {
+      ...MSA_ATTRIBUTES
+    }
+  }
+  ${MSA_ATTRIBUTES}
+`;
+
+export const GET_MSAS_BY_RFP = gql`
+  query getMSAsByRFP($rfpId: String!) {
+    msasByRFP(rfpId: $rfpId) {
       ...MSA_ATTRIBUTES
     }
   }

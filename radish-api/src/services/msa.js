@@ -538,3 +538,8 @@ export const onReceiptMSABuyer = async (msaObj, senderWhisperKey) => {
     );
   }
 };
+
+export const getMSAsByRFPId = async rfpId => {
+  const msas = await db.collection('msa').find({ rfpId }).toArray();
+  return msas;
+}

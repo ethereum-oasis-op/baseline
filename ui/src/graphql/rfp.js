@@ -1,4 +1,6 @@
 import gql from 'graphql-tag';
+import { PROPOSAL_ATTRIBUTES } from './proposal';
+import { MSA_ATTRIBUTES } from './msa';
 
 export const RFP_ATTRIBUTES = gql`
   fragment RFP_ATTRIBUTES on RFP {
@@ -54,3 +56,20 @@ export const GET_RFP = gql`
   }
   ${RFP_ATTRIBUTES}
 `;
+
+export const GET_RFP_PROPOSAL_MSA = gql`
+  query ($uuid: String!) {
+    rfp(uuid: $uuid) {
+      ...RFP_ATTRIBUTES
+    }
+    getProposalsByRFPId(rfpId: $uuid) {
+      ...PROPOSAL_ATTRIBUTES
+    }
+    msasByRFP(rfpId: $uuid) {
+      ...MSA_ATTRIBUTES
+    }
+  }
+  ${RFP_ATTRIBUTES}
+  ${PROPOSAL_ATTRIBUTES}
+  ${MSA_ATTRIBUTES}
+`

@@ -1,32 +1,30 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
-import Table from '@material-ui/core/Table';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
 import { useParams } from 'react-router-dom';
 import { useQuery, useLazyQuery } from '@apollo/react-hooks';
 import moment from 'moment';
-import { GET_RFP } from '../graphql/rfp';
+import { GET_RFP_PROPOSAL_MSA } from '../graphql/rfp';
 import RadishLogo from '../components/RadishLogo';
 import RFPSuppliersTable from '../components/RFPSuppliersTable';
 import ProposalForm from '../components/ProposalForm';
 import { GET_PARTNER_BY_IDENTITY } from '../graphql/partners';
-import { GET_PROPOSALS_BY_RFPID } from '../graphql/proposal';
 import RateTable from '../components/RateTable';
+import SKUTable from '../components/SKUTable';
+import { ServerSettingsContext } from '../contexts/server-settings-context';
 
 const RFPDetail = () => {
+  const [isSender, setIsSender] = useState(false);
   const { id } = useParams();
-  const { loading, error, data } = useQuery(GET_RFP, {
-    variables: { uuid: id },
+  const { settings } = useContext(ServerSettingsContext);
+  const { organizationAddress } = settings ? settings : {};
+  const { loading, error, data, refetch } = useQuery(GET_RFP_PROPOSAL_MSA, {
+    variables: {
+      uuid: id,
+    }
   });
   const [getPartnerByMessengerKey, { loading: partnerLoading, data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
-  );
-  const [getProposalsByRFPId, { loading: proposalLoading, data: proposalData }] = useLazyQuery(
-    GET_PROPOSALS_BY_RFPID,
   );
 
   useEffect(() => {
@@ -36,18 +34,22 @@ const RFPDetail = () => {
     }
   }, [data]);
 
-  const userRole = Number(localStorage.getItem('userRole')) || 1;
+  useEffect(() => {
+    if (organizationAddress && partnerData) {
+      partnerData.getPartnerByIdentity.address === organizationAddress && setIsSender(true);
+    };
+  }, [organizationAddress, partnerData]);
 
-  if (loading || partnerLoading || proposalLoading) return <RadishLogo loader />;
+  if (loading || partnerLoading) return <RadishLogo loader />;
 
   if (!data || !data.rfp) return <h1>Not Found</h1>;
 
   return (
     <Container>
       <Typography variant="h4">{data.rfp.description}</Typography>
-      {userRole === 2 && (
+      {!isSender && partnerData && (
         <Typography variant="body1">
-          for {partnerData && partnerData.getPartnerByMessengerKey.name}
+          for {partnerData.getPartnerByMessengerKey.name}
         </Typography>
       )}
       <Typography>
@@ -56,29 +58,18 @@ const RFPDetail = () => {
       <Typography variant="h2" style={{ margin: '2rem' }}>
         Items Requested
       </Typography>
-      <Table style={{ margin: '2rem' }}>
-        <TableHead>
-          <TableRow>
-            <TableCell>SKU</TableCell>
-            <TableCell>Description</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>{data.rfp.sku}</TableCell>
-            <TableCell>{data.rfp.skuDescription}</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      {userRole === 1 && (
+      <SKUTable rfp={data.rfp} />
+      {isSender && (
         <RFPSuppliersTable
           rfp={data.rfp}
-          proposals={proposalData ? proposalData.getProposalsByRFPId : []}
+          proposals={data.getProposalsByRFPId || []}
+          msas={data.msasByRFP || []}
+          refetch={refetch}
         />
       )}
-      {userRole === 2 && proposalData && !proposalData.getProposalsByRFPId.length && <ProposalForm rfp={data.rfp} />}
-      {userRole === 2 && proposalData && proposalData.getProposalsByRFPId.length > 0 && (
-        <RateTable proposals={proposalData.getProposalsByRFPId} />
+      {!isSender && data && !data.getProposalsByRFPId.length && <ProposalForm rfp={data.rfp} />}
+      {!isSender && data && data.getProposalsByRFPId.length > 0 && (
+        <RateTable rates={data.getProposalsByRFPId[0].rates} />
       )}
     </Container>
   );

@@ -34,6 +34,7 @@ const useStyles = makeStyles(() => ({
     margin: '0 auto',
     width: '95%',
     height: '100%',
+    marginTop: '2rem',
   },
   clearIcon: {
     position: 'absolute',
@@ -50,7 +51,14 @@ const CreateRFP = () => {
   const { postRFP } = useContext(RFPContext);
   const { organizations } = useContext(PartnerContext);
   const currentUser = localStorage.getItem('username') || 'Org 1';
-  const suppliers = organizations.filter(org => org.name !== currentUser);
+  const suppliers = organizations.filter(org => {
+    const names = {
+      Supplier1: 'Supplier 1',
+      Supplier2: 'Supplier 2',
+      Org1: 'Org1',
+    };
+    return org.name !== names[currentUser]
+  });
   const history = useHistory();
 
   const formik = useFormik({

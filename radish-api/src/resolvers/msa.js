@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 import { MSA, getMSAById, getAllMSAs, getMSABySKU, saveMSA } from '../services/msa';
@@ -10,6 +11,20 @@ import { strip0x } from '../utils/crypto/conversions';
 import { checkKeyPair } from '../utils/crypto/ecc/babyjubjub-ecc';
 
 const pycryptojs = require('zokrates-pycryptojs');
+=======
+import { uuid } from 'uuidv4';
+import {
+  getMSAById,
+  getAllMSAs,
+  getMSAByProposalId,
+  saveMSA,
+  getMSAsByRFP,
+} from '../services/msa';
+import { pubsub } from '../subscriptions';
+import { saveNotice } from '../services/notice';
+import { getPartnerByIdentity } from '../services/partner';
+import msgDeliveryQueue from '../queues/message_delivery';
+>>>>>>> feat: msa/contract creation integration
 
 const NEW_MSA = 'NEW_MSA';
 
@@ -62,6 +77,9 @@ export default {
         supplierSignatureStatus,
       };
     },
+    msasByRFP(_parent, args) {
+      return getMSAsByRFP(args.rfpId).then(res => res);
+    }
   },
   Mutation: {
     createMSA: async (_parent, args, context) => {
