@@ -109,7 +109,7 @@ const ProposalForm = ({ rfp }) => {
                                 else
                                   formik.setFieldValue(
                                     `rates.${index}.startRange`,
-                                    e.target.value - formik.values.rates[index - 1].endRange + 1,
+                                    formik.values.rates[index - 1].endRange + 1,
                                   );
                                 formik.handleChange(e);
                               }}
