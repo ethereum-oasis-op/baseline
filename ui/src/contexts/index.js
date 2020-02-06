@@ -13,6 +13,7 @@ import { NoticeProvider } from './notice-context';
 import { RFPProvider } from './rfp-context';
 import { ProposalProvider } from './proposal-context';
 import { MSAProvider } from './msa-context';
+import { ToastrProvider } from './ToastrContext';
 
 let uri = 'radish-api-buyer.docker/graphql';
 
@@ -56,17 +57,19 @@ const client = new ApolloClient({
 function AppProviders({ children }) {
   return (
     <ApolloProvider client={client}>
-      <NoticeProvider>
-        <ServerSettingsProvider>
-          <PartnerProvider>
-            <RFPProvider>
-              <ProposalProvider>
-                <MSAProvider>{children}</MSAProvider>
-              </ProposalProvider>
-            </RFPProvider>
-          </PartnerProvider>
-        </ServerSettingsProvider>
-      </NoticeProvider>
+      <ToastrProvider>
+        <NoticeProvider>
+          <ServerSettingsProvider>
+            <PartnerProvider>
+              <RFPProvider>
+                <ProposalProvider>
+                  <MSAProvider>{children}</MSAProvider>
+                </ProposalProvider>
+              </RFPProvider>
+            </PartnerProvider>
+          </ServerSettingsProvider>
+        </NoticeProvider>
+      </ToastrProvider>
     </ApolloProvider>
   );
 }
