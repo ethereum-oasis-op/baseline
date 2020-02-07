@@ -1,6 +1,6 @@
 const axios = require('axios');
-const Identity = require('./models/Identity');
-const Message = require('./models/Message');
+const Identity = require('../db/models/Identity');
+const Message = require('../db/models/Message');
 
 // Useful constants
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';

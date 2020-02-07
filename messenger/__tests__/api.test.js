@@ -1,10 +1,10 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
 const Config = require('../config');
-const generalUtils = require('../src/generalUtils.js');
+const generalUtils = require('../src/utils/generalUtils.js');
 
-const Identity = require('../src/models/Identity');
-const Message = require('../src/models/Message');
+const Identity = require('../src/db/models/Identity');
+const Message = require('../src/db/models/Message');
 
 const { ipAddress: buyerIp, apiPort: buyerPort } = Config.nodes.node_1;
 const buyerRequest = request(`${buyerIp}:${buyerPort}`);

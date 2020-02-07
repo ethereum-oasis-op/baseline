@@ -1,6 +1,6 @@
-const Identity = require('./models/Identity');
-const Message = require('./models/Message');
-const utils = require('./generalUtils');
+const Identity = require('../../db/models/Identity');
+const Message = require('../../db/models/Message');
+const utils = require('../../utils/generalUtils');
 const whisperUtils = require('./whisperUtils');
 const web3utils = require('./web3Utils.js');
 

@@ -1,11 +1,11 @@
 // TODO: Use config to pass db config for test env to setupDb
 const mongoose = require('mongoose');
 const Config = require('../config');
-const WhisperWrapper = require('../src/WhisperWrapper.js');
-const web3utils = require('../src/web3Utils.js');
+const WhisperWrapper = require('../src/clients/whisper/WhisperWrapper.js');
+const web3utils = require('../src/clients/whisper/web3Utils.js');
 
-const Identity = require('../src/models/Identity');
-const Message = require('../src/models/Message');
+const Identity = require('../src/db/models/Identity');
+const Message = require('../src/db/models/Message');
 
 beforeAll(async () => {
   mongoose.connect(Config.nodes.node_1.dbUrl, Config.mongoose);

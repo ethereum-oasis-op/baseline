@@ -2,8 +2,8 @@ const express = require('express');
 
 const router = express.Router();
 const Config = require('../../config');
-const WhisperWrapper = require('../WhisperWrapper');
-const web3utils = require('../web3Utils.js');
+const WhisperWrapper = require('../clients/whisper/WhisperWrapper');
+const web3utils = require('../clients/whisper/web3Utils.js');
 
 let messenger;
 

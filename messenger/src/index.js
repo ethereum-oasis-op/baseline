@@ -1,5 +1,5 @@
-const { app, apiRouter } = require('./app.js');
-const db = require('./db');
+const { app, apiRouter } = require('./server.js');
+const db = require('./db/connect.js');
 const Config = require('../config');
 
 const nodeNum = process.env.NODE_NUM || 1;

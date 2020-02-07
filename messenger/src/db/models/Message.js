@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const MessageSchema = new mongoose.Schema({
@@ -21,10 +20,10 @@ const MessageSchema = new mongoose.Schema({
   sentDate: Number,
   deliveredDate: Number,
 },
-{
-  collection: 'Messages',
-  versionKey: false,
-});
+  {
+    collection: 'Messages',
+    versionKey: false,
+  });
 
 const Messages = mongoose.model('Messages', MessageSchema);
 
