@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const IdentitySchema = new mongoose.Schema({
@@ -22,10 +21,10 @@ const IdentitySchema = new mongoose.Schema({
   },
   createdDate: String,
 },
-{
-  collection: 'Identities',
-  versionKey: false,
-});
+  {
+    collection: 'Identities',
+    versionKey: false,
+  });
 
 const Identities = mongoose.model('Identities', IdentitySchema);
 

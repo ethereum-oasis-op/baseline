@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Config = require('../config');
+const Config = require('../../config');
 
 const { firstConnectRetryDelaySecs } = Config.mongo;
 

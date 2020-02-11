@@ -1,5 +1,5 @@
 const Web3 = require('web3');
-const Config = require('../config');
+const Config = require('../../../config');
 
 const nodeNum = process.env.NODE_NUM || 1;
 const { whisperPort } = Config.nodes[`node_${nodeNum}`];

@@ -1,6 +1,6 @@
-const Identity = require('./models/Identity.js');
-const Message = require('./models/Message.js');
-const utils = require('./generalUtils.js');
+const Identity = require('../../db/models/Identity.js');
+const Message = require('../../db/models/Message.js');
+const utils = require('../../utils/generalUtils.js');
 const web3utils = require('./web3Utils.js');
 
 // Useful constants
