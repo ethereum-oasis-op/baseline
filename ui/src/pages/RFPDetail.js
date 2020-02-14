@@ -55,7 +55,7 @@ const RFPDetail = () => {
       <Typography>
         Proposal Deadline: {moment(data.rfp.proposalDeadline * 1000).format('LL')}
       </Typography>
-      <Typography variant="h2" style={{ margin: '2rem' }}>
+      <Typography variant="h2">
         Items Requested
       </Typography>
       <SKUTable rfp={data.rfp} />

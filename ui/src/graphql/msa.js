@@ -52,3 +52,12 @@ export const GET_MSAS_BY_RFP = gql`
   }
   ${MSA_ATTRIBUTES}
 `;
+
+export const GET_MSA_BY_ID = gql`
+  query msa($id: String!) {
+    msa(id: $id) {
+      ...MSA_ATTRIBUTES
+    }
+  }
+  ${MSA_ATTRIBUTES}
+`

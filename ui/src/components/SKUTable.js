@@ -7,7 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 
 const SKUTable = ({ rfp }) => {
   return (
-    <Table style={{ margin: '2rem' }}>
+    <Table style={{ margin: '2rem 0 2rem 0' }}>
       <TableHead>
         <TableRow>
           <TableCell>SKU</TableCell>

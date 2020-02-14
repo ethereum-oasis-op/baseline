@@ -13,7 +13,7 @@ const RateTable = ({ rates }) => {
   return (
     <>
       <Typography variant="h3">Pricing</Typography>
-      <Table style={{ margin: '2rem' }}>
+      <Table style={{ margin: '2rem 0 2rem 0' }}>
         <TableHead>
           <TableRow>
             <TableCell>Volume</TableCell>

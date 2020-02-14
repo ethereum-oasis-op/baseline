@@ -43,7 +43,7 @@ const App = () => {
           <Route path="/proposal/:id" component={ProposalDetail} />
           <Route path="/invoice/:id" component={Invoice} />
           <Route path="/purchaseorder/:id" component={PurchaseOrder} />
-          <Route path="/msa/:id" component={MSA} />
+          <Route path="/contracts/:id" component={MSA} />
           <Route component={NoMatch} />
         </Switch>
       </div>

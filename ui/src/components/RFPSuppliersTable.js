@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import uniqid from 'uniqid';
 import find from 'lodash/find';
 import CreateContract from './CreateContract';
+import Link from './Link';
 import { formatCurrency } from '../utils';
 import { MSAContext } from '../contexts/msa-context';
 
@@ -60,7 +61,8 @@ const RFPSuppliersTable = ({ rfp, proposals, msas, refetch }) => {
               <TableRow key={uniqid()}>
                 <TableCell>{proposal.partner.name}</TableCell>
                 <TableCell>
-                  {proposal.receiptDate ? `Sent: ${proposal.receiptDate}` : 'Pending'}
+                  {/* {proposal.receiptDate ? `Sent: ${proposal.receiptDate}` : 'Pending'} */}
+                  Sent
                 </TableCell>
                 <TableCell>
                   {proposal.rates &&
@@ -79,7 +81,7 @@ const RFPSuppliersTable = ({ rfp, proposals, msas, refetch }) => {
                 <TableCell>
                   {proposal.rates &&
                     (proposal.msaId ? (
-                      <Typography>Contract Established</Typography>
+                      <Link to={`/contracts/${proposal.msaId}`}>View Contract</Link>
                     ) : (
                       <Button
                         variant="contained"
