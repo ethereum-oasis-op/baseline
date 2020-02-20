@@ -9,7 +9,7 @@ import uniqid from 'uniqid';
 import GreaterThanIcon from './GreaterThanIcon';
 import { formatCurrency } from '../utils';
 
-const RateTable = ({ rates }) => {
+const RateTable = ({ rates, erc20ContractAddress }) => {
   return (
     <>
       <Typography variant="h3">Pricing</Typography>
@@ -18,6 +18,7 @@ const RateTable = ({ rates }) => {
           <TableRow>
             <TableCell>Volume</TableCell>
             <TableCell>Price</TableCell>
+            <TableCell>Payment Token</TableCell>
             <TableCell>Unit Of Measure</TableCell>
           </TableRow>
         </TableHead>
@@ -29,6 +30,7 @@ const RateTable = ({ rates }) => {
                 {rate.endRange}
               </TableCell>
               <TableCell>{formatCurrency(rate.price)}</TableCell>
+              <TableCell>{erc20ContractAddress}</TableCell>
               <TableCell>{rate.unitOfMeasure}</TableCell>
             </TableRow>
           ))}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -16,36 +16,33 @@ const useStyles = makeStyles(theme => ({
   },
   select: {
     maxHeight: '2.25rem',
-    marginLeft: '.5rem',
     overflow: 'hidden',
     '& .MuiOutlinedInput-notchedOutline': {
-      borderColor: '#50A75D',
+      borderColor: '#007BFF',
     },
   },
   icon: {
-    fill: '#50A75D',
+    fill: '#007BFF',
     position: 'relative',
     top: '.1rem',
+    '&:hover': {
+      cursor: 'pointer',
+    }
   },
 }));
 
 const DropDown = props => {
-  const { items, onChange, defaultItem } = props;
+  const { items, onChange, value, disabled, field } = props;
   const classes = useStyles();
-  const [value, setValue] = React.useState('');
-
-  const handleChange = event => {
-    setValue(event.target.value);
-    if (onChange) onChange(event);
-  };
 
   return (
-    <FormControl variant="outlined" className={classes.formControl}>
+    <FormControl variant="outlined" className={classes.formControl} disabled={disabled}>
       <Select
+        name={field.name}
         displayEmpty
         defaultValue=""
         value={value}
-        onChange={handleChange}
+        onChange={onChange}
         IconComponent={KeyboardArrowDown}
         autoWidth
         className={classes.select}
@@ -55,9 +52,6 @@ const DropDown = props => {
           },
         }}
       >
-        <MenuItem value="" disabled>
-          {defaultItem}
-        </MenuItem>
         {items.map(item => (
           <MenuItem key={uniqid()} value={item.value} disabled={item.disabled}>
             {item.label}
@@ -66,6 +60,11 @@ const DropDown = props => {
       </Select>
     </FormControl>
   );
+};
+
+DropDown.defaultProps = {
+  disabled: false,
+  field: {},
 };
 
 export default DropDown;

@@ -16,7 +16,7 @@ import { ServerSettingsContext } from '../contexts/server-settings-context';
 
 const MSADetail = () => {
   const { id } = useParams();
-  const [isSender, setIsSender] = useState(false);
+  const [isSender, setIsSender] = useState(true);
   const [fetchMSA, { data: msaData, loading: msaLoading }] = useLazyQuery(GET_MSA_BY_ID);
   const { msa } = msaData || {};
 
@@ -35,7 +35,6 @@ const MSADetail = () => {
   const { settings } = useContext(ServerSettingsContext);
   const { organizationAddress } = settings ? settings : {};
 
-
   useEffect(() => {
     if (!msa) {
       fetchMSA({ variables: { id } });
@@ -48,13 +47,15 @@ const MSADetail = () => {
 
   useEffect(() => {
     if (organizationAddress && address) {
-      address === organizationAddress && setIsSender(true);
+      address === organizationAddress ? setIsSender(true) : setIsSender(false);
     };
   }, [organizationAddress, address]);
 
   useEffect(() => {
     if (rfp) getPartnerByIdentity({ variables: { identity: rfp.sender } });
   }, [getPartnerByIdentity, rfp]);
+
+  if (!msaData) return 'Not Found';
 
   return (
     <Container>
@@ -65,7 +66,7 @@ const MSADetail = () => {
         {proposal &&
           <>
             <Grid item>
-              <RateTable rates={proposal.rates} />
+              <RateTable rates={proposal.rates} erc20ContractAddress={proposal.erc20ContractAddress} />
             </Grid>
             <Grid item style={{ marginLeft: '10rem' }}>
               <Typography variant="h3">Conditions</Typography>

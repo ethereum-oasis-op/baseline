@@ -10,11 +10,13 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import AddCircleOutline from '@material-ui/icons/AddCircleOutline';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import findIndex from 'lodash/findIndex';
 import { useHistory } from 'react-router-dom';
 import { ProposalContext } from '../contexts/proposal-context';
 import TextField from './TextField';
 import GreaterThanIcon from './GreaterThanIcon';
+import DropDown from './DropDown';
 
 const useStyles = makeStyles(() => ({
   table: {
@@ -38,13 +40,32 @@ const ProposalForm = ({ rfp }) => {
   const classes = useStyles();
   const history = useHistory();
   const [disabled, setDisabled] = useState({});
+  const [contractAddress, setContractAddress] = useState('');
   const { postProposal } = useContext(ProposalContext);
+
+  const erc20contracts = [{
+    value: '',
+    label: 'Select payment token'
+  },
+  {
+    value: '0x1234',
+    label: 'USD',
+  },
+  {
+    value: '0x3451',
+    label: 'GBP',
+  },
+  {
+    value: '0x4562',
+    label: 'EUR',
+  }];
 
   const formik = useFormik({
     initialValues: {
       rates: [],
       rfpId: rfp._id,
       recipient: rfp.sender,
+      erc20ContractAddress: '',
     },
     onSubmit: async values => {
       await postProposal({ variables: { input: values } });
@@ -74,18 +95,20 @@ const ProposalForm = ({ rfp }) => {
             }),
           )
           .min(1, 'Must add at least 1 rate'),
+          erc20ContractAddress: Yup.string().required('Token type required'),
       });
     }),
   });
 
   return (
     <FormikProvider value={formik}>
-      <form onSubmit={formik.handleSubmit} style={{ margin: '2rem' }}>
+      <form onSubmit={formik.handleSubmit}>
         <Table className={classes.table}>
           <TableHead>
             <TableRow>
               <TableCell>Volume</TableCell>
               <TableCell>Price</TableCell>
+              <TableCell>Payment Token</TableCell>
               <TableCell>Unit of Measure</TableCell>
             </TableRow>
           </TableHead>
@@ -105,7 +128,7 @@ const ProposalForm = ({ rfp }) => {
                               component={TextField}
                               onChange={(e, v) => {
                                 if (index === 0)
-                                  formik.setFieldValue(`rates.${index}.startRange`, 0);
+                                  formik.setFieldValue(`rates.${index}.startRange`, 1);
                                 else
                                   formik.setFieldValue(
                                     `rates.${index}.startRange`,
@@ -128,6 +151,21 @@ const ProposalForm = ({ rfp }) => {
                               className={classes.field}
                               startAdornment="$"
                               type="number"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Field
+                              name='erc20ContractAddress'
+                              component={DropDown}
+                              disabled={disabled[index]}
+                              className={classes.field}
+                              type="string"
+                              items={erc20contracts}
+                              onChange={(e) => {
+                                setContractAddress(e.target.value);
+                                formik.handleChange(e);
+                              }}
+                              value={contractAddress}
                             />
                           </TableCell>
                           <TableCell>
@@ -182,17 +220,21 @@ const ProposalForm = ({ rfp }) => {
                         <TableRow>
                           <TableCell className={classes.tableCell}>
                             <ErrorMessage
-                              className={classes.errorMessage}
                               name={`rates.${index}.endRange`}
-                              render={msg => <Typography>{msg}</Typography>}
+                              render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
                             />
                           </TableCell>
                           <TableCell className={classes.tableCell}>
                             <ErrorMessage
-                              className={classes.errorMessage}
                               name={`rates.${index}.price`}
-                              render={msg => <Typography>{msg}</Typography>}
+                              render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
                             />
+                          </TableCell>
+                          <TableCell className={classes.tableCell}>
+                            <ErrorMessage
+                                name='erc20ContractAddress'
+                                render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
+                              />
                           </TableCell>
                         </TableRow>
                       </React.Fragment>
@@ -212,9 +254,8 @@ const ProposalForm = ({ rfp }) => {
                   <TableRow>
                     <TableCell className={classes.tableCell}>
                       <ErrorMessage
-                        className={classes.errorMessage}
                         name="rates"
-                        render={error => !Array.isArray(error) && <Typography>{error}</Typography>}
+                        render={error => !Array.isArray(error) && <Typography className={classes.errorMessage}>{error}</Typography>}
                       />
                     </TableCell>
                   </TableRow>
@@ -223,7 +264,11 @@ const ProposalForm = ({ rfp }) => {
             />
           </TableBody>
         </Table>
-        <Button type="submit">Send Proposal</Button>
+        <Grid container direction="column">
+          <Grid item>
+            <Button style={{ marginTop: '.5rem' }} type="submit">Send Proposal</Button>
+          </Grid>
+        </Grid>
       </form>
     </FormikProvider>
   );

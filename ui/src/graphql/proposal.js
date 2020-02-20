@@ -10,6 +10,7 @@ export const PROPOSAL_ATTRIBUTES = gql`
       price
       unitOfMeasure
     }
+    erc20ContractAddress
     sender
   }
 `;

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -7,56 +7,29 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button';
 import uniqid from 'uniqid';
-import find from 'lodash/find';
-import CreateContract from './CreateContract';
 import Link from './Link';
+import CreateContract from './CreateContract';
 import { formatCurrency } from '../utils';
-import { MSAContext } from '../contexts/msa-context';
 
-const RFPSuppliersTable = ({ rfp, proposals, msas, refetch }) => {
-  const { postMSA } = useContext(MSAContext);
-  const [open, setOpen] = useState({});
-
-  const recipientProposals = rfp.recipients.map(recipient => {
-    const recipientProposal = find(
-      proposals,
-      proposal => proposal.sender === recipient.partner.identity,
-    ) || {};
-    const msa = find(msas, msa => msa.proposalId === recipientProposal._id) || {};
-    return { ...recipient, ...recipientProposal, msaId: msa._id };
-  });
-
-  const createContract = async (rfpId, proposalId, recipient, index) => {
-    await postMSA({
-      variables: {
-        input: {
-          rfpId,
-          proposalId,
-          recipient,
-        },
-      },
-    });
-    setOpen({ [index]: false });
-    refetch();
-  };
-
+const RFPSuppliersTable = ({ rfp, proposals, setOpen, open, createContract }) => {
   return (
     <>
-      <Typography variant="h2" style={{ margin: '2rem' }}>
+      <Typography variant="h2">
         Suppliers
       </Typography>
-      <Table style={{ margin: '2rem' }}>
+      <Table>
         <TableHead>
           <TableRow>
             <TableCell>Supplier</TableCell>
             <TableCell>Status</TableCell>
             <TableCell>Volume</TableCell>
             <TableCell>Price Per Unit</TableCell>
+            <TableCell>Payment Token</TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
-          {recipientProposals.map((proposal, index) => {
+          {proposals.map((proposal, index) => {
             return (
               <TableRow key={uniqid()}>
                 <TableCell>{proposal.partner.name}</TableCell>
@@ -65,18 +38,33 @@ const RFPSuppliersTable = ({ rfp, proposals, msas, refetch }) => {
                   Sent
                 </TableCell>
                 <TableCell>
-                  {proposal.rates &&
+                  {proposal.rates ? (
                     proposal.rates.map((rate, i) => (
                       <Typography key={uniqid()}>
                         {`${rate.startRange}-${rate.endRange}${proposal.rates[i + 1] ? '' : '+'}`}
                       </Typography>
-                    ))}
+                    ))
+                  ) : (
+                    <Typography>
+                      N/A
+                    </Typography>
+                  )}
                 </TableCell>
                 <TableCell>
-                  {proposal.rates &&
+                  {proposal.rates ? (
                     proposal.rates.map(rate => (
                       <Typography key={uniqid()}>{`${formatCurrency(rate.price)}`}</Typography>
-                    ))}
+                    ))
+                  ) : (
+                    <Typography>N/A</Typography>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {proposal.erc20ContractAddress ? (
+                    <Typography>{proposal.erc20ContractAddress}</Typography>
+                  ) : (
+                    <Typography>N/A</Typography>
+                  )}
                 </TableCell>
                 <TableCell>
                   {proposal.rates &&
@@ -96,8 +84,9 @@ const RFPSuppliersTable = ({ rfp, proposals, msas, refetch }) => {
                   rfp={rfp}
                   proposal={proposal}
                   open={open[index]}
+                  index={index}
                   handleClose={() => setOpen({ [index]: false })}
-                  createContract={() => createContract(rfp._id, proposal._id, proposal.sender, index)}
+                  createContract={createContract}
                 />
               </TableRow>
             );
