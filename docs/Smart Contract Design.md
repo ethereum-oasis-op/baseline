@@ -6,11 +6,11 @@ description: Detailed explanation of Radish34 smart contracts
 
 ## Table of Contents
 - [Overview](#overview)
-- [Assumptions](#context)
+- [Assumptions](#assumptions)
 - [Smart Contract Patterns](#smart-contract-patterns)
 - [Deployment Model](#deployment-model)
 - [Extensions](#extensions)
-- [References](#definitions)
+- [References](#references)
 
 
 ## Overview
@@ -18,18 +18,27 @@ description: Detailed explanation of Radish34 smart contracts
 This document is to provide an architectural specification for the Radish34 Procurement solution
 using ZKP on the public blockchain. As part of an ongoing iterative development process, 
 this document is a working version which will be updated based on feedback, review and use case updates from the stakeholders.
+WHen the Radish34 system is initialized, all contracts are deployed and registered with ERC1820Registry
+Particularly, for this application, a deployment script is utilized as part of the bootstrap process, to deloy the contracts
+and set them ready for interaction during on-going procurement processes. Moreover, in this case the system of smart contracts
+is for a given network or workgroup of participants. Depending on the business need, specific interfaces can be defined
+and leveraged for a set of participants and by extension any form of global interfaces can be registered/deployed for
+different business needs and type/set of participants
 
 ## Assumptions:
 
-- Org registry contract is deployed and it stores public identity information for the different parties
+- Org registry contract is deployed and it stores public identity information for the different parties. OrgRestry is deployed
+  as part of the initialization process. However, any number of registries can be created/registered depending on the need.
+  This applies to all smart contracts covered under Radish34, that are key for managing the business process - registries,
+  tokens, and privacy related contracts
 - Onboarding of different parties to the network is assumed to be done (as part of decentralized identity management). 
   To this extent, the additional data used for registering organization can be marked as dataUri or an ENS domain registry
 - Buyer’s address can be set in the clear based on understanding of the business implications
-- Any off chain data is to be encrypted and delivered to intended recipient while it is being sent from one party to another
-  ;and only a hash of the offchain data is stored on chain (for integrity)
+- Off-chain data is delivered from one party to another via radish's messenger service, and is always encrypted in-transit. 
+  Only a hash of the off-chain data is ever stored on-chain (for integrity)
 - During the process of RFP placement, we assume no constraints/adjustments/negotiations on price or quantity
   set during the proposal of the RFQ nor the responses to the RFQ
-- Complex and custom business needs related variations such as negotiations, token hierarchies, and additional verificiations
+- Complex and custom business needs related variations such as negotiations, token hierarchies, and additional verifications
   for business logic integrity are left out of scope to leave room for collaborated extensions
 - Integration with oracles has been left out of scope as part of the initial implementation
 
