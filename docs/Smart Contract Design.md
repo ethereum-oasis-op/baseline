@@ -15,15 +15,9 @@ description: Detailed explanation of Radish34 smart contracts
 
 ## Overview
 
-This document is to provide an architectural specification for the Radish34 Procurement solution
-using ZKP on the public blockchain. As part of an ongoing iterative development process, 
-this document is a working version which will be updated based on feedback, review and use case updates from the stakeholders.
-WHen the Radish34 system is initialized, all contracts are deployed and registered with ERC1820Registry
-Particularly, for this application, a deployment script is utilized as part of the bootstrap process, to deloy the contracts
-and set them ready for interaction during on-going procurement processes. Moreover, in this case the system of smart contracts
-is for a given network or workgroup of participants. Depending on the business need, specific interfaces can be defined
-and leveraged for a set of participants and by extension any form of global interfaces can be registered/deployed for
-different business needs and type/set of participants
+This document provides an architectural specification for the Radish34 product procurement solution using ZKP on the public blockchain. As part of an ongoing, iterative development process, this document is a working version which will be modified based on feedback, review, and use-case updates from the stakeholders.
+
+When the Radish34 system is initialized, all smart contracts are deployed and registered with the ERC1820Registry. During the bootstrap process, a script deploys the contracts and prepares them for interaction during on-going procurement processes. In Radish34, the system of smart contracts is scoped to a particular network or workgroup of participants. However, other interfaces can be defined and leveraged for a set of participants and, by extension, any form of global interfaces can be registered/deployed for different business needs and type/set of participants.
 
 ## Assumptions:
 
