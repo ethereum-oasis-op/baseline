@@ -1,5 +1,9 @@
 import express from 'express';
-import { partnerCreateRFP, partnerSignedRFP, deliveryReceiptUpdate } from '../db/models/modules/msa/rfps';
+import {
+  partnerCreateRFP,
+  partnerSignedRFP,
+  deliveryReceiptUpdate,
+} from '../db/models/modules/msa/rfps';
 import { saveProposal } from '../db/models/modules/msa/proposals';
 
 const router = express.Router();
@@ -34,24 +38,24 @@ router.post('/documents', async (req, res) => {
         return res.send({ message: error });
       }
       break;
-    //case 'msa_create':
-    //docId = await msaUtils.createMSA(messageObj);
-    //break;
-    //case 'msa_update':
-    //docId = await msaUtils.updateMSA(messageObj);
-    //break;
-    //case 'po_create':
-    //docId = await poUtils.createPO(messageObj);
-    //break;
-    //case 'po_update':
-    //docId = await poUtils.updatePO(messageObj);
-    //break;
-    //case 'invoice_create':
-    //docId = await invoiceUtils.createInvoice(messageObj);
-    //break;
-    //case 'invoice_update':
-    //docId = await invoiceUtils.updateInvoice(messageObj);
-    //break;
+    // case 'msa_create':
+    // docId = await msaUtils.createMSA(messageObj);
+    // break;
+    // case 'msa_update':
+    // docId = await msaUtils.updateMSA(messageObj);
+    // break;
+    // case 'po_create':
+    // docId = await poUtils.createPO(messageObj);
+    // break;
+    // case 'po_update':
+    // docId = await poUtils.updatePO(messageObj);
+    // break;
+    // case 'invoice_create':
+    // docId = await invoiceUtils.createInvoice(messageObj);
+    // break;
+    // case 'invoice_update':
+    // docId = await invoiceUtils.updateInvoice(messageObj);
+    // break;
     default:
       console.log('Did not recognize message object type:', messageObj);
   }

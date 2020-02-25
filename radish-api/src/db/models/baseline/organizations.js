@@ -56,7 +56,7 @@ export const getPartnerById = async address => {
 };
 
 export const getPartnerByIdentity = async identity => {
-  const partner = {};
+  const partner = await Organization.findOne({ sender: identity });
   return partner;
 };
 

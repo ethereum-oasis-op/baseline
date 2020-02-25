@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "83bdbfd7-8960-4e81-892a-2f24379d6b24",
+		"_postman_id": "2bf1db56-e4c8-4e13-a265-dfe585b5e6c7",
 		"name": "integration-test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -149,6 +149,7 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				},
 				{
@@ -429,9 +430,11 @@
 							"response": []
 						}
 					],
+					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
 				}
-			]
+			],
+			"protocolProfileBehavior": {}
 		},
 		{
 			"name": "retrieve buyer identity",
@@ -1221,216 +1224,6 @@
 			"response": []
 		},
 		{
-			"name": "Buyer checks  messageId in which signature is received",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "4322c789-ef0b-4923-b926-95cb7b094e73",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"var res = JSON.parse(responseBody);",
-							"",
-							"var rfpId = pm.globals.get(\"rfpId\");",
-							"var sku = pm.globals.get(\"sku\");",
-							"",
-							"pm.test('should return a valid response', () => {",
-							"    pm.response.to.not.be.error;",
-							"    pm.response.to.be.ok;",
-							"    pm.response.to.be.withBody;",
-							"    pm.response.to.be.json;",
-							"});",
-							"",
-							"pm.test('should return createRFP.sku', () => {",
-							"    pm.expect(res.data.rfp.sku).to.exist;",
-							"    pm.expect(res.data.rfp.sku).to.equal(sku);",
-							"});",
-							"",
-							"pm.test('should return createRFP._id', () => {",
-							"    pm.expect(res.data.rfp._id).to.exist;",
-							"    pm.expect(res.data.rfp._id).to.equal(rfpId);",
-							"});",
-							"",
-							"pm.globals.set(\"messageId1-sig\", res.data.rfp.recipients[0].signature.messageId);",
-							"pm.globals.set(\"messageId2-sig\", res.data.rfp.recipients[1].signature.messageId);"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"name": "Content-Type",
-						"type": "text",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "graphql",
-					"graphql": {
-						"query": "query($rfpId:String!)\n{ rfp(uuid: $rfpId) \n{ \n    _id, \n    sku, \n    recipients \n    { \n        signature \n        { \n            sentDate receivedDate messageId \n        } \n    } \n} \n}",
-						"variables": "{\n\t\"rfpId\":\"{{rfpId}}\"\n}"
-					}
-				},
-				"url": {
-					"raw": "http://localhost:8001/graphql",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "8001",
-					"path": [
-						"graphql"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Buyer retrieves RFP signature signed by supplier1",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "63b093a3-f6e6-427c-92eb-586507fbc8ec",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"var res = JSON.parse(responseBody);",
-							"",
-							"var messageId_sig = pm.globals.get(\"messageId1-sig\");",
-							"",
-							"",
-							"pm.test('should return a valid response', () => {",
-							"    pm.response.to.not.be.error;",
-							"    pm.response.to.be.ok;",
-							"    pm.response.to.be.withBody;",
-							"    pm.response.to.be.json;",
-							"});",
-							"",
-							"pm.test('should return payload', () => {",
-							"    pm.expect(res.payload).to.exist;",
-							"});",
-							"",
-							"pm.test('should match id', () => {",
-							"    pm.expect(res.id).to.equal(messageId_sig);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-messenger-id",
-						"value": "{{buyerMessengerId}}",
-						"type": "text"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://localhost:4001/api/v1/messages/{{messageId1-sig}}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "4001",
-					"path": [
-						"api",
-						"v1",
-						"messages",
-						"{{messageId1-sig}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Buyer retrieves RFP signature signed by supplier2",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "63b093a3-f6e6-427c-92eb-586507fbc8ec",
-						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
-							"    pm.response.to.have.status(200);",
-							"});",
-							"",
-							"var res = JSON.parse(responseBody);",
-							"",
-							"var messageId_sig = pm.globals.get(\"messageId2-sig\");",
-							"",
-							"",
-							"pm.test('should return a valid response', () => {",
-							"    pm.response.to.not.be.error;",
-							"    pm.response.to.be.ok;",
-							"    pm.response.to.be.withBody;",
-							"    pm.response.to.be.json;",
-							"});",
-							"",
-							"pm.test('should return payload', () => {",
-							"    pm.expect(res.payload).to.exist;",
-							"});",
-							"",
-							"pm.test('should match id', () => {",
-							"    pm.expect(res.id).to.equal(messageId_sig);",
-							"});"
-						],
-						"type": "text/javascript"
-					}
-				}
-			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-messenger-id",
-						"type": "text",
-						"value": "{{buyerMessengerId}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "http://localhost:4001/api/v1/messages/{{messageId2-sig}}",
-					"protocol": "http",
-					"host": [
-						"localhost"
-					],
-					"port": "4001",
-					"path": [
-						"api",
-						"v1",
-						"messages",
-						"{{messageId2-sig}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "Supplier1 creates proposal",
 			"event": [
 				{
@@ -1846,5 +1639,6 @@
 				]
 			}
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
