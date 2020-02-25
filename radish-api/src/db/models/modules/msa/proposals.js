@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { createNotice } from '../../baseline/notices';
 
 const ProposalSchema = new mongoose.Schema({
   _id: {
@@ -35,6 +36,27 @@ const ProposalSchema = new mongoose.Schema({
     type: String, // Messenger Id of partner
     required: true,
   },
+  recipients: [
+    {
+      partner: {
+        name: String, // Organization name
+        address: String, // Ethereum address
+        identity: String, // Messenger Id of partner
+        role: String, // Organization role within supply chain
+      },
+      origination: {
+        // Filled by buyer
+        receiptDate: Number, // Date of confirmed receipt
+        messageId: String, // Hash of message used to send RFP via messenger service
+      },
+      signature: {
+        // Filled by buyer/supplier
+        sentDate: Number, // Supplier fills: Date Supplier sent signature
+        receivedDate: Number, // Buyer fills: Date of confirmed receipt of valid sig
+        messageId: String, // Buyer/Supplier fills: Hash of message used to send/received RFP via messenger service
+      },
+    },
+  ],
 });
 
 const Proposal = mongoose.model('proposals', ProposalSchema);
@@ -54,11 +76,17 @@ export const getAllProposals = async () => {
   return proposals;
 };
 
-export const saveProposal = async input => {
-  const count = await Proposal.count({});
-  const doc = Object.assign(input, { _id: count + 1 });
-  const proposal = await Proposal.insert(doc);
-  return proposal;
+export const saveProposal = async doc => {
+  try {
+    const newProposal = doc;
+    newProposal._id = doc._id;
+    console.log(`Saving new Proposal (id: ${doc._id}) from partner...`);
+    const result = await Proposal.create([newProposal], { upsert: true, new: true });
+    await createNotice('proposal', result[0], newProposal.rfpId);
+    return result[0];
+  } catch (e) {
+    console.log('Error creating proposal: ', e);
+  }
 };
 
 export default {

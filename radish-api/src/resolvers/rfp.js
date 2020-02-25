@@ -2,7 +2,7 @@ import { getRFPById, getAllRFPs } from '../services/rfp';
 import { saveNotice } from '../services/notice';
 import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../queues/message_delivery';
-import { onCreateRFP } from '../integrations/rfp';
+import { saveRFP } from '../db/models/modules/msa/rfps';
 import { getPartnerByIdentity } from '../services/partner';
 
 const NEW_RFP = 'NEW_RFP';
@@ -23,7 +23,7 @@ export default {
       const myRFP = args.input;
       myRFP.createdDate = currentTime;
       myRFP.sender = context.identity;
-      const rfp = (await onCreateRFP(myRFP))._doc;
+      const rfp = (await saveRFP(myRFP))._doc;
       await saveNotice({
         resolved: false,
         category: 'rfp',

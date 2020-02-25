@@ -1,6 +1,10 @@
 import express from 'express';
-import { partnerCreateRFP, partnerSignedRfp, deliveryReceiptUpdate } from '../integrations/rfp';
-import { partnerCreateProposal } from '../integrations/proposal.js';
+import {
+  partnerCreateRFP,
+  partnerSignedRFP,
+  deliveryReceiptUpdate,
+} from '../db/models/modules/msa/rfps';
+import { saveProposal } from '../db/models/modules/msa/proposals';
 
 const router = express.Router();
 
@@ -20,7 +24,7 @@ router.post('/documents', async (req, res) => {
       break;
     case 'rfp_signature': // i.e. supplier signs RFP and sends back to buyer
       console.log('RPF SIGNATURE post body', messageObj);
-      docId = (await partnerSignedRfp(messageObj))._id;
+      docId = (await partnerSignedRFP(messageObj))._id;
       break;
     case 'delivery_receipt':
       // ex: supplier's messenger automatically sends this message type after receiving buyer's RFP
@@ -28,30 +32,30 @@ router.post('/documents', async (req, res) => {
       break;
     case 'proposal_create':
       try {
-        docId = (await partnerCreateProposal(messageObj))._id;
+        docId = (await saveProposal(messageObj))._id;
       } catch (error) {
         res.status(400);
         return res.send({ message: error });
       }
       break;
-    //case 'msa_create':
-    //docId = await msaUtils.createMSA(messageObj);
-    //break;
-    //case 'msa_update':
-    //docId = await msaUtils.updateMSA(messageObj);
-    //break;
-    //case 'po_create':
-    //docId = await poUtils.createPO(messageObj);
-    //break;
-    //case 'po_update':
-    //docId = await poUtils.updatePO(messageObj);
-    //break;
-    //case 'invoice_create':
-    //docId = await invoiceUtils.createInvoice(messageObj);
-    //break;
-    //case 'invoice_update':
-    //docId = await invoiceUtils.updateInvoice(messageObj);
-    //break;
+    // case 'msa_create':
+    // docId = await msaUtils.createMSA(messageObj);
+    // break;
+    // case 'msa_update':
+    // docId = await msaUtils.updateMSA(messageObj);
+    // break;
+    // case 'po_create':
+    // docId = await poUtils.createPO(messageObj);
+    // break;
+    // case 'po_update':
+    // docId = await poUtils.updatePO(messageObj);
+    // break;
+    // case 'invoice_create':
+    // docId = await invoiceUtils.createInvoice(messageObj);
+    // break;
+    // case 'invoice_update':
+    // docId = await invoiceUtils.updateInvoice(messageObj);
+    // break;
     default:
       console.log('Did not recognize message object type:', messageObj);
   }

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import messenger from '../utils/messengerWrapper';
-import { signatureSentUpdate } from '../integrations/rfp';
+import { signatureSentUpdate } from '../db/models/modules/msa/rfps';
 
 module.exports = async (job, done) => {
   const { data: jobData } = job;
