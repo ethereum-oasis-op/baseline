@@ -1,6 +1,6 @@
 import {
-  getPartnerByID,
-  getPartnerByIdentity,
+  getPartnerByAddress,
+  getPartnerByMessengerKey,
   getAllPartners,
   getMyPartners,
   savePartner,
@@ -12,10 +12,10 @@ const PARTNERS_UPDATE = 'PARTNERS_UPDATE';
 export default {
   Query: {
     partner(_parent, args) {
-      return getPartnerByID(args.address).then(res => res);
+      return getPartnerByAddress(args.address).then(res => res);
     },
-    getPartnerByIdentity(_parent, args) {
-      return getPartnerByIdentity(args.identity).then(res => res);
+    getPartnerByMessengerKey(_parent, args) {
+      return getPartnerByMessengerKey(args.identity).then(res => res);
     },
     partners() {
       return getAllPartners();

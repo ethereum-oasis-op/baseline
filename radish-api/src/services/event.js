@@ -1,37 +1,27 @@
 import { utils } from 'ethers';
-import fs from 'fs';
 import { getServerSettings } from '../utils/serverSettings';
 import { getContract } from '../utils/ethers';
 import { saveOrganization } from './organization';
-
-const OrgRegistryPath = '/app/artifacts/OrgRegistry.json';
-
-export const getOrgRegistryJson = () => {
-  if (fs.existsSync(OrgRegistryPath)) {
-    const orgRegistry = fs.readFileSync(OrgRegistryPath);
-    return JSON.parse(orgRegistry);
-  }
-  console.log('Unable to locate file: ', OrgRegistryPath);
-  throw ReferenceError('Registrar.json not found');
-};
+import { getContractJson } from './contract';
 
 export const subscribeRegisterOrgEvent = async () => {
   const config = await getServerSettings();
-  const orgRegistryJson = getOrgRegistryJson();
-  if (!config.organizationRegistryAddress) {
+  const orgRegistryJson = getContractJson('OrgRegistry');
+  if (!config.addresses.OrgRegistry) {
     return;
   }
   const orgRegistryContract = getContract(
     orgRegistryJson,
     config.rpcProvider,
-    config.organizationRegistryAddress,
+    config.addresses.OrgRegistry,
   );
-  orgRegistryContract.on('RegisterOrg', (name, address, role, key) => {
+  orgRegistryContract.on('RegisterOrg', (name, address, role, messagingKey, zkpPublicKey) => {
     saveOrganization({
       name: utils.parseBytes32String(name),
       address: address,
       role: role.toNumber(),
-      identity: key,
+      identity: messagingKey,
+      zkpPublicKey: zkpPublicKey,
     });
   });
 };

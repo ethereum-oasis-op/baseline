@@ -27,33 +27,24 @@ export const setRPCProvider = async rpcProvider => {
   return { serverSettingsUpdate: settings };
 };
 
+export const setContractAddress = async (contractName, contractAddress) => {
+  const doc = {};
+  doc.addresses[contractName] = contractAddress;
+  await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
+  const settings = await getServerSettings();
+  await pubsub.publish('SERVER_SETTINGS_UPDATE', { serverSettingsUpdate: settings });
+  return settings;
+};
+
 export const setOrganizationWalletAddress = async organizationAddress => {
-  const doc = { organizationAddress };
-  await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
-  const settings = await getServerSettings();
-  await pubsub.publish('SERVER_SETTINGS_UPDATE', { serverSettingsUpdate: settings });
-  return settings;
-};
-
-export const setERC1820RegistryAddress = async erc1820RegistryAddress => {
-  const doc = { erc1820RegistryAddress };
-  await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
-  const settings = await getServerSettings();
-  await pubsub.publish('SERVER_SETTINGS_UPDATE', { serverSettingsUpdate: settings });
-  return settings;
-};
-
-export const setRegistrarAddress = async registrarAddress => {
-  const doc = { registrarAddress };
-  await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
-  const settings = await getServerSettings();
-  await pubsub.publish('SERVER_SETTINGS_UPDATE', { serverSettingsUpdate: settings });
-  return settings;
-};
-
-export const setOrganizationRegistryAddress = async organizationRegistryAddress => {
-  const doc = { organizationRegistryAddress };
-  await db.collection('serversettings').findOneAndUpdate({}, { $set: doc }, { upsert: true });
+  // assign organization.address:
+  await db
+    .collection('serversettings')
+    .findOneAndUpdate(
+      {},
+      { $set: { 'organization.address': organizationAddress } },
+      { upsert: true },
+    );
   const settings = await getServerSettings();
   await pubsub.publish('SERVER_SETTINGS_UPDATE', { serverSettingsUpdate: settings });
   return settings;
@@ -64,7 +55,5 @@ export default {
   getServerSettings,
   setRPCProvider,
   setOrganizationWalletAddress,
-  setERC1820RegistryAddress,
-  setRegistrarAddress,
-  setOrganizationRegistryAddress,
+  setContractAddress,
 };

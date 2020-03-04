@@ -1,10 +1,6 @@
 import healthcheck from '../install/healthcheck';
 import { pubsub } from '../subscriptions';
-import {
-  setRPCProvider,
-  setOrganizationRegistryAddress,
-  getServerSettings,
-} from '../utils/serverSettings';
+import { setRPCProvider, setContractAddress, getServerSettings } from '../utils/serverSettings';
 import { createWalletFromMnemonic } from '../utils/wallet';
 
 const SERVER_SETTINGS_UPDATE = 'SERVER_SETTINGS_UPDATE';
@@ -12,9 +8,22 @@ const SERVER_SETTINGS_UPDATE = 'SERVER_SETTINGS_UPDATE';
 export default {
   Query: {
     async getServerSettings() {
-      const settings = await getServerSettings();
-      console.log('Getting server settings', settings);
-      return settings;
+      const { rpcProvider, organization, addresses } = await getServerSettings();
+      console.log('Getting server settings:');
+      console.log(rpcProvider);
+      console.log(organization);
+      console.log(addresses);
+      // TODO: Edit ServerSettings graphQL schema to be a nested object with 'organizations' and 'addresses' sub-objects, to align with the radosh-api backend.
+      const flattenedSettings = {
+        rpcProvider,
+        organizationName: organization.name,
+        organizationRole: organization.role,
+        organizationWhisperKey: organization.messengerKey,
+        organizationAddress: organization.address,
+        globalRegistryAddress: addresses.ERC1820Registry,
+        orgRegistryAddress: addresses.OrgRegistry,
+      };
+      return flattenedSettings;
     },
   },
   Mutation: {
@@ -24,8 +33,8 @@ export default {
       const settings = await getServerSettings();
       return settings;
     },
-    setOrganizationRegistryAddress: async (_parent, args) => {
-      await setOrganizationRegistryAddress(args.organizationRegistryAddress);
+    setOrgRegistryAddress: async (_parent, args) => {
+      await setContractAddress('OrgRegistry', args.orgRegistryAddress);
       healthcheck();
       const settings = await getServerSettings();
       return settings;

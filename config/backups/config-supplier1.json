@@ -1,12 +1,17 @@
 {
   "rpcProvider": "http://ganache:8545",
-  "registrarAddress": "0xC5d828f2110323Fa6EBb387173Fc4318c5bAc9fF",
-  "buyerAddress": "0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41",
-  "organizationName": "Supplier 1",
-  "organizationRole": 2,
-  "organizationWhisperKey": "0x04ef0c8b14877227e7b2be8e8f4c83cda30622757acc86a9f86863bcc56cf1d2b7e2bf14a6694c1e3e2b12cd8a8fb19ad392f44d4ca124735ae6b5321780a1817f",
-  "orgRegistryAddress": "0xd5A108eD4a9236717026cc008831BD0B6a87Adab",
-  "registryAddress": "0x701f5a3724d9e940cA22C1DBaA15dA910F7f398a",
-  "globalRegistryAddress": "0x0E257c2302fE485458Af4F177aA441695dce0Fe4",
-  "organizationRegistryAddress": "0xd5A108eD4a9236717026cc008831BD0B6a87Adab"
+  "organization": {
+    "messengerKey": "0x042aeccd0790b525e9efe176ecab01d9a46e214001d609e5b2cc4b10d0bc02fa01f3145ed23247a564d1e589abdeec48d79d925cd931d6320d38783c95dded8f61",
+    "name": "Supplier 1",
+    "role": 2,
+    "zkpPublicKey": "0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387",
+    "zkpPrivateKey": "0xb084bd09eea9612b5790a73d9f88bdf644d56194a410b08f6d2ae09d5fccbfe"
+  },
+  "addresses": {
+    "ERC1820Registry": "0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397",
+    "OrgRegistry": "0x31088fd0eede771d5bda1558e06a666Cd9BF110c",
+    "BN256G2": "0x8f17969A8dc9cbAe2EB98541F33c7c396f615241",
+    "Verifier": "0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3",
+    "Shield": "0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB"
+  }
 }

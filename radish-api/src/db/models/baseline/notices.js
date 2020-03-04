@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { getPartnerByIdentity } from './organizations';
+import { getPartnerByMessengerKey } from '../../../services/partner';
 // import { pubsub } from '../subscriptions';
 
 /**
@@ -83,7 +83,7 @@ export const saveNotice = async input => {
  */
 export const createNotice = async (category, payload, categoryId = null) => {
   try {
-    const sender = await getPartnerByIdentity(payload.sender);
+    const sender = await getPartnerByMessengerKey(payload.sender);
     const newNotice = {
       categoryId: categoryId || payload._id,
       category,

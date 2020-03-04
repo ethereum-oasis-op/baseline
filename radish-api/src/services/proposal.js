@@ -6,9 +6,12 @@ export const getProposalById = async id => {
 };
 
 export const getProposalsByRFPId = async rfpId => {
-  const proposal = await db.collection('proposals').find({ rfpId }).toArray();
+  const proposal = await db
+    .collection('proposals')
+    .find({ rfpId })
+    .toArray();
   return proposal;
-}
+};
 
 export const getAllProposals = async () => {
   const proposals = await db

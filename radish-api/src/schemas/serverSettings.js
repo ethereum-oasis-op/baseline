@@ -1,5 +1,8 @@
 import gql from 'graphql-tag';
 
+/**
+TODO: Edit ServerSettings to be a nested object with 'organizations' and 'addresses' sub-objects, because it's neater. Will require a change to the UI. The backend has already been modified to allow this.
+*/
 export default gql`
   extend type Query {
     getServerSettings: ServerSettings
@@ -7,7 +10,7 @@ export default gql`
 
   extend type Mutation {
     setRPCProvider(uri: String!): ServerSettings
-    setOrganizationRegistryAddress(organizationRegistryAddress: Address): ServerSettings
+    setOrgRegistryAddress(orgRegistryAddress: Address): ServerSettings
     setWalletFromMnemonic(mnemonic: String!, path: String): ServerSettings
   }
 
@@ -22,6 +25,8 @@ export default gql`
     organizationWhisperKey: String
     organizationAddress: String
     globalRegistryAddress: Address
-    organizationRegistryAddress: Address
+    orgRegistryAddress: Address
+    organisationzkpPublicKey: String
+    organisationzkpPrivateKey: String
   }
 `;

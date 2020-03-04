@@ -2,7 +2,7 @@ const fs = require('fs');
 const { Wallet } = require('ethers');
 const Paths = require('../paths.json');
 
-const getWalletPath = role => `${Paths.KeystorePath}/${role}.eth`;
+const getWalletPath = role => `${Paths.Keystore}/${role}.eth`;
 
 const getWallet = role => {
   const walletFilePath = getWalletPath(role);
@@ -12,6 +12,11 @@ const getWallet = role => {
   }
   console.log('No wallet found:', walletFilePath);
   return process.exit(1);
+};
+
+const getAddress = role => {
+  const { address } = getWallet(role).signingKey;
+  return address;
 };
 
 const getPrivateKey = role => {
@@ -27,5 +32,6 @@ const getPrivateKey = role => {
 
 module.exports = {
   getWallet,
+  getAddress,
   getPrivateKey,
 };

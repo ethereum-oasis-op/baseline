@@ -73,17 +73,17 @@ const getContract = (contractJson, uri, address) => {
 };
 
 const getContractWithWallet = (contractJson, contractAddress, uri, privateKey) => {
-  let obt = null;
+  let contract = null;
   try {
     const provider = getProvider(uri);
     const wallet = new ethers.Wallet(privateKey, provider);
-    obt = new ethers.Contract(contractAddress, contractJson.compilerOutput.abi, provider);
-    const contractWithWallet = obt.connect(wallet);
+    contract = new ethers.Contract(contractAddress, contractJson.compilerOutput.abi, provider);
+    const contractWithWallet = contract.connect(wallet);
     return contractWithWallet;
   } catch (e) {
     console.log('Failed to instantiate compiled contract', e);
   }
-  return obt;
+  return contract;
 };
 
 const parseBigNumbers = object => {
@@ -195,6 +195,31 @@ const getAccounts = async uri => {
   return getProvider(uri).listAccounts();
 };
 
+/**
+Parses an event log for a particular eventName, and returns the values.
+@param {string} eventName
+@param {ethers.Contract} contract - an ethers contract instance i.e. `const contract = new ethers.Contract(...)`
+@param {ethers transactionReceipt} txReceipt - not to be confused with an ethers transaction response.
+*/
+const getEventValuesFromTxReceipt = (eventName, contract, txReceipt) => {
+  const { logs } = txReceipt;
+
+  for (let i = 0; i < logs.length; i++) {
+    const log = logs[i];
+    const logDescription = contract.interface.parseLog(log);
+    if (logDescription.name === eventName) {
+      let { values } = logDescription;
+      values = removeNumericKeys(values); // values contains duplicate numeric keys for each event parameter.
+      values = parseBigNumbers(values); // convert uints (returned as BigNumber) to numbers.
+
+      // console.log(`\n\nExtracted these values relating to ${eventName}:`);
+      // console.log(values);
+      return values;
+    }
+  }
+  return {};
+};
+
 module.exports = {
   getProvider,
   getDefaultProvider,
@@ -214,4 +239,5 @@ module.exports = {
   removeNumericKeys,
   parseBigNumbersToIntArray,
   parseBytes32ToStringArray,
+  getEventValuesFromTxReceipt,
 };

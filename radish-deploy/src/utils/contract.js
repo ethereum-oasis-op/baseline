@@ -2,38 +2,42 @@ const Wallet = require('./wallet');
 const Ethers = require('./ethers');
 const Paths = require('../paths.json');
 
-let ERC1820Address;
-let orgRegistryAddress;
-
 const uri = process.env.RPC_PROVIDER;
-const getERC1820Address = () => ERC1820Address;
-const getOrgRegistryAddress = () => orgRegistryAddress;
+const contractAddresses = [];
 
-const deployERC1820Registry = async role => {
+const getContractAddress = contractName => contractAddresses[contractName];
+
+const deployContract = async (contractName, constructorArgs = [], msgSenderName) => {
   const tx = await Ethers.deployContract(
-    Paths.ERC1820RegistryPath,
+    Paths[contractName],
     uri,
-    Wallet.getPrivateKey(role),
-    Ethers.getAccounts(uri)[0],
+    Wallet.getPrivateKey(msgSenderName),
+    constructorArgs,
   );
-  ERC1820Address = tx.address;
-  return ERC1820Address;
+  contractAddresses[contractName] = tx.address;
+  return contractAddresses[contractName];
 };
 
-const deployOrgRegistry = async role => {
-  const tx = await Ethers.deployContract(
-    Paths.OrgRegistryPath,
+const deployContractWithLibraryLink = async (
+  contractName,
+  constructorArgs = [],
+  libraryName,
+  msgSenderName,
+) => {
+  const tx = await Ethers.deployContractWithLibraryLink(
+    Paths[contractName],
     uri,
-    Wallet.getPrivateKey(role),
-    getERC1820Address(),
+    Wallet.getPrivateKey(msgSenderName),
+    constructorArgs,
+    libraryName,
+    getContractAddress(libraryName),
   );
-  orgRegistryAddress = tx.address;
-  return orgRegistryAddress;
+  contractAddresses[contractName] = tx.address;
+  return contractAddresses[contractName];
 };
 
 module.exports = {
-  deployERC1820Registry,
-  deployOrgRegistry,
-  getERC1820Address,
-  getOrgRegistryAddress,
+  getContractAddress,
+  deployContract,
+  deployContractWithLibraryLink,
 };

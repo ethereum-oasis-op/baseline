@@ -107,13 +107,13 @@ async function storeNewMessage(messageData, content) {
 }
 
 async function forwardMessage(messageObj) {
-  console.log(`Forwarding message to radish-api: POST ${radishApiUrl}/documents`);
+  console.log(`\n\n\nForwarding message to radish-api: POST ${radishApiUrl}/documents`);
   try {
     const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
-    console.log(`SUCCESS: POST ${radishApiUrl}/documents`);
+    console.log(`\nSUCCESS: POST ${radishApiUrl}/documents`);
     console.log(`${response.status} -`, response.data);
   } catch (error) {
-    console.error(`ERROR: POST ${radishApiUrl}/documents`);
+    console.error(`\nERROR: POST ${radishApiUrl}/documents`);
     if (error.response) {
       console.log(`${error.response.status} -`, error.response.data);
     }

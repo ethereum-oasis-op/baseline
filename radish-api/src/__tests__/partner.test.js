@@ -39,7 +39,7 @@ describe('Partner graphq testing', () => {
  
 addPartner: async (_parent, args) => {
       await savePartner(args.input);
-      const partner = await getPartnerByID(args.input.address);
+      const partner = await getPartnerByAddress(args.input.address);
       return partner;
     }
 

@@ -1,4 +1,4 @@
-import { getRFPById, getAllRFPs } from '../../db/models/modules/msa/rfps';
+import { getRFPById, getAllRFPs } from '../../db/models/modules/rfps';
 import { pubsub } from '../subscriptions';
 
 const NEW_RFP = 'NEW_RFP';

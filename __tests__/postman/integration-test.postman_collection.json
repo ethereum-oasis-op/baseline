@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2bf1db56-e4c8-4e13-a265-dfe585b5e6c7",
+		"_postman_id": "2215d39d-d8b2-45f8-9b58-d3d082ba89cf",
 		"name": "integration-test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -644,7 +644,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation($supplier1MessengerId:String!, $supplier2MessengerId:String!){\n          createRFP( input: {\n            sku: \"SKU-1234\",\n            skuDescription: \"Component AAA\",\n            description: \"Description for AAA\",\n            proposalDeadline: 1585663500,\n            recipients: \n            [\n              { \n                partner: \n                { \n                  identity: $supplier1MessengerId,\n                  name: \"Supplier 1\",\n                  address:   \"0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f\",\n                  role: \"supplier\"\n                }\n              },\n              { \n                partner: \n                { \n                  identity: $supplier2MessengerId,\n                  name: \"Supplier 2\",\n                  address: \"0x3f7eB8a7d140366423e9551e9532F4bf1A304C65\",\n                  role: \"supplier\"\n                }\n              }\n            ]\n          })\n          { _id, sku } \n        } \n",
+						"query": "mutation($supplier1MessengerId:String!, $supplier2MessengerId:String!){\n          createRFP( input: {\n            sku: \"SKU-1234\",\n            skuDescription: \"Component AAA\",\n            description: \"Description for AAA\",\n            proposalDeadline: 1585663500,\n            recipients: \n            [\n              { \n                partner: \n                { \n                  identity: $supplier1MessengerId,\n                  name: \"Supplier 1\",\n                  address:   \"0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f\",\n                  role: \"supplier\",\n                  zkpPublicKey: \"0x99246c83ca94b55a7330f68952ee74574a7d3b1921ccf29c84f75975935e6333\"\n                }\n              },\n              { \n                partner: \n                { \n                  identity: $supplier2MessengerId,\n                  name: \"Supplier 2\",\n                  address: \"0x3f7eB8a7d140366423e9551e9532F4bf1A304C65\",\n                  role: \"supplier\",\n                  zkpPublicKey: \"0x99246c83ca94b55a7330f68952ee74574a7d3b1921ccf29c84f75975935e6333\"\n                }\n              }\n            ]\n          })\n          { _id, sku } \n        } \n",
 						"variables": "{\n\t\"supplier1MessengerId\":\"{{supplier1MessengerId}}\",\n\t\"supplier2MessengerId\":\"{{supplier2MessengerId}}\"\n}"
 					}
 				},

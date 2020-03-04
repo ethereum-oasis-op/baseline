@@ -32,8 +32,8 @@ export default {
     organizations() {
       return getAllOrganizations();
     },
-    organizationList(_parent, args) {
-      return listOrganizations(args.start, args.count);
+    organizationList() {
+      return listOrganizations();
     },
     registeredOrganization(_parent, args) {
       return getRegisteredOrganization(args.address);
@@ -53,13 +53,14 @@ export default {
   Mutation: {
     registerOrganization: async (_root, args) => {
       const settings = await getServerSettings();
-      const { organizationWhisperKey, organizationAddress } = settings;
+      const { zkpPublicKey, messengerKey, address } = settings.organization;
 
       const orgRegistryTxHash = await registerToOrgRegistry(
-        organizationAddress,
+        address,
         args.organizationName,
         args.organizationRole,
-        organizationWhisperKey,
+        messengerKey,
+        zkpPublicKey,
       );
 
       console.log('Registering Organization with tx:', orgRegistryTxHash);

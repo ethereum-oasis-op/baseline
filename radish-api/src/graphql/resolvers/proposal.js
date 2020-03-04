@@ -1,10 +1,10 @@
 import { uuid } from 'uuidv4';
 import {
   getProposalById,
-  getProposalsByRFPId,
+  getProposalByRFPId,
   getAllProposals,
   saveProposal,
-} from '../../db/models/modules/msa/proposals';
+} from '../../db/models/modules/proposals';
 import { pubsub } from '../subscriptions';
 import { saveNotice } from '../../db/models/baseline/notices';
 import { getPartnerByIdentity } from '../../db/models/baseline/organizations';
@@ -17,7 +17,7 @@ export default {
       return getProposalById(args.id).then(res => res);
     },
     getProposalsByRFPId(_parent, args) {
-      return getProposalsByRFPId(args.rfpId).then(res => res);
+      return getProposalByRFPId(args.rfpId).then(res => res);
     },
     proposals() {
       return getAllProposals();

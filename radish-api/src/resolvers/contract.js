@@ -9,7 +9,20 @@ export default {
       return getAllContracts();
     },
     transactionReceipt(parent, args) {
-      return getTxReceipt(args.hash).then(res => res);
+      return getTxReceipt(args.hash).then(txReceipt => {
+        return {
+          transactionHash: txReceipt.transactionHash,
+          status: txReceipt.status,
+          from: txReceipt.from,
+          to: txReceipt.to,
+          blockNumber: txReceipt.blockNumber,
+          blockHash: txReceipt.blockHash,
+          confirmations: txReceipt.confirmations,
+          gasUsed: txReceipt.gasUsed.toNumber(),
+          cumulativeGasUsed: txReceipt.cumulativeGasUsed.toNumber(),
+          contractAddress: txReceipt.contractAddress,
+        };
+      });
     },
   },
 

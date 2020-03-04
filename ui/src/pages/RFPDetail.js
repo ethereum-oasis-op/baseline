@@ -22,7 +22,7 @@ const RFPDetail = () => {
   const { loading, error, data } = useQuery(GET_RFP, {
     variables: { uuid: id },
   });
-  const [getPartnerByIdentity, { loading: partnerLoading, data: partnerData }] = useLazyQuery(
+  const [getPartnerByMessengerKey, { loading: partnerLoading, data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
   const [getProposalsByRFPId, { loading: proposalLoading, data: proposalData }] = useLazyQuery(
@@ -31,7 +31,7 @@ const RFPDetail = () => {
 
   useEffect(() => {
     if (data && data.rfp) {
-      getPartnerByIdentity({ variables: { identity: data.rfp.sender } });
+      getPartnerByMessengerKey({ variables: { identity: data.rfp.sender } });
       getProposalsByRFPId({ variables: { rfpId: id } });
     }
   }, [data]);
@@ -47,7 +47,7 @@ const RFPDetail = () => {
       <Typography variant="h4">{data.rfp.description}</Typography>
       {userRole === 2 && (
         <Typography variant="body1">
-          for {partnerData && partnerData.getPartnerByIdentity.name}
+          for {partnerData && partnerData.getPartnerByMessengerKey.name}
         </Typography>
       )}
       <Typography>

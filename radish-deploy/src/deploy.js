@@ -3,87 +3,102 @@ const Wallet = require('./utils/wallet');
 const Contract = require('./utils/contract');
 const Organization = require('./utils/organization');
 const Settings = require('./utils/settings');
-const { getIdentities } = require('./utils/identities');
+const { getWhisperIdentities } = require('./utils/identities');
+const { uploadVks } = require('./utils/vk');
 
-let globalRegistryAddress;
-let organizationRegistryAddress;
+const addresses = {};
 
 const deployContracts = async role => {
-  globalRegistryAddress = await Contract.deployERC1820Registry(role);
-  console.log('✅  Registry Deployed:', globalRegistryAddress);
-  organizationRegistryAddress = await Contract.deployOrgRegistry(role);
-  console.log('✅  OrganizationRegistry Deployed:', organizationRegistryAddress);
+  addresses.ERC1820Registry = await Contract.deployContract('ERC1820Registry', [], role);
+  console.log('✅  ERC1820Registry deployed:', addresses.ERC1820Registry);
+
+  addresses.OrgRegistry = await Contract.deployContract(
+    'OrgRegistry',
+    [addresses.ERC1820Registry],
+    role,
+  );
+  console.log('✅  OrgRegistry deployed:', addresses.OrgRegistry);
+
+  addresses.BN256G2 = await Contract.deployContract('BN256G2', [], role);
+  console.log('✅  BN256G2 library deployed:', addresses.BN256G2);
+
+  addresses.Verifier = await Contract.deployContractWithLibraryLink(
+    'Verifier',
+    [],
+    'BN256G2',
+    role,
+  );
+  console.log('✅  Verifier deployed:', addresses.Verifier);
+
+  addresses.Shield = await Contract.deployContract('Shield', [addresses.Verifier], role);
+  console.log('✅  Shield deployed:', addresses.Shield);
 };
 
 const assignManager = async role => {
-  const { signingKey } = await Wallet.getWallet(role);
-  const { transactionHash: assignManagerTxHash } = await Organization.assignManager(
-    organizationRegistryAddress,
-    signingKey.address,
-  );
-  console.log(`✅  Assigned the ${role} as the manager:`, assignManagerTxHash);
+  const { transactionHash } = await Organization.assignManager('OrgRegistry', role, role);
+  console.log(`✅  Assigned the ${role} as the manager for OrgRegistry. TxHash:`, transactionHash);
 };
 
 const setInterfaceImplementer = async role => {
-  const { signingKey } = await Wallet.getWallet(role);
-  const {
-    transactionHash: setInterfaceImplementerTxHash,
-  } = await Organization.setInterfaceImplementer(
-    signingKey.address,
+  const roleAddress = await Wallet.getAddress(role);
+  const { transactionHash } = await Organization.setInterfaceImplementer(
+    roleAddress,
     ethers.utils.id('IOrgRegistry'),
-    organizationRegistryAddress,
+    addresses.OrgRegistry,
+    role,
   );
-  console.log(
-    `✅  Set OrgReg as Interface Implementer for ${role}:`,
-    setInterfaceImplementerTxHash,
-  );
+  console.log(`✅  Set OrgRegistry as Interface Implementer for ${role}. TxHash:`, transactionHash);
 };
 
+// TODO Add a method to create commitment public key and private key for the user and receive these of the partners' from partners.
+// Remove these fields from config. Or just the organisationzkpPrivateKey
 const register = async role => {
-  const { organizationName, organizationRole } = await Settings.getServerSettings(role);
-  const { signingKey } = await Wallet.getWallet(role);
-  const ids = await getIdentities();
+  const roleAddress = await Wallet.getAddress(role);
+  const config = await Settings.getServerSettings(role);
+  let { organization } = config;
+  const messengerKey = (await getWhisperIdentities())[role];
+  organization = { ...organization, messengerKey };
+
   const { transactionHash } = await Organization.registerToOrgRegistry(
     role,
-    organizationRegistryAddress,
-    signingKey.address,
-    organizationName,
-    organizationRole,
-    ids[role],
+    addresses.OrgRegistry,
+    roleAddress,
+    organization.name,
+    organization.role,
+    organization.messengerKey,
+    organization.zkpPublicKey,
   );
-  console.log(`✅  Registered ${role} in the OrgReg with tx hash:`, transactionHash);
+  console.log(`✅  Registered ${role} in the OrgRegistry with tx hash:`, transactionHash);
 };
 
 const checkOrgCount = async () => {
-  const registeredOrgCount = await Organization.getOrgCount(organizationRegistryAddress);
+  const registeredOrgCount = await Organization.getOrgCount(addresses.OrgRegistry, 'deployer');
   console.log(`✅  getOrg: ${registeredOrgCount} Organizations have successfully been set up!`);
 };
 
 const checkOrgInfo = async role => {
-  const { signingKey } = await Wallet.getWallet(role);
-  const info = await Organization.getOrgInfo(organizationRegistryAddress, signingKey.address);
+  const roleAddress = await Wallet.getAddress(role);
+  const info = await Organization.getOrgInfo(addresses.OrgRegistry, roleAddress, 'deployer');
   console.log(info);
 };
 
 const saveSettings = async role => {
-  const { organizationName, organizationRole } = await Settings.getServerSettings(role);
-  const ids = await getIdentities();
-
+  const config = await Settings.getServerSettings(role);
+  let { organization } = config;
+  const messengerKey = (await getWhisperIdentities())[role];
+  organization = { ...organization, messengerKey };
   Settings.setServerSettings(role, {
-    organizationRegistryAddress,
-    globalRegistryAddress,
-    organizationName,
-    organizationRole,
-    organizationWhisperKey: ids[`${role}`],
+    addresses,
+    organization,
   });
 };
 
 const main = async () => {
   const registerAll = process.env.MODE === 'register-all';
 
-  await deployContracts('buyer');
-  await assignManager('buyer');
-  await setInterfaceImplementer('buyer');
+  await deployContracts('deployer');
+  await assignManager('deployer');
+  await setInterfaceImplementer('deployer');
   await register('buyer');
   await register('supplier1');
   await register('supplier2');
@@ -96,6 +111,8 @@ const main = async () => {
   await saveSettings('buyer');
   await saveSettings('supplier1');
   await saveSettings('supplier2');
+
+  await uploadVks('deployer');
 
   console.log('----------------- Completed  -----------------');
   console.log(`Please restart the radish-apis for the config to take effect`);

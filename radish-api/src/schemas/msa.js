@@ -1,9 +1,10 @@
 import gql from 'graphql-tag';
 
+// TODO nesting
 const MSASchema = gql`
   extend type Query {
     msa(id: Int!): MSA
-    msaByProposal(proposalId: String!): MSA
+    msaBySKU(sku: String!): MSA
     msas: [MSA]
   }
 
@@ -16,29 +17,31 @@ const MSASchema = gql`
   }
 
   type MSA {
-    _id: Int!
-    proposalId: String!
-    rfpId: String!
-    buyerSignature: Signature
-    supplierSignature: Signature
+    _id: String!
+    zkpPublicKeyOfBuyer: String!
+    zkpPublicKeyOfSupplier: String!
+    tierBounds: [Int!]
+    pricesByTier: [Int!]
+    sku: String!
+    erc20ContractAddress: String!
+    hashOfTieredPricing: String!
+    minVolume: Int!
+    maxVolume: Int!
+    commitment: String!
+    salt: String!
+    accumulatedVolumeOrdered: Int!
+    accumulatedVolumeDelivered: Int!
+    whisperPublicKeySupplier: String!
+    buyerSignatureStatus: Boolean!
+    supplierSignatureStatus: Boolean!
   }
 
   input inputMSA {
-    proposalId: String!
-    rfpId: String!
-    buyerSignature: inputSignature,
-  }
-
-  type Signature {
-    name: String!
-    signature: String!
-    signatureDate: Date!
-  }
-
-  input inputSignature {
-    name: String!
-    signature: String!
-    signatureDate: Date!
+    supplierAddress: String!
+    tierBounds: [Int!]
+    pricesByTier: [Int!]
+    sku: String!
+    erc20ContractAddress: String!
   }
 `;
 

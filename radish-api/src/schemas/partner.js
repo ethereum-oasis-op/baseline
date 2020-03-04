@@ -5,7 +5,7 @@ export default gql`
     partner(address: Address!): Partner
     partners: [Partner]
     myPartners: [Partner]
-    getPartnerByIdentity(identity: String!): Partner
+    getPartnerByMessengerKey(identity: String!): Partner
   }
 
   extend type Mutation {
@@ -18,10 +18,11 @@ export default gql`
   }
 
   type Partner {
-    name: String!
     address: Address!
-    role: Role!
+    zkpPublicKey: String!
     identity: String!
+    name: String!
+    role: Role!
   }
 
   input AddPartnerInput {
@@ -29,6 +30,7 @@ export default gql`
     address: Address!
     role: Role!
     identity: String!
+    zkpPublicKey: String!
   }
 
   input RemovePartnerInput {

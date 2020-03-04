@@ -1,39 +1,25 @@
 import fs from 'fs';
 import db from './db';
+import { jsonifyVk } from './jsonifyVk';
 
-const formatArray = data => {
-  if (data.startsWith('0x')) {
-    return data.split(',').map(d => d.trim());
-  }
-  if (data.startsWith('[')) {
-    return JSON.parse(
-      `[${data
-        .replace(/\[/g, '["')
-        .replace(/]/g, '"]')
-        .replace(/(?<!\]),\s/g, '", "')}]`,
-    );
-  }
-  return data;
+/**
+The vk's keys tend to be stored alphabetically in the db. But we need the following exact order, or everything will break:
+*/
+const reorderVerificationKey = vk => {
+  const { H, Galpha, Hbeta, Ggamma, Hgamma, query } = vk;
+  return { H, Galpha, Hbeta, Ggamma, Hgamma, query };
 };
 
 export const getVerificationKeyByID = async id => {
-  const vk = await db.collection('verificationKey').findOne({ _id: id });
-  return vk;
+  const vk = await db
+    .collection('verificationKey')
+    .findOne({ _id: id }, { projection: { _id: 0 } });
+  const reorderedVk = vk === null ? vk : reorderVerificationKey(vk);
+  return reorderedVk; // reorderVerificationKey(vk);
 };
 
-export const saveVerificationKeyToDB = async (keyID, filePath) => {
-  const formattedObject = {};
-  const array = fs
-    .readFileSync(filePath)
-    .toString()
-    .split('\n');
-  for (let i = 0; i < array.length; i += 1) {
-    const currentElement = array[i].split('=');
-    formattedObject[currentElement[0].trim()] = formatArray(currentElement[1].trim());
-  }
-  await db
-    .collection('verificationKey')
-    .updateOne({ _id: keyID }, { $set: formattedObject }, { upsert: true });
+export const saveVerificationKeyToDB = async (keyID, _vk) => {
+  await db.collection('verificationKey').updateOne({ _id: keyID }, { $set: _vk }, { upsert: true });
   const vk = await getVerificationKeyByID(keyID);
   return vk;
 };
@@ -47,26 +33,51 @@ const readJsonFile = filePath => {
   throw ReferenceError('file not found');
 };
 
-export const getProofByDocID = async DocId => {
-  const proof = await db.collection('proof').findOne({ _id: DocId });
-  delete proof._id;
+export const getProofByDocID = async id => {
+  const proof = await db.collection('proof').findOne({ _id: id }, { projection: { _id: 0 } });
   return proof;
 };
 
 export const saveProofToDB = async (docID, keyID, filePath) => {
-  const proof = readJsonFile(filePath);
+  const { proof, inputs } = readJsonFile(filePath);
   const formattedObject = {
     docID: docID,
     verificationKeyID: keyID,
-    verificationKey: await getVerificationKeyByID(keyID),
     proof,
+    inputs,
   };
   await db
     .collection('proof')
     .updateOne({ _id: docID }, { $set: formattedObject }, { upsert: true });
   const storedProof = await getProofByDocID(docID);
-  delete storedProof._id;
   return storedProof;
+};
+
+export const checkForNewVks = async () => {
+  console.log(`Checking for new verification keys...`);
+  let newVkCount = 0;
+  const circuitNames = fs.readdirSync(`/app/output/`);
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const circuitName of circuitNames) {
+    const verifierPath = `/app/output/${circuitName}/Verifier_${circuitName}.sol`;
+    const vkPath = `/app/output/${circuitName}/${circuitName}_vk.key`;
+
+    if (!(fs.existsSync(vkPath) && fs.existsSync(verifierPath))) continue; // eslint-disable-line no-continue
+
+    // check to see if any of these circuits are not yet stored in the mongo db:
+    const doc = await getVerificationKeyByID(circuitName);
+    // console.log(circuitName);
+    // console.log('doc:', doc);
+    if (doc === null) {
+      console.log(`New VK for ${circuitName} found; storing it in the mongodb. `);
+      newVkCount += 1;
+      const vkJson = await jsonifyVk(verifierPath);
+      await saveVerificationKeyToDB(circuitName, JSON.parse(vkJson));
+    }
+  }
+
+  if (newVkCount === 0) console.log(`No new vks found`);
 };
 
 export default {
@@ -74,4 +85,5 @@ export default {
   saveProofToDB,
   getVerificationKeyByID,
   getProofByDocID,
+  checkForNewVks,
 };

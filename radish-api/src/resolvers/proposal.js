@@ -7,7 +7,7 @@ import {
 } from '../services/proposal';
 import { pubsub } from '../subscriptions';
 import { saveNotice } from '../services/notice';
-import { getPartnerByIdentity } from '../services/partner';
+import { getPartnerByMessengerKey } from '../services/partner';
 import msgDeliveryQueue from '../queues/message_delivery';
 
 const NEW_PROPOSAL = 'NEW_PROPOSAL';
@@ -27,7 +27,7 @@ export default {
   Mutation: {
     createProposal: async (_parent, args, context) => {
       const { recipient, ...input } = args.input;
-      const currentUser = await getPartnerByIdentity(context.identity);
+      const currentUser = await getPartnerByMessengerKey(context.identity);
       input._id = uuid();
       input.sender = context.identity;
       const newProposal = await saveProposal(input);

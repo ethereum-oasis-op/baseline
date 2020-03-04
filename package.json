@@ -22,6 +22,7 @@
     "seed:buyer": "docker-compose run --rm -e ROLE='buyer' mongo-seed sh seed.sh",
     "seed:supplier1": "docker-compose run --rm -e ROLE='supplier1' mongo-seed sh seed.sh",
     "seed:supplier2": "docker-compose run --rm -e ROLE='supplier2' mongo-seed sh seed.sh",
+    "setup": "./setup.sh",
     "deploy": "docker-compose run --rm radish-deploy sh deploy.sh",
     "deploy:all": "docker-compose run -e MODE='register-all' --rm radish-deploy sh deploy.sh"
   },
@@ -48,7 +49,7 @@
     "@0x/sol-coverage": "^3.0.5",
     "@0x/sol-profiler": "^3.1.7",
     "@0x/sol-trace": "^2.0.13",
-    "eslint": "^6.7.0",
+    "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-babel": "^5.3.0",
     "eslint-plugin-import": "^2.18.2",

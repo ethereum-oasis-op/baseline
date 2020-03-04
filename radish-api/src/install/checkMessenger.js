@@ -19,8 +19,8 @@ export default async () => {
 
   try {
     const loc = `${messengerURI}/identities`;
-    const whisperKey = await getIdentity(loc);
-    console.log('Whisper key:', whisperKey);
+    const messengerKey = await getIdentity(loc);
+    console.log('Whisper key:', messengerKey);
   } catch (error) {
     if (!error.response) {
       console.error('Error: Network Error');

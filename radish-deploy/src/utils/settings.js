@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Paths = require('../paths.json');
 
-const getFilePath = role => `${Paths.ConfigPath}/config-${role}.json`;
+const getFilePath = role => `${Paths.Config}/config-${role}.json`;
 
 const getServerSettings = role => {
   const filepath = getFilePath(role);
@@ -26,7 +26,7 @@ const saveSettingsToConfigFile = (role, settings, nextSettings) => {
     console.log(`Could not find settings file: ${filepath}`);
     return process.exit(1);
   }
-};;
+};
 
 const setServerSettings = (role, settings) => {
   const prevSettings = getServerSettings(role);
@@ -35,7 +35,7 @@ const setServerSettings = (role, settings) => {
   return nextSettings;
 };
 
-const setMinimalServerSettings = (role, settings) => {};;
+const setMinimalServerSettings = (role, settings) => {};
 
 module.exports = {
   getServerSettings,

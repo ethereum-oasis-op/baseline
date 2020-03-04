@@ -1,11 +1,8 @@
 import fs from 'fs';
 import { Wallet, utils } from 'ethers';
-import { getProvider, parseBigNumbers } from './ethers';
-import { getServerSettings, setServerSettings } from './serverSettings';
+import { getProvider } from './ethers';
 
 const walletPath = '/keystore/account.eth';
-
-const parseBalanceWeiToEther = balance => {};
 
 export const getWallet = async () => {
   if (fs.existsSync(walletPath)) {

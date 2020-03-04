@@ -97,3 +97,4 @@ artifacts/
 build
 dist
 *config*/config-*.json
+*config*/merkle-tree/

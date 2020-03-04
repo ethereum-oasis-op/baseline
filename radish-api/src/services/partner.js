@@ -1,14 +1,21 @@
 import db from '../db';
 
-export const getPartnerByID = async address => {
+export const getPartnerByzkpPublicKey = async zkpPublicKey => {
+  const partner = await db
+    .collection('organization')
+    .findOne({ zkpPublicKey: zkpPublicKey });
+  return partner;
+};
+
+export const getPartnerByAddress = async address => {
   const partner = await db.collection('organization').findOne({ address: address });
   return partner;
 };
 
-export const getPartnerByIdentity = async identity => {
-  const partner = await db.collection('organization').findOne({ identity });
+export const getPartnerByMessengerKey = async messengerKey => {
+  const partner = await db.collection('organization').findOne({ identity: messengerKey });
   return partner;
-}
+};
 
 export const getAllPartners = async () => {
   const organizations = await db

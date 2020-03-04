@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 import messenger from '../utils/messengerWrapper';
-import { signatureSentUpdate } from '../db/models/modules/msa/rfps';
+import { signatureSentUpdate } from '../db/models/modules/rfps';
 
 module.exports = async (job, done) => {
   const { data: jobData } = job;
   console.log(`BullJS delivering message (uuid: ${jobData.documentId})`);
-  const message = (await messenger.createMessage(
+  const message = await messenger.createMessage(
     jobData.senderId,
     jobData.recipientId,
     jobData.payload,
-  )).data;
+  ).data;
   job.progress(50);
 
   console.log('BullJS updating the origination messageId to', message._id);

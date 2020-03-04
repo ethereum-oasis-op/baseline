@@ -3,5 +3,8 @@
   "rules": {
     "no-underscore-dangle": "off",
     "no-console": "off"
-  }
+  },
+  globals: {
+    'BigInt':true
+  },
 }

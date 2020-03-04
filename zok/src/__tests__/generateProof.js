@@ -15,7 +15,7 @@ describe('Generate Proof', () => {
       const body = {
         docId: 'doc12314',
         name: 'test',
-        witness: [5, 25],
+        inputs: [5, 25],
       };
       const dbResponse = {
         docID: 'test1234',

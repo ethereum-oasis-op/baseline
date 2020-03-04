@@ -52,18 +52,27 @@ Example: (Replace `path/to/test.zok` with the filepath of the file to be compute
 This is a POST instruction that runs `compute-witness` and `generate-proof` instructions.
 
 Request body:  
-`filename`: the name of the `.zok` file (without the `.zok` file extension)
-`witness`: array of the witness arguments  
+`filename`: the name of the `.zok` file (without the `.zok` file extension).
+`inputs`: array of the arguments the the `main()` function of the circuit.
 
 The `/app/zok/output` dir has the outputs of these steps copied from within the container. When the `generate-proof` instruction is run, the corresponding `proof.json` is stored in the `/app/zok/output` dir.  
 
 Example: (Replace `filename` with the name of the file for which we're creating a witness).  
-`curl -d '{"filename": "test", "witness": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate-proof`
+`curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate-proof`
 
 Alternatively, the POSTMAN application can be used to run these curl requests.
 
 Note: All the resultant files from the above steps/processes are created in a sub-directory named with the input parameter, `filename` (where, for example, the filename is `test` for filepath `/app/zok/path/to/test.zok`).
 
+### `vk`
+
+This is a GET request, to retrieve a vk from the db. (Note: a trusted setup will have to have taken place for the vk to exist).
+
+Request body:
+`id`: the name of the `.zok` file (without the `.zok` file extension).
+
+Example:
+`curl -d '{"id": "test"}' -H "Content-Type: application/json" -X GET http://radish-zok.docker/vk`
 
 # testing individual `.zok` files
 
@@ -100,6 +109,6 @@ To test a particular `.zok` file manually in the terminal:
 
 `./zokrates setup`
 
-`./zokrates compute-witness -a <witness>`
+`./zokrates compute-witness -a <inputs>`
 
 `./zokrates generate-proof`

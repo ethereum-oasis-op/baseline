@@ -1,43 +1,30 @@
 import fs from 'fs';
-import {
-  getServerSettings,
-  setERC1820RegistryAddress,
-  setRegistrarAddress,
-  setOrganizationRegistryAddress,
-} from '../utils/serverSettings';
+import { getServerSettings, setContractAddress } from '../utils/serverSettings';
 import db from '../db';
 import { getPrivateKey } from '../utils/wallet';
-import { getProvider, getWallet, deployContract } from '../utils/ethers';
+import {
+  getProvider,
+  getWallet,
+  deployContract,
+  getContract,
+  getContractWithWallet,
+} from '../utils/ethers';
 
-const ERC1820RegistryPath = '/app/artifacts/ERC1820Registry.json';
-const RegistrarPath = '/app/artifacts/Registrar.json';
-const OrgRegistryPath = '/app/artifacts/OrgRegistry.json';
-
-export const getERC1820RegistryJson = () => {
-  if (fs.existsSync(ERC1820RegistryPath)) {
-    const erc1820Registry = fs.readFileSync(ERC1820RegistryPath);
-    return JSON.parse(erc1820Registry);
-  }
-  console.log('Unable to locate file: ', ERC1820RegistryPath);
-  throw ReferenceError('ERC1820Registry.json not found');
+export const getDefaultPath = contractName => {
+  return `/app/artifacts/${contractName}.json`;
 };
 
-export const getRegistarJson = () => {
-  if (fs.existsSync(RegistrarPath)) {
-    const registrar = fs.readFileSync(RegistrarPath);
-    return JSON.parse(registrar);
+/**
+@param {string} contractName - e.g. for myContract.sol, pass string 'myContract'.
+*/
+export const getContractJson = contractName => {
+  const path = getDefaultPath(contractName);
+  if (fs.existsSync(path)) {
+    const json = fs.readFileSync(path);
+    return JSON.parse(json);
   }
-  console.log('Unable to locate file: ', RegistrarPath);
-  throw ReferenceError('OrgRegistry.json not found');
-};
-
-export const getOrgRegistryJson = () => {
-  if (fs.existsSync(OrgRegistryPath)) {
-    const orgRegistry = fs.readFileSync(OrgRegistryPath);
-    return JSON.parse(orgRegistry);
-  }
-  console.log('Unable to locate file: ', OrgRegistryPath);
-  throw ReferenceError('Registrar.json not found');
+  console.log('Unable to locate file: ', path);
+  throw ReferenceError(`contractName.json not found`);
 };
 
 export const getContractById = async transactionHash => {
@@ -45,8 +32,31 @@ export const getContractById = async transactionHash => {
   return contract;
 };
 
-export const getContractByName = async name => {
-  const contract = await db.collection('smartcontract').findOne({ contractName: name });
+/**
+Only works for contracts stored at the default path, and in the default place in the config (which will be most contracts).
+*/
+export const getContractByName = async contractName => {
+  const config = await getServerSettings();
+  const contract = getContract(
+    getContractJson(contractName),
+    config.rpcProvider,
+    config.addresses[contractName],
+  );
+  return contract;
+};
+
+/**
+Only works for contracts stored at the default path, and in the default place in the config (which will be most contracts).
+*/
+export const getContractWithWalletByName = async contractName => {
+  const config = await getServerSettings();
+  const privateKey = await getPrivateKey();
+  const contract = getContractWithWallet(
+    getContractJson(contractName),
+    config.addresses[contractName],
+    config.rpcProvider,
+    privateKey,
+  );
   return contract;
 };
 
@@ -60,22 +70,10 @@ export const getAllContracts = async () => {
 
 export const getTxReceipt = async hash => {
   const config = await getServerSettings();
-  const uri = config.blockchainProvider;
+  const uri = config.rpcProvider;
   const provider = getProvider(uri);
   const txReceipt = await provider.getTransactionReceipt(hash);
-
-  return {
-    transactionHash: txReceipt.transactionHash,
-    status: txReceipt.status,
-    from: txReceipt.from,
-    to: txReceipt.to,
-    blockNumber: txReceipt.blockNumber,
-    blockHash: txReceipt.blockHash,
-    confirmations: txReceipt.confirmations,
-    gasUsed: txReceipt.gasUsed.toNumber(),
-    cumulativeGasUsed: txReceipt.cumulativeGasUsed.toNumber(),
-    contractAddress: txReceipt.contractAddress,
-  };
+  return txReceipt;
 };
 
 export const saveSmartContract = async input => {
@@ -94,10 +92,15 @@ export const saveBlockchainTransaction = async input => {
 
 export const deployERC1820Registry = async contractName => {
   const config = await getServerSettings();
-  const uri = config.blockchainProvider;
+  const uri = config.rpcProvider;
   const privateKey = await getPrivateKey();
   const wallet = await getWallet(uri, privateKey);
-  const returnData = await deployContract(getERC1820RegistryJson(), uri, privateKey, null);
+  const returnData = await deployContract(
+    getContractJson('ERC1820Registry'),
+    uri,
+    privateKey,
+    null,
+  );
   const blockchainTransactionRecord = {
     transactionHash: returnData.hash,
     status: 'pending',
@@ -110,7 +113,7 @@ export const deployERC1820Registry = async contractName => {
     transactionHash: returnData.hash,
   };
   await saveSmartContract(inputWithContractAddress);
-  await setERC1820RegistryAddress(returnData.address);
+  await setContractAddress('ERC1820Registry', returnData.address);
   const provider = getProvider(uri);
   let receiptSatus;
   provider.waitForTransaction(returnData.hash).then(receipt => {
@@ -131,10 +134,15 @@ export const deployERC1820Registry = async contractName => {
 
 export const deployRegistrar = async addressOfERC1820 => {
   const config = await getServerSettings();
-  const uri = config.blockchainProvider;
+  const uri = config.rpcProvider;
   const privateKey = await getPrivateKey();
   const wallet = await getWallet(uri, privateKey);
-  const returnData = await deployContract(getRegistarJson(), uri, privateKey, addressOfERC1820);
+  const returnData = await deployContract(
+    getContractJson('Registrar'),
+    uri,
+    privateKey,
+    addressOfERC1820,
+  );
   const pendingRecord = {
     transactionHash: returnData.hash,
     status: 'pending',
@@ -147,7 +155,7 @@ export const deployRegistrar = async addressOfERC1820 => {
     transactionHash: returnData.hash,
   };
   await saveSmartContract(inputWithContractAddress);
-  await setRegistrarAddress(returnData.address);
+  await setContractAddress('Registar', returnData.address);
   const provider = getProvider(uri);
   let receiptSatus;
   provider.waitForTransaction(returnData.hash).then(receipt => {
@@ -168,11 +176,11 @@ export const deployRegistrar = async addressOfERC1820 => {
 
 export const deployOrgRegistry = async addressOfRegistrar => {
   const config = await getServerSettings();
-  const uri = config.blockchainProvider;
+  const uri = config.rpcProvider;
   const privateKey = await getPrivateKey();
   const wallet = await getWallet(uri, privateKey);
   const returnData = await deployContract(
-    getOrgRegistryJson(),
+    getContractJson('OrgRegistry'),
     uri,
     privateKey,
     addressOfRegistrar,
@@ -189,7 +197,7 @@ export const deployOrgRegistry = async addressOfRegistrar => {
     transactionHash: returnData.hash,
   };
   await saveSmartContract(inputWithContractAddress);
-  await setOrganizationRegistryAddress(returnData.address);
+  await setContractAddress('OrgRegistry', returnData.address);
   const provider = getProvider(uri);
   let receiptSatus;
   provider.waitForTransaction(returnData.hash).then(receipt => {
@@ -208,22 +216,13 @@ export const deployOrgRegistry = async addressOfRegistrar => {
   return { contract };
 };
 
-export const getOrganizationRegistryAddress = async () => {
-  const config = await getServerSettings();
-  const address = config.organizationRegistryAddress;
-  return address;
-};
-
 export default {
   deployERC1820Registry,
   deployRegistrar,
   deployOrgRegistry,
-  getOrganizationRegistryAddress,
   getContractByName,
   getContractById,
   getTxReceipt,
   getAllContracts,
-  getERC1820RegistryJson,
-  getRegistarJson,
-  getOrgRegistryJson,
+  getContractJson,
 };

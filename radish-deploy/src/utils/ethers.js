@@ -40,7 +40,7 @@ const sendSignedTransaction = async signedTransaction => {
 
 const getContractMetadata = filepath => JSON.parse(fs.readFileSync(filepath, 'utf8'));
 
-const deployContract = async (contractFilepath, uri, privateKey, controllerAddress) => {
+const deployContract = async (contractFilepath, uri, privateKey, constructorArgs) => {
   const wallet = getWallet(uri, privateKey);
   let contract;
 
@@ -51,14 +51,94 @@ const deployContract = async (contractFilepath, uri, privateKey, controllerAddre
     contractJson.compilerOutput.evm.bytecode,
     wallet,
   );
-  if (!controllerAddress) {
+  // expect constructorArgs to be an array
+  if (!Array.isArray(constructorArgs) || !constructorArgs.length) {
     contract = await factory.deploy();
   } else {
-    contract = await factory.deploy(controllerAddress);
+    contract = await factory.deploy(...constructorArgs);
   }
   const { address } = contract;
   const { hash } = contract.deployTransaction;
-  return { address: address, hash: hash };
+
+  // The contract is NOT deployed yet; it's only been sent to the mining pool; we must wait until it is mined
+  await contract.deployed();
+
+  return { address, hash };
+};
+
+/**
+Links an already-deployed library's address to a not-yet-deployed contract's bytecode.
+If we want to deploy a contract which will use an already-deployed library, then we need to replace (within the contract's bytecode) the 'placeholder' for the library with the library's address.
+*/
+const link = (bytecode, libraryName, libraryAddress) => {
+  const address = libraryAddress.replace('0x', '');
+  const { linkReferences } = bytecode;
+  let qualifyingLibraryName;
+
+  // We parse the bytecode's linkedReferences in search of the correct path of the library (in order to construct a correctly formatted qualifyingLibraryName)
+  // eslint-disable-next-line no-restricted-syntax
+  for (const entry of Object.entries(linkReferences)) {
+    if (libraryName in entry[1]) {
+      // From Solidity docs: Note that the fully qualified library name is the path of its source file and the library name separated by :.
+      qualifyingLibraryName = `${entry[0]}:${libraryName}`;
+      break;
+    }
+  }
+  if (qualifyingLibraryName === undefined)
+    throw new Error(`linkReference for library '${libraryName}' not found in contract's bytecode.`);
+
+  const encodedLibraryName = utils
+    .solidityKeccak256(['string'], [qualifyingLibraryName])
+    .slice(2, 36);
+  // console.log(`\nEncoded library name for ${qualifyingLibraryName}: ${encodedLibraryName}`);
+
+  const pattern = new RegExp(`_+\\$${encodedLibraryName}\\$_+`, 'g');
+  // ensure this particular library is being used by the contract (by checking for its encoded name within the contract's bytecode)
+  if (!pattern.exec(bytecode.object)) {
+    throw new Error(
+      `Can't find the encoding ${encodedLibraryName} of ${libraryName}'s qualifying library name ${qualifyingLibraryName} in the contract's bytecode. It's possible that the library's path (i.e. the preimage of the keccak encoding) is incorrect.`,
+    );
+  }
+
+  // swap out the placeholder with the library's deployed address:
+  return bytecode.object.replace(pattern, address);
+};
+
+/**
+Some contract need to refer to libraries which have already been deployed to an address. The contract's pre-deployment bytecode includes a 'blank space' into which the deployed library's address needs to be inserted.
+This function inserts a deployed library's address into the bytecode, before then deploying the contract.
+*/
+const deployContractWithLibraryLink = async (
+  contractFilepath,
+  uri,
+  privateKey,
+  constructorArgs,
+  libraryName,
+  libraryAddress,
+) => {
+  const wallet = getWallet(uri, privateKey);
+  let contract;
+  const contractJson = getContractMetadata(contractFilepath);
+  const { abi } = contractJson.compilerOutput;
+  const { bytecode } = contractJson.compilerOutput.evm;
+
+  const linkedBytecode = link(bytecode, libraryName, libraryAddress);
+
+  const factory = new ethers.ContractFactory(abi, linkedBytecode, wallet);
+
+  // expect constructorArgs to be an array
+  if (!Array.isArray(constructorArgs) || !constructorArgs.length) {
+    contract = await factory.deploy();
+  } else {
+    contract = await factory.deploy(...constructorArgs);
+  }
+  const { address } = contract;
+  const { hash } = contract.deployTransaction;
+
+  // The contract is NOT deployed yet; it's only been sent to the mining pool; we must wait until it is mined
+  await contract.deployed();
+
+  return { address, hash };
 };
 
 const getUnsignedContractDeployment = (contractJson, args = []) => {
@@ -211,6 +291,7 @@ module.exports = {
   getSigner,
   sendSignedTransaction,
   deployContract,
+  deployContractWithLibraryLink,
   getUnsignedContractDeployment,
   getContract,
   parseBigNumbers,

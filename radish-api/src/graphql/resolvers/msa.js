@@ -1,9 +1,4 @@
-import {
-  getMSAById,
-  getAllMSAs,
-  getMSAByProposalId,
-  saveMSA,
-} from '../../db/models/modules/msa/msa';
+import { getMSAById, getAllMSAs, getMSAByProposalId, saveMSA } from '../../db/models/modules/msa';
 import { pubsub } from '../subscriptions';
 import { saveNotice } from '../../db/models/baseline/notices';
 

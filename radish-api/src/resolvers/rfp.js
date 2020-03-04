@@ -2,8 +2,8 @@ import { getRFPById, getAllRFPs } from '../services/rfp';
 import { saveNotice } from '../services/notice';
 import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../queues/message_delivery';
-import { saveRFP } from '../db/models/modules/msa/rfps';
-import { getPartnerByIdentity } from '../services/partner';
+import { saveRFP } from '../db/models/modules/rfps';
+import { getPartnerByMessengerKey } from '../services/partner';
 
 const NEW_RFP = 'NEW_RFP';
 
@@ -18,7 +18,9 @@ export default {
   },
   Mutation: {
     createRFP: async (_parent, args, context) => {
-      const currentUser = context.identity ? await getPartnerByIdentity(context.identity) : null;
+      const currentUser = context.identity
+        ? await getPartnerByMessengerKey(context.identity)
+        : null;
       const currentTime = Math.floor(Date.now() / 1000);
       const myRFP = args.input;
       myRFP.createdDate = currentTime;

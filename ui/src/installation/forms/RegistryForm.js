@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
 
 const roles = [
   { label: 'Buyer', value: 1, disabled: false, },
-  { label: 'Seller', value: 2, disabled: false, },
+  { label: 'Supplier', value: 2, disabled: false, },
   { label: 'Carrier', value: 3, disabled: true, },
 ];
 

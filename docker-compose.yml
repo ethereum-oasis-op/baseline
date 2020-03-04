@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 
 services:
   sol-compile:
@@ -18,8 +18,9 @@ services:
     volumes:
       - ./contracts:/app/contracts:delegated
       - ./artifacts:/app/artifacts:delegated
-      - ./.babelrc:/app/.babelrc:delegated
+      - ./babel.config.json:/app/babel.config.json:delegated
       - ./compiler.json:/app/compiler.json:delegated
+      # - ./radish-api/dist/utils:/app/utils:delegated
     networks:
       - network-buyer
       - network-supplier1
@@ -28,8 +29,8 @@ services:
       - ganache
 
   ganache:
-    image: trufflesuite/ganache-cli:v6.7.0
-    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 80000000000
+    image: trufflesuite/ganache-cli:latest
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0xdad57e191799c38233bb7897f5ca66eb42d4f2f6d05ec657f8121b57e5d3bde6, 1000000000000000000000" --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 10000000
     ports:
       - 8545:8545
     networks:
@@ -50,14 +51,14 @@ services:
       - ./zok/dist:/app/dist:delegated
       - ./zok/output:/app/output:delegated
     environment:
-      PROVING_SCHEME: 'g16'
+      PROVING_SCHEME: 'gm17'
       VIRTUAL_HOST: radish-zok.docker
-      MONGO_URL: mongodb://mongo-buyer
+      MONGO_URL: mongodb://mongo-buyer # TODO: radish-zok's db of proving materials shouldn't depend on the Buyer's mongodb. Each user should probably read proving files from their local disk rather than from a shared mongodb?
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
     depends_on:
       - radish-zok-watch
-      - mongo-buyer
+      - mongo-buyer # TODO: remove dependency on mongo-buyer.
     networks:
       - network-buyer
       - network-supplier1
@@ -113,11 +114,13 @@ services:
       - mongo-buyer
       - mongo-supplier1
       - mongo-supplier2
+      - radish-zok
     environment:
       RPC_PROVIDER: http://ganache:8545
       MESSENGER_BUYER_URI: http://messenger-buyer:4001/api/v1
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001/api/v1
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001/api/v1
+      ZOK_URL: http://radish-zok:80
     networks:
       - network-buyer
       - network-supplier1
@@ -149,6 +152,7 @@ services:
       - ganache
       - messenger-buyer
       - redis-buyer
+      - merkle-tree
     environment:
       VIRTUAL_HOST: radish-api-buyer.docker
       MONGO_URL: mongodb://mongo-buyer
@@ -156,6 +160,8 @@ services:
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-buyer:4001/api/v1'
       REDIS_URL: redis://redis-buyer:6379
+      ZOK_URL: http://radish-zok:80
+      MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-buyer
     ports:
@@ -181,6 +187,7 @@ services:
       - ganache
       - messenger-supplier1
       - redis-supplier1
+      - merkle-tree
     environment:
       VIRTUAL_HOST: radish-api-supplier1.docker
       MONGO_URL: mongodb://mongo-supplier1
@@ -188,6 +195,8 @@ services:
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier1:4001/api/v1'
       REDIS_URL: redis://redis-supplier1:6379
+      ZOK_URL: http://radish-zok:80
+      MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier1
     ports:
@@ -212,6 +221,7 @@ services:
       - mongo-supplier2
       - ganache
       - messenger-supplier2
+      - merkle-tree
     environment:
       VIRTUAL_HOST: radish-api-supplier2.docker
       MONGO_URL: mongodb://mongo-supplier2
@@ -219,6 +229,8 @@ services:
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier2:4001/api/v1'
       REDIS_URL: redis://redis-supplier2:6379
+      ZOK_URL: http://radish-zok:80
+      MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier2
     ports:
@@ -233,7 +245,7 @@ services:
       - ./radish-api/src:/app/src:delegated
       - ./radish-api/dist:/app/dist:delegated
       - ./config/keystore:/keystore
-      - ./config/config.json:/app/config/default.json
+      - ./config:/app/config
     networks:
       - network-buyer
       - network-supplier1
@@ -253,7 +265,7 @@ services:
     networks:
       - network-buyer
     ports:
-      - 27017:27017
+      - 27117:27017
 
   mongo-supplier1:
     image: mongo:latest
@@ -266,7 +278,7 @@ services:
     networks:
       - network-supplier1
     ports:
-      - 27117:27017
+      - 27217:27017
 
   mongo-supplier2:
     image: mongo:latest
@@ -279,7 +291,7 @@ services:
     networks:
       - network-supplier2
     ports:
-      - 27217:27017
+      - 27317:27017
 
   mongo-seed:
     build: ./mongo-seed
@@ -467,10 +479,53 @@ services:
     ports:
       - 4003:4001
 
+  merkle-tree:
+    image: eyblockchain/timber:v2.0.1
+    restart: on-failure
+    depends_on:
+      - mongo-merkle-tree
+      - ganache
+    volumes: # ensure relative paths are correct if embedding this microservice in another application:
+      - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
+      - ./contracts/shield:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+    ports:
+      - 9000:80
+    environment:
+      BLOCKCHAIN_HOST: ws://ganache
+      BLOCKCHAIN_PORT: 8545
+      CONTRACT_ORIGIN: 'compile' # Where to find the contractInstances?
+      # Specify one of:
+      # - 'remote' (to GET a solc-compiled contract interface json from a remote microservice); or
+      # - 'mongodb' (to get a solc-compiled contract interface json from mongodb); or
+      # - 'default' (to get a solc-compiled contract interface json from the app/build/ folder)
+      # - 'compile' (to compile contracts from a .sol file, at startup, with solc, from the /app/contracts/ folder). Useful if the application using Timber doesn't use solc to generate contract interface json's.
+    networks: # we'll have all users sharing the one tree for now. TODO: explore separation of merkle-tree db's (difficult).
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+
+  # The database storing the merkle tree
+  mongo-merkle-tree:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=merkle_tree
+    volumes:
+      - ./config/merkle-tree/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - mongo-merkle-tree-volume:/data/db
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    ports:
+      - 27417:27017
+
 volumes:
   mongo-buyer:
   mongo-supplier1:
   mongo-supplier2:
+  mongo-merkle-tree-volume:
   chaindata:
 
 networks:

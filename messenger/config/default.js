@@ -2,7 +2,7 @@
 module.exports = {
   mongo: {
     debug: false,
-    uri: process.env.MONGODB_URL || 'mongodb://mongo-messenger:27017',
+    uri: process.env.MONGO_URL || 'mongodb://mongo-messenger:27017',
     bufferMaxEntries: 8,
     firstConnectRetryDelaySecs: 5,
   },

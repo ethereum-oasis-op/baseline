@@ -20,7 +20,7 @@ export const GET_SERVER_SETTINGS = gql`
   query GetServerSettings {
     getServerSettings {
       globalRegistryAddress
-      organizationRegistryAddress
+      orgRegistryAddress
       organizationName
       organizationRole
       organizationAddress
@@ -34,7 +34,7 @@ export const GET_SERVER_SETTINGS_UPDATE = gql`
   subscription GetServerSettingsUpdate{
     serverSettingsUpdate {
       globalRegistryAddress
-      organizationRegistryAddress
+      orgRegistryAddress
       organizationName
       organizationRole
       organizationAddress
@@ -48,7 +48,7 @@ export const SET_RPC_PROVIDER = gql`
   mutation SetRPCProvider($uri: String!) {
     setRPCProvider(uri: $uri) {
       globalRegistryAddress
-      organizationRegistryAddress
+      orgRegistryAddress
       organizationName
       organizationRole
       organizationAddress
@@ -63,7 +63,7 @@ export const SET_WALLET_FROM_MNEMONIC = gql`
   mutation SetWalletFromMnemonic($mnemonic: String!, $path: String){
     setWalletFromMnemonic(mnemonic: $mnemonic, path: $path){
       globalRegistryAddress
-      organizationRegistryAddress
+      orgRegistryAddress
       organizationName
       organizationRole
       organizationWhisperKey

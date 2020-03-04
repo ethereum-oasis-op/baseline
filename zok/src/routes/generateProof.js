@@ -5,18 +5,25 @@ import { saveProofToDB } from '../utils/fileToDB';
 const router = express.Router();
 
 router.post('/', async (req, res, next) => {
-  const { docId, filename, witness, outputDirectoryPath, proofFileName } = req.body;
+  req.setTimeout(900000);
+  const { docId, filename, inputs, outputDirectoryPath, proofFileName } = req.body;
+  console.log(`\nReceived request to /generateProof`);
+  console.log(req.body);
+
   const opts = {};
   opts.createFile = true;
   opts.directory = `./output/${filename}` || outputDirectoryPath;
   opts.fileName = `${filename}_proof.json` || proofFileName;
   try {
+    console.log('\nCompute witness...');
     await zokrates.computeWitness(
       `./output/${filename}/${filename}_out`,
       `./output/${filename}/`,
       `${filename}_witness`,
-      witness,
+      inputs,
     );
+
+    console.log('\nGenerate proof...');
     await zokrates.generateProof(
       `./output/${filename}/${filename}_pk.key`,
       `./output/${filename}/${filename}_out`,
@@ -29,6 +36,10 @@ router.post('/', async (req, res, next) => {
       filename,
       `./output/${filename}/${filename}_proof.json`,
     );
+
+    console.log(`\nComplete`);
+    console.log(`\nResponding with proof:`);
+    console.log(storedProof);
     return res.send(storedProof);
   } catch (err) {
     return next(err);

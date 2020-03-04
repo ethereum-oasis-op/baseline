@@ -105,11 +105,13 @@ class WhisperWrapper {
       } else {
         // Store raw message
         doc = await utils.storeNewMessage(data, content);
-        await this.sendDeliveryReceipt(data);
+        await this.sendDeliveryReceipt(data, messageObj.type);
       }
       // Append source message ID to the object for tracking inbound
       // messages from partners via the messenger API
-      messageObj.messageId = data.hash;
+      if (messageObj.type !== 'delivery_receipt') {
+        messageObj.messageId = data.hash;
+      }
       // Adding sender Id to message to know who sent the message
       messageObj.senderId = data.sig;
       // Send all JSON messages to radish-api
@@ -117,17 +119,18 @@ class WhisperWrapper {
     } else {
       // Text message
       doc = await utils.storeNewMessage(data, content);
-      await this.sendDeliveryReceipt(data);
+      await this.sendDeliveryReceipt(data, 'TEXT');
     }
     return doc;
   }
 
-  async sendDeliveryReceipt(data) {
+  async sendDeliveryReceipt(data, deliveredType) {
     // Send delivery receipt back to sender
     const time = await Math.floor(Date.now() / 1000);
     const receiptObject = {
       type: 'delivery_receipt',
       deliveredDate: time,
+      deliveredType,
       messageId: data.hash,
     };
     const receiptString = JSON.stringify(receiptObject);
