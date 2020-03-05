@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Divider from '@material-ui/core/Divider';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import Inbox from '@material-ui/icons/Inbox';
 import Send from '@material-ui/icons/Send';
 import { groupBy, filter } from 'lodash';
@@ -146,18 +146,29 @@ Category.defaultProps = {
 const SideNav = ({ notices, selected }) => {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
+  const [createForm, setCreateForm] = useState('');
   const groups = groupBy(notices, 'category');
   const results = groupBy(notices, 'status');
   const createForms = [
-    { value: '/rfp/create', label: 'Create New RFP '},
+    { value: '', label: 'Create New Item' },
+    { value: '/rfp/create', label: 'Create New RFP ' },
   ];
 
-  const dropdownOnChange = (e) => history.push(e.target.value);
+  const dropdownOnChange = (e) => {
+    setCreateForm(e.target.value);
+    history.push(e.target.value);
+  };
+
+  useEffect(() => {
+    if (createForms.filter(form => form.value === location.pathname).length)
+      setCreateForm(location.pathname);
+  }, []);
 
   return (
     <div className={classes.root}>
       <List className={classes.filterList}>
-        <DropDown items={createForms} onChange={dropdownOnChange} className={classes.createNewButton} defaultItem="Create New Item" />
+        <DropDown className={classes.createNewButton} items={createForms} onChange={dropdownOnChange} value={createForm} />
         <Category icon={Inbox} label="Inbox" category={results.incoming} url="/notices/inbox" />
         <Category icon={Send} label="Outbox" category={results.outgoing} url="/notices/outbox" />
       </List>

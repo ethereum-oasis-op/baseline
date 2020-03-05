@@ -36,6 +36,10 @@ const ProposalSchema = new mongoose.Schema({
     type: String, // Messenger Id of partner
     required: true,
   },
+  erc20ContractAddress: {
+    type: String,
+    required: true,
+  },
   recipients: [
     {
       partner: {

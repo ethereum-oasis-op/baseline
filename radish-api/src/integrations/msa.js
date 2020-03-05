@@ -123,6 +123,10 @@ const MSASchema = new mongoose.Schema({
   commitments: {
     type: [MSACommitmentSchema],
   },
+  rfpId: {
+    type: String,
+    required: true,
+  }
 });
 
 const MSAModel = mongoose.model('msa', MSASchema);

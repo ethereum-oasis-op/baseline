@@ -199,12 +199,13 @@ export class MSA {
   }
 }
 
-export const getMSABySKUAndParties = async (zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku) => {
+export const getMSABySKUAndParties = async (zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku, rfpId) => {
   try {
     const msa = await MSAModel.findOne({
       'constants.zkpPublicKeyOfBuyer': zkpPublicKeyOfBuyer,
       'constants.zkpPublicKeyOfSupplier': zkpPublicKeyOfSupplier,
       'constants.sku': sku,
+      rfpId,
     }).lean();
     return msa;
   } catch (e) {
@@ -223,21 +224,30 @@ export const getMSAById = async id => {
   }
 };
 
-export const getMSABySKU = async sku => {
+export const getMSAsBySKU = async sku => {
   try {
-    const msa = await MSAModel.findOne({ sku: sku }).lean();
-    return msa;
+    const msas = await MSAModel.find({ 'constants.sku': sku }).lean();
+    return msas;
   } catch (e) {
     console.log('\nError getting MSA from DB: ', e);
     return false;
   }
 };
 
+export const getMSAsByRFPId = async rfpId => {
+  try {
+    const msas = await MSAModel.find({ rfpId }).lean();
+    return msas;
+  } catch (e) {
+    console.log('\nError getting MSA from DB: ', e);
+    return false;
+  }
+}
+
 export const getAllMSAs = async () => {
   try {
     const msas = await MSAModel.find({})
-      .lean()
-      .toArray();
+      .lean();
     return msas;
   } catch (e) {
     console.log('\nError getting MSA from DB: ', e);
@@ -251,6 +261,7 @@ export const saveMSA = async msaObject => {
     msaObject.constants.zkpPublicKeyOfBuyer,
     msaObject.constants.zkpPublicKeyOfSupplier,
     msaObject.constants.sku,
+    msaObject.rfpId
   );
   if (exists)
     throw new Error(
@@ -280,6 +291,7 @@ export const updateMSAWithSupplierSignature = async msaObject => {
     msaObject.constants.zkpPublicKeyOfBuyer,
     msaObject.constants.zkpPublicKeyOfSupplier,
     msaObject.constants.sku,
+    msaObject.rfpId,
   );
 
   if (!exists)
@@ -292,6 +304,7 @@ export const updateMSAWithSupplierSignature = async msaObject => {
         'constants.zkpPublicKeyOfBuyer': msaObject.constants.zkpPublicKeyOfBuyer,
         'constants.zkpPublicKeyOfSupplier': msaObject.constants.zkpPublicKeyOfSupplier,
         'constants.sku': msaObject.constants.sku,
+        rfpId: msaObject.rfpId,
       },
       {
         $set: {

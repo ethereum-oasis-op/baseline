@@ -10,6 +10,7 @@ export const PROPOSAL_ATTRIBUTES = gql`
       price
       unitOfMeasure
     }
+    erc20ContractAddress
     sender
   }
 `;
@@ -53,6 +54,15 @@ export const CREATE_PROPOSAL = gql`
 export const GET_PROPOSAL = gql`
   query proposal($id: String!) {
     proposal(id: $id) {
+      ...PROPOSAL_ATTRIBUTES
+    }
+  }
+  ${PROPOSAL_ATTRIBUTES}
+`;
+
+export const GET_PROPOSAL_BY_RFP_AND_SUPPLIER = gql`
+  query proposal($sender: String! $rfpId: String!) {
+    getProposalByRFPAndSupplier(sender: $sender rfpId: $rfpId) {
       ...PROPOSAL_ATTRIBUTES
     }
   }

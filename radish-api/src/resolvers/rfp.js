@@ -44,14 +44,14 @@ export default {
       recipients.forEach(recipient => {
         // For data structure parity between buyer/supplier systems
         // put the recipient back as the only entry in the array
-        rfpDetails.recipients = [recipient];
+        const rfpToSend = { ...rfpDetails, recipients: [recipient] };
         // Add to BullJS queue
         msgDeliveryQueue.add(
           {
             documentId: rfp._id,
             senderId: context.identity,
             recipientId: recipient.partner.identity,
-            payload: rfpDetails,
+            payload: rfpToSend,
           },
           {
             // Mark job as failed after 20sec so subsequent jobs are not stalled

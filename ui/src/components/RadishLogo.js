@@ -44,6 +44,9 @@ const useStyles = makeStyles(() => ({
   },
   loaderContainer: {
     overflow: 'visible',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
   },
 }));
 

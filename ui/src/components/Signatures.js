@@ -5,16 +5,11 @@ import Typography from '@material-ui/core/Typography';
 
 const SignatureItem = props => {
   const { status, details, role } = props;
-
   return (
     <Grid item style={{ padding: '1rem' }} xs={4}>
       <Typography>{role}: {status}</Typography>
       {status === 'Approved' ?
-        <>
-          <Typography>{details.name}</Typography>
-          <Typography>{details.signatureDate}</Typography>
-          <Typography>{details.signature}</Typography>
-        </>
+        <Typography>{details.name}</Typography>
         :
         <Typography>Awaiting Signature</Typography>
       }
@@ -23,21 +18,23 @@ const SignatureItem = props => {
 };
 
 const Signatures = props => {
-  const { buyerSignature, supplierSignature } = props;
+  const { buyer, supplier, buyerStatus, supplierStatus } = props;
   return (
     <>
       <h3>Signatures</h3>
       <Grid container direction="row">
-        <SignatureItem role="Buyer" status={buyerSignature ? 'Approved' : 'Pending'} details={buyerSignature} />
-        <SignatureItem role="Supplier" status={supplierSignature ? 'Approved' : 'Pending'} details={supplierSignature} />
+        <SignatureItem role="Buyer" status={buyerStatus ? 'Approved' : 'Pending'} details={buyer} />
+        <SignatureItem role="Supplier" status={supplierStatus ? 'Approved' : 'Pending'} details={supplier} />
       </Grid>
     </>
   );
 };
 
 Signatures.propTypes = {
-  buyerSignature: PropTypes.shape({}).isRequired,
-  supplierSignature: PropTypes.shape({}).isRequired,
+  buyer: PropTypes.shape({}).isRequired,
+  supplier: PropTypes.shape({}).isRequired,
+  buyerStatus: PropTypes.bool.isRequired,
+  supplierStatus: PropTypes.bool.isRequired,
 }
 
 SignatureItem.propTypes = {
