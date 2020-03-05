@@ -22,12 +22,13 @@ After you've done that, log in to the Github package registry by running
 
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
 1. run `npm ci`
-1. run `npm run setup` to perform zk-SNARK trusted setups for the main circuits.
+1. run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **
+1. run `npm run setup` to perform zk-SNARK trusted setups for the main circuits. ** This takes several minutes to complete **
 1. run `npm run build` to create the JSON files in the `artifacts` folder needed for deployment.
 1. Make sure you download and have the following files stored in your `/config` directory: `config-buyer.json`, `config-supplier1.json`, `config-supplier2.json`.
 1. run `npm run deploy`
    - This docker container first deploys both the Registry contract and the OrgRegistry contract.
-   - Then it registers a Buyer and 2 Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
+   - Then it registers (1) Buyer and (2) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
    - The goal of deployment is to initialize the Radish34 system by pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart contract, which holds the organization metadata to thus enable any ongoing procurement operations.
    - Essentially the deployment is based on deploying an `ERC1820Registry` client called the `Registrar`, followed by registering an interface for `OrgRegistry` with the `ERC1820Registry`, then registering the roles of the buyer and supplier with the `OrgRegistry`
    - Any changes to the config files are updated in the individual db instances `mongo-${role}`
@@ -106,9 +107,9 @@ After you've done that, log in to the Github package registry by running
       Please restart the radish-apis for the config to take effect
    ```
 1. run `docker-compose up`
-   - This will start all `radish` containers. Alternatively, run the following command to save resources and only start the subset of containers needed for integration tests: `docker-compose up -d ganache radish-api-buyer radish-api-supplier1 radish-api-watch geth-node messenger-buyer messenger-supplier1 redis-buyer redis-supplier1 mongo-buyer mongo-supplier1`
+   - This will start all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
-   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of the containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui`
+   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of a specific containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui`
    Example Logs:
    ```
       radish-api-buyer        | Connected to db
@@ -131,6 +132,11 @@ After you've done that, log in to the Github package registry by running
 
 ## Troubleshooting
 
+1. If you get errors during the `npm ci` step, please ensure that you are running node version `11`. The `nvm` (node version manager) tool allows you to easily switch between versions:
+```
+nvm install 11
+nvm use 11
+```
 1. Restart the test environment
    - run `docker-compose down` to stop containers
    - run this command to give the docker command a clean slate: `docker volume prune -f && echo volume pruned && docker system prune -f && echo system pruned && docker network prune -f && echo network pruned`
