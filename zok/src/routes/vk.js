@@ -8,7 +8,7 @@ const router = express.Router();
  * @param {string} id is the name of the circuit, e.g. 'createMSA'
 
 */
-router.post('/', async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const { id } = req.body;
     console.log(`\nReceived request ${id} to /vk`);
