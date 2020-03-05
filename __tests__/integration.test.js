@@ -1,13 +1,29 @@
 import request from 'supertest';
 import { concatenateThenHash } from '../radish-api/src/utils/crypto/hashes/sha256/sha256';
+import { MongoClient } from 'mongodb';
 
 jest.setTimeout(600000);
 
 // Check <repo-root>/docker-compose.yml for correct URLs
 const buyerApiURL = 'http://localhost:8001';
 const buyerMessengerURL = 'http://localhost:4001';
+const buyerMongoURL = 'mongodb://localhost:27117/radish34'
 const supplierMessengerURL = 'http://localhost:4002';
 const supplierApiURL = 'http://localhost:8002';
+
+let nativeClient;
+let db;
+
+beforeAll(async () => {
+  // Clear out saved msas so there aren't unintended collisions
+  nativeClient = await MongoClient.connect(buyerMongoURL, { useUnifiedTopology: true });
+  db = nativeClient.db();
+  await db.collection('msas').deleteMany();
+});
+
+afterAll(async () => {
+  await nativeClient.close();
+});
 
 describe('Check that containers are ready', () => {
   describe('Buyer containers', () => {
@@ -75,10 +91,10 @@ describe('Buyer sends new RFP to supplier', () => {
       expect(res.statusCode).toEqual(400);
     });
 
-      test('Buyer graphql mutation createRFP() returns 200', async () => {
-        let zkpPublicKey = '0x99246c83ca94b55a7330f68952ee74574a7d3b1921ccf29c84f75975935e6333';
+    test('Buyer graphql mutation createRFP() returns 200', async () => {
+      let zkpPublicKey = '0x99246c83ca94b55a7330f68952ee74574a7d3b1921ccf29c84f75975935e6333';
 
-        const postBody = ` mutation {
+      const postBody = ` mutation {
             createRFP( input: {
               sku: "${sku}",
               skuDescription: "Widget 200",
@@ -96,12 +112,12 @@ describe('Buyer sends new RFP to supplier', () => {
             })
             { _id, sku }
           } `
-        const res = await request(buyerApiURL)
-          .post('/graphql')
-          .send({ query: postBody });
-        expect(res.statusCode).toEqual(200);
-        rfpId = res.body.data.createRFP._id;
-      });
+      const res = await request(buyerApiURL)
+        .post('/graphql')
+        .send({ query: postBody });
+      expect(res.statusCode).toEqual(200);
+      rfpId = res.body.data.createRFP._id;
+    });
   });
 
   describe('Check RFP existence through radish-api queries', () => {
