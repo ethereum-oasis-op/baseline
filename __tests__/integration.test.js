@@ -36,10 +36,11 @@ describe('Check that containers are ready', () => {
 
 });
 
+let rfpId;
+
 describe('Buyer sends new RFP to supplier', () => {
   let supplierMessengerId;
   let buyerMessengerId;
-  let rfpId;
   const sku = 'FAKE-SKU-123';
 
   describe('Retrieve identities from messenger', () => {
@@ -206,6 +207,7 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
             tierBounds: [1, 200, 400, 600],
             pricesByTier: [10, 9, 8],
             erc20ContractAddress: "${erc20ContractAddress}",
+            rfpId: "${rfpId}",
           })
           { _id }
         } `
@@ -225,8 +227,9 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
           pricesByTier: [10, 9, 8],
           sku: "${sku}",
           erc20ContractAddress: "${erc20ContractAddress}",
+          rfpId: "${rfpId}",
         })
-        { zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku, _id, commitment, salt}
+        { zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku, _id, commitments { commitment, salt } }
       } `
 
       const res = await request(buyerApiURL)
@@ -238,7 +241,7 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
       expect(res.body.data.createMSA.zkpPublicKeyOfSupplier).toEqual('0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5');
       expect(res.body.data.createMSA.sku).toEqual('FAKE-SKU-123');
       expect(res.body.data.createMSA._id).not.toBeNull();
-      expect(res.body.data.createMSA.commitment).toEqual(concatenateThenHash(
+      expect(res.body.data.createMSA.commitments[0].commitment).toEqual(concatenateThenHash(
         '0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965',
         '0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5',
         concatenateThenHash(...tierBoundsPadded, ...pricesByTierPadded),
@@ -248,7 +251,7 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
         erc20ContractAddressPadded,
         '0x00000000000000000000000000000000',
         '0x00000000000000000000000000000000',
-        res.body.data.createMSA.salt
+        res.body.data.createMSA.commitments[0].salt,
       ));
 
       // assign global states for PO tests:
