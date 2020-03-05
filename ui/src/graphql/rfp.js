@@ -57,6 +57,15 @@ export const GET_RFP = gql`
   ${RFP_ATTRIBUTES}
 `;
 
+export const GET_RFP_BY_SKU = gql`
+  query rfp($sku: String!) {
+    rfp(sku: $sku) {
+      ...RFP_ATTRIBUTES
+    }
+  }
+  ${RFP_ATTRIBUTES}
+`;
+
 export const GET_RFP_PROPOSAL_MSA = gql`
   query ($uuid: String!) {
     rfp(uuid: $uuid) {
@@ -65,7 +74,7 @@ export const GET_RFP_PROPOSAL_MSA = gql`
     getProposalsByRFPId(rfpId: $uuid) {
       ...PROPOSAL_ATTRIBUTES
     }
-    msasByRFP(rfpId: $uuid) {
+    msasByRFPId(rfpId: $uuid) {
       ...MSA_ATTRIBUTES
     }
   }

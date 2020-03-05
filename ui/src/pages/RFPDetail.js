@@ -26,12 +26,13 @@ const RFPDetail = () => {
   const { loading, error, data, refetch } = useQuery(GET_RFP_PROPOSAL_MSA, {
     variables: {
       uuid: id,
-    }
+    },
   });
   const [getPartnerByMessengerKey, { loading: partnerLoading, data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
-  const { rfp, getProposalsByRFPId: proposals, msasByRFP: msas } = data || {};
+
+  const { rfp, getProposalsByRFPId: proposals, msasByRFPId: msas } = data || {};
 
   useEffect(() => {
     if (rfp && msas && proposals) {
@@ -40,14 +41,14 @@ const RFPDetail = () => {
           proposals,
           proposal => proposal.sender === recipient.partner.identity,
         ) || {};
-        const msa = find(msas, msa => msa.proposalId === recipientProposal._id) || {};
+        const msa = find(msas, msa => msa.whisperPublicKeySupplier === recipientProposal.sender) || {};
         return { ...recipient, ...recipientProposal, msaId: msa._id };
       });
       setRecipientProposals(rps);
     };
   }, [rfp, proposals, msas]);
 
-  const createContract = async (index, proposal, contractAddress) => {
+  const createContract = async (index, proposal) => {
     const { rates } = proposal;
     const tierBounds = [];
     const pricesByTier = [];
@@ -66,6 +67,7 @@ const RFPDetail = () => {
       pricesByTier,
       sku: rfp.sku,
       erc20ContractAddress: proposal.erc20ContractAddress,
+      rfpId: id,
     }
 
     await postMSA({
@@ -82,13 +84,12 @@ const RFPDetail = () => {
   useEffect(() => {
     if (data && data.rfp) {
       getPartnerByMessengerKey({ variables: { identity: data.rfp.sender } });
-      getProposalsByRFPId({ variables: { rfpId: id } });
     }
   }, [data]);
 
   useEffect(() => {
     if (organizationAddress && partnerData) {
-      partnerData.getPartnerByIdentity.address === organizationAddress && setIsSender(true);
+      partnerData.getPartnerByMessengerKey.address === organizationAddress && setIsSender(true);
     };
   }, [organizationAddress, partnerData]);
 

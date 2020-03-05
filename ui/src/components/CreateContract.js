@@ -3,10 +3,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
 import SKUTable from './SKUTable';
 import RateTable from './RateTable';
-import DropDown from './DropDown';
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -27,7 +25,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const CreateContract = ({ rfp, proposal, open, handleClose, createContract, index }) => {
-  const [contractAddress, setContractAddress] = useState('');
   const classes = useStyles();
 
   return (
@@ -41,7 +38,7 @@ const CreateContract = ({ rfp, proposal, open, handleClose, createContract, inde
         <Typography variant="body1">
           By selecting "I Accept", I am agreeing to the Terms & Conditions stated here and ...
         </Typography>
-        <Button className={classes.button} onClick={() => createContract(index, proposal, contractAddress)}>
+        <Button className={classes.button} onClick={() => createContract(index, proposal)}>
           I Accept
         </Button>
       </div>

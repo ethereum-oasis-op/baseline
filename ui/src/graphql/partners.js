@@ -7,6 +7,7 @@ export const GET_ALLPARTNERS_QUERY = gql`
       address
       role
       identity
+      zkpPublicKey
     }
 
     myPartners {
@@ -14,6 +15,7 @@ export const GET_ALLPARTNERS_QUERY = gql`
       address
       role
       identity
+      zkpPublicKey
     }
   }
 `;
@@ -26,6 +28,7 @@ export const GET_PARTNER_UPDATE = gql`
         address
         role
         identity
+        zkpPublicKey
       }
 
       myPartners {
@@ -33,6 +36,7 @@ export const GET_PARTNER_UPDATE = gql`
         address
         role
         identity
+        zkpPublicKey
       }
     }
   }

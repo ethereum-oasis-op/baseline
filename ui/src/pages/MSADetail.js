@@ -10,7 +10,7 @@ import Signatures from '../components/Signatures';
 import ApproveFooter from '../components/ApproveFooter';
 import { GET_MSA_BY_ID } from '../graphql/msa';
 import { GET_RFP } from '../graphql/rfp';
-import { GET_PROPOSAL } from '../graphql/proposal';
+import { GET_PROPOSAL_BY_RFP_AND_SUPPLIER } from '../graphql/proposal';
 import { GET_PARTNER_BY_IDENTITY } from '../graphql/partners';
 import { ServerSettingsContext } from '../contexts/server-settings-context';
 
@@ -23,14 +23,19 @@ const MSADetail = () => {
   const [fetchRFP, { data: rfpData, loading: rfpLoading }] = useLazyQuery(GET_RFP);
   const { rfp } = rfpData || {};
 
-  const [fetchProposal, { data: proposalData, loading: proposalLoading }] = useLazyQuery(GET_PROPOSAL);
-  const { proposal } = proposalData || {};
+  const [fetchProposal, { data: proposalData, loading: proposalLoading }] = useLazyQuery(GET_PROPOSAL_BY_RFP_AND_SUPPLIER);
+  const { getProposalByRFPAndSupplier: proposal } = proposalData || {};
 
   const [getPartnerByIdentity, { data: partnerData, loading: partnerLoading }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
-  const { getPartnerByIdentity: partner } = partnerData || {};
-  const { name, address } = partner || {};
+  const { getPartnerByMessengerKey: buyer } = partnerData || {};
+  const { name, address } = buyer || {};
+
+  const [getSupplierByIdentity, { data: supplierData }] = useLazyQuery(
+    GET_PARTNER_BY_IDENTITY,
+  );
+  const { getPartnerByMessengerKey: supplier } = supplierData || {};
 
   const { settings } = useContext(ServerSettingsContext);
   const { organizationAddress } = settings ? settings : {};
@@ -41,7 +46,7 @@ const MSADetail = () => {
     };
     if (msa) {
       fetchRFP({ variables: { uuid: msa.rfpId } });
-      fetchProposal({ variables: { id: msa.proposalId } });
+      fetchProposal({ variables: { sender: msa.whisperPublicKeySupplier, rfpId: msa.rfpId } });
     };
   }, [fetchMSA, msa]);
 
@@ -53,14 +58,15 @@ const MSADetail = () => {
 
   useEffect(() => {
     if (rfp) getPartnerByIdentity({ variables: { identity: rfp.sender } });
-  }, [getPartnerByIdentity, rfp]);
+    if (msa) getSupplierByIdentity({ variables: { identity: msa.whisperPublicKeySupplier } });
+  }, [getPartnerByIdentity, rfp, msa]);
 
   if (!msaData) return 'Not Found';
 
   return (
     <Container>
       {rfp && <Typography variant='h2'>{rfp.description}</Typography>}
-      {partner && <Typography>{name}</Typography>}
+      {buyer && <Typography>{name}</Typography>}
       {rfp && <SKUTable rfp={rfp} />}
       <Grid container>
         {proposal &&
@@ -75,10 +81,13 @@ const MSADetail = () => {
           </>
         }
       </Grid>
-      {/* TODO: integrate Signatures component with backend */}
-      <Signatures />
-      {/* only show approve footer if current user has not already signed */}
-      {!isSender && <ApproveFooter onClick={() => console.log('hello')} />}
+      {buyer && supplier && <Signatures
+        buyer={buyer}
+        supplier={supplier}
+        supplierStatus={msa.supplierSignatureStatus}
+        buyerStatus={msa.buyerSignatureStatus}
+      />}
+      {!isSender && !msa.supplierSignatureStatus && <ApproveFooter onClick={() => console.log('hello')} />}
     </Container>
   );
 }

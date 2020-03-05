@@ -46,7 +46,8 @@ const POSchema = gql`
   }
 
   type Variables {
-    accumulatedVolumeOrdered: String!
+    accumulatedVolumeOrdered: Int!
+    accumulatedVolumeDelivered: Int!
   }
 `;
 

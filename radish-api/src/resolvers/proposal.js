@@ -4,6 +4,7 @@ import {
   getProposalsByRFPId,
   getAllProposals,
   saveProposal,
+  getProposalByRFPAndSupplier
 } from '../services/proposal';
 import { pubsub } from '../subscriptions';
 import { saveNotice } from '../services/notice';
@@ -23,6 +24,9 @@ export default {
     proposals() {
       return getAllProposals();
     },
+    getProposalByRFPAndSupplier(_parent, args) {
+      return getProposalByRFPAndSupplier({ sender: args.sender, rfpId: args.rfpId });
+    }
   },
   Mutation: {
     createProposal: async (_parent, args, context) => {

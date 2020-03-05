@@ -59,3 +59,12 @@ export const GET_PROPOSAL = gql`
   }
   ${PROPOSAL_ATTRIBUTES}
 `;
+
+export const GET_PROPOSAL_BY_RFP_AND_SUPPLIER = gql`
+  query proposal($sender: String! $rfpId: String!) {
+    getProposalByRFPAndSupplier(sender: $sender rfpId: $rfpId) {
+      ...PROPOSAL_ATTRIBUTES
+    }
+  }
+  ${PROPOSAL_ATTRIBUTES}
+`;

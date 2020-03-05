@@ -1,8 +1,7 @@
-<<<<<<< HEAD
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
-import { MSA, getMSAById, getAllMSAs, getMSABySKU, saveMSA } from '../services/msa';
-import { getPartnerByAddress } from '../services/partner';
+import { MSA, getMSAById, getAllMSAs, getMSAsBySKU, saveMSA, getMSAsByRFPId } from '../services/msa';
+import { getPartnerByAddress, getPartnerByzkpPublicKey } from '../services/partner';
 import { saveNotice } from '../services/notice';
 import { getServerSettings } from '../utils/serverSettings';
 import { pubsub } from '../subscriptions';
@@ -11,26 +10,12 @@ import { strip0x } from '../utils/crypto/conversions';
 import { checkKeyPair } from '../utils/crypto/ecc/babyjubjub-ecc';
 
 const pycryptojs = require('zokrates-pycryptojs');
-=======
-import { uuid } from 'uuidv4';
-import {
-  getMSAById,
-  getAllMSAs,
-  getMSAByProposalId,
-  saveMSA,
-  getMSAsByRFP,
-} from '../services/msa';
-import { pubsub } from '../subscriptions';
-import { saveNotice } from '../services/notice';
-import { getPartnerByIdentity } from '../services/partner';
-import msgDeliveryQueue from '../queues/message_delivery';
->>>>>>> feat: msa/contract creation integration
 
 const NEW_MSA = 'NEW_MSA';
 
 const getSignatureStatus = msa => {
-  const { RBuyer, SBuyer } = msa.constants.EdDSASignatures.buyer;
-  const { RSupplier, SSupplier } = msa.constants.EdDSASignatures.supplier;
+  const { R: RBuyer, S: SBuyer } = msa.constants.EdDSASignatures.buyer;
+  const { R: RSupplier, S: SSupplier } = msa.constants.EdDSASignatures.supplier;
   let buyerSignatureStatus;
   let supplierSignatureStatus;
   if (RBuyer && SBuyer) buyerSignatureStatus = true;
@@ -43,42 +28,49 @@ const getSignatureStatus = msa => {
   };
 };
 
+const mapMSAsWithSignatureStatus = async msas => {
+  const msasWithSignatureStatus = await Promise.all(msas.map(async msa => {
+    const { constants, ...msaData } = msa;
+    const { buyerSignatureStatus, supplierSignatureStatus } = getSignatureStatus(msa);
+    const supplier = await getPartnerByzkpPublicKey(constants.zkpPublicKeyOfSupplier);
+    return {
+      ...msaData,
+      ...constants,
+      whisperPublicKeySupplier: supplier.identity,
+      buyerSignatureStatus,
+      supplierSignatureStatus,
+    };
+  }));
+  return msasWithSignatureStatus
+}
+
 export default {
   Query: {
-    msa(_parent, args) {
-      const msa = getMSAById(args.id).then(res => res);
+    msa: async (_parent, args) => {
+      const msa = await getMSAById(args.id).then(res => res);
+      const { constants, ...msaData } = msa;
       const { buyerSignatureStatus, supplierSignatureStatus } = getSignatureStatus(msa);
+      const supplier = await getPartnerByzkpPublicKey(constants.zkpPublicKeyOfSupplier);
+
       return {
-        ...msa,
+        ...msaData,
+        ...constants,
+        whisperPublicKeySupplier: supplier.identity,
         buyerSignatureStatus,
         supplierSignatureStatus,
       };
     },
-    msas() {
-      const msas = getAllMSAs();
-      const msasSignatureStatus = msas.map(msa => {
-        const { buyerSignatureStatus, supplierSignatureStatus } = getSignatureStatus(msa);
-        // eslint-disable-next-line no-param-reassign
-        msa = {
-          ...msa,
-          buyerSignatureStatus,
-          supplierSignatureStatus,
-        };
-        return msa;
-      });
-      return msasSignatureStatus;
+    msas: async () => {
+      const msas = await getAllMSAs();
+      return mapMSAsWithSignatureStatus(msas);
     },
-    msaBySKU(_parent, args) {
-      const msa = getMSABySKU(args.sku);
-      const { buyerSignatureStatus, supplierSignatureStatus } = getSignatureStatus(msa);
-      return {
-        ...msa,
-        buyerSignatureStatus,
-        supplierSignatureStatus,
-      };
+    msasBySKU: async (_parent, args)  => {
+      const msas = await getMSAsBySKU(args.sku);
+      return mapMSAsWithSignatureStatus(msas);
     },
-    msasByRFP(_parent, args) {
-      return getMSAsByRFP(args.rfpId).then(res => res);
+    msasByRFPId: async (_parent, args) => {
+      const msas = await getMSAsByRFPId(args.rfpId);
+      return mapMSAsWithSignatureStatus(msas);
     }
   },
   Mutation: {
@@ -120,6 +112,7 @@ export default {
       };
 
       const msaObject = msa.object;
+      msaObject.rfpId = args.input.rfpId;
 
       const msaDoc = await saveMSA(msaObject);
 
@@ -145,17 +138,20 @@ export default {
         },
       });
 
-      pubsub.publish(NEW_MSA, { newMSA: msaDoc });
-
-      return {
+      const { constants, ...msaData } = msaObject;
+      const msaDetails = {
         _id: msaDoc._id,
-        ...msaObject.constants,
+        ...msaData,
+        ...constants,
         supplier: { ..._supplier },
-        ...msaObject.commitments[0],
         whisperPublicKeySupplier: _supplier.identity,
         buyerSignatureStatus: true,
         supplierSignatureStatus: false,
       };
+
+      pubsub.publish(NEW_MSA, { newMSA: msaDetails });
+
+      return msaDetails;
     },
   },
   Subscription: {

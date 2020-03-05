@@ -5,6 +5,7 @@ const ProposalSchema = gql`
     proposal(id: String!): Proposal
     getProposalsByRFPId(rfpId: String!): [Proposal]
     proposals: [Proposal]
+    getProposalByRFPAndSupplier(sender: String! rfpId: String!): Proposal
   }
 
   extend type Mutation {

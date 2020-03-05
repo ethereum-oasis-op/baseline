@@ -25,3 +25,8 @@ export const saveProposal = async input => {
   const proposal = await db.collection('proposals').insert(input);
   return proposal;
 };
+
+export const getProposalByRFPAndSupplier = async input => {
+  const proposal = await db.collection('proposals').findOne(input);
+  return proposal;
+};

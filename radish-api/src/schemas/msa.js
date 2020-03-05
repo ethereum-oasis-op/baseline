@@ -3,9 +3,10 @@ import gql from 'graphql-tag';
 // TODO nesting
 const MSASchema = gql`
   extend type Query {
-    msa(id: Int!): MSA
-    msaBySKU(sku: String!): MSA
+    msa(id: String!): MSA
+    msasBySKU(sku: String!): [MSA]
     msas: [MSA]
+    msasByRFPId(rfpId: String!): [MSA]
   }
 
   extend type Mutation {
@@ -27,13 +28,11 @@ const MSASchema = gql`
     hashOfTieredPricing: String!
     minVolume: Int!
     maxVolume: Int!
-    commitment: String!
-    salt: String!
-    accumulatedVolumeOrdered: Int!
-    accumulatedVolumeDelivered: Int!
+    commitments: [Commitment]!
     whisperPublicKeySupplier: String!
     buyerSignatureStatus: Boolean!
     supplierSignatureStatus: Boolean!
+    rfpId: String!
   }
 
   input inputMSA {
@@ -42,6 +41,7 @@ const MSASchema = gql`
     pricesByTier: [Int!]
     sku: String!
     erc20ContractAddress: String!
+    rfpId: String!
   }
 `;
 

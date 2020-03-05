@@ -3,8 +3,27 @@ import gql from 'graphql-tag';
 export const MSA_ATTRIBUTES = gql`
   fragment MSA_ATTRIBUTES on MSA {
     _id
+    zkpPublicKeyOfBuyer
+    zkpPublicKeyOfSupplier
+    whisperPublicKeySupplier
+    tierBounds
+    pricesByTier
+    sku
+    erc20ContractAddress
+    hashOfTieredPricing
+    minVolume
+    maxVolume
+    buyerSignatureStatus
+    supplierSignatureStatus
     rfpId
-    proposalId
+    commitments {
+      commitment
+      salt
+      variables {
+        accumulatedVolumeOrdered
+        accumulatedVolumeDelivered
+      }
+    }
   }
 `;
 
@@ -44,9 +63,9 @@ export const GET_MSA_BY_PROPOSAL = gql`
   ${MSA_ATTRIBUTES}
 `;
 
-export const GET_MSAS_BY_RFP = gql`
-  query getMSAsByRFP($rfpId: String!) {
-    msasByRFP(rfpId: $rfpId) {
+export const GET_MSAS_BY_SKU = gql`
+  query msasBySKU($sku: String!) {
+    msasBySKU(sku: $sku) {
       ...MSA_ATTRIBUTES
     }
   }
