@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2215d39d-d8b2-45f8-9b58-d3d082ba89cf",
+		"_postman_id": "6a7c3a14-6d69-470e-aeea-677b1af3f9c6",
 		"name": "integration-test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1269,7 +1269,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation($rfpId:String!, $buyerMessengerId:String!){\n  createProposal(input: \n    { rfpId: $rfpId, \n      rates: [\n        {\n\t\t\tstartRange : 0,\n\t\t\tendRange : 100,\n\t\t\tprice : 10.0,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 101,\n\t\t\tendRange : 200,\n\t\t\tprice : 9.0,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 201,\n\t\t\tendRange : 300,\n\t\t\tprice : 8.0,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n      }\n        \n      ],\n  recipient: $buyerMessengerId\n    }\n  )\n  {\n      _id\n    rfpId\n    rates {\n      startRange\n      endRange\n      price\n      unitOfMeasure\n    }\n    sender\n  }\n}",
+						"query": "mutation($rfpId:String!, $buyerMessengerId:String!){\n  createProposal(input: \n    { rfpId: $rfpId, \n      rates: [\n        {\n\t\t\tstartRange : 0,\n\t\t\tendRange : 100,\n\t\t\tprice : 10.0,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 101,\n\t\t\tendRange : 200,\n\t\t\tprice : 9.0,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 201,\n\t\t\tendRange : 300,\n\t\t\tprice : 8.0,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n      }\n        \n      ],\n      erc20ContractAddress: \"0xcd234a471b72ba2f1ccf0a70fcaba648a5eecd8d\",\n  recipient: $buyerMessengerId\n    }\n  )\n  {\n      _id\n    rfpId\n    rates {\n      startRange\n      endRange\n      price\n      unitOfMeasure\n    }\n    sender\n  }\n}",
 						"variables": "{\n\t\"rfpId\":\"{{rfpId}}\",\n\t\"buyerMessengerId\": \"{{buyerMessengerId}}\"\n}"
 					}
 				},
@@ -1466,7 +1466,7 @@
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation($rfpId:String!, $buyerMessengerId:String!){\n  createProposal(input: \n    { rfpId: $rfpId, \n      rates: [\n        {\n\t\t\tstartRange : 0,\n\t\t\tendRange : 50,\n\t\t\tprice : 10.50,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 51,\n\t\t\tendRange : 500,\n\t\t\tprice : 9.5,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 501,\n\t\t\tendRange : 1000,\n\t\t\tprice : 8.5,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n      }\n        \n      ],\n  recipient: $buyerMessengerId\n    }\n  )\n  {\n      _id\n    rfpId\n    rates {\n      startRange\n      endRange\n      price\n      unitOfMeasure\n    }\n    sender\n  }\n}",
+						"query": "mutation($rfpId:String!, $buyerMessengerId:String!){\n  createProposal(input: \n    { rfpId: $rfpId, \n      rates: [\n        {\n\t\t\tstartRange : 0,\n\t\t\tendRange : 50,\n\t\t\tprice : 10.50,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 51,\n\t\t\tendRange : 500,\n\t\t\tprice : 9.5,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n        },\n        {\n\t\t\tstartRange : 501,\n\t\t\tendRange : 1000,\n\t\t\tprice : 8.5,\n\t\t\tunitOfMeasure : \"Price Per Unit\"\n      }\n        \n      ],\n  erc20ContractAddress: \"0xcd234a471b72ba2f1ccf0a70fcaba648a5eecd8d\",\n  recipient: $buyerMessengerId\n    }\n  )\n  {\n      _id\n    rfpId\n    rates {\n      startRange\n      endRange\n      price\n      unitOfMeasure\n    }\n    sender\n  }\n}",
 						"variables": "{\n\t\"rfpId\":\"{{rfpId}}\",\n\t\"buyerMessengerId\": \"{{buyerMessengerId}}\"\n}"
 					}
 				},
@@ -1601,6 +1601,68 @@
 					"graphql": {
 						"query": "query($proposalId:String!){\n  proposal(id: $proposalId)\n  {\n    _id\n    rfpId\n    rates {\n      startRange\n      endRange\n      price\n      unitOfMeasure\n    }\n    sender\n\n  }\n}",
 						"variables": "{\n\t\"proposalId\":\"{{proposalId2}}\"\n}"
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/graphql",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"graphql"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buyer creates MSA",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4322c789-ef0b-4923-b926-95cb7b094e73",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var res = JSON.parse(responseBody);",
+							"",
+							"pm.test('should return a valid response', () => {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"pm.test('should return createMSA.sku', () => {",
+							"    pm.expect(res.data.createMSA.sku).to.exist;",
+							"    pm.expect(res.data.createMSA.sku).to.equal(\"SKU-1234567\");",
+							"});",
+							"",
+							"pm.test('should return createMSA._id', () => {",
+							"    pm.expect(res.data.createMSA._id).to.exist;",
+							"});",
+							"",
+							"pm.test('should return createMSA.commitments', () => {",
+							"    pm.expect(res.data.createMSA.commitments).to.exist;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($rfpId:String!){\n        createMSA( input: {\n          rfpId: $rfpId,\n          supplierAddress: \"0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f\",\n          tierBounds: [1, 200, 400, 600],\n          pricesByTier: [10, 9, 8],\n          sku: \"SKU-1234567\",\n          erc20ContractAddress: \"0xcd234a471b72ba2f1ccf0a70fcaba648a5eecd8d\",\n        })\n        { zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku, _id, \n        commitments { commitment, salt }\n        }\n     }\n",
+						"variables": "{\n\t\"rfpId\":\"{{rfpId}}\"\n}"
 					}
 				},
 				"url": {
