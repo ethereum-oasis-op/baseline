@@ -135,34 +135,37 @@
 							"    pm.response.to.be.json;",
 							"});",
 							"",
-							"pm.test('should return vk', () => {",
-							"    pm.expect(res.vk).to.exist;",
+							"pm.test('should return docID', () => {",
+							"    pm.expect(res.docID).to.exist;",
+							"});",
+							"",
+							"pm.test('should return proof', () => {",
+							"    pm.expect(res.proof).to.exist;",
+							"});",
+							"",
+							"pm.test('should return inputs', () => {",
+							"    pm.expect(res.inputs).to.exist;",
+							"});",
+							"",
+							"pm.test('should return verificationKeyID', () => {",
+							"    pm.expect(res.verificationKeyID).to.exist;",
 							"});"
 						],
 						"type": "text/javascript"
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"auth": {
 					"type": "noauth"
 				},
-				"method": "GET",
+				"method": "POST",
 				"header": [
 					{
 						"key": "Content-Type",
 						"name": "Content-Type",
 						"type": "text",
 						"value": "application/json"
-					},
-					{
-						"key": "body",
-						"value": "test",
-						"type": "text",
-						"disabled": true
 					}
 				],
 				"body": {

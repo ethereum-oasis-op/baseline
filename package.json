@@ -19,7 +19,6 @@
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:watch": "jest --watchAll --runInBand",
     "postman-test-zok-api": "npx newman run zok/src/test/zok-api-integration-test.postman_collection.json -e zok/src/test/radish-local.postman_environment.json",
-    "postman-test-radish-api": "npx newman run radish-api/src/test/radish-api-integration-test.postman_collection.json -e  radish-api/src/test/radish-local.postman_environment.json",
     "postman-integration-test": "npx newman run __tests__/postman/integration-test.postman_collection.json  -e  __tests__/postman/radish-local.postman_environment.json --delay-request 1000",
     "seed": "npm run seed:buyer && npm run seed:supplier1 && npm run seed:supplier2",
     "seed:buyer": "docker-compose run --rm -e ROLE='buyer' mongo-seed sh seed.sh",
