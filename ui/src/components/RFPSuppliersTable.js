@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -95,6 +96,14 @@ const RFPSuppliersTable = ({ rfp, proposals, setOpen, open, createContract }) =>
       </Table>
     </>
   );
+};
+
+RFPSuppliersTable.propTypes = {
+  rfp: PropTypes.shape({}).isRequired,
+  proposals: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setOpen: PropTypes.func.isRequired,
+  open: PropTypes.shape({}).isRequired,
+  createContract: PropTypes.func.isRequired,
 };
 
 export default RFPSuppliersTable;

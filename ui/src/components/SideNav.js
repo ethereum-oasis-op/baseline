@@ -8,6 +8,7 @@ import { NavLink, useHistory, useLocation } from 'react-router-dom';
 import Inbox from '@material-ui/icons/Inbox';
 import Send from '@material-ui/icons/Send';
 import { groupBy, filter } from 'lodash';
+import uniqid from 'uniqid';
 import DropDown from './DropDown';
 
 const useStyles = makeStyles(() => ({
@@ -132,15 +133,18 @@ const Category = ({ icon: Icon, label, items = [], name, url, selected }) => {
 
 Category.propTypes = {
   selected: PropTypes.bool,
-  icon: PropTypes.element.isRequired,
+  icon: PropTypes.elementType,
   label: PropTypes.string.isRequired,
-  items: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  items: PropTypes.arrayOf(PropTypes.shape({})),
+  name: PropTypes.string,
   url: PropTypes.string.isRequired,
 };
 
 Category.defaultProps = {
   selected: false,
+  icon: null,
+  name: '',
+  items: [],
 };
 
 const SideNav = ({ notices, selected }) => {
@@ -163,7 +167,7 @@ const SideNav = ({ notices, selected }) => {
   useEffect(() => {
     if (createForms.filter(form => form.value === location.pathname).length)
       setCreateForm(location.pathname);
-  }, []);
+  }, [createForms, location.pathname]);
 
   return (
     <div className={classes.root}>
@@ -178,6 +182,7 @@ const SideNav = ({ notices, selected }) => {
       <List className={classes.filterList}>
         {categories.map(({ label, key, url, icon }) => (
           <Category
+            key={uniqid()}
             icon={icon}
             label={label}
             items={groups[key]}
@@ -191,9 +196,9 @@ const SideNav = ({ notices, selected }) => {
       <Divider />
 
       <List className={classes.filterList}>
-        <Category icon={null} label="Products" url="/products" />
-        <Category icon={null} label="Partners" url="/partners" />
-        <Category icon={null} label="Contracts" url="/contracts" />
+        <Category label="Products" url="/products" />
+        <Category label="Partners" url="/partners" />
+        <Category items={groups.msa} label="Contracts" url="/notices/contracts" />
       </List>
     </div>
   );

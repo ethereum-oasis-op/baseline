@@ -17,16 +17,16 @@ import { ServerSettingsContext } from '../contexts/server-settings-context';
 const MSADetail = () => {
   const { id } = useParams();
   const [isSender, setIsSender] = useState(true);
-  const [fetchMSA, { data: msaData, loading: msaLoading }] = useLazyQuery(GET_MSA_BY_ID);
+  const [fetchMSA, { data: msaData }] = useLazyQuery(GET_MSA_BY_ID);
   const { msa } = msaData || {};
 
-  const [fetchRFP, { data: rfpData, loading: rfpLoading }] = useLazyQuery(GET_RFP);
+  const [fetchRFP, { data: rfpData }] = useLazyQuery(GET_RFP);
   const { rfp } = rfpData || {};
 
-  const [fetchProposal, { data: proposalData, loading: proposalLoading }] = useLazyQuery(GET_PROPOSAL_BY_RFP_AND_SUPPLIER);
+  const [fetchProposal, { data: proposalData }] = useLazyQuery(GET_PROPOSAL_BY_RFP_AND_SUPPLIER);
   const { getProposalByRFPAndSupplier: proposal } = proposalData || {};
 
-  const [getPartnerByIdentity, { data: partnerData, loading: partnerLoading }] = useLazyQuery(
+  const [getPartnerByIdentity, { data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
   const { getPartnerByMessengerKey: buyer } = partnerData || {};
@@ -48,7 +48,7 @@ const MSADetail = () => {
       fetchRFP({ variables: { uuid: msa.rfpId } });
       fetchProposal({ variables: { sender: msa.whisperPublicKeySupplier, rfpId: msa.rfpId } });
     };
-  }, [fetchMSA, msa]);
+  }, [fetchMSA, msa, id, fetchRFP, fetchProposal]);
 
   useEffect(() => {
     if (organizationAddress && address) {
@@ -59,7 +59,7 @@ const MSADetail = () => {
   useEffect(() => {
     if (rfp) getPartnerByIdentity({ variables: { identity: rfp.sender } });
     if (msa) getSupplierByIdentity({ variables: { identity: msa.whisperPublicKeySupplier } });
-  }, [getPartnerByIdentity, rfp, msa]);
+  }, [getPartnerByIdentity, rfp, msa, getSupplierByIdentity]);
 
   if (!msaData) return 'Not Found';
 

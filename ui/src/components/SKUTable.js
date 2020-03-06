@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -22,6 +23,10 @@ const SKUTable = ({ rfp }) => {
       </TableBody>
     </Table>
   );
+};
+
+SKUTable.propTypes = {
+  rfp: PropTypes.shape({}).isRequired,
 };
 
 export default SKUTable;

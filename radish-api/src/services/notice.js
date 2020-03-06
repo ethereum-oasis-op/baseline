@@ -11,6 +11,7 @@ export const getAllNotices = async () => {
     .collection('notices')
     .find({})
     .toArray();
+
   return notices;
 };
 
@@ -19,6 +20,7 @@ export const getNoticesByCategory = async category => {
     .collection('notices')
     .find({ category })
     .toArray();
+
   return notices;
 };
 

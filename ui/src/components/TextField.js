@@ -8,7 +8,7 @@ import MUITextField from '@material-ui/core/TextField';
 const TextField = ({ label, field, form: { dirty, touched, errors }, ...other }) => {
   const errorText = errors[field.name];
   const hasError = dirty && touched[field.name] && errorText !== undefined;
-  const adornments = { startAdornment: other.startAdornment, endAdornment: other.endAdornment };
+  const adornments = { startAdornment: other.startadornment, endAdornment: other.endadornment };
 
   return (
     <MUITextField

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -61,6 +62,14 @@ const DropDown = props => {
     </FormControl>
   );
 };
+
+DropDown.propTypes = {
+  items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
+  field: PropTypes.shape({}),
+}
 
 DropDown.defaultProps = {
   disabled: false,

@@ -24,7 +24,7 @@ const MSAProvider = ({ children }) => {
         },
       });
     }
-  }, []);
+  }, [subscribeToMore]);
 
   return (
     <MSAContext.Provider value={{ msas, loading, error, postMSA }}>{children}</MSAContext.Provider>

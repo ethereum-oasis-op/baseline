@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
@@ -38,6 +39,16 @@ const RateTable = ({ rates, erc20ContractAddress }) => {
       </Table>
     </>
   );
+};
+
+RateTable.propTypes = {
+  rates: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  erc20ContractAddress: PropTypes.string.isRequired,
+};
+
+RateTable.defaultProps = {
+  rates: [],
+  erc20ContractAddress: '',
 };
 
 export default RateTable;
