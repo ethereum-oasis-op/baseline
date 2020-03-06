@@ -111,7 +111,7 @@ ChipMaker.propTypes = {
   }).isRequired,
 };
 
-const categories = ['msa', 'purchaseorder', 'invoice', 'rfp', 'inbox', 'outbox'];
+const categories = ['msa', 'proposal', 'purchaseorder', 'invoice', 'rfp', 'inbox', 'outbox'];
 
 const NoticesList = ({ match }) => {
   const classes = useStyles();
@@ -121,8 +121,12 @@ const NoticesList = ({ match }) => {
   const mailboxes = groupBy(notices, 'status');
   let rows = [];
 
-  if (categories.includes(category)) {
-    rows = groups[category];
+  const overrides = {
+    contracts: 'msa',
+  };
+
+  if (categories.includes(category) || categories.includes(overrides[category])) {
+    rows = groups[category] || groups[overrides[category]];
   }
 
   if (category === 'inbox' || category === 'outbox') {

@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import { useFormik, FieldArray, Field, FormikProvider, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { makeStyles } from '@material-ui/core/styles';
@@ -138,8 +139,9 @@ const ProposalForm = ({ rfp }) => {
                               }}
                               disabled={disabled[index]}
                               className={classes.field}
-                              startAdornment={<GreaterThanIcon />}
+                              startadornment={<GreaterThanIcon />}
                               type="number"
+                              value={rate.endRange || ''}
                             />
                           </TableCell>
                           <TableCell>
@@ -149,8 +151,9 @@ const ProposalForm = ({ rfp }) => {
                               onChange={formik.handleChange}
                               disabled={disabled[index]}
                               className={classes.field}
-                              startAdornment="$"
+                              startadornment="$"
                               type="number"
+                              value={rate.price || ''}
                             />
                           </TableCell>
                           <TableCell>
@@ -272,6 +275,10 @@ const ProposalForm = ({ rfp }) => {
       </form>
     </FormikProvider>
   );
+};
+
+ProposalForm.propTypes = {
+  rfp: PropTypes.shape({}).isRequired,
 };
 
 export default ProposalForm;

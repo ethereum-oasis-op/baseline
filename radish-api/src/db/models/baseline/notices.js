@@ -85,6 +85,7 @@ export const createNotice = async (category, payload, categoryId = null) => {
   try {
     const sender = await getPartnerByMessengerKey(payload.sender);
     const newNotice = {
+      resolved: false,
       categoryId: categoryId || payload._id,
       category,
       subject: `New ${category}: ${payload._id}`,

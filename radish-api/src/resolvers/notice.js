@@ -12,22 +12,22 @@ const NEW_NOTICE = 'NEW_NOTICE';
 
 export default {
   Query: {
-    notice(_parent, args) {
+    notice: async (_parent, args) => {
       return getNoticeById(args.id).then(res => res);
     },
-    notices() {
+    notices: async () => {
       return getAllNotices();
     },
-    getNoticesByCategory(_parent, args) {
+    getNoticesByCategory: async (_parent, args) => {
       return getNoticesByCategory(args.category).then(res => res);
     },
-    getInbox() {
+    getInbox: async () => {
       return getInbox();
     },
-    getOutbox() {
+    getOutbox: async () => {
       return getOutbox();
     },
-    getNoticeCount() {
+    getNoticeCount: () => {
       return {
         msa: 5,
         rfp: 2,

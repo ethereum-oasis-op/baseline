@@ -64,11 +64,15 @@ const NoticesTable = props => {
 };
 
 NoticesTable.propTypes = {
-  notices: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  notices: PropTypes.arrayOf(PropTypes.shape({})),
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   options: PropTypes.shape({
     key: PropTypes.string.isRequired,
   }).isRequired,
+};
+
+NoticesTable.defaultProps = {
+  notices: [],
 };
 
 export default NoticesTable;

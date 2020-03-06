@@ -20,8 +20,12 @@ const NoticeLayout = ({ selected, children }) => {
 };
 
 NoticeLayout.propTypes = {
-  selected: PropTypes.string.isRequired,
-  children: PropTypes.arrayOf(PropTypes.node).isRequired,
+  selected: PropTypes.string,
+  children: PropTypes.node.isRequired,
+};
+
+NoticeLayout.defaultProps = {
+  selected: '',
 };
 
 export default NoticeLayout;

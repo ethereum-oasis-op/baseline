@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Typography from '@material-ui/core/Typography';
@@ -28,7 +29,7 @@ const CreateContract = ({ rfp, proposal, open, handleClose, createContract, inde
   const classes = useStyles();
 
   return (
-    <Modal open={open || false} onClose={handleClose}>
+    <Modal open={open} onClose={handleClose}>
       <div style={{ margin: 'auto', position: 'relative' }} className={classes.paper}>
         <Typography variant="h2">{rfp.description}</Typography>
         <SKUTable rfp={rfp} />
@@ -44,6 +45,19 @@ const CreateContract = ({ rfp, proposal, open, handleClose, createContract, inde
       </div>
     </Modal>
   );
+};
+
+CreateContract.propTypes = {
+  rfp: PropTypes.shape({}).isRequired,
+  proposal: PropTypes.shape({}).isRequired,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func.isRequired,
+  createContract: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+};
+
+CreateContract.defaultProps = {
+  open: false,
 };
 
 export default CreateContract;

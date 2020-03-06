@@ -23,7 +23,7 @@ const RFPDetail = () => {
   const { postMSA } = useContext(MSAContext);
   const { settings } = useContext(ServerSettingsContext);
   const { organizationAddress } = settings ? settings : {};
-  const { loading, error, data, refetch } = useQuery(GET_RFP_PROPOSAL_MSA, {
+  const { loading, data, refetch } = useQuery(GET_RFP_PROPOSAL_MSA, {
     variables: {
       uuid: id,
     },
@@ -85,7 +85,7 @@ const RFPDetail = () => {
     if (data && data.rfp) {
       getPartnerByMessengerKey({ variables: { identity: data.rfp.sender } });
     }
-  }, [data]);
+  }, [getPartnerByMessengerKey, data]);
 
   useEffect(() => {
     if (organizationAddress && partnerData) {
