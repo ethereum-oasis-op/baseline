@@ -1,7 +1,7 @@
 # Welcome to Baseline
 
 <div align="center">
-  <img src="docs/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png" />
+  <img src="docs/assets/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png" />
   <p>
     Combining advances in cryptography, messaging, and blockchain to execute
     <br/>

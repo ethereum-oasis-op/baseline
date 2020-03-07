@@ -24,7 +24,7 @@
     "seed:buyer": "docker-compose run --rm -e ROLE='buyer' mongo-seed sh seed.sh",
     "seed:supplier1": "docker-compose run --rm -e ROLE='supplier1' mongo-seed sh seed.sh",
     "seed:supplier2": "docker-compose run --rm -e ROLE='supplier2' mongo-seed sh seed.sh",
-    "setup": "./setup.sh",
+    "setup": "./bin/setup.sh",
     "deploy": "docker-compose run --rm radish-deploy sh deploy.sh",
     "deploy:all": "docker-compose run -e MODE='register-all' --rm radish-deploy sh deploy.sh"
   },
