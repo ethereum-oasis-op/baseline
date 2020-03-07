@@ -1,9 +1,14 @@
+---
+title: Zokrates component
+description: Detailed explanation of the privacy protocols under ZKP
+---
+
 # Zokrates component
 
 ## What is here?
-<!---
-Write about what is this folder and the contents. What languages, frameworks, etc...?
--->
+
+This component is a RESTful service that leverages a library (`zokrates.js`) that wraps around Zokrates utility, to expose functionalities necessary for 
+
 ## How does this fit in to Radish?
 <!---
 Explain this component in the context of the rest of the system. 
