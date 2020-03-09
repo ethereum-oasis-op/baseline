@@ -2,14 +2,16 @@ import crypto from 'crypto';
 import { strip0x } from '../../conversions';
 
 /**
-Utility function:
-hashes a concatenation of items but it does it by
-breaking the items up into 432 bit chunks, hashing those, plus any remainder
-and then repeating the process until you end up with a single hash.  That way
-we can generate a hash without needing to use more than a single sha round.  It's
-not the same value as we'd get using rounds but it's at least doable.
-@param {string} hexValue
-*/
+ * Utility function:
+ * hashes a concatenation of items but it does it by
+ * breaking the items up into 432 bit chunks, hashing those, plus any remainder
+ * and then repeating the process until you end up with a single hash.  That way
+ * we can generate a hash without needing to use more than a single sha round.  It's
+ * not the same value as we'd get using rounds but it's at least doable.
+ * 
+ * @param {string} hexValue
+ */
+
 export const sha256 = hexValue => {
   const preimage = strip0x(hexValue);
 
@@ -21,11 +23,13 @@ export const sha256 = hexValue => {
 };
 
 /**
-Utility function to concatenate two hex strings and return as buffer
-Looks like the inputs are somehow being changed to decimal!
-@param {string} a
-@param {string} b
-*/
+ * Utility function to concatenate two hex strings and return as buffer
+ * Looks like the inputs are somehow being changed to decimal!
+ * 
+ * @param {string} a - the 'a' part
+ * @param {string} b - the 'b' part
+ * @returns {string} - buffer
+ */
 export const concatenate = (a, b) => {
   const length = a.length + b.length;
   const buffer = Buffer.allocUnsafe(length); // creates a buffer object of length 'length'
@@ -39,7 +43,9 @@ export const concatenate = (a, b) => {
 };
 
 /**
-@param {Array[string]} hexValues
+ * Concats then hashes
+ * 
+ * @param {string[]} hexValues - An array of hex values as strings to concat
  */
 export const concatenateThenHash = (...hexValues) => {
   const preimage = hexValues

@@ -196,11 +196,13 @@ const getAccounts = async uri => {
 };
 
 /**
-Parses an event log for a particular eventName, and returns the values.
-@param {string} eventName
-@param {ethers.Contract} contract - an ethers contract instance i.e. `const contract = new ethers.Contract(...)`
-@param {ethers transactionReceipt} txReceipt - not to be confused with an ethers transaction response.
-*/
+ * Parses an event log for a particular eventName, and returns the values.
+ *
+ * @param {string} eventName - event to pull from the logs
+ * @param {Object} contract - an ethers contract instance i.e. `const contract = new ethers.Contract(...)`
+ * @param {Object} txReceipt - not to be confused with an ethers transaction response.
+ * @returns {Object}
+ */
 const getEventValuesFromTxReceipt = (eventName, contract, txReceipt) => {
   const { logs } = txReceipt;
 

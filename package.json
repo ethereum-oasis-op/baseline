@@ -59,6 +59,7 @@
     "ethers": "^4.0.42",
     "husky": "^4.2.3",
     "jest": "^24.8.0",
+    "jsdoc": "^3.6.3",
     "mongodb": "^3.5.4",
     "prettier-eslint": "^9.0.1",
     "solhint": "2.1.0",
