@@ -3,8 +3,6 @@ import { getServerSettings } from '../utils/serverSettings';
 import { getPrivateKey } from '../utils/wallet';
 import { getProvider, getWallet } from '../utils/ethers';
 
-const EdDSA = require('elliptic').eddsa; // DO NOT USE - DEPRECATED - MOVED TO ./radish-api/src/utils/crypto.js
-
 export const getAddress = async () => {
   const config = await getServerSettings();
   const wallet = getWallet(config.rpcProvider, await getPrivateKey());
