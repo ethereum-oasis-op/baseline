@@ -25,34 +25,9 @@ export const getBalance = async () => {
   return balance;
 };
 
-// DO NOT USE - DEPRECATED - MOVED TO ./radish-api/src/utils/crypto.js
-export const getPublicKey = async () => {
-  const ec = new EdDSA('ed25519');
-  const privateKey = await getPrivateKey();
-  const key = ec.keyFromSecret(privateKey);
-  return key.getPublic('hex');
-};
-
-// DO NOT USE - DEPRECATED - MOVED TO ./radish-api/src/utils/crypto.js
-export const sign = async hashValue => {
-  const ec = new EdDSA('ed25519');
-  const privateKey = await getPrivateKey();
-  const ecPrivateKey = ec.keyFromSecret(privateKey);
-  return ecPrivateKey.sign(hashValue).toHex();
-};
-
-// DO NOT USE - DEPRECATED - MOVED TO ./radish-api/src/utils/crypto.js
-export const verify = async (publicKey, hashValue, signature) => {
-  const ec = new EdDSA('ed25519');
-  const ecPublicKey = ec.keyFromPublic(publicKey, 'hex');
-  return ecPublicKey.verify(hashValue, signature);
-};
-
 export default {
   getAddress,
   getAccounts,
   getBalance,
   getPublicKey,
-  sign,
-  verify,
 };
