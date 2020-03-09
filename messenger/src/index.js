@@ -1,27 +1,22 @@
-const { app, apiRouter } = require('./server.js');
-const db = require('./db/connect.js');
+const logger = require('winston');
+const { startServer } = require('./server');
+const { connect: dbConnect } = require('./db/connect');
 const Config = require('../config');
 
-const nodeNum = process.env.NODE_NUM || 1;
+// Import bull queues so they create redis connections
+require('./queues/sendMessage');
+require('./queues/receiveMessage');
 
-let server;
-const { dbUrl, apiPort } = Config.nodes[`node_${nodeNum}`];
+const userIndex = process.env.USER_INDEX || 0;
+const { dbUrl, apiPort } = Config.users[userIndex];
 
-async function startApiRouter() {
-  await apiRouter.initialize();
-  server = app.listen(apiPort, () => console.log(`REST-Express server listening on port ${apiPort}`));
-  return server;
-}
-
-async function terminate() {
-  await server.close();
-  await db.close();
-}
-
-const dbPromise = db.connect(dbUrl);
-const serverPromise = dbPromise.then(startApiRouter);
-
-module.exports = {
-  serverPromise,
-  terminate,
+const main = async () => {
+  try {
+    await dbConnect(dbUrl);
+    await startServer(apiPort);
+  } catch (err) {
+    logger.error(`Initialization error: ${err}`);
+  }
 };
+
+main();

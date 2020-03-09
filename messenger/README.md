@@ -2,7 +2,7 @@
 
 ## What is here?
 
-This service sends and receives messages using Whisper. The `messenger` service connects to a running, Whisper-enabled geth client via websocket. A Whisper network must be created by the peering each Radish system for message delivery
+This service sends and receives messages using Whisper. The `messenger` service connects to a running, Whisper-enabled geth client via websocket. A Whisper network must be created by peering each Radish system for message delivery
 
 ## How does this fit in to Radish?
 
@@ -11,19 +11,17 @@ The messenger service fulfills the requirement of decentralized private messagin
 
 ## How can I run it?
 
+### Requirements
+NodeJS v12
+
 ### Running the service
 
-The service comes up along with all the other services needed to run Radish from the docker-compose file. For the Radish POC app there are two instances that spin up, one for the buyer and one for the supplier.
-To run the service on it's own you need the following supporting services:
+The service comes up along with all the other services needed to run Radish from the docker-compose file. For the Radish POC app there are two instances that spin up, one for the buyer and one for the supplier. To run the service on it's own, you need the following supporting services:
 
 - mongo
 - redis
 - geth client
-- ethereum network with whisper enabled nodes
-
-```
-npm start
-```
+- ethereum network with Whisper-enabled nodes
 
 ### API, Unit Testing
 1. Make sure you have all of the necessary npm packages in `./node_modules`
@@ -32,7 +30,7 @@ npm install
 ```
 2. Build/run the ancillary services needed to run unit tests and test the REST API.
 ```
-docker-compose -f ../docker-compose.yml up --build geth-bootnode geth-miner1 geth-miner2 geth-node mongo-buyer
+npm run deploy:up
 ```
 3. Start the messenger service in the `test` env
 ```
@@ -45,12 +43,11 @@ npm test
 
 ### Troubleshooting
 
-If you get errors related to a `node_module` called `scrypt` please ensure that you are running node version `10.15`. The `nvm` (node version manager) tool allows you to easily switch between versions:
+If you get errors when running steps 1 or 3 above, please ensure that you are running node version `12.16`. The `nvm` (node version manager) tool allows you to easily switch between versions:
 ```
-nvm install 10.15
-nvm use 10.15
+nvm install 12.16
+nvm use 12.16
 ```
-
 
 ## What is the architecture? 
 

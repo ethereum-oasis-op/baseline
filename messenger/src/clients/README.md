@@ -7,4 +7,4 @@ In order to add an alternative messaging client to replace Whisper, you will nee
 
 1. Create a new directory here and create a file for that directory that replicates the methods used by `messenger/src/services/Whisper/WhisperWrapper.js` so that the server can utilize it using the same method names.
 2. Update the `messenger/config/default.js` file so that the `messagingType` field matches your new messaging client type.
-3. Add code to the `initialize()` function in `messenger/src/spi/rest-express.js` so that a new instance of your messaging client is created and used.
+3. Add a new `case` statement for your client in `messenger/src/utils/getClient.js`.

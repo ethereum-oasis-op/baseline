@@ -1,4 +1,4 @@
-FROM node:10.15
+FROM node:12-alpine
 
 # Create app directory
 WORKDIR /app
@@ -12,6 +12,7 @@ COPY package*.json ./
 RUN npm install
 
 # Bundle app source
+# See .dockerignore for exclusions
 COPY . .
 
 EXPOSE 4001
