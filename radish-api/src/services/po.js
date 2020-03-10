@@ -3,7 +3,7 @@ import { checkRoot } from './merkle-tree';
 import { updateMSAWithNewCommitment } from './msa';
 import { getPartnerByMessengerKey } from './partner';
 import { formatProof, createPO as createPOTransaction } from './shield';
-import { generateProof } from './zok';
+import { generateProof } from './zkp';
 
 import { POModel } from '../integrations/po';
 

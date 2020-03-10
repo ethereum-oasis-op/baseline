@@ -40,24 +40,24 @@ services:
     volumes:
       - chaindata:/chaindata
 
-  radish-zok:
+  radish-zkp:
     build:
-      context: ./zok/
+      context: ./zkp/
       dockerfile: dev.Dockerfile
     command: npm run dev
     volumes:
-      - ./zok/zok:/app/zok:delegated
-      - ./zok/src:/app/src:delegated
-      - ./zok/dist:/app/dist:delegated
-      - ./zok/output:/app/output:delegated
+      - ./zkp/circuits:/app/circuits:delegated
+      - ./zkp/src:/app/src:delegated
+      - ./zkp/dist:/app/dist:delegated
+      - ./zkp/output:/app/output:delegated
     environment:
       PROVING_SCHEME: 'gm17'
-      VIRTUAL_HOST: radish-zok.docker
-      MONGO_URL: mongodb://mongo-buyer # TODO: radish-zok's db of proving materials shouldn't depend on the Buyer's mongodb. Each user should probably read proving files from their local disk rather than from a shared mongodb?
+      VIRTUAL_HOST: radish-zkp.docker
+      MONGO_URL: mongodb://mongo-buyer # TODO: radish-zkp's db of proving materials shouldn't depend on the Buyer's mongodb. Each user should probably read proving files from their local disk rather than from a shared mongodb?
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
     depends_on:
-      - radish-zok-watch
+      - radish-zkp-watch
       - mongo-buyer # TODO: remove dependency on mongo-buyer.
     networks:
       - network-buyer
@@ -66,13 +66,13 @@ services:
     ports:
       - 8080:80
 
-  radish-zok-watch:
+  radish-zkp-watch:
     build:
-      context: ./zok/
+      context: ./zkp/
       dockerfile: dev.Dockerfile
     volumes:
-      - ./zok/src:/app/src:delegated
-      - ./zok/dist:/app/dist:delegated
+      - ./zkp/src:/app/src:delegated
+      - ./zkp/dist:/app/dist:delegated
     networks:
       - network-buyer
       - network-supplier1
@@ -114,13 +114,13 @@ services:
       - mongo-buyer
       - mongo-supplier1
       - mongo-supplier2
-      - radish-zok
+      - radish-zkp
     environment:
       RPC_PROVIDER: http://ganache:8545
       MESSENGER_BUYER_URI: http://messenger-buyer:4001/api/v1
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001/api/v1
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001/api/v1
-      ZOK_URL: http://radish-zok:80
+      ZKP_URL: http://radish-zkp:80
     networks:
       - network-buyer
       - network-supplier1
@@ -143,7 +143,6 @@ services:
       - ./radish-api/dist:/app/dist:delegated
       - ./radish-api/package.json:/app/package.json:delegated
       - ./config/keystore/buyer.eth:/keystore/account.eth
-      # - ./config/keystore:/keystore
       - ./config/config-buyer.json:/app/config/default.json
       - ./artifacts:/app/artifacts:delegated
     depends_on:
@@ -160,7 +159,7 @@ services:
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-buyer:4001/api/v1'
       REDIS_URL: redis://redis-buyer:6379
-      ZOK_URL: http://radish-zok:80
+      ZKP_URL: http://radish-zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-buyer
@@ -195,7 +194,7 @@ services:
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier1:4001/api/v1'
       REDIS_URL: redis://redis-supplier1:6379
-      ZOK_URL: http://radish-zok:80
+      ZKP_URL: http://radish-zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier1
@@ -229,7 +228,7 @@ services:
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier2:4001/api/v1'
       REDIS_URL: redis://redis-supplier2:6379
-      ZOK_URL: http://radish-zok:80
+      ZKP_URL: http://radish-zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier2

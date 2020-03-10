@@ -9,10 +9,10 @@ import { registerCoreResolver } from '../../../resolvers';
 
 const { setQueues } = require('bull-board');
 
-const requestNamespace = `baseline:zok:generateProof:req`;
-const ackNamespace = `baseline:zok:generateProof:ack`;
-const responseNamespace = `baseline:zok:generateProof:res`;
-const generateProofNamespace = `baseline:zok:generateProof`;
+const requestNamespace = `baseline:zkp:generateProof:req`;
+const ackNamespace = `baseline:zkp:generateProof:ack`;
+const responseNamespace = `baseline:zkp:generateProof:res`;
+const generateProofNamespace = `baseline:zkp:generateProof`;
 const requestQueue = new Queue(requestNamespace, process.env.REDIS_URL);
 const ackQueue = new Queue(ackNamespace, process.env.REDIS_URL);
 const responseQueue = new Queue(responseNamespace, process.env.REDIS_URL);

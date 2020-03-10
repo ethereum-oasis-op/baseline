@@ -15,7 +15,7 @@ router.post('/', async (req, res, next) => {
     fs.mkdirSync(`/app/output/${filename}`, { recursive: true });
 
     console.log('\nCompile...');
-    await zokrates.compile(`./zok/${filepath}`, `./output/${filename}`, `${filename}_out`);
+    await zokrates.compile(`./circuits/${filepath}`, `./output/${filename}`, `${filename}_out`);
 
     console.log('\nSetup...');
     await zokrates.setup(

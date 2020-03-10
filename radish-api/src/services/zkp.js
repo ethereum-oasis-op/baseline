@@ -1,6 +1,6 @@
 import request from 'request';
 
-const url = process.env.ZOK_URL;
+const url = process.env.ZKP_URL;
 
 /**
 POST inputs to a circuit (and receive a proof in return)
