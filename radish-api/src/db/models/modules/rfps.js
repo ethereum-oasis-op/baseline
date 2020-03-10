@@ -88,117 +88,6 @@ export const saveRFP = async doc => {
   return result[0];
 };
 
-const verifyRFPSignature = async (signature, doc) => {
-  // const docHash = await hash(doc, { algorithm: 'sha256' });
-  // TODO: Need to get public key from sender from somewhere
-  // const isVerified = await verify('123456', docHash, signature);
-  return true;
-};
-
-/**
- * Set the receivedDate and Message Id for the local documents 'signature' field
- * on the receiver side.
- */
-export const signatureReceivedUpdate = async (messageId, senderId, rfpId) => {
-  const currentTime = Math.floor(Date.now() / 1000);
-  const signature = {
-    messageId,
-    receivedDate: currentTime,
-  };
-  console.log(`Updating RFP ${rfpId} document with signature field`, signature);
-  console.log('Sender Id', senderId);
-
-  const result = await RFP.findOneAndUpdate(
-    { _id: rfpId, 'recipients.partner.identity': senderId },
-    { $set: { 'recipients.$.signature': signature } },
-    { upsert: false, new: true },
-  );
-  console.log('Update result', result);
-  return result;
-};
-
-/**
- * Set the sentDate and Message for the local documents 'signature' field
- * on the sender side
- */
-export const signatureSentUpdate = async (messageId, myId, rfpId) => {
-  const currentTime = Math.floor(Date.now() / 1000);
-  const signature = {
-    messageId,
-    sentDate: currentTime,
-  };
-  console.log(`Updating RFP ${rfpId} document with signature field`, signature);
-  console.log('My Id', myId);
-  // Finding my Id as it appears in the document sent to me by the sender
-  // The sender created this 'partner' ID for me, when they generated the
-  // document on their system.
-  const result = await RFP.findOneAndUpdate(
-    { _id: rfpId, 'recipients.partner.identity': myId },
-    { $set: { 'recipients.$.signature': signature } },
-    { upsert: false, new: true },
-  );
-  console.log('Update result', result);
-  return result;
-};
-
-/**
- * Signs and enqueue delivery for the RFP document
- * @param {Object} doc - The Document to sign
- */
-const signAndReturnRFP = async doc => {
-  console.log('About to sign RFP');
-  const config = await getServerSettings();
-  console.log('Got server settings', config);
-  const docHash = hash(doc, { algorithm: 'sha256' });
-  console.log('Got RFP Hash to sign', docHash);
-  const signature = await sign(docHash);
-  console.log('Created signature', signature);
-  // Package up signature in payload
-  const payload = {
-    signature,
-    type: 'rfp_signature',
-    rfpId: doc._id,
-    method: 'EdDSA',
-  };
-  console.log('Signature payload ready', JSON.stringify(payload));
-  // Put on message delivery queue to go out
-  sigDeliveryQueue.add(
-    {
-      documentId: doc._id,
-      senderId: config.organization.messengerKey,
-      recipientId: doc.sender,
-      payload,
-    },
-    {
-      // Mark job as failed after 20sec so subsequent jobs are not stalled
-      timeout: 20000,
-    },
-  );
-  console.log('Signed RFP and enqueued it', doc._id);
-};
-
-/**
- * Handles inbound call from the supplier with the signed RFP object.
- * Pulls out the payload components, validates the signature, and kicks off
- * the next part of the Baseline process (ie generating the proofs, etc...)
- * @param {Object} payload - the payload object from the supplier
- */
-export const partnerSignedRFP = async payload => {
-  // get payload, pull out the document id
-  const { signature, rfpId, messageId, senderId } = payload;
-  // Get the rfp
-  const rfp = await getRFPById(rfpId);
-  // verify the signature
-  if (await verifyRFPSignature(signature, rfp)) {
-    // update the rfp with the signature info from the supplier
-    const result = await signatureReceivedUpdate(messageId, senderId, rfpId);
-    // Enqueue the next workflow processing stage
-    console.log('Signature saving result', result);
-    return result;
-  }
-  // Do something about the failed signature check
-};
-
 /**
  * When a user on a Partners API generates a new RFP (Whisper?)
  */
@@ -211,8 +100,6 @@ export const partnerCreateRFP = async doc => {
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   await createNotice('rfp', result[0]);
   console.log('Got RFP as supplier');
-  // Deliver signed RFP document to back sender
-  await signAndReturnRFP(doc);
 
   return result[0];
 };
@@ -267,11 +154,6 @@ export default {
   getRFPById,
   getAllRFPs,
   saveRFP,
-  verifyRFPSignature,
-  signatureReceivedUpdate,
-  signatureSentUpdate,
-  signAndReturnRFP,
-  partnerSignedRFP,
   partnerCreateRFP,
   deliveryReceiptUpdate,
   originationUpdate,

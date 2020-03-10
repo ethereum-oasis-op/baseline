@@ -1,7 +1,6 @@
 import express from 'express';
 import {
   partnerCreateRFP,
-  partnerSignedRFP,
   deliveryReceiptUpdate,
 } from '../db/models/modules/rfps';
 import { saveProposal } from '../db/models/modules/proposals';
@@ -23,10 +22,6 @@ router.post('/documents', async (req, res) => {
         res.send({ message: 'Could not create new RFP. Required fields: uuid' });
         return;
       }
-      break;
-    case 'rfp_signature': // i.e. supplier signs RFP and sends back to buyer
-      console.log('RPF SIGNATURE post body', messageObj);
-      docId = (await partnerSignedRFP(messageObj))._id;
       break;
     case 'delivery_receipt':
       // ex: supplier's messenger automatically sends this message type after receiving buyer's RFP

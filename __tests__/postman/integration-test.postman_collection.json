@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "6a7c3a14-6d69-470e-aeea-677b1af3f9c6",
+		"_postman_id": "65b6f616-2edd-4934-a124-4646fd80934c",
 		"name": "integration-test",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -71,8 +71,7 @@
 											"",
 											"",
 											"pm.test('should return createRFP._id', () => {",
-											"    pm.expect(res.data.myPublicKey).to.exist;",
-											"    pm.expect(res.data.myPublicKey).to.equal(\"b2490923470a273c00ddd471a4037f77c4521ce3410caca594e79abfdb0c26e3\");",
+											"    pm.expect(res.data.myWalletBalance).to.exist;",
 											"});",
 											"",
 											""
@@ -94,7 +93,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query\n{ myPublicKey\n\n}",
+										"query": "query\n{ \n    myWalletBalance\n}",
 										"variables": ""
 									}
 								},
@@ -251,10 +250,8 @@
 											"",
 											"",
 											"pm.test('should return createRFP._id', () => {",
-											"    pm.expect(res.data.myPublicKey).to.exist;",
-											"    pm.expect(res.data.myPublicKey).to.equal(\"c3375b9faa72b2a320abf003c6753b49f22beb95fb3ce8d7b26c70841484ca2a\");",
+											"    pm.expect(res.data.myWalletBalance).to.exist;",
 											"});",
-											"",
 											""
 										],
 										"type": "text/javascript"
@@ -274,7 +271,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query\n{ myPublicKey\n\n}",
+										"query": "query\n{ \n    myWalletBalance\n}",
 										"variables": ""
 									}
 								},
@@ -316,10 +313,8 @@
 											"",
 											"",
 											"pm.test('should return createRFP._id', () => {",
-											"    pm.expect(res.data.myPublicKey).to.exist;",
-											"    pm.expect(res.data.myPublicKey).to.equal(\"1cebb83622a41d725950301ae315f61c40caf33239ff23816226615f453d6d31\");",
+											"    pm.expect(res.data.myWalletBalance).to.exist;",
 											"});",
-											"",
 											""
 										],
 										"type": "text/javascript"
@@ -339,7 +334,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query\n{ myPublicKey\n\n}",
+										"query": "query\n{ \n    myWalletBalance\n}",
 										"variables": ""
 									}
 								},
