@@ -44,6 +44,8 @@
     "@devexpress/dx-react-grid": "^2.2.1",
     "@devexpress/dx-react-grid-material-ui": "^2.2.1",
     "@material-ui/icons": "^4.5.1",
+    "big-integer": "^1.6.48",
+    "hex-to-binary": "^1.0.1",
     "openzeppelin-solidity": "^2.4.0"
   },
   "devDependencies": {

@@ -27,5 +27,4 @@ export default {
   getAddress,
   getAccounts,
   getBalance,
-  getPublicKey,
 };
