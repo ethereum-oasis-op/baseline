@@ -1,30 +1,42 @@
-// TODO: Use config to pass db config for test env to setupDb
 const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
 const Config = require('../config');
 const WhisperWrapper = require('../src/clients/whisper/WhisperWrapper.js');
 const web3utils = require('../src/clients/whisper/web3Utils.js');
+const generalUtils = require('../src/utils/generalUtils.js');
+const { decrypt } = require('../src/utils/encryptUtils.js');
+const { receiveMessageQueue } = require('../src/queues/receiveMessage/index.js');
 
 const Identity = require('../src/db/models/Identity');
 const Message = require('../src/db/models/Message');
 
+let nativeClient;
+let db;
+
 beforeAll(async () => {
-  mongoose.connect(Config.nodes.node_1.dbUrl, Config.mongoose);
+  generalUtils.forwardMessage = jest.fn();
+
+  // Create mongoose connection to db
+  await mongoose.connect(Config.users[0].dbUrl, Config.mongoose);
   await Identity.deleteMany();
   await Message.deleteMany();
+
+  // Create native mongo connection to db
+  nativeClient = await MongoClient.connect(Config.users[0].dbUrl, { useUnifiedTopology: true });
+  db = nativeClient.db();
 });
 
 afterAll(async () => {
-  mongoose.connection.close();
+  await mongoose.connection.close();
+  await nativeClient.close();
 });
 
-let messenger; let
-  whisperId;
+let messenger;
+let whisperId;
 
 describe('WhisperWrapper', () => {
   beforeAll(async () => {
     messenger = await new WhisperWrapper();
-    // Stub out function with HTTP request to radish-api
-    messenger.forwardMessage = jest.fn();
   });
 
   describe('Identities', () => {
@@ -44,6 +56,18 @@ describe('WhisperWrapper', () => {
       const result = await messenger.getIdentities();
       expect(result[0]).toEqual(whisperId);
     });
+
+    describe('Check encryption', () => {
+      test('Whisper privateKey should be encrypted at-rest in Mongo', async () => {
+        const mongooseResult = await Identity.find({});
+        const rawMongoResult = await db.collection('Identities').find({}).toArray();
+        expect(mongooseResult[0].publicKey).toEqual(rawMongoResult[0].publicKey);
+        expect(mongooseResult[0].privateKey).not.toEqual(rawMongoResult[0].privateKey);
+        const decrypted = await decrypt(rawMongoResult[0].privateKey);
+        expect(mongooseResult[0].privateKey).toEqual(decrypted);
+      });
+    });
+
   });
 
   describe('Messages', () => {
@@ -170,6 +194,7 @@ describe('WhisperWrapper', () => {
         expect(error).toEqual(false);
         expect(result.deliveredDate).not.toBeUndefined();
       });
+
     });
   });
 });

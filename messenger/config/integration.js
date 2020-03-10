@@ -5,27 +5,28 @@ module.exports = {
     bufferMaxEntries: 8,
     firstConnectRetryDelaySecs: 5,
   },
-  nodes: {
-    node_1: {
+  users: [
+    {
       ipAddress: '127.0.0.1',
-      whisperPort: '8546',
+      messengerPort: '8546',
       apiPort: '4001',
       origin: 'mychat2',
-      dbUrl: 'mongodb://mongo/radish34_test_1',
+      dbUrl: 'mongodb://mongo-buyer:27017/radish34_test',
     },
-    node_2: {
+    {
       ipAddress: '127.0.0.1',
-      whisperPort: '8548',
+      messengerPort: '8548',
       apiPort: '4002',
       origin: 'mychat2',
-      dbUrl: 'mongodb://127.0.0.1:27018/radish34_test_2',
+      dbUrl: 'mongodb://mongo-supplier1:27017/radish34_test',
     },
-    node_3: {
+    {
       ipAddress: '127.0.0.1',
-      whisperPort: '8550',
+      messengerPort: '8550',
       apiPort: '4003',
       origin: 'mychat2',
-      dbUrl: 'mongodb://127.0.0.1:27018/radish34_test_3',
+      dbUrl: 'mongodb://mongo-supplier2:27017/radish34_test',
     },
-  },
+  ],
+  encryptionKey: process.env.ENCRYPT_KEY, // Must be 256 bits (32 characters)
 };

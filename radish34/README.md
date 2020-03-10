@@ -106,10 +106,10 @@ After you've done that, log in to the Github package registry by running
       ----------------- Completed  -----------------
       Please restart the radish-apis for the config to take effect
    ```
-1. run `docker-compose up`
+1. run `docker-compose up -d`
    - This will start all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
-   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of a specific containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui`
+   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui`
    Example Logs:
    ```
       radish-api-buyer        | Connected to db

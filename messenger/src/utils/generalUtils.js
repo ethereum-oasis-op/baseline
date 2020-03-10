@@ -1,12 +1,17 @@
 const axios = require('axios');
+const logger = require('winston');
+require('../logger');
 const Identity = require('../db/models/Identity');
 const Message = require('../db/models/Message');
+const { receiveMessageQueue } = require('../queues/receiveMessage/index.js');
 
-// Useful constants
-const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
-const POW_TIME = process.env.WHISPER_POW_TIME || 100;
-const TTL = process.env.WHISPER_TTL || 20;
-const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
+const {
+  DEFAULT_TOPIC,
+  POW_TIME,
+  TTL,
+  POW_TARGET,
+} = require('../clients/whisper/whisperUtils.js');
+
 const radishApiUrl = process.env.RADISH_API_URL || 'http://localhost:8101/api/v1';
 
 function hasJsonStructure(str) {
@@ -107,15 +112,15 @@ async function storeNewMessage(messageData, content) {
 }
 
 async function forwardMessage(messageObj) {
-  console.log(`\n\n\nForwarding message to radish-api: POST ${radishApiUrl}/documents`);
+  logger.info(`Forwarding message to radish-api: POST ${radishApiUrl}/documents`);
   try {
     const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
-    console.log(`\nSUCCESS: POST ${radishApiUrl}/documents`);
-    console.log(`${response.status} -`, response.data);
+    logger.info(`SUCCESS: POST ${radishApiUrl}/documents`);
+    logger.info(`${response.status} -`, response.data);
   } catch (error) {
-    console.error(`\nERROR: POST ${radishApiUrl}/documents`);
+    logger.error(`ERROR: POST ${radishApiUrl}/documents`);
     if (error.response) {
-      console.log(`${error.response.status} -`, error.response.data);
+      logger.error(`${error.response.status} -`, error.response.data);
     }
   }
 }
@@ -127,8 +132,8 @@ module.exports = {
   findIdentity,
   getMessages,
   getSingleMessage,
-  forwardMessage,
   storeNewMessage,
+  forwardMessage,
   DEFAULT_TOPIC,
   POW_TIME,
   TTL,

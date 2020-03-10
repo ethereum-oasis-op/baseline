@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const logger = require('winston');
 const Config = require('../../config');
 
 const { firstConnectRetryDelaySecs } = Config.mongo;
@@ -10,27 +10,27 @@ let mongoUrl;
 
 // Registering db connection event listeners
 conn.once('open', () => {
-  console.log(`Successfully connected to ${mongoUrl}`);
+  logger.info(`SUCCESS: connected to mongo`);
 
   // When successfully connected
   conn.on('connected', () => {
-    console.log(`Mongoose default connection open to ${mongoUrl}`);
+    logger.debug(`Mongoose default connection open ${mongoUrl}`);
   });
 
   // If the connection throws an error
   conn.on('error', (err) => {
-    console.error(`Mongoose default connection error: ${err}`);
+    logger.error(`Mongoose default connection error: ${err}`);
   });
 
   // When the connection is disconnected
   conn.on('disconnected', () => {
-    console.error('Mongoose default connection disconnected');
+    logger.error('Mongoose default connection disconnected');
   });
 
   // If the Node process ends, close the Mongoose connection
   process.on('SIGINT', () => {
     conn.close(() => {
-      console.log(
+      logger.debug(
         'Mongoose default connection disconnected through app termination',
       );
       process.exit(0);
@@ -44,18 +44,24 @@ function simpleSleep(ms) {
 
 async function connect(url) {
   mongoUrl = url;
-  mongoose.set('debug', Config.mongo.debug);
+  if (Config.mongo.debug == true) {
+    mongoose.set('debug', function (collection, method, query, doc, options) {
+      logger.debug(`Mongoose ${method} on ${collection} query: ${JSON.stringify(query)}`, {
+        doc,
+        options
+      });
+    });
+  }
 
   let connected = false;
   while (!connected) {
     try {
-      console.log('mongoURL', mongoUrl);
       // eslint-disable-next-line no-await-in-loop
       await mongoose.connect(mongoUrl, Config.mongoose);
       connected = true;
     } catch (error) {
-      console.error(error.message);
-      console.log(`Retrying connection in ${firstConnectRetryDelaySecs} secs`);
+      logger.error(error.message);
+      logger.info(`Retrying connection in ${firstConnectRetryDelaySecs} secs`);
     }
 
     // eslint-disable-next-line no-await-in-loop
@@ -64,7 +70,7 @@ async function connect(url) {
 }
 
 function close() {
-  console.log('Closing DB connection');
+  logger.info('Closing DB connection');
   conn.close();
 }
 

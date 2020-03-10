@@ -1,29 +1,56 @@
 const express = require('express');
-
 const router = express.Router();
+const logger = require('winston');
+const { getClient } = require('../utils/getClient.js');
 const Config = require('../../config');
-const WhisperWrapper = require('../clients/whisper/WhisperWrapper');
-const web3utils = require('../clients/whisper/web3Utils.js');
 
 let messenger;
 
+/**
+ * @api {get} /health-check Check status of messenger system
+ * @apiName HealthCheck
+ * @apiGroup Health
+ */
 router.get('/health-check', async (req, res) => {
   res.status(200);
   res.send({ serverAlive: true });
 });
 
+/**
+ * @api {get} /health-check/client Check the status of the Web3 client connection
+ * @apiName ClientHealthCheck
+ * @apiGroup Health
+ * @apiSuccess {Object} connected If client is connected
+ * @apiSuccess {Object} type The type of messaging client connected
+ */
 router.get('/health-check/client', async (req, res) => {
   const result = await messenger.isConnected();
   res.status(200);
   res.send({ connected: result, type: Config.messagingType });
 });
 
+/**
+ * @api {get} /identities Get the client account identities
+ * @apiDescription A list of the client (whisper) user accounts stored
+ * in the DB. Public and private keys are stored, only public returned.
+ * @apiName GetIdentities
+ * @apiGroup Identity
+ * @apiSuccess {Object[]} List of identities stored in the DB
+ */
 router.get('/identities', async (req, res) => {
   const result = await messenger.getIdentities();
   res.status(200);
   res.send(result);
 });
 
+/**
+ * @api {post} /identities Create a new identity in the client and stores it
+ * @apiDescription Accepts no params, it will initiate a request to the connected
+ * client to create a new identity for use in sending messages. The
+ * new Identity will be stored in the database.
+ * @apiName PostIdentities
+ * @apiGroup Identity
+ */
 router.post('/identities', async (req, res) => {
   const result = await messenger.createIdentity();
   // TODO: do we need to add this identity to the Registry smart contract?
@@ -31,6 +58,7 @@ router.post('/identities', async (req, res) => {
   res.send(result);
 });
 
+// Filter to catch all messages and require an identity header
 router.all('/messages*', async (req, res, next) => {
   const validId = await messenger.findIdentity(req.headers['x-messenger-id']);
   if (!validId) {
@@ -56,7 +84,12 @@ function formatMessageHelper(message) {
   };
 }
 
-// Fetch messages from all conversations
+/**
+ * @api {get} /messages Get messages scoped to a specific user
+ * @apiName GetMessages
+ * @apiGroup Messages
+ * @apiHeader {String} x-messenger-id The Id of the identity to use for all /messages filtering
+ */
 router.get('/messages', async (req, res) => {
   const myId = req.headers['x-messenger-id'];
   const messages = await messenger.getMessages(
@@ -73,7 +106,14 @@ router.get('/messages', async (req, res) => {
   res.send(formattedMessages);
 });
 
-// Fetch messages from all conversations
+/**
+ * @api {get} /messages/:messageId Get a specific message
+ * @apiDescription Return a specific message
+ * @apiName GetMessagesByID
+ * @apiGroup Messages
+ * @apiParam {String} messageId Unique message Id
+ * @apiHeader {String} x-messenger-id The Id of the identity to use for all /messages filtering
+ */
 router.get('/messages/:messageId', async (req, res) => {
   const result = await messenger.getSingleMessage(req.params.messageId);
   if (!result) {
@@ -87,6 +127,15 @@ router.get('/messages/:messageId', async (req, res) => {
   res.send(formatMessageHelper(result));
 });
 
+/**
+ * @api {post} /messages Create a new message
+ * @apiDescription Create a new message to send via the connected client
+ * @apiName PostMessage
+ * @apiGroup Messages
+ * @apiHeader {String} x-messenger-id The Id of the identity to use for all /messages filtering
+ * @apiParam {Object} payload The object to send (Base64 encoded?)
+ * @apiParam {Object} recipient Message Identity ID of where to send the message
+ */
 router.post('/messages', async (req, res) => {
   const myId = req.headers['x-messenger-id'];
   if (!req.body.payload) {
@@ -109,11 +158,8 @@ router.post('/messages', async (req, res) => {
 async function initialize() {
   // Retrieve messenger instance and pass to helper classes
   // Modularized here to enable use of other messenger services in the future
-  console.log('Initializing server...');
-  if (Config.messagingType === 'whisper') {
-    messenger = await new WhisperWrapper();
-    await web3utils.getWeb3();
-  }
+  logger.info('Initializing server...');
+  messenger = await getClient();
   const connected = await messenger.isConnected();
   await messenger.loadIdentities();
   await messenger.createFirstIdentity();

@@ -2,9 +2,12 @@
 module.exports = {
   mongo: {
     debug: false,
-    uri: process.env.MONGO_URL || 'mongodb://mongo-messenger:27017',
+    uri: process.env.MONGODB_URL || 'mongodb://mongo-radish:27017/radish34',
     bufferMaxEntries: 8,
     firstConnectRetryDelaySecs: 5,
+  },
+  logging: {
+    level: 'info'
   },
   mongoose: {
     useUnifiedTopology: true,

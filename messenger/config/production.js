@@ -5,13 +5,15 @@ module.exports = {
     firstConnectRetryDelaySecs:
       process.env.MONGO_FIRST_CONNECT_RETRY_DELAY_SECS || 5,
   },
-  nodes: {
-    node_1: {
+  users: [
+    {
       ipAddress: 'geth-node',
-      whisperPort: '8546',
+      messengerPort: '8546',
       apiPort: '4001',
       origin: 'mychat2',
-      dbUrl: `${process.env.MONGO_URL}/radish34` || 'mongodb://mongo-messenger:27017/radish34',
+      dbUrl: process.env.MONGO_URL || 'mongodb://mongo-radish:27017/radish34',
+      redisUrl: process.env.REDIS_URL || 'redis://redis-radish:6379',
     },
-  },
+  ],
+  encryptionKey: process.env.ENCRYPT_KEY, // Must be 256 bits (32 characters)
 };

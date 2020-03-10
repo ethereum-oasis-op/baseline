@@ -304,88 +304,19 @@ services:
       - mongo-supplier1
       - mongo-supplier2
 
-  geth-bootnode:
-    hostname: geth-bootnode
-    container_name: geth-bootnode
-    environment:
-      - VIRTUAL_HOST=geth-bootnode.docker
-      - nodekeyhex=08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b #Needs to be fix, so that the miners know the resulting enode id
-    build:
-      context: ./geth-env
-      dockerfile: ./bootnode/Dockerfile
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-      - network-geth
-    ports:
-      - 30301:30301/udp
-
-  geth-miner1:
-    hostname: geth-miner1
-    container_name: geth-miner1
-    depends_on:
-      - geth-bootnode
-    environment:
-      - VIRTUAL_HOST=geth-miner1.docker
-      - nodekeyhex=8eb666d3e8a42bfc7d9e829af60b6d9142d65bef1ecb5897622b4c3ef93377e2 # sets the enode so we can use static-nodes.json to add as peer
-      - address=0x8cc5a1a0802db41db826c2fcb72423744338dcb0 # derived from the private key which is passed in the args
-      - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
-      - bootnodeIp=172.25.0.101
-    ports:
-      - 8544:8545/tcp
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-      - network-geth
-    build:
-      context: ./geth-env
-      dockerfile: ./miner/Dockerfile
-      args:
-        privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46 # Please don't do something like this in production, okay?
-        password: pass
-
-  geth-miner2:
-    hostname: geth-miner2
-    container_name: geth-miner2
-    depends_on:
-      - geth-miner1
-    environment:
-      - nodekeyhex=8861389742e9ee2669855a4928a712cec0f275241a359647772df689840c3c6c # sets the enode so we can use static-nodes.json to add as peer
-      - address=0x3590aca93338b0721966a8d0c96ebf2c4c87c544 # derived from the private key which is passed in the args
-      - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
-      - bootnodeIp=172.25.0.101
-    ports:
-      - 8542:8545/tcp
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-      - network-geth
-    build:
-      context: ./geth-env
-      dockerfile: ./miner/Dockerfile
-      args:
-        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
-        password: word
-
   geth-node:
     hostname: geth-node
     container_name: geth-node
     depends_on:
        - geth-miner1
-    environment:
-      VIRTUAL_HOST: geth-node.docker
-      nodeType: full
-      address: '0x3590aca93338b0721966a8d0c96ebf2c4c87c544' # derived from the private key which is passed in the args
-      bootnodeId: 76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c # derived from the nodekeyhex of the bootnode
-      bootnodeIp: geth-bootnode
+       - geth-miner2
+    env_file:
+      - ./geth-env/node/docker.env
     build:
       context: ./geth-env
       dockerfile: ./node/Dockerfile
       args:
-        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
+        privatekey: 54c68a6104df07a9661b9b8fe1106263feeeddfd67aed8dafed1438040e421d1
         password: word
     networks:
       - network-buyer
@@ -401,13 +332,63 @@ services:
       timeout: 5s
       retries: 30
 
+  geth-bootnode:
+    hostname: geth-bootnode
+    container_name: geth-bootnode
+    env_file:
+      - ./geth-env/bootnode/docker.env
+    build:
+      context: ./geth-env
+      dockerfile: ./bootnode/Dockerfile
+    networks:
+      network-geth:
+        ipv4_address: 172.25.0.101 # The miners need to know the IP address later on
+    ports:
+      - 30301:30301/udp
+
+  geth-miner1:
+    hostname: geth-miner1
+    container_name: geth-miner1
+    depends_on:
+      - geth-bootnode
+    env_file:
+      - ./geth-env/miner/miner_1.env
+    ports:
+      - 8544:8545/tcp
+    networks:
+      - network-geth
+    build:
+      context: ./geth-env
+      dockerfile: ./miner/Dockerfile
+      args:
+        privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46
+        password: pass
+
+  geth-miner2:
+    hostname: geth-miner2
+    container_name: geth-miner2
+    depends_on:
+      - geth-miner1
+    env_file:
+      - ./geth-env/miner/miner_2.env
+    ports:
+      - 8542:8545/tcp
+    networks:
+      - network-geth
+    build:
+      context: ./geth-env
+      dockerfile: ./miner/Dockerfile
+      args:
+        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
+        password: word
+
   redis-buyer:
     image: redis
     container_name: redis-buyer
     networks:
       - network-buyer
-    expose:
-      - 6379
+    ports:
+      - 6379:6379
 
   redis-supplier1:
     image: redis
@@ -430,14 +411,18 @@ services:
     container_name: messenger-buyer
     links:
       - mongo-buyer
+      - redis-buyer
       - geth-node
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
+    env_file:
+      - ./messenger/docker.env
     environment:
       VIRTUAL_HOST: messenger-buyer.docker
-      MONGO_URL: mongodb://mongo-buyer
+      MONGO_URL: mongodb://mongo-buyer:27017/radish34
       RADISH_API_URL: http://radish-api-buyer:8101/api/v1
+      REDIS_URL: redis://redis-buyer:6379
     networks:
       - network-buyer
     ports:
@@ -448,14 +433,18 @@ services:
     container_name: messenger-supplier1
     links:
       - mongo-supplier1
+      - redis-supplier1
       - geth-node
+    env_file:
+      - ./messenger/docker.env
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
       VIRTUAL_HOST: messenger-supplier1.docker
-      MONGO_URL: mongodb://mongo-supplier1
+      MONGO_URL: mongodb://mongo-supplier1:27017/radish34
       RADISH_API_URL: http://radish-api-supplier1:8101/api/v1
+      REDIS_URL: redis://redis-supplier1:6379
     networks:
       - network-supplier1
     ports:
@@ -466,14 +455,18 @@ services:
     container_name: messenger-supplier2
     links:
       - mongo-supplier2
+      - redis-supplier2
       - geth-node
+    env_file:
+      - ./messenger/docker.env
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
       VIRTUAL_HOST: messenger-supplier2.docker
-      MONGO_URL: mongodb://mongo-supplier2
+      MONGO_URL: mongodb://mongo-supplier2:27017/radish34
       RADISH_API_URL: http://radish-api-supplier2:8101/api/v1
+      REDIS_URL: redis://redis-supplier2:6379
     networks:
       - network-supplier2
     ports:
@@ -529,7 +522,11 @@ volumes:
   chaindata:
 
 networks:
+  network-geth:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.25.0.0/24
   network-buyer:
   network-supplier1:
   network-supplier2:
-  network-geth:
