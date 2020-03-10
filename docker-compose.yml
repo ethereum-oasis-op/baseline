@@ -293,17 +293,6 @@ services:
     ports:
       - 27317:27017
 
-  mongo-seed:
-    build: ./mongo-seed
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-    links:
-      - mongo-buyer
-      - mongo-supplier1
-      - mongo-supplier2
-
   geth-node:
     hostname: geth-node
     container_name: geth-node
