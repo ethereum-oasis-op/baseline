@@ -9,17 +9,21 @@ description: Detailed explanation of the privacy protocols under ZKP
 
 This component is a RESTful service that leverages a library (`zokrates.js`) that wraps around Zokrates utility, to expose functionalities necessary for generation of proofs. Specifically, Zokrates is used to create zkSnark proofs, that can be verified on chain. In addition to RESTful services, the component also contains circuits in `zok/zok/`. These circuits are in the form of pure functions that correspond to the specific processes involved in the procurement use case.
 
-Following circuits are in play:
+The following circuits were created to accommodate the Radish34 demo:
 - createMSA: This circuit uses EdDSA libraries, sha256 hashing and tiering structure validation checks as imported functionalities to generate a proof for creation of an MSA
 - createPO: This circuit uses sha256 hashing and tiering price calculation checks as imported functionalities to generate a proof for creation of a PO
 
+These specialized circuits enforce correctness of the shared business logic that establishes a volume discount agreement with tiered pricing and ensures that a series of successive purchase orders are calculated against it without double-counting.
+
+Going beyond the Radish34 demo, a developer may employ a generalized circuit that simply checks the consistency of each Party's off-chain data and business logic execution, there is an opportunity for industry standards bodies and regulators to develop libraries of circuits that they can require regulated workflows to employ. This would ensure that not only do counterparties maintain consistent information and run the same code, but that the code conforms to approved specifications.
+
 Assumptions:
-- GM17 is used as the proving mechanism for generation of zkSnark proofs. Although there are other proving schemes, GM17 was decided to the proving scheme of choice to account for non-malleability of proofs, even though the verification time is higher than other state of the art schemes such as Groth16. It is easier to handle the malleability issue in the proving system rather than in the protocol (which means choosing GM17 over G16+extra steps) for a reason: the point of using G16 is to reduce the proof size and the verification cost but we do not have yet a well optimized protocol cost wise. Hence, the choice is to go with gm17 for radish34.
+- GM17 is used as the proving mechanism for generation of zkSnark proofs. Although there are other proving schemes, GM17 was decided to be the proving scheme of choice to account for non-malleability of proofs, even though the verification time is higher than other state of the art schemes such as Groth16. It is easier to handle the malleability issue in the proving system rather than in the protocol (which means choosing GM17 over G16+extra steps) for a reason: the point of using G16 is to reduce the proof size and the verification cost but we do not have yet a well optimized protocol cost wise. Hence, the choice is to go with gm17 for radish34.
 - A key aspect of the usage of the ZKP, is the choice of hashing mechanism. As part of proof generation, one of the inputs to the proof is the hash of the metadata, that is computed offline and also within the circuit to verify that correct hash been used for generating the proof of a document. Another place where hashing is leveraged is during the hashing of commitment in the Shield contract. Hashing used across all these positions is to be consistent, and therefore, SHA256 is used. Even though there are other hashing choices such as Pedersen, Mimc, Poseidon, etc., SHA256 was chosen to offset gas costs in comouting a SHA256 hash on chain are significantly cheaper than that of other hashing mechanisms
 
 ## How does this fit in to Radish?
 
-During the set up of the baseline/radish server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
+During the set up of the baseline server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
 
 ## How can I run it?
 
