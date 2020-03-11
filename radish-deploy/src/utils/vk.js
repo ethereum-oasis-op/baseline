@@ -1,5 +1,5 @@
 const Paths = require('../paths.json');
-const { getVks } = require('../services/zok');
+const { getVks } = require('../services/zkp');
 
 const Ethers = require('./ethers');
 const Wallet = require('./wallet');

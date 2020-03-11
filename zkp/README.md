@@ -1,13 +1,15 @@
 ---
-title: Zokrates component
-description: Detailed explanation of the privacy protocols under ZKP
+title: ZKP component
+description: Detailed explanation of the privacy protocols under ZKP, using a toolbox called Zokrates
 ---
 
 # Zokrates component
 
 ## What is here?
 
-This component is a RESTful service that leverages a library (`zokrates.js`) that wraps around Zokrates utility, to expose functionalities necessary for generation of proofs. Specifically, Zokrates is used to create zkSnark proofs, that can be verified on chain. In addition to RESTful services, the component also contains circuits in `zok/zok/`. These circuits are in the form of pure functions that correspond to the specific processes involved in the procurement use case.
+This component is a RESTful service that leverages a library (`zokrates.js`) that wraps around Zokrates utility, to expose functionalities necessary for generation of proofs. Specifically, Zokrates is used to create zk-SNARK proofs, that can be verified on chain. In addition to RESTful services, the component also contains circuits in `zkp/circuits/`. These circuits are in the form of pure functions that correspond to the specific processes involved in the procurement use case.
+
+zk-SNARK stands for "Zero Knowledge Succinct Non-Interactive Argument of Knowledge", and is a family of privacy tools called zero knowledge proofs (ZKP). While other privacy techniques like bulletproofs, ring signatures and stealth addresses, etc. mask the identities of the entities involved in a business transaction, ZKP techniques allow to prove logical statements without divulging any information and yet proving the validity of such proofs. Particularly, zk-SNARKs are mathematical concepts and tools to establish zero knowlege verification of succinct proofs, which convert logical statements to arithmetic circuits, that are then leveraged to generate proofs. References below provide further information on zk-SNARKS explainers and existing production implementation of a zk-SNARK (ZCash). Much of the work in Radish34 for ZKP adapts the model of shielded transactions from ZCash. The work on ZKPs in the case of Radish34 also particularly stems from prior work to leverage zk-SNARKs tooling to conduct token transfers under zero knowledge in EY Nightfall.
 
 The following circuits were created to accommodate the Radish34 demo:
 - createMSA: This circuit uses EdDSA libraries, sha256 hashing and tiering structure validation checks as imported functionalities to generate a proof for creation of an MSA
@@ -21,59 +23,59 @@ Assumptions:
 - GM17 is used as the proving mechanism for generation of zkSnark proofs. Although there are other proving schemes, GM17 was decided to be the proving scheme of choice to account for non-malleability of proofs, even though the verification time is higher than other state of the art schemes such as Groth16. It is easier to handle the malleability issue in the proving system rather than in the protocol (which means choosing GM17 over G16+extra steps) for a reason: the point of using G16 is to reduce the proof size and the verification cost but we do not have yet a well optimized protocol cost wise. Hence, the choice is to go with gm17 for radish34.
 - A key aspect of the usage of the ZKP, is the choice of hashing mechanism. As part of proof generation, one of the inputs to the proof is the hash of the metadata, that is computed offline and also within the circuit to verify that correct hash been used for generating the proof of a document. Another place where hashing is leveraged is during the hashing of commitment in the Shield contract. Hashing used across all these positions is to be consistent, and therefore, SHA256 is used. Even though there are other hashing choices such as Pedersen, Mimc, Poseidon, etc., SHA256 was chosen to offset gas costs in comouting a SHA256 hash on chain are significantly cheaper than that of other hashing mechanisms
 
-## How does this fit in to Radish?
+## How does this fit in to Radish34?
 
-During the set up of the baseline server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
+During the set up of the Radish34 server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
 
 ## How can I run it?
 
 Run the following instruction to ensure that the service is up:
 
-`docker-compose up -d radish-zok`
+`docker-compose up -d radish-zkp`
 
-This should spin up two containers: `radish-zok` and `radish-zok-watch`; wherein `radish-zok` contains RESTful end points for interacting with the service. And `radish-zok-watch` runs in the background to ensure that the js files in the former container are appropriately compiled using babel.
+This should spin up two containers: `radish-zkp` and `radish-zkp-watch`; wherein `radish-zkp` contains RESTful end points for interacting with the service. And `radish-zkp-watch` runs in the background to ensure that the js files in the former container are appropriately compiled using babel.
 
 Logs should look like the following:
 
-`radish-zok`: `docker-compose logs -f radish-zok`
+`radish-zkp`: `docker-compose logs -f radish-zkp`
 ```
 radish34-zokrates@1.0.0 dev /app
-radish-zok_1            | > nodemon ./dist/index.js
-radish-zok_1            |
-radish-zok_1            | [nodemon] 1.19.4
-radish-zok_1            | [nodemon] to restart at any time, enter `rs`
-radish-zok_1            | [nodemon] watching dir(s): *.*
-radish-zok_1            | [nodemon] watching extensions: js,mjs,json
-radish-zok_1            | [nodemon] starting `node ./dist/index.js`
+radish-zkp_1            | > nodemon ./dist/index.js
+radish-zkp_1            |
+radish-zkp_1            | [nodemon] 1.19.4
+radish-zkp_1            | [nodemon] to restart at any time, enter `rs`
+radish-zkp_1            | [nodemon] watching dir(s): *.*
+radish-zkp_1            | [nodemon] watching extensions: js,mjs,json
+radish-zkp_1            | [nodemon] starting `node ./dist/index.js`
 
 ```
 
-`radish-zok-watch`: `docker-compose logs -f radish-zok-watch`
+`radish-zkp-watch`: `docker-compose logs -f radish-zkp-watch`
 
 ```
 radish34-zokrates@1.0.0 build:watch /app
-radish-zok-watch_1      | > npm run build -- --watch
-radish-zok-watch_1      |
-radish-zok-watch_1      |
-radish-zok-watch_1      | > radish34-zokrates@1.0.0 build /app
-radish-zok-watch_1      | > cod-scripts build "--watch"
-radish-zok-watch_1      |
-radish-zok-watch_1      | Successfully compiled 6 files with Babel.
+radish-zkp-watch_1      | > npm run build -- --watch
+radish-zkp-watch_1      |
+radish-zkp-watch_1      |
+radish-zkp-watch_1      | > radish34-zkprates@1.0.0 build /app
+radish-zkp-watch_1      | > cod-scripts build "--watch"
+radish-zkp-watch_1      |
+radish-zkp-watch_1      | Successfully compiled 6 files with Babel.
 ```
 
-`radish-zok` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/zok/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish-zok.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
+`radish-zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/circuits/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish-zkp.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
 
 ### `generateKeys`
 This is a POST instruction that runs `compile`, `setup` and `exportVerifier` instructions.
 
 Request body:
-`filepath`: the path of the `.zok` file (relative to `/app/zok/`).
-E.g. for a file at `/app/zok/path/to/test.zok` the filepath is `path/to/test.zok`.
+`filepath`: the path of the `.zok` file (relative to `/app/circuits/`).
+E.g. for a file at `/app/circuits/path/to/test.zok` the filepath is `path/to/test.zok`.
 
-The `/app/zok/output` dir will contain the outputs of these steps copied from within the container.
+The `/app/output` dir will contain the outputs of these steps copied from within the container.
 
 Example: (Replace `path/to/test.zok` with the filepath of the file to be computed).  
-`curl -d '{"filepath": "path/to/test.zok"}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate-keys`
+`curl -d '{"filepath": "path/to/test.zok"}' -H "Content-Type: application/json" -X POST http://radish-zkp.docker/generate-keys`
 
 ### `generateProof`
 This is a POST instruction that runs `compute-witness` and `generate-proof` instructions.
@@ -82,14 +84,14 @@ Request body:
 `filename`: the name of the `.zok` file (without the `.zok` file extension).
 `inputs`: array of the arguments the the `main()` function of the circuit.
 
-The `/app/zok/output` dir has the outputs of these steps copied from within the container. When the `generate-proof` instruction is run, the corresponding `proof.json` is stored in the `/app/zok/output` dir.  
+The `/app/output` dir has the outputs of these steps copied from within the container. When the `generate-proof` instruction is run, the corresponding `proof.json` is stored in the `/app/output` dir.  
 
 Example: (Replace `filename` with the name of the file for which we're creating a witness).  
-`curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish-zok.docker/generate-proof`
+`curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish-zkp.docker/generate-proof`
 
 Alternatively, the POSTMAN application can be used to run these curl requests.
 
-Note: All the resultant files from the above steps/processes are created in a sub-directory named with the input parameter, `filename` (where, for example, the filename is `test` for filepath `/app/zok/path/to/test.zok`).
+Note: All the resultant files from the above steps/processes are created in a sub-directory under `/app/output` named with the input parameter, `filename` (where, for example, the filename is `test` for filepath `/app/circuits/path/to/test.zok`).
 
 ### `vk`
 
@@ -99,7 +101,7 @@ Request body:
 `id`: the name of the `.zok` file (without the `.zok` file extension).
 
 Example:
-`curl -d '{"id": "test"}' -H "Content-Type: application/json" -X GET http://radish-zok.docker/vk`
+`curl -d '{"id": "test"}' -H "Content-Type: application/json" -X GET http://radish-zkp.docker/vk`
 
 ### Testing individual `.zok` files
 
@@ -110,7 +112,7 @@ Cargo is pre-installed on the container. Following instructions are for developm
 
 ##### build
 
-This instruction builds cargo to be able to run native instructions: `docker-compose exec radish-zok cd src && ./do build`
+This instruction builds cargo to be able to run native instructions: `docker-compose exec radish-zkp cd src && ./do build`
 
 Following examples can be run, or custom written as scripts that could be mounted to the container to run one-off instructions.
 
@@ -143,10 +145,10 @@ To test a particular `.zok` file manually in the terminal:
 
 ## What is the architecture?
 
-The following segments detail out the choice and design of the MSA and PO creation process as it applies to Radish34.
+Following the baseline protocol, the following segments detail out the ZKP components of the Radish34 architecture, to apply a procurement case against the baseline protocol. In the scope of the procurement process (RFP to MSA to PO), MSA and PO are the processes that are subject to constraints of privacy in the process
 
-### MSA preamble
-- Buyer & Seller agree on an MSA.
+### MSA process
+- Buyer & Seller agree on an MSA (Master Service Agreement). Buyer attests that the supplier has signed the MSA without revealing the identity of the supplier.
 -
   ```
   msa = {
@@ -308,7 +310,8 @@ MSA commitment tree
                 MSA commitments are added to these Leaves
 ```
 
-### PO preamble
+### PO process
+- Based on the terms agreed upon in the preceding MSA process, POs (Purchase Orders) are issued by buyer to the supplier. Issuance of a PO by the buyer should be done in such a way that the cumulative volume input (used for determing the correct price based on net accumulated volume or ordered) and the calculation involved to derive the price are private.
 
 - Once the `MSACommitment` is in place, the Buyer can place a purchase order (PO) against the MSA.  
 - A purchase order is just a 'commitment' by the Buyer to purchase a particular volume of a good.
@@ -490,6 +493,12 @@ PO commitment tree
 - Choice of hashing functions: Other hashing choices - Mimc, Poseidon, Pedersen
 
 ## References
+- [Zero-Knowledge-Proofs] (https://zkp.science/)
+- [Zokrates] (https://github.com/Zokrates/ZoKrates)
+- [zk-SNARK] (https://z.cash/technology/zksnarks/)
+- [EY-Nightfall] (https://github.com/EYBlockchain/nightfall)
+- [Nightfall-Explainer] (https://medium.com/@chaitanyakonda/nightfall-makes-token-transactions-on-ethereum-private-how-does-it-work-acf2ffd0aa7a)
+- [Arithmetic-Circuits-Explainer] (https://medium.com/web3studio/simple-explanations-of-arithmetic-circuits-and-zero-knowledge-proofs-806e59a79785)
 - [Groth16](https://eprint.iacr.org/2016/260.pdf)
 - [GM17](https://eprint.iacr.org/2017/540.pdf)
 - [Cheap-Hash-Functions](https://ethresear.ch/t/cheap-hash-functions-for-zksnark-merkle-tree-proofs-which-can-be-calculated-on-chain/3176/10)

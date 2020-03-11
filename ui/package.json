@@ -1,14 +1,23 @@
 {
+  "name": "radish34-ui",
+  "version": "1.0.0",
+  "description": "React based UI microservice for the Radish34 project",
+  "contributors": [
+    "Alek Turberville <Aturberv>",
+    "Claudia Baik <clacla826>",
+    "Patrick Macom <pmacom>"
+  ],
+  "license": "SEE LICENSE in root/license.md",
   "scripts": {
+    "build": "react-scripts build",
+    "build:watch": "npm run build -- --watch",
+    "eject": "react-scripts eject",
     "format": "cod-scripts format",
     "lint": "cod-scripts lint",
     "lint:md": "markdownlint -i node_modules -i build .",
-    "validate": "cod-scripts validate",
     "start": "react-scripts start",
-    "eject": "react-scripts eject",
-    "build": "react-scripts build",
-    "build:watch": "npm run build -- --watch",
-    "test": "cod-scripts test"
+    "test": "cod-scripts test",
+    "validate": "cod-scripts validate"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.2",

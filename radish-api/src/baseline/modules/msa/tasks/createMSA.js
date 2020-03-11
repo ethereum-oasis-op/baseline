@@ -13,7 +13,7 @@ export default [
     resolver: 'signCommitment',
   },
   {
-    description: 'asks the zok service to generate a proof with the provided payload',
+    description: 'asks the zkp service to generate a proof with the provided payload',
     requires: ['msaId'],
     provides: ['customResponse'],
     resolver: 'customFunc',

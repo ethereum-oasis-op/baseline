@@ -1,7 +1,7 @@
 import { Commitment } from './commitment';
 import { getPartnerByMessengerKey } from './partner';
 import { formatProof, createMSA as createMSATransaction } from './shield';
-import { generateProof } from './zok';
+import { generateProof } from './zkp';
 
 import MSAModel from '../integrations/msa';
 

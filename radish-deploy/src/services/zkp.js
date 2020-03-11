@@ -1,7 +1,7 @@
 const request = require('request');
 const { poll } = require('../utils/poll');
 
-const url = process.env.ZOK_URL;
+const url = process.env.ZKP_URL;
 
 // TODO: create config for this value?
 const POLLING_FREQUENCY = 6000; // milliseconds
@@ -57,7 +57,7 @@ async function getVks(circuitNames) {
         const { vk } = await poll(getVkPollingFunction, POLLING_FREQUENCY, {
           id: circuitName,
         });
-        // console.log(`\nResponse from zok microservice for ${circuitName}:`);
+        // console.log(`\nResponse from zkp microservice for ${circuitName}:`);
         // console.log(vk);
         return vk;
       } catch (err) {
