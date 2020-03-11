@@ -23,9 +23,9 @@ Assumptions:
 - GM17 is used as the proving mechanism for generation of zkSnark proofs. Although there are other proving schemes, GM17 was decided to be the proving scheme of choice to account for non-malleability of proofs, even though the verification time is higher than other state of the art schemes such as Groth16. It is easier to handle the malleability issue in the proving system rather than in the protocol (which means choosing GM17 over G16+extra steps) for a reason: the point of using G16 is to reduce the proof size and the verification cost but we do not have yet a well optimized protocol cost wise. Hence, the choice is to go with gm17 for radish34.
 - A key aspect of the usage of the ZKP, is the choice of hashing mechanism. As part of proof generation, one of the inputs to the proof is the hash of the metadata, that is computed offline and also within the circuit to verify that correct hash been used for generating the proof of a document. Another place where hashing is leveraged is during the hashing of commitment in the Shield contract. Hashing used across all these positions is to be consistent, and therefore, SHA256 is used. Even though there are other hashing choices such as Pedersen, Mimc, Poseidon, etc., SHA256 was chosen to offset gas costs in comouting a SHA256 hash on chain are significantly cheaper than that of other hashing mechanisms
 
-## How does this fit in to Radish?
+## How does this fit in to Radish34?
 
-During the set up of the baseline server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
+During the set up of the Radish34 server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
 
 ## How can I run it?
 

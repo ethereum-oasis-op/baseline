@@ -1,9 +1,12 @@
 {
-  "name": "messenger-service",
-  "version": "0.0.1",
-  "description": "REST Based API for sending and receiving structured JSON messages delivered via Whisper",
-  "author": "Sam Stokes <sam.stokes@consensys.net>",
-  "license": "CC0 1.0 Universal",
+  "name": "radish34-messenger-service",
+  "version": "1.0.0",
+  "description": "REST Based API microservice for sending and receiving structured JSON messages delivered via Whisper",
+  "contributors": [
+    "Brian Chamberlain <breakpointer>",
+    "Sam Stokes <bitwiseguy>"
+  ],
+  "license": "SEE LICENSE in root/license.md",
   "jest": {
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
@@ -24,17 +27,17 @@
     "verbose": true
   },
   "scripts": {
-    "start": "NODE_ENV=production node ./src/index.js",
-    "start:dev": "NODE_ENV=development nodemon ./src/index.js",
-    "start:test": "NODE_ENV=test nodemon ./src/index.js",
     "build": "bin/build-image.sh",
     "deploy:up": "docker-compose -f ../docker-compose.yml up --build geth-node mongo-buyer redis-buyer",
     "deploy:down": "docker-compose down",
-    "test": "NODE_ENV=test jest --runInBand --forceExit --coverage",
+    "docs": "npx apidoc -i src/ -o docs/",
     "lint:fix": "eslint --fix .",
     "lint": "eslint .",
     "prettify": "prettier --write **/*.js",
-    "docs": "npx apidoc -i src/ -o docs/"
+    "start": "NODE_ENV=production node ./src/index.js",
+    "start:dev": "NODE_ENV=development nodemon ./src/index.js",
+    "start:test": "NODE_ENV=test nodemon ./src/index.js",
+    "test": "NODE_ENV=test jest --runInBand --forceExit --coverage"
   },
   "dependencies": {
     "axios": "^0.19.0",

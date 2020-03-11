@@ -1,7 +1,19 @@
 {
   "name": "radish-34",
   "version": "1.0.0",
-  "description": "",
+  "description": "Codebase for Radish34 application - procurement use case for the Baseline protocol",
+  "contributors": [
+    "A.J. May <aj-may>",
+    "Brian Chamberlain <breakpointer>",
+    "Chaitanya Konda <ChaitanyaKonda>",
+    "Claudia Baik <clacla826>",
+    "Duncan Westland <Westlad>",
+    "Kartheek Solipuram <skarred14>",
+    "Patrick Macom <pmacom>",
+    "Sam Stokes <bitwiseguy>",
+    "Wenxing Wang <wenxing-wang-ey>"
+  ],
+  "license": "SEE LICENSE in license.md",
   "main": "index.js",
   "jest": {
     "testEnvironment": "node",
@@ -34,8 +46,6 @@
     "type": "git",
     "url": "git+https://github.com/EYBlockchain/radish-34.git"
   },
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/EYBlockchain/radish-34/issues"
   },
