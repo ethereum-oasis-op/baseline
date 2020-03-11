@@ -1,10 +1,13 @@
 {
-  "extends": "./node_modules/cod-scripts/eslint.js",
+  "extends": ["./node_modules/cod-scripts/eslint.js", "plugin:jsdoc/recommended"],
   "rules": {
     "no-underscore-dangle": "off",
     "no-console": "off"
   },
-  globals: {
-    'BigInt':true
+  "globals": {
+    "BigInt":true
   },
+  "plugins": [
+    "jsdoc"
+  ]
 }

@@ -3,9 +3,11 @@ import { hexToDec, flattenDeep } from '../utils/crypto/conversions';
 import { getTxReceipt, getContractWithWalletByName } from './contract';
 
 /**
-Converts a proof object to a flattened array of integers (field elements).
-@param {object} proofObject - elliptic curve points - in the format provided by the zkp service.
-*/
+ * Converts a proof object to a flattened array of integers (field elements).
+ *
+ * @param {object} proofObject - elliptic curve points - in the format provided by the zkp service.
+ * @returns {string} - the proof
+ */
 export const formatProof = proofObject => {
   let proof = Object.values(proofObject);
   // convert to flattened array:
@@ -16,8 +18,12 @@ export const formatProof = proofObject => {
 };
 
 /**
-Log stats relating to the gas used in both the verifier contract, and the shield contract.
-*/
+ * Log stats relating to the gas used in both the verifier contract, and the shield contract.
+ *
+ * @param {string} functionName - function for calculating stats
+ * @param {string} shieldContract - shield contract
+ * @param {string} txReceipt - transaction receipt
+ */
 const gasUsedStats = (functionName, shieldContract, txReceipt) => {
   console.group(`\nGas used in ${functionName}:`);
   const { gasUsed } = txReceipt;
@@ -37,10 +43,10 @@ const gasUsedStats = (functionName, shieldContract, txReceipt) => {
 };
 
 /**
-@param {array[field]} proof
-@param {field} publicInputHash
-@param {array[hex]} publicInputs
-*/
+ * @param {string[]} proof - Array of private fields for the proof
+ * @param {string} publicInputHash - The public side of the hash
+ * @param {string[]} publicInputs - Other public proof fields
+ */
 export const createMSA = async (proof, publicInputHash, publicInputs) => {
   console.log('\nCreating MSA within the shield contract');
   console.log('proof:');
@@ -77,10 +83,10 @@ export const createMSA = async (proof, publicInputHash, publicInputs) => {
 };
 
 /**
-@param {array[field]} proof
-@param {field} publicInputHash
-@param {array[hex]} publicInputs
-*/
+@param {string[]} proof - Array of private fields for the proof
+@param {string} publicInputHash - The public side of the hash
+@param {string[]} publicInputs - Other public proof fields  
+ */
 export const createPO = async (proof, publicInputHash, publicInputs) => {
   console.log('\nCreating PO within the shield contract');
   console.log('proof:');

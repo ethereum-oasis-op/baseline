@@ -49,6 +49,8 @@
   },
   "devDependencies": {
     "cod-scripts": "^3.2.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-jsdoc": "^22.0.0",
     "eslint-plugin-prettier": "^3.1.1",
     "faker": "git+https://git@github.com/Marak/faker.js.git#d3ce6f1",
     "markdownlint-cli": "^0.15.0",
