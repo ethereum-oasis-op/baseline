@@ -63,16 +63,16 @@ radish-zkp-watch_1      |
 radish-zkp-watch_1      | Successfully compiled 6 files with Babel.
 ```
 
-`radish-zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/zkp/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish-zkp.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
+`radish-zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/circuits/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish-zkp.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
 
 ### `generateKeys`
 This is a POST instruction that runs `compile`, `setup` and `exportVerifier` instructions.
 
 Request body:
-`filepath`: the path of the `.zok` file (relative to `/app/zkp/`).
-E.g. for a file at `/app/zkp/path/to/test.zok` the filepath is `path/to/test.zok`.
+`filepath`: the path of the `.zok` file (relative to `/app/circuits/`).
+E.g. for a file at `/app/circuits/path/to/test.zok` the filepath is `path/to/test.zok`.
 
-The `/app/zkp/output` dir will contain the outputs of these steps copied from within the container.
+The `/app/output` dir will contain the outputs of these steps copied from within the container.
 
 Example: (Replace `path/to/test.zok` with the filepath of the file to be computed).  
 `curl -d '{"filepath": "path/to/test.zok"}' -H "Content-Type: application/json" -X POST http://radish-zkp.docker/generate-keys`
@@ -84,14 +84,14 @@ Request body:
 `filename`: the name of the `.zok` file (without the `.zok` file extension).
 `inputs`: array of the arguments the the `main()` function of the circuit.
 
-The `/app/zkp/output` dir has the outputs of these steps copied from within the container. When the `generate-proof` instruction is run, the corresponding `proof.json` is stored in the `/app/zkp/output` dir.  
+The `/app/output` dir has the outputs of these steps copied from within the container. When the `generate-proof` instruction is run, the corresponding `proof.json` is stored in the `/app/output` dir.  
 
 Example: (Replace `filename` with the name of the file for which we're creating a witness).  
 `curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish-zkp.docker/generate-proof`
 
 Alternatively, the POSTMAN application can be used to run these curl requests.
 
-Note: All the resultant files from the above steps/processes are created in a sub-directory named with the input parameter, `filename` (where, for example, the filename is `test` for filepath `/app/zkp/path/to/test.zok`).
+Note: All the resultant files from the above steps/processes are created in a sub-directory under `/app/output` named with the input parameter, `filename` (where, for example, the filename is `test` for filepath `/app/circuits/path/to/test.zok`).
 
 ### `vk`
 
