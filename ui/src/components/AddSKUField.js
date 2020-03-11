@@ -124,17 +124,10 @@ const AddSKUField = ({ formik, volumeField = false, displayOverride }) => {
               />
             </TableCell>
             <TableCell className={classes.borderlessTableCell}>
-              {volumeField ? (
-                <ErrorMessage
-                  name="volume"
-                  render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
-                />
-              ) : (
-                <ErrorMessage
-                  name="skuDescription"
-                  render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
-                />
-              )}
+              <ErrorMessage
+                name="skuDescription"
+                render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
+              />
             </TableCell>
           </TableRow>
         }

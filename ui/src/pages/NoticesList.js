@@ -111,7 +111,7 @@ ChipMaker.propTypes = {
   }).isRequired,
 };
 
-const categories = ['msa', 'proposal', 'purchase order', 'invoice', 'rfp', 'inbox', 'outbox'];
+const categories = ['msa', 'proposal', 'po', 'invoice', 'rfp', 'inbox', 'outbox'];
 
 const NoticesList = ({ match }) => {
   const classes = useStyles();
@@ -123,7 +123,7 @@ const NoticesList = ({ match }) => {
 
   const overrides = {
     contracts: 'msa',
-    po: 'purchase order'
+    'purchase-order': 'po',
   };
 
   if (categories.includes(category) || categories.includes(overrides[category])) {

@@ -7,7 +7,13 @@ export const formatCurrency = (number, currency = 'USD') =>
   number &&
   new Intl.NumberFormat(navigator.language, { style: 'currency', currency }).format(number);
 
-
+/**
+ * Calculates the price of a volume based on MSA tiering structure
+ * @param {array} tierBounds - the tierBounds field for an MSA
+ * @param {array} pricesByTier - the pricesByTier field for an MSA
+ * @param {number} oldAccumulatedVolume - the accumulatedVolumeOrdered field for latest commitment in an MSA
+ * @param {number} volume - the volume to calculate the price for
+ */
 export const calculateTieringPrice = (tierBounds, pricesByTier, oldAccumulatedVolume, volume) => {
   const oldVolume = oldAccumulatedVolume;
   const newVolume = oldVolume + volume;

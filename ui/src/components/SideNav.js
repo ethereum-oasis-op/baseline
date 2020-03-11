@@ -99,8 +99,8 @@ const categories = [
   { label: 'Proposals', key: 'proposal', url: '/notices/proposal'},
   {
     label: 'Purchase Orders',
-    key: 'purchaseorder',
-    url: '/notices/purchaseorder',
+    key: 'po',
+    url: '/notices/purchase-order',
   },
   { label: 'Invoices', key: 'invoice', url: '/notices/invoice'},
   // { label: 'MSA', key: 'msa', url: '/notices/msa', icon: DescriptionIcon },

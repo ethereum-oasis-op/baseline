@@ -25,6 +25,7 @@ const useStyles = makeStyles(() => ({
   },
   errorMessage: {
     color: 'red',
+    marginBottom: '2rem',
   },
   submitButton: {
     background: '#007BFF',
@@ -58,6 +59,13 @@ const CreatePurchaseOrder = () => {
   );
 
   const { getPartnerByMessengerKey: currentUser } = partnerData || {};
+  
+  const checkValidVolume = (volume, msa) => {
+    if (!msa) return null;
+    const latestCommitment = msa.commitments[msa.commitments.length - 1];
+    const maxTierBound = msa.tierBounds[msa.tierBounds.length - 1];
+    return Number(volume) + latestCommitment.variables.accumulatedVolumeOrdered >  maxTierBound;
+  }
 
   const formik = useFormik({
     initialValues: {
@@ -86,9 +94,9 @@ const CreatePurchaseOrder = () => {
         .number()
         .required('Purchase Order volume required')
         .min(1, 'Volume cannot be 0')
-        .max(selectedMSA
-          ? selectedMSA.tierBounds[selectedMSA.tierBounds.length - 1]
-          : null
+        .max(volume =>
+          checkValidVolume(volume, selectedMSA),
+          "The maximum amount of volume that the supplier has available and that can be ordered under this MSA. The volume submitted may not exceed the the upper volume bound of the MSA rate table"
         ),
       sku: Yup.string().required('Input SKU number'),
       msaId: Yup.string().required('Select an MSA'),
@@ -122,7 +130,7 @@ const CreatePurchaseOrder = () => {
         {!selectedMSA && <Typography variant="h3">Select MSA To Create a Purchase Order for:</Typography>}
         <MSACardList
           msas={buyerMSAS}
-          volume={formik.values.volume}
+          volume={Number(formik.values.volume)}
           onClick={msa => {
             if (selectedMSA) {
               if (msa._id === selectedMSA._id) {
@@ -136,7 +144,7 @@ const CreatePurchaseOrder = () => {
             formik.setFieldValue('sku', msa.sku);
             formik.setFieldValue('msaId', msa._id);
           }}
-          selectedMSA={selectedMSA ? selectedMSA._id : null}
+          selectedMSAId={selectedMSA ? selectedMSA._id : ''}
         />
         <FormikProvider value={formik}>
           <form onSubmit={formik.handleSubmit}>
@@ -157,6 +165,10 @@ const CreatePurchaseOrder = () => {
             />
             <Field name="deliveryDate" label="Delivery Date" component={DatePickerField} />
             <AddSKUField formik={formik} volumeField displayOverride />
+            <ErrorMessage
+              name="volume"
+              render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
+            />
             <Button className={classes.submitButton} type="submit">
               Send Purchase Order
             </Button>
