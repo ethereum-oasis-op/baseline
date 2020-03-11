@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Generating docs..."
-BASE_DOCS='./docs/generated'
+BASE_DOCS='docs/generated'
 if [ -d "$BASE_DOCS" ]; then rm -Rf $BASE_DOCS; fi
 
 echo "    Smart contracts"
@@ -22,17 +22,18 @@ mkdir -p $DEP_DOCS
 ./node_modules/.bin/jsdoc ./radish-deploy/src -r -c ./.jsdoc-conf.json -d $DEP_DOCS
 echo -e "    output to: ${DEP_DOCS}\n"
 
-# echo "    Zok service"
-# ZOK_DOCS="${BASE_DOCS}/zok-service"
-# mkdir -p $ZOK_DOCS
-# echo -e "    output to: ${ZOK_DOCS}\n"
+# echo "    Zkp service"
+# ZKP_DOCS="${BASE_DOCS}/zkp-service"
+# mkdir -p $ZKP_DOCS
+# echo -e "    output to: ${ZKP_DOCS}\n"
 
 # echo "    UI docs"
 # UI_DOCS="${BASE_DOCS}/ui"
 # mkdir -p $UI_DOCS
 # echo -e "    output to: ${UI_DOCS}\n"
 
-# echo "    Messenger service"
-# MS_DOCS="${BASE_DOCS}/messenger"
-# mkdir -p $MS_DOCS
-# echo -e "    output to: ${MS_DOCS}\n"
+echo "    Messenger service api"
+MS_DOCS="${BASE_DOCS}/messenger-api"
+mkdir -p $MS_DOCS
+apidoc -i messenger/src -o $MS_DOCS -c messenger
+echo -e "    output to: ${MS_DOCS}\n"
