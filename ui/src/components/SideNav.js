@@ -157,6 +157,7 @@ const SideNav = ({ notices, selected }) => {
   const createForms = [
     { value: '', label: 'Create New Item' },
     { value: '/rfp/create', label: 'Create New RFP ' },
+    { value: '/purchase-order/create', label: 'Create New Purchase Order '},
   ];
 
   const dropdownOnChange = (e) => {

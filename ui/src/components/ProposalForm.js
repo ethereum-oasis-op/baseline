@@ -129,7 +129,7 @@ const ProposalForm = ({ rfp }) => {
                               component={TextField}
                               onChange={(e, v) => {
                                 if (index === 0)
-                                  formik.setFieldValue(`rates.${index}.startRange`, 1);
+                                  formik.setFieldValue(`rates.${index}.startRange`, 0);
                                 else
                                   formik.setFieldValue(
                                     `rates.${index}.startRange`,

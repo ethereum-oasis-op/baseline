@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 import { MSA, getMSAById, getAllMSAs, getMSAsBySKU, saveMSA, getMSAsByRFPId } from '../services/msa';
-import { getPartnerByAddress, getPartnerByzkpPublicKey } from '../services/partner';
+import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessengerKey } from '../services/partner';
 import { saveNotice } from '../services/notice';
 import { getServerSettings } from '../utils/serverSettings';
 import { pubsub } from '../subscriptions';
@@ -37,6 +37,7 @@ const mapMSAsWithSignatureStatus = async msas => {
       ...msaData,
       ...constants,
       whisperPublicKeySupplier: supplier.identity,
+      supplierDetails: supplier,
       buyerSignatureStatus,
       supplierSignatureStatus,
     };
@@ -56,12 +57,14 @@ export default {
         ...msaData,
         ...constants,
         whisperPublicKeySupplier: supplier.identity,
+        supplierDetails: supplier,
         buyerSignatureStatus,
         supplierSignatureStatus,
       };
     },
-    msas: async () => {
-      const msas = await getAllMSAs();
+    msas: async (_parent, args, context) => {
+      const requester = await getPartnerByMessengerKey(context.identity);
+      const msas = await getAllMSAs(requester);
       return mapMSAsWithSignatureStatus(msas);
     },
     msasBySKU: async (_parent, args)  => {

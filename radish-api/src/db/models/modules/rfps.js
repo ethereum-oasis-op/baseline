@@ -98,6 +98,8 @@ export const partnerCreateRFP = async doc => {
   newRFP._id = doc.uuid;
   console.log(`Saving new RFP (uuid: ${doc.uuid}) from partner...`);
   const result = await RFP.create([newRFP], { upsert: true, new: true });
+  console.log('result ---- ', result[0]);
+  console.log('result recipients ---- ', result[0].recipients);
   await createNotice('rfp', result[0]);
   console.log('Got RFP as supplier');
 

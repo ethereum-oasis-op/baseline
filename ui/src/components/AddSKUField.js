@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AddSKUField = ({ formik }) => {
+const AddSKUField = ({ formik, volumeField = false, displayOverride }) => {
   const classes = useStyles();
   const [disabled, setDisabled] = useState(false);
   const [display, setDisplay] = useState(false);
@@ -47,11 +47,11 @@ const AddSKUField = ({ formik }) => {
       <TableHead>
         <TableRow>
           <TableCell>SKU</TableCell>
-          <TableCell>Description</TableCell>
+          <TableCell>{volumeField ? 'Volume' : 'Description'}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
-        {display ?
+        {display || displayOverride ?
         <TableRow>
         <TableCell>
           <Field
@@ -60,16 +60,28 @@ const AddSKUField = ({ formik }) => {
             onChange={formik.handleChange}
             disabled={disabled}
             className={classes.field}
+            value={formik.values.sku}
           />
         </TableCell>
         <TableCell>
-          <Field
-            id="skuDescription"
-            component={TextField}
-            onChange={formik.handleChange}
-            disabled={disabled}
-            className={classes.field}
-          />
+          {volumeField ?
+            <Field
+              id="volume"
+              component={TextField}
+              onChange={formik.handleChange}
+              disabled={disabled}
+              className={classes.field}
+              value={formik.values.volume}
+            />
+            :
+            <Field
+              id="skuDescription"
+              component={TextField}
+              onChange={formik.handleChange}
+              disabled={disabled}
+              className={classes.field}
+            />
+          }
         </TableCell>
         <TableCell className={classes.tableCellButton}>
           {!disabled ? (
@@ -103,13 +115,26 @@ const AddSKUField = ({ formik }) => {
           </TableCell>
         </TableRow>
         }
-        {formik.errors.sku &&
+        {Object.keys(formik.errors).length > 0 &&
           <TableRow>
             <TableCell className={classes.borderlessTableCell}>
               <ErrorMessage
                 name="sku"
                 render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
               />
+            </TableCell>
+            <TableCell className={classes.borderlessTableCell}>
+              {volumeField ? (
+                <ErrorMessage
+                  name="volume"
+                  render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
+                />
+              ) : (
+                <ErrorMessage
+                  name="skuDescription"
+                  render={msg => <Typography className={classes.errorMessage}>{msg}</Typography>}
+                />
+              )}
             </TableCell>
           </TableRow>
         }

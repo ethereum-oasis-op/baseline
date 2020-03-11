@@ -32,7 +32,7 @@ const CreateContract = ({ rfp, proposal, open, handleClose, createContract, inde
     <Modal open={open} onClose={handleClose}>
       <div style={{ margin: 'auto', position: 'relative' }} className={classes.paper}>
         <Typography variant="h2">{rfp.description}</Typography>
-        <SKUTable rfp={rfp} />
+        <SKUTable sku={rfp.sku} description={rfp.skuDescription} />
         <RateTable rates={proposal.rates} erc20ContractAddress={proposal.erc20ContractAddress} />
         <Typography variant="body1">Add Conditions</Typography>
         <Button className={classes.borderLessButton}>+ Add Conditions</Button>

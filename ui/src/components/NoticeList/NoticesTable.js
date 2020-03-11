@@ -39,6 +39,7 @@ const NoticesTable = props => {
   const categoryOverrides = {
     proposal: 'rfp',
     msa: 'contracts',
+    po: 'purchase-order',
   };
 
   return (

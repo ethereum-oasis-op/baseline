@@ -111,7 +111,7 @@ const RFPDetail = () => {
       <Typography variant="h2">
         Items Requested
       </Typography>
-      <SKUTable rfp={data.rfp} />
+      <SKUTable sku={data.rfp.sku} description={data.rfp.skuDescription} />
       {isSender && (
         <RFPSuppliersTable
           rfp={rfp}

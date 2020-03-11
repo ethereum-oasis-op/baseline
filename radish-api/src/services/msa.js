@@ -244,9 +244,15 @@ export const getMSAsByRFPId = async rfpId => {
   }
 }
 
-export const getAllMSAs = async () => {
+export const getAllMSAs = async requester => {
   try {
-    const msas = await MSAModel.find({})
+    const msas = await MSAModel
+      .find({
+        $or: [
+          { 'constants.zkpPublicKeyOfBuyer': requester.zkpPublicKey },
+          { 'constants.zkpPublicKeyOfSupplier': requester.zkpPublicKey }
+        ]
+      })
       .lean();
     return msas;
   } catch (e) {

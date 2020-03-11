@@ -14,6 +14,7 @@ import { RFPProvider } from './rfp-context';
 import { ProposalProvider } from './proposal-context';
 import { MSAProvider } from './msa-context';
 import { ToastrProvider } from './ToastrContext';
+import { PurchaseOrderProvider } from './purchase-order-context';
 
 let uri = 'radish-api-buyer.docker/graphql';
 
@@ -63,7 +64,11 @@ function AppProviders({ children }) {
             <PartnerProvider>
               <RFPProvider>
                 <ProposalProvider>
-                  <MSAProvider>{children}</MSAProvider>
+                  <MSAProvider>
+                    <PurchaseOrderProvider>
+                      {children}
+                    </PurchaseOrderProvider>
+                  </MSAProvider>
                 </ProposalProvider>
               </RFPProvider>
             </PartnerProvider>

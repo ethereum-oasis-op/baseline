@@ -3,13 +3,21 @@ import mongoose from 'mongoose';
 const POMetadata = new mongoose.Schema({
   msaId: {
     type: String,
-    required: false,
+    required: true,
   },
   // is the PO 'open' or 'closed'?
   open: {
     type: Boolean,
     default: true,
     required: false,
+  },
+  deliveryDate: {
+    type: Number,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
   },
   deliveries: [
     {
