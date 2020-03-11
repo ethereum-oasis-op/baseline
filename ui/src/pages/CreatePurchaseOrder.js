@@ -59,13 +59,6 @@ const CreatePurchaseOrder = () => {
   );
 
   const { getPartnerByMessengerKey: currentUser } = partnerData || {};
-  
-  const checkValidVolume = (volume, msa) => {
-    if (!msa) return null;
-    const latestCommitment = msa.commitments[msa.commitments.length - 1];
-    const maxTierBound = msa.tierBounds[msa.tierBounds.length - 1];
-    return Number(volume) + latestCommitment.variables.accumulatedVolumeOrdered >  maxTierBound;
-  }
 
   const formik = useFormik({
     initialValues: {
@@ -94,8 +87,8 @@ const CreatePurchaseOrder = () => {
         .number()
         .required('Purchase Order volume required')
         .min(1, 'Volume cannot be 0')
-        .max(volume =>
-          checkValidVolume(volume, selectedMSA),
+        .max(
+          selectedMSA ? selectedMSA.tierBounds[selectedMSA.tierBounds.length - 1] - selectedMSA.commitments[selectedMSA.commitments.length - 1].variables.accumulatedVolumeOrdered : null,
           "The maximum amount of volume that the supplier has available and that can be ordered under this MSA. The volume submitted may not exceed the the upper volume bound of the MSA rate table"
         ),
       sku: Yup.string().required('Input SKU number'),
