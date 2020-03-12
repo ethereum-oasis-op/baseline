@@ -40,7 +40,7 @@ services:
     volumes:
       - chaindata:/chaindata
 
-  radish-zkp:
+  zkp:
     build:
       context: ./zkp/
       dockerfile: dev.Dockerfile
@@ -52,12 +52,12 @@ services:
       - ./zkp/output:/app/output:delegated
     environment:
       PROVING_SCHEME: 'gm17'
-      VIRTUAL_HOST: radish-zkp.docker
+      VIRTUAL_HOST: radish34-zkp.docker
       MONGO_URL: mongodb://mongo-buyer # TODO: radish-zkp's db of proving materials shouldn't depend on the Buyer's mongodb. Each user should probably read proving files from their local disk rather than from a shared mongodb?
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
     depends_on:
-      - radish-zkp-watch
+      - zkp-watch
       - mongo-buyer # TODO: remove dependency on mongo-buyer.
     networks:
       - network-buyer
@@ -66,7 +66,7 @@ services:
     ports:
       - 8080:80
 
-  radish-zkp-watch:
+  zkp-watch:
     build:
       context: ./zkp/
       dockerfile: dev.Dockerfile
@@ -79,7 +79,7 @@ services:
       - network-supplier2
     command: npm run build:watch
 
-  radish34-ui:
+  ui:
     build:
       context: ./ui/
       dockerfile: dev.Dockerfile
@@ -103,9 +103,9 @@ services:
       options:
         max-size: 10m
 
-  radish-deploy:
+  deploy:
     build:
-      context: ./radish-deploy/
+      context: ./deploy/
     depends_on:
       - ganache
       - messenger-buyer
@@ -114,52 +114,52 @@ services:
       - mongo-buyer
       - mongo-supplier1
       - mongo-supplier2
-      - radish-zkp
+      - zkp
     environment:
       RPC_PROVIDER: http://ganache:8545
       MESSENGER_BUYER_URI: http://messenger-buyer:4001/api/v1
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001/api/v1
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001/api/v1
-      ZKP_URL: http://radish-zkp:80
+      ZKP_URL: http://zkp:80
     networks:
       - network-buyer
       - network-supplier1
       - network-supplier2
     volumes:
-      - ./radish-deploy/src:/app/src:delegated
-      - ./radish-deploy/package.json:/app/package.json:delegated
+      - ./deploy/src:/app/src:delegated
+      - ./deploy/package.json:/app/package.json:delegated
       - ./artifacts:/app/artifacts:delegated
       - ./config/keystore:/keystore:delegated
       - ./config:/app/src/config
 
-  radish-api-buyer:
-    container_name: radish-api-buyer
+  api-buyer:
+    container_name: api-buyer
     build:
-      context: ./radish-api/
+      context: ./api/
       dockerfile: dev.Dockerfile
     command: npm run dev
     restart: on-failure
     volumes:
-      - ./radish-api/dist:/app/dist:delegated
-      - ./radish-api/package.json:/app/package.json:delegated
+      - ./api/dist:/app/dist:delegated
+      - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/buyer.eth:/keystore/account.eth
       - ./config/config-buyer.json:/app/config/default.json
       - ./artifacts:/app/artifacts:delegated
     depends_on:
-      - radish-api-watch
+      - api-watch
       - mongo-buyer
       - ganache
       - messenger-buyer
       - redis-buyer
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish-api-buyer.docker
+      VIRTUAL_HOST: radish34-api-buyer.docker
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-buyer:4001/api/v1'
       REDIS_URL: redis://redis-buyer:6379
-      ZKP_URL: http://radish-zkp:80
+      ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-buyer
@@ -167,34 +167,34 @@ services:
       - 8001:8001
       - 8101:8101
 
-  radish-api-supplier1:
-    container_name: radish-api-supplier1
+  api-supplier1:
+    container_name: api-supplier1
     build:
-      context: ./radish-api/
+      context: ./api/
       dockerfile: dev.Dockerfile
     command: npm run dev
     restart: on-failure
     volumes:
-      - ./radish-api/dist:/app/dist:delegated
-      - ./radish-api/package.json:/app/package.json:delegated
+      - ./api/dist:/app/dist:delegated
+      - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier1.eth:/keystore/account.eth
       - ./config/config-supplier1.json:/app/config/default.json
       - ./artifacts:/app/artifacts:delegated
     depends_on:
-      - radish-api-watch
+      - api-watch
       - mongo-supplier1
       - ganache
       - messenger-supplier1
       - redis-supplier1
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish-api-supplier1.docker
+      VIRTUAL_HOST: radish34-api-supplier1.docker
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier1:4001/api/v1'
       REDIS_URL: redis://redis-supplier1:6379
-      ZKP_URL: http://radish-zkp:80
+      ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier1
@@ -202,47 +202,47 @@ services:
       - 8002:8001
       - 8102:8101
 
-  radish-api-supplier2:
-    container_name: radish-api-supplier2
+  api-supplier2:
+    container_name: api-supplier2
     build:
-      context: ./radish-api/
+      context: ./api/
       dockerfile: dev.Dockerfile
     command: npm run dev
     restart: on-failure
     volumes:
-      - ./radish-api/dist:/app/dist:delegated
-      - ./radish-api/package.json:/app/package.json:delegated
+      - ./api/dist:/app/dist:delegated
+      - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier2.eth:/keystore/account.eth
       - ./config/config-supplier2.json:/app/config/default.json
       - ./artifacts:/app/artifacts:delegated
     depends_on:
-      - radish-api-watch
+      - api-watch
       - mongo-supplier2
       - ganache
       - messenger-supplier2
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish-api-supplier2.docker
+      VIRTUAL_HOST: radish34-api-supplier2.docker
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: 'http://messenger-supplier2:4001/api/v1'
       REDIS_URL: redis://redis-supplier2:6379
-      ZKP_URL: http://radish-zkp:80
+      ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier2
     ports:
       - 8003:8001
 
-  radish-api-watch:
+  api-watch:
     build:
-      context: ./radish-api/
+      context: ./api/
       dockerfile: dev.Dockerfile
     command: npm run build:watch
     volumes:
-      - ./radish-api/src:/app/src:delegated
-      - ./radish-api/dist:/app/dist:delegated
+      - ./api/src:/app/src:delegated
+      - ./api/dist:/app/dist:delegated
       - ./config/keystore:/keystore
       - ./config:/app/config
     networks:
@@ -409,7 +409,7 @@ services:
     environment:
       VIRTUAL_HOST: messenger-buyer.docker
       MONGO_URL: mongodb://mongo-buyer:27017/radish34
-      RADISH_API_URL: http://radish-api-buyer:8101/api/v1
+      RADISH_API_URL: http://api-buyer:8101/api/v1
       REDIS_URL: redis://redis-buyer:6379
     networks:
       - network-buyer
@@ -431,7 +431,7 @@ services:
     environment:
       VIRTUAL_HOST: messenger-supplier1.docker
       MONGO_URL: mongodb://mongo-supplier1:27017/radish34
-      RADISH_API_URL: http://radish-api-supplier1:8101/api/v1
+      RADISH_API_URL: http://api-supplier1:8101/api/v1
       REDIS_URL: redis://redis-supplier1:6379
     networks:
       - network-supplier1
@@ -453,7 +453,7 @@ services:
     environment:
       VIRTUAL_HOST: messenger-supplier2.docker
       MONGO_URL: mongodb://mongo-supplier2:27017/radish34
-      RADISH_API_URL: http://radish-api-supplier2:8101/api/v1
+      RADISH_API_URL: http://api-supplier2:8101/api/v1
       REDIS_URL: redis://redis-supplier2:6379
     networks:
       - network-supplier2
