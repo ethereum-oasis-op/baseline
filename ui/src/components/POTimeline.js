@@ -87,14 +87,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function getSteps() {
-  return ['Sent', 'Accepted', 'In Progress', 'Ready', 'In Transit', 'Delivered', 'Invoiced', 'Paid'];
+function getSteps(isSender) {
+  return [isSender ? 'Sent' : 'Received', 'Accepted', 'In Progress', 'Ready', 'In Transit', 'Delivered', 'Invoiced', 'Paid'];
 }
 
-export default function POTimeline() {
+export default function POTimeline({ isSender }) {
   const classes = useStyles();
   const [activeStep] = React.useState(1);
-  const steps = getSteps();
+  const steps = getSteps(isSender);
 
   return (
     <div className={classes.root}>

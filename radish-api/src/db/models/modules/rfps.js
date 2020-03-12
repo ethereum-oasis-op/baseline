@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { uuid } from 'uuidv4';
+import { createNotice } from '../baseline/notices';
 
 const RFPSchema = new mongoose.Schema(
   {
