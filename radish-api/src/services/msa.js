@@ -13,6 +13,7 @@ import { edwardsDecompress } from '../utils/crypto/ecc/compress-decompress';
 import { concatenateThenHash } from '../utils/crypto/hashes/sha256/sha256';
 
 import msgDeliveryQueue from '../queues/message_delivery';
+import { saveNotice } from './notice';
 
 const pycryptojs = require('zokrates-pycryptojs');
 
@@ -493,6 +494,17 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
       };
 
       const msaDoc = await updateMSAWithSupplierSignature(msa);
+
+      await saveNotice({
+        resolved: false,
+        category: 'msa',
+        subject: `New MSA: for SKU ${msaDoc.constants.sku}`,
+        from: partner.name,
+        statusText: 'Pending',
+        status: 'incoming',
+        categoryId: msaDoc._id,
+        lastModified: Math.floor(Date.now() / 1000),
+      });
 
       msgDeliveryQueue.add({
         documentId: msa._id,

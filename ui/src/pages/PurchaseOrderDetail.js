@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { useLazyQuery } from '@apollo/react-hooks';
 import { useParams, useHistory } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
@@ -10,10 +10,14 @@ import MSACard from '../components/MSACard';
 import POTimeline from '../components/POTimeline';
 import { GET_PURCHASE_ORDER } from '../graphql/purchase-order';
 import { GET_MSA_BY_ID } from '../graphql/msa';
+import { ServerSettingsContext } from '../contexts/server-settings-context';
 
 const PurchaseOrderDetail = () => {
   const history = useHistory();
   const { id } = useParams();
+  const { settings } = useContext(ServerSettingsContext);
+  const { organizationWhisperKey: currentUserWhisperKey } = settings ? settings : {};
+
   const [fetchPO, { data, loading }] = useLazyQuery(GET_PURCHASE_ORDER);
   const { po: purchaseOrder } = data || {};
 
@@ -42,7 +46,7 @@ const PurchaseOrderDetail = () => {
           {msa && <MSACard msa={msa} price={purchaseOrder.constants.price} onClick={() => history.push(`/contracts/${msa._id}`)} />}
         </Grid>
         <Grid item xs={8}>
-          <POTimeline />
+          <POTimeline isSender={currentUserWhisperKey !== purchaseOrder.whisperPublicKeyOfSupplier} />
         </Grid>
       </Grid>
     </Container>

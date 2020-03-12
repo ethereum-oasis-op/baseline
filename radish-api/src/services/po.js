@@ -14,6 +14,7 @@ import { edwardsDecompress } from '../utils/crypto/ecc/compress-decompress';
 import { concatenateThenHash } from '../utils/crypto/hashes/sha256/sha256';
 
 import msgDeliveryQueue from '../queues/message_delivery';
+import { saveNotice } from './notice';
 
 /**
 A poDoc object (from the mongodb) contains an array of commitments.
@@ -348,10 +349,22 @@ export const createPO = async (_zkpPrivateKeyOfBuyer, oldMSA, newMSA, po) => {
 // TODO: we need to actually make sure that it was indeed the Buyer of this MSA who has sent us the MSA. Otherwise, we could be updating the MSA db with bogus information from a random person.
 // TODO: we need to check that the commitment actually exists at the purported index on-chain.
 export const onReceiptPOSupplier = async (messageObj, senderWhisperKey) => {
+  const sender = await getPartnerByMessengerKey(senderWhisperKey);
   const { po, msa } = messageObj;
 
   const poDoc = await savePO(po);
   const msaDoc = await updateMSAWithNewCommitment(msa);
+
+  await saveNotice({
+    resolved: false,
+    category: 'po',
+    subject: `New PO for SKU: ${poDoc.constants.sku}`,
+    from: sender.name,
+    statusText: 'Pending',
+    status: 'incoming',
+    categoryId: poDoc._id,
+    lastModified: Math.floor(Date.now() / 1000),
+  });
 
   // more logic required here in future...
 };
