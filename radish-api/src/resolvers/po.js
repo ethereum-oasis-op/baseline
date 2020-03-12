@@ -11,8 +11,14 @@ const NEW_PO = 'NEW_PO';
 
 export default {
   Query: {
-    po(_parent, args) {
-      return getPOById(args.id).then(res => res);
+    po: async (_parent, args) => {
+      const po = await getPOById(args.id).then(res => res);
+      const supplier = await getPartnerByzkpPublicKey(po.constants.zkpPublicKeyOfSupplier);
+
+      return {
+        ...po,
+        whisperPublicKeyOfSupplier: supplier.identity,
+      }
     },
     pos() {
       return getAllPOs();
@@ -33,7 +39,7 @@ export default {
       */
       const currentUser = await getPartnerByMessengerKey(context.identity);
 
-      const { msaId, volume } = args.input;
+      const { msaId, volume, deliveryDate, description } = args.input;
 
       const oldMSADoc = await getMSAById(msaId);
 
@@ -96,6 +102,11 @@ export default {
       const newMSADoc = await updateMSAWithNewCommitment(newMSAObject);
 
       const poObject = po.object;
+      poObject.metadata = {
+        msaId,
+        deliveryDate,
+        description,
+      };
 
       const poDoc = await savePO(poObject);
 

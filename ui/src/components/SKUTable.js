@@ -6,19 +6,21 @@ import TableRow from '@material-ui/core/TableRow';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 
-const SKUTable = ({ rfp }) => {
+const SKUTable = ({ sku, description, volume }) => {
   return (
     <Table style={{ margin: '2rem 0 2rem 0' }}>
       <TableHead>
         <TableRow>
           <TableCell>SKU</TableCell>
-          <TableCell>Description</TableCell>
+          {description && <TableCell>Description</TableCell>}
+          {volume && <TableCell>Volume</TableCell>}
         </TableRow>
       </TableHead>
       <TableBody>
         <TableRow>
-          <TableCell>{rfp.sku}</TableCell>
-          <TableCell>{rfp.skuDescription}</TableCell>
+          <TableCell>{sku}</TableCell>
+          {description && <TableCell>{description}</TableCell>}
+          {volume && <TableCell>{volume}</TableCell>}
         </TableRow>
       </TableBody>
     </Table>
@@ -26,7 +28,14 @@ const SKUTable = ({ rfp }) => {
 };
 
 SKUTable.propTypes = {
-  rfp: PropTypes.shape({}).isRequired,
+  sku: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  volume: PropTypes.number,
+};
+
+SKUTable.defaultProps = {
+  description: undefined,
+  volume: undefined,
 };
 
 export default SKUTable;

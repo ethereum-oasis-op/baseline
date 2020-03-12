@@ -9,7 +9,7 @@ const SignatureItem = props => {
     <Grid item style={{ padding: '1rem' }} xs={4}>
       <Typography>{role}: {status}</Typography>
       {status === 'Approved' ?
-        <Typography>{details.name}</Typography>
+        <Typography>Organization Name: {details.name}</Typography>
         :
         <Typography>Awaiting Signature</Typography>
       }

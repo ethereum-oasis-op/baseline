@@ -42,7 +42,7 @@ const RFPSuppliersTable = ({ rfp, proposals, setOpen, open, createContract }) =>
                   {proposal.rates ? (
                     proposal.rates.map((rate, i) => (
                       <Typography key={uniqid()}>
-                        {`${rate.startRange}-${rate.endRange}${proposal.rates[i + 1] ? '' : '+'}`}
+                        {`${i === 0 ? rate.startRange + 1 : rate.startRange}-${rate.endRange}${proposal.rates[i + 1] ? '' : '+'}`}
                       </Typography>
                     ))
                   ) : (
@@ -70,7 +70,7 @@ const RFPSuppliersTable = ({ rfp, proposals, setOpen, open, createContract }) =>
                 <TableCell>
                   {proposal.rates &&
                     (proposal.msaId ? (
-                      <Link to={`/contracts/${proposal.msaId}`}>View Contract</Link>
+                      <Link to={`/contracts/${proposal.msaId}`} underline={"hover"}>View Contract</Link>
                     ) : (
                       <Button
                         variant="contained"

@@ -94,6 +94,7 @@ export const GET_PARTNER_BY_IDENTITY = gql`
       address
       role
       identity
+      zkpPublicKey
     }
   }
 `;

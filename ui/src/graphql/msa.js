@@ -19,10 +19,18 @@ export const MSA_ATTRIBUTES = gql`
     commitments {
       commitment
       salt
+      index
       variables {
         accumulatedVolumeOrdered
         accumulatedVolumeDelivered
       }
+    }
+    supplierDetails {
+      name
+      address
+      role
+      identity
+      zkpPublicKey
     }
   }
 `;

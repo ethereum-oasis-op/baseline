@@ -16,7 +16,7 @@ import { ServerSettingsContext } from '../contexts/server-settings-context';
 
 const MSADetail = () => {
   const { id } = useParams();
-  const [isSender, setIsSender] = useState(true);
+  const [isBuyer, setIsBuyer] = useState(true);
   const [fetchMSA, { data: msaData }] = useLazyQuery(GET_MSA_BY_ID);
   const { msa } = msaData || {};
 
@@ -52,7 +52,7 @@ const MSADetail = () => {
 
   useEffect(() => {
     if (organizationAddress && address) {
-      address === organizationAddress ? setIsSender(true) : setIsSender(false);
+      address === organizationAddress ? setIsBuyer(true) : setIsBuyer(false);
     };
   }, [organizationAddress, address]);
 
@@ -67,7 +67,7 @@ const MSADetail = () => {
     <Container>
       {rfp && <Typography variant='h2'>{rfp.description}</Typography>}
       {buyer && <Typography>{name}</Typography>}
-      {rfp && <SKUTable rfp={rfp} />}
+      {rfp && <SKUTable sku={rfp.sku} description={rfp.skuDescription} />}
       <Grid container>
         {proposal &&
           <>
@@ -87,7 +87,7 @@ const MSADetail = () => {
         supplierStatus={msa.supplierSignatureStatus}
         buyerStatus={msa.buyerSignatureStatus}
       />}
-      {!isSender && !msa.supplierSignatureStatus && <ApproveFooter onClick={() => console.log('hello')} />}
+      {!isBuyer && !msa.supplierSignatureStatus && <ApproveFooter onClick={() => console.log('hello')} />}
     </Container>
   );
 }

@@ -129,7 +129,7 @@ const ProposalForm = ({ rfp }) => {
                               component={TextField}
                               onChange={(e, v) => {
                                 if (index === 0)
-                                  formik.setFieldValue(`rates.${index}.startRange`, 1);
+                                  formik.setFieldValue(`rates.${index}.startRange`, 0);
                                 else
                                   formik.setFieldValue(
                                     `rates.${index}.startRange`,
@@ -242,18 +242,20 @@ const ProposalForm = ({ rfp }) => {
                         </TableRow>
                       </React.Fragment>
                     ))}
-                  <TableRow>
-                    <TableCell className={classes.tableCell}>
-                      <Button
-                        type="button"
-                        onClick={() => !formik.values.rates.includes('') && arrayHelpers.push('')}
-                        style={{ color: '#50A75D' }}
-                      >
-                        <AddCircleOutline />
-                        Add Tier
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                  {formik.values.rates.length < 3 && (
+                    <TableRow>
+                      <TableCell className={classes.tableCell}>
+                        <Button
+                          type="button"
+                          onClick={() => !formik.values.rates.includes('') && arrayHelpers.push('')}
+                          style={{ color: '#50A75D' }}
+                        >
+                          <AddCircleOutline />
+                          Add Tier
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )}
                   <TableRow>
                     <TableCell className={classes.tableCell}>
                       <ErrorMessage
