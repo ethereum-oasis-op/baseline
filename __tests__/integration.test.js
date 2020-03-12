@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { concatenateThenHash } from '../radish-api/src/utils/crypto/hashes/sha256/sha256';
+import { concatenateThenHash } from '../api/src/utils/crypto/hashes/sha256/sha256';
 import { MongoClient } from 'mongodb';
 
 jest.setTimeout(600000);
