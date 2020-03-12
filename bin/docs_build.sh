@@ -10,16 +10,16 @@ mkdir -p $SC_DOCS
 npx solidity-docgen -i ./contracts -o $SC_DOCS --contract-pages --solc-settings "{remappings: ['openzeppelin-solidity=$PWD/node_modules/openzeppelin-solidity']}"
 echo -e "    output to: ${SC_DOCS}\n"
 
-echo "    Radish-api service"
-API_DOCS="${BASE_DOCS}/radish-api"
+echo "    Api service"
+API_DOCS="${BASE_DOCS}/api"
 mkdir -p $API_DOCS
-./node_modules/.bin/jsdoc ./radish-api/src -r -c ./.jsdoc-conf.json -d $API_DOCS
+./node_modules/.bin/jsdoc ./api/src -r -c ./.jsdoc-conf.json -d $API_DOCS
 echo -e "    output to: ${API_DOCS}\n"
 
-echo "    Radish-deploy "
-DEP_DOCS="${BASE_DOCS}/radish-deploy"
+echo "    Deploy job"
+DEP_DOCS="${BASE_DOCS}/deploy"
 mkdir -p $DEP_DOCS
-./node_modules/.bin/jsdoc ./radish-deploy/src -r -c ./.jsdoc-conf.json -d $DEP_DOCS
+./node_modules/.bin/jsdoc ./deploy/src -r -c ./.jsdoc-conf.json -d $DEP_DOCS
 echo -e "    output to: ${DEP_DOCS}\n"
 
 # echo "    Zkp service"
