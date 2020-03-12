@@ -242,18 +242,20 @@ const ProposalForm = ({ rfp }) => {
                         </TableRow>
                       </React.Fragment>
                     ))}
-                  <TableRow>
-                    <TableCell className={classes.tableCell}>
-                      <Button
-                        type="button"
-                        onClick={() => !formik.values.rates.includes('') && arrayHelpers.push('')}
-                        style={{ color: '#50A75D' }}
-                      >
-                        <AddCircleOutline />
-                        Add Tier
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                  {formik.values.rates.length < 3 && (
+                    <TableRow>
+                      <TableCell className={classes.tableCell}>
+                        <Button
+                          type="button"
+                          onClick={() => !formik.values.rates.includes('') && arrayHelpers.push('')}
+                          style={{ color: '#50A75D' }}
+                        >
+                          <AddCircleOutline />
+                          Add Tier
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  )}
                   <TableRow>
                     <TableCell className={classes.tableCell}>
                       <ErrorMessage
