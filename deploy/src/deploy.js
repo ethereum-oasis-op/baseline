@@ -34,11 +34,13 @@ const deployContracts = async role => {
   console.log('✅  Shield deployed:', addresses.Shield);
 };
 
+//TODO: Add managers for Shield and Verifier contracts
 const assignManager = async role => {
   const { transactionHash } = await Organization.assignManager('OrgRegistry', role, role);
   console.log(`✅  Assigned the ${role} as the manager for OrgRegistry. TxHash:`, transactionHash);
 };
 
+//TODO: Add set interface implementers for Shield and Verifier contracts
 const setInterfaceImplementer = async role => {
   const roleAddress = await Wallet.getAddress(role);
   const { transactionHash } = await Organization.setInterfaceImplementer(
@@ -69,6 +71,19 @@ const register = async role => {
     organization.zkpPublicKey,
   );
   console.log(`✅  Registered ${role} in the OrgRegistry with tx hash:`, transactionHash);
+};
+
+const registerInterfaces = async role => {
+  const { transactionHash } = await Organization.registerOrgInterfaces(
+    role,
+    addresses.OrgRegistry,
+    'Radish34',
+    //TODO: Deploy ERC1155 token and add deployed token address here
+    '0x0000000000000000000000000000000000000000',
+    addresses.Shield,
+    addresses.Verifier
+  );
+  console.log(`✅  Registered interfaces for shield & verifier with OrgRegistry with tx hash:`, transactionHash);
 };
 
 const checkOrgCount = async () => {
@@ -102,6 +117,7 @@ const main = async () => {
   await register('buyer');
   await register('supplier1');
   await register('supplier2');
+  await registerInterfaces('buyer');
 
   await checkOrgCount();
   await checkOrgInfo('buyer');

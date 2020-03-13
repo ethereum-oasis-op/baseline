@@ -27,9 +27,9 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     struct OrgInterfaces {
         bytes32 groupName;
-        address tokenFactoryAddress;
+        address tokenAddress;
         address shieldAddress;
-        address verifierRegistryAddress;
+        address verifierAddress;
     }
 
     mapping (address => Org) orgMap;
@@ -135,22 +135,22 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     /// @notice Function to register the names of the interfaces associated with the OrgRegistry
     /// @param _groupName name of the working group registered by an organization
-    /// @param _tokenFactoryAddress name of the registered token interface
+    /// @param _tokenAddress name of the registered token interface
     /// @param _shieldAddress name of the registered shield registry interface
-    /// @param _verifierRegistryAddress name of the verifier registry interface
+    /// @param _verifierAddress name of the verifier registry interface
     /// @dev Function to register an organization's interfaces for easy lookup
     /// @return `true` upon successful registration of the organization's interfaces
     function registerInterfaces(
         bytes32 _groupName,
-        address _tokenFactoryAddress,
+        address _tokenAddress,
         address _shieldAddress,
-        address _verifierRegistryAddress
+        address _verifierAddress
     ) external returns (bool) {
         orgInterfaceMap[orgInterfaceCount] = OrgInterfaces(
             _groupName,
-            _tokenFactoryAddress,
+            _tokenAddress,
             _shieldAddress,
-            _verifierRegistryAddress
+            _verifierAddress
         );
         orgInterfaceCount++;
         return true;
@@ -194,9 +194,9 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         for (uint i = 0; i < orgInterfaceCount; i++) {
             OrgInterfaces storage orgInterfaces = orgInterfaceMap[i];
             gName[i] = orgInterfaces.groupName;
-            tfAddress[i] = orgInterfaces.tokenFactoryAddress;
+            tfAddress[i] = orgInterfaces.tokenAddress;
             sAddress[i] = orgInterfaces.shieldAddress;
-            vrAddress[i] = orgInterfaces.verifierRegistryAddress;
+            vrAddress[i] = orgInterfaces.verifierAddress;
         }
         return (
             gName,
