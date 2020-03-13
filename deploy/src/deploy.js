@@ -24,7 +24,7 @@ const deployContracts = async role => {
 
   addresses.Verifier = await Contract.deployContractWithLibraryLink(
     'Verifier',
-    [],
+    [addresses.ERC1820Registry],
     'BN256G2',
     role,
   );
