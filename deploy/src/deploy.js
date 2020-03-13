@@ -30,7 +30,7 @@ const deployContracts = async role => {
   );
   console.log('✅  Verifier deployed:', addresses.Verifier);
 
-  addresses.Shield = await Contract.deployContract('Shield', [addresses.Verifier], role);
+  addresses.Shield = await Contract.deployContract('Shield', [addresses.Verifier, addresses.ERC1820Registry], role);
   console.log('✅  Shield deployed:', addresses.Shield);
 };
 

@@ -1,11 +1,11 @@
 pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
-import "./ERC165Compatible.sol";
-import "./Registrar.sol";
-import "./IOrgRegistry.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/access/Roles.sol";
 
+import "./IOrgRegistry.sol";
+import "./Registrar.sol";
+import "./ERC165Compatible.sol";
+import "openzeppelin-solidity/contracts/access/Roles.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /// @dev Contract for maintaining organization registry
 /// Contract inherits from Ownable and ERC165Compatible
@@ -64,14 +64,22 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// in the org registry contract
     function setInterfaces() public onlyOwner returns (bool) {
         /// 0x54ebc817 is equivalent to the bytes4 of the function selectors in IOrgRegistry
-        supportedInterfaces[0x54ebc817] = true;
+        supportedInterfaces[this.registerOrg.selector ^
+                            this.registerInterfaces.selector ^
+                            this.getOrgs.selector ^
+                            this.getOrgCount.selector ^
+                            this.getInterfaceAddresses.selector] = true;
         return true;
     }
 
     /// @notice This function is a helper function to be able to get the
     /// set interface id by the setInterfaces()
     function getInterfaces() external pure returns (bytes4) {
-        return 0x54ebc817;
+        return this.registerOrg.selector ^
+                this.registerInterfaces.selector ^
+                this.getOrgs.selector ^
+                this.getOrgCount.selector ^
+                this.getInterfaceAddresses.selector;
     }
 
     /// @dev Since this is an inherited method from ERC165 Compatible, it returns the value of the interface id
