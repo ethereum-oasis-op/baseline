@@ -29,10 +29,10 @@ const useStyles = makeStyles(() => ({
 const UserSelection = () => {
   const classes = useStyles();
   const [data, setData] = useState({ status: 504 });
-  const apiURL = window.localStorage.getItem('api') || 'http://radish-api-buyer.docker/graphql';
+  const apiURL = window.localStorage.getItem('api') || 'http://radish34-api-buyer.docker/graphql';
   const user = window.localStorage.getItem('username') || 'Org1';
   const { settings } = useContext(ServerSettingsContext);
-  const { organizationAddress } = settings ? settings : {};
+  const { organizationAddress } = settings || {};
   console.log(`UI attached to ${data}`);
 
   const fetchHealthCheck = useCallback(async () => {
@@ -50,9 +50,9 @@ const UserSelection = () => {
 
   const handleChange = event => {
     const users = {
-      Org1: { url: 'radish-api-buyer.docker/graphql', role: 1 },
-      Supplier1: { url: 'radish-api-supplier1.docker/graphql', role: 2 },
-      Supplier2: { url: 'radish-api-supplier2.docker/graphql', role: 2 },
+      Org1: { url: 'radish34-api-buyer.docker/graphql', role: 1 },
+      Supplier1: { url: 'radish34-api-supplier1.docker/graphql', role: 2 },
+      Supplier2: { url: 'radish34-api-supplier2.docker/graphql', role: 2 },
     };
 
     window.location.reload(false);
