@@ -18,7 +18,7 @@ export default async () => {
   const messengerURI = process.env.MESSENGER_URI;
 
   try {
-    const loc = `${messengerURI}/identities`;
+    const loc = `${messengerURI}/api/v1/identities`;
     const messengerKey = await getIdentity(loc);
     console.log('Whisper key:', messengerKey);
   } catch (error) {

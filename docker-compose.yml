@@ -117,9 +117,9 @@ services:
       - zkp
     environment:
       RPC_PROVIDER: http://ganache:8545
-      MESSENGER_BUYER_URI: http://messenger-buyer:4001/api/v1
-      MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001/api/v1
-      MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001/api/v1
+      MESSENGER_BUYER_URI: http://messenger-buyer:4001
+      MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001
+      MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001
       ZKP_URL: http://zkp:80
     networks:
       - network-buyer
@@ -157,7 +157,7 @@ services:
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URI: 'http://messenger-buyer:4001/api/v1'
+      MESSENGER_URI: http://messenger-buyer:4001
       REDIS_URL: redis://redis-buyer:6379
       ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
@@ -192,7 +192,7 @@ services:
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URI: 'http://messenger-supplier1:4001/api/v1'
+      MESSENGER_URI: http://messenger-supplier1:4001
       REDIS_URL: redis://redis-supplier1:6379
       ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
@@ -226,7 +226,7 @@ services:
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
-      MESSENGER_URI: 'http://messenger-supplier2:4001/api/v1'
+      MESSENGER_URI: http://messenger-supplier2:4001
       REDIS_URL: redis://redis-supplier2:6379
       ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
@@ -409,7 +409,7 @@ services:
     environment:
       VIRTUAL_HOST: messenger-buyer.docker
       MONGO_URL: mongodb://mongo-buyer:27017/radish34
-      RADISH_API_URL: http://api-buyer:8101/api/v1
+      RADISH_API_URL: http://api-buyer:8101
       REDIS_URL: redis://redis-buyer:6379
     networks:
       - network-buyer
@@ -431,7 +431,7 @@ services:
     environment:
       VIRTUAL_HOST: messenger-supplier1.docker
       MONGO_URL: mongodb://mongo-supplier1:27017/radish34
-      RADISH_API_URL: http://api-supplier1:8101/api/v1
+      RADISH_API_URL: http://api-supplier1:8101
       REDIS_URL: redis://redis-supplier1:6379
     networks:
       - network-supplier1
@@ -453,7 +453,7 @@ services:
     environment:
       VIRTUAL_HOST: messenger-supplier2.docker
       MONGO_URL: mongodb://mongo-supplier2:27017/radish34
-      RADISH_API_URL: http://api-supplier2:8101/api/v1
+      RADISH_API_URL: http://api-supplier2:8101
       REDIS_URL: redis://redis-supplier2:6379
     networks:
       - network-supplier2
