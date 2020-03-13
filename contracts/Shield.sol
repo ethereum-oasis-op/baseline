@@ -5,13 +5,15 @@ Contract to enable the management of private fungible token (ERC-20) transaction
 
 pragma solidity ^0.5.8;
 
-import "./Ownable.sol";
+import "./ERC165Compatible.sol";
 import "./MerkleTree.sol";
-import "./VerifierInterface.sol";
-import "./ERC20Interface.sol";
+import "./IShield.sol";
+import "./IVerifier.sol";
+import "./Registrar.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
-
-contract Shield is Ownable, MerkleTree {
+contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     // ENUMS:
     enum TransactionTypes { CreateMSA, CreatePO }
 
@@ -29,8 +31,8 @@ contract Shield is Ownable, MerkleTree {
     event GasUsed(uint256 byShieldContract, uint256 byVerifierContract);
 
     // CONTRACT INSTANCES:
-    VerifierInterface private verifier; // the verification smart contract
-    ERC20Interface private erc20ContractInstance; // the  ERC-20 token contract
+    IVerifier private verifier; // the verification smart contract
+    IERC20 private erc20ContractInstance; // the  ERC-20 token contract
 
     // PRIVATE TRANSACTIONS' PUBLIC STATES:
     mapping(bytes32 => bytes32) public commitments; // store commitments
@@ -42,30 +44,61 @@ contract Shield is Ownable, MerkleTree {
     mapping(uint => uint256[]) public vks; // mapped to by an enum uint(TransactionTypes):
 
     // FUNCTIONS:
-    constructor(address _verifier) public {
-        _owner = msg.sender;
-        verifier = VerifierInterface(_verifier);
+    constructor(address _verifier, address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
+        owner();
+        verifier = IVerifier(_verifier);
+        setInterfaces();
+        setInterfaceImplementation("IShield", address(this));
+    }
+
+    function setInterfaces() public onlyOwner returns (bool) {
+        supportedInterfaces[this.changeVerifier.selector ^
+                            this.getVerifier.selector ^
+                            this.createMSA.selector ^
+                            this.createPO.selector] = true;
+        return true;
+    }
+
+    function getInterfaces() external pure returns (bytes4) {
+        return this.changeVerifier.selector ^
+                this.getVerifier.selector ^
+                this.createMSA.selector ^
+                this.createPO.selector;
+    }
+
+    function supportsInterface(bytes4 interfaceId) external view returns (bool) {
+        return supportedInterfaces[interfaceId];
+    }
+
+    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+        return ERC1820_ACCEPT_MAGIC;
+    }
+
+    function assignManager(address _oldManager, address _newManager) external {
+        assignManagement(_oldManager, _newManager);
     }
 
     /**
     self destruct
     */
-    function close() external onlyOwner {
-        selfdestruct(address(uint160(_owner)));
+    function close() external onlyOwner returns (bool) {
+        selfdestruct(address(uint160(owner())));
+        return true;
     }
 
     /**
     function to change the address of the underlying Verifier contract
     */
-    function changeVerifier(address _verifier) external onlyOwner {
-        verifier = VerifierInterface(_verifier);
+    function changeVerifier(address _verifier) external onlyOwner returns (bool) {
+        verifier = IVerifier(_verifier);
         emit VerifierChanged(_verifier);
+        return true;
     }
 
     /**
     returns the verifier-interface contract address that this shield contract is calling
     */
-    function getVerifier() public view returns (address) {
+    function getVerifier() external view returns (address) {
         return address(verifier);
     }
 
@@ -89,7 +122,7 @@ contract Shield is Ownable, MerkleTree {
         uint256[] calldata _proof,
         uint256[] calldata _inputs,
         bytes32 _newMSACommitment
-    ) external {
+    ) external returns (bool) {
 
         // gas measurement:
         uint256 gasCheckpoint = gasleft();
@@ -125,6 +158,7 @@ contract Shield is Ownable, MerkleTree {
         // gas measurement:
         gasUsedByShieldContract = gasUsedByShieldContract + gasCheckpoint - gasleft();
         emit GasUsed(gasUsedByShieldContract, gasUsedByVerifierContract);
+        return true;
     }
 
     /**
@@ -137,7 +171,7 @@ contract Shield is Ownable, MerkleTree {
         bytes32 _nullifierOfOldMSACommitment,
         bytes32 _newMSACommitment,
         bytes32 _newPOCommitment
-    ) external {
+    ) external returns(bool) {
 
         // gas measurement:
         uint256[3] memory gasUsed; // array needed to stay below local stack limit
@@ -183,5 +217,6 @@ contract Shield is Ownable, MerkleTree {
         // gas measurement:
         gasUsed[1] = gasUsed[1] + gasUsed[0] - gasleft();
         emit GasUsed(gasUsed[1], gasUsed[2]);
+        return true;
     }
 }

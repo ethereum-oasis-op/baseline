@@ -49,6 +49,30 @@ const setInterfaceImplementer = async (
   return transactionHash;
 };
 
+const registerOrgInterfaces = async (
+  msgSenderName,
+  orgRegistryAddress,
+  groupName,
+  tokenFactoryAddress,
+  shieldAddress,
+  verifierAddress
+) => {
+  const OrgRegistryMetadata = await Ethers.getContractMetadata(Paths.OrgRegistry);
+  const tx = await Ethers.getContractWithWallet(
+    OrgRegistryMetadata,
+    orgRegistryAddress,
+    process.env.RPC_PROVIDER,
+    Wallet.getPrivateKey(msgSenderName),
+  ).registerInterfaces(
+    utils.formatBytes32String(groupName),
+    tokenFactoryAddress,
+    shieldAddress,
+    verifierAddress
+  );
+  const transactionHash = { transactionHash: tx.hash };
+  return transactionHash;
+}
+
 const registerToOrgRegistry = async (
   msgSenderName,
   orgRegistryAddress,
@@ -59,6 +83,21 @@ const registerToOrgRegistry = async (
   zkpPublicKey,
 ) => {
   const OrgRegistryMetadata = await Ethers.getContractMetadata(Paths.OrgRegistry);
+  // we'll be calling the 'assignManager' method of OrgRegistry.sol:
+  //TODO: setInterfaceImplementer function can only be called once before being uncallable. If called again, the eventual call of ERC1820Registry's 'setManager' function would fail, because msg.sender would always be OrgRegistry's address, and not the current Manager.
+  /* let contractMetadata; 
+    switch (manageeName) {
+    case 'OrgRegistry':
+      contractMetadata = Ethers.getContractMetadata(Paths.OrgRegistry);
+      break;
+    case 'Shield':
+      contractMetadata = Ethers.getContractMetadata(Paths.Shield);
+      break;
+    case 'Verifier':
+      contractMetadata = Ethers.getContractMetadata(Paths.Verifier);
+    default:
+      break;
+  } */
   const tx = await Ethers.getContractWithWallet(
     OrgRegistryMetadata,
     orgRegistryAddress,
@@ -113,6 +152,7 @@ module.exports = {
   assignManager,
   setInterfaceImplementer,
   registerToOrgRegistry,
+  registerOrgInterfaces,
   getOrgCount,
   getOrgInfo,
 };

@@ -25,11 +25,13 @@ Harry R
 
 pragma solidity ^0.5.8;
 
-import "./Ownable.sol";
+import "./ERC165Compatible.sol";
 import "./Pairing.sol";
+import "./Registrar.sol";
+import "./IVerifier.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-
-contract Verifier is Ownable {
+contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
 
     using Pairing for *;
 
@@ -49,6 +51,28 @@ contract Verifier is Ownable {
     }
 
     Verification_Key_GM17 vk;
+
+    constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
+        setInterfaces();
+        setInterfaceImplementation("IVerifier", address(this));
+    }
+
+    function setInterfaces() public onlyOwner returns (bool) {
+        supportedInterfaces[this.verify.selector] = true;
+        return true;
+    }
+
+    function getInterfaces() external pure returns (bytes4) {
+        return this.verify.selector;
+    }
+
+    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+        return ERC1820_ACCEPT_MAGIC;
+    }
+
+    function assignManager(address _oldManager, address _newManager) external {
+        assignManagement(_oldManager, _newManager);
+    }
 
     function verify(
         uint256[] memory _proof,

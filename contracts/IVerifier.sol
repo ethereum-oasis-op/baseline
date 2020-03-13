@@ -1,5 +1,5 @@
 /**
-@title VerifierInterface
+@title IVerifier
 @dev Example Verifier Implementation
 @notice Do not use this example in any production code!
 */
@@ -7,7 +7,7 @@
 pragma solidity ^0.5.8;
 
 
-interface VerifierInterface {
+interface IVerifier {
 
     function verify(
         uint256[] calldata _proof,
