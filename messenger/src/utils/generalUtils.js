@@ -12,7 +12,7 @@ const {
   POW_TARGET,
 } = require('../clients/whisper/whisperUtils.js');
 
-const radishApiUrl = process.env.RADISH_API_URL || 'http://localhost:8101/api/v1';
+const radishApiUrl = process.env.RADISH_API_URL ? `${process.env.RADISH_API_URL}/api/v1` : 'http://localhost:8101/api/v1';
 
 function hasJsonStructure(str) {
   if (typeof str !== 'string') return false;
@@ -112,7 +112,7 @@ async function storeNewMessage(messageData, content) {
 }
 
 async function forwardMessage(messageObj) {
-  logger.info(`Forwarding message to radish-api: POST ${radishApiUrl}/documents`);
+  logger.info(`Forwarding message to api service: POST ${radishApiUrl}/documents`);
   try {
     const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
     logger.info(`SUCCESS: POST ${radishApiUrl}/documents`);

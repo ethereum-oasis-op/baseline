@@ -16,9 +16,9 @@ const getWhisperIdentities = async () => {
   }
 
   try {
-    const buyer = await getWhisperIdentity(`${MESSENGER_BUYER_URI}/identities`);
-    const supplier1 = await getWhisperIdentity(`${MESSENGER_SUPPLIER1_URI}/identities`);
-    const supplier2 = await getWhisperIdentity(`${MESSENGER_SUPPLIER2_URI}/identities`);
+    const buyer = await getWhisperIdentity(`${MESSENGER_BUYER_URI}/api/v1/identities`);
+    const supplier1 = await getWhisperIdentity(`${MESSENGER_SUPPLIER1_URI}/api/v1/identities`);
+    const supplier2 = await getWhisperIdentity(`${MESSENGER_SUPPLIER2_URI}/api/v1/identities`);
     console.log('✅  Retrieved all Whisper Identity for each user');
     whisperIdentities = {
       buyer,

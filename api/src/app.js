@@ -91,7 +91,7 @@ export default async function startServer() {
     typeDefs: [coreQuery, ...typeDefs],
     resolvers,
     context: async () => {
-      const { data } = await axios.get(`${process.env.MESSENGER_URI}/identities`);
+      const { data } = await axios.get(`${process.env.MESSENGER_URI}/api/v1/identities`);
       const identity = data && data[0] ? data[0].publicKey : null;
       return { identity };
     },
