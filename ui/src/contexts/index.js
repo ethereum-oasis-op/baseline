@@ -16,7 +16,7 @@ import { MSAProvider } from './msa-context';
 import { ToastrProvider } from './ToastrContext';
 import { PurchaseOrderProvider } from './purchase-order-context';
 
-let uri = 'radish-api-buyer.docker/graphql';
+let uri = 'radish34-api-buyer.docker/graphql';
 
 if (window.localStorage.getItem('api')) {
   uri = window.localStorage.getItem('api');
@@ -65,9 +65,7 @@ function AppProviders({ children }) {
               <RFPProvider>
                 <ProposalProvider>
                   <MSAProvider>
-                    <PurchaseOrderProvider>
-                      {children}
-                    </PurchaseOrderProvider>
+                    <PurchaseOrderProvider>{children}</PurchaseOrderProvider>
                   </MSAProvider>
                 </ProposalProvider>
               </RFPProvider>
