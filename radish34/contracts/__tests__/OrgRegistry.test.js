@@ -1,12 +1,12 @@
-import { getWallet, getAccounts, getSigner } from '../wallet';
+import { getWallet, getAccounts, getSigner } from '../src/wallet';
 // import Doppelganger from 'ethereum-doppelganger';
 import { ethers, utils } from 'ethers';
 
 
-import OrgRegistryArtifact from '../../artifacts/OrgRegistry.json';
-import RegistrarArtifact from '../../artifacts/Registrar.json';
-import ERC165CompatibleArtifact from '../../artifacts/ERC165Compatible.json';
-import ERC1820RegistryArtifact from '../../artifacts/ERC1820Registry.json';
+import OrgRegistryArtifact from '../artifacts/OrgRegistry.json';
+import RegistrarArtifact from '../artifacts/Registrar.json';
+import ERC165CompatibleArtifact from '../artifacts/ERC165Compatible.json';
+import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
 
 const wallet = getWallet();
 let orgRegistry, registrar, erc1820Registry;

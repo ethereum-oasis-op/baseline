@@ -1,0 +1,28 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "solidity contracts",
+  "main": "wallet.js",
+  "scripts": {
+    "test": "jest",
+    "build": "sol-compiler",
+    "build:watch": "sol-compiler --watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@0x/sol-compiler": "^4.0.8",
+    "@0x/sol-coverage": "^4.0.8",
+    "@0x/sol-profiler": "^4.0.8",
+    "@0x/sol-trace": "^3.0.8",
+    "ganache-core": "^2.10.2",
+    "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.8.7",
+    "openzeppelin-solidity": "^2.5.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}

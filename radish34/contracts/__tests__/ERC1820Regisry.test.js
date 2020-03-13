@@ -1,7 +1,7 @@
 import { ethers, utils } from 'ethers';
-import { getWallet, getAccounts, getSigner } from '../wallet';
-import ERC1820RegistryArtifact from '../../artifacts/ERC1820Registry.json';
-import SampleERC1820ImplementerArtifact from '../../artifacts/SampleERC1820Implementer.json';
+import { getWallet, getAccounts, getSigner } from '../src/wallet';
+import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
+//import SampleERC1820ImplementerArtifact from '../artifacts/SampleERC1820Implementer.json';
 
 const wallet = getWallet();
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";

@@ -1,16 +1,16 @@
 version: '3.5'
 
 services:
-  sol-compile:
-    build: ./
-    command: build:watch
-    volumes:
-      - ./contracts:/app/contracts:delegated
-      - ./artifacts:/app/artifacts:cached
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
+  # sol-compile:
+  #   build: ./
+  #   command: build:watch
+  #   volumes:
+  #     - ./contracts:/app/contracts:delegated
+  #     - ./artifacts:/app/artifacts:cached
+  #   networks:
+  #     - network-buyer
+  #     - network-supplier1
+  #     - network-supplier2
 
   jest:
     build: ./

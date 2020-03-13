@@ -22,7 +22,7 @@ const providerEngine = new Web3ProviderEngine();
 providerEngine.addProvider(new FakeGasEstimateSubprovider(4 * (10 ** 6))); 
 // Ganache does a poor job of estimating gas, so just crank it up for testing.
 providerEngine.addProvider(revertTraceSubprovider);
-providerEngine.addProvider(new RpcSubprovider({ rpcUrl: 'http://ganache:8545' }));
+providerEngine.addProvider(new RpcSubprovider({ rpcUrl: 'http://0.0.0.0:8545' }));
 providerEngine.addProvider(profilerSubprovider);
 providerEngine.addProvider(coverageSubprovider);
 providerUtils.startProviderEngine(providerEngine);

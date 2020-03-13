@@ -14,7 +14,6 @@
   "main": "src/app.js",
   "scripts": {
     "check": "node ./src/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "axios": "^0.19.0",
