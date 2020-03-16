@@ -4,7 +4,7 @@
 
 The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020 and launched as an [OASIS](https://oasis-open-projects.org/) open source project on \[ March X, 2020 \], supported by fourteen founding companies. More companies joined the effort shortly thereafter and continue to do so. \[Link to full list and roles.\]
 
-test test test test 
+test test test test
 
 The work of the community is maintained under a public domain license at  
 [**https://github.com/ethereum-oasis/baseline**](https://github.com/ethereum-oasis/baseline).
