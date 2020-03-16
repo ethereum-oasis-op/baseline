@@ -1,11 +1,12 @@
 pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
 
+//TODO: Use openzeppelin interfaces inside the timber service
 import "./IOrgRegistry.sol";
 import "./Registrar.sol";
 import "./ERC165Compatible.sol";
-import "openzeppelin-solidity/contracts/access/Roles.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./Roles.sol";
+import "./Ownable.sol";
 
 /// @dev Contract for maintaining organization registry
 /// Contract inherits from Ownable and ERC165Compatible

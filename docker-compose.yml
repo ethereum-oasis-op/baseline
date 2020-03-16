@@ -468,7 +468,7 @@ services:
       - ganache
     volumes: # ensure relative paths are correct if embedding this microservice in another application:
       - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
-      - ./contracts/shield:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+      - ./contracts:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
     ports:
       - 9000:80
     environment:
