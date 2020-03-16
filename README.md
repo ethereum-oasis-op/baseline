@@ -7,7 +7,7 @@
     <br/>
     secure and private business processes via the public Ethereum Mainnet.
   </p>
-  Read the full documentation <a href="https://radish.gitbook.io/docs/-LuE-E657uooMibsj9_Y/">here</a>.
+  Read the full documentation <a href="https://docs.baseline-protocol.org">here at docs.baseline-protocol.org</a>.
   <p>
     <em>Join our <a href="https://communityinviter.com/apps/ethereum-baseline/join-us">Slack workspace</a> for Baseline news and updates!</em>
   </p>
