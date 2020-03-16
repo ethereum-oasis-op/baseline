@@ -5,11 +5,11 @@ Contract to enable the management of private fungible token (ERC-20) transaction
 
 pragma solidity ^0.5.8;
 
-import "./ERC165Compatible.sol";
+import "../ERC165Compatible.sol";
 import "./MerkleTree.sol";
 import "./IShield.sol";
 import "./IVerifier.sol";
-import "./Registrar.sol";
+import "../Registrar.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 

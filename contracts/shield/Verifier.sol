@@ -25,9 +25,9 @@ Harry R
 
 pragma solidity ^0.5.8;
 
-import "./ERC165Compatible.sol";
+import "../ERC165Compatible.sol";
 import "./Pairing.sol";
-import "./Registrar.sol";
+import "../Registrar.sol";
 import "./IVerifier.sol";
 import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
