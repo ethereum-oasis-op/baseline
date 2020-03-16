@@ -1,8 +1,8 @@
 pragma solidity ^0.5.8;
-import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
+import "./ERC165.sol";
 
 contract ERC165Compatible is ERC165 {
-    mapping (bytes4 => bool) supportedInterfaces;
+    mapping(bytes4 => bool) supportedInterfaces;
 
     constructor() public {
         setInterfaces();
@@ -18,7 +18,11 @@ contract ERC165Compatible is ERC165 {
     ///  uses less than 30,000 gas.
     /// @return `true` if the contract implements `interfaceID` and
     ///  `interfaceID` is not 0xffffffff, `false` otherwise
-    function supportsInterface(bytes4 interfaceID) external view returns (bool){
+    function supportsInterface(bytes4 interfaceID)
+        external
+        view
+        returns (bool)
+    {
         return supportedInterfaces[interfaceID];
     }
 }

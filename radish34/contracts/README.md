@@ -92,19 +92,24 @@ From the perspective of the procurement process, the key interactions are as fol
 
 ## How can I run it?
 
-All smart contracts contained in this directory, are compiled as part of the build process: `docker-compose build`. This process inherently leverages the `sol-compile` service, which watches for the directory changes and compiles the solidity code to EVM bytecode and ABI definitions, which get stored in `artifacts/`.
+All smart contracts contained in this directory, are compiled as part of the build process: `npm run build`. This process inherently leverages the `sol-compile` service, which compiles the solidity code to EVM bytecode and ABI definitions and stores them in `artifacts/`.
 
-To deploy the contracts, there is a deployment script that deploys these contracts using the artifacts of compilation process above, to a given network. This can be run by executing the following instruction on root of the parent folder: `npm run deploy`.
+To deploy the contracts, there is a deployment script that deploys these contracts using the artifacts of compilation process above, to a given network. This can be run by executing the following instruction on **root** of the parent folder: `npm run deploy`.
 
 When the Radish34 system is initialized, all smart contracts are deployed and registered with the ERC1820Registry. During the bootstrap process, a script deploys the contracts and prepares them for interaction during on-going procurement processes. In Radish34, the system of smart contracts is scoped to a particular network or workgroup of participants. However, other interfaces can be defined and leveraged for a set of participants and, by extension, any form of global interfaces can be registered/deployed for different business needs and type/set of participants.
 
-To run the tests...
+### To run the tests...
 
-All smart contract based tests are contained in `__tests__` directory under this directory. There is a service called `jest`, which watches for any `.test.js` files, and executes the test cases. To check the running of these tests, execute `docker-compose logs -f jest` to check the test logs.
+All smart contract based tests are contained in `__tests__` directory under this directory. There is a service called `jest`, which looks for any `.test.js` files, and runs the test cases. Execute the following series of commands to run the tests:
+```shell
+npm run build
+docker-compose up ganache
+npm run test
+```
 
 ## What is the architecture? 
 
-![Architecture of smart contracts](../docs/assets/SmartContractArch.png)
+![Architecture of smart contracts](../../docs/assets/SmartContractArch.png)
 The system of smart contracts in Radish34 can be explained in the form of the following higher level patterns or groupings
 of the various smart contracts
 

@@ -29,10 +29,9 @@ import "./ERC165Compatible.sol";
 import "./Pairing.sol";
 import "./Registrar.sol";
 import "./IVerifier.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "./Ownable.sol";
 
 contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
-
     using Pairing for *;
 
     struct Proof_GM17 {
@@ -52,7 +51,12 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
 
     Verification_Key_GM17 vk;
 
-    constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
+    constructor(address _erc1820)
+        public
+        Ownable()
+        ERC165Compatible()
+        Registrar(_erc1820)
+    {
         setInterfaces();
         setInterfaceImplementation("IVerifier", address(this));
     }
@@ -66,7 +70,10 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         return this.verify.selector;
     }
 
-    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+    function canImplementInterfaceForAddress(
+        bytes32 interfaceHash,
+        address addr
+    ) external view returns (bytes32) {
         return ERC1820_ACCEPT_MAGIC;
     }
 
@@ -90,15 +97,17 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         uint256[] memory _proof,
         uint256[] memory _inputs,
         uint256[] memory _vk
-    ) public returns (uint) {
-
+    ) public returns (uint256) {
         Proof_GM17 memory proof;
         Pairing.G1Point memory vk_dot_inputs;
 
         vk_dot_inputs = Pairing.G1Point(0, 0); //initialise
 
         proof.A = Pairing.G1Point(_proof[0], _proof[1]);
-        proof.B = Pairing.G2Point([_proof[2], _proof[3]], [_proof[4], _proof[5]]);
+        proof.B = Pairing.G2Point(
+            [_proof[2], _proof[3]],
+            [_proof[4], _proof[5]]
+        );
         proof.C = Pairing.G1Point(_proof[6], _proof[7]);
 
         vk.H = Pairing.G2Point([_vk[0], _vk[1]], [_vk[2], _vk[3]]);
@@ -107,16 +116,22 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         vk.Ggamma = Pairing.G1Point(_vk[10], _vk[11]);
         vk.Hgamma = Pairing.G2Point([_vk[12], _vk[13]], [_vk[14], _vk[15]]);
 
-        vk.query.length = (_vk.length - 16)/2;
-        uint j = 0;
-        for (uint i = 16; i < _vk.length; i += 2) {
-            vk.query[j++] = Pairing.G1Point(_vk[i], _vk[i+1]);
+        vk.query.length = (_vk.length - 16) / 2;
+        uint256 j = 0;
+        for (uint256 i = 16; i < _vk.length; i += 2) {
+            vk.query[j++] = Pairing.G1Point(_vk[i], _vk[i + 1]);
         }
 
-        require(_inputs.length + 1 == vk.query.length, "Length of inputs[] or vk.query is incorrect!");
+        require(
+            _inputs.length + 1 == vk.query.length,
+            "Length of inputs[] or vk.query is incorrect!"
+        );
 
-        for (uint i = 0; i < _inputs.length; i++)
-            vk_dot_inputs = Pairing.addition(vk_dot_inputs, Pairing.scalar_mul(vk.query[i + 1], _inputs[i]));
+        for (uint256 i = 0; i < _inputs.length; i++)
+            vk_dot_inputs = Pairing.addition(
+                vk_dot_inputs,
+                Pairing.scalar_mul(vk.query[i + 1], _inputs[i])
+            );
 
         vk_dot_inputs = Pairing.addition(vk_dot_inputs, vk.query[0]);
 
@@ -125,14 +140,32 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
          *                              * e(C, H)
          * where psi = \sum_{i=0}^l input_i pvk.query[i]
          */
-        if (!Pairing.pairingProd4(vk.Galpha, vk.Hbeta, vk_dot_inputs, vk.Hgamma, proof.C, vk.H, Pairing.negate(Pairing.addition(proof.A, vk.Galpha)), Pairing.addition2(proof.B, vk.Hbeta))) {
+        if (
+            !Pairing.pairingProd4(
+                vk.Galpha,
+                vk.Hbeta,
+                vk_dot_inputs,
+                vk.Hgamma,
+                proof.C,
+                vk.H,
+                Pairing.negate(Pairing.addition(proof.A, vk.Galpha)),
+                Pairing.addition2(proof.B, vk.Hbeta)
+            )
+        ) {
             return 1;
         }
 
         /**
          * e(A, H^{gamma}) = e(G^{gamma}, B)
          */
-        if (!Pairing.pairingProd2(proof.A, vk.Hgamma, Pairing.negate(vk.Ggamma), proof.B)) {
+        if (
+            !Pairing.pairingProd2(
+                proof.A,
+                vk.Hgamma,
+                Pairing.negate(vk.Ggamma),
+                proof.B
+            )
+        ) {
             return 2;
         }
 

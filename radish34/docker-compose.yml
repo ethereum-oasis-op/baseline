@@ -1,33 +1,6 @@
 version: '3.5'
 
 services:
-  # sol-compile:
-  #   build: ./
-  #   command: build:watch
-  #   volumes:
-  #     - ./contracts:/app/contracts:delegated
-  #     - ./artifacts:/app/artifacts:cached
-  #   networks:
-  #     - network-buyer
-  #     - network-supplier1
-  #     - network-supplier2
-
-  jest:
-    build: ./
-    command: test:watch
-    volumes:
-      - ./contracts/contracts:/app/contracts:delegated
-      - ./contracts/artifacts:/app/artifacts:delegated
-      - ./babel.config.json:/app/babel.config.json:delegated
-      - ./compiler.json:/app/compiler.json:delegated
-      # - ./radish-api/dist/utils:/app/utils:delegated
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-    depends_on:
-      - ganache
-
   ganache:
     image: trufflesuite/ganache-cli:latest
     command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0xdad57e191799c38233bb7897f5ca66eb42d4f2f6d05ec657f8121b57e5d3bde6, 1000000000000000000000" --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 10000000
@@ -468,7 +441,7 @@ services:
       - ganache
     volumes: # ensure relative paths are correct if embedding this microservice in another application:
       - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
-      - ./contracts/contracts/shield:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+      - ./contracts/contracts:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
     ports:
       - 9000:80
     environment:
