@@ -16,8 +16,8 @@ services:
     build: ./
     command: test:watch
     volumes:
-      - ./contracts:/app/contracts:delegated
-      - ./artifacts:/app/artifacts:delegated
+      - ./contracts/contracts:/app/contracts:delegated
+      - ./contracts/artifacts:/app/artifacts:delegated
       - ./babel.config.json:/app/babel.config.json:delegated
       - ./compiler.json:/app/compiler.json:delegated
       # - ./radish-api/dist/utils:/app/utils:delegated
@@ -128,7 +128,7 @@ services:
     volumes:
       - ./deploy/src:/app/src:delegated
       - ./deploy/package.json:/app/package.json:delegated
-      - ./artifacts:/app/artifacts:delegated
+      - ./contracts/artifacts:/app/artifacts:delegated
       - ./config/keystore:/keystore:delegated
       - ./config:/app/src/config
 
@@ -144,7 +144,7 @@ services:
       - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/buyer.eth:/keystore/account.eth
       - ./config/config-buyer.json:/app/config/default.json
-      - ./artifacts:/app/artifacts:delegated
+      - ./contracts/artifacts:/app/artifacts:delegated
     depends_on:
       - api-watch
       - mongo-buyer
@@ -179,7 +179,7 @@ services:
       - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier1.eth:/keystore/account.eth
       - ./config/config-supplier1.json:/app/config/default.json
-      - ./artifacts:/app/artifacts:delegated
+      - ./contracts/artifacts:/app/artifacts:delegated
     depends_on:
       - api-watch
       - mongo-supplier1
@@ -214,7 +214,7 @@ services:
       - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier2.eth:/keystore/account.eth
       - ./config/config-supplier2.json:/app/config/default.json
-      - ./artifacts:/app/artifacts:delegated
+      - ./contracts/artifacts:/app/artifacts:delegated
     depends_on:
       - api-watch
       - mongo-supplier2
@@ -468,7 +468,7 @@ services:
       - ganache
     volumes: # ensure relative paths are correct if embedding this microservice in another application:
       - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
-      - ./contracts/shield:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+      - ./contracts/contracts/shield:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
     ports:
       - 9000:80
     environment:

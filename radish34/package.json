@@ -25,8 +25,7 @@
     ]
   },
   "scripts": {
-    "build": "sol-compiler",
-    "build:watch": "sol-compiler --watch",
+    "build:contracts": "cd contracts && npm run build",
     "deploy": "docker-compose run --rm deploy sh deploy.sh",
     "deploy:all": "docker-compose run -e MODE='register-all' --rm radish-deploy sh deploy.sh",
     "docs:build": "bin/docs_build.sh",

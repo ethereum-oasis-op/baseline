@@ -4,9 +4,8 @@
   "description": "solidity contracts",
   "main": "wallet.js",
   "scripts": {
-    "test": "jest",
-    "build": "sol-compiler",
-    "build:watch": "sol-compiler --watch"
+    "test": "jest --runInBand --forceExit",
+    "build": "sol-compiler"
   },
   "author": "",
   "license": "ISC",
