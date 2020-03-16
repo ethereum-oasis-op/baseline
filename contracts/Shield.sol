@@ -5,13 +5,14 @@ Contract to enable the management of private fungible token (ERC-20) transaction
 
 pragma solidity ^0.5.8;
 
+//TODO: Use openzeppelin interfaces inside the timber service
 import "./ERC165Compatible.sol";
 import "./MerkleTree.sol";
 import "./IShield.sol";
 import "./IVerifier.sol";
 import "./Registrar.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "./Ownable.sol";
+import "./ERC20Interface.sol";
 
 contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     // ENUMS:
@@ -32,7 +33,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
 
     // CONTRACT INSTANCES:
     IVerifier private verifier; // the verification smart contract
-    IERC20 private erc20ContractInstance; // the  ERC-20 token contract
+    ERC20Interface private erc20ContractInstance; // the  ERC-20 token contract
 
     // PRIVATE TRANSACTIONS' PUBLIC STATES:
     mapping(bytes32 => bytes32) public commitments; // store commitments
