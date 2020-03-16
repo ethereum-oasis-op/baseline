@@ -14,6 +14,7 @@ const ToastrProvider = ({ children }) => {
       userAddress,
     },
   });
+
   const [toastrOpen, showToastr] = useState(false);
   const [toastr, setToastr] = useState({});
 
@@ -31,6 +32,7 @@ const ToastrProvider = ({ children }) => {
 
   useEffect(() => {
     if (data && data.onNotification) {
+      setToastr({});
       const { message, success } = data.onNotification;
       displayToastr(message, success ? 'success' : 'error');
     }
