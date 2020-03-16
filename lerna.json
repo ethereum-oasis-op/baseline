@@ -1,0 +1,7 @@
+{
+  "packages": [
+    "radish34/*", 
+    "baseline/*"
+  ],
+  "version": "independent"
+}
