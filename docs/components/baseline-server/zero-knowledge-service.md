@@ -16,9 +16,7 @@ The Baseline Protocol open source community is helping to build ...
 
 Here's where you can see the current state of the work on the zk service.
 
-
-
 ## Zero Knowledge Circuits and the Standards Opportunity
 
-As the Radish34 POC shows, the somewhat more expensive \(if roughly $0.24 per proof is expensive\) process of enforcing the correctness of a code Package 
+As the Radish34 POC shows, the somewhat more expensive \(if roughly $0.24 per proof is expensive\) process of enforcing the correctness of a code Package
 

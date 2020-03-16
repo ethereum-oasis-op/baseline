@@ -6,7 +6,7 @@ description: 'After migration to /baseline, point this file to /radish34 readme.
 
 If you’ve read the [Radish34 Explained](radish34.md) section or played with the [user experience demo](demo.md) and now want to build and run the POC yourself, you’re in the right place.
 
-### Prerequisites
+## Prerequisites
 
 1. Install [Docker for Mac](https://www.docker.com/docker-mac), or [Docker for Windows](https://www.docker.com/docker-windows)
    * It's recommended that you allocate 12GB of RAM in Docker \(see 'Troubleshooting'\).
@@ -20,7 +20,7 @@ After you've done that, log in to the Github package registry by running
 
 `docker login -u <your-username> -p <the-token-you-just-generated> docker.pkg.github.com`
 
-### Development/Test Environment
+## Development/Test Environment
 
 1. As part of the development environment, we assume a procurement use-case with three users: \(1\) buyer and \(2\) supplier organizations.
 2. Run `npm ci && npm run postinstall`. \*\* This takes about 6 minutes to clean install npm packages in root and all sub directories \*\*
@@ -176,7 +176,7 @@ radish-34_radish-zkp_1 is up-to-date
 5. Run integration tests: `npm run test`
 6. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
 
-### Troubleshooting
+## Troubleshooting
 
 1. If you get errors during the `npm ci` step, please ensure that you are running node version `11`. The `nvm` \(node version manager\) tool allows you to easily switch between versions:
 
@@ -195,7 +195,7 @@ nvm use 11
    * Check the memory usage by running `docker stats`
    * If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` \(default is `2.0GiB`\).
 
-#### Front-end Environment
+### Front-end Environment
 
 1. When the above setup is run successfully, the UI is ready at `http://radish34-ui.docker`
 2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `radish34-ui` container. Example Logs:

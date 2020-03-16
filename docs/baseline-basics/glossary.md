@@ -2,13 +2,13 @@
 
 ## Baseline Protocol
 
-A set of components and procedures that allows separate systems of record to maintain record consistency and workflow integrity by using the public Ethereum Mainnet as a common frame of reference \(CFR\). 
+A set of components and procedures that allows separate systems of record to maintain record consistency and workflow integrity by using the public Ethereum Mainnet as a common frame of reference \(CFR\).
 
 ## **Mainnet**
 
-The Mainnet is an always-on state machine that is maintained as a public good in such a way that it maximizes the resistance to an individual or group to gain control, lock out users from valid functions, or change history. The Mainnet is capitalized to emphasize its relationship to the Internet.   
-  
-Used without capitalization to distinguish a public production network from public testnets. For example, the Ethereum mainnet vs. its testnets, such as Ropsten.  
+The Mainnet is an always-on state machine that is maintained as a public good in such a way that it maximizes the resistance to an individual or group to gain control, lock out users from valid functions, or change history. The Mainnet is capitalized to emphasize its relationship to the Internet.
+
+Used without capitalization to distinguish a public production network from public testnets. For example, the Ethereum mainnet vs. its testnets, such as Ropsten.
 
 ## Middleware
 
@@ -16,7 +16,7 @@ There are many forms of middleware. We use the term in the context of the Baseli
 
 ## Atomic Compartmentalization
 
-Even counterparties to the same business-to-business Workflow typically must not have access to -- or even awareness of -- processes that they are not directly involved in.  
+Even counterparties to the same business-to-business Workflow typically must not have access to -- or even awareness of -- processes that they are not directly involved in.
 
 ## Workflow
 
@@ -37,6 +37,4 @@ lorem ipsum
 ## CodeBook =&gt; Package
 
 During the Radish34 project, the notion of a shared "codebook" was often discussed. This is ...
-
-
 

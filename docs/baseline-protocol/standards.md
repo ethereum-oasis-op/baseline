@@ -18,15 +18,11 @@ Requirements, and non-functional requirements in particular, are meaningful only
 
 ## Functional Requirements
 
-
-
 ## Non-Functional Requirements
-
-
 
 ## Abstract
 
-This document, the Baseline Specification, defines the implementation requirements for maintaining data consistency and workflow continuity \(with atomic compartmentalization\) among sets of state machines that are operated by different [Parties](). The Baseline Specification assumes the use of a public Mainnet as the necessary common frame of reference to achieve this, and it uses the public Ethereum [Mainnet ]()as the reference implementation.  
+This document, the Baseline Specification, defines the implementation requirements for maintaining data consistency and workflow continuity \(with atomic compartmentalization\) among sets of state machines that are operated by different [Parties](standards.md). The Baseline Specification assumes the use of a public Mainnet as the necessary common frame of reference to achieve this, and it uses the public Ethereum [Mainnet ](standards.md)as the reference implementation.
 
 > When two or more machines store data and run business logic in a verified state of consistency, enabled by using the Mainnet as a common frame of reference, then the machines, data and code are said to be _baselined_.
 
@@ -38,7 +34,7 @@ The Baseline Specification is in draft and currently does not have a version num
 
 It is expected, at time of writing, that this specification will be released in the second quarter of 2020.
 
-Send comments to the EEA Mainnet Working Group at https://entethalliance.org/contact/.
+Send comments to the EEA Mainnet Working Group at [https://entethalliance.org/contact/](https://entethalliance.org/contact/).
 
 GitHub Issues [https://github.com/ethereum-oasis/baseline](https://github.com/ethereum-oasis/baseline) are preferred for discussion of this specification.
 
@@ -50,7 +46,7 @@ tbd
 
 It is generally understood that state machines, from a simple database to various forms of enterprise systems of record, require a common frame of reference when they need to maintain consistency and continuity with other state machines. The field of distributed systems provides for several patterns that accomplish this, each involving tradeoffs.
 
-The pattern defined here is predicated on the use of a state machine as a common frame of reference between two or more systems. 
+The pattern defined here is predicated on the use of a state machine as a common frame of reference between two or more systems.
 
 ## Conformance
 
