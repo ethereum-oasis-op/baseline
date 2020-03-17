@@ -36,6 +36,7 @@
   * [Zero Knowledge Service](components/baseline-server/zero-knowledge-service.md)
   * [APIs](components/baseline-server/apis.md)
 * [On-Chain Functions](components/on-chain.md)
+* [UI Integration](components/ui-integration.md)
 
 ## Baselining Your Product <a id="baselining"></a>
 
