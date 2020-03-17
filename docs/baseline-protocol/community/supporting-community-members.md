@@ -8,5 +8,5 @@ Link to OASIS resources and/or list here
 
 ## New Contributors on March 19, 2020
 
-Aztec, ConsenSys Health, [Anyblock Analytics GmbH](https://anyblockanalytics.com), [Ocyan Cloud Technology LTD](https://ocyan.com)
+Aztec, ConsenSys Health, [Anyblock Analytics GmbH](https://anyblockanalytics.com), [Ocyan Cloud Technology LTD](https://ocyan.com), [Digital Scarcity](http://digitalscarcity.io/), 
 
