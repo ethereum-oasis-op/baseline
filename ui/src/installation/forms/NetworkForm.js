@@ -40,8 +40,10 @@ const options = [
 const ChooseNetworkForm = () => {
   const classes = useStyles();
   const { setRPCProvider, settings } = useContext(ServerSettingsContext);
-  if (!settings) { return <div>No settings</div>}
-  
+  if (!settings) {
+    return <div>No settings</div>;
+  }
+
   const { rpcProvider } = settings;
 
   const onSubmit = async ({ networkId, customRPCURL }) => {
@@ -54,7 +56,7 @@ const ChooseNetworkForm = () => {
     });
   };
 
-  console.log('NETWORK FORM', { settings })
+  console.log('NETWORK FORM', { settings });
   console.log({ rpcProvider });
 
   return (

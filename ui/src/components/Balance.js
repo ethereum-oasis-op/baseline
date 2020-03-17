@@ -3,24 +3,21 @@ import { makeStyles } from '@material-ui/core/styles';
 import { ServerStatusProvider, ServerStatusContext } from '../contexts/server-status-context';
 
 const useStyles = makeStyles(() => ({
-  root: {
-  },
+  root: {},
 }));
 
 const RenderBalance = () => {
   const classes = useStyles();
-  const { status, loading} = useContext(ServerStatusContext);
+  const { status, loading } = useContext(ServerStatusContext);
 
-  if(loading) { return <div>Loading</div>}
+  if (loading) {
+    return <div>Loading</div>;
+  }
 
-  return (
-    <span className={`balance ${classes.root}`}>
-      {status.balance}
-    </span>
-  );
-}
+  return <span className={`balance ${classes.root}`}>{status.balance}</span>;
+};
 
-const Balance = () => {  
+const Balance = () => {
   return (
     <ServerStatusProvider>
       <RenderBalance />

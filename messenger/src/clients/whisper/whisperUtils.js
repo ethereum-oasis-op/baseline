@@ -26,8 +26,24 @@ async function sendPrivateMessage(
   }
   const web3 = await web3utils.getWeb3();
   const content = await web3.utils.fromAscii(messageString);
-  const whisperId = await Identity.findOne({ _id: senderId });
+  let whisperId;
+  console.log('TESTING THIS OUT', senderId,
+    recipientId,
+    DEFAULT_TOPIC,
+    messageContent);
+
+  console.log('-----------------');
+  const t = await Identity.findOne({});
+  console.log('SENDER ID?', senderId);
+  console.log('ALL IDENTITIES', t);
+  try {
+    whisperId = await Identity.findOne({ _id: senderId });
+    console.log('WHISPER ID?', senderId, whisperId);
+  } catch (error) {
+    console.log('error retreiving id:', error);
+  }
   let hash;
+  console.log('WHISPER ID?', whisperId);
   try {
     hash = await web3.shh.post({
       pubKey: recipientId,

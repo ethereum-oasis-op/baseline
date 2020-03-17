@@ -10,7 +10,7 @@ export const PROPOSAL_ATTRIBUTES = gql`
       price
       unitOfMeasure
     }
-    erc20ContractAddress
+    # erc20ContractAddress
     sender
   }
 `;
@@ -33,13 +33,28 @@ export const GET_ALL_PROPOSALS = gql`
   ${PROPOSAL_ATTRIBUTES}
 `;
 
-export const GET_PROPOSALS_BY_RFPID = gql`
-  query proposal($rfpId: String!) {
-    getProposalsByRFPId(rfpId: $rfpId) {
+// export const GET_PROPOSALS_BY_RFPID = gql`
+//   query proposal($rfpId: String!) {
+//     getProposalsByRFPId(rfpId: $rfpId) {
+//       ...PROPOSAL_ATTRIBUTES
+//     }
+//   }
+//   ${PROPOSAL_ATTRIBUTES}
+// `;
+
+export const GET_PROPOSAL_BY_RFPID_FOR_SUPPLIER = gql`
+  query GetProposalByRFPIdForSupplier($rfpId: String!, $supplierId: String!) {
+    proposal: getProposalByRFPIdForSupplier(rfpId: $rfpId, supplierId: $supplierId) {
       ...PROPOSAL_ATTRIBUTES
     }
   }
   ${PROPOSAL_ATTRIBUTES}
+`;
+
+export const GET_PROPOSAL_BY_RFPID_FOR_SUPPLIER_UPDATE = gql`
+  subscription GetProposalByRFPIdForSupplierUpdate($rfpId: String!, $supplierId: String!) {
+    proposal: getProposalByRFPIdForSupplierUpdate(rfpId: $rfpId, supplierId: $supplierId)
+  }
 `;
 
 export const CREATE_PROPOSAL = gql`
@@ -61,8 +76,8 @@ export const GET_PROPOSAL = gql`
 `;
 
 export const GET_PROPOSAL_BY_RFP_AND_SUPPLIER = gql`
-  query proposal($sender: String! $rfpId: String!) {
-    getProposalByRFPAndSupplier(sender: $sender rfpId: $rfpId) {
+  query proposal($sender: String!, $rfpId: String!) {
+    getProposalByRFPAndSupplier(sender: $sender, rfpId: $rfpId) {
       ...PROPOSAL_ATTRIBUTES
     }
   }

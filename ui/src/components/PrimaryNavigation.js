@@ -55,25 +55,27 @@ const useStyles = makeStyles(theme => ({
 export default function PrimaryNavigation() {
   const classes = useStyles();
   const { settings, loadingSettings } = useContext(ServerSettingsContext);
-  if (loadingSettings || !settings) { return <Loading/> }
-  const { organizationAddress, organizationName, organizationRole } = settings;
-  const theme = organizationRole === 1 ? 'dark' : 'light';
+  if (loadingSettings || !settings) {
+    return <Loading />;
+  }
+  const { messengerKey, name, role } = settings.organization;
+  const theme = role === 1 ? 'dark' : 'light';
   const logo = theme === 'dark' ? RadishLogoDark : RadishLogoLight;
-
+  
   return (
     <div>
       <AppBar className={`${classes.appBar} ${classes[theme]}`} position="fixed" elevation={0}>
         <Toolbar>
           <Link to="/">
             <div className={`logo-wrapper ${classes.logoWrapper}`}>
-              <img className={`logo-image ${classes.logoImage}`} src={logo} alt="Radish Logo" />
+              <img className={`logo-image ${classes.logoImage}`} src={logo} alt="Logo" />
               <Typography className={`logo-text ${classes.logoText}`} variant="h6" noWrap>
-                {organizationName}
+                {name}
               </Typography>
               <Chip
                 className={`org-address ${classes.orgAddress}`}
                 size="small"
-                label={organizationAddress}
+                label={messengerKey}
               />
               <Balance />
             </div>

@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
     paddingTop: 0,
     '.MuiFormControl-root': {
       margin: 0,
-    }
+    },
   },
   createNewButton: {
     border: '1px solid red',
@@ -96,13 +96,13 @@ const useStyles = makeStyles(() => ({
 
 const categories = [
   { label: 'RFPs', key: 'rfp', url: '/notices/rfp' },
-  { label: 'Proposals', key: 'proposal', url: '/notices/proposal'},
+  { label: 'Proposals', key: 'proposal', url: '/notices/proposal' },
   {
     label: 'Purchase Orders',
     key: 'po',
     url: '/notices/purchase-order',
   },
-  { label: 'Invoices', key: 'invoice', url: '/notices/invoice'},
+  { label: 'Invoices', key: 'invoice', url: '/notices/invoice' },
   // { label: 'MSA', key: 'msa', url: '/notices/msa', icon: DescriptionIcon },
   // { label: "Procurement Requests", key: "procurementRequest", url: "/notices/procurementrequest", icon: LibraryBooksIcon },
 ];
@@ -120,10 +120,11 @@ const Category = ({ icon: Icon, label, items = [], name, url, selected }) => {
         activeClassName={classes.selected}
         isActive={() => selected}
       >
-        { Icon
-          ? <Icon className={classes.icon} />
-          : <div className={`${classes.dot} dot-${name}`} />
-        }
+        {Icon ? (
+          <Icon className={classes.icon} />
+        ) : (
+          <div className={`${classes.dot} dot-${name}`} />
+        )}
         <div className={classes.label}>{label}</div>
         <div className={classes.count}>{unresolved.length ? unresolved.length : null}</div>
       </NavLink>

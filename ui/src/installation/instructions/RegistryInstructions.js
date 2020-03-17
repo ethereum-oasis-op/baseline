@@ -8,7 +8,12 @@ const RegisterInstructions = () => {
       <p>Please select from the available Registries</p>
       <Divider />
       <h2>Why do I need to connect to a Registry?</h2>
-      <p>In order to perserve continuity, consistency, compartmentalization, cornucopias, cactus and Christopher Columbus, we need to establish a connection to the Ethereum blockchain. By doing so, Blockchain creates magic and you can be sure that all of your data is accurate and matches your partners.</p>
+      <p>
+        In order to perserve continuity, consistency, compartmentalization, cornucopias, cactus and
+        Christopher Columbus, we need to establish a connection to the Ethereum blockchain. By doing
+        so, Blockchain creates magic and you can be sure that all of your data is accurate and
+        matches your partners.
+      </p>
     </div>
   );
 };

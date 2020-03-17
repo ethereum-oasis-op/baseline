@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useFormik, FormikProvider} from 'formik';
+import { useFormik, FormikProvider } from 'formik';
 import Button from '@material-ui/core/Button';
 import * as Yup from 'yup';
 import Grid from '@material-ui/core/Grid';
@@ -33,33 +33,30 @@ const WalletForm = () => {
   const { state, setWalletFromMnemonic } = useContext(ServerSettingsContext);
 
   const formik = useFormik({
-    initialValues: {
-    },
+    initialValues: {},
     onSubmit: async values => {
       const { path } = values;
-      let words = [];
-      for(i=1; i <= 12 ; i++){
+      const words = [];
+      for (i = 1; i <= 12; i++) {
         words.push(values[`word-${i}`]);
       }
-      const mnemonic = words.join(" ");
-      await setWalletFromMnemonic({ variables: { mnemonic, path }});
+      const mnemonic = words.join(' ');
+      await setWalletFromMnemonic({ variables: { mnemonic, path } });
     },
-    validationSchema: Yup.object().shape({
-    }),
+    validationSchema: Yup.object().shape({}),
   });
-
 
   const onPaste = event => {
     const pastedText = event.clipboardData.getData('Text');
-    const words = pastedText.split(" ");
+    const words = pastedText.split(' ');
     event.preventDefault();
-    for(i=0; i < words.length; i++){
-      formik.setFieldValue(`word-${i+1}`, words[i]);
+    for (i = 0; i < words.length; i++) {
+      formik.setFieldValue(`word-${i + 1}`, words[i]);
     }
-  }
+  };
 
   const mnemonicFields = [];
-  for( var i = 1; i <= 12; i++) {
+  for (var i = 1; i <= 12; i++) {
     mnemonicFields.push(
       <TextField
         onChange={formik.handleChange}
@@ -67,7 +64,7 @@ const WalletForm = () => {
         name={`word-${i}`}
         className={classes.field}
         onPaste={onPaste}
-      />
+      />,
     );
   }
 
@@ -99,11 +96,14 @@ const WalletForm = () => {
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <div>You can either let the API generate it's own ethereum address or you can provide a mnemonic for an existing account.</div>
+          <div>
+            You can either let the API generate it's own ethereum address or you can provide a
+            mnemonic for an existing account.
+          </div>
           <div>Please note, you will need at least 50 (?) ethereum in the account.</div>
         </Grid>
-        { state === 'nowallet' ? mnemonicForm() : null }
-        { state === 'nobalance' ? balanceWarning() : null }
+        {state === 'nowallet' ? mnemonicForm() : null}
+        {state === 'nobalance' ? balanceWarning() : null}
       </Grid>
     </div>
   );

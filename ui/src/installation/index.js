@@ -147,15 +147,13 @@ const Installation = ({ state, settings }) => {
       <div className={classes.instructions}>{steps[activeStep].instructions}</div>
 
       <div className={classes.content}>
-        <h1>{ state }</h1>
+        <h1>{state}</h1>
         <Stepper activeStep={activeStep} orientation="vertical" connector={null} nonLinear>
           {steps.map(({ label, settings, content }, index) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
               <div className={activeStep > index ? `${classes.settings} active` : classes.settings}>
-                <div className={classes.settingsContent}>
-                  {settings}
-                </div>
+                <div className={classes.settingsContent}>{settings}</div>
               </div>
               <StepContent className={classes.stepContent}>{content}</StepContent>
             </Step>

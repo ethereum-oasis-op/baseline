@@ -129,7 +129,7 @@ describe('WhisperWrapper', () => {
         const rawObj = {
           type: 'delivery_receipt',
           deliveredDate: 1576249522,
-          messageId: '0x123',
+          origMessageId: '0x123',
         };
         const web3 = await web3utils.getWeb3();
         const messageHex = await web3.utils.fromAscii(JSON.stringify(rawObj));
@@ -157,7 +157,7 @@ describe('WhisperWrapper', () => {
         }
         expect(error).toEqual(true);
         expect(result).toEqual(
-          `Original message id (${rawObj.messageId}) not found. Cannot add delivery receipt.`,
+          `Original message id (${rawObj.origMessageId}) not found. Cannot add delivery receipt.`,
         );
       });
 
@@ -165,7 +165,7 @@ describe('WhisperWrapper', () => {
         const rawObj = {
           type: 'delivery_receipt',
           deliveredDate: 1576249522,
-          messageId,
+          origMessageId: messageId,
         };
         const web3 = await web3utils.getWeb3();
         const messageHex = await web3.utils.fromAscii(JSON.stringify(rawObj));

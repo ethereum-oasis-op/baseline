@@ -9,11 +9,17 @@ const NoticeProvider = ({ children }) => {
   const { subscribeToMore, loading, data, error } = useQuery(GET_ALL_NOTICES);
   const notices = data ? data.notices : [];
 
+  if(!loading){
+  console.log('SHOULD BE GETTING SOME NOTICES', notices);
+  debugger;
+  }
+
   useEffect(() => {
     subscribeToMore({
       document: NEW_NOTICE,
       variables: {},
       updateQuery: (prev, { subscriptionData }) => {
+        console.log('New notice event?');
         if (!subscriptionData.data) return prev;
         const { newNotice } = subscriptionData.data;
         return { notices: [newNotice, ...prev.notices] };
@@ -22,9 +28,7 @@ const NoticeProvider = ({ children }) => {
   }, [subscribeToMore]);
 
   return (
-    <NoticeContext.Provider value={{ notices, loading, error }}>
-      {children}
-    </NoticeContext.Provider>
+    <NoticeContext.Provider value={{ notices, loading, error }}>{children}</NoticeContext.Provider>
   );
 };
 
