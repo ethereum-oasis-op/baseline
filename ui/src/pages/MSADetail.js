@@ -57,6 +57,8 @@ const MSADetail = () => {
   }, [organizationAddress, address]);
 
   useEffect(() => {
+    console.log('RFP', rfp);
+    console.log('MSA', msa);
     if (rfp) getPartnerByIdentity({ variables: { identity: rfp.sender } });
     if (msa) getSupplierByIdentity({ variables: { identity: msa.whisperPublicKeySupplier } });
   }, [getPartnerByIdentity, rfp, msa, getSupplierByIdentity]);
@@ -69,6 +71,7 @@ const MSADetail = () => {
       {buyer && <Typography>{name}</Typography>}
       {rfp && <SKUTable sku={rfp.sku} description={rfp.skuDescription} />}
       <Grid container>
+        <div>TESTING</div>
         {proposal &&
           <>
             <Grid item>

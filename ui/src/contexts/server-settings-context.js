@@ -8,7 +8,7 @@ import {
   GET_SERVER_SETTINGS_UPDATE,
   SET_RPC_PROVIDER,
   SET_WALLET_FROM_MNEMONIC,
-  REGISTER_ORGANIZATION
+  REGISTER_ORGANIZATION,
 } from '../graphql/server-settings';
 
 const ServerSettingsContext = React.createContext([{}, () => {}]);
@@ -19,20 +19,18 @@ const stateUpdateQuery = (prev, { subscriptionData }) => {
   if (!subscriptionData.data) return prev;
   const { serverStateUpdate } = subscriptionData.data;
   return { prev, serverState: serverStateUpdate };
-}
+};
 
 const settingsUpdateQuery = (prev, { subscriptionData }) => {
   if (!subscriptionData.data) return prev;
   const { serverSettingsUpdate } = subscriptionData.data;
   return { prev, getServerSettings: serverSettingsUpdate };
-}
+};
 
 const ServerSettingsProvider = ({ children }) => {
-  const {
-    subscribeToMore: subscribeToStateUpdates,
-    data: initState,
-    loading,
-  } = useQuery(GET_SERVER_STATE);
+  const { subscribeToMore: subscribeToStateUpdates, data: initState, loading } = useQuery(
+    GET_SERVER_STATE,
+  );
 
   const {
     subscribeToMore: subscribeToSettingsUpdates,
@@ -76,11 +74,11 @@ const ServerSettingsProvider = ({ children }) => {
         loading,
         loadingSettings,
         setRPCProvider,
-        registerOrganizationInfo ,
-        setWalletFromMnemonic
+        registerOrganizationInfo,
+        setWalletFromMnemonic,
       }}
     >
-      {children}
+      {state ? children : <div>Loading</div>}
     </ServerSettingsContext.Provider>
   );
 };

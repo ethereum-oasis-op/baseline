@@ -70,11 +70,13 @@ const CreateRFP = () => {
       recipients: [],
     },
     onSubmit: async values => {
-      const { proposalDeadline } = values;
+      const { proposalDeadline, recipients } = values;
+      const partnerIdentities = recipients.map(recipient => recipient.partner.identity);
       await postRFP({
         variables: {
           input: {
             ...values,
+            recipients: partnerIdentities,
             proposalDeadline: moment(proposalDeadline).unix(),
           },
         },

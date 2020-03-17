@@ -27,7 +27,9 @@ const ProposalProvider = ({ children }) => {
   }, [subscribeToMore]);
 
   return (
-    <ProposalContext.Provider value={{ proposals, loading, error, postProposal }}>{children}</ProposalContext.Provider>
+    <ProposalContext.Provider value={{ proposals, loading, error, postProposal }}>
+      {children}
+    </ProposalContext.Provider>
   );
 };
 

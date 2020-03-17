@@ -20,16 +20,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 const roles = [
-  { label: 'Buyer', value: 1, disabled: false, },
-  { label: 'Supplier', value: 2, disabled: false, },
-  { label: 'Carrier', value: 3, disabled: true, },
+  { label: 'Buyer', value: 1, disabled: false },
+  { label: 'Seller', value: 2, disabled: false },
+  { label: 'Carrier', value: 3, disabled: true },
 ];
 
 const RegistryForm = () => {
   const classes = useStyles();
   const { registerOrganizationInfo, settings } = useContext(ServerSettingsContext);
-  if (!settings) { return <div>No settings</div>}
-  
+  if (!settings) {
+    return <div>No settings</div>;
+  }
+
   const { rpcProvider } = settings;
 
   const onSubmit = async ({ organizationName, role }) => {
@@ -44,7 +46,7 @@ const RegistryForm = () => {
     });
   };
 
-  console.log('NETWORK FORM', { settings })
+  console.log('NETWORK FORM', { settings });
   console.log({ rpcProvider });
 
   return (

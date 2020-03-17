@@ -15,7 +15,7 @@ import Divider from '@material-ui/core/Divider';
 import SearchIcon from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import NoticesTable from '../components/NoticeList/NoticesTable';
+import DataTable from '../components/DataTable/DataTable';
 import { PartnerContext } from '../contexts/partner-context';
 import NoticeLayout from '../components/NoticeLayout';
 
@@ -34,8 +34,8 @@ const useStyles = makeStyles(() => ({
     fontSize: '1.6rem',
     fontWeight: 'bold',
     marginRight: '1rem',
-    alignItems: "center",
-    display: "flex",
+    alignItems: 'center',
+    display: 'flex',
   },
   searchPartnersInputContainer: {
     flexGrow: 1,
@@ -48,7 +48,7 @@ const useStyles = makeStyles(() => ({
     borderColor: 'transparent',
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: 'transparent',
-    }
+    },
   },
   searchPartnersInputIcon: {
     width: '1.5rem',
@@ -92,7 +92,7 @@ const useStyles = makeStyles(() => ({
     },
     '& .MuiOutlinedInput-notchedOutline': {
       borderColor: '#286AD2',
-    }
+    },
   },
   filterInput: {
     height: '1.8rem',
@@ -108,7 +108,7 @@ const useStyles = makeStyles(() => ({
     color: '#62737F',
     marginLeft: '1rem',
     fontWeight: 'bold',
-  }
+  },
 }));
 
 const SearchPartners = ({ actions, values }) => {
@@ -121,33 +121,33 @@ const SearchPartners = ({ actions, values }) => {
       <div className={classes.searchPartnersTitle}>Partners</div>
       <div className={classes.searchPartnersInputContainer}>
         <FormControl fullWidth variant="outlined">
-            <OutlinedInput
-              className={classes.searchPartnersInput}
-              id="outlined-adornment-amount"
-              value={search}
-              onChange={event => setSearch(event.target.value)}
-              placeholder="Search"
-              startAdornment={(
-                <InputAdornment position="start">
-                  <SearchIcon className={classes.searchPartnersInputIcon} />
-                </InputAdornment>
-              )}
-              endAdornment={(
-                <InputAdornment position="end">
-                  <CloseIcon className={classes.searchPartnersInputIcon} />
-                </InputAdornment>
-              )}
-            />
-          </FormControl>
+          <OutlinedInput
+            className={classes.searchPartnersInput}
+            id="outlined-adornment-amount"
+            value={search}
+            onChange={event => setSearch(event.target.value)}
+            placeholder="Search"
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchIcon className={classes.searchPartnersInputIcon} />
+              </InputAdornment>
+            }
+            endAdornment={
+              <InputAdornment position="end">
+                <CloseIcon className={classes.searchPartnersInputIcon} />
+              </InputAdornment>
+            }
+          />
+        </FormControl>
       </div>
     </div>
   );
-}
+};
 
 const SortPartnerTable = ({ actions, values }) => {
   const classes = useStyles();
-  const { setSearch, setCategory, setRole, setSort } = actions;
-  const { search, category, role, sort } = values;
+  const { setSearch, setCategory, setRole } = actions;
+  const { search, category, role } = values;
 
   return (
     <div>
@@ -172,95 +172,84 @@ const SortPartnerTable = ({ actions, values }) => {
         </div>
 
         <div className={classes.sortPartnersCol2}>
-            <ToggleButtonGroup
-              value={role}
-              exclusive
-              size="small"
-              onChange={(_event, value) => setRole(value)}
-              aria-label="filter by role"
-            >
-              <ToggleButton value={0} aria-label="left aligned">
-                All Roles
-              </ToggleButton>
-              <ToggleButton value={1} aria-label="centered">
-                Buyers
-              </ToggleButton>
-              <ToggleButton value={2} aria-label="centered">
-                Suppliers
-              </ToggleButton>
-              <ToggleButton value={3} aria-label="centered">
-                Carrier
-              </ToggleButton>
-            </ToggleButtonGroup>
-
-            <div className={classes.filterPartners}>
-              <FormControl variant="outlined" className={classes.formControl}>
-                <Select
-                  className={classes.filterInput}
-                  value={sort}
-                  onChange={(event, value) => {
-                    console.log(event, value);
-                    setSort(event.target.value);
-                  }}
-                  displayEmpty={false}
-                  IconComponent={() => <ExpandMoreIcon className={classes.expandIcon} />}
-                >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  <MenuItem value="recent">Recently Added</MenuItem>
-                  <MenuItem value="frequent">Most Frequented</MenuItem>
-                </Select>
-              </FormControl>
-            </div>
+          <ToggleButtonGroup
+            value={role}
+            exclusive
+            size="small"
+            onChange={(_event, value) => setRole(value)}
+            aria-label="filter by role"
+          >
+            <ToggleButton value={0} aria-label="left aligned">
+              All Roles
+            </ToggleButton>
+            <ToggleButton value={1} aria-label="centered">
+              Buyers
+            </ToggleButton>
+            <ToggleButton value={2} aria-label="centered">
+              Suppliers
+            </ToggleButton>
+            <ToggleButton value={3} aria-label="centered">
+              Carrier
+            </ToggleButton>
+          </ToggleButtonGroup>
         </div>
       </Grid>
       <Divider />
     </div>
-  )
-}
+  );
+};
 
-const SelectPartner = ({ partners, row, addPartner, removePartner }) => {
-  const checked = false;
-  const onToggle = (event) => {
-    console.log(event.target.value);
-  }
-  
-  console.log(partners, row);
+const PartnerCheckbox = ({ row, addPartner, isPartner, removePartner }) => {
+  const onToggle = async event => {
+    if (isPartner) {
+      await removePartner({ variables: { input: { address: event.target.value } } });
+    } else {
+      await addPartner({ variables: { input: { address: event.target.value } } });
+    }
+  };
 
   return (
     <Checkbox
-      checked={checked}
+      checked={isPartner}
       onChange={onToggle}
       value={row.address}
       inputProps={{ 'aria-label': 'primary checkbox' }}
     />
   );
-}
+};
 
-const Partner = () => {
+const PartnerList = () => {
   const classes = useStyles();
   const { partners, organizations, addPartner, removePartner } = useContext(PartnerContext);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('registry');
   const [role, setRole] = useState(0);
-  const [sort, setSort] = useState('recent');
   let items = category === 'registry' ? organizations : partners;
 
-  if(role) {
+  // Filter by role
+  if (role) {
     items = filter(items, { role }, []);
   }
+
+  // Filter by search text
+  if (search) {
+    items = filter(items, item => {
+      const lowercaseName = item.name.toLowerCase();
+      return lowercaseName.indexOf(search.toLowerCase()) > -1;
+    });
+  }
+
   const notices = items;
 
   const columns = [
     {
       name: 'add',
       label: 'Add/Remove',
-      formatter: (_value, {row}) => (
-        <SelectPartner
+      formatter: (_value, { row }) => (
+        <PartnerCheckbox
           addPartner={addPartner}
           removePartner={removePartner}
-          partners={partners}
+          isPartner={row.isPartner}
           row={row}
         />
       ),
@@ -273,16 +262,16 @@ const Partner = () => {
       name: 'role',
       label: 'Role',
       formatter: value => {
-        switch(value){
+        switch (value) {
           case 1:
-            return 'Buyer'
+            return 'Buyer';
           case 2:
-            return 'Supplier'
+            return 'Supplier';
           case 3:
-            return 'Carrier'
+            return 'Carrier';
           default:
-            return 'Error'
-        };
+            return 'Error';
+        }
       },
     },
     {
@@ -295,13 +284,16 @@ const Partner = () => {
 
   return (
     <NoticeLayout selected="partners">
-      <SortPartnerTable actions={{ setSearch, setCategory, setRole, setSort }} values={{ search, category, role, sort }} />
+      <SortPartnerTable
+        actions={{ setSearch, setCategory, setRole }}
+        values={{ search, category, role }}
+      />
       <Typography variant="h2" className={classes.companyCount}>
         {companyCount} Companies
       </Typography>
       <Divider />
-      <NoticesTable
-        notices={notices}
+      <DataTable
+        data={notices}
         columns={columns}
         options={{
           key: 'name',
@@ -311,4 +303,4 @@ const Partner = () => {
   );
 };
 
-export default Partner;
+export default PartnerList;

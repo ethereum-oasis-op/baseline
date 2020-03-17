@@ -45,7 +45,9 @@ const InstallationHeader = () => {
   const classes = useStyles();
   const { settings } = useContext(ServerSettingsContext);
 
-  if (!settings) { return <div>No settings</div>}
+  if (!settings) {
+    return <div>No settings</div>;
+  }
   const { organizationAddress } = settings;
 
   return (
@@ -57,13 +59,13 @@ const InstallationHeader = () => {
           </IconButton>
           <Typography variant="h6" className={classes.title}>
             Radish34 Installation
-            {
-              organizationAddress
-              ? <Chip className={classes.orgAddress} size="small" label={organizationAddress} />
-              : null
-            }
+            {organizationAddress ? (
+              <Chip className={classes.orgAddress} size="small" label={organizationAddress} />
+            ) : null}
           </Typography>
-          <Button color="inherit">Balance: <Balance /></Button>
+          <Button color="inherit">
+            Balance: <Balance />
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

@@ -89,14 +89,14 @@ class WhisperWrapper {
       if (messageObj.type === 'delivery_receipt') {
         // Check if receipt came from original recipient
         const originalMessage = await Message.findOne({
-          _id: messageObj.messageId,
+          _id: messageObj.origMessageId,
         });
         if (!originalMessage) {
           throw new Error(`Original message id (${messageObj.messageId}) not found. Cannot add delivery receipt.`);
         } else if (originalMessage.recipientId === data.sig) {
           // Update original message to indicate successful delivery
           doc = await Message.findOneAndUpdate(
-            { _id: messageObj.messageId },
+            { _id: messageObj.origMessageId },
             { deliveredDate: messageObj.deliveredDate },
             { upsert: false, new: true },
           );

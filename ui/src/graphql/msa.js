@@ -87,4 +87,4 @@ export const GET_MSA_BY_ID = gql`
     }
   }
   ${MSA_ATTRIBUTES}
-`
+`;;

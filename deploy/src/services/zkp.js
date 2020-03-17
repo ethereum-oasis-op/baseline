@@ -11,6 +11,7 @@ GET the verification key for a particular circuit
 @param {string} id is the name of the circuit, e.g. 'createMSA'
 */
 async function getVk(id) {
+  console.log('ZOK_URL', url);
   console.log(`\nCalling /vk(${id})`);
   return new Promise((resolve, reject) => {
     const options = {

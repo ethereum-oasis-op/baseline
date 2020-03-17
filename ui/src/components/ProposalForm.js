@@ -61,6 +61,8 @@ const ProposalForm = ({ rfp }) => {
     label: 'EUR',
   }];
 
+  console.log('RFPPPPPPPPPPPP VALUES', rfp);
+
   const formik = useFormik({
     initialValues: {
       rates: [],
@@ -69,6 +71,7 @@ const ProposalForm = ({ rfp }) => {
       erc20ContractAddress: '',
     },
     onSubmit: async values => {
+      console.log('SENDING THESE VARAIBLES', values);
       await postProposal({ variables: { input: values } });
       history.push('/notices/outbox');
     },

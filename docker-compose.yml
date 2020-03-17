@@ -383,16 +383,12 @@ services:
     container_name: redis-supplier1
     networks:
       - network-supplier1
-    expose:
-      - 6379
 
   redis-supplier2:
     image: redis
     container_name: redis-supplier2
     networks:
       - network-supplier2
-    expose:
-      - 6379
 
   messenger-buyer:
     hostname: messenger-buyer
@@ -411,6 +407,8 @@ services:
       MONGO_URL: mongodb://mongo-buyer:27017/radish34
       RADISH_API_URL: http://api-buyer:8101
       REDIS_URL: redis://redis-buyer:6379
+    volumes:
+      - ./messenger/src:/app/src:delegated
     networks:
       - network-buyer
     ports:
@@ -433,6 +431,8 @@ services:
       MONGO_URL: mongodb://mongo-supplier1:27017/radish34
       RADISH_API_URL: http://api-supplier1:8101
       REDIS_URL: redis://redis-supplier1:6379
+    volumes:
+      - ./messenger/src:/app/src:delegated
     networks:
       - network-supplier1
     ports:
@@ -455,6 +455,8 @@ services:
       MONGO_URL: mongodb://mongo-supplier2:27017/radish34
       RADISH_API_URL: http://api-supplier2:8101
       REDIS_URL: redis://redis-supplier2:6379
+    volumes:
+      - ./messenger/src:/app/src:delegated
     networks:
       - network-supplier2
     ports:

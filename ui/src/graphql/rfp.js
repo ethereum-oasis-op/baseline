@@ -10,14 +10,8 @@ export const RFP_ATTRIBUTES = gql`
     sku
     skuDescription
     sender
-    recipients {
-      partner {
-        identity
-        name
-        address
-        role
-      }
-    }
+    recipients
+    baselineId
   }
 `;
 
@@ -82,3 +76,14 @@ export const GET_RFP_PROPOSAL_MSA = gql`
   ${PROPOSAL_ATTRIBUTES}
   ${MSA_ATTRIBUTES}
 `
+export const GET_RFP_DELIVERED_DATE = gql`
+  query GetRFPDeliveredDate($docId: String!, $recipientId: String!) {
+    deliveredDate: getRFPDeliveredDate(docId: $docId, recipientId: $recipientId)
+  }
+`;
+
+export const NEW_RFP_DELIVERY_RECEIPT_UPDATE = gql`
+  subscription NewRFPDeliveryReceiptUpdate($docId: String!, $recipientId: String!) {
+    deliveredDate: newRFPDeliveryReceiptUpdate(docId: $docId, recipientId: $recipientId)
+  }
+`;

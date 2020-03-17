@@ -43,15 +43,9 @@ const DataTable = props => {
         <TableBody>
           {data.map(row => {
             return (
-              <Row
-                key={`row-${row[options.key]}`}
-                row={row}
-                rows={data}
-                href={href}
-                {...props}
-              />
-            )}
-          )}
+              <Row key={`row-${row[options.key]}`} row={row} rows={data} href={href} {...props} />
+            );
+          })}
         </TableBody>
       </Table>
     </Paper>
@@ -59,7 +53,7 @@ const DataTable = props => {
 };
 
 DataTable.propTypes = {
-  notices: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   columns: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   options: PropTypes.shape({
     key: PropTypes.string.isRequired,

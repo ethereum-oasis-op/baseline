@@ -7,8 +7,7 @@ import Toastr from '../components/Toastr';
 const ToastrContext = React.createContext([]);
 
 const ToastrProvider = ({ children }) => {
-  const userAddress =
-    localStorage.getItem('userAddress');
+  const userAddress = localStorage.getItem('userAddress');
   const { data } = useSubscription(INCOMING_TOASTR_NOTIFICATION, {
     variables: {
       userAddress,

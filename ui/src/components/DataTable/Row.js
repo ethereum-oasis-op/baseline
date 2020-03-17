@@ -26,16 +26,17 @@ const Row = props => {
   const key = row[options.key];
   const rowClassnames = checkClasses(options.rowClasses, { row });
 
-  const rowClasses = classNames({
-    [classes.cursor] : !!href,
+  const rowClasses = classNames(
+    {
+      [classes.cursor]: !!href,
     },
     rowClassnames,
-    );
-  
+  );
+
   const handleClick = href => history.push(href);
 
   return (
-    <TableRow className={rowClasses} onClick={href ? handleClick(href): null}>
+    <TableRow className={rowClasses} onClick={href ? handleClick(href) : null}>
       {columns.map(column => {
         const data = { column, columns, row, rows, options };
         const columnClassnames = checkClasses(column.columnClasses, data);

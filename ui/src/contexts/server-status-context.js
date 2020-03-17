@@ -10,14 +10,12 @@ const statusUpdateQuery = (prev, { subscriptionData }) => {
   if (!subscriptionData.data) return prev;
   const { serverStatusUpdate } = subscriptionData.data;
   return { prev, serverStatus: serverStatusUpdate };
-}
+};
 
 const ServerStatusProvider = ({ children }) => {
-  const {
-    subscribeToMore: subscribeToStatusUpdates,
-    data: initStatus,
-    loading,
-  } = useQuery(GET_SERVER_STATUS);
+  const { subscribeToMore: subscribeToStatusUpdates, data: initStatus, loading } = useQuery(
+    GET_SERVER_STATUS,
+  );
 
   useEffect(() => {
     if (!statusListener) {
