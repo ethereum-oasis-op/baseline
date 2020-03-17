@@ -20,7 +20,10 @@
   * [Community Tools](baseline-protocol/community/community-tools.md)
 * [Baseline Process](baseline-protocol/process.md)
 * [Performance Stats and Specs](baseline-protocol/performance.md)
-* [Standards](baseline-protocol/standards.md)
+* [Standards](baseline-protocol/standards/README.md)
+  * [Functional Requirements](baseline-protocol/standards/functional-requirements.md)
+  * [Non-Functional Requirements](baseline-protocol/standards/nfr.md)
+  * [Mainnet](baseline-protocol/standards/mainnet.md)
 * [Driving Mainnet Evolution](baseline-protocol/mainnet.md)
 * [Roadmap](baseline-protocol/roadmap.md)
 

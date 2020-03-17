@@ -22,7 +22,7 @@ Requirements, and non-functional requirements in particular, are meaningful only
 
 ## Abstract
 
-This document, the Baseline Specification, defines the implementation requirements for maintaining data consistency and workflow continuity \(with atomic compartmentalization\) among sets of state machines that are operated by different [Parties](standards.md). The Baseline Specification assumes the use of a public Mainnet as the necessary common frame of reference to achieve this, and it uses the public Ethereum [Mainnet ](standards.md)as the reference implementation.
+This document, the Baseline Specification, defines the implementation requirements for maintaining data consistency and workflow continuity \(with atomic compartmentalization\) among sets of state machines that are operated by different [Parties](./). The Baseline Specification assumes the use of a public Mainnet as the necessary common frame of reference to achieve this, and it uses the public Ethereum [Mainnet ](./)as the reference implementation.
 
 > When two or more machines store data and run business logic in a verified state of consistency, enabled by using the Mainnet as a common frame of reference, then the machines, data and code are said to be _baselined_.
 
