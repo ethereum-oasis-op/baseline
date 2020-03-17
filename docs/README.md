@@ -15,7 +15,7 @@ There are lots of opportunities to get informed, get involved, and **get value**
 
 ## The Baseline Protocol
 
-The Baseline Protocol is an approach to using the public [Mainnet](baseline-basics/glossary.md#mainnet) as a common frame of reference between systems, including traditional corporate systems of record, any kind of database, and even different blockchains or DLTs. It is particularly promising as a way to reduce capital expense and other overheads while increasing operational integrity when automating business processes across multiple companies.
+The Baseline Protocol is an approach to using the public [Mainnet](baseline-basics/glossary.md#mainnet) as a common frame of reference between systems, including traditional corporate systems of record, any kind of database or state machine, and even different blockchains or DLTs. It is particularly promising as a way to reduce capital expense and other overheads while increasing operational integrity when automating business processes across multiple companies.
 
 The approach is designed to appeal to security and performance-minded technology officers.
 
