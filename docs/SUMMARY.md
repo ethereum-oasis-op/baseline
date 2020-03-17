@@ -7,6 +7,7 @@
 * [Radish34 Explained](radish34-demo/radish34.md)
 * [Radish34 Interactive Demo](radish34-demo/demo.md)
 * [Getting Started with Radish34](radish34-demo/radish34-start.md)
+* [Radish34 Workflow](radish34-demo/radish34-workflow.md)
 * [Radish34 Key Diagrams](radish34-demo/radish34-diagrams.md)
 * [Modifying Radish34](radish34-demo/mods.md)
 * [From POC to Protocol](radish34-demo/poc-to-protocol.md)
@@ -30,6 +31,7 @@
 ## Components
 
 * [Baseline Server](components/baseline-server/README.md)
+  * [BullJS](components/baseline-server/bulljs.md)
   * [Messenger](components/baseline-server/messenger.md)
   * [Zero Knowledge Service](components/baseline-server/zero-knowledge-service.md)
   * [APIs](components/baseline-server/apis.md)

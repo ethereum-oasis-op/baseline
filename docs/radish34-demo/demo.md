@@ -13,5 +13,7 @@ But if you want to see what it might be like for a group of companies to use the
 
 ### [**Click Here for Radish34 Demo**](https://www.figma.com/proto/XQ9sIPu0FeoNSojX8YQtmz/Radish34?node-id=759%3A13805&viewport=150%2C167%2C0.05065051466226578&scaling=min-zoom) 
 
-![](../.gitbook/assets/image.png)
+![](../.gitbook/assets/image%20%282%29.png)
+
+dddd
 
