@@ -4,6 +4,10 @@
 
 
 
+![](../.gitbook/assets/r34-queue-based-workflow-design-rfp-to-msa-flow.jpg)
+
+
+
 
 
 
