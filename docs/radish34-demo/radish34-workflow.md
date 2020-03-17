@@ -44,28 +44,3 @@ These support the direct operation of the Radish system as it is installed for a
 
 
 
-
-
-
-
-
-
-## RFP Creation Flow
-
-![RFP Flow](../.gitbook/assets/rfp-flow.png)
-
-1. Buyer initiates the creation of a new RFP. This will most likely be done via the UI, which then makes the `POST /graphql { createRFP }` mutation request to the `radish-api` service.
-2. If the RFP passes the schema validation, `radish-api` stores the new RFP in `mongo`.
-3. For each `recipient` listed in the RFP, `radish-api` makes a `POST /messages { type: "rfp_create" }` request to `messenger` to send the RFP via Whisper.
-4. `messenger` stores all messages in `mongo`, regardless of the message content.
-5. `messenger` sends the message to the supplier's Whisper identity via the Whisper-enabled geth client.
-6. The supplier's `whisper client` receives the new message.
-7. The supplier's `whisper client` sends a `delivery_receipt` message back to the sender \(buyer in this case\) to let them know that the message reached its destination.
-   1. The buyer's `whisper client` receives the `delivery_receipt` and forwards to its `messenger` service.
-   2. `messenger` updates the `deliveryDate` field in the original message in `mongo` for verification of successful delivery.
-8. Supplier's `whisper client` forwards the `rfp_create` message to `messenger`
-9. `messenger` stores the raw message in `mongo`
-10. `messenger` inspects the message contents to see if it is a properly formatted JSON object. If so, it forwards the object to `radish-api` via a `POST /documents` request
-11. `radish-api` further inspects the message contents for the `type` field. In this example, it detects `type: "rfp_create"`
-12. `radish-api` stores the object in the RFP collection in `mongo` if it passes schema validation
-

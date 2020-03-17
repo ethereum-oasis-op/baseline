@@ -31,9 +31,9 @@
 ## Components
 
 * [Baseline Server](components/baseline-server/README.md)
-  * [BullJS](components/baseline-server/bulljs.md)
   * [Messenger](components/baseline-server/messenger.md)
   * [Zero Knowledge Service](components/baseline-server/zero-knowledge-service.md)
+  * [Untitled](components/baseline-server/untitled.md)
   * [APIs](components/baseline-server/apis.md)
 * [On-Chain Functions](components/on-chain.md)
 * [UI Integration](components/ui-integration.md)
@@ -51,5 +51,6 @@
 * [Glossary](baseline-basics/glossary.md)
 * [FAQ](baseline-basics/faq.md)
 * [Key GitHub Folder Readme's](baseline-basics/key-github-folder-readmes.md)
-* [Code Docs](baseline-basics/code-docs.md)
+* [Code Docs](baseline-basics/code-docs/README.md)
+  * [BullJS](baseline-basics/code-docs/bulljs.md)
 
