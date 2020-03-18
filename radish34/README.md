@@ -2,7 +2,7 @@
 
 __Radish34__ is a product procurement application that utilizes the __Baseline Protocol__ to gain unprecedented data integrity while maintaining privacy and security for its users.
 
-## Prerequisites
+## Prerequisites to run the demo
 
 1.  Install [Docker for Mac](https://www.docker.com/docker-mac), or
     [Docker for Windows](https://www.docker.com/docker-windows)  
@@ -20,6 +20,13 @@ After you've done that, log in to the Github package registry by running
 
 ## Development/Test Environment
 
+### Prerequisites/Assumptions
+
+1. MacOS development environment (Catalina or later - 10.15.X). Note: It is possible it works in other environments/versions of MacOS
+1. NodeJS version 11.15 installed (or use of NVM is recommended)
+1. You are able to run the demo (☝️ see prerequisites above ☝️)
+
+### Setup
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
 1. Run `npm ci && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
 1. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
