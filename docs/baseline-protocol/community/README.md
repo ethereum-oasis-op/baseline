@@ -20,9 +20,41 @@ We will hold Onboarding office hours twice a week at least until June 2020. Sign
 
 #### **Roadmapping**
 
-Te
+There will be sessions \(online for now during the period of global pandemic\) to dive deep on the technology
+
+#### Technical Steering Committee
 
 
+
+#### Specifications Steering Committee
+
+
+
+### Connecting with Each Other Directly
+
+#### Slack
+
+The Baseline Protocol initiative maintains a Slack channel that is moderated but public. Sign up [**here**](https://communityinviter.com/apps/ethereum-baseline/join-us).  It's an active group, and you can directly connect with folks doing the work and coordinate with each other to get the work done.
+
+#### Members Directory
+
+You can [**sign up**](https://lists.oasis-open-projects.org/g/baseline) to the baseline protocol members list and get access to the [**Directory**](https://lists.oasis-open-projects.org/g/baseline/directory).
+
+#### Group Email
+
+When you [sign up](https://lists.oasis-open-projects.org/g/baseline) in the members directory, you will have the option to get email that's sent to the mailing list or directly from anyone in the group. You can control how that impacts your inbox [**here**](https://lists.oasis-open-projects.org/g/baseline/editsub). 
+
+#### Forums
+
+The team hasn't yet set up a Reddit or other public forum, but several new members are already talking about doing that. Stay tuned or help make it happen.
+
+#### Social Networking
+
+The Baseline Protocol initiative maintains the [@baselineproto](https://twitter.com/baselineproto) Twitter account, to which members of the TSC, SSC and some maintainers can post. We also use the [\#baselineprotoco](https://twitter.com/hashtag/Baselineprotocol)l tag.
+
+#### Medium
+
+The Baseline Protocol initiative will use Medium to post blogs. 
 
 ## Contributors Guide
 
