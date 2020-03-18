@@ -30,11 +30,11 @@
 
 ## Components
 
-* [Baseline Server](components/baseline-server/README.md)
-  * [Messenger](components/baseline-server/messenger.md)
-  * [Zero Knowledge Service](components/baseline-server/zero-knowledge-service.md)
-  * [Data Integration Service](components/baseline-server/untitled.md)
-  * [APIs](components/baseline-server/apis.md)
+* [Baseline Services](components/baseline-services/README.md)
+  * [Messenger](components/baseline-services/messenger.md)
+  * [Zero Knowledge Service](components/baseline-services/zero-knowledge-service.md)
+  * [Data Integration Service](components/baseline-services/untitled.md)
+  * [APIs](components/baseline-services/apis.md)
 * [On-Chain Functions](components/on-chain.md)
 * [UI Integration](components/ui-integration.md)
 
