@@ -39,8 +39,6 @@ Additional integrations:
 
 ![Radish34 Functional Component Architecture](../.gitbook/assets/radish34-components%20%281%29.png)
 
-![Radish34 Functional Component Architecture](../.gitbook/assets/image.png)
-
 
 
 ## 
