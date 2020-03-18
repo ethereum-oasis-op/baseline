@@ -12,7 +12,7 @@ __Radish34__ is a product procurement application that utilizes the __Baseline P
 
     `dotdocker start`
 
-1.  In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
+1.  (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
 
 After you've done that, log in to the Github package registry by running
 
@@ -38,7 +38,6 @@ After you've done that, log in to the Github package registry by running
    *** Setups complete ***
    ```
 1. Run `npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
-1. Make sure you download and have the following files stored in your `/config` directory: `config-buyer.json`, `config-supplier1.json`, `config-supplier2.json`.
 1. Run `npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
    - This docker container first deploys both the Registry contract and the OrgRegistry contract.
    - Then it registers (1) Buyer and (2) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
