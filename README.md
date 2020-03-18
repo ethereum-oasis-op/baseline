@@ -77,7 +77,7 @@ optionally `npm run clean` to clean out any `node_modules` folders installed by 
 
 # How to contribute?
 
-See [our contributing guidelines](CONTRIBUTING.MD)
+See [our contributing guidelines](CONTRIBUTING.md)
 
 # License
 
