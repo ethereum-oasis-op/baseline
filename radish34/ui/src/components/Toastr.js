@@ -5,10 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
   success: {
-    background: 'green',
+    background: '#28D295',
   },
   error: {
-    background: 'red',
+    background: '#ff0a3f',
   },
 }));
 
