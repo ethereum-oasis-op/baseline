@@ -108,7 +108,9 @@ Additional documentation about the OASIS Open Projects program can be found [her
 
 ## License and Patent Policies
 
-All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and patent polices. 
+All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md). 
+
+In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](http://cla-assistant.io/ethereum-oasis/baseline) for community contributions. You must [sign the ICLA](http://cla-assistant.io/ethereum-oasis/baseline) before your pull requests to the baseline repository will be merged. [Check here](https://www.oasis-open.org/resources/projects/cla/projects-view-entity-cla) to see if your company has signed the ECLA. 
 
 ##  
 
