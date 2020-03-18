@@ -38,7 +38,7 @@ The technical steering committee \(TSC\) is accountable to the Project Governanc
 | :--- | :--- |
 | [**Brian Chamberlain**](https://www.linkedin.com/in/blchamberlain/)\*\*\*\* | ConsenSys |
 | \*\*\*\*[**Conor Svensson**](https://www.linkedin.com/in/conor10/)\*\*\*\* | Web3Labs |
-| \*\*\*\*[**Erick Bravick**](https://www.linkedin.com/in/ebravick/)\*\*\*\* | Core Convergence |
+| \*\*\*\*[**Eric Bravick**](https://www.linkedin.com/in/ebravick/)\*\*\*\* | Core Convergence |
 | [**Hudson Jameson**](https://www.linkedin.com/in/hudsonjameson/)\*\*\*\* | Ethereum Foundation |
 | \*\*\*\*[**Johann Eid**](https://www.linkedin.com/in/johanneid/)\*\*\*\* | Chainlink |
 | [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/)\*\*\*\* | Ernst & Young |
