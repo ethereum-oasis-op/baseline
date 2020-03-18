@@ -30,6 +30,28 @@ To run the __Radish34__ application, follow the instructions in `/radish34/READM
 
 __Baseline__ is an open-source project that is actively seeking contributions from any willing participants. Here are some guidelines for people that would like to contribute to the project.
 
+# Quickstart
+
+A `Makefile` has been included for convenience; most of its targets wrap `npm`, `docker` and `solc` invocations.
+
+Just want to get the __Baseline Protocol__ running locally?
+`make && make start && make test` will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes between [] and [] minutes to complete.*
+
+Here are the targets currently exposed by the `Makefile`:
+
+| Target | Description |
+|:-------------|:------------------------------------------------------------|
+| `make` | Alias for `make build`. |
+| `make build` | Build and dockerize all modules within the monorepo; perform initial zk circuit setups. |
+| `make clean` | Reclaim disk used by all modules (i.e. `node_modules/`) and the local docker environment. This effectively uninstalls your local __Baseline__ environment and will require building from scratch. |
+| `make contracts` | Compile the Solidity contracts. |
+| `make deploy-contracts` | Deploy the Solidity contracts. Requires the stack to be running. |
+| `make npm-install` | `npm ci` wrapper for all modules in the monorepo. |
+| `make start` | Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation. |
+| `make stop` | Stop the running __Baseline__ stack. |
+| `make test` | Run the full test suite. Requires the stack to be running. |
+| `make zk-circuits` | Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits` |
+
 ## Submitting an issue
 
 To help us get a better understanding of the issue you've identified, follow the guidelines in one of our *Issue Templates*.
