@@ -1,9 +1,9 @@
 ---
-title: ZKP component
+title: Zero Knowledge Service component
 description: Detailed explanation of the privacy protocols under ZKP, using a toolbox called Zokrates
 ---
 
-# Zokrates component
+# Zero Knowledge Service component
 
 ## What is here?
 
@@ -39,7 +39,6 @@ Logs should look like the following:
 
 `zkp`: `docker-compose logs -f zkp`
 ```
-radish34-zokrates@1.0.0 dev /app
 zkp_1            | > nodemon ./dist/index.js
 zkp_1            |
 zkp_1            | [nodemon] 1.19.4
@@ -53,11 +52,10 @@ zkp_1            | [nodemon] starting `node ./dist/index.js`
 `zkp-watch`: `docker-compose logs -f zkp-watch`
 
 ```
-radish34-zokrates@1.0.0 build:watch /app
 zkp-watch_1      | > npm run build -- --watch
 zkp-watch_1      |
 zkp-watch_1      |
-zkp-watch_1      | > radish34-zkprates@1.0.0 build /app
+zkp-watch_1      | > radish34-zoprates@1.0.0 build /app
 zkp-watch_1      | > cod-scripts build "--watch"
 zkp-watch_1      |
 zkp-watch_1      | Successfully compiled 6 files with Babel.

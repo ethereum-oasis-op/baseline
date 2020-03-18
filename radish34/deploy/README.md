@@ -1,27 +1,31 @@
-# Radish Deploy
+---
+title: Deployment Job component
+description: Detailed explanation of the deployment operations in Radish34 implementation
+---
+
+# Deployment Job component
 
 ## What is here?
-<!---
-Write about what is this folder and the contents
--->
+
+This is a dev utilty/convenience for deploying smart contracts to the blockchain network. Refer to the `contracts/` documentation for detailed explanation of the deployment model.
+
 ## How does this fit in to Radish?
-<!---
-Explain this component in the context of the rest of the system
--->
+
+During the initialization of the Radish34 system, smart contracts are deployed to the blockchain network. 
+
 ## How can I run it?
-<!---
-Put in the normal commands to run the service and to run tests
--->
+
+Run `npm run deploy` to deploy the contracts, which utilize the artifacts updated in the `artifacts/` upon running the build step: `npm run build:contracts`.
+
 ## What is the architecture? 
-<!---
-In addition to the images add some description of them explaining each part of the diagram.
-I know you think your images are beautiful, self-explanatory works of technical art but please,
-for the sake of us dumb sods, write a little about them.
--->
+
+![SmartContractDeployment](../docs/assets/SmartContractDeployment.png)
+
+- Deployment is handled as a one time job wherein ERC1820 standard is used for deploying all the Radish34 contracts
+- Deployment operation is handled as being run by a `deployer` as a user. This is done so that the role of an administrative or operator entity could deploy contracts on behalf of a workgroup
+
 ## How can this be improved?
-<!---
-So that others know what you're planning on doing (and how they might help) 
-write about or (ideally) link to existing issues in github that are important to advance the work on the project.
-If you link please use github issue filter for your component label (and if you don't have a component label, make one).
-E.g. https://github.com/EYBlockchain/radish-34/issues?q=is%3Aissue+is%3Aopen+label%3ADocumentation would show all the documentation issues that are open.
--->
+
+- On-demand or adhoc deployment to allow for custom deployment operations at run time
+- Upgrade contracts using proxy delegation methods to account for upgradability of the different contracts that are registered with ERC1820: `OrgRegistry`, `Shield` and `Verifier` contracts
+- Enhancements to the deployment job for mainnet deployment via a funded wallet

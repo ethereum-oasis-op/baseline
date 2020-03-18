@@ -2,6 +2,8 @@
 
 __Radish34__ is a product procurement application that utilizes the __Baseline Protocol__ to gain unprecedented data integrity while maintaining privacy and security for its users.
 
+Disclaimer: This implementation is a demo, and production aspects of key management, wallet management, cloud hosting, integration to other third party tools and performance optimization are left out of scope to drive adoption and present a base set of tools for the community to provide inputs and take this further.
+
 ## Prerequisites to run the demo
 
 1.  Install [Docker for Mac](https://www.docker.com/docker-mac), or
@@ -152,7 +154,7 @@ After you've done that, log in to the Github package registry by running
 1. Run `docker-compose up -d && docker-compose restart`
    - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
-   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui`
+   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `api-{role}` and `ui`
    Example Logs:
    ```
       radish-api-buyer        | Connected to db
@@ -246,31 +248,34 @@ nvm use 11
    - Run `docker-compose down` to stop containers
    - Run this command to give the docker command a clean slate: `docker volume prune -f && echo volume pruned && docker system prune -f && echo system pruned && docker network prune -f && echo network pruned`
    - In some cases, due to stale images application may have build issues owing to existing images and packages that were a part of those builds. To get around such issues, run `docker-compose build --no-cache` to run a clean re-build of the docker images
-   - run through the 'steps to start the application' in __Development/Test Environment__
-1. Increase RAM allocated to Docker
+   - Run through the 'steps to start the application' in __Development/Test Environment__
+1. Increasing resource allocation for Docker
+   - During set up, `npm run setup`, there are cases where the setup instruction might fail, and the logs of the `zkp` container (`docker-compose logs -f zkp`) throws babel compilation errors. This is due to the memory consumption needed for running the compute intensive set up process. In these cases, it is recommended to toggle memory and CPU cores consumption
    - Consider these steps if you are running many of the `radish` containers and your PC is bogged down
    - Check the memory usage by running `docker stats`
    - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` (default is `2.0GiB`). Although not required in all cases, it is recommended to increase the swap memory to 4GB and CPU cores to 8 on Docker Preferences/Settings.
+1. Running tests
+   - In some cases, while running the test suite `npm run test` there could be a socket hang up error. This is potentially due to race conditions across the different containers for the API services. To resolve this issue run `docker-compose restart api-buyer api-supplier1 api-supplier2` to get rid of errors while running the test suite.
 
 ### Front-end Environment
 
 1. When the above setup is run successfully, the UI is ready at `http://radish34-ui.docker`
-2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `radish34-ui` container.
+2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `ui` container.
    Example Logs:
    ```
-      radish34-ui_1           | > @ start /app
-      radish34-ui_1           | > react-scripts start
-      radish34-ui_1           |
-      radish34-ui_1           |
-      radish34-ui_1           | Starting the development server...
-      radish34-ui_1           |
-      radish34-ui_1           | Compiled successfully!
-      radish34-ui_1           |
-      radish34-ui_1           | You can now view undefined in the browser.
-      radish34-ui_1           |
-      radish34-ui_1           |   Local:            http://localhost:3000/
-      radish34-ui_1           |   On Your Network:  http://172.27.0.14:3000/
-      radish34-ui_1           |
-      radish34-ui_1           | Note that the development build is not optimized.
-      radish34-ui_1           | To create a production build, use npm run build.
+      ui_1           | > @ start /app
+      ui_1           | > react-scripts start
+      ui_1           |
+      ui_1           |
+      ui_1           | Starting the development server...
+      ui_1           |
+      ui_1           | Compiled successfully!
+      ui_1           |
+      ui_1           | You can now view undefined in the browser.
+      ui_1           |
+      ui_1           |   Local:            http://localhost:3000/
+      ui_1           |   On Your Network:  http://172.27.0.14:3000/
+      ui_1           |
+      ui_1           | Note that the development build is not optimized.
+      ui_1           | To create a production build, use npm run build.
    ```

@@ -34,7 +34,7 @@ From the perspective of the procurement process, the key interactions are as fol
 
 ### 1. Deployment Process:
 
-![SmartContractDeployment](../docs/assets/SmartContractDeployment.png)
+Refer the ![Deployment](./deploy/README.md) job component for details on the deployment operation.
 
 - Registrar
 

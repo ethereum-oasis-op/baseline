@@ -1,4 +1,9 @@
-# UI for supply chain
+---
+title: Application Service component
+description: Detailed explanation of the UI components of the Radish34 implementation
+---
+
+# Application Service component
 
 ## What is here?
 This component is a React based UI using graphql to interface with the API.
