@@ -13,18 +13,32 @@ Below is a summary of the MSA workflow broken down by steps, and each step can b
 3. Buyer API then interacts ZKP service, to generate an offchain proof of execution of business logic: verify the signature of the supplier, and data validation checks on the terms of the MSA document, the volume tiering structure. This proof is then verified on chain, by invoking an RPC request to interact with the Shield and Verifier contracts deployed on chain. Buyer API communicates the successful verification \(transaction hash\), merkle leaf index \(indicating the position in the merkle tree in the Shield contract, where the hash of the MSA document is stored on chain\) to the Supplier via the Messenger service
 4. Upon receiving the verification data from the Buyer, Supplier API could either run a confirmation check - either as extension to capture events emitted on chain during storage of hash in the merkle tree OR as an additional method to validate against data stored on the Supplier DB instance.  
 
-![Radish34 Swimlane Diagram](../.gitbook/assets/image%20%283%29.png)
+![Radish34 MSA Workflow](../.gitbook/assets/image%20%283%29.png)
 
-![Radish34 High-Level Component Diagram ](../.gitbook/assets/image%20%281%29.png)
+#### Radish34 as an instantiation of Baseline
 
-![Radish34 Detailed Component Diagram \(Green Boxes are Reusable Components for Protocol\)](../.gitbook/assets/image.png)
+The figure below depicts Baseline as a set of microservices that are enabled using Baseline protocol. Radish34 is an instance of Baseline built for the procurement use case. Baseline has been formulated based on core design and product principles that are directional for Radish34 and any other customization of the Baseline protocol. Also shown is a sample instantiation of a hosted \(assumed Microsoft Azure Services\) application of a Baseline protocol.
 
-## RFP Creation Workflow
+![Baseline =&amp;gt; Radish34](../.gitbook/assets/image%20%281%29.png)
 
+#### Radish34 Functional Architecture
 
+The figure shows the various components of the Radish34 system. In line with the design and extensibility aspects set up in the Baseline protocol, the system architecture below also contains the components that can be replaced or modified for other similar use cases. Across the different services/integrations listed below, light green represents the components that can be replaced/modified and the darker ones represent the components that can be re-used for further customizations for similar use cases.
 
-| This page steps through the information flow during the creation of a new RFP. The \`Buyer's\` system is shown on the left in blue. The \`Supplier's\` system is shown on the right in green. |
-| :--- |
+1. API: This microservice orchestrates the overall application management, and contains components that enable UI \(GraphQL\), blockchain, ZKP, messenger, and data integrations. In particular, API orchestration is also handled using queue management based approach.
+2. Application Integration: This represents the user facing or user interaction layer. Although the Radish34 demo shows a particular UI representation, this can be extended or integrated into external legacy data or application systems
+3. Smart Contract Integration: Radish34 smart contracts are managed and built as part of the deployment process. This could be customized as needed as part of an overall pipeline or can be handled on demans.
+4. Zokrates Integration: Radish34 circuits represent the off-chain proofs/statements that are to be verified on chain. The service contains utilities for compiling circuits, generating keys for proof generation, generating proofs and verifier contracts
+5. Messaging Service Integration: Message communication is handled using Whisper, and the service also contains utilities for creating identities and pub/sub wrappers for handling message communication
+6. Data Store Integration: This layer represents the different db components used in the Radish34 implementation to manage data across the storage instances \(Mongo DB\) and cache instances \(Redis DB\)
+
+Additional integrations:
+
+1. Custom wallet \(in the form of config files\) are leveraged by the API and Blockchain interaction components to transact on chain. The config files are loaded as part of the build process, and contain key metadata required for the overall application user configuration settings
+2. Public mainnet integrations are handled through the API to in turn invoke RPC calls to the ethereum mainnet
+
+![Radish34 Functional Component Architecture](../.gitbook/assets/image.png)
+
 
 
 ## 
