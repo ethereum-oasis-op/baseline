@@ -1,6 +1,6 @@
 # Radish34 Explained
 
-Radish34 is a proof of concept, a reference implementation, a demo. In 2019, a joint development effort to build it led to the Baseline Protocol, a way for enterprises to use the [Mainnet](../baseline-basics/glossary.md#mainnet) as [middleware](../baseline-basics/glossary.md#middleware) without compromising corporate information security practices. Radish34 remains the best way to show the general baseline approach in a specific example. You can build and run the proof of concept [here](radish34-start.md). And you can see how a set of companies would integrate their supply chain management systems in this [interactive demo](demo.md).
+Radish34 is a proof of concept, a reference implementation, a demo. In 2019, a joint development effort to build it led to the Baseline Protocol, a way for enterprises to use the [Mainnet](../baseline-basics/glossary.md#mainnet) as [middleware](../baseline-basics/glossary.md#middleware) without compromising corporate information security practices. Radish34 remains the best way to show the general baseline approach in a specific example. You can build and run the proof of concept [here](radish34-poc.md). And you can see how a set of companies would integrate their supply chain management systems in this [interactive demo](radish34-demo.md).
 
 ## The Procurement Use Case
 

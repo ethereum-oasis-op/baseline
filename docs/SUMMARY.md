@@ -5,11 +5,11 @@
 ## Radish34 Demo
 
 * [Radish34 Explained](radish34-demo/radish34.md)
-* [Radish34 Interactive Demo](radish34-demo/demo.md)
-* [Getting Started with Radish34](radish34-demo/radish34-start.md)
+* [Radish34 Interactive Demo](radish34-demo/radish34-demo.md)
+* [Radish34 POC](radish34-demo/radish34-poc.md)
 * [Radish34 Workflow](radish34-demo/radish34-workflow.md)
 * [Radish34 Key Diagrams](radish34-demo/radish34-diagrams.md)
-* [Modifying Radish34](radish34-demo/mods.md)
+* [Modifying Radish34](radish34-demo/radish34-mods.md)
 * [From POC to Protocol](radish34-demo/poc-to-protocol.md)
 
 ## Baseline Protocol
@@ -33,7 +33,7 @@
 * [Baseline Server](components/baseline-server/README.md)
   * [Messenger](components/baseline-server/messenger.md)
   * [Zero Knowledge Service](components/baseline-server/zero-knowledge-service.md)
-  * [Untitled](components/baseline-server/untitled.md)
+  * [Data Integration Service](components/baseline-server/untitled.md)
   * [APIs](components/baseline-server/apis.md)
 * [On-Chain Functions](components/on-chain.md)
 * [UI Integration](components/ui-integration.md)
