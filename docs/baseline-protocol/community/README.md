@@ -100,11 +100,17 @@ Follow these steps when submitting a pull request:
 
 ## OASIS and Governance
 
+OASIS Open is a non-profit, vendor-neutral standards developing organization. It provides rules and guidelines to ensure equitable and transparent oversight of technical collaborations in open source and open standards.  Additionally, it provides services such as technical program support, legal, marketing, and events management.
 
+The Baseline Protocol is governed by the [Ethereum OASIS Project Governing Board](https://www.baseline-protocol.org/about/) under the [OASIS Open Projects Program](http://oasis-open-projects.org/).  Ethereum OASIS exists to provide a neutral forum for companies and community representatives to create high-quality specifications that facilitate Ethereum’s longevity, interoperability, and ease of integration.  One does not have to "join" the group formally or financially  in order to make a contribution to Baseline or other Ethereum OASIS projects.  
 
-### 
+Additional documentation about the OASIS Open Projects program can be found [here](https://github.com/oasis-open-projects/documentation).  
 
-## 
+## License and Patent Policies
+
+All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and patent polices. 
+
+##  
 
 
 
