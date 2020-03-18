@@ -20,7 +20,7 @@ We will hold Onboarding office hours twice a week at least until June 2020. Sign
 
 #### **Roadmapping**
 
-There will be sessions \(online for now during the period of global pandemic\) to dive deep on the technology
+There will be sessions \(online for now during the period of global pandemic\) to dive deep on the technology. Check the [calendar](https://lists.oasis-open-projects.org/g/baseline/calendar) for details.
 
 #### Technical Steering Committee
 
