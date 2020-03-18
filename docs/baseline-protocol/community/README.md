@@ -10,7 +10,7 @@ All work in the [Baseline Protocol public repo](https://github.com/ethereum-oasi
 
 ### Meetings and Meetups
 
-Check the [**group calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for times/dates of these online \(and eventually f2f\) meetings. If the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. Chime in on the [**Slack**](https://communityinviter.com/apps/ethereum-baseline/join-us)...don't be shy.
+Check the [**group calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for times/dates of these online \(and eventually face to face\) meetings. If the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. Chime in on the [**Slack**](https://communityinviter.com/apps/ethereum-baseline/join-us)...don't be shy.
 
 #### Onboarding: Help Getting Started
 
