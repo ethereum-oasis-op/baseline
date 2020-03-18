@@ -38,7 +38,7 @@ The Baseline Protocol initiative maintains a Slack channel that is moderated but
 
 #### Members Directory
 
-You can [**sign up**](https://lists.oasis-open-projects.org/g/baseline) to the baseline protocol members list and get access to the [**Directory**](https://lists.oasis-open-projects.org/g/baseline/directory).
+You can [**sign up**](https://lists.oasis-open-projects.org/g/baseline) to the baseline protocol members list and get access to the [**Directory**](https://lists.oasis-open-projects.org/g/baseline/directory). This will show you any members who have elected to be displayed publicly. There are others who will choose to be hidden but will receive group emails.
 
 #### Group Email
 
