@@ -30,7 +30,7 @@ This should spin up two containers: `api` and `api-watch`; wherein `api` contain
 
 ## What is the architecture?
 
-[!RadishAPIArch](../docs/assets/RadishAPIArch.png)
+![RadishAPIArch](../../docs/assets/RadishAPIArch.png)
 
 The Radish server is an instantiation of a microservice (docker) based baseline architecture consisting of the following services:
 - API: GraphQL based interface, serving as a gateway to the other services in the Radish server and enabling transactions on the mainnet

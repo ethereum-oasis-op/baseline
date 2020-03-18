@@ -55,7 +55,7 @@ zkp_1            | [nodemon] starting `node ./dist/index.js`
 zkp-watch_1      | > npm run build -- --watch
 zkp-watch_1      |
 zkp-watch_1      |
-zkp-watch_1      | > radish34-zoprates@1.0.0 build /app
+zkp-watch_1      | > radish34-zokrates@1.0.0 build /app
 zkp-watch_1      | > cod-scripts build "--watch"
 zkp-watch_1      |
 zkp-watch_1      | Successfully compiled 6 files with Babel.
