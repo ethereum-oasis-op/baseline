@@ -273,46 +273,77 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
       // assign global states for PO tests:
       msaId = res.body.data.createMSA._id
     });
+
+    test('After a while, the commitment index should not be null', async () => {
+      const queryBody = `{ msa(id:"${msaId}")
+                            {
+                              _id,
+                              commitments {
+                                index
+                              }
+                            }
+                          }`
+      // Wait for db to update
+      console.log('This test can take up to 10 minutes to run. It will provide frequent status updates');
+      let res;
+      for (let retry = 0; retry < 30; retry++) {
+        console.log('Checking for non-null msa index, attempt:', retry);
+        res = await request(buyerApiURL)
+          .post('/graphql')
+          .send({ query: queryBody });
+        if (res.body.data.msa && res.body.data.msa.commitments[0].index !== null) {
+          console.log('Test complete');
+          break;
+        }
+        await new Promise((r) => setTimeout(r, 20000));
+      }
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.data.msa._id).not.toBeUndefined();
+      expect(res.body.data.msa.index).not.toBeNull();
+    });
   });
 });
 
-// describe('Buyer creates PO', () => {
-//   describe('Create new PO through buyer radish-api', () => {
-//     test('Buyer graphql mutation createPO() returns 400 without volume', async () => {
-//       const postBody = ` mutation {
-//           createPO( input: {
-//             msaId: "${msaId}",
-//             volume: 300
-//           })
-//           { _id }
-//         } `
-//
-//       const res = await request(buyerApiURL)
-//         .post('/graphql')
-//         .send({ query: postBody });
-//
-//       expect(res.statusCode).toEqual(400);
-//     });
-//
-//     test('Buyer graphql mutation createPO() returns 200', async () => {
-//       const postBody = ` mutation {
-//         createPO( input: {
-//           msaId: "${msaId}",
-//           volume: 300
-//         })
-//         { zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku, _id, commitment, salt }
-//       } `
-//
-//       const res = await request(buyerApiURL)
-//         .post('/graphql')
-//         .send({ query: postBody });
-//
-//       expect(res.statusCode).toEqual(200);
-//       expect(res.body.data.createPO.zkpPublicKeyOfBuyer).toEqual('0x99246c83ca94b55a7330f68952ee74574a7d3b1921ccf29c84f75975935e6333');
-//       expect(res.body.data.createPO.zkpPublicKeyOfSupplier).toEqual('0x83e7b0ea610bde1adc00f50fa541fd2a220fcc55743fa34d2fb33eb9da563143');
-//       expect(res.body.data.createPO.sku).toEqual('FAKE-SKU-123');
-//       expect(res.body.data.createPO._id).not.toBeNull();
-//       expect(res.body.data.createPO.commitment).not.toEqual(null);
-//     });
-//   });
-// });
+describe('Buyer creates PO', () => {
+  describe('Create new PO through buyer radish-api', () => {
+    test('Buyer graphql mutation createPO() returns 400 without volume', async () => {
+      const postBody = ` mutation {
+          createPO( input: {
+            msaId: "${msaId}",
+            description: "300 units",
+            deliveryDate: 1584051780,
+          })
+          { _id }
+        } `
+
+      const res = await request(buyerApiURL)
+        .post('/graphql')
+        .send({ query: postBody });
+
+      expect(res.statusCode).toEqual(400);
+    });
+
+    test('Buyer graphql mutation createPO() returns 200', async () => {
+      const postBody = ` mutation {
+        createPO( input: {
+          msaId: "${msaId}",
+          description: "300 units",
+          deliveryDate: 1584051780,
+          volume: 300
+        })
+        { _id, constants { zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku }, commitments { commitment, salt } }
+      } `
+
+      const res = await request(buyerApiURL)
+        .post('/graphql')
+        .send({ query: postBody });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body.data.createPO.constants.zkpPublicKeyOfBuyer).toEqual('0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965');
+      expect(res.body.data.createPO.constants.zkpPublicKeyOfSupplier).toEqual('0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5');
+      expect(res.body.data.createPO.constants.sku).toEqual('FAKE-SKU-123');
+      expect(res.body.data.createPO._id).not.toBeNull();
+      expect(res.body.data.createPO.commitments[0]).not.toEqual(null);
+    });
+  });
+});

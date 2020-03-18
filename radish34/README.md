@@ -143,8 +143,8 @@ After you've done that, log in to the Github package registry by running
       ----------------- Completed  -----------------
       Please restart the radish-apis for the config to take effect
    ```
-1. run `docker-compose up -d`
-   - This will start all `radish` containers
+1. Run `docker-compose up -d && docker-compose restart`
+   - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
    - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui`
    Example Logs:
@@ -164,7 +164,69 @@ After you've done that, log in to the Github package registry by running
       radish-api-buyer        | 🚀 Server ready at http://localhost:8001/graphql
       radish-api-buyer        | 🚀 Subscriptions ready at ws://localhost:8001/graphql`
    ```
-1. Run integration tests: `npm run test`
+1. Run integration tests: `npm run test`. ** This takes about 3-5 minutes to run to completion **
+   Example Logs:
+   ```
+         time npm run test
+
+      > NODE_ENV=test jest --verbose --runInBand --forceExit
+
+      console.log __tests__/integration.test.js:287
+         This test can take up to 10 minutes to run. It will provide frequent status updates
+
+      console.log __tests__/integration.test.js:290
+         Checking for non-null msa index, attempt: 0
+
+      console.log __tests__/integration.test.js:290
+         Checking for non-null msa index, attempt: 1
+
+      console.log __tests__/integration.test.js:290
+         Checking for non-null msa index, attempt: 2
+
+      console.log __tests__/integration.test.js:290
+         Checking for non-null msa index, attempt: 3
+
+      console.log __tests__/integration.test.js:295
+         Test complete
+
+      PASS  __tests__/integration.test.js (181.696s)
+      Check that containers are ready
+         Buyer containers
+            ✓ Buyer messenger GET /health-check returns 200 (13ms)
+            ✓ Buyer radish-api REST server GET /health-check returns 200 (16ms)
+         Supplier containers
+            ✓ Supplier messenger GET /health-check returns 200 (6ms)
+            ✓ Supplier radish-api REST server GET /health-check returns 200 (12ms)
+      Buyer sends new RFP to supplier
+         Retrieve identities from messenger
+            ✓ Supplier messenger GET /identities (7ms)
+            ✓ Buyer messenger GET /identities (6ms)
+         Create new RFP through buyer radish-api
+            ✓ Buyer graphql mutation createRFP() returns 400 withOUT sku (46ms)
+            ✓ Buyer graphql mutation createRFP() returns 200 (77ms)
+         Check RFP existence through radish-api queries
+            ✓ Buyer graphql query rfp() returns 200 (23ms)
+            ✓ Supplier graphql query rfp() returns 200 (2116ms)
+         Check RFP contents through radish-api query
+            ✓ Buyer rfp.recipients.origination contents are correct (25ms)
+            ✓ Supplier messenger has raw message that delivered RFP from buyer (11ms)
+      Buyer creates MSA, signs it, sends to supplier, supplier responds with signed MSA
+         Create new MSA through buyer radish-api
+            ✓ Buyer graphql mutation createMSA() returns 400 without sku (11ms)
+            ✓ Buyer graphql mutation createMSA() returns 200 (447ms)
+            ✓ After a while, the commitment index should not be null (60131ms)
+      Buyer creates PO
+         Create new PO through buyer radish-api
+            ✓ Buyer graphql mutation createPO() returns 400 without volume (10ms)
+            ✓ Buyer graphql mutation createPO() returns 200 (117616ms)
+
+      Test Suites: 1 passed, 1 total
+      Tests:       17 passed, 17 total
+      Snapshots:   0 total
+      Time:        181.74s
+      Ran all test suites.
+      npm run test  3.35s user 3.37s system 3% cpu 3:06.52 total
+   ```
 1. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
 
 ## Troubleshooting
@@ -182,7 +244,7 @@ nvm use 11
 1. Increase RAM allocated to Docker
    - Consider these steps if you are running many of the `radish` containers and your PC is bogged down
    - Check the memory usage by running `docker stats`
-   - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` (default is `2.0GiB`).
+   - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` (default is `2.0GiB`). Although not required in all cases, it is recommended to increase the swap memory to 4GB and CPU cores to 8 on Docker Preferences/Settings.
 
 ### Front-end Environment
 
