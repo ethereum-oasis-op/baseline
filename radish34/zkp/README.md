@@ -31,39 +31,39 @@ During the set up of the Radish34 server, the circuits are compiled and set up t
 
 Run the following instruction to ensure that the service is up:
 
-`docker-compose up -d radish-zkp`
+`docker-compose up -d zkp`
 
-This should spin up two containers: `radish-zkp` and `radish-zkp-watch`; wherein `radish-zkp` contains RESTful end points for interacting with the service. And `radish-zkp-watch` runs in the background to ensure that the js files in the former container are appropriately compiled using babel.
+This should spin up two containers: `zkp` and `zkp-watch`; wherein `zkp` contains RESTful end points for interacting with the service. And `zkp-watch` runs in the background to ensure that the js files in the former container are appropriately compiled using babel.
 
 Logs should look like the following:
 
-`radish-zkp`: `docker-compose logs -f radish-zkp`
+`zkp`: `docker-compose logs -f zkp`
 ```
 radish34-zokrates@1.0.0 dev /app
-radish-zkp_1            | > nodemon ./dist/index.js
-radish-zkp_1            |
-radish-zkp_1            | [nodemon] 1.19.4
-radish-zkp_1            | [nodemon] to restart at any time, enter `rs`
-radish-zkp_1            | [nodemon] watching dir(s): *.*
-radish-zkp_1            | [nodemon] watching extensions: js,mjs,json
-radish-zkp_1            | [nodemon] starting `node ./dist/index.js`
+zkp_1            | > nodemon ./dist/index.js
+zkp_1            |
+zkp_1            | [nodemon] 1.19.4
+zkp_1            | [nodemon] to restart at any time, enter `rs`
+zkp_1            | [nodemon] watching dir(s): *.*
+zkp_1            | [nodemon] watching extensions: js,mjs,json
+zkp_1            | [nodemon] starting `node ./dist/index.js`
 
 ```
 
-`radish-zkp-watch`: `docker-compose logs -f radish-zkp-watch`
+`zkp-watch`: `docker-compose logs -f zkp-watch`
 
 ```
 radish34-zokrates@1.0.0 build:watch /app
-radish-zkp-watch_1      | > npm run build -- --watch
-radish-zkp-watch_1      |
-radish-zkp-watch_1      |
-radish-zkp-watch_1      | > radish34-zkprates@1.0.0 build /app
-radish-zkp-watch_1      | > cod-scripts build "--watch"
-radish-zkp-watch_1      |
-radish-zkp-watch_1      | Successfully compiled 6 files with Babel.
+zkp-watch_1      | > npm run build -- --watch
+zkp-watch_1      |
+zkp-watch_1      |
+zkp-watch_1      | > radish34-zkprates@1.0.0 build /app
+zkp-watch_1      | > cod-scripts build "--watch"
+zkp-watch_1      |
+zkp-watch_1      | Successfully compiled 6 files with Babel.
 ```
 
-`radish-zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/circuits/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish-zkp.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
+`zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/circuits/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish34-zkp.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
 
 ### `generateKeys`
 This is a POST instruction that runs `compile`, `setup` and `exportVerifier` instructions.
@@ -75,7 +75,7 @@ E.g. for a file at `/app/circuits/path/to/test.zok` the filepath is `path/to/tes
 The `/app/output` dir will contain the outputs of these steps copied from within the container.
 
 Example: (Replace `path/to/test.zok` with the filepath of the file to be computed).  
-`curl -d '{"filepath": "path/to/test.zok"}' -H "Content-Type: application/json" -X POST http://radish-zkp.docker/generate-keys`
+`curl -d '{"filepath": "path/to/test.zok"}' -H "Content-Type: application/json" -X POST http://radish34-zkp.docker/generate-keys`
 
 ### `generateProof`
 This is a POST instruction that runs `compute-witness` and `generate-proof` instructions.
@@ -87,7 +87,7 @@ Request body:
 The `/app/output` dir has the outputs of these steps copied from within the container. When the `generate-proof` instruction is run, the corresponding `proof.json` is stored in the `/app/output` dir.  
 
 Example: (Replace `filename` with the name of the file for which we're creating a witness).  
-`curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish-zkp.docker/generate-proof`
+`curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish34-zkp.docker/generate-proof`
 
 Alternatively, the POSTMAN application can be used to run these curl requests.
 
@@ -101,7 +101,7 @@ Request body:
 `id`: the name of the `.zok` file (without the `.zok` file extension).
 
 Example:
-`curl -d '{"id": "test"}' -H "Content-Type: application/json" -X GET http://radish-zkp.docker/vk`
+`curl -d '{"id": "test"}' -H "Content-Type: application/json" -X GET http://radish34-zkp.docker/vk`
 
 ### Testing individual `.zok` files
 
