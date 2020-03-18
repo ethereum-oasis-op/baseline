@@ -1,0 +1,81 @@
+{
+  "name": "radish-34",
+  "version": "1.0.0",
+  "description": "Codebase for Radish34 application - procurement use case for the Baseline protocol",
+  "contributors": [
+    "A.J. May <aj-may>",
+    "Brian Chamberlain <breakpointer>",
+    "Chaitanya Konda <ChaitanyaKonda>",
+    "Claudia Baik <clacla826>",
+    "Duncan Westland <Westlad>",
+    "Kartheek Solipuram <skarred14>",
+    "Patrick Macom <pmacom>",
+    "Sam Stokes <bitwiseguy>",
+    "Wenxing Wang <wenxing-wang-ey>"
+  ],
+  "license": "SEE LICENSE in license.md",
+  "main": "index.js",
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "<rootDir>/__tests__/**"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/__tests__/postman"
+    ]
+  },
+  "scripts": {
+    "build:contracts": "pushd contracts && npm run build && popd",
+    "deploy": "docker-compose run --rm deploy sh deploy.sh",
+    "deploy:all": "docker-compose run -e MODE='register-all' --rm radish-deploy sh deploy.sh",
+    "docs:build": "./bin/docs_build.sh",
+    "lint": "solhint \"contracts/**/*.sol\"",
+    "postman-test-zkp-api": "npx newman run zkp/src/test/zkp-api-integration-test.postman_collection.json -e zkp/src/test/radish-local.postman_environment.json",
+    "postman-integration-test": "npx newman run __tests__/postman/integration-test.postman_collection.json  -e  __tests__/postman/radish-local.postman_environment.json --delay-request 1000",
+    "postinstall": "(pushd messenger && npm ci && popd); (pushd api && npm ci && popd); (pushd deploy && npm ci && popd); (pushd ui && npm ci && popd); (pushd zkp && npm ci && popd); (pushd contracts && npm ci && popd)",
+    "setup": "./bin/setup.sh",
+    "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
+    "test:watch": "jest --watchAll --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EYBlockchain/radish-34.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EYBlockchain/radish-34/issues"
+  },
+  "homepage": "https://github.com/EYBlockchain/radish-34#readme",
+  "dependencies": {
+    "@babel/preset-env": "^7.7.7",
+    "@devexpress/dx-react-core": "^2.2.1",
+    "@devexpress/dx-react-grid": "^2.2.1",
+    "@devexpress/dx-react-grid-material-ui": "^2.2.1",
+    "@material-ui/icons": "^4.5.1",
+    "big-integer": "^1.6.48",
+    "hex-to-binary": "^1.0.1",
+    "openzeppelin-solidity": "^2.4.0"
+  },
+  "devDependencies": {
+    "@0x/sol-compiler": "^3.1.8",
+    "@0x/sol-coverage": "^3.0.5",
+    "@0x/sol-profiler": "^3.1.7",
+    "@0x/sol-trace": "^2.0.13",
+    "apidoc": "^0.20.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "ethereum-doppelganger": "0.0.7",
+    "ethers": "^4.0.42",
+    "husky": "^4.2.3",
+    "jest": "^24.8.0",
+    "jsdoc": "^3.6.3",
+    "mongodb": "^3.5.4",
+    "prettier-eslint": "^9.0.1",
+    "solhint": "2.1.0",
+    "solidity-docgen": "^0.3.14",
+    "supertest": "^4.0.2",
+    "web3-provider-engine": "^15.0.4"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "radish34-deploy",
+  "version": "1.0.0",
+  "description": "One time job for deploying Radish34 smart contracts",
+  "contributors": [
+    "Chaitanya Konda <ChaitanyaKonda>",
+    "Duncan Westland <Westlad>",
+    "Kartheek Solipuram <skarred14>",
+    "Patrick Macom <pmacom>",
+    "Sam Stokes <bitwiseguy>",
+    "Wenxing Wang <wenxing-wang-ey>"
+  ],
+  "license": "SEE LICENSE in root/license.md",
+  "main": "src/app.js",
+  "scripts": {
+    "check": "node ./src/app.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "config": "^3.2.4",
+    "ethers": "^4.0.40",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "cod-scripts": "^3.2.0"
+  }
+}
