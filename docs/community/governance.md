@@ -33,7 +33,7 @@ After the six month Startup Period, there shall be a nomination and election per
 
 #### Maintainers: 
 
-Contributors who have the ability to commit code and contributions to a repo's main branch on the Baseline Protocol. A Contributor may become a Maintainer by a majority approval of the existing Maintainers.
+Contributors who have the ability to commit code and contributions to a repo's main branch on the Baseline Protocol. A Contributor may become a Maintainer by a majority approval of the existing Maintainers. The initial number of maintainers required to merge a pull request to master in the github repo shall be three, but may be amended to no fewer than two by a simple majority of the maintainers.
 
 #### Contributors: 
 

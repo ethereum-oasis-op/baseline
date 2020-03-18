@@ -84,7 +84,7 @@ The position is annual and chosen by popular vote of contributors who have had w
 
 ### [**Aztec**](https://www.aztecprotocol.com/)**,**  [**ConsenSys Health**](https://consensyshealth.com)**,**  [**Anyblock Analytics GmbH**](https://anyblockanalytics.com)**,**  [**Ocyan Cloud Technology LTD**](https://ocyan.com)**,**  [**Digital Scarcity**](http://digitalscarcity.io/)**,** Energy Web Foundation, The Graph
 
-## Contributors and Maintainers \(in GitHub Repo\)
+## Contributors and Maintainers
 
 | Name | Github Handle | Company |
 | :--- | :--- | :--- |
