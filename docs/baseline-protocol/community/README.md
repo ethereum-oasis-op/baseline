@@ -10,7 +10,7 @@ All work in the [Baseline Protocol public repo](https://github.com/ethereum-oasi
 
 ### Meetings and Meetups
 
-**Help Getting Started**:  We will hold Onboarding office hours twice a week. ****Check the [**group calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for times. And if the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. Chime in on the [Slack](https://communityinviter.com/apps/ethereum-baseline/join-us)...don't be shy.
+**Help Getting Started**:  We will hold Onboarding office hours twice a week. ****Check the [**group calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for times. And if the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. Chime in on the [**Slack**](https://communityinviter.com/apps/ethereum-baseline/join-us)...don't be shy.
 
 ### Onboarding Practices and Offers
 
