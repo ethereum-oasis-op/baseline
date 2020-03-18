@@ -1,16 +1,16 @@
 # Open Source Community
 
-The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020 and launched as an [OASIS](https://oasis-open-projects.org/) open source project on \[ March X, 2020 \], supported by fourteen founding companies. The initiative is strongly aligned with the Mainnet Working Group, a joint effort of the [Enterprise Ethereum Alliance](https://entethalliance.org) and the [Ethereum Foundation](https://ethereum.org).
+The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020 and launched as an [OASIS](https://oasis-open-projects.org/) open source project on March 19, 2020, supported by fourteen founding companies. The initiative is strongly aligned with the Mainnet Working Group, a joint effort of the [Enterprise Ethereum Alliance](https://entethalliance.org) and the [Ethereum Foundation](https://ethereum.org).
 
-A 2019 project exploring ways to use the public Ethereum network in a procurement use case produced insights that led to the formation of the protocol initiative. The companies that conducted the project -- EY, ConsenSys, and Microsoft -- donated the work as a public domain contribution to the non-profit open standards organization, OASIS under [eCLA](https://www.oasis-open.org/resources/open-repositories/cla/). They were joined on March 4, 2020 by [AMD](https://www.amd.com/en/technologies/blockchain), [ChainLink](https://chain.link/), [Core Convergence](https://www.coreconvergence.us/), [Duke University](https://pratt.duke.edu/), [Envision Blockchain](https://envisionblockchain.com/), [MakerDAO](https://makerdao.com/en/), [Neocova](https://neocova.com/), [Splunk](https://www.splunk.com/), [Unibright](https://unibright.io/), [Provide](https://provide.services/), and [W3BCLOUD](https://www.w3bcloud.com/).
+> This work is active and open to contributors.
+
+All work in the [Baseline Protocol public repo](https://github.com/ethereum-oasis/baseline) is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [`license.md`](https://github.com/ethereum-oasis/baseline/blob/master/license.md).
 
 ## Contributors Guide
 
-{% embed url="https://github.com/ethereum-oasis/baseline/blob/master/README.md" caption="Top Readme of the Github Repo" %}
+
 
 ## How to contribute?
-
-**Baseline** is an open-source project that is actively seeking contributions from any willing participants. Here are some guidelines for people that would like to contribute to the project.
 
 ### Submitting an issue
 
