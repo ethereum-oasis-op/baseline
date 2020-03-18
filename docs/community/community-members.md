@@ -32,7 +32,7 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 
 ### Your Technical Steering Committee
 
-The technical steering committee \(TSC\) is accountable to the Project Governance Board for organizing 
+The technical steering committee \(TSC\) is accountable to the Project Governance Board for bootstrapping the maintainer group, stepping in to resolve any conflicts on merges or maintainer self-organization 
 
 | Name | Company |
 | :--- | :--- |
