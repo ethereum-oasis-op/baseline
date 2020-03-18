@@ -4,9 +4,11 @@ Over 400 people and companies signed up to be notified about the opening of the 
 
 ## Governance
 
+The Baseline Protocol initiative is governed by the rules of OASIS and by the 
+
 ### Your Project Governance Board
 
-The project governance board \(PGB\) is organized by OASIS and is accountable for ensuring the balance and integrity of the Ethereum-Oasis initiatives, such as the Baseline Protocol. The PGB is responsible for 
+The project governance board \(PGB\) is organized by OASIS and is accountable for ensuring the balance and integrity of the Ethereum-Oasis initiatives, such as the Baseline Protocol. 
 
 | Name | Organization |
 | :--- | :--- |
