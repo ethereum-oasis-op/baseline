@@ -2,6 +2,12 @@
 
 * [Welcome](README.md)
 
+## Community
+
+* [Open Source Community](community/community.md)
+* [Community Members](community/community-members.md)
+* [Governance](community/governance.md)
+
 ## Radish34 Demo
 
 * [Radish34 Explained](radish34-demo/radish34.md)
@@ -15,9 +21,6 @@
 ## Baseline Protocol
 
 * [The Baseline Protocol](baseline-protocol/protocol.md)
-* [Open Source Community](baseline-protocol/community/README.md)
-  * [Community Members](baseline-protocol/community/community-members.md)
-  * [Governance](baseline-protocol/community/governance.md)
 * [Baseline Process](baseline-protocol/process.md)
 * [Components](baseline-protocol/components/README.md)
   * [APIs](baseline-protocol/components/apis.md)

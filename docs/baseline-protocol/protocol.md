@@ -2,7 +2,7 @@
 
 The Baseline Protocol is an open source initiative that combines advances in cryptography, messaging, and blockchain to deliver secure and private business processes at low cost via the public Mainnet. The protocol will enable confidential and complex collaboration between enterprises without leaving any sensitive data on-chain. The work is governed by the [Ethereum-Oasis Project](https://github.com/ethereum/oasis-open-project), which is managed by [OASIS](https://oasis-open-projects.org/) and funded by the [Ethereum Foundation](https://ethereum.org/) and the [Enterprise Ethereum Alliance](https://entethalliance.org/).
 
-## Why Baseline Different Systems of Record?
+## Why _Baseline_ Different Systems of Record?
 
 Businesses spend hundreds of millions of dollars on ERP, CRM and other internal systems of record. Failure to properly synchronize these systems between organizations causes considerable disruption and waste: disputes, lost inventory, inflated capital costs, regulatory actions, and other value leakage. To avoid these problems, systems require a common frame of reference. But only the largest high-volume partnerships can afford the capital expense involved in setting up such integrations. The baseline approach employs the public Ethereum Mainnet as that common frame of reference, because it’s always on, companies can’t be locked out or restricted from using it, and they only need to pay for what they use.
 
