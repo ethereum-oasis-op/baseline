@@ -1,7 +1,7 @@
 {
-  "name": "radish-34",
-  "version": "1.0.0",
-  "description": "Codebase for Radish34 application - procurement use case for the Baseline protocol",
+  "name": "Baseline",
+  "version": "0.0.1",
+  "description": "Baseline protocol monorepo",
   "contributors": [
     "A.J. May <aj-may>",
     "Brian Chamberlain <breakpointer>",
@@ -16,16 +16,16 @@
   "license": "SEE LICENSE in license.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EYBlockchain/radish-34.git"
+    "url": "git+https://github.com/ethereum-oasis/baseline.git"
   },
   "bugs": {
-    "url": "https://github.com/EYBlockchain/radish-34/issues"
+    "url": "https://github.com/ethereum-oasis/baseline/issues"
   },
-  "homepage": "https://github.com/EYBlockchain/radish-34#readme",
   "scripts": {
-    "docs:build": "bin/docs_build.sh",
-    "test": "lerna run test"
+    "bootstrap": "lerna bootstrap",
+    "clean": "bin/clean_npm.sh"
   },
+  "homepage": "https://baseline-protocol.org",
   "devDependencies": {
     "lerna": "^3.20.2"
   }
