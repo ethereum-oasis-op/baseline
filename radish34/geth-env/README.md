@@ -1,6 +1,7 @@
 # Local Ethereum Network
 
-This directory contains the code needed to run a local, private Ethereum network. The repo's root-level `docker-compose.yml` uses this code to deploy the following types of containers. **Do not use this setup in a production environment. The docker-compose.yml contains hardcoded Ethereum account passwords and private keys.**
+This directory contains the code needed to run a local, private Ethereum network. This network is used as the messaging layer to send messages between Radish34 users via the Whisper protocol within geth nodes. The repo's root-level `docker-compose.yml` uses this code to deploy the following types of containers. 
+> Warning: Do not use this setup in a production environment. The docker-compose.yml contains hardcoded Ethereum account passwords and private keys.
 
 1. **bootnode**: need (1) of these to register nodes on the network and connect them to peers
 2. **miner**: need at least (2) of these running in order to produce new blocks in our local, private PoA (proof-of-authority) network

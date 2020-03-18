@@ -1,4 +1,9 @@
-# Messenger Service
+---
+title: Messenger Service component
+description: Detailed explanation of the messaging service components of the Radish34 implementation
+---
+
+# Messenger Service component
 
 ## What is here?
 
