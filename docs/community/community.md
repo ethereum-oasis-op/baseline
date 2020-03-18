@@ -24,11 +24,11 @@ There will be sessions \(online for now during the period of global pandemic\) t
 
 #### Technical Steering Committee
 
-
+The [TSC](community-members.md#your-technical-steering-committee) will meet typically once a month, biweekly during the early direction setting period from March to June of 2020. Members of the TSC can check the TSC [sub-group calendar](https://lists.oasis-open-projects.org/g/baseline-tsc/calendar) and receive invitations.
 
 #### Specifications Steering Committee
 
-
+The [SSC](community-members.md#your-specifications-steering-committee) will meet typically once a month, biweekly during the early direction setting period from March to June of 2020. Members of the SSC can check the SSC [sub-group calendar](https://lists.oasis-open-projects.org/g/baseline/subgroups) and receive invitations.
 
 ### Connecting with Each Other Directly
 
@@ -54,7 +54,7 @@ The Baseline Protocol initiative maintains the [@baselineproto](https://twitter.
 
 #### Medium
 
-The Baseline Protocol initiative will use Medium to post blogs. 
+The Baseline Protocol initiative will use Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol).  Reach out on Slack to the chair, OASIS team or members of the steering committees, if you want to be a writer or editor.
 
 ## Contributors Guide
 
