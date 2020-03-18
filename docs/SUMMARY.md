@@ -20,31 +20,30 @@
   * [Community Governance](baseline-protocol/community/community-governance.md)
   * [Community Tools](baseline-protocol/community/community-tools.md)
 * [Baseline Process](baseline-protocol/process.md)
+* [Components](baseline-protocol/components/README.md)
+  * [APIs](baseline-protocol/components/apis.md)
+  * [Data Integration Service](baseline-protocol/components/untitled.md)
+  * [UI Integration](baseline-protocol/components/ui-integration.md)
+  * [On-Chain Functions](baseline-protocol/components/on-chain.md)
+  * [Zero Knowledge Service](baseline-protocol/components/zero-knowledge-service.md)
+  * [Messenger](baseline-protocol/components/messenger.md)
 * [Performance Stats and Specs](baseline-protocol/performance.md)
 * [Standards](baseline-protocol/standards/README.md)
   * [Functional Requirements](baseline-protocol/standards/functional-requirements.md)
   * [Non-Functional Requirements](baseline-protocol/standards/nfr.md)
+  * [Driving Mainnet Evolution](baseline-protocol/standards/mainnet-1.md)
   * [Mainnet](baseline-protocol/standards/mainnet.md)
-* [Driving Mainnet Evolution](baseline-protocol/mainnet.md)
 * [Roadmap](baseline-protocol/roadmap.md)
-
-## Components
-
-* [Baseline Services](components/baseline-services/README.md)
-  * [Messenger](components/baseline-services/messenger.md)
-  * [Zero Knowledge Service](components/baseline-services/zero-knowledge-service.md)
-  * [Data Integration Service](components/baseline-services/untitled.md)
-  * [APIs](components/baseline-services/apis.md)
-* [On-Chain Functions](components/on-chain.md)
-* [UI Integration](components/ui-integration.md)
 
 ## Baselining Your Product <a id="baselining"></a>
 
 * [How to 'Baseline' Your Product](baselining/your-product.md)
-* [Supply Chain Management](baselining/scm.md)
-* [ERP & CRM](baselining/erp-crm.md)
-* [Core Banking](baselining/core-banking.md)
-* [Enterprise Middleware](baselining/enterprise-middleware.md)
+* [Industry Verticals](baselining/industry-verticals/README.md)
+  * [Healthcare](baselining/industry-verticals/healthcare.md)
+  * [Core Banking](baselining/industry-verticals/core-banking.md)
+  * [ERP & CRM](baselining/industry-verticals/erp-crm.md)
+  * [Supply Chain Management](baselining/industry-verticals/scm.md)
+* [Cloud](baselining/enterprise-middleware.md)
 
 ## Baseline Basics
 
