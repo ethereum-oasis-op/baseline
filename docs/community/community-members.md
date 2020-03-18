@@ -1,16 +1,12 @@
 # Community Members
 
-Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th  and 19th, 2020. Over 300 of them also signed in as group members. The members represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
+Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th  and 19th, 2020. Over 300 of them also signed in as group members. The [members](https://lists.oasis-open-projects.org/g/baseline/directory) represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
 
 ### **Leadership**
 
 In an openly governed open standards / open source initiative, leadership is organic. One need not be seated to a committee to lead. One need not be the chair to lead the community in a direction. \(Indeed, the chair's primary job is to harmonize the interests of others and help the community move to a shared vision, not necessarily to forward their own point of view.\)  
 
-> The way to lead is to start something, help something, fix something...even spellcheck something!
->
-> The way to lead is to get others to amplify what you are doing \(best done by listening deeply to others first\).
->
-> The way to lead is to serve your own \(and your company's\) enlightened self interest. You should be able to draw a straight line from your time on this work to real impact for your own offerings.
+> **The way to lead is to start something, help something, fix something...even spellcheck something!  The way to lead is to get others to amplify what you are doing \(best done by listening deeply to others first\). The way to lead is to serve your own \(and your company's\) enlightened self interest. You should be able to draw a straight line from your time on this work to real impact for your own offerings.**
 
 The people and companies listed below have stepped up to identify themselves as supporters, stakeholders, responsible parties, and accountable parties to help bootstrap the work. 
 
@@ -84,7 +80,13 @@ The position is annual and chosen by popular vote of contributors who have had w
 
 ### \*\*\*\*[**AMD**](https://www.amd.com/en/technologies/blockchain)**,** [**EY**](https://blockchain.ey.com/)**,** [**ChainLink**](https://chain.link/)**,** [**Core Convergence**](https://www.coreconvergence.us/)**,** [**ConsenSys**](https://consensys.net/)**,** [**Duke University**](https://pratt.duke.edu/)**,** [**Envision Blockchain**](https://envisionblockchain.com/)**,** [**MakerDAO**](https://makerdao.com/en/)**,** [**Microsoft**](http://www.microsoft.com/)**,** [**Neocova**](https://neocova.com/)**,** [**Splunk**](https://www.splunk.com/)**,** [**Unibright**](https://unibright.io/)**,** [**Provide**](https://provide.services/)**, and** [**W3BCLOUD**](https://www.w3bcloud.com/)**.**
 
-## New Contributors Wishing to Be Officially Listed on March 19, 2020
+## New Stakeholders: March 19, 2020
 
-### [**Aztec**](https://www.aztecprotocol.com/)**,**  [**ConsenSys Health**](https://consensyshealth.com)**,**  [**Anyblock Analytics GmbH**](https://anyblockanalytics.com)**,**  [**Ocyan Cloud Technology LTD**](https://ocyan.com)**,**  [**Digital Scarcity**](http://digitalscarcity.io/)**,** 
+### [**Aztec**](https://www.aztecprotocol.com/)**,**  [**ConsenSys Health**](https://consensyshealth.com)**,**  [**Anyblock Analytics GmbH**](https://anyblockanalytics.com)**,**  [**Ocyan Cloud Technology LTD**](https://ocyan.com)**,**  [**Digital Scarcity**](http://digitalscarcity.io/)**,** Energy Web Foundation, The Graph
+
+## Contributors and Maintainers \(in GitHub Repo\)
+
+| Name | Github Handle | Company |
+| :--- | :--- | :--- |
+|  |  |  |
 
