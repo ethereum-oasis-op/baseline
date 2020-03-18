@@ -6,17 +6,32 @@ The Baseline Protocol initiative was [announced](https://consensys.net/blog/pres
 
 All work in the [Baseline Protocol public repo](https://github.com/ethereum-oasis/baseline) is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [`license.md`](https://github.com/ethereum-oasis/baseline/blob/master/license.md).
 
+## Working Together
+
+### Meetings and Meetups
+
+### Onboarding Practices and Offers
+
 ## Contributors Guide
 
+There are two ways to contribute: 
 
+* Write code \(Architecture, Spikes, Issues, 
+* Write specifications \(Epics, Stories, Standards, Prioritizations, Use Cases...and Incentives\)
 
-## How to contribute?
+\[More here on each....leading up to TSC and SSC.\]
 
-### Submitting an issue
+ZenHub
+
+### Technical Contributors
+
+#### Issues Organization
+
+#### Submitting an issue
 
 To help us get a better understanding of the issue you've identified, follow the guidelines in one of our _Issue Templates_.
 
-### Submitting a pull request
+#### Submitting a pull request
 
 Follow these steps when submitting a pull request:
 
@@ -25,30 +40,29 @@ Follow these steps when submitting a pull request:
 3. Ensure that your changes do not cause any existing tests to fail.
 4. Submit a pull request against the `master` branch.
 
-## License
+#### Maintainers and Commit Rules
 
-All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [`license.md`](https://github.com/ethereum-oasis/baseline/blob/master/license.md).
+#### TSC
+
+### Specifications Contributors
+
+#### Epics, Stories organization
+
+#### Industry Verticals
+
+#### Horizontal Platforms
+
+#### SSC
+
+## OASIS and Governance
 
 
 
-**Baseline Protocol** is an open-source project that is actively seeking contributios from any willing participants. Here are some guidelines for people that would like to contribute to the project.
+### 
 
-### Submitting an issue
+## 
 
-To help us get a better understanding of the issue you've identified, follow the guidelines in one of our _Issue Templates_.
 
-### Submitting a pull request
-
-Follow these steps when submitting a pull request:
-
-1. Fork the [`github.com/ethereum-oasis/baseline`](https://github.com/ethereu-oasis/baseline) repo into your GitHub account. Read more about forking a repo on Github [here](https://help.github.com/articles/fork-a-repo/).
-2. Create a new branch, based on the `master` branch, with a name that concisely describes what you’re working on \(ex. `add-mysql`\).
-3. Ensure that your changes do not cause any existing tests to fail.
-4. Submit a pull request against the `master` branch.
-
-## License
-
-All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to `license.md`.
 
 Contributors Guide
 
