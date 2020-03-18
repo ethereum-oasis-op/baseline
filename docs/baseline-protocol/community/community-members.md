@@ -1,8 +1,10 @@
 # Community Members
 
-Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th  and 19th. Over 300 of them also signed in as group members. 
+Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th  and 19th, 2020. Over 300 of them also signed in as group members. The members represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
 
-Leadership in an openly governed open standards / open source initiative is organic. One need not be seated to a committee to lead. One need not be the chair to lead the community in a direction. \(Indeed, the chair's primary job is to harmonize the interests of others and help the community move to a shared vision, not necessarily to forward their own point of view.\)  
+### **Leadership**
+
+In an openly governed open standards / open source initiative, leadership is organic. One need not be seated to a committee to lead. One need not be the chair to lead the community in a direction. \(Indeed, the chair's primary job is to harmonize the interests of others and help the community move to a shared vision, not necessarily to forward their own point of view.\)  
 
 > The way to lead is to start something, help something, fix something...even spellcheck something!
 >
@@ -16,7 +18,7 @@ Go to the [**site**](https://baseline-protocol.org) to get access to the team Sl
 
 ## Governance
 
-The Baseline Protocol initiative is governed by the rules of OASIS and by the 
+The Baseline Protocol initiative is governed by the rules of OASIS and by the [ratified charter](governance.md).
 
 ### Bootstrapping Phase and Ongoing Phase
 
