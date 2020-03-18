@@ -1,10 +1,26 @@
 # Community Members
 
-Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th  and 19th. Over 300 of them also signed in as members of the [Baseline-Protocol.org](https://baseline-protocol.org) group. Go to the site to get access to the team Slack channel, the member directory, and other resources.
+Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th  and 19th. Over 300 of them also signed in as group members. 
+
+Leadership in an openly governed open standards / open source initiative is organic. One need not be seated to a committee to lead. One need not be the chair to lead the community in a direction. \(Indeed, the chair's primary job is to harmonize the interests of others and help the community move to a shared vision, not necessarily to forward their own point of view.\)  
+
+> The way to lead is to start something, help something, fix something...even spellcheck something!
+>
+> The way to lead is to get others to amplify what you are doing \(best done by listening deeply to others first\).
+>
+> The way to lead is to serve your own \(and your company's\) enlightened self interest. You should be able to draw a straight line from your time on this work to real impact for your own offerings.
+
+The people and companies listed below have stepped up to identify themselves as supporters, stakeholders, responsible parties, and accountable parties to help bootstrap the work. 
+
+Go to the [**site**](https://baseline-protocol.org) to get access to the team Slack channel, the member directory, and other resources.
 
 ## Governance
 
 The Baseline Protocol initiative is governed by the rules of OASIS and by the 
+
+### Bootstrapping Phase and Ongoing Phase
+
+The technical steering committee and the chair listed below will be seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period will end when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceeding period\) vote on the new TSC and chair.  The specifications steering committee   
 
 ### Your Project Governance Board
 
