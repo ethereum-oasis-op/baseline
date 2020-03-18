@@ -30,7 +30,7 @@ The techniques used to work on the volume discount problem have other applicatio
 
 ### The Multilateral-to-Bilateral Compartmentalization Problem
 
-Say a Buyer wishes to make the same request for proposal \(RFP\) to 10 different suppliers. It may be desirable, or even mandatory, for the suppliers to know about the presence of the others in the RFP process and know that the same RFP was made to all of them. But it would not be appropriate for Supplier A to have access to Supplier B's Bid. In fact, Supplier A shouldn't even be aware that any of the other suppliers actually bid on the RFP, even though an ideal system would link each Bid verifiably to the original multi-party RFP.
+Say a Buyer wishes to make the same request for proposal \(RFP\) to 10 different suppliers. It may be desirable, or even mandatory, for the suppliers to know about the presence of the others in the RFP process and know that the same RFP was made to all of them. But it would not be appropriate for Supplier A to have access to Supplier B's bid. In fact, Supplier A shouldn't even be aware that any of the other suppliers actually bid on the RFP, even though an ideal system would link each Bid verifiably to the original multi-party RFP.
 
 ### The Blind Coordination Problem
 
