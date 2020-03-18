@@ -17,7 +17,7 @@
 * [The Baseline Protocol](baseline-protocol/protocol.md)
 * [Open Source Community](baseline-protocol/community/README.md)
   * [Community Members](baseline-protocol/community/community-members.md)
-  * [Community Tools](baseline-protocol/community/community-tools.md)
+  * [Governance](baseline-protocol/community/governance.md)
 * [Baseline Process](baseline-protocol/process.md)
 * [Components](baseline-protocol/components/README.md)
   * [APIs](baseline-protocol/components/apis.md)
