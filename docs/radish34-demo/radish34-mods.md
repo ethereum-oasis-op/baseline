@@ -12,5 +12,5 @@ So how would you take this code and make it work for something we haven’t writ
 
 ## Baselining an Invoice
 
-\[ Brian, Kartheek, Sam, Pat, Lucas — let’s describe in loose terms what parts of the code a skilled developer would use to take what we have and mod it for a different Step, like an Invoice...though we could choose another Step, like the Widget tracker. We can talk about what is here, what can be just used as-is, what would need modification, what would need “heart surgery” and what core concepts or components are yet to be even sketched that would be needed to make that new Step work. \]
+We will shortly run a session on what one would do to modify the existing Radish34 code to make a new Workflow Step like a POC.  In that process, we will discover and discuss ways to abstract the Radish34 code and generalize it to develop a proper Baseline Protocol and standard.  **Stay tuned!**
 
