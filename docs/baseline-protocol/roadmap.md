@@ -20,7 +20,7 @@ This is a work in progress.
 
 
 
-## Ideas for Epics:
+## Ideas for Future Epics:
 
 ### Uhoh, we're out of consistency and can't do this new Step...here's how we fix that.
 
