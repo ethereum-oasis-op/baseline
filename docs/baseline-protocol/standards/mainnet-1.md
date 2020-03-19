@@ -31,5 +31,7 @@ Many established companies are not comfortable with, or are prohibited from, hol
 
 ## Barriers to Enterprise Adoption of Public Blockchain
 
-\[List the 10-12 issues and talk about how the baseline protocol was created to avoid most of them and bring the rest within the risk profile of traditional Internet-capable IT systems.\]
+The attached document from the EEA Mainnet Working Group lists the "top ten" reasons why a conservative, security-minded corporate officer has concerns about using the public Mainnet. It provides a brief profile on the kind of person who has these concerns and what may be on their minds day-to-day.  The Baseline Protocol aims to avoid most of these and bring the rest to a level that would be considered normal and tolerable in a high-security corporate IT environment. 
+
+{% file src="../../.gitbook/assets/why-i-wont-use-the-mainnet-ten-problems-6-1.pdf" %}
 
