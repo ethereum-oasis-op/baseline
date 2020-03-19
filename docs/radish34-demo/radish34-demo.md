@@ -19,7 +19,7 @@ But if you want to see what it might be like for a group of companies to use the
 
 In the supply chain story we staged in this application the user can play the role of Buyer who wants to place an order with Suppliers for X number of widgets. They also can play the role of Supplier who works with the Buyer to fulfill their purchasing needs.
 
-The story begins with the Buyer creating a Request for Proposals and sending it to several suppliers, getting proposals back, selecting one proposal and then Baselining the MSA contract between the Buyer and Supplier.
+The story begins with the Buyer creating a Request for Proposals and sending it to several suppliers, getting proposals back, selecting one proposal, and then Baselining the MSA contract between the Buyer and Supplier.
 
 #### Setup
 
