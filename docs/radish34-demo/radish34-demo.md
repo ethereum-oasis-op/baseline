@@ -56,22 +56,23 @@ We broke down the supply chain procurement process into two phases; Contracting 
 
 **Buyer  context:** We have an MSA with two suppliers for part X. It's now time to order the part so we can have the inventory we need to begin manufacturing.
 
-1. Select from a list of my parts, the new part X for product Y
-2. With the part selected, Create a new PO and allow me to enter the Qty/delivery dates I need
+1. Select from a list of my parts, the new part X for product Y.
+2. With the part selected, create a new PO and allow me to enter the Qty/delivery dates I need.
 3. Since this part has two contracted suppliers \(from contracting phase\), I can see my PO total price based on the MSA I have with each supplier, and any existing PO's I have sent are calculated into my rate.
-4. Send PO to selected suppliers
-5. Wait for suppliers to accept the PO and update the PO status to "in fulfillment"
-6. Wait for invoice
-7. Receive invoice from suppler, open it, and click "pay"     8\) This PO is now completed/closed. Other POs could be still open, I am able to view the status of those.
+4. Send PO to selected suppliers.
+5. Wait for suppliers to accept the PO and update the PO status to "in fulfillment."
+6. Wait for invoice.
+7. Receive invoice from suppler, open it, and click "pay."  
+8. This PO is now completed/closed. Other POs could be still open, I am able to view the status of those.
 
 **Supplier context**: We have an MSA for Part X with a Buyer. At this point I am just waiting for POs. Also, I am such a good supplier that I can always meet customer qty and time frame demands so I accept every PO I receive.
 
-1. Receive notification of new PO from buyer
-2. Acknowledge the PO and change the PO state to "in fulfillment"
+1. Receive notification of new PO from buyer.
+2. Acknowledge the PO and change the PO state to "in fulfillment."
 3. Go do the work of fulfilling the order for Part X.
 4. Order filed, find the PO and create an invoice against it. The details are pulled from the PO.
 5. Satisfied with the Invoice I click 'send' to deliver the invoice to the Buyer.
 6. I wait to be paid.
-7. I am notified when the buyer pays
-8. PO/Invoice phase completed
+7. I am notified when the buyer pays.
+8. PO/Invoice phase completed.
 
