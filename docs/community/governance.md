@@ -1,6 +1,20 @@
 # Governance
 
-## **Baseline Open Source Project Governance**
+## OASIS and Governance
+
+OASIS Open is a non-profit, vendor-neutral standards developing organization. It provides rules and guidelines to ensure equitable and transparent oversight of technical collaborations in open source and open standards.  Additionally, it provides services such as technical program support, legal, marketing, and events management.
+
+The Baseline Protocol is governed by the [Ethereum OASIS Project Governing Board](https://www.baseline-protocol.org/about/) under the [OASIS Open Projects Program](http://oasis-open-projects.org/).  Ethereum OASIS exists to provide a neutral forum for companies and community representatives to create high-quality specifications that facilitate Ethereum’s longevity, interoperability, and ease of integration.  One does not have to "join" the group formally or financially  in order to make a contribution to Baseline or other Ethereum OASIS projects.  
+
+Additional documentation about the OASIS Open Projects program can be found [here](https://github.com/oasis-open-projects/documentation).  
+
+## License and Patent Policies
+
+All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md). 
+
+In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](http://cla-assistant.io/ethereum-oasis/baseline) for community contributions. You must [sign the ICLA](http://cla-assistant.io/ethereum-oasis/baseline) before your pull requests to the baseline repository will be merged. [Check here](https://www.oasis-open.org/resources/projects/cla/projects-view-entity-cla) to see if your company has signed the ECLA. 
+
+## **Chaarter: Baseline Open Source Project Governance**
 
 **Ratified on March 18, 2020 by the** [**PGB**](community-members.md#your-project-governance-board)**.**
 

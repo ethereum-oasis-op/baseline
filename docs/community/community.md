@@ -6,11 +6,19 @@ The Baseline Protocol initiative was [announced](https://consensys.net/blog/pres
 
 All work in the [Baseline Protocol public repo](https://github.com/ethereum-oasis/baseline) is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [`license.md`](https://github.com/ethereum-oasis/baseline/blob/master/license.md).
 
+## **Leadership**
+
+In an openly governed open standards / open source initiative, leadership is organic. One need not be seated to a committee to lead. One need not be the chair to lead the community in a direction. \(Indeed, the chair's primary job is to harmonize the interests of others and help the community move to a shared vision, not necessarily to forward their own point of view.\)  
+
+> **The way to lead is to start something, help something, fix something...even spellcheck something!  The way to lead is to get others to amplify what you are doing \(best done by listening deeply to others first\). The way to lead is to serve your own \(and your company's\) enlightened self interest. You should be able to draw a straight line from your time on this work to real impact for your own offerings.**
+
+Below are the things you need to know to get informed, get involved and get value out of the work.
+
 ## Working Together
 
 ### Meetings and Meetups
 
-Check the [**group calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for times/dates of these online \(and eventually face to face\) meetings. If the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. Chime in on the [**Slack**](https://communityinviter.com/apps/ethereum-baseline/join-us)...don't be shy.
+Check the [**group calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for times/dates of online \(and eventually face to face\) meetings. If the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. Chime in on the [**Slack**](https://communityinviter.com/apps/ethereum-baseline/join-us)...don't be shy.
 
 #### Onboarding: Help Getting Started
 
@@ -20,7 +28,7 @@ We will hold Onboarding office hours twice a week at least until June 2020. Sign
 
 #### **Roadmapping**
 
-There will be sessions \(online for now during the period of global pandemic\) to dive deep on the technology. Check the [calendar](https://lists.oasis-open-projects.org/g/baseline/calendar) for details.
+There will be sessions \(online for now during the period of global pandemic\) to dive deep on the technology. Check the [calendar](https://lists.oasis-open-projects.org/g/baseline/calendar) for details. 
 
 #### Technical Steering Committee
 
@@ -56,97 +64,5 @@ The Baseline Protocol initiative maintains the [@baselineproto](https://twitter.
 
 The Baseline Protocol initiative will use Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol).  Reach out on Slack to the chair, OASIS team or members of the steering committees, if you want to be a writer or editor.
 
-## Contributors Guide
 
-There are four ways to contribute: 
-
-* Write code \(Architecture, Spikes, Issues, Tasks\) 
-* Write specifications \(Epics, Stories, [Standards](../baseline-protocol/standards/), Prioritizations, Use Cases\)
-* Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders;
-* Help prioritize work and develop incentives to get it done. 
-
-All work of the Baseline Protocol initiative is maintained at: [https://github.com/ethereum-oasis/baseline](https://github.com/ethereum-oasis/baseline)
-
-### Technical Contributors
-
-#### Issues Organization and Community "Sprints"
-
-Technical tasks are written as Github Issues. Issues will be reviewed, lightly prioritized, and communicated as "hey, help out here!" messaging to the developer community every two weeks. The TSC will periodically review what Issues and communications best succeeded in attracting help.
-
-An Issue should be constructed, in particular, with acceptance tests. All other elements of a good Issue should be known to any practicing developer. 
-
-Most Issues should be attached to an Epic \(see below\).
-
-#### Submitting a pull request
-
-Follow these steps when submitting a pull request:
-
-1. Fork the repo into your GitHub account. Read more about forking a repo on Github [here](https://help.github.com/articles/fork-a-repo/).
-2. Create a new branch, based on the `master` branch, with a name that concisely describes what you’re working on \(ex. `add-mysql`\).
-3. Ensure that your changes do not cause any existing tests to fail.
-4. Submit a pull request against the `master` branch.
-
-Good practice strongly favors committing work frequently and not loading up a long period of work in isolation. Be brave...let others see what you are working on, even if it isn't "ready."
-
-#### Maintainers and Commit Rules
-
-During the bootstrap phase \(March - June, 2020\) merging to Master will require review by THREE Maintainers. The TSC will seed the set of Maintainers. Thereafter, any active Committer can become a Maintainer. Maintainers may add more Maintainers by simple majority and \(rough consensus rules\), and the TSC may step in to resolve cases where this process fails. 
-
-### Specifications Contributors
-
-#### Epics, Stories organization
-
-The Baseline Protocol initiative uses [Zenhub](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. \(Zenhub should be a tab in your Github interface. There is a Chrome plugin also.\)
-
-
-
-#### Industry Verticals
-
-#### Horizontal Platforms
-
-#### SSC
-
-## OASIS and Governance
-
-OASIS Open is a non-profit, vendor-neutral standards developing organization. It provides rules and guidelines to ensure equitable and transparent oversight of technical collaborations in open source and open standards.  Additionally, it provides services such as technical program support, legal, marketing, and events management.
-
-The Baseline Protocol is governed by the [Ethereum OASIS Project Governing Board](https://www.baseline-protocol.org/about/) under the [OASIS Open Projects Program](http://oasis-open-projects.org/).  Ethereum OASIS exists to provide a neutral forum for companies and community representatives to create high-quality specifications that facilitate Ethereum’s longevity, interoperability, and ease of integration.  One does not have to "join" the group formally or financially  in order to make a contribution to Baseline or other Ethereum OASIS projects.  
-
-Additional documentation about the OASIS Open Projects program can be found [here](https://github.com/oasis-open-projects/documentation).  
-
-## License and Patent Policies
-
-All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md). 
-
-In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](http://cla-assistant.io/ethereum-oasis/baseline) for community contributions. You must [sign the ICLA](http://cla-assistant.io/ethereum-oasis/baseline) before your pull requests to the baseline repository will be merged. [Check here](https://www.oasis-open.org/resources/projects/cla/projects-view-entity-cla) to see if your company has signed the ECLA. 
-
-##  
-
-
-
-Contributors Guide
-
-Communications
-
-Governance
-
-OASIS
-
-eCLA and iCLA
-
-CC0
-
-Patents
-
-Meetings
-
-The WORK and how we get it done
-
-Tools
-
-How to get involved. Ways to get involved.
-
-Leadership
-
-Making community participation pay off for members
 

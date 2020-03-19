@@ -5,6 +5,7 @@
 ## Community
 
 * [Open Source Community](community/community.md)
+* [Contributors Guide](community/contributors-guide.md)
 * [Community Members](community/community-members.md)
 * [Governance](community/governance.md)
 
