@@ -36,6 +36,10 @@ Follow these steps when submitting a pull request:
 
 Good practice strongly favors committing work frequently and not loading up a long period of work in isolation. Be brave...let others see what you are working on, even if it isn't "ready."
 
+### eCLA and iCLA
+
+Anyone can do a pull request and commit. In order for your work to be merged, you will need to sign the eCLA \(entity contributor agreement\) or iCLA \(individual contributor agreement\). Here are the details: [https://www.oasis-open.org/resources/projects/cla/projects-entity-cla](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla)
+
 ### Maintainers and Commit Rules
 
 During the bootstrap phase \(March - June, 2020\) merging to Master will require review by THREE Maintainers. The TSC will seed the set of Maintainers. Thereafter, any active Committer can become a Maintainer. Maintainers may add more Maintainers by simple majority and \(rough consensus rules\), and the TSC may step in to resolve cases where this process fails. 
