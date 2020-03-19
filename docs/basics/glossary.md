@@ -54,31 +54,33 @@ In Radish34, there isn't a coherent "Baseline Server", but in the ultimate refer
 
 There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. An important one is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the orgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and also is used as a state-marker for managing Workflow integrity.
 
-OnChain Com
 
-Shield Contract
 
 ### CodeBook =&gt; Package
 
 During the Radish34 project, the notion of a shared "codebook" was often discussed. This is ...
 
-### Registrar
+### orgRegistry Contract
 
-The highest level of \[Radish34\] contract that inherits from ERC1820 and defines a WorkGroup.
+Think of the orgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
 
-### orgRegistry
+### Shield Contract
 
-The set of Parties involved in a WorkGroup defined by a \[Registrar\]
+The Shield Contract holds a Merkle Tree that holds the Baseline Proofs. The off-chain ZK Service will send the proof to the Shield contract, which will call the Verifier contract. If the Verifier contract returns 'true', then the proof is stored in a leaf on the Merkle Tree. 
 
-Entanglement
+### Verifier Contract
 
-Parties and Counter-Parties
+The Verifier Contract is the on-chain component of the ZK Service, which ensures that a baseline proof is only deposited on the Mainnet if all Counter-parties have performed the Workflow Step consistently and have adhered to the rules of any previous Workflow Step. In the Radish34 POC, a good example of this is the MSA to PO Workflow. 
 
 ### Baseline Proofs
+
+The hash deposited in a Shield Contract when a Workflow Step successfully completes.
 
 
 
 ## Radish34-Specific Terms
+
+\(work in progress...see [Radish34](../radish34/radish34-explained.md) section for full documentation.\)
 
 RFP
 

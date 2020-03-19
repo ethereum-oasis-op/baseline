@@ -9,7 +9,7 @@
 * [Community Members](community/community-members.md)
 * [Governance](community/governance.md)
 
-## Radish34 Demo <a id="radish34"></a>
+## Radish34
 
 * [Radish34 Explained](radish34/radish34-explained.md)
 * [Radish34 Interactive Demo](radish34/radish34-demo.md)
