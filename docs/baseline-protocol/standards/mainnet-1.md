@@ -11,7 +11,14 @@ The purpose of this section is to list and describe the key things the baseline 
 
 ## Point to Point Messaging
 
-The Radish34 demo uses Whisper, which comes with standard Geth nodes, to
+The Radish34 demo uses Whisper, which comes with standard Geth nodes. However, it is not ideal for _baselining_.  The ideal messaging service, which the Baseline  Protocol community will endeavor to specify and promote, would:
+
+* Send data point-to-point, stored only by specified counter-parties with no intermediary storage; 
+* Able to specify different counter-parties on a message-by-message \(or at least Workflow Step by Step\) basis; 
+* Balance appropriate liveness and safety guarantees optimally for baselining; 
+* Handle long session management without blocking and without "frankenstein" code.
+
+It has been suggested that the Baseline Protocol community consider looking into the [Corda Flows](https://github.com/corda/corda) open source repository as an example of a potential design pattern that would suit baselining. If so, an effort to implement such a pattern in an Ethereum client such as Hyperledger Besu could be a way forward.
 
 ## Zokrates Support or Replacement
 
