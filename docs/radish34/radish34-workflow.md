@@ -73,7 +73,7 @@ These objects are specific to the technology implementation. They encapsulate th
 
 ### Deployment/Configuration Objects
 
-These support the direct operation of the Radish system as it is installed for a specific environment/deployment in an organizations data center/cloud. Cryptographic keys are stored separately from configuration to support separate access controls and key rotation. These objects need not be managed in an RDMS or storage system, but in the case of the cryptographic keys should be stored in a HSM based vault of some kind.
+These support the direct operation of the Radish system as it is installed for a specific environment/deployment in an organizations data center/cloud. Cryptographic keys are stored separately from configuration to support separate access controls and key rotation. These objects need not be managed in an RDMS or storage system. Cryptographic keys, however, should be stored in a HSM based vault of some kind.
 
 ![](../.gitbook/assets/revised-radish-user-stories-business-objects-3.png)
 

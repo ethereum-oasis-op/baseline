@@ -6,7 +6,7 @@ description: >-
 
 # Standards
 
-Lorem ipsum
+The Baseline Protocol community will use this section to coordinate, memorialize and publish specifications.
 
 ## High Level Context
 
@@ -14,15 +14,9 @@ Lorem ipsum
 
 Requirements, and non-functional requirements in particular, are meaningful only in the context of use. As a protocol designed for wide usage, the baseline pattern begs a set of cases that are well suited it. It's also wise to sketch the boundaries of what constitutes a sensible use of the pattern. That is the intent of this section.
 
-### Functional Requirements
-
-## Functional Requirements
-
-## Non-Functional Requirements
-
 ## Abstract
 
-This document, the Baseline Specification, defines the implementation requirements for maintaining data consistency and workflow continuity \(with atomic compartmentalization\) among sets of state machines that are operated by different [Parties](./). The Baseline Specification assumes the use of a public Mainnet as the necessary common frame of reference to achieve this, and it uses the public Ethereum [Mainnet ](./)as the reference implementation.
+This document, the Baseline Specification, defines the implementation requirements for maintaining data consistency and workflow continuity \(with [atomic compartmentalization](../../basics/glossary.md#atomic-compartmentalization)\) among sets of state machines that are operated by different [Parties](./). The Baseline Specification assumes the use of a public Mainnet as the necessary common frame of reference to achieve this, and it uses the public Ethereum [Mainnet ](./)as the reference implementation.
 
 > When two or more machines store data and run business logic in a verified state of consistency, enabled by using the Mainnet as a common frame of reference, then the machines, data and code are said to be _baselined_.
 
@@ -36,17 +30,13 @@ It is expected, at time of writing, that this specification will be released in 
 
 Send comments to the EEA Mainnet Working Group at [https://entethalliance.org/contact/](https://entethalliance.org/contact/).
 
-GitHub Issues [https://github.com/ethereum-oasis/baseline](https://github.com/ethereum-oasis/baseline) are preferred for discussion of this specification.
-
-## Contents
-
-tbd
+GitHub Issues managed in [Zenhub](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) as Epics, Stories, Tasks \(and their comments\) are preferred for discussion of this specification.
 
 ## Introduction
 
 It is generally understood that state machines, from a simple database to various forms of enterprise systems of record, require a common frame of reference when they need to maintain consistency and continuity with other state machines. The field of distributed systems provides for several patterns that accomplish this, each involving tradeoffs.
 
-The pattern defined here is predicated on the use of a state machine as a common frame of reference between two or more systems.
+The pattern defined here is predicated on the use of a singleton state machine as a common frame of reference between two or more systems.
 
 ## Conformance
 

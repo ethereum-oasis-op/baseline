@@ -18,3 +18,21 @@ Take a Step Back: Look at the emerging protocol as a strawperson and tear it apa
 
 This is a work in progress.
 
+
+
+## Ideas for Epics:
+
+### Uhoh, we're out of consistency and can't do this new step...here's how we fix that.
+
+Tools for fixing inconsistencies that show up in the execution of subsequent steps.
+
+### Heartbeat: 
+
+Baseline servers do ongoing listening of their entangled records and send messages to the entangled counterparties of a record that has, for whatever reason, been changed without properly "re-baselining".
+
+### Consistency Between Multiple Existing Records
+
+The MV\(P\) of Baseline assumes that one party has a record that the other party does not. The party with the record is the Initiator, and they need to send the data \(and codebook\) to the Counter-parties that they want to baseline with. 
+
+But what if two \(or more!\) parties have what they think is the same record, and they want to a\) confirm that they match; b\) if they do, baseline the record, so that they can use it for Workflow Steps to follow; c\) if they don’t, go through some process of determining which should be Canon, setting the others to that value, and then baselining.
+

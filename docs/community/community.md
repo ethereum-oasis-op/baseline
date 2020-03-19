@@ -58,39 +58,47 @@ The Baseline Protocol initiative will use Medium to post blogs. Here is the [**p
 
 ## Contributors Guide
 
-There are two ways to contribute: 
+There are four ways to contribute: 
 
-* Write code \(Architecture, Spikes, Issues, 
-* Write specifications \(Epics, Stories, Standards, Prioritizations, Use Cases...and Incentives\)
+* Write code \(Architecture, Spikes, Issues, Tasks\) 
+* Write specifications \(Epics, Stories, [Standards](../baseline-protocol/standards/), Prioritizations, Use Cases\)
+* Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders;
+* Help prioritize work and develop incentives to get it done. 
 
-\[More here on each....leading up to TSC and SSC.\]
-
-ZenHub
+All work of the Baseline Protocol initiative is maintained at: [https://github.com/ethereum-oasis/baseline](https://github.com/ethereum-oasis/baseline)
 
 ### Technical Contributors
 
-#### Issues Organization
+#### Issues Organization and Community "Sprints"
 
-#### Submitting an issue
+Technical tasks are written as Github Issues. Issues will be reviewed, lightly prioritized, and communicated as "hey, help out here!" messaging to the developer community every two weeks. The TSC will periodically review what Issues and communications best succeeded in attracting help.
 
-To help us get a better understanding of the issue you've identified, follow the guidelines in one of our _Issue Templates_.
+An Issue should be constructed, in particular, with acceptance tests. All other elements of a good Issue should be known to any practicing developer. 
+
+Most Issues should be attached to an Epic \(see below\).
 
 #### Submitting a pull request
 
 Follow these steps when submitting a pull request:
 
-1. Fork this repo into your GitHub account. Read more about forking a repo on Github [here](https://help.github.com/articles/fork-a-repo/).
+1. Fork the repo into your GitHub account. Read more about forking a repo on Github [here](https://help.github.com/articles/fork-a-repo/).
 2. Create a new branch, based on the `master` branch, with a name that concisely describes what you’re working on \(ex. `add-mysql`\).
 3. Ensure that your changes do not cause any existing tests to fail.
 4. Submit a pull request against the `master` branch.
 
+Good practice strongly favors committing work frequently and not loading up a long period of work in isolation. Be brave...let others see what you are working on, even if it isn't "ready."
+
 #### Maintainers and Commit Rules
 
-#### TSC
+During the bootstrap phase \(March - June, 2020\) merging to Master will require review by THREE Maintainers. The TSC will seed the set of Maintainers. Thereafter, any active Committer can become a Maintainer. Maintainers may add more Maintainers by simple majority and \(rough consensus rules\), and the TSC may step in to resolve cases where this process fails. 
 
 ### Specifications Contributors
 
 #### Epics, Stories organization
+
+The Baseline Protocol initiative uses [Zenhub](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. \(Zenhub should be a tab in your Github interface. There is a Chrome plugin also.\)
+
+
 
 #### Industry Verticals
 
