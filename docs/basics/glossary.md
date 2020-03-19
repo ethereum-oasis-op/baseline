@@ -28,19 +28,35 @@ There are many forms of middleware. We use the term in the context of the Baseli
 
 ### Workgroup
 
-lorem ipsum
+A set of Parties \(defined in the orgRegistry\) when a Registrar factory smart contract is called to start a Workflow.
 
 ### Workflow
 
-lorem ipsum
+A series of Steps that constitute a coherent business process between a set of counter-parties in a Workflow. 
 
 ### Step
 
-lorem ipsum
+A discreet _baselined_ Record/Function/BusinessEvent/Document \(e.g,. RFP, MSA, PO\) within a Workflow that implements a set of baseline Tasks.
 
 ### Task
 
-lorem ipsum
+Different Workflow Steps implement either all or a subset of Tasks, such as selecting a set of counter-parties, serializing a record, sending messages, sometimes executing off-chain functions \(not in Radish34, but definitely in protocol-compliant stack\), executing and sending/receiving EdDSA sigs, invoking ZK service, sometimes ensuring that the ZK circuit \(or a code package/container in a non-Radish34 implementation\) of a previous Step is executed correctly \(only for Steps that follow previous steps that enforce 'entanglement'\)...etc. The set of Tasks that a Step implements is called its LifeCycle. Most of these Tasks invoke on or more Components.
+
+### Components
+
+In the Baseline Protocol context, Components are just the general term for services, smart contracts, etc., like the ZK service, messenger and smart contracts. Some of these are not in the current Radish34 implementation as distinct components, but some/all should be constructed in the protocol work.
+
+### Baseline Server
+
+In Radish34, there isn't a coherent "Baseline Server", but in the ultimate reference implementation of the protocol, the set of off-chain Components and APIs to messaging, systems of record, etc. presumably will be packaged as the "Baseline Server".
+
+### Baseline Proof
+
+There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. An important one is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the orgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and also is used as a state-marker for managing Workflow integrity.
+
+OnChain Com
+
+Shield Contract
 
 ### CodeBook =&gt; Package
 

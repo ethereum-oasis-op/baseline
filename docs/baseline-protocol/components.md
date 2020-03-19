@@ -6,7 +6,27 @@ During the bootstrapping phase of the initiative \(March - June 2020\), this sec
 
 **The section below articulates a few of the known components, but this is a work in progress.**
 
+Across the different services/integrations in the diagram below, light green represents the components that can be replaced/modified and the darker ones represent the components that can be re-used for further customizations for similar use cases.
+
 ![Components of a Baseline Protocol within a Radish34 POC Context](../.gitbook/assets/radish34-components%20%281%29.png)
+
+## On-Chain Components
+
+### Registrar "factory" Contract
+
+The Registrar contract generates the three contracts below on the Mainnet to bootstrap a WorkGroup.
+
+### orgRegistry Contract
+
+Think of the orgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
+
+### Shield Contract
+
+The Shield Contract holds a Merkle Tree that holds the Baseline Proofs. The off-chain ZK Service will send the proof to the Shield contract, which will call the Verifier contract. If the Verifier contract returns 'true', then the proof is stored in a leaf on the Merkle Tree. 
+
+### Verifier Contract
+
+The Verifier Contract is the on-chain component of the ZK Service, which ensures that a baseline proof is only deposited on the Mainnet if all Counter-parties have performed the Workflow Step consistently and have adhered to the rules of any previous Workflow Step. In the Radish34 POC, a good example of this is the MSA to PO Workflow. 
 
 ## Messenger Service
 
