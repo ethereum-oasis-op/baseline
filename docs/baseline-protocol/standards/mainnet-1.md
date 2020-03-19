@@ -7,7 +7,7 @@ description: >-
 
 # Driving Mainnet Evolution
 
-The Mainnet is a \[ insert copy from the upcoming Medium article \].
+The purpose of this section is to list and describe the key things the baseline community needs to see improved, supported or created in order to grow as a protocol, so that enterprises will use the approach and get used to employing the Mainnet in normal business activities.
 
 ## Point to Point Messaging
 

@@ -12,7 +12,7 @@ Orchestration \(not the same as devops orchestration\)
 
 ## Messenger Service
 
-The messenger service fulfills the requirement of decentralized private messaging between Radish network participants. Each party that runs a Radish system \(and the Baseline protocol\) needs to send private data to each other. In the supply chain use case this private data is in the form of requests for proposals \(RFPs\), Service Contracts \(MSAs\), Purchase Orders, and secret keys/hashes used in the ZKP generation or verification processes. Also, this service adds message delivery receipts and durability to the messages by storing them locally.
+The messenger service fulfills the requirement of decentralized private messaging between Parties. Each Party that runs a baselined system needs to send private data to Counter-parties. In the Radish34 supply chain use case, this private data is in the form of requests for proposals \(RFPs\), Service Contracts \(MSAs\), Purchase Orders, and secret keys/hashes used in the ZKP generation or verification processes. Also, this service adds message delivery receipts and durability to the messages by storing them locally.
 
 ### Radish34 Implementation
 
@@ -20,13 +20,18 @@ The messenger service used in the Radish34 demo was [Whisper](https://github.com
 
 Here's the [**link**](https://github.com/ethereum-oasis/baseline/tree/master/messenger) to the component as implemented in the Radish34 demo.
 
-Convenient as it is, Whisper is not well supported at this time, and it has a number of drawbacks:
-
-* Data is stored and forwarded by nodes on the way to its destination.
+Convenient as it is, Whisper is not well supported at this time, and it has a number of drawbacks. Chief among these is that data is stored and forwarded by nodes on the way to the destination, potentially breaking prohibitions by GDPR and other regulations that stipulate that personally identifiable information not be stored, even in encrypted form, on machines not controlled by the responsible Parties or authorized Counter-parties. 
 
 ### Suggested Implementation
 
-Stay tuned for details.
+The ideal messaging service, which the Baseline  Protocol community will endeavor to specify and promote, would:
+
+* Send data point-to-point, stored only by specified counter-parties with no intermediary storage; 
+* Able to specify different counter-parties on a message-by-message \(or at least Workflow Step by Step\) basis; 
+* Balance appropriate liveness and safety guarantees optimally for baselining; 
+* Handle long session management without blocking and without "frankenstein" code.
+
+It has been suggested that the Baseline Protocol community consider looking into the [Corda Flows](https://github.com/corda/corda) open source repository as an example of a potential design pattern that would suit baselining. If so, an effort to implement such a pattern in an Ethereum client such as Hyperledger Besu could be a way forward.
 
 ## ZK Service
 

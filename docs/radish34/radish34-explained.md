@@ -1,6 +1,6 @@
 # Radish34 Explained
 
-Radish34 is the result of a 2019 joint development effort to build a supply chain POC. The work led to the Baseline Protocol, a way for enterprises to use the [Mainnet](../baseline-basics/glossary.md#mainnet) as [middleware](../baseline-basics/glossary.md#middleware) without compromising corporate information security practices. Radish34 remains the best way to show the general baseline approach in a specific example. You can build and run the proof of concept [here](radish34-poc.md). And you can see how a set of companies would integrate their supply chain management systems in this [interactive demo](radish34-demo.md).
+Radish34 is the result of a 2019 joint development effort to build a supply chain POC. The work led to the Baseline Protocol, a way for enterprises to use the [Mainnet](../basics/glossary.md#mainnet) as [middleware](../basics/glossary.md#middleware) without compromising corporate information security practices. Radish34 remains the best way to show the general baseline approach in a specific example. You can build and run the proof of concept [here](radish34-poc.md). And you can see how a set of companies would integrate their supply chain management systems in this [interactive demo](radish34-demo.md).
 
 ## The Procurement Use Case
 
@@ -8,7 +8,7 @@ Supply chain, as a topic, presented an obvious choice for exploring ways to use 
 
 First, the team from EY that helped start the Radish34 project are experts on the subject and were able to articulate a highly precise and detailed set of workflows with both functional and non-functional requirements.
 
-Second, supply chain has been a classic starting point for enterprise blockchain explorations, because it involves such a tangle of different entities that must work together. But, one of the key problems with using private or public blockchains in a supply chain context is [_compartmentalization_](../baseline-basics/glossary.md#atomic-compartmentalization).
+Second, supply chain has been a classic starting point for enterprise blockchain explorations, because it involves such a tangle of different entities that must work together. But, one of the key problems with using private or public blockchains in a supply chain context is [_compartmentalization_](../basics/glossary.md#atomic-compartmentalization).
 
 Even when different companies are partners in a single supply chain, there are things Party A shouldn't know about the relationship or activities of Parties B and C, even if those activities support the same Workflow for the same set of goods. The Radish34 team had to find a way to coordinate companies without anyone that was maintaining the integrity of the ledger learning anything about the business activities or relationships of the participants.
 

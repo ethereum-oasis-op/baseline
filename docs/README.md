@@ -15,7 +15,7 @@ There are lots of opportunities to get informed, get involved, and **get value**
 
 ## The Baseline Protocol
 
-The Baseline Protocol is an approach to using the public [Mainnet](baseline-basics/glossary.md#mainnet) as a common frame of reference between systems, including traditional corporate systems of record, any kind of database or state machine, and even different blockchains or DLTs. It is particularly promising as a way to reduce capital expense and other overheads while increasing operational integrity when automating business processes across multiple companies.
+The Baseline Protocol is an approach to using the public [Mainnet](basics/glossary.md#mainnet) as a common frame of reference between systems, including traditional corporate systems of record, any kind of database or state machine, and even different blockchains or DLTs. It is particularly promising as a way to reduce capital expense and other overheads while increasing operational integrity when automating business processes across multiple companies.
 
 The approach is designed to appeal to security and performance-minded technology officers.
 
@@ -25,5 +25,5 @@ You can find all the details on the Baseline Protocol [here](baseline-protocol/p
 
 In 2019, three members of the Baseline Protocol community, EY, ConsenSys and Microsoft, got together to build a proof of concept showing how enterprises could safely and effectively use the public Ethereum network to conduct end-to-end supply chain operations without compromising corporate information security norms and practices. What the team learned from that effort led to the formation of the Baseline Protocol initiative.
 
-You can find the details on Radish34 [here](radish34-demo/radish34-poc.md).
+You can find the details on Radish34 [here](radish34/radish34-poc.md).
 

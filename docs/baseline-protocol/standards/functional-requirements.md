@@ -1,2 +1,0 @@
-# Functional Requirements
-
