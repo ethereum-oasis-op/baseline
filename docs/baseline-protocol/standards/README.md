@@ -48,3 +48,7 @@ The key words _MAY_, _MUST_, _MUST NOT_, _SHOULD_, and _SHOULD NOT_ in this docu
 
 This Specification includes requirements and Application Programming Interfaces \(APIs\) that are described as _experimental_. Experimental means that a requirement or API is in early stages of development and might change as feedback is incorporated. Implementors are encouraged to implement these experimental requirements, with the knowledge that requirements in future versions of the Specification are not guaranteed to be compatible with the current version. Please send your comments and feedback on the experimental portions of this Specification to the EEA Technical Steering Committee at [https://entethalliance.org/contact/](https://entethalliance.org/contact/).
 
+
+
+**This section is a work in progress.**
+

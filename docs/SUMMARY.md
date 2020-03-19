@@ -25,8 +25,8 @@
 * [Baseline Process](baseline-protocol/process.md)
 * [Components](baseline-protocol/components.md)
 * [Standards](baseline-protocol/standards/README.md)
-  * [Driving Mainnet Evolution](baseline-protocol/standards/mainnet-1.md)
   * [Mainnet](baseline-protocol/standards/mainnet.md)
+  * [Driving Mainnet Evolution](baseline-protocol/standards/mainnet-1.md)
 * [Roadmap](baseline-protocol/roadmap.md)
 * [Performance Stats and Specs](baseline-protocol/performance.md)
 

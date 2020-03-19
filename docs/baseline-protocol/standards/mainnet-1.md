@@ -23,9 +23,11 @@ For enterprises to adopt a DSL like Zokrates as part of their core IT stack, it 
 
 ## Eth2
 
-The Baseline Protocol can provide utility for a variety of uses across industries today on the current \[ \] Ethereum. It avoids several of the key issues enterprises have with using "public" Ethereum.
+The Baseline Protocol can provide utility for a variety of uses across industries today on the current iteration of Ethereum. It avoids several of the key issues enterprises have with using "public" Ethereum. But some issues remain. Notably, the "Noisy Neighbor" concern. It is hoped that Eth2 will put many of these issues to rest or bring them to acceptable levels of performance and risk. The Baseline Protocol community needs to be a leading, helpful voice in the evolution of Eth2.
 
 ## Gas Pump Service
+
+Many established companies are not comfortable with, or are prohibited from, holding cryptocurrency -- even if just to power IT operations \(e.g., $gas charges for placing Baseline Proofs on the Mainnet\).  For the foreseeable future, enterprises wishing to conduct baselining may need a way to have someone else pay the $gas and then bill them _old-school_ in fiat currency.
 
 ## Barriers to Enterprise Adoption of Public Blockchain
 
