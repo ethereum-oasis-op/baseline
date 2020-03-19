@@ -22,7 +22,7 @@ This is a work in progress.
 
 ## Ideas for Epics:
 
-### Uhoh, we're out of consistency and can't do this new step...here's how we fix that.
+### Uhoh, we're out of consistency and can't do this new Step...here's how we fix that.
 
 Tools for fixing inconsistencies that show up in the execution of subsequent steps.
 
