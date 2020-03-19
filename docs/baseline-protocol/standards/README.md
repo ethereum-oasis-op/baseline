@@ -6,6 +6,8 @@ description: >-
 
 # Standards
 
+#### This section is work in progress as the baseline protocol community gears up to standardize the learnings from the Radish34 POC and develop the protocol.
+
 The Baseline Protocol community will use this section to coordinate, memorialize and publish specifications.
 
 ## High Level Context
