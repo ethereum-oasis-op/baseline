@@ -1,14 +1,12 @@
 # Components
 
-## Overview
+The purpose of the Baseline Protocol initiative is to construct a design-pattern and set of reference implementations and tools that can help developers build _baselined_ offerings, as discussed elsewhere.
 
-Contains many of the components detailed in this section.
+During the bootstrapping phase of the initiative \(March - June 2020\), this section will be used to articulate the generalized abstractions the community can glean from the Radish34 POC implementation.  
 
-Installed in the Party's infrastructure on-prem or in Cloud.
+**The section below articulates a few of the known components, but this is a work in progress.**
 
-Orchestration \(not the same as devops orchestration\)
-
-![](../.gitbook/assets/image.png)
+![Components of a Baseline Protocol within a Radish34 POC Context](../.gitbook/assets/radish34-components%20%281%29.png)
 
 ## Messenger Service
 
