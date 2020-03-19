@@ -37,7 +37,7 @@ Corresponding to the above breakdown of the processes, below is a listing of tec
 3. MSA: Co-signing of the documents is a pre-requisite for storing a hash of an MSA on chain. In addition, this process of signing should also ensure that the identity of supplier is never revealed on chain. This is done so by using ZKP \(zk-SNARK\) tooling, and the proofs generated off-chain that verify that the intended supplier has signed the MSA, are verified on-chain.
 4. PO: Leveraging the terms of the MSA, a PO is created such that the inputs used to determine the price of the PO are never revealed, but can be verified on-chain using ZKP technologies like zk-SNARK.
 
-During the initial RFP stage, there is an onset of pure off-chain communication. During the MSA stage, Mainnet is leveraged for notarization and traceability. Finally, in the PO stage, verifiable off-chain computation provides a trigger to an on-chain process that issues POs as tokens.
+During the initial RFP stage, there is an onset of pure off-chain communication. When in the MSA stage, Mainnet is leveraged for notarization and traceability. Finally, in the PO stage, verifiable off-chain computation provides a trigger to an on-chain process that issues POs as tokens.
 
 The figure below describes a particular aspect of creating an MSA, and represented as a sequence diagram.
 
