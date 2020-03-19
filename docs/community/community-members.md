@@ -49,7 +49,7 @@ The technical steering committee \(TSC\) is accountable to the Project Governanc
 
 ### Your Specifications Steering Committee
 
-The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products.  These are senior industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://github.com/ethereum-oasis/baseline/tree/toplevel-restructure/radish34/zkp#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893).
+The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products.  These are senior industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://github.com/ethereum-oasis/baseline#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893).
 
 SSC members are seated by consensus of the sitting members. There is no specific maximum number of seats, and it is expected that the members will form sub-committees for topics like industry verticals.
 
@@ -85,6 +85,8 @@ The position is annual and chosen by popular vote of contributors who have had w
 ### [**Aztec**](https://www.aztecprotocol.com/)**,**  [**ConsenSys Health**](https://consensyshealth.com)**,**  [**Anyblock Analytics GmbH**](https://anyblockanalytics.com)**,**  [**Ocyan Cloud Technology LTD**](https://ocyan.com)**,**  [**Digital Scarcity**](http://digitalscarcity.io/)**,** Energy Web Foundation, The Graph
 
 ## Contributors and Maintainers
+
+Stay tuned at the community bootstraps.
 
 | Name | Github Handle | Company |
 | :--- | :--- | :--- |

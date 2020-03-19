@@ -16,7 +16,7 @@ The messenger service fulfills the requirement of decentralized private messagin
 
 The messenger service used in the Radish34 demo was [Whisper](https://github.com/ethereum/go-ethereum/wiki/Whisper). This was convenient, as it is supported in Geth and provided a fast way to demonstrate the concept. 
 
-Here's the [**link**](https://github.com/ethereum-oasis/baseline/tree/master/messenger) to the component as implemented in the Radish34 demo.
+Here's the [**link**](https://github.com/ethereum-oasis/baseline/tree/master/radish34/messenger) to the component as implemented in the Radish34 demo.
 
 Convenient as it is, Whisper is not well supported at this time, and it has a number of drawbacks. Chief among these is that data is stored and forwarded by nodes on the way to the destination, potentially breaking prohibitions by GDPR and other regulations that stipulate that personally identifiable information not be stored, even in encrypted form, on machines not controlled by the responsible Parties or authorized Counter-parties. 
 
@@ -39,7 +39,7 @@ zk-SNARK stands for "Zero Knowledge Succinct Non-Interactive Argument of Knowled
 
 There is a good backgrounder on ZK and how it is used in the Radish34 demo in the repo here:
 
-{% embed url="https://github.com/ethereum-oasis/baseline/tree/toplevel-restructure/radish34/zkp" caption="ZK and Zokrates Component in Radish34" %}
+{% embed url="https://github.com/ethereum-oasis/baseline/blob/master/radish34/zkp/README.md" %}
 
 ### ZK in the Baseline Protocol
 
@@ -61,7 +61,7 @@ It costs more in Mainnet $gas fees and in time to set up specialized circuits. B
 
 In the Radish34 Demo, the team built a simple web-based UI to simulate the user experience of systems of record that were enabled with the Baseline Protocol. You can find that here:
 
-{% embed url="https://github.com/ethereum-oasis/baseline/tree/master/ui" %}
+{% embed url="https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui" %}
 
 In the real world, the user experience is the experience of any number of products.
 
