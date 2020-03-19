@@ -11,7 +11,7 @@ You will find in the Repo the code of a procurement demo called **Radish34**. An
 
 There are lots of opportunities to get informed, get involved, and **get value** out of defining requirements, developing reusable components, and ultimately deploying the Baseline Protocol in your own offerings.
 
-**Go** [**here**](community/community.md) **for details on how to get involved.** 
+**New Contributors:  Go** [**here**](community/community.md) **for details on how to get involved.**
 
 ## The Baseline Protocol
 
