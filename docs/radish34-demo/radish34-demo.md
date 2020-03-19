@@ -43,14 +43,14 @@ We broke down the supply chain procurement process into two phases; Contracting 
 
 **Supplier context**: I manufacture newly developed Part X. I know my volume capabilities and have rate tables I can provide to prospective buyers.
 
-1. Add my company global Registry \(during Radish setup\)
-2. Add new Part X to my system, publish Part X to my global registry entry
-3. Wait for an RFQ from a buyer
-4. New RFQ request comes in from Buyer for Part X
-5. I reply to RFQ with a pre-signed MSA contract that includes my rate table
-6. Wait for Buyer to sign
-7. I am notified when buyer signs
-8. Done contracting phase
+1. Add my company global Registry \(during Radish setup\).
+2. Add new Part X to my system, publish Part X to my global registry entry.
+3. Wait for an RFQ from a buyer.
+4. New RFQ request comes in from Buyer for Part X.
+5. I reply to RFQ with a pre-signed MSA contract that includes my rate table.
+6. Wait for Buyer to sign.
+7. I am notified when buyer signs.
+8. Done contracting phase.
 
 #### Ongoing Phase
 
