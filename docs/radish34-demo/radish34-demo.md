@@ -33,13 +33,13 @@ We broke down the supply chain procurement process into two phases; Contracting 
 
 **Buyer context**: My R&D department has given me a request for a new part X for our product Y. I need to find two domestic suppliers for this part who can fulfill my expected 12 month volume.
 
-1. Browse the list of suppliers in the Global registry \(via the Radish App UI\) for the supplier who carries part X
-2. Select two suppliers from the list who can deliver the approximate volume
+1. Browse the list of suppliers in the Global registry \(via the Radish App UI\) for the supplier who carries part X.
+2. Select two suppliers from the list who can deliver the approximate volume.
 3. Click "Draft an RFQ" for this SKU/new part for the selected suppliers and enter in my estimated Qty needed.
-4. Click "send" deliver it to the selected suppliers
+4. Click "send" deliver it to the selected suppliers.
 5. Wait for suppliers to respond with initial MSA agreements that contain their rate tables for part X at different quantities.
-6. Review each and "sign & return" each of the MSA contracts from the suppliers
-7. Done with contracting phase
+6. Review each and "sign & return" each of the MSA contracts from the suppliers.
+7. Done with contracting phase.
 
 **Supplier context**: I manufacture newly developed Part X. I know my volume capabilities and have rate tables I can provide to prospective buyers.
 
