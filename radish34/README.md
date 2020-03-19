@@ -30,32 +30,41 @@ After you've done that, log in to the Github package registry by running
 
 ### Setup
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
-1. Run `npm ci && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
-1. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
-1. Run `npm run setup` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete **
-   Exmaple logs:
-   ```
-   *** Starting zokrates container ***
-   radish-34_radish-zkp-watch_1 is up-to-date
-   mongo-buyer is up-to-date
-   radish-34_radish-zkp_1 is up-to-date
+2. Run `npm ci && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
+3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
+4. Run `npm run setup` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
+    <details> 
+      <summary>Example logs</summary>
+      <p> 
 
-   *** Running setup for createMSA ***
-   {"verificationKey":{"H":[["0x28cbb3929742ba7f874746fb890540017813ef404ae38c7073bf030be3577194","0x0974c59917efe8f2aa0049ded97d3103a300ca864c122b1d4c13197d2548c550"],["0x205078b5f99a3e041d75a8d3eb0cafe24da9649271275861bafbfa074a946f68","0x23c46a91322035df6f503929d00efc95ab970633c0b9cdd521f26831137ce398"]],"Galpha":["0x030cb162dc5bb2112b625de1cff121dc0e867068f496d3862d8d27e144c13c64","0x143e8abb0bcdb24417a01bc581bff336c2539f9b48c39c5b1447a5e4ca8a79c6"],"Hbeta":[["0x2e1a7b77ee31735d5b8dd25a032ea8bfda27c5905bec6d3ee3d0b01169ed7961","0x149b8fb268d495e15e642da2bd172791fd65bf9cdc49da8f1b16c34635ede869"],["0x2ccd66691257c87cdbd98efad37a0f60422a1e4d73dd2c18ebd87fc8522db9be","0x15437cb448e5bf0cf3067e2de941cf4ed73f6f732dac9cf19f0e89555f6d7a36"]],"Ggamma":["0x0c132ee8e18b7dd37a7332f6138d2c30826910652de0df3d188fe3597da2208d","0x2cced0ec0c467fac9b6774739b696d2fd1074cdef99da52c986838cea132bbe8"],"Hgamma":[["0x060ae04d4f50d8f01ca4fad8a29fd6d0d8f6eae762c1345bbebab3d8ca8cd993","0x0bb22b3de71c381a8bbd3b40633f3c2db119b75f5874a28bf4f221bae4fa9d73"],["0x13aa539b007374ee850da69ee1b91869ca4d64337a41e2cf4eaef844a28c251c","0x299c36c9cc3aab3c7df10bff199bb66c6d954dfa4ba30b5b33705a4b5bf0708e"]],"query":[["0x2ea45bf055ff829b0348d5c2b0619371de5835c0e28dd63c3d806aa06e3890f5","0x2aa391d2cb16b76693d1dfbbe0272861e38e7cf457f38d0f93d5a7751f3fa7a0"],["0x18c4fa762ba68bdaabb02658ad113cc22333107d73ebc0f508e4c4f2f5a3aaf2","0x075062f8a367e48fc22c99752a8e0211148462c8dab0c87d4c12c85545594e07"]]}}
-   *** Running setup for createPO ***
-   {"verificationKey":{"H":[["0x2d5f6d4b7d13b5cebd8d6cece9dbce5ecb04d3ea80217e0426c2b1d72c2d972d","0x02ff4a4667c3fead0b270277aba0fef1a8f2e94e85b160d19385c089ac7cf501"],["0x25ddb0f3266fc2b2efefa6247f24355a327353f6ccfb5ca9fb5ab1352370a21b","0x1c078f4b5447ef774133731e301b43a9c8657123409333efffa74486a86fb47f"]],"Galpha":["0x0d36fc5d69ce3f50ec40bb9d3540fb1d898a2f91d48932bf55cfcb304af635e3","0x1a555461b3ac218af5fca356d75b9d0eecce6bb8d44aab275141e1a980077a67"],"Hbeta":[["0x29a47d9266d3a915ba517cd2d099ef4872c568d86d69c63ff5fa55aa7a5f6284","0x1125edf840c07eda41a962f71f1e0d8b4c0052587c6b6918ebb3a267c43b6255"],["0x2d15aefb7f2a3374e28671f5b4b5dc1db80660656b16fd81953a6104a95b61ef","0x2e43d6f090a7402b948824568e69a956646a8ddc79eba4bfad65da4863663ce5"]],"Ggamma":["0x11cf0010dc05657a0933a3366efab90a055ef76c926af3c94cd79df0daace624","0x138c005e154787838b851afc869be363e089b2e3786c197c1a7a7f8023e2adcf"],"Hgamma":[["0x267470583b8333a4c8b81331d12d6badfd49c416810fd23006ec393f812c8a56","0x14321eed994c76846d2b8b532e7995d3cb76c022ab05af426a99e98a53076779"],["0x0cfcd3abdf0119481374bf209c71f7afcd8920b85de0e95294933ddd3c16c92a","0x23871104deb8a7c03efaf1ede048dd9f968b4602ea7f824a5c8d4aaa1e6f4143"]],"query":[["0x1a7251f3ac3930802d03eae0f4d8187a62bcf752b33cedd98defe74ddc07cd8f","0x06a13bbc659fae79a8e0ab7fa474d4ae451d42633116e42e17334ee21a847fc5"],["0x26620d77c65980fb18256ee17bc0e80adc30ddb4c54cd61154432d713889ea33","0x237af6ad935a45192f8a279e3543bca9b04aa547d16501c3c164c9ef38ad59c0"]]}}
-   *** Setups complete ***
-   ```
-1. Run `npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
-1. Run `npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
-   - This docker container first deploys both the Registry contract and the OrgRegistry contract.
-   - Then it registers (1) Buyer and (2) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
-   - The goal of deployment is to initialize the Radish34 system by pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart contract, which holds the organization metadata to thus enable any ongoing procurement operations.
-   - Essentially the deployment is based on deploying an `ERC1820Registry` client called the `Registrar`, followed by registering an interface for `OrgRegistry` with the `ERC1820Registry`, then registering the roles of the buyer and supplier with the `OrgRegistry`
-   - In addition, the contracts that are necessary for privacy management, `Shield` and `Verifier` contract are deployed to the network
-   - Any changes to the config files are updated in the individual db instances `mongo-${role}`
-   Example logs:
-   ```
+      ```
+      *** Starting zokrates container ***
+      radish-34_radish-zkp-watch_1 is up-to-date
+      mongo-buyer is up-to-date
+      radish-34_radish-zkp_1 is up-to-date
+
+      *** Running setup for createMSA ***
+      {"verificationKey":{"H":[["0x28cbb3929742ba7f874746fb890540017813ef404ae38c7073bf030be3577194","0x0974c59917efe8f2aa0049ded97d3103a300ca864c122b1d4c13197d2548c550"],["0x205078b5f99a3e041d75a8d3eb0cafe24da9649271275861bafbfa074a946f68","0x23c46a91322035df6f503929d00efc95ab970633c0b9cdd521f26831137ce398"]],"Galpha":["0x030cb162dc5bb2112b625de1cff121dc0e867068f496d3862d8d27e144c13c64","0x143e8abb0bcdb24417a01bc581bff336c2539f9b48c39c5b1447a5e4ca8a79c6"],"Hbeta":[["0x2e1a7b77ee31735d5b8dd25a032ea8bfda27c5905bec6d3ee3d0b01169ed7961","0x149b8fb268d495e15e642da2bd172791fd65bf9cdc49da8f1b16c34635ede869"],["0x2ccd66691257c87cdbd98efad37a0f60422a1e4d73dd2c18ebd87fc8522db9be","0x15437cb448e5bf0cf3067e2de941cf4ed73f6f732dac9cf19f0e89555f6d7a36"]],"Ggamma":["0x0c132ee8e18b7dd37a7332f6138d2c30826910652de0df3d188fe3597da2208d","0x2cced0ec0c467fac9b6774739b696d2fd1074cdef99da52c986838cea132bbe8"],"Hgamma":[["0x060ae04d4f50d8f01ca4fad8a29fd6d0d8f6eae762c1345bbebab3d8ca8cd993","0x0bb22b3de71c381a8bbd3b40633f3c2db119b75f5874a28bf4f221bae4fa9d73"],["0x13aa539b007374ee850da69ee1b91869ca4d64337a41e2cf4eaef844a28c251c","0x299c36c9cc3aab3c7df10bff199bb66c6d954dfa4ba30b5b33705a4b5bf0708e"]],"query":[["0x2ea45bf055ff829b0348d5c2b0619371de5835c0e28dd63c3d806aa06e3890f5","0x2aa391d2cb16b76693d1dfbbe0272861e38e7cf457f38d0f93d5a7751f3fa7a0"],["0x18c4fa762ba68bdaabb02658ad113cc22333107d73ebc0f508e4c4f2f5a3aaf2","0x075062f8a367e48fc22c99752a8e0211148462c8dab0c87d4c12c85545594e07"]]}}
+      *** Running setup for createPO ***
+      {"verificationKey":{"H":[["0x2d5f6d4b7d13b5cebd8d6cece9dbce5ecb04d3ea80217e0426c2b1d72c2d972d","0x02ff4a4667c3fead0b270277aba0fef1a8f2e94e85b160d19385c089ac7cf501"],["0x25ddb0f3266fc2b2efefa6247f24355a327353f6ccfb5ca9fb5ab1352370a21b","0x1c078f4b5447ef774133731e301b43a9c8657123409333efffa74486a86fb47f"]],"Galpha":["0x0d36fc5d69ce3f50ec40bb9d3540fb1d898a2f91d48932bf55cfcb304af635e3","0x1a555461b3ac218af5fca356d75b9d0eecce6bb8d44aab275141e1a980077a67"],"Hbeta":[["0x29a47d9266d3a915ba517cd2d099ef4872c568d86d69c63ff5fa55aa7a5f6284","0x1125edf840c07eda41a962f71f1e0d8b4c0052587c6b6918ebb3a267c43b6255"],["0x2d15aefb7f2a3374e28671f5b4b5dc1db80660656b16fd81953a6104a95b61ef","0x2e43d6f090a7402b948824568e69a956646a8ddc79eba4bfad65da4863663ce5"]],"Ggamma":["0x11cf0010dc05657a0933a3366efab90a055ef76c926af3c94cd79df0daace624","0x138c005e154787838b851afc869be363e089b2e3786c197c1a7a7f8023e2adcf"],"Hgamma":[["0x267470583b8333a4c8b81331d12d6badfd49c416810fd23006ec393f812c8a56","0x14321eed994c76846d2b8b532e7995d3cb76c022ab05af426a99e98a53076779"],["0x0cfcd3abdf0119481374bf209c71f7afcd8920b85de0e95294933ddd3c16c92a","0x23871104deb8a7c03efaf1ede048dd9f968b4602ea7f824a5c8d4aaa1e6f4143"]],"query":[["0x1a7251f3ac3930802d03eae0f4d8187a62bcf752b33cedd98defe74ddc07cd8f","0x06a13bbc659fae79a8e0ab7fa474d4ae451d42633116e42e17334ee21a847fc5"],["0x26620d77c65980fb18256ee17bc0e80adc30ddb4c54cd61154432d713889ea33","0x237af6ad935a45192f8a279e3543bca9b04aa547d16501c3c164c9ef38ad59c0"]]}}
+      *** Setups complete ***
+      ``` 
+      </p>
+    </details> 
+
+5. Run `npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
+6. Run `npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
+    - This docker container first deploys both the Registry contract and the OrgRegistry contract.
+    - Then it registers (1) Buyer and (2) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
+    - The goal of deployment is to initialize the Radish34 system by pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart contract, which holds the organization metadata to thus enable any ongoing procurement operations.
+    - Essentially the deployment is based on deploying an `ERC1820Registry` client called the `Registrar`, followed by registering an interface for `OrgRegistry` with the `ERC1820Registry`, then registering the roles of the buyer and supplier with the `OrgRegistry`
+    - In addition, the contracts that are necessary for privacy management, `Shield` and `Verifier` contract are deployed to the network
+    - Any changes to the config files are updated in the individual db instances `mongo-${role}`
+    <details> 
+      <summary>Example logs</summary>
+      <p> 
+
+      ```
       > docker-compose run --rm radish-deploy sh deploy.sh
       Patiently waiting 10 seconds for ganache container to init ...
       Checking for ganache ...
@@ -94,50 +103,50 @@ After you've done that, log in to the Github package registry by running
       }
       Updated settings for buyer to include: {
       addresses: {
-         ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
-         OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
-         BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
-         Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
-         Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
+          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
+          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
+          BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
+          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
+          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
       },
       organization: {
-         messengerKey: '0x04660083ec950731f412cb96cca49f55d443c370ed8e2d3d938769ce4b200ffc0e9597001574b165b4030235331de26f49b1c4ea1c03d902d2ba75302393fa050e',
-         name: 'Org1',
-         role: 1,
-         zkpPublicKey: '0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965',
-         zkpPrivateKey: '0x29ae268c4e58726d63fb5b0dae75e8d70f77519d12063f1a8fa9ebec085e533d'
+          messengerKey: '0x04660083ec950731f412cb96cca49f55d443c370ed8e2d3d938769ce4b200ffc0e9597001574b165b4030235331de26f49b1c4ea1c03d902d2ba75302393fa050e',
+          name: 'Org1',
+          role: 1,
+          zkpPublicKey: '0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965',
+          zkpPrivateKey: '0x29ae268c4e58726d63fb5b0dae75e8d70f77519d12063f1a8fa9ebec085e533d'
       }
       }
       Updated settings for supplier1 to include: {
       addresses: {
-         ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
-         OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
-         BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
-         Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
-         Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
+          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
+          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
+          BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
+          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
+          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
       },
       organization: {
-         messengerKey: '0x047087e00ac5d68d752caab75c7107329f354a52a9e220d83a0bd14b9a76dbcc359a7e604548a48f0e9a45f5f0d9a31a2b9fa005ec5fd0cce49ccb229a6a28eaff',
-         name: 'Supplier 1',
-         role: 2,
-         zkpPublicKey: '0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387',
-         zkpPrivateKey: '0xb084bd09eea9612b5790a73d9f88bdf644d56194a410b08f6d2ae09d5fccbfe'
+          messengerKey: '0x047087e00ac5d68d752caab75c7107329f354a52a9e220d83a0bd14b9a76dbcc359a7e604548a48f0e9a45f5f0d9a31a2b9fa005ec5fd0cce49ccb229a6a28eaff',
+          name: 'Supplier 1',
+          role: 2,
+          zkpPublicKey: '0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387',
+          zkpPrivateKey: '0xb084bd09eea9612b5790a73d9f88bdf644d56194a410b08f6d2ae09d5fccbfe'
       }
       }
       Updated settings for supplier2 to include: {
       addresses: {
-         ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
-         OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
-         BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
-         Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
-         Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
+          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
+          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
+          BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
+          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
+          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
       },
       organization: {
-         messengerKey: '0x04fa022574ff337d4e5ab9e529a9dc379c8e12fb9fb424c7c400de9ba42d9e24d9d37fb6cd88c182f9908a1451765d98c561006df44a637b9b72551f9f43dc73a7',
-         name: 'Supplier 2',
-         role: 2,
-         zkpPublicKey: '0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5',
-         zkpPrivateKey: '0x111bc1d832ba0ea6804f031c6f0ec9550f4d2b55666c30d7b4cf532b22a45f25'
+          messengerKey: '0x04fa022574ff337d4e5ab9e529a9dc379c8e12fb9fb424c7c400de9ba42d9e24d9d37fb6cd88c182f9908a1451765d98c561006df44a637b9b72551f9f43dc73a7',
+          name: 'Supplier 2',
+          role: 2,
+          zkpPublicKey: '0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5',
+          zkpPrivateKey: '0x111bc1d832ba0ea6804f031c6f0ec9550f4d2b55666c30d7b4cf532b22a45f25'
       }
       }
 
@@ -150,13 +159,19 @@ After you've done that, log in to the Github package registry by running
       ✅  Uploaded verification key for createPO. TxHash: 0x1cc5f0e43b810394e655cafc889b1191d5a874d1d3847269182662df13479e9f
       ----------------- Completed  -----------------
       Please restart the radish-apis for the config to take effect
-   ```
-1. Run `docker-compose up -d && docker-compose restart`
+      ```
+      </p>
+    </details> 
+
+7. Run `docker-compose up -d && docker-compose restart`
    - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
    - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `api-{role}` and `ui`
-   Example Logs:
-   ```
+    <details> 
+      <summary>Example logs</summary>
+      <p> 
+
+      ```
       radish-api-buyer        | Connected to db
       radish-api-buyer        | Mongoose connected to db
       radish-api-buyer        | Loading config file ...
@@ -171,60 +186,64 @@ After you've done that, log in to the Github package registry by running
       radish-api-buyer        | 🏥  Healthcheck Status: ready
       radish-api-buyer        | 🚀 Server ready at http://localhost:8001/graphql
       radish-api-buyer        | 🚀 Subscriptions ready at ws://localhost:8001/graphql`
-   ```
-1. Run integration tests: `npm run test`. ** This takes about 3-5 minutes to run to completion **
-   Example Logs:
-   ```
-         time npm run test
+      ```
+      </p>
+    </details> 
 
+8. Run integration tests: `npm run test`. ** This takes about 3-5 minutes to run to completion **
+    <details> 
+      <summary>Example logs</summary>
+      <p> 
+
+      ```
       > NODE_ENV=test jest --verbose --runInBand --forceExit
 
       console.log __tests__/integration.test.js:287
-         This test can take up to 10 minutes to run. It will provide frequent status updates
+          This test can take up to 10 minutes to run. It will provide frequent status updates
 
       console.log __tests__/integration.test.js:290
-         Checking for non-null msa index, attempt: 0
+          Checking for non-null msa index, attempt: 0
 
       console.log __tests__/integration.test.js:290
-         Checking for non-null msa index, attempt: 1
+          Checking for non-null msa index, attempt: 1
 
       console.log __tests__/integration.test.js:290
-         Checking for non-null msa index, attempt: 2
+          Checking for non-null msa index, attempt: 2
 
       console.log __tests__/integration.test.js:290
-         Checking for non-null msa index, attempt: 3
+          Checking for non-null msa index, attempt: 3
 
       console.log __tests__/integration.test.js:295
-         Test complete
+          Test complete
 
       PASS  __tests__/integration.test.js (181.696s)
       Check that containers are ready
-         Buyer containers
+          Buyer containers
             ✓ Buyer messenger GET /health-check returns 200 (13ms)
             ✓ Buyer radish-api REST server GET /health-check returns 200 (16ms)
-         Supplier containers
+          Supplier containers
             ✓ Supplier messenger GET /health-check returns 200 (6ms)
             ✓ Supplier radish-api REST server GET /health-check returns 200 (12ms)
       Buyer sends new RFP to supplier
-         Retrieve identities from messenger
+          Retrieve identities from messenger
             ✓ Supplier messenger GET /identities (7ms)
             ✓ Buyer messenger GET /identities (6ms)
-         Create new RFP through buyer radish-api
+          Create new RFP through buyer radish-api
             ✓ Buyer graphql mutation createRFP() returns 400 withOUT sku (46ms)
             ✓ Buyer graphql mutation createRFP() returns 200 (77ms)
-         Check RFP existence through radish-api queries
+          Check RFP existence through radish-api queries
             ✓ Buyer graphql query rfp() returns 200 (23ms)
             ✓ Supplier graphql query rfp() returns 200 (2116ms)
-         Check RFP contents through radish-api query
+          Check RFP contents through radish-api query
             ✓ Buyer rfp.recipients.origination contents are correct (25ms)
             ✓ Supplier messenger has raw message that delivered RFP from buyer (11ms)
       Buyer creates MSA, signs it, sends to supplier, supplier responds with signed MSA
-         Create new MSA through buyer radish-api
+          Create new MSA through buyer radish-api
             ✓ Buyer graphql mutation createMSA() returns 400 without sku (11ms)
             ✓ Buyer graphql mutation createMSA() returns 200 (447ms)
             ✓ After a while, the commitment index should not be null (60131ms)
       Buyer creates PO
-         Create new PO through buyer radish-api
+          Create new PO through buyer radish-api
             ✓ Buyer graphql mutation createPO() returns 400 without volume (10ms)
             ✓ Buyer graphql mutation createPO() returns 200 (117616ms)
 
@@ -234,8 +253,11 @@ After you've done that, log in to the Github package registry by running
       Time:        181.74s
       Ran all test suites.
       npm run test  3.35s user 3.37s system 3% cpu 3:06.52 total
-   ```
-1. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
+      ```
+      </p>
+    </details> 
+
+9. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
 
 ## Troubleshooting
 
@@ -244,25 +266,29 @@ After you've done that, log in to the Github package registry by running
 nvm install 11
 nvm use 11
 ```
-1. Restart the test environment
+
+2. Restart the test environment
    - Run `docker-compose down` to stop containers
    - Run this command to give the docker command a clean slate: `docker volume prune -f && echo volume pruned && docker system prune -f && echo system pruned && docker network prune -f && echo network pruned`
    - In some cases, due to stale images application may have build issues owing to existing images and packages that were a part of those builds. To get around such issues, run `docker-compose build --no-cache` to run a clean re-build of the docker images
    - Run through the 'steps to start the application' in __Development/Test Environment__
-1. Increasing resource allocation for Docker
+3. Increasing resource allocation for Docker
    - During set up, `npm run setup`, there are cases where the setup instruction might fail, and the logs of the `zkp` container (`docker-compose logs -f zkp`) throws babel compilation errors. This is due to the memory consumption needed for running the compute intensive set up process. In these cases, it is recommended to toggle memory and CPU cores consumption
    - Consider these steps if you are running many of the `radish` containers and your PC is bogged down
    - Check the memory usage by running `docker stats`
    - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` (default is `2.0GiB`). Although not required in all cases, it is recommended to increase the swap memory to 4GB and CPU cores to 8 on Docker Preferences/Settings.
-1. Running tests
+4. Running tests
    - In some cases, while running the test suite `npm run test` there could be a socket hang up error. This is potentially due to race conditions across the different containers for the API services. To resolve this issue run `docker-compose restart api-buyer api-supplier1 api-supplier2` to get rid of errors while running the test suite.
 
 ### Front-end Environment
 
 1. When the above setup is run successfully, the UI is ready at `http://radish34-ui.docker`
 2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `ui` container.
-   Example Logs:
-   ```
+    <details> 
+      <summary>Example logs</summary>
+      <p> 
+
+      ```
       ui_1           | > @ start /app
       ui_1           | > react-scripts start
       ui_1           |
@@ -278,4 +304,6 @@ nvm use 11
       ui_1           |
       ui_1           | Note that the development build is not optimized.
       ui_1           | To create a production build, use npm run build.
-   ```
+      ```
+      </p>
+    </details> 
