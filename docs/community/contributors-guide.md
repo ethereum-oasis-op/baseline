@@ -40,6 +40,8 @@ Good practice strongly favors committing work frequently and not loading up a lo
 
 Anyone can do a pull request and commit. In order for your work to be merged, you will need to sign the eCLA \(entity contributor agreement\) or iCLA \(individual contributor agreement\). Here are the details: [https://www.oasis-open.org/resources/projects/cla/projects-entity-cla](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla)
 
+The iCLA happens automatically when people submit a pull request, or they can access directly by going to [https://cla-assistant.io/ethereum-oasis/baseline](https://cla-assistant.io/ethereum-oasis/baseline)
+
 ### Maintainers and Commit Rules
 
 During the bootstrap phase \(March - June, 2020\) merging to Master will require review by THREE Maintainers. The TSC will seed the set of Maintainers. Thereafter, any active Committer can become a Maintainer. Maintainers may add more Maintainers by simple majority and \(rough consensus rules\), and the TSC may step in to resolve cases where this process fails. 
