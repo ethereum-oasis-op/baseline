@@ -6,7 +6,7 @@ radish34=./radish34
 # over time, as the radish34 use-case is abstracted/generalized into
 # the baseline protocol, the pushd/popd hacks will fade away...
 
-.PHONY: build clean contracts deploy-contracts npm-install start stop rest test zk-circuits
+.PHONY: build clean contracts deploy-contracts npm-install start stop reset test zk-circuits
 
 default: build
 
