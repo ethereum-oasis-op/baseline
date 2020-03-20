@@ -43,6 +43,7 @@ Here are the targets currently exposed by the `Makefile`:
 | `make npm-install` | `npm ci` wrapper for all modules in the monorepo. |
 | `make start` | Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation. |
 | `make stop` | Stop the running __Baseline__ stack. |
+| `make reset` | Clean the docker environment by pruning the docker networks and volumes. |
 | `make test` | Run the full test suite. Requires the stack to be running. |
 | `make zk-circuits` | Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits` |
 
