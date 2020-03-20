@@ -1,3 +1,5 @@
+const { execSync } = require('child_process');
+const fs = require('fs');
 const ethers = require('ethers');
 const Wallet = require('./utils/wallet');
 const Contract = require('./utils/contract');
@@ -7,6 +9,22 @@ const { getWhisperIdentities } = require('./utils/identities');
 const { uploadVks } = require('./utils/vk');
 
 const addresses = {};
+const pycryptoCliPath = 'pycrypto/cli.py';
+
+const generateKeyPair = () => {
+  let keys = {};
+  if (fs.existsSync(pycryptoCliPath)) {
+    const stdout = execSync(`python3 ${pycryptoCliPath} keygen`);
+    const lines = stdout.toString().split(/\n/);
+    const keypair = lines[0].split(/ /);
+    if (keypair.length === 2) {
+      keys['privateKey'] = `0x${keypair[0]}`;
+      keys['publicKey'] = `0x${keypair[1]}`;
+    }
+  }
+
+  return keys;
+}
 
 const deployContracts = async role => {
   addresses.ERC1820Registry = await Contract.deployContract('ERC1820Registry', [], role);
@@ -65,16 +83,30 @@ const register = async role => {
   const messengerKey = (await getWhisperIdentities())[role];
   organization = { ...organization, messengerKey };
 
+  organization.address = roleAddress;
+  if (!organization.zkpPublicKey) {
+    const { privateKey, publicKey } = generateKeyPair();
+    organization.zkpPublicKey = publicKey;
+    organization.zkpPrivateKey = privateKey;
+  }
+
   const { transactionHash } = await Organization.registerToOrgRegistry(
     role,
     addresses.OrgRegistry,
-    roleAddress,
+    organization.address,
     organization.name,
     organization.role,
     organization.messengerKey,
     organization.zkpPublicKey,
   );
   console.log(`✅  Registered ${role} in the OrgRegistry with tx hash:`, transactionHash);
+
+  if (transactionHash) {
+    Settings.setServerSettings(role, {
+      addresses,
+      organization,
+    });
+  }
 };
 
 const registerInterfaces = async role => {
@@ -116,7 +148,6 @@ const saveSettings = async role => {
 };
 
 const main = async () => {
-
   await deployContracts('deployer');
   await assignManager('deployer');
   await setInterfaceImplementer('deployer');

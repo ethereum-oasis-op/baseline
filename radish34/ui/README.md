@@ -19,7 +19,7 @@ This is the front end piece/demo to Radish. Something to keep in mind, however, 
 4. Start up the ui service
   - If you would like to run the UI service alone you can run: `docker-compose up -d ui`
   - Otherwise you can simply run `docker-compose up -d`
-  - Navigate to `http://radish34-ui.docker/`
+  - Navigate to `http://localhost:3000/`
 
 In view of the procurement application, when you stage up the application, the following steps show how the different processes can be run/demo'ed using a UI
 RFP: Buyer selects create new RFP on the top left corner of the UI, and selects suppliers to send RFP to. Upon submitting an RFP, the supplier screen gets updated with an incoming RFP which they can view and fill out a form to submit a proposal as a response. Upon submitting the proposal, the buyer screen then gets updated with an incoming proposal which when they click to view will link them to the original RFP where they can view the details of a proposal and decide whether or not to create a Contract (msa) for.

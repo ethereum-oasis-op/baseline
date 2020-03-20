@@ -94,10 +94,9 @@ typings/
 # End of https://www.gitignore.io/api/node
 
 artifacts/
-build
-dist
-config/config-*.json
-config/merkle-tree/
+build/
+dist/
+config/
 
 # Ignore generated docs
 docs/generated

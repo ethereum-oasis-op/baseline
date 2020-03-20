@@ -25,15 +25,17 @@
     ]
   },
   "scripts": {
+    "await-stack": "./ops/await_stack.sh",
+    "build": "./ops/build.sh",
     "build:contracts": "pushd contracts && npm run build && popd",
-    "deploy": "docker-compose run --rm deploy sh deploy.sh",
-    "deploy:all": "docker-compose run -e MODE='register-all' --rm radish-deploy sh deploy.sh",
-    "docs:build": "./bin/docs_build.sh",
+    "deploy": "docker-compose run --rm deploy && docker-compose restart api-buyer api-supplier1 api-supplier2",
+    "docs:build": "./ops/build_docs.sh",
+    "dockerize": "./ops/dockerize.sh",
+    "install-config": "mkdir -p ./config && cp -r ./deploy/src/config/backups/* ./config && cp -r ./deploy/src/config/keystore ./config",
     "lint": "solhint \"contracts/**/*.sol\"",
     "postman-test-zkp-api": "npx newman run zkp/src/test/zkp-api-integration-test.postman_collection.json -e zkp/src/test/radish-local.postman_environment.json",
     "postman-integration-test": "npx newman run __tests__/postman/integration-test.postman_collection.json  -e  __tests__/postman/radish-local.postman_environment.json --delay-request 1000",
-    "postinstall": "(pushd messenger && npm ci && popd); (pushd api && npm ci && popd); (pushd deploy && npm ci && popd); (pushd ui && npm ci && popd); (pushd zkp && npm ci && popd); (pushd contracts && npm ci && popd)",
-    "setup": "./bin/setup.sh",
+    "setup-circuits": "./ops/setup_circuits.sh",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test:watch": "jest --watchAll --runInBand"
   },

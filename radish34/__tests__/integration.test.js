@@ -2,23 +2,39 @@ import request from 'supertest';
 import { concatenateThenHash } from '../api/src/utils/crypto/hashes/sha256/sha256';
 import { MongoClient } from 'mongodb';
 
+const fs = require('fs');
+
 jest.setTimeout(600000);
 
 // Check <repo-root>/docker-compose.yml for correct URLs
 const buyerApiURL = 'http://localhost:8001';
 const buyerMessengerURL = 'http://localhost:4001';
 const buyerMongoURL = 'mongodb://localhost:27117/radish34'
-const supplierMessengerURL = 'http://localhost:4002';
-const supplierApiURL = 'http://localhost:8002';
+const supplierMessengerURL = 'http://localhost:4003';
+const supplierApiURL = 'http://localhost:8003';
 
 let nativeClient;
 let db;
+
+const getConfigFilePath = role => `./config/config-${role}.json`;
+
+const getOrgSettings = role => {
+  let settings;
+  const filepath = getConfigFilePath(role);
+  if (fs.existsSync(filepath)) {
+    settings = JSON.parse(fs.readFileSync(filepath));
+  }
+  expect(settings).toBeTruthy();
+  expect(settings.organization).toBeTruthy();
+  return settings.organization;
+};
 
 beforeAll(async () => {
   // Clear out saved msas so there aren't unintended collisions
   nativeClient = await MongoClient.connect(buyerMongoURL, { useUnifiedTopology: true });
   db = nativeClient.db();
   await db.collection('msas').deleteMany();
+  await db.collection('RFP').deleteMany();
 });
 
 afterAll(async () => {
@@ -93,7 +109,7 @@ describe('Buyer sends new RFP to supplier', () => {
     });
 
     test('Buyer graphql mutation createRFP() returns 200', async () => {
-      let zkpPublicKey = '0x99246c83ca94b55a7330f68952ee74574a7d3b1921ccf29c84f75975935e6333';
+      let supplier2 = getOrgSettings('supplier2');
 
       const postBody = ` mutation {
             createRFP( input: {
@@ -103,20 +119,21 @@ describe('Buyer sends new RFP to supplier', () => {
               proposalDeadline: 1578065104,
               recipients: [{
                 partner: {
-                  identity: "${supplierMessengerId}",
+                  identity: "${supplier2.messengerKey}",
                   name: "FakeName",
-                  address: "0x0D8c04aCd7c417D412fe4c4dbB713f842dcd3A65",
+                  address: "${supplier2.address}",
                   role: "supplier",
-                  zkpPublicKey: "${zkpPublicKey}",
+                  zkpPublicKey: "${supplier2.zkpPublicKey}",
                 }
               }]
             })
             { _id, sku }
-          } `
+          }`
       const res = await request(buyerApiURL)
         .post('/graphql')
         .send({ query: postBody });
       expect(res.statusCode).toEqual(200);
+      console.log(res.body);
       rfpId = res.body.data.createRFP._id;
     });
   });
@@ -168,6 +185,7 @@ describe('Buyer sends new RFP to supplier', () => {
         .post('/graphql')
         .send({ query: queryBody });
       expect(res.statusCode).toEqual(200);
+      console.log(res.body.data.rfp.recipients[0]);
       const origination = res.body.data.rfp.recipients[0].origination;
       expect(origination.receiptDate).not.toBeUndefined();
       messageId = origination.messageId;
@@ -195,8 +213,9 @@ describe('Buyer sends new RFP to supplier', () => {
 let msaId;
 
 describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with signed MSA', () => {
-  const supplierAddress = '0x3f7eB8a7d140366423e9551e9532F4bf1A304C65';
-  const supplierAddressPadded = '0x0000000000000000000000003f7eB8a7d140366423e9551e9532F4bf1A304C65';
+  const supplier = getOrgSettings('supplier2');
+  const supplierAddress = supplier.address;
+  const supplierAddressPadded = `0x000000000000000000000000${supplierAddress.substring(2)}`;
   const sku = 'FAKE-SKU-123';
   const skuPadded = '0x0000000046414b452d534b552d313233';
   const erc20ContractAddress = '0xcd234a471b72ba2f1ccf0a70fcaba648a5eecd8d';
@@ -246,20 +265,23 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
           rfpId: "${rfpId}",
         })
         { zkpPublicKeyOfBuyer, zkpPublicKeyOfSupplier, sku, _id, commitments { commitment, salt } }
-      } `
+      }`
 
       const res = await request(buyerApiURL)
         .post('/graphql')
         .send({ query: postBody });
 
+      const buyerZkpPublicKey = getOrgSettings('buyer').zkpPublicKey;
+      const supplierZkpPublicKey = getOrgSettings('supplier2').zkpPublicKey;
+
       expect(res.statusCode).toEqual(200);
-      expect(res.body.data.createMSA.zkpPublicKeyOfBuyer).toEqual('0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965');
-      expect(res.body.data.createMSA.zkpPublicKeyOfSupplier).toEqual('0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5');
+      expect(res.body.data.createMSA.zkpPublicKeyOfBuyer).toEqual(buyerZkpPublicKey);
+      expect(res.body.data.createMSA.zkpPublicKeyOfSupplier).toEqual(supplierZkpPublicKey);
       expect(res.body.data.createMSA.sku).toEqual('FAKE-SKU-123');
       expect(res.body.data.createMSA._id).not.toBeNull();
       expect(res.body.data.createMSA.commitments[0].commitment).toEqual(concatenateThenHash(
-        '0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965',
-        '0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5',
+        buyerZkpPublicKey,
+        supplierZkpPublicKey,
         concatenateThenHash(...tierBoundsPadded, ...pricesByTierPadded),
         tierBoundsPadded[0],
         tierBoundsPadded[tierBoundsPadded.length - 1],
@@ -339,8 +361,8 @@ describe('Buyer creates PO', () => {
         .send({ query: postBody });
 
       expect(res.statusCode).toEqual(200);
-      expect(res.body.data.createPO.constants.zkpPublicKeyOfBuyer).toEqual('0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965');
-      expect(res.body.data.createPO.constants.zkpPublicKeyOfSupplier).toEqual('0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5');
+      expect(res.body.data.createPO.constants.zkpPublicKeyOfBuyer).toEqual(getOrgSettings('buyer').zkpPublicKey);
+      expect(res.body.data.createPO.constants.zkpPublicKeyOfSupplier).toEqual(getOrgSettings('supplier2').zkpPublicKey);
       expect(res.body.data.createPO.constants.sku).toEqual('FAKE-SKU-123');
       expect(res.body.data.createPO._id).not.toBeNull();
       expect(res.body.data.createPO.commitments[0]).not.toEqual(null);

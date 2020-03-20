@@ -16,7 +16,7 @@ import { MSAProvider } from './msa-context';
 import { ToastrProvider } from './ToastrContext';
 import { PurchaseOrderProvider } from './purchase-order-context';
 
-let uri = 'radish34-api-buyer.docker/graphql';
+let uri = 'localhost:8101/graphql';
 
 if (window.localStorage.getItem('api')) {
   uri = window.localStorage.getItem('api');

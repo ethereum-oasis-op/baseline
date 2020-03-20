@@ -46,14 +46,17 @@ Here are the targets currently exposed by the `Makefile`:
 | Target | Description |
 |:-------------|:------------------------------------------------------------|
 | `make` | Alias for `make build`. |
-| `make build` | Build and dockerize all modules within the monorepo; perform initial zk circuit setups. |
+| `make build` | Build all modules within the monorepo. |
+| `make build-containers` | Dockerize all modules within the monorepo. |
 | `make clean` | Reclaim disk used by all modules (i.e. `node_modules/`) and the local docker environment. This effectively uninstalls your local __Baseline__ environment and will require building from scratch. |
 | `make contracts` | Compile the Solidity contracts. |
 | `make deploy-contracts` | Deploy the Solidity contracts. Requires the stack to be running. |
-| `make npm-install` | `npm ci` wrapper for all modules in the monorepo. |
+| `make npm-install` | `npm i` wrapper for all modules in the monorepo. |
 | `make start` | Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation. |
 | `make stop` | Stop the running __Baseline__ stack. |
-| `make reset` | Clean out the docker networks and volumes. Requires `make deploy-contracts` before the next `make start`. |
+| `make system-check` | Verify that `docker` is configured properly. |
+| `make restart` | Stop and start the `docker` stack. |
+| `make reset` | Clean the docker environment by pruning the docker networks and volumes. |
 | `make test` | Run the full test suite. Requires the stack to be running. |
 | `make zk-circuits` | Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits` |
 

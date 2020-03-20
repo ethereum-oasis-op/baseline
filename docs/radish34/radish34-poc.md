@@ -27,9 +27,9 @@ After you've done that, log in to the Github package registry by running
 ## Development/Test Environment
 
 1. As part of the development environment, we assume a procurement use-case with three users: \(1\) buyer and \(2\) supplier organizations.
-2. Run `npm ci && npm run postinstall`. \*\* This takes about 6 minutes to clean install npm packages in root and all sub directories \*\*
+2. Run `npm i && npm run postinstall`. \*\* This takes about 6 minutes to clean install npm packages in root and all sub directories \*\*
 3. Run `docker-compose build` to create the latest versions of the docker containers. \*\* Only do this the first time or when service source code is changed \*\*. \*\* This takes about 40 minutes for a fresh build \*\*
-4. Run `npm run setup` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. \*\* This takes about 5-10 minutes to complete \*\* Example logs:
+4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. \*\* This takes about 5-10 minutes to complete \*\* Example logs:
 
 \[ Need to fix the code segments below...maybe....at least it scrolls. \]
 
@@ -178,11 +178,11 @@ radish-34_radish-zkp_1 is up-to-date
    ```
 
 5. Run integration tests: `npm run test`
-6. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
+6. Within about 5 minutes, UI is loaded on `http://radish34-ui` on your local browser
 
 ## Troubleshooting
 
-1. If you get errors during the `npm ci` step, please ensure that you are running node version `11`. The `nvm` \(node version manager\) tool allows you to easily switch between versions:
+1. If you get errors during the `npm i` step, please ensure that you are running node version `11`. The `nvm` \(node version manager\) tool allows you to easily switch between versions:
 
 ```text
 nvm install 11
@@ -201,7 +201,7 @@ nvm use 11
 
 ### Front-end Environment
 
-1. When the above setup is run successfully, the UI is ready at `http://radish34-ui.docker`
+1. When the above setup is run successfully, the UI is ready at `http://radish34-ui`
 2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `radish34-ui` container. Example Logs:
 
    ```text

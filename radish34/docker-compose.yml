@@ -26,7 +26,7 @@ services:
       - ./zkp/output:/app/output:delegated
     environment:
       PROVING_SCHEME: 'gm17'
-      VIRTUAL_HOST: radish34-zkp.docker
+      VIRTUAL_HOST: radish34-zkp
       MONGO_URL: mongodb://mongo-buyer # TODO: radish-zkp's db of proving materials shouldn't depend on the Buyer's mongodb. Each user should probably read proving files from their local disk rather than from a shared mongodb?
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
@@ -54,11 +54,13 @@ services:
       - ./ui/public/images:/app/public/images:delegated
       - ./ui/public/fonts:/app/public/fonts:delegated
     environment:
-      VIRTUAL_HOST: radish34-ui.docker
+      VIRTUAL_HOST: radish34-ui
     networks:
       - network-buyer
       - network-supplier1
       - network-supplier2
+    ports:
+      - 3000:3000
     logging:
       options:
         max-size: 10m
@@ -90,7 +92,6 @@ services:
       - ./deploy/src:/app/src:delegated
       - ./deploy/package.json:/app/package.json:delegated
       - ./contracts/artifacts:/app/artifacts:delegated
-      - ./config/keystore:/keystore:delegated
       - ./config:/app/src/config
 
   api-buyer:
@@ -114,7 +115,7 @@ services:
       - redis-buyer
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish34-api-buyer.docker
+      VIRTUAL_HOST: radish34-api-buyer
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
@@ -149,7 +150,7 @@ services:
       - redis-supplier1
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish34-api-supplier1.docker
+      VIRTUAL_HOST: radish34-api-supplier1
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
@@ -183,7 +184,7 @@ services:
       - messenger-supplier2
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish34-api-supplier2.docker
+      VIRTUAL_HOST: radish34-api-supplier2
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
@@ -350,7 +351,7 @@ services:
     env_file:
       - ./messenger/docker.env
     environment:
-      VIRTUAL_HOST: messenger-buyer.docker
+      VIRTUAL_HOST: messenger-buyer
       MONGO_URL: mongodb://mongo-buyer:27017/radish34
       RADISH_API_URL: http://api-buyer:8101
       REDIS_URL: redis://redis-buyer:6379
@@ -372,7 +373,7 @@ services:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
-      VIRTUAL_HOST: messenger-supplier1.docker
+      VIRTUAL_HOST: messenger-supplier1
       MONGO_URL: mongodb://mongo-supplier1:27017/radish34
       RADISH_API_URL: http://api-supplier1:8101
       REDIS_URL: redis://redis-supplier1:6379
@@ -394,7 +395,7 @@ services:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
-      VIRTUAL_HOST: messenger-supplier2.docker
+      VIRTUAL_HOST: messenger-supplier2
       MONGO_URL: mongodb://mongo-supplier2:27017/radish34
       RADISH_API_URL: http://api-supplier2:8101
       REDIS_URL: redis://redis-supplier2:6379
