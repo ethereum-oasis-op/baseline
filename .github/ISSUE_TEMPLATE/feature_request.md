@@ -1,8 +1,12 @@
 ---
-name: 'Feature Request'
-about: 'Propose a new feature or user story'
-labels: feature
+name: Feature Request
+about: Propose a new feature or user story
+title: ''
+labels: ''
+assignees: ''
+
 ---
+
 ## Overview
 
 English description of the feature in a sentence or two, usually in the form of a user story.
@@ -34,4 +38,3 @@ English description of the feature in a sentence or two, usually in the form of 
 
 - [ ] A list of tasks that need
 - [ ] to be done to call this issue done
-

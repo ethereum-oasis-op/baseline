@@ -1,8 +1,12 @@
 ---
-name: 'Bug report'
-about: 'Found a bug? No problemo!'
-labels: ':bug: bug'
+name: Bug report
+about: Found a bug? No problemo!
+title: ''
+labels: ''
+assignees: ''
+
 ---
+
 ## Expected Behavior
 
 
@@ -20,4 +24,3 @@ labels: ':bug: bug'
   - Version:
   - Platform:
   - Subsystem:
-
