@@ -166,7 +166,7 @@ After you've done that, log in to the Github package registry by running
 7. Run `docker-compose up -d && docker-compose restart`
    - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
-   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are api-{role} and ui. For example: `docker-compose logs -f radish-api-buyer`, `docker-compose logs -f radish-api-supplier1`, `docker-compose logs -f radish-api-supplier2`, `docker-compose logs -f radish-api-supplier3`, and `docker-compose logs -f radish34-ui`
+   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are api-{role} and ui. For example: `docker-compose logs -f api-buyer`, `docker-compose logs -f api-supplier1`, `docker-compose logs -f api-supplier2`, and `docker-compose logs -f ui`
     <details> 
       <summary>Example api-buyer logs</summary>
       <p> 
