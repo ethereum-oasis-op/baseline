@@ -43,7 +43,7 @@ One TSC Member shall serve as provisional chair of the TSC for six months. On Se
 
 #### Steady State Periods: 
 
-After the six month Startup Period, there shall be a nomination and election period for electing TSC members, typically from the ranks of Contributors and Maintainers. The TSC voting members shall consist of eleven \(7, 9 or 11\) elected members chosen by Active Contributors. An Active Contributor is defined as any Contributor who has had a contribution accepted into the Master Branch of the codebase during the prior six \(6\) months. The TSC shall approve the process and timing for nominations and elections held on an annual basis.
+After the six month Bootstrap Period, there shall be a nomination and election period for electing TSC members, typically from the ranks of Contributors and Maintainers. The TSC voting members shall consist of eleven \(7, 9 or 11\) elected members chosen by Active Contributors. An Active Contributor is defined as any Contributor who has had a contribution accepted into the Master Branch of the codebase during the prior six \(6\) months. The TSC shall approve the process and timing for nominations and elections held on an annual basis.
 
 #### Maintainers: 
 
