@@ -5,7 +5,7 @@
   "contributors": [
     "Chaitanya Konda <ChaitanyaKonda>",
     "Duncan Westland <Westlad>",
-    "Michael Connor <iAmMichaelConnor>",  
+    "Michael Connor <iAmMichaelConnor>",
     "Kartheek Solipuram <skarred14>",
     "Patrick Macom <pmacom>",
     "Wenxing Wang <wenxing-wang-ey>"
@@ -13,10 +13,9 @@
   "license": "SEE LICENSE in root/license.md",
   "main": "src/index.js",
   "scripts": {
-    "start": "node ./dist/index.js",
-    "dev": "nodemon ./dist/index.js",
+    "start": "cod-scripts build && node ./dist/index.js",
+    "dev": "cod-scripts build --watch & nodemon ./dist/index.js",
     "build": "cod-scripts build",
-    "build:watch": "npm run build -- --watch",
     "test": "jest --watchAll --verbose=true --silent",
     "test:ci": "jest --verbose=true --silent --ci --coverage",
     "fix": "npm run format && npm run lint -- --fix",

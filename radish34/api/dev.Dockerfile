@@ -1,9 +1,9 @@
-FROM node:11.13
+FROM node:11.15
 
 RUN \
-apt-get update -y && \
-apt-get install python3-pip -y && \
-pip3 install bitstring==3.1.5
+  apt-get update -y && \
+  apt-get install python3-pip -y && \
+  pip3 install bitstring==3.1.5
 
 RUN mkdir /app
 WORKDIR /app

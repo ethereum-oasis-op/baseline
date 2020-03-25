@@ -33,7 +33,7 @@ Run the following instruction to ensure that the service is up:
 
 `docker-compose up -d zkp`
 
-This should spin up two containers: `zkp` and `zkp-watch`; wherein `zkp` contains RESTful end points for interacting with the service. And `zkp-watch` runs in the background to ensure that the js files in the former container are appropriately compiled using babel.
+This will spin up the `zkp` container, which contains RESTful end points for interacting with the service. In the `dev` mode specified by the `docker-compose.yml` file, `babel` runs in the background to compile down to ES5 style code and `nodemon` watches for any file changes so that developers can make changes locally and the container will pickup on them automatically.
 
 Logs should look like the following:
 
@@ -47,18 +47,6 @@ zkp_1            | [nodemon] watching dir(s): *.*
 zkp_1            | [nodemon] watching extensions: js,mjs,json
 zkp_1            | [nodemon] starting `node ./dist/index.js`
 
-```
-
-`zkp-watch`: `docker-compose logs -f zkp-watch`
-
-```
-zkp-watch_1      | > npm run build -- --watch
-zkp-watch_1      |
-zkp-watch_1      |
-zkp-watch_1      | > radish34-zokrates@1.0.0 build /app
-zkp-watch_1      | > cod-scripts build "--watch"
-zkp-watch_1      |
-zkp-watch_1      | Successfully compiled 6 files with Babel.
 ```
 
 `zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/circuits/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish34-zkp.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
@@ -110,7 +98,7 @@ Cargo is pre-installed on the container. Following instructions are for developm
 
 ##### build
 
-This instruction builds cargo to be able to run native instructions: `docker-compose exec radish-zkp cd src && ./do build`
+This instruction builds cargo to be able to run native instructions: `docker-compose exec zkp cd src && ./do build`
 
 Following examples can be run, or custom written as scripts that could be mounted to the container to run one-off instructions.
 

@@ -29,7 +29,7 @@ The __Baseline Protocol__ code is currently embedded inside the `/radish-api` di
 A `Makefile` has been included for convenience; most of its targets wrap `npm`, `docker` and `solc` invocations.
 
 Just want to get the __Baseline Protocol__ running locally?
-`make && make start && make test` will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes between [] and [] minutes to complete.*
+`make && make start && make deploy-contracts && make test` will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 30 minutes to complete.*
 
 Here are the targets currently exposed by the `Makefile`:
 
@@ -43,6 +43,7 @@ Here are the targets currently exposed by the `Makefile`:
 | `make npm-install` | `npm ci` wrapper for all modules in the monorepo. |
 | `make start` | Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation. |
 | `make stop` | Stop the running __Baseline__ stack. |
+| `make reset` | Clean out the docker networks and volumes. Requires `make deploy-contracts` before the next `make start`. |
 | `make test` | Run the full test suite. Requires the stack to be running. |
 | `make zk-circuits` | Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits` |
 
