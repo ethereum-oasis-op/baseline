@@ -259,6 +259,14 @@ After you've done that, log in to the Github package registry by running
 
 9. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
 
+## Collection of Log Commands
+
+`docker-compose logs -f api-buyer`  
+`docker-compose logs -f api-supplier1`  
+`docker-compose logs -f api-supplier2`   
+`docker-compose logs -f ui`  
+
+
 ## Troubleshooting
 
 1. If you get errors during the `npm ci` step, please ensure that you are running node version `11`. The `nvm` (node version manager) tool allows you to easily switch between versions:
