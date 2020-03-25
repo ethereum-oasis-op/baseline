@@ -36,6 +36,9 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
 
     using Pairing for *;
 
+    uint256 constant SNARK_SCALAR_BOUND = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
+    uint256 constant PRIME_BOUND = 21888242871839275222246405745257275088696311157297823662689037894645226208583;
+
     struct Proof_GM17 {
         Pairing.G1Point A;
         Pairing.G2Point B;
@@ -102,6 +105,19 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         proof.B = Pairing.G2Point([_proof[2], _proof[3]], [_proof[4], _proof[5]]);
         proof.C = Pairing.G1Point(_proof[6], _proof[7]);
 
+        // Check whether proof values are each less than the prime bound
+        require(proof.A.X < PRIME_BOUND, "Proof value aX greater than prime bound!");
+        require(proof.A.Y < PRIME_BOUND, "Proof value aY greater than prime bound!");
+
+        require(proof.B.X[0] < PRIME_BOUND, "Proof value bX0 greater than prime bound!");
+        require(proof.B.Y[0] < PRIME_BOUND, "Proof value bY0 greater than prime bound!");
+
+        require(proof.B.X[1] < PRIME_BOUND, "Proof value aY1 greater than prime bound!");
+        require(proof.B.Y[1] < PRIME_BOUND, "Proof value bY1 greater than prime bound!");
+
+        require(proof.C.X < PRIME_BOUND, "Proof value cX greater than prime bound!");
+        require(proof.C.Y < PRIME_BOUND, "Proof value cY greater than prime bound!");
+
         vk.H = Pairing.G2Point([_vk[0], _vk[1]], [_vk[2], _vk[3]]);
         vk.Galpha = Pairing.G1Point(_vk[4], _vk[5]);
         vk.Hbeta = Pairing.G2Point([_vk[6], _vk[7]], [_vk[8], _vk[9]]);
@@ -116,8 +132,11 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
 
         require(_inputs.length + 1 == vk.query.length, "Length of inputs[] or vk.query is incorrect!");
 
-        for (uint i = 0; i < _inputs.length; i++)
+        // Check whether inputs are less than the snark field upper bound
+        for (uint i = 0; i < _inputs.length; i++) {
+            require(_inputs[i] < SNARK_SCALAR_BOUND, "Input greater than snark scalar field!");
             vk_dot_inputs = Pairing.addition(vk_dot_inputs, Pairing.scalar_mul(vk.query[i + 1], _inputs[i]));
+        }
 
         vk_dot_inputs = Pairing.addition(vk_dot_inputs, vk.query[0]);
 
