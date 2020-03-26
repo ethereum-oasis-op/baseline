@@ -261,11 +261,20 @@ After you've done that, log in to the Github package registry by running
 
 ## Collection of Log Commands
 
-`docker-compose logs -f api-buyer`  
-`docker-compose logs -f api-supplier1`  
-`docker-compose logs -f api-supplier2`   
 `docker-compose logs -f ui`  
-
+`docker-compose logs -f api-buyer`  
+`docker-compose logs -f messenger-buyer`   
+`docker-compose logs -f mongo-buyer`  
+`docker-compose logs -f api-supplier1`  
+`docker-compose logs -f messenger-supplier1`  
+`docker-compose logs -f mongo-supplier1`   
+`docker-compose logs -f api-supplier2`  
+`docker-compose logs -f messenger-supplier2`  
+`docker-compose logs -f mongo-supplier2`  
+`docker-compose logs -f geth-node`   
+`docker-compose logs -f geth-miner1`  
+`docker-compose logs -f geth-miner2`  
+`docker-compose logs -f geth-bootnode`  
 
 ## Troubleshooting
 
