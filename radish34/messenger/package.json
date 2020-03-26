@@ -47,19 +47,19 @@
     "colors": "^1.4.0",
     "express": "^4.17.1",
     "express-winston": "^4.0.3",
-    "mongoose": "^5.9.2",
+    "mongoose": "^5.9.5",
     "web3": "^1.2.6",
     "winston": "^3.2.1"
   },
   "devDependencies": {
-    "apidoc": "^0.20.0",
+    "apidoc": "^0.20.1",
     "eslint": "^6.7.2",
-    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.19.1",
     "husky": "^4.2.3",
     "jest": "^25.1.0",
     "lint-staged": "^10.0.7",
-    "mongodb": "^3.5.3",
+    "mongodb": "^3.5.5",
     "nodemon": "^2.0.2",
     "prettier": "^1.19.1",
     "supertest": "^4.0.2"

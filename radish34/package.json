@@ -46,12 +46,12 @@
   },
   "homepage": "https://github.com/EYBlockchain/radish-34#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.7.7",
-    "apidoc": "^0.20.0",
+    "@babel/preset-env": "^7.9.0",
+    "apidoc": "^0.20.1",
     "husky": "^4.2.3",
     "jest": "^24.8.0",
     "jsdoc": "^3.6.3",
-    "mongodb": "^3.5.4",
+    "mongodb": "^3.5.5",
     "solhint": "2.1.0",
     "solidity-docgen": "^0.3.14",
     "supertest": "^4.0.2"
