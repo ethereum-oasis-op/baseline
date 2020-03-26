@@ -22,6 +22,7 @@
     "openzeppelin-solidity": "^2.5.0"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "verbose": true
   }
 }
