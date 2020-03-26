@@ -13,9 +13,9 @@
   "license": "SEE LICENSE in root/license.md",
   "main": "src/index.js",
   "scripts": {
-    "start": "cod-scripts build && node ./dist/index.js",
-    "dev": "cod-scripts build --watch & nodemon ./dist/index.js",
-    "build": "cod-scripts build",
+    "build": "babel src -d dist",
+    "start": "npm run build && node ./dist/index.js",
+    "dev": "nodemon --exec babel-node ./src/index.js",
     "test": "jest --watchAll --verbose=true --silent",
     "test:ci": "jest --verbose=true --silent --ci --coverage",
     "fix": "npm run format && npm run lint -- --fix",
@@ -25,7 +25,6 @@
     "validate": "npm run lint && npm run lint:md"
   },
   "dependencies": {
-    "@babel/runtime": "^7.6.2",
     "@eyblockchain/zokrates.js": "^1.2.0",
     "body-parser": "1.19.0",
     "config": "^3.2.4",
@@ -37,7 +36,11 @@
     "yargs": "15.1.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
     "cod-scripts": "^3.2.0",
+    "@babel/preset-env": "^7.9.0",
     "markdownlint-cli": "^0.15.0",
     "jest": "^24.9.0",
     "nodemon": "^1.18.9"

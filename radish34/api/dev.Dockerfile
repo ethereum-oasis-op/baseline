@@ -8,7 +8,7 @@ RUN \
 RUN mkdir /app
 WORKDIR /app
 
-COPY ./package.json ./package-lock.json ./
+COPY ./package.json ./package-lock.json ./.babelrc ./
 RUN npm ci
 
 EXPOSE 8001

@@ -286,7 +286,7 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
       // Wait for db to update
       console.log('This test can take up to 10 minutes to run. It will provide frequent status updates');
       let res;
-      for (let retry = 0; retry < 30; retry++) {
+      for (let retry = 0; retry < 15; retry++) {
         console.log('Checking for non-null msa index, attempt:', retry);
         res = await request(buyerApiURL)
           .post('/graphql')
