@@ -34,7 +34,7 @@ From the perspective of the procurement process, the key interactions are as fol
 
 ### 1. Deployment Process:
 
-Refer the ![Deployment](../deploy/README.md) job component for details on the deployment operation.
+Refer to the [Deployment](../deploy/README.md) job component for details on the deployment operation.
 
 - Registrar
 

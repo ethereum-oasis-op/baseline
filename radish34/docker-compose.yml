@@ -14,6 +14,7 @@ services:
       - chaindata:/chaindata
 
   zkp:
+    container_name: zkp
     build:
       context: ./zkp/
       dockerfile: dev.Dockerfile
@@ -30,7 +31,6 @@ services:
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
     depends_on:
-      - zkp-watch
       - mongo-buyer # TODO: remove dependency on mongo-buyer.
     networks:
       - network-buyer
@@ -38,19 +38,6 @@ services:
       - network-supplier2
     ports:
       - 8080:80
-
-  zkp-watch:
-    build:
-      context: ./zkp/
-      dockerfile: dev.Dockerfile
-    volumes:
-      - ./zkp/src:/app/src:delegated
-      - ./zkp/dist:/app/dist:delegated
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-    command: npm run build:watch
 
   ui:
     build:
@@ -113,13 +100,13 @@ services:
     command: npm run dev
     restart: on-failure
     volumes:
+      - ./api/src:/app/src:delegated
       - ./api/dist:/app/dist:delegated
       - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/buyer.eth:/keystore/account.eth
       - ./config/config-buyer.json:/app/config/default.json
       - ./contracts/artifacts:/app/artifacts:delegated
     depends_on:
-      - api-watch
       - mongo-buyer
       - ganache
       - messenger-buyer
@@ -148,13 +135,13 @@ services:
     command: npm run dev
     restart: on-failure
     volumes:
+      - ./api/src:/app/src:delegated
       - ./api/dist:/app/dist:delegated
       - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier1.eth:/keystore/account.eth
       - ./config/config-supplier1.json:/app/config/default.json
       - ./contracts/artifacts:/app/artifacts:delegated
     depends_on:
-      - api-watch
       - mongo-supplier1
       - ganache
       - messenger-supplier1
@@ -183,13 +170,13 @@ services:
     command: npm run dev
     restart: on-failure
     volumes:
+      - ./api/src:/app/src:delegated
       - ./api/dist:/app/dist:delegated
       - ./api/package.json:/app/package.json:delegated
       - ./config/keystore/supplier2.eth:/keystore/account.eth
       - ./config/config-supplier2.json:/app/config/default.json
       - ./contracts/artifacts:/app/artifacts:delegated
     depends_on:
-      - api-watch
       - mongo-supplier2
       - ganache
       - messenger-supplier2
@@ -207,24 +194,6 @@ services:
       - network-supplier2
     ports:
       - 8003:8001
-
-  api-watch:
-    build:
-      context: ./api/
-      dockerfile: dev.Dockerfile
-    command: npm run build:watch
-    volumes:
-      - ./api/src:/app/src:delegated
-      - ./api/dist:/app/dist:delegated
-      - ./config/keystore:/keystore
-      - ./config:/app/config
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-    logging:
-      options:
-        max-size: 10m
 
   mongo-buyer:
     image: mongo:latest

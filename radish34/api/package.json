@@ -15,20 +15,18 @@
   "license": "SEE LICENSE in root/license.md",
   "main": "src/index.js",
   "scripts": {
-    "build": "cod-scripts build",
-    "build:watch": "npm run build -- --watch",
-    "dev": "nodemon ./dist/index.js",
+    "build": "babel src -d dist",
+    "start": "npm run build && node ./dist/index.js",
+    "dev": "nodemon --exec babel-node ./src/index.js",
     "fix": "npm run format && npm run lint -- --fix",
     "format": "prettier --write \"**/*.{json,css,scss,md}\"",
     "lint": "eslint .",
     "lint:md": "markdownlint -i node_modules -i dist .",
-    "start": "node ./dist/index.js",
     "test": "jest --watchAll --verbose=true --silent",
     "test:ci": "jest --verbose=true --silent --ci --coverage",
     "validate": "npm run lint && npm run lint:md"
   },
   "dependencies": {
-    "@babel/runtime": "^7.9.0",
     "apollo-server": "^2.11.0",
     "apollo-server-express": "^2.11.0",
     "axios": "^0.19.2",
@@ -57,6 +55,10 @@
     "zokrates-pycryptojs": "1.0.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.0",
     "cod-scripts": "^3.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-jsdoc": "^22.1.0",

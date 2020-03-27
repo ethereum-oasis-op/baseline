@@ -23,9 +23,9 @@ As part of the set up of the Radish34 server, the API server is stood up as a mi
 
 Run the following instruction to ensure that the service is up:
 
-`docker-compose up -d api`
+`docker-compose up -d api-buyer`
 
-This should spin up two containers: `api` and `api-watch`; wherein `api` contains RESTful end points for interacting with the service. And `api-watch` runs in the background to ensure that the js files in the former container are appropriately compiled using babel.
+This will spin up the `api-buyer` container, which contains RESTful end points for interacting with the service. In the `dev` mode specified by the `docker-compose.yml` file, `babel` runs in the background to compile down to ES5 style code and `nodemon` watches for any file changes so that developers can make changes locally and the container will pickup on them automatically.
 
 
 ## What is the architecture?
