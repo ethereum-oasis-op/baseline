@@ -59,7 +59,7 @@ Here are the targets currently exposed by the `Makefile`:
 
 ## Running Radish34
 
-To run the __Radish34__ application, follow the instructions in [radish34/README.md](radish34/README.md).
+To run the __Radish34__ application, follow the instructions in [radish34/README.md](./radish34/README.md).
 
 `cd radish34` and go from there 🚀
 
@@ -88,8 +88,16 @@ optionally `npm run clean` to clean out any `node_modules` folders installed by 
 
 # How to contribute?
 
-See [our contributing guidelines](CONTRIBUTING.md)
+See [our contributing guidelines](./CONTRIBUTING.md)
+
+# Want to be a maintainer?
+
+Read about [our maintainer policy](./MAINTAINERS.md)
+
+# How to behave?
+
+Please read and be mindful of our [Code of Conduct](./CODE_OF_CONDUCT.md)
 
 # License
 
-All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [license.md](license.md).
+All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [our license](./LICENSE.md).
