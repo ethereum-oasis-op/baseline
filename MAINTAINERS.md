@@ -1,6 +1,6 @@
 # What do maintainers do?
 
-Maintainers are people who are take an active role in advancing the Baseline Protocol and/or related projects (e.g. the Radish34 Demo). They are primarily responsible for: 
+Maintainers are people who take an active role in advancing the Baseline Protocol and/or related projects (e.g. the Radish34 Demo). They are primarily responsible for: 
  - Reviewing and merging PRs into the master branch
  - Cutting, testing, and releasing new versions of the related Baseline projects
  - Working with the TSC and SSC to advance the Baseline Protocol
@@ -18,6 +18,7 @@ Maintainers are people who are take an active role in advancing the Baseline Pro
   - [Patrick](https://github.com/pmacom)
   - [Kartheek](https://github.com/skarred14)
   - [Brian](https://github.com/breakpointer)
+  - [John](https://github.com/humbitious)
 
 # How to become a maintainer?
 
@@ -40,3 +41,5 @@ If you are a maintainer you can be voted out if any of the following occur:
  - You stop reviewing PR's, responding to messages, answering emails, and/or generally ghost the project.
  - You are disrespectful towards anyone in the community and/or involved in the project in some way.
  - You violate [the code of conduct](./CODE_OF_CONDUCT.md)
+ 
+A simple majority of maintainers in attendance is required to remove a maintainer, but the TSC may be brought in to arbitrate, if the maintainer to be removed or any other party wishes to dispute the action. Two-thirds of all current maintainers constitute a quorum for a meeting involving a question of removal. 
