@@ -46,7 +46,6 @@
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
     "history": "^4.9.0",
-    "jest": "^24.9.0",
     "lodash": "^4.17.15",
     "material-ui": "^0.20.2",
     "moment": "^2.24.0",
@@ -85,17 +84,5 @@
       "pre-commit": "cod-scripts pre-commit",
       "commit-msg": "cod-scripts commitlint -E HUSKY_GIT_PARAMS"
     }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }
