@@ -166,9 +166,9 @@ After you've done that, log in to the Github package registry by running
 7. Run `docker-compose up -d && docker-compose restart`
    - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
-   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `api-{role}` and `ui`
+   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are api-{role} and ui. For example: `docker-compose logs -f api-buyer api-supplier1 api-supplier2 ui`
     <details> 
-      <summary>Example logs</summary>
+      <summary>Example api-buyer logs</summary>
       <p> 
 
       ```
@@ -258,6 +258,23 @@ After you've done that, log in to the Github package registry by running
     </details> 
 
 9. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
+
+## Collection of Log Commands
+
+`docker-compose logs -f ui`  
+`docker-compose logs -f api-buyer`  
+`docker-compose logs -f messenger-buyer`   
+`docker-compose logs -f mongo-buyer`  
+`docker-compose logs -f api-supplier1`  
+`docker-compose logs -f messenger-supplier1`  
+`docker-compose logs -f mongo-supplier1`   
+`docker-compose logs -f api-supplier2`  
+`docker-compose logs -f messenger-supplier2`  
+`docker-compose logs -f mongo-supplier2`  
+`docker-compose logs -f geth-node`   
+`docker-compose logs -f geth-miner1`  
+`docker-compose logs -f geth-miner2`  
+`docker-compose logs -f geth-bootnode`  
 
 ## Troubleshooting
 
