@@ -443,7 +443,7 @@ export const createMSA = async msa => {
 
   const publicInputs = [msa.commitment.commitment.hex()];
 
-  const { transactionHash, leafIndex, leafValue, newRoot, proof, publicInputs } = await createMSATransaction(
+  const { transactionHash, leafIndex, leafValue, newRoot } = await createMSATransaction(
     proofArray,
     publicInputHash.field(248, 1, true),
     publicInputs,
