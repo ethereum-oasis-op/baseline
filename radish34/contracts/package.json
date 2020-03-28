@@ -14,11 +14,13 @@
     "@0x/sol-coverage": "^4.0.8",
     "@0x/sol-profiler": "^4.0.8",
     "@0x/sol-trace": "^3.0.8",
-    "ganache-core": "^2.10.2",
+    "ganache-cli": "^6.9.1",
     "jest": "^25.1.0"
   },
   "dependencies": {
     "@babel/preset-env": "^7.9.0",
+    "big-integer": "^1.6.48",
+    "ethereum-doppelganger": "^0.0.7",
     "openzeppelin-solidity": "^2.5.0"
   },
   "jest": {
