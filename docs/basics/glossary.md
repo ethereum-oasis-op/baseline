@@ -21,8 +21,8 @@ Used without capitalization to distinguish a public production network from publ
 There are many forms of middleware. We use the term in the context of the Baseline Protocol in a particular way. Systems of record maintained by legally separate entities require a common frame of reference in order to run business process integration across them. Flow control, ensuring that two processes don't run inappropriately against the same shared state, terminating the back and forth of the [two generals problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), non-repudiation, etc. In this context, the protocol is primarily about loose-coupling architecture in the transaction-processing middleware \(TPM\) area. It is not necessarily about schema translators, though a typical system would very likely run CRUD access between a baseline server and a system of record through translation services in a traditional Enterprise Service Bus \(ESB\). Unlike some RPC middleware, the Baseline Protocol is asynchronous, though it is certainly about passing parameters between functions running on two or more remote machines...and ensuring consistency between them.
 
 ### 
+WIP section - Placeholder for future updates
 
-### 
 
 ## Baseline Protocol Components and Conventions
 
@@ -36,7 +36,7 @@ A series of Steps that constitute a coherent business process between a set of c
 
 ### Step
 
-A discreet _baselined_ Record/Function/BusinessEvent/Document \(e.g,. RFP, MSA, PO\) within a Workflow that implements a set of baseline Tasks.
+A discrete _baselined_ Record/Function/BusinessEvent/Document \(e.g,. RFP, MSA, PO\) within a Workflow that implements a set of baseline Tasks.
 
 ### Task
 
@@ -58,7 +58,7 @@ There are several things passed to the Mainnet, primarily from the ZK Service, i
 
 ### CodeBook =&gt; Package
 
-During the Radish34 project, the notion of a shared "codebook" was often discussed. This is ...
+During the Radish34 project, the notion of a shared "codebook" was often discussed. This in concept refers to a collection of artifacts or library components that enable a business process to be "baselined", but in general is extensible to any such components that subject to a business process. These artifacts in the case of Radish34 and presumably what would be "importable" components include the zk snark based circuits for usage in off chain zkp based proof generation and/or other logical components representing a business logic in a workflow process.
 
 ### orgRegistry Contract
 
@@ -74,23 +74,19 @@ The Verifier Contract is the on-chain component of the ZK Service, which ensures
 
 ### Baseline Proofs
 
-The hash deposited in a Shield Contract when a Workflow Step successfully completes.
-
-
+The hash deposited in a Shield Contract when a Workflow Step successfully completes, representing successful verification on chain of the correctness of a logical statement (proof); successful storage of the hash in a Merkle tree within a Shield contract on chain.
 
 ## Radish34-Specific Terms
 
 \(work in progress...see [Radish34](../radish34/radish34-explained.md) section for full documentation.\)
 
-RFP
+RFP: Request for proposal is a document issued at the beginning of a business process containing a request for a good transfer placed by a intending buying party. In some cases RFPs are issued in public, and in some cases they are issued in private in a point to point communication mode
 
-Bid
+Bid/Proposal: The response to an RFP, wherein an intended selling party proposes their acceptance of the RFP, and addition of contractual terms for the intended procurement of goods. These terms vary from use case to use case, and in the case of Radish34 this is represented by a volume discount structure which typically is negotiated between the buying and selling parties
 
-Proposal
+MSA: Master Service Agreement is a document/contract issued to mark the beginning of the procurement process issued by the buying to the selling party and contains the terms agreed upon as in the bid/proposal. Typically, this is a material process and require co-signing of the agreements, that can be verifiable and provable.
 
-MSA
-
-PO
+PO: Purchase order is a document/token issued to begin the ordering process and that needs to maintain linkage to the MSA and thereby the terms agreed upon in the MSA.
 
 
 
