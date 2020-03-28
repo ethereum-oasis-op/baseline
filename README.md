@@ -28,13 +28,18 @@ The __Baseline Protocol__ code is currently embedded inside the `/radish-api` di
 
 A `Makefile` has been included for convenience; most of its targets wrap `npm`, `docker` and `solc` invocations.
 
-Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 30 minutes to complete.*
+Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete. [You will need dotdocker running.](./radish34/README.md#prerequisites-to-run-the-demo) *
+
 ```
 make
 make deploy-contracts
 make start
 make test
 ```
+
+### The demo UI
+
+After running the above (`make test` optional) you can view the Radish34 demo by opening [http://radish34-ui.docker](http://radish34-ui.docker) in your browser.
 
 Here are the targets currently exposed by the `Makefile`:
 
