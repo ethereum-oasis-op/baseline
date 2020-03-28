@@ -3,7 +3,7 @@ const logger = require('winston');
 require('../logger');
 const Identity = require('../db/models/Identity');
 const Message = require('../db/models/Message');
-const { receiveMessageQueue } = require('../queues/receiveMessage/index.js');
+const { receiveMessageQueue } = require('../queues/receiveMessage/');
 
 const {
   DEFAULT_TOPIC,
@@ -14,6 +14,10 @@ const {
 
 const radishApiUrl = process.env.RADISH_API_URL ? `${process.env.RADISH_API_URL}/api/v1` : 'http://localhost:8101/api/v1';
 
+/**
+ * Function that checks whether given object has a JSON structure?
+ * @param {Object} str 
+ */
 function hasJsonStructure(str) {
   if (typeof str !== 'string') return false;
   try {
@@ -47,7 +51,7 @@ async function getIdentities() {
   return identities;
 }
 
-// Find single identity in database
+// Function to check whether an identity `myId` exists in the database
 async function findIdentity(myId) {
   return Identity.exists({ _id: myId });
 }
@@ -55,7 +59,7 @@ async function findIdentity(myId) {
 // Fetch messages for a given conversation
 // Private conversation = all messages with same topic and same two Whisper Ids
 async function getMessages(myId, topic = DEFAULT_TOPIC, partnerId, since) {
-  const currentTime = await Math.floor(Date.now() / 1000);
+  const currentTime = Math.floor(Date.now() / 1000);
   let timeThreshold = parseInt(since, 10);
   // Default to showing last 24 hours of messages
   if (!since) {
@@ -89,28 +93,39 @@ async function getMessages(myId, topic = DEFAULT_TOPIC, partnerId, since) {
   ]);
 }
 
+// Function that fetch a single message from DB as per the messageId
 async function getSingleMessage(messageId) {
   return Message.findOne({ _id: messageId });
 }
 
+/**
+ * Function to store new message in the database
+ * @param {Object} messageData 
+ * @param {String} content 
+ */
 async function storeNewMessage(messageData, content) {
+  const { hash, recipientPublicKey, sig, ttl, topic, pow, timestamp } = messageData;
   return Message.findOneAndUpdate(
-    { _id: messageData.hash },
+    { _id: hash },
     {
-      _id: messageData.hash,
+      _id: hash,
       messageType: 'individual',
-      recipientId: messageData.recipientPublicKey,
-      senderId: messageData.sig,
-      ttl: messageData.ttl,
-      topic: messageData.topic,
+      recipientId: recipientPublicKey,
+      senderId: sig,
+      ttl,
+      topic,
       payload: content,
-      pow: messageData.pow,
-      sentDate: messageData.timestamp,
+      pow,
+      sentDate: timestamp,
     },
     { upsert: true, new: true },
   );
 }
 
+/**
+ * Function that forwards the message
+ * @param {Object} messageObj 
+ */
 async function forwardMessage(messageObj) {
   logger.info(`Forwarding message to api service: POST ${radishApiUrl}/documents`);
   try {
