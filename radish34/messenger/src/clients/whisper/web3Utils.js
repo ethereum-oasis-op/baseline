@@ -8,6 +8,7 @@ const { ipAddress } = Config.users[userIndex];
 
 let web3client;
 
+// Function that checks connection
 async function isConnected() {
   let connected = false;
   if (typeof web3client !== 'undefined') {
@@ -16,6 +17,7 @@ async function isConnected() {
   return connected;
 }
 
+// Function that gets the web3 instance
 async function getWeb3() {
   if (typeof web3client === 'undefined') {
     // set the provider you want from Web3.providers
