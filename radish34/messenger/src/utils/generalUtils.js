@@ -15,8 +15,9 @@ const {
 const radishApiUrl = process.env.RADISH_API_URL ? `${process.env.RADISH_API_URL}/api/v1` : 'http://localhost:8101/api/v1';
 
 /**
- * Function that checks whether given object has a JSON structure?
- * @param {Object} str 
+ * Checks whether a given string can be converted to a proper JSON object.
+ * Edge cases: inputs of "true" or "null" return false
+ * @param {String} str 
  */
 function hasJsonStructure(str) {
   if (typeof str !== 'string') return false;
