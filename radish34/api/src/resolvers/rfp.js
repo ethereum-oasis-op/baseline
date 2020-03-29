@@ -9,8 +9,10 @@ const NEW_RFP = 'NEW_RFP';
 
 export default {
   Query: {
-    rfp(_parent, args) {
-      return getRFPById(args.uuid).then(res => res);
+    async rfp(_parent, args) {
+      const { uuid } = args;
+      const res = await getRFPById(uuid);
+      return res;
     },
     rfps() {
       return getAllRFPs();
@@ -18,29 +20,32 @@ export default {
   },
   Mutation: {
     createRFP: async (_parent, args, context) => {
-      const currentUser = context.identity
-        ? await getPartnerByMessengerKey(context.identity)
+      const { identity } = context;
+      const currentUser = identity
+        ? await getPartnerByMessengerKey(identity)
         : null;
+      const { input } = args;
       const currentTime = Math.floor(Date.now() / 1000);
-      const myRFP = args.input;
+      const myRFP = input;
       myRFP.createdDate = currentTime;
-      myRFP.sender = context.identity;
+      myRFP.sender = identity;
       const rfp = (await saveRFP(myRFP))._doc;
+      const { description: rfpDesc, _id: rfpId } = rfp;
       await saveNotice({
         resolved: false,
         category: 'rfp',
-        subject: `New RFP: ${rfp.description}`,
+        subject: `New RFP: ${rfpDesc}`,
         from: currentUser ? currentUser.name : 'Buyer',
         statusText: 'Pending',
         status: 'outgoing',
-        categoryId: rfp._id,
+        categoryId: rfpId,
         lastModified: currentTime,
       });
       pubsub.publish(NEW_RFP, { newRFP: rfp });
-      console.log(`Sending RFP (uuid: ${rfp._id}) to recipients...`);
+      console.log(`Sending RFP (uuid: ${rfpId}) to recipients...`);
       const { recipients, ...rfpDetails } = rfp;
       rfpDetails.type = 'rfp_create';
-      rfpDetails.uuid = rfp._id;
+      rfpDetails.uuid = rfpId;
       recipients.forEach(recipient => {
         // For data structure parity between buyer/supplier systems
         // put the recipient back as the only entry in the array
@@ -48,8 +53,8 @@ export default {
         // Add to BullJS queue
         msgDeliveryQueue.add(
           {
-            documentId: rfp._id,
-            senderId: context.identity,
+            documentId: rfpId,
+            senderId: identity,
             recipientId: recipient.partner.identity,
             payload: rfpToSend,
           },

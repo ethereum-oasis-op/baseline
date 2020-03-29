@@ -13,34 +13,49 @@ export default {
       console.log(rpcProvider);
       console.log(organization);
       console.log(addresses);
-      // TODO: Edit ServerSettings graphQL schema to be a nested object with 'organizations' and 'addresses' sub-objects, to align with the radosh-api backend.
+      // TODO: Edit ServerSettings graphQL schema to be a nested object with 'organizations' and 'addresses' sub-objects, to align with the radish-api backend.
+      const {
+        name: organizationName,
+        role: organizationRole,
+        messengerKey: organizationWhisperKey,
+        address: organizationAddress
+      } = organization;
+
+      const {
+        ERC1820Registry: globalRegistryAddress,
+        OrgRegistry: orgRegistryAddress
+      } = addresses;
+
       const flattenedSettings = {
         rpcProvider,
-        organizationName: organization.name,
-        organizationRole: organization.role,
-        organizationWhisperKey: organization.messengerKey,
-        organizationAddress: organization.address,
-        globalRegistryAddress: addresses.ERC1820Registry,
-        orgRegistryAddress: addresses.OrgRegistry,
+        organizationName,
+        organizationRole,
+        organizationWhisperKey,
+        organizationAddress,
+        globalRegistryAddress,
+        orgRegistryAddress,
       };
       return flattenedSettings;
     },
   },
   Mutation: {
     setRPCProvider: async (_parent, args) => {
-      await setRPCProvider(args.uri);
+      const { uri } = args;
+      await setRPCProvider(uri);
       healthcheck();
       const settings = await getServerSettings();
       return settings;
     },
     setOrgRegistryAddress: async (_parent, args) => {
-      await setContractAddress('OrgRegistry', args.orgRegistryAddress);
+      const { orgRegistryAddress } = args;
+      await setContractAddress('OrgRegistry', orgRegistryAddress);
       healthcheck();
       const settings = await getServerSettings();
       return settings;
     },
     setWalletFromMnemonic: async (_parent, args) => {
-      await createWalletFromMnemonic(args.mnemonic, args.path);
+      const { mnemonic, path } = args;
+      await createWalletFromMnemonic(mnemonic, path);
       healthcheck();
       const settings = await getServerSettings();
       return settings;
