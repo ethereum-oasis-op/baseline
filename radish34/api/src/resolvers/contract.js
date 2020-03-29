@@ -2,27 +2,30 @@ import { getContractById, getTxReceipt, getAllContracts } from '../services/cont
 
 export default {
   Query: {
-    contract(parent, args) {
-      return getContractById(args.transactionHash).then(res => res);
+    async contract(parent, args) {
+      const { transactionHash } = args;
+      const res = await getContractById(transactionHash);
+      return res;
     },
     contracts() {
       return getAllContracts();
     },
-    transactionReceipt(parent, args) {
-      return getTxReceipt(args.hash).then(txReceipt => {
-        return {
-          transactionHash: txReceipt.transactionHash,
-          status: txReceipt.status,
-          from: txReceipt.from,
-          to: txReceipt.to,
-          blockNumber: txReceipt.blockNumber,
-          blockHash: txReceipt.blockHash,
-          confirmations: txReceipt.confirmations,
-          gasUsed: txReceipt.gasUsed.toNumber(),
-          cumulativeGasUsed: txReceipt.cumulativeGasUsed.toNumber(),
-          contractAddress: txReceipt.contractAddress,
-        };
-      });
+    async transactionReceipt(parent, args) {
+      const { hash } = args;
+      const txReceipt = await getTxReceipt(hash);
+      const { transactionHash, status, from, to, blockNumber, blockHash, confirmations, gasUsed, cumulativeGasUsed, contractAddress } = txReceipt;
+      return {
+        transactionHash,
+        status,
+        from,
+        to,
+        blockNumber,
+        blockHash,
+        confirmations,
+        gasUsed: gasUsed.toNumber(),
+        cumulativeGasUsed: cumulativeGasUsed.toNumber(),
+        contractAddress,
+      };
     },
   },
 

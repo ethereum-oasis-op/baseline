@@ -2,8 +2,10 @@ import { getServerSettings } from '../utils/serverSettings';
 
 export default async () => {
   const config = await getServerSettings();
+  const { OrgRegistry } = config.addresses;
+  const { zkpPublicKey } = config.organization;
 
-  if (config.addresses.OrgRegistry && config.organization.zkpPublicKey) {
+  if (OrgRegistry && zkpPublicKey) {
     return true;
   }
   return false;

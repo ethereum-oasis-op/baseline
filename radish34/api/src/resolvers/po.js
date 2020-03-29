@@ -12,12 +12,13 @@ const NEW_PO = 'NEW_PO';
 export default {
   Query: {
     po: async (_parent, args) => {
-      const po = await getPOById(args.id).then(res => res);
+      const { id } = args;
+      const po = await getPOById(id);
       const supplier = await getPartnerByzkpPublicKey(po.constants.zkpPublicKeyOfSupplier);
-
+      const { identity } = supplier;
       return {
         ...po,
-        whisperPublicKeyOfSupplier: supplier.identity,
+        whisperPublicKeyOfSupplier: identity,
       }
     },
     pos() {
@@ -26,14 +27,17 @@ export default {
   },
   Mutation: {
     createPO: async (_parent, args, context) => {
-      const currentUser = await getPartnerByMessengerKey(context.identity);
+      const { identity } = context;
+      const { input } = args;
+      const currentUser = await getPartnerByMessengerKey(identity);
+      const { address: currentUserAddress, name: currentUserName } = currentUser;
       try {
         console.log('\n\n\nRequest to create PO with inputs:');
-        console.log(args.input);
+        console.log(input);
         /*
         currentUser: {
           _id: '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
-          address: '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
+          currentUserAddress: '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
           identity:  '0x042dd4912150fe2ecdbb4bd84a2f44dce6bac3530f2f6d702db27686898a8cd1185e3988aae09508680f815ed3494d11de18026ecd641da2786490a6fa3b33bf18'
           name: 'Org1',
           role: 1
@@ -43,11 +47,11 @@ export default {
           onNotification: {
             success: true,
             message: 'PO creation in progress... This may take some time',
-            userAddress: currentUser.address,
+            userAddress: currentUserAddress,
           }
         });
 
-        const { msaId, volume, deliveryDate, description } = args.input;
+        const { msaId, volume, deliveryDate, description } = input;
 
         const oldMSADoc = await getMSAById(msaId);
 
@@ -57,13 +61,13 @@ export default {
 
         const price = oldMSA.price(volume);
         console.log(`\nCalculated a price of ${price} for this PO`);
-
+        const { constants } = oldMSAObject;
         const {
           zkpPublicKeyOfBuyer,
           zkpPublicKeyOfSupplier,
           sku,
           erc20ContractAddress,
-        } = oldMSAObject.constants;
+        } = constants;
 
         const po = new PO({
           metadata: {
@@ -83,14 +87,17 @@ export default {
         let { accumulatedVolumeOrdered } = oldMSAObject.commitments[0].variables;
         accumulatedVolumeOrdered += volume;
 
+        const { _id } = oldMSA;
+        const { variables } = oldMSA.object;
         const newMSA = new MSA({
-          _id: oldMSA._id,
-          constants: oldMSA.object.constants,
-          variables: { ...oldMSA.object.variables, accumulatedVolumeOrdered },
+          _id,
+          constants,
+          variables: { ...variables, accumulatedVolumeOrdered },
         });
 
         const settings = await getServerSettings();
-        const zkpPrivateKeyOfBuyer = settings.organization.zkpPrivateKey;
+        const { zkpPrivateKey } = settings.organization;
+        const zkpPrivateKeyOfBuyer = zkpPrivateKey;
 
         // keep unused variables here for now; they might be used soon...
         const {
@@ -115,28 +122,30 @@ export default {
           deliveryDate,
           description,
         };
+        const { sku } = poObject.constants;
 
         const poDoc = await savePO(poObject);
-
+        const { _id: poDocId } = poDoc;
         const supplier = await getPartnerByzkpPublicKey(zkpPublicKeyOfSupplier);
 
         await saveNotice({
           resolved: false,
           category: 'po',
-          subject: `New PO for SKU: ${poObject.constants.sku}`,
-          from: currentUser.name,
+          subject: `New PO for SKU: ${sku}`,
+          from: currentUserName,
           statusText: 'Pending',
           status: 'outgoing',
-          categoryId: poDoc._id,
+          categoryId: poDocId,
           lastModified: Math.floor(Date.now() / 1000),
         });
 
-        console.log(`\nSending PO (id: ${poDoc._id}) to supplier...`);
+        console.log(`\nSending PO (id: ${poDocId}) to supplier...`);
         const senderId = currentUser.identity;
         const recipientId = supplier.identity;
+        const { zkpPublicKey: supplierZkpPublicKey } = supplier;
         // Add to BullJS queue
         msgDeliveryQueue.add({
-          documentId: poDoc._id,
+          documentId: poDocId,
           senderId,
           recipientId,
           payload: {
@@ -148,13 +157,13 @@ export default {
 
         pubsub.publish(NEW_PO, { newPO: { ...poDoc, whisperPublicKeyOfSupplier: supplier.zkpPublicKey } });
 
-        return { ...poDoc, whisperPublicKeyOfSupplier: supplier.zkpPublicKey };
+        return { ...poDoc, whisperPublicKeyOfSupplier: supplierZkpPublicKey };
       } catch (e) {
         pubsub.publish('INCOMING_TOASTR_NOTIFICATION', {
           onNotification: {
             success: false,
             message: 'Something went wrong during PO creation, please try again.',
-            userAddress: currentUser.address,
+            userAddress: currentUserAddress,
           }
         });
         throw new Error(e);

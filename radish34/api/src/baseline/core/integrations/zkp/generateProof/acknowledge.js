@@ -1,6 +1,7 @@
 export default async (job, done) => {
   try {
-    done(null, job.data);
+    const { data } = job;
+    done(null, data);
   } catch (error) {
     console.error('Error', error);
   }

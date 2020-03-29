@@ -83,12 +83,13 @@ export const saveNotice = async input => {
  */
 export const createNotice = async (category, payload, categoryId = null) => {
   try {
-    const sender = await getPartnerByMessengerKey(payload.sender);
+    const { payloadSender: sender, _id } = payload;
+    const sender = await getPartnerByMessengerKey(payloadSender);
     const newNotice = {
       resolved: false,
-      categoryId: categoryId || payload._id,
+      categoryId: categoryId || _id,
       category,
-      subject: `New ${category}: ${payload._id}`,
+      subject: `New ${category}: ${_id}`,
       from: sender.name,
       statusText: 'Awaiting Response',
       lastModified: Math.floor(Date.now() / 1000),

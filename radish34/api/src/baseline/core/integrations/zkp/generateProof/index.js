@@ -22,14 +22,16 @@ setQueues([requestQueue, ackQueue, responseQueue, generateProofQueue]);
 
 ackQueue.process(`${__dirname}/acknowledge.js`);
 ackQueue.on('completed', async (job, data) => {
-  await setJobStarted(data.baselineId, data.taskId, data.jobId);
+  const { baselineId, taskId, jobId } = data;
+  await setJobStarted(baselineId, taskId, jobId);
 });
 
 responseQueue.process(`${__dirname}/processResponse.js`);
 responseQueue.on('completed', async (job, data) => {
-  await setJobCompleted(data.baselineId, data.taskId, data.result);
-  const baselineTaskGroup = await getBaselineTaskGroupById(data.baselineId);
-  resumeTaskGroupById(data.baselineId);
+  const { baselineId, taskId, result } = data;
+  await setJobCompleted(baselineId, taskId, result);
+  const baselineTaskGroup = await getBaselineTaskGroupById(baselineId);
+  resumeTaskGroupById(baselineId);
 });
 
 const generateProof = async (baselineId, taskId, params, options) => {

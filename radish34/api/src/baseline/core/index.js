@@ -46,7 +46,7 @@ export const checkTaskRequirements = async (data, requirements) => {
 
 export const checkTaskGroupResolvers = async baselineTasks => {
   try {
-    const registeredResolvers = await getResolvers();
+    const registeredResolvers = getResolvers();
     const resolvers = baselineTasks.map(task => {
       return {
         key: task.resolver,
@@ -74,14 +74,14 @@ export const getRequiredValues = (requires, data) => {
 };
 
 export const resumeTask = async (baselineId, data, task) => {
-  const { resolver: resolverName, requires } = task;
+  const { resolver: resolverName, requires, _id } = task;
   const resolverFunc = getResolver(resolverName);
-  const params = await getRequiredValues(requires, data);
+  const params = getRequiredValues(requires, data);
   const options = await getBaselineTaskResolverOptions(task._id);
   if (isCoreResolver(resolverName)) {
-    await callCoreResolver(baselineId, task._id, resolverFunc, params, options);
+    await callCoreResolver(baselineId, _id, resolverFunc, params, options);
   } else {
-    await callCustomResolver(baselineId, task._id, resolverFunc, params, options);
+    await callCustomResolver(baselineId, _id, resolverFunc, params, options);
     await resumeTaskGroupById(baselineId);
   }
 };

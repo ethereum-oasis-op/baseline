@@ -95,9 +95,10 @@ export const saveRFP = async doc => {
 export const partnerCreateRFP = async doc => {
   // 1.) Checks blockchain txHash for the RFP and compares it with the hashed content from Buyer
   // 2.) Save RFP to local db
+  const { uuid } = doc;
   const newRFP = doc;
-  newRFP._id = doc.uuid;
-  console.log(`Saving new RFP (uuid: ${doc.uuid}) from partner...`);
+  newRFP._id = uuid;
+  console.log(`Saving new RFP (uuid: ${uuid}) from partner...`);
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   await createNotice('rfp', result[0]);
   console.log('Got RFP as supplier');
@@ -110,11 +111,12 @@ export const partnerCreateRFP = async doc => {
  * Update the RFP to show that recipient has received the RFP.
  */
 export const deliveryReceiptUpdate = async doc => {
-  console.log(`Updating deliveryReceipt date for messageId ${doc.messageId}`);
+  const { messageId, deliveredDate } = doc;
+  console.log(`Updating deliveryReceipt date for messageId ${messageId}`);
   console.log('deliveryReceipt doc:', doc);
   const result = await RFP.findOneAndUpdate(
-    { 'recipients.origination.messageId': doc.messageId },
-    { $set: { 'recipients.$.origination.receiptDate': doc.deliveredDate } },
+    { 'recipients.origination.messageId': messageId },
+    { $set: { 'recipients.$.origination.receiptDate': deliveredDate } },
     { upsert: false, new: true },
   );
   return result;

@@ -6,8 +6,10 @@ const NEW_MSA = 'NEW_MSA';
 
 export default {
   Query: {
-    msa(_parent, args) {
-      return getMSAById(args.id).then(res => res);
+    async msa(_parent, args) {
+      const { id } = args;
+      const res = await getMSAById(id);
+      return res;
     },
     msas() {
       return getAllMSAs();
@@ -19,16 +21,18 @@ export default {
   Mutation: {
     createMSA: async (_parent, args) => {
       // TODO: Connect this to the new baseline createMSA function
-      const newMSA = await saveMSA(args.input);
+      const { input } = args;
+      const newMSA = await saveMSA(input);
       const msa = newMSA.ops[0];
+      const { proposalId, _id } = msa;
       await saveNotice({
         resolved: false,
         category: 'msa',
-        subject: `MSA established for proposal ${msa.proposalId}`,
+        subject: `MSA established for proposal ${proposalId}`,
         from: 'Buyer',
         statusText: 'Active',
         status: 'outgoing',
-        categoryId: msa._id,
+        categoryId: _id,
         lastModified: Math.floor(Date.now() / 1000),
       });
       pubsub.publish(NEW_MSA, { newMSA: msa });

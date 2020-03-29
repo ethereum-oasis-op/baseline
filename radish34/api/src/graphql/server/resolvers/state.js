@@ -12,7 +12,8 @@ export default {
   },
   Mutation: {
     setState: async (_parent, args) => {
-      await setServerState(args.state);
+      const { state } = args;
+      await setServerState(state);
       const state = await getServerState();
       return { state };
     },

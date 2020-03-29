@@ -26,8 +26,10 @@ const getAllOrganizations = async () => {
 
 export default {
   Query: {
-    organization(_parent, args) {
-      return getOrganizationById(args.address).then(res => res);
+    async organization(_parent, args) {
+      const { address } = args;
+      const res = await getOrganizationById(address);
+      return res;
     },
     organizations() {
       return getAllOrganizations();
@@ -36,13 +38,15 @@ export default {
       return listOrganizations();
     },
     registeredOrganization(_parent, args) {
-      return getRegisteredOrganization(args.address);
+      const { address } = args;
+      return getRegisteredOrganization(address);
     },
     organizationCount() {
       return getOrganizationCount();
     },
     orgRegistryAddress(_parent, args) {
-      return getInterfaceAddress(args.registrarAddress, args.managerAddress, 'IOrgRegistry');
+      const { registrarAddress, managerAddress } = args;
+      return getInterfaceAddress(registrarAddress, managerAddress, 'IOrgRegistry');
     },
   },
   Organization: {
@@ -54,11 +58,12 @@ export default {
     registerOrganization: async (_root, args) => {
       const settings = await getServerSettings();
       const { zkpPublicKey, messengerKey, address } = settings.organization;
+      const { organizationName, organizationRole } = args;
 
       const orgRegistryTxHash = await registerToOrgRegistry(
         address,
-        args.organizationName,
-        args.organizationRole,
+        organizationName,
+        organizationRole,
         messengerKey,
         zkpPublicKey,
       );

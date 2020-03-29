@@ -48,44 +48,51 @@ const mapMSAsWithSignatureStatus = async msas => {
 export default {
   Query: {
     msa: async (_parent, args) => {
-      const msa = await getMSAById(args.id).then(res => res);
+      const { id } = args;
+      const msa = await getMSAById(id).then(res => res);
       const { constants, ...msaData } = msa;
       const { buyerSignatureStatus, supplierSignatureStatus } = getSignatureStatus(msa);
       const supplier = await getPartnerByzkpPublicKey(constants.zkpPublicKeyOfSupplier);
-
+      const { identity } = supplier;
       return {
         ...msaData,
         ...constants,
-        whisperPublicKeySupplier: supplier.identity,
+        whisperPublicKeySupplier: identity,
         supplierDetails: supplier,
         buyerSignatureStatus,
         supplierSignatureStatus,
       };
     },
     msas: async (_parent, args, context) => {
-      const requester = await getPartnerByMessengerKey(context.identity);
+      const { identity } = context;
+      const requester = await getPartnerByMessengerKey(identity);
       const msas = await getAllMSAs(requester);
       return mapMSAsWithSignatureStatus(msas);
     },
-    msasBySKU: async (_parent, args)  => {
-      const msas = await getMSAsBySKU(args.sku);
+    msasBySKU: async (_parent, args) => {
+      const { sku } = args;
+      const msas = await getMSAsBySKU(sku);
       return mapMSAsWithSignatureStatus(msas);
     },
     msasByRFPId: async (_parent, args) => {
-      const msas = await getMSAsByRFPId(args.rfpId);
+      const { rfpId } = args;
+      const msas = await getMSAsByRFPId(rfpId);
       return mapMSAsWithSignatureStatus(msas);
     }
   },
   Mutation: {
     createMSA: async (_parent, args, context) => {
+      const { input } = args;
+      const { supplierAddress } = input;
       console.log('\n\n\nRequest to create MSA with inputs:');
-      console.log(args.input);
-      const _supplier = await getPartnerByAddress(args.input.supplierAddress);
+      console.log(input);
+      const _supplier = await getPartnerByAddress(supplierAddress);
       delete _supplier._id;
       delete args.input.supplierAddress;
 
       const settings = await getServerSettings();
-      const { zkpPrivateKey, zkpPublicKey, name } = settings.organization;
+      const { organization } = settings;
+      const { zkpPrivateKey, zkpPublicKey, name } = organization;
 
       // Check the zkp key pair (throws an error if invalid pair):
       checkKeyPair(zkpPrivateKey, zkpPublicKey);
@@ -94,7 +101,7 @@ export default {
         constants: {
           zkpPublicKeyOfBuyer: zkpPublicKey,
           zkpPublicKeyOfSupplier: _supplier.zkpPublicKey,
-          ...args.input,
+          ...input,
         },
       });
 
@@ -114,26 +121,33 @@ export default {
         },
       };
 
-      const msaObject = msa.object;
-      msaObject.rfpId = args.input.rfpId;
+      const { object } = msg;
+      const { rfpId } = args.input;
+
+      const msaObject = object;
+      const { sku } = msaObject.constants
+      msaObject.rfpId = rfpId;
 
       const msaDoc = await saveMSA(msaObject);
+
+      const { identity } = context;
+      const { _id } = msaDoc;
 
       await saveNotice({
         resolved: false,
         category: 'msa',
-        subject: `New MSA: for SKU ${msaObject.constants.sku}`,
+        subject: `New MSA: for SKU ${sku}`,
         from: name,
         statusText: 'Pending',
         status: 'outgoing',
-        categoryId: msaDoc._id,
+        categoryId: _id,
         lastModified: Math.floor(Date.now() / 1000),
       });
 
       console.log(`\nSending MSA (id: ${msaDoc._id}) to supplier for signing...`);
       msgDeliveryQueue.add({
-        documentId: msaDoc._id,
-        senderId: context.identity,
+        documentId: _id,
+        senderId: identity,
         recipientId: _supplier.identity,
         payload: {
           type: 'msa_create',
@@ -143,7 +157,7 @@ export default {
 
       const { constants, ...msaData } = msaObject;
       const msaDetails = {
-        _id: msaDoc._id,
+        _id,
         ...msaData,
         ...constants,
         supplier: { ..._supplier },

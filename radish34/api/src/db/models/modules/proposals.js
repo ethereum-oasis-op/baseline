@@ -82,11 +82,13 @@ export const getAllProposals = async () => {
 
 export const saveProposal = async doc => {
   try {
+    const { _id } = doc;
     const newProposal = doc;
-    newProposal._id = doc._id;
-    console.log(`Saving new Proposal (id: ${doc._id}) from partner...`);
+    newProposal._id = _id;
+    const { rfpId } = newProposal;
+    console.log(`Saving new Proposal (id: ${_id}) from partner...`);
     const result = await Proposal.create([newProposal], { upsert: true, new: true });
-    await createNotice('proposal', result[0], newProposal.rfpId);
+    await createNotice('proposal', result[0], rfpId);
     return result[0];
   } catch (e) {
     console.log('Error creating proposal: ', e);

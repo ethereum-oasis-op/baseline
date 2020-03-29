@@ -15,7 +15,8 @@ export default {
   },
   Mutation: {
     setRPCProvider: async (_parent, args) => {
-      const rpcProvider = args.uri;
+      const { uri } = args.uri;
+      const rpcProvider = uri;
       const settings = await setServerSetting('rpcProvider', rpcProvider);
       return settings;
     },
@@ -25,7 +26,8 @@ export default {
       return settings;
     },
     setWalletFromMnemonic: async (_parent, args) => {
-      await createWalletFromMnemonic(args.mnemonic, args.path);
+      const { mnemonic, path } = args;
+      await createWalletFromMnemonic(mnemonic, path);
       // healthcheck();
       const settings = await getServerSettings();
       return settings;

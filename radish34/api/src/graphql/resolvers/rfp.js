@@ -5,8 +5,10 @@ const NEW_RFP = 'NEW_RFP';
 
 export default {
   Query: {
-    rfp(_parent, args) {
-      return getRFPById(args.uuid).then(res => res);
+    async rfp(_parent, args) {
+      const { uuid } = args;
+      const res = await getRFPById(uuid);
+      return res;
     },
     rfps() {
       return getAllRFPs();
@@ -14,7 +16,7 @@ export default {
   },
   Mutation: {
     // TODO: Connect this to the new baseline function 'createRFP'
-    createRFP: async (_parent, args, context) => {},
+    createRFP: async (_parent, args, context) => { },
   },
   Subscription: {
     newRFP: {

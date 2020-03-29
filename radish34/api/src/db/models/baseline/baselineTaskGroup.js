@@ -27,9 +27,10 @@ export const parseMongooseBaselineTask = baselineTask => {
 };
 
 export const parseMongooseBaselineTaskGroup = baselineTaskGroup => {
+  const { data, baselineTasks } = baselineTaskGroup;
   return Object.assign(baselineTaskGroup.toObject(), {
-    data: convertMongooseMaptoJSON(baselineTaskGroup.data),
-    baselineTasks: baselineTaskGroup.baselineTasks.map(parseMongooseBaselineTask),
+    data: convertMongooseMaptoJSON(data),
+    baselineTasks: baselineTasks.map(parseMongooseBaselineTask),
   });
 };
 

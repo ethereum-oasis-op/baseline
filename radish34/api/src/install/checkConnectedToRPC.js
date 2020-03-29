@@ -6,11 +6,12 @@ const providers = ['homestead', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
 export default async () => {
   const config = await getServerSettings();
   let connection;
+  const { rpcProvider } = config;
 
-  if (providers.includes(config.rpcProvider)) {
-    connection = await getDefaultProvider(config.rpcProvider);
+  if (providers.includes(rpcProvider)) {
+    connection = await getDefaultProvider(rpcProvider);
   } else {
-    connection = await getProvider(config.rpcProvider);
+    connection = await getProvider(rpcProvider);
   }
 
   connection
@@ -19,7 +20,7 @@ export default async () => {
       console.log('Connected to network:', network);
     })
     .catch(err => {
-      console.error(`Could not connect to RPC server at '${config.rpcProvider}'`, err);
+      console.error(`Could not connect to RPC server at '${rpcProvider}'`, err);
       return false;
     });
 
