@@ -17,7 +17,7 @@
   "scripts": {
     "build": "babel src -d dist",
     "start": "npm run build && node ./dist/index.js",
-    "dev": "nodemon --exec babel-node ./src/index.js",
+    "dev": "npm run build && nodemon --exec babel-node ./src/index.js",
     "fix": "npm run format && npm run lint -- --fix",
     "format": "prettier --write \"**/*.{json,css,scss,md}\"",
     "lint": "eslint .",
