@@ -1,2 +1,0 @@
-# Industry Verticals
-
