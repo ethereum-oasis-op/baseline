@@ -1,16 +1,16 @@
 # Community Members
 
-Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th  and 19th, 2020. Over 300 of them also signed in as group members. The [members](https://lists.oasis-open-projects.org/g/baseline/directory) represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
+Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th and 19th, 2020. Over 300 of them also signed in as group members. The [members](https://lists.oasis-open-projects.org/g/baseline/directory) represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
 
 ### Bootstrapping Phase and Ongoing Phase
 
-The technical steering committee and the chair listed below will be seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period will end when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceeding period\) vote on the new TSC and chair.  The specifications steering committee \(SSC\) has a variable number, and membership is based on  
+The technical steering committee and the chair listed below will be seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period will end when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceeding period\) vote on the new TSC and chair. The specifications steering committee \(SSC\) has a variable number, and membership is based on
 
-The people and companies listed below have stepped up to identify themselves as supporters, stakeholders, responsible parties, and accountable parties to help bootstrap the Baseline Protocol work. 
+The people and companies listed below have stepped up to identify themselves as supporters, stakeholders, responsible parties, and accountable parties to help bootstrap the Baseline Protocol work.
 
 ### Your Project Governance Board
 
-The project governance board \(PGB\) is organized by OASIS and is accountable for ensuring the balance and integrity of the Ethereum-Oasis initiatives, such as the Baseline Protocol. 
+The project governance board \(PGB\) is organized by OASIS and is accountable for ensuring the balance and integrity of the Ethereum-Oasis initiatives, such as the Baseline Protocol.
 
 | Name | Organization |
 | :--- | :--- |
@@ -20,7 +20,7 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 
 ### Your Technical Steering Committee
 
-The technical steering committee \(TSC\) is accountable to the Project Governance Board for bootstrapping the maintainer group, stepping in to resolve any conflicts on merges or maintainer self-organization 
+The technical steering committee \(TSC\) is accountable to the Project Governance Board for bootstrapping the maintainer group, stepping in to resolve any conflicts on merges or maintainer self-organization
 
 | Name | Company |
 | :--- | :--- |
@@ -37,7 +37,7 @@ The technical steering committee \(TSC\) is accountable to the Project Governanc
 
 ### Your Specifications Steering Committee
 
-The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products.  These are senior industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://github.com/ethereum-oasis/baseline#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893).
+The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products. These are senior industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://github.com/ethereum-oasis/baseline#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893).
 
 SSC members are seated by consensus of the sitting members. There is no specific maximum number of seats, and it is expected that the members will form sub-committees for topics like industry verticals.
 

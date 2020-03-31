@@ -11,7 +11,7 @@ The purpose of this section is to list and describe the key things the baseline 
 
 ## Point to Point Messaging
 
-The Radish34 demo uses Whisper, which comes with standard Geth nodes. However, it is not ideal for _baselining_.  The ideal messaging service, which the Baseline  Protocol community will endeavor to specify and promote, would:
+The Radish34 demo uses Whisper, which comes with standard Geth nodes. However, it is not ideal for _baselining_. The ideal messaging service, which the Baseline Protocol community will endeavor to specify and promote, would:
 
 * Send data point-to-point, stored only by specified counter-parties with no intermediary storage; 
 * Able to specify different counter-parties on a message-by-message \(or at least Workflow Step by Step\) basis; 
@@ -20,7 +20,7 @@ The Radish34 demo uses Whisper, which comes with standard Geth nodes. However, i
 
 It has been suggested that the Baseline Protocol community consider looking into the [Corda Flows](https://github.com/corda/corda) open source repository as an example of a potential design pattern that would suit baselining. If so, an effort to implement such a pattern in an Ethereum client such as Hyperledger Besu could be a way forward.
 
-## Zero Knowledge Service (Zokrates and zkSnark related improvements)
+## Zero Knowledge Service \(Zokrates and zkSnark related improvements\)
 
 While the baseline approach isn't solely about zero knowledge techniques, it uses them to ensure that all parties store the same data in their respective systems of record, execute business rules consistently, and enforce the correctness of Workflow Steps.
 
@@ -34,11 +34,11 @@ The Baseline Protocol can provide utility for a variety of uses across industrie
 
 ## Gas Pump Service
 
-Many established companies are not comfortable with, or are prohibited from, holding cryptocurrency -- even if just to power IT operations \(e.g., $gas charges for placing Baseline Proofs on the Mainnet\).  For the foreseeable future, enterprises wishing to conduct baselining may need a way to have someone else pay the $gas and then bill them _old-school_ in fiat currency.
+Many established companies are not comfortable with, or are prohibited from, holding cryptocurrency -- even if just to power IT operations \(e.g., $gas charges for placing Baseline Proofs on the Mainnet\). For the foreseeable future, enterprises wishing to conduct baselining may need a way to have someone else pay the $gas and then bill them _old-school_ in fiat currency.
 
 ## Barriers to Enterprise Adoption of Public Blockchain
 
-The attached document from the EEA Mainnet Working Group lists the "top ten" reasons why a conservative, security-minded corporate officer has concerns about using the public Mainnet. It provides a brief profile on the kind of person who has these concerns and what may be on their minds day-to-day.  The Baseline Protocol aims to avoid most of these and bring the rest to a level that would be considered normal and tolerable in a high-security corporate IT environment. 
+The attached document from the EEA Mainnet Working Group lists the "top ten" reasons why a conservative, security-minded corporate officer has concerns about using the public Mainnet. It provides a brief profile on the kind of person who has these concerns and what may be on their minds day-to-day. The Baseline Protocol aims to avoid most of these and bring the rest to a level that would be considered normal and tolerable in a high-security corporate IT environment.
 
-{% file src="../../.gitbook/assets/why-i-wont-use-the-mainnet-ten-problems-6-1.pdf" %}
+{% file src="../../.gitbook/assets/why-i-wont-use-the-mainnet-ten-problems-6-1 \(1\).pdf" %}
 
