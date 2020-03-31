@@ -2,48 +2,48 @@
 
 * [Welcome](README.md)
 
-## Radish34 Demo
+## Community
 
-* [Radish34 Explained](radish34-demo/radish34.md)
-* [Radish34 Interactive Demo](radish34-demo/demo.md)
-* [Getting Started with Radish34](radish34-demo/radish34-start.md)
-* [Radish34 Workflow](radish34-demo/radish34-workflow.md)
-* [Modifying Radish34](radish34-demo/mods.md)
-* [From POC to Protocol](radish34-demo/poc-to-protocol.md)
+* [Open Source Community](community/community.md)
+* [Contributors Guide](community/contributors-guide.md)
+* [Community Members](community/community-members.md)
+* [Governance](community/governance.md)
+
+## Radish34
+
+* [Radish34 Explained](radish34/radish34-explained.md)
+* [Radish34 Interactive Demo](radish34/radish34-demo.md)
+* [Radish34 POC](radish34/radish34-poc.md)
+* [Radish34 Workflow](radish34/radish34-workflow.md)
+* [Radish34 Key Diagrams](radish34/radish34-diagrams.md)
+* [Modifying Radish34](radish34/radish34-mods.md)
+* [From POC to Protocol](radish34/poc-to-protocol.md)
 
 ## Baseline Protocol
 
 * [The Baseline Protocol](baseline-protocol/protocol.md)
-* [Open Source Community](baseline-protocol/community/README.md)
-  * [Supporting Community Members](baseline-protocol/community/supporting-community-members.md)
-  * [Community Governance](baseline-protocol/community/community-governance.md)
-  * [Community Tools](baseline-protocol/community/community-tools.md)
 * [Baseline Process](baseline-protocol/process.md)
-* [Performance Stats and Specs](baseline-protocol/performance.md)
-* [Standards](baseline-protocol/standards.md)
-* [Driving Mainnet Evolution](baseline-protocol/mainnet.md)
+* [Components](baseline-protocol/components.md)
+* [Standards](baseline-protocol/standards/README.md)
+  * [Mainnet](baseline-protocol/standards/mainnet.md)
+  * [Driving Mainnet Evolution](baseline-protocol/standards/mainnet-1.md)
 * [Roadmap](baseline-protocol/roadmap.md)
-
-## Components
-
-* [Baseline Server](components/baseline-server/README.md)
-  * [Messenger](components/baseline-server/messenger.md)
-  * [Zero Knowledge Service](components/baseline-server/zero-knowledge-service.md)
-  * [APIs](components/baseline-server/apis.md)
-* [On-Chain Functions](components/on-chain.md)
+* [Performance Stats and Specs](baseline-protocol/performance.md)
 
 ## Baselining Your Product <a id="baselining"></a>
 
 * [How to 'Baseline' Your Product](baselining/your-product.md)
-* [Supply Chain Management](baselining/scm.md)
-* [ERP & CRM](baselining/erp-crm.md)
-* [Core Banking](baselining/core-banking.md)
-* [Enterprise Middleware](baselining/enterprise-middleware.md)
+* [Industry Verticals](baselining/industry-verticals/README.md)
+  * [Healthcare](baselining/industry-verticals/healthcare.md)
+  * [Core Banking](baselining/industry-verticals/core-banking.md)
+  * [ERP & CRM](baselining/industry-verticals/erp-crm.md)
+  * [Supply Chain Management](baselining/industry-verticals/scm.md)
+* [Cloud](baselining/enterprise-middleware.md)
 
-## Baseline Basics
+## Baseline Basics <a id="basics"></a>
 
-* [Glossary](baseline-basics/glossary.md)
-* [FAQ](baseline-basics/faq.md)
-* [Key GitHub Folder Readme's](baseline-basics/key-github-folder-readmes.md)
-* [Code Docs](baseline-basics/code-docs.md)
+* [Glossary](basics/glossary.md)
+* [FAQ](basics/faq.md)
+* [Code Docs](basics/code-docs/README.md)
+  * [BullJS](basics/code-docs/bulljs.md)
 
