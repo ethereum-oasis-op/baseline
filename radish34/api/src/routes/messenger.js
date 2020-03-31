@@ -11,9 +11,10 @@ const router = express.Router();
 
 router.post('/documents', async (req, res) => {
   const messageObj = req.body;
+  const { type, deliveredType, senderId, _id } = messageObj;
   let docId;
-  console.log(`\n\n\nReceived new document of type ${messageObj.type}. Parsing now...`);
-  switch (messageObj.type) {
+  console.log(`\n\n\nReceived new document of type ${type}. Parsing now...`);
+  switch (type) {
     case 'rfp_create': // inbound RFP from partner
       try {
         docId = (await partnerCreateRFP(messageObj))._id;
@@ -26,10 +27,10 @@ router.post('/documents', async (req, res) => {
     case 'delivery_receipt':
       // ex: supplier's messenger automatically sends this message type after receiving buyer's RFP
       // Todo: need to enhance to handle each document types, now deliveryReceiptUpdate() only handles RFP
-      if (messageObj.deliveredType === 'rfp_create') {
+      if (deliveredType === 'rfp_create') {
         docId = (await deliveryReceiptUpdate(messageObj))._id;
       }
-      if (messageObj.deliveredType === 'po_create') {
+      if (deliveredType === 'po_create') {
         docId = (await deliveryReceiptUpdate(messageObj))._id;
       }
       break;
@@ -45,8 +46,8 @@ router.post('/documents', async (req, res) => {
       try {
         console.log('\n\n\nReceived MSA\n');
         console.dir(messageObj, { depth: null });
-        onReceiptMSASupplier(messageObj, messageObj.senderId);
-        docId = messageObj._id;
+        onReceiptMSASupplier(messageObj, senderId);
+        docId = _id;
       } catch (error) {
         res.status(400);
         res.send({ message: error });
@@ -56,8 +57,8 @@ router.post('/documents', async (req, res) => {
       try {
         console.log('\n\n\nReceived Signed MSA\n');
         console.dir(messageObj, { depth: null });
-        onReceiptMSABuyer(messageObj, messageObj.senderId);
-        docId = messageObj._id;
+        onReceiptMSABuyer(messageObj, senderId);
+        docId = _id;
       } catch (error) {
         res.status(400);
         res.send({ message: error });
@@ -77,7 +78,7 @@ router.post('/documents', async (req, res) => {
       try {
         console.log('\n\n\nReceived PO\n');
         console.dir(messageObj, { depth: null });
-        onReceiptPOSupplier(messageObj, messageObj.senderId);
+        onReceiptPOSupplier(messageObj, senderId);
       } catch (error) {
         res.status(400);
         res.send({ message: error });

@@ -25,13 +25,14 @@ async function sendPrivateMessage(
     messageString = JSON.stringify(messageContent);
   }
   const web3 = await web3utils.getWeb3();
-  const content = await web3.utils.fromAscii(messageString);
+  const content = web3.utils.fromAscii(messageString);
   const whisperId = await Identity.findOne({ _id: senderId });
+  const { keyId } = whisperId;
   let hash;
   try {
     hash = await web3.shh.post({
       pubKey: recipientId,
-      sig: whisperId.keyId,
+      sig: keyId,
       ttl: TTL,
       topic,
       payload: content,
@@ -44,7 +45,7 @@ async function sendPrivateMessage(
   }
 
   // Store message in database
-  const time = await Math.floor(Date.now() / 1000);
+  const time = Math.floor(Date.now() / 1000);
   let doc;
   try {
     doc = await Message.findOneAndUpdate(
