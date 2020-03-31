@@ -2,9 +2,9 @@
   "name": "contracts",
   "version": "1.0.0",
   "description": "solidity contracts",
-  "main": "wallet.js",
+  "main": "src/utils.js",
   "scripts": {
-    "test": "jest --runInBand --forceExit",
+    "test": "jest --runInBand --forceExit --detectOpenHandles",
     "build": "sol-compiler"
   },
   "author": "",
@@ -20,7 +20,9 @@
   "dependencies": {
     "@babel/preset-env": "^7.9.0",
     "big-integer": "^1.6.48",
+    "bignumber": "^1.1.0",
     "ethereum-doppelganger": "^0.0.7",
+    "ethers": "^4.0.46",
     "openzeppelin-solidity": "^2.5.0"
   },
   "jest": {

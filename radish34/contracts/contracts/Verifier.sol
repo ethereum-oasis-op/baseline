@@ -39,6 +39,8 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
     uint256 constant SNARK_SCALAR_BOUND = 21888242871839275222246405745257275088548364400416034343698204186575808495617;
     uint256 constant PRIME_BOUND = 21888242871839275222246405745257275088696311157297823662689037894645226208583;
 
+    event Verified(bool verified);
+
     struct Proof_GM17 {
         Pairing.G1Point A;
         Pairing.G2Point B;
@@ -88,6 +90,7 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         } else {
             result = false;
         }
+        emit Verified(result);
     }
 
     function verificationCalculation(
