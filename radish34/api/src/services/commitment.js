@@ -51,11 +51,12 @@ export class Commitment {
 
       case 'commitment':
         // Generate a new commitment from the input commitment object.
+        const { commitment: _commitment, index: _index, salt: _salt, preimage: _preimage } = commitment;
         validate(commitment, 'commitment');
-        this._commitment = commitment.commitment;
-        this._index = commitment.index;
-        this._salt = commitment.salt;
-        this._preimage = commitment.preimage;
+        this._commitment = _commitment;
+        this._index = _index;
+        this._salt = _salt;
+        this._preimage = _preimage;
         break;
 
       default:

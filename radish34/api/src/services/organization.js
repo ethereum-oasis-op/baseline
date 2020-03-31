@@ -12,26 +12,31 @@ import db from '../db';
 
 export const assignManager = async (fromAddress, toAddress) => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { OrgRegistry } = config.addresses;
   const privateKey = await getPrivateKey();
 
   const tx = await getContractWithWallet(
     getContractJson('OrgRegistry'),
-    config.addresses.OrgRegistry,
-    config.rpcProvider,
+    OrgRegistry,
+    rpcProvider,
     privateKey,
   ).assignManager(fromAddress, toAddress);
-  const transactionHash = { transactionHash: tx.hash };
+  const { hash: txHash } = tx;
+  const transactionHash = { transactionHash: txHash };
   return transactionHash;
 };
 
 export const getManager = async fromAddress => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { ERC1820Registry } = config.addresses;
   const privateKey = await getPrivateKey();
 
   const tx = await getContractWithWallet(
     getContractJson('ERC1820Registry'),
-    config.addresses.ERC1820Registry,
-    config.rpcProvider,
+    ERC1820Registry,
+    rpcProvider,
     privateKey,
   ).getManager(fromAddress);
   return tx;
@@ -43,15 +48,18 @@ export const setInterfaceImplementer = async (
   implementerAddress,
 ) => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { ERC1820Registry } = config.addresses;
   const privateKey = await getPrivateKey();
 
   const tx = await getContractWithWallet(
     getContractJson('ERC1820Registry'),
-    config.addresses.ERC1820Registry,
-    config.rpcProvider,
+    ERC1820Registry,
+    rpcProvider,
     privateKey,
   ).setInterfaceImplementer(managerAddress, interfaceHash, implementerAddress);
-  const transactionHash = { transactionHash: tx.hash };
+  const { hash: txHash } = tx;
+  const transactionHash = { transactionHash: txHash };
   return transactionHash;
 };
 
@@ -63,11 +71,13 @@ export const registerToOrgRegistry = async (
   zkpPublicKey,
 ) => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { OrgRegistry } = config.addresses;
   const privateKey = await getPrivateKey();
   const tx = await getContractWithWallet(
     getContractJson('OrgRegistry'),
-    config.addresses.OrgRegistry,
-    config.rpcProvider,
+    OrgRegistry,
+    rpcProvider,
     privateKey,
   ).registerOrg(
     address,
@@ -82,23 +92,27 @@ export const registerToOrgRegistry = async (
 
 export const getOrganizationCount = async () => {
   const config = await getServerSettings();
-  if (!config.addresses.OrgRegistry) {
+  const { rpcProvider } = config;
+  const { OrgRegistry } = config.addresses;
+  if (!OrgRegistry) {
     return 0;
   }
   const organizationCount = await getContract(
     getContractJson('OrgRegistry'),
-    config.rpcProvider,
-    config.addresses.OrgRegistry,
+    rpcProvider,
+    OrgRegistry,
   ).getOrgCount();
   return organizationCount.toNumber();
 };
 
 export const listOrganizations = async () => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { OrgRegistry } = config.addresses;
   const organizationList = await getContract(
     getContractJson('OrgRegistry'),
-    config.rpcProvider,
-    config.addresses.OrgRegistry,
+    rpcProvider,
+    OrgRegistry,
   ).getOrgs();
   return {
     addresses: organizationList[0],
@@ -111,10 +125,12 @@ export const listOrganizations = async () => {
 
 export const getRegisteredOrganization = async walletAddress => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { OrgRegistry } = config.addresses;
   const organization = await getContract(
     getContractJson('OrgRegistry'),
-    config.rpcProvider,
-    config.addresses.OrgRegistry,
+    rpcProvider,
+    OrgRegistry,
   ).getOrg(walletAddress);
 
   return {
@@ -132,19 +148,22 @@ export const getInterfaceAddress = async (
   interfaceName,
 ) => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { ERC1820Registry } = config.addresses;
   const interfaceAddress = await getContract(
     getContractJson('ERC1820Registry'),
-    config.rpcProvider,
-    config.addresses.ERC1820Registry,
+    rpcProvider,
+    ERC1820Registry,
   ).getInterfaceImplementer(managerAddress, interfaceName);
 
   return interfaceAddress;
 };
 
 export const saveOrganization = async input => {
+  const { address } = input;
   const organization = await db
     .collection('organization')
-    .updateOne({ _id: input.address }, { $set: input }, { upsert: true });
+    .updateOne({ _id: address }, { $set: input }, { upsert: true });
   return organization;
 };
 
@@ -153,14 +172,15 @@ export const saveOrganizations = async () => {
   if (rpcProvider) {
     const orgCount = await getOrganizationCount();
     const org = await listOrganizations();
+    const { addresses, names, roles, messagingKeys, zkpPublicKeys } = org;
     for (let i = 0; i < orgCount; i += 1) {
       const record = {
-        _id: org.addresses[i],
-        address: org.addresses[i],
-        name: org.names[i],
-        role: org.roles[i],
-        identity: org.messagingKeys[i],
-        zkpPublicKey: org.zkpPublicKeys[i]
+        _id: addresses[i],
+        address: addresses[i],
+        name: names[i],
+        role: roles[i],
+        identity: messagingKeys[i],
+        zkpPublicKey: zkpPublicKeys[i]
       };
       saveOrganization(record);
     }

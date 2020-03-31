@@ -64,7 +64,8 @@ export const createMSA = async (proof, publicInputHash, publicInputs) => {
   const tx = await shieldContract.createMSA(proof, publicInputHash, ...publicInputs, overrides);
   // The operation is NOT complete yet; we must wait until it is mined
   await tx.wait();
-  const txReceipt = await getTxReceipt(tx.hash);
+  const { hash: txHash } = tx;
+  const txReceipt = await getTxReceipt(txHash);
 
   const { leafIndex, leafValue, root: newRoot } = getEventValuesFromTxReceipt(
     'NewLeaf',
@@ -75,7 +76,7 @@ export const createMSA = async (proof, publicInputHash, publicInputs) => {
   gasUsedStats('createMSA', shieldContract, txReceipt);
 
   return {
-    transactionHash: tx.hash,
+    transactionHash: txHash,
     leafIndex,
     leafValue,
     newRoot,
@@ -104,7 +105,8 @@ export const createPO = async (proof, publicInputHash, publicInputs) => {
   const tx = await shieldContract.createPO(proof, publicInputHash, ...publicInputs, overrides);
   // The operation is NOT complete yet; we must wait until it is mined
   await tx.wait();
-  const txReceipt = await getTxReceipt(tx.hash);
+  const { hash: txHash } = tx;
+  const txReceipt = await getTxReceipt(txHash);
 
   const { minLeafIndex, leafValues, root: newRoot } = getEventValuesFromTxReceipt(
     'NewLeaves',
@@ -122,7 +124,7 @@ export const createPO = async (proof, publicInputHash, publicInputs) => {
   gasUsedStats('createMSA', shieldContract, txReceipt);
 
   return {
-    transactionHash: tx.hash,
+    transactionHash: txHash,
     newMSALeafIndex,
     newPOLeafIndex,
     newMSALeafValue,

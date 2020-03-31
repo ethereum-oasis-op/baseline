@@ -3,12 +3,12 @@ import db from '../db';
 export const getPartnerByzkpPublicKey = async zkpPublicKey => {
   const partner = await db
     .collection('organization')
-    .findOne({ zkpPublicKey: zkpPublicKey });
+    .findOne({ zkpPublicKey });
   return partner;
 };
 
 export const getPartnerByAddress = async address => {
-  const partner = await db.collection('organization').findOne({ address: address });
+  const partner = await db.collection('organization').findOne({ address });
   return partner;
 };
 
@@ -34,13 +34,15 @@ export const getMyPartners = async () => {
 };
 
 export const savePartner = async input => {
+  const { address } = input;
   const partner = await db
     .collection('partner')
-    .updateOne({ _id: input.address }, { $set: input }, { upsert: true });
+    .updateOne({ _id: address }, { $set: input }, { upsert: true });
   return partner;
 };
 
 export const deletePartner = async input => {
-  const partner = await db.collection('partner').deleteOne({ _id: input.address });
+  const { address } = input;
+  const partner = await db.collection('partner').deleteOne({ _id: address });
   return partner;
 };

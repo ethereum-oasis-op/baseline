@@ -37,10 +37,11 @@ Only works for contracts stored at the default path, and in the default place in
 */
 export const getContractByName = async contractName => {
   const config = await getServerSettings();
+  const { rpcProvider, addresses: configAddresses } = config;
   const contract = getContract(
     getContractJson(contractName),
-    config.rpcProvider,
-    config.addresses[contractName],
+    rpcProvider,
+    configAddresses[contractName],
   );
   return contract;
 };
@@ -50,11 +51,12 @@ Only works for contracts stored at the default path, and in the default place in
 */
 export const getContractWithWalletByName = async contractName => {
   const config = await getServerSettings();
+  const { rpcProvider, addresses: configAddresses } = config;
   const privateKey = await getPrivateKey();
   const contract = getContractWithWallet(
     getContractJson(contractName),
-    config.addresses[contractName],
-    config.rpcProvider,
+    configAddresses[contractName],
+    rpcProvider,
     privateKey,
   );
   return contract;
@@ -77,16 +79,18 @@ export const getTxReceipt = async hash => {
 };
 
 export const saveSmartContract = async input => {
+  const { transactionHash } = input;
   const smartContract = await db
     .collection('smartcontract')
-    .updateOne({ _id: input.transactionHash }, { $set: input }, { upsert: true });
+    .updateOne({ _id: transactionHash }, { $set: input }, { upsert: true });
   return smartContract;
 };
 
 export const saveBlockchainTransaction = async input => {
+  const { transactionHash } = input;
   const blockchainTransaction = await db
     .collection('blockchaintransaction')
-    .updateOne({ _id: input.transactionHash }, { $set: input }, { upsert: true });
+    .updateOne({ _id: transactionHash }, { $set: input }, { upsert: true });
   return blockchainTransaction;
 };
 
@@ -94,41 +98,44 @@ export const deployERC1820Registry = async contractName => {
   const config = await getServerSettings();
   const uri = config.rpcProvider;
   const privateKey = await getPrivateKey();
-  const wallet = await getWallet(uri, privateKey);
+  const wallet = getWallet(uri, privateKey);
+  const { address: walletSigningKeyAddress } = wallet.signingKey;
   const returnData = await deployContract(
     getContractJson('ERC1820Registry'),
     uri,
     privateKey,
     null,
   );
+  const { hash: returnDataHash, address: returnDataAddress } = returnData;
   const blockchainTransactionRecord = {
-    transactionHash: returnData.hash,
+    transactionHash: returnDataHash,
     status: 'pending',
   };
   await saveBlockchainTransaction(blockchainTransactionRecord);
   const inputWithContractAddress = {
     contractName: contractName,
-    contractOwner: wallet.signingKey.address,
-    contractAddress: returnData.address,
-    transactionHash: returnData.hash,
+    contractOwner: walletSigningKeyAddress,
+    contractAddress: returnDataAddress,
+    transactionHash: returnDataHash,
   };
   await saveSmartContract(inputWithContractAddress);
-  await setContractAddress('ERC1820Registry', returnData.address);
+  await setContractAddress('ERC1820Registry', returnDataAddress);
   const provider = getProvider(uri);
   let receiptSatus;
-  provider.waitForTransaction(returnData.hash).then(receipt => {
-    if (receipt.status === 1) {
+  provider.waitForTransaction(returnDataHash).then(receipt => {
+    if (receipt.status) {
       receiptSatus = 'success';
     } else {
       receiptSatus = 'failure';
     }
+    const { transactionHash } = receipt;
     const successRecord = {
-      transactionHash: receipt.transactionHash,
+      transactionHash,
       status: receiptSatus,
     };
     saveBlockchainTransaction(successRecord);
   });
-  const contract = await getContractById(returnData.hash);
+  const contract = await getContractById(returnDataHash);
   return { contract };
 };
 
@@ -136,41 +143,44 @@ export const deployRegistrar = async addressOfERC1820 => {
   const config = await getServerSettings();
   const uri = config.rpcProvider;
   const privateKey = await getPrivateKey();
-  const wallet = await getWallet(uri, privateKey);
+  const wallet = getWallet(uri, privateKey);
+  const { address: walletSigningKeyAddress } = wallet.signingKey;
   const returnData = await deployContract(
     getContractJson('Registrar'),
     uri,
     privateKey,
     addressOfERC1820,
   );
+  const { hash: returnDataHash, address: returnDataAddress } = returnData;
   const pendingRecord = {
-    transactionHash: returnData.hash,
+    transactionHash: returnDataHash,
     status: 'pending',
   };
   await saveBlockchainTransaction(pendingRecord);
   const inputWithContractAddress = {
     contractName: 'Registrar',
-    contractOwner: wallet.signingKey.address,
-    contractAddress: returnData.address,
-    transactionHash: returnData.hash,
+    contractOwner: walletSigningKeyAddress,
+    contractAddress: returnDataAddress,
+    transactionHash: returnDataHash,
   };
   await saveSmartContract(inputWithContractAddress);
-  await setContractAddress('Registar', returnData.address);
+  await setContractAddress('Registar', returnDataAddress);
   const provider = getProvider(uri);
   let receiptSatus;
-  provider.waitForTransaction(returnData.hash).then(receipt => {
-    if (receipt.status === 1) {
+  provider.waitForTransaction(returnDataHash).then(receipt => {
+    if (receipt) {
       receiptSatus = 'success';
     } else {
       receiptSatus = 'failure';
     }
+    const { transactionHash } = receipt;
     const successRecord = {
-      transactionHash: receipt.transactionHash,
+      transactionHash,
       status: receiptSatus,
     };
     saveBlockchainTransaction(successRecord);
   });
-  const contract = await getContractById(returnData.hash);
+  const contract = await getContractById(returnDataHash);
   return { contract };
 };
 
@@ -178,7 +188,8 @@ export const deployOrgRegistry = async addressOfRegistrar => {
   const config = await getServerSettings();
   const uri = config.rpcProvider;
   const privateKey = await getPrivateKey();
-  const wallet = await getWallet(uri, privateKey);
+  const wallet = getWallet(uri, privateKey);
+  const { address: walletSigningKeyAddress } = wallet.signingKey;
   const returnData = await deployContract(
     getContractJson('OrgRegistry'),
     uri,
@@ -189,30 +200,32 @@ export const deployOrgRegistry = async addressOfRegistrar => {
     transactionHash: returnData.hash,
     status: 'pending',
   };
+  const { hash: returnDataHash, address: returnDataAddress } = returnData;
   await saveBlockchainTransaction(pendingRecord);
   const inputWithContractAddress = {
     contractName: 'Organization Registry Smart Contract',
-    contractOwner: wallet.signingKey.address,
-    contractAddress: returnData.address,
-    transactionHash: returnData.hash,
+    contractOwner: walletSigningKeyAddress,
+    contractAddress: returnDataAddress,
+    transactionHash: returnDataHash,
   };
   await saveSmartContract(inputWithContractAddress);
-  await setContractAddress('OrgRegistry', returnData.address);
+  await setContractAddress('OrgRegistry', returnDataAddress);
   const provider = getProvider(uri);
   let receiptSatus;
   provider.waitForTransaction(returnData.hash).then(receipt => {
-    if (receipt.status === 1) {
+    if (receipt.status) {
       receiptSatus = 'success';
     } else {
       receiptSatus = 'failure';
     }
+    const { transactionHash } = receipt;
     const successRecord = {
-      transactionHash: receipt.transactionHash,
+      transactionHash,
       status: receiptSatus,
     };
     saveBlockchainTransaction(successRecord);
   });
-  const contract = await getContractById(returnData.hash);
+  const contract = await getContractById(returnDataHash);
   return { contract };
 };
 

@@ -24,7 +24,7 @@ async function start(contractName, contractAddress) {
       url: `${url}/start`,
       method: 'POST',
       json: true,
-      headers: { contractname: contractName },
+      headers: { contractname },
       body: { contractAddress },
     };
     request(options, (err, res, body) => {

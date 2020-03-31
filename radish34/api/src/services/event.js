@@ -6,22 +6,24 @@ import { getContractJson } from './contract';
 
 export const subscribeRegisterOrgEvent = async () => {
   const config = await getServerSettings();
+  const { rpcProvider } = config;
+  const { OrgRegistry } = config.addresses;
   const orgRegistryJson = getContractJson('OrgRegistry');
-  if (!config.addresses.OrgRegistry) {
+  if (!OrgRegistry) {
     return;
   }
   const orgRegistryContract = getContract(
     orgRegistryJson,
-    config.rpcProvider,
-    config.addresses.OrgRegistry,
+    rpcProvider,
+    OrgRegistry,
   );
   orgRegistryContract.on('RegisterOrg', (name, address, role, messagingKey, zkpPublicKey) => {
     saveOrganization({
       name: utils.parseBytes32String(name),
-      address: address,
+      address,
       role: role.toNumber(),
       identity: messagingKey,
-      zkpPublicKey: zkpPublicKey,
+      zkpPublicKey,
     });
   });
 };
