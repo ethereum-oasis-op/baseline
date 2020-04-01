@@ -450,9 +450,6 @@ export const createMSA = async msa => {
   );
 
   console.log('\nCREATE MSA TRANSACTION COMPLETE');
-  console.log(proof);
-  console.log(proofArray);
-  console.log(publicInputs);
 
   return {
     transactionHash,
