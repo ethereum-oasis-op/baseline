@@ -14,9 +14,9 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 
 | Name | Organization |
 | :--- | :--- |
-| \*\*\*\*[**Chaals Neville**](https://www.linkedin.com/in/chaals/)\*\*\*\* | Enterprise Ethereum Alliance |
-| [**Dan Burnett**](https://www.linkedin.com/in/daburnett/)\*\*\*\* | PegaSys |
-| [**Tas Dienes**](https://www.linkedin.com/in/tasdienes/)\*\*\*\* | Ethereum Foundation |
+| [**Chaals Neville**](https://www.linkedin.com/in/chaals/) | Enterprise Ethereum Alliance |
+| [**Dan Burnett**](https://www.linkedin.com/in/daburnett/) | PegaSys |
+| [**Tas Dienes**](https://www.linkedin.com/in/tasdienes/) | Ethereum Foundation |
 
 ### Your Technical Steering Committee
 
@@ -24,16 +24,16 @@ The technical steering committee \(TSC\) is accountable to the Project Governanc
 
 | Name | Company |
 | :--- | :--- |
-| [**Brian Chamberlain**](https://www.linkedin.com/in/blchamberlain/)\*\*\*\* | ConsenSys |
-| \*\*\*\*[**Conor Svensson**](https://www.linkedin.com/in/conor10/)\*\*\*\* | Web3Labs |
-| \*\*\*\*[**Eric Bravick**](https://www.linkedin.com/in/ebravick/)\*\*\*\* | Core Convergence |
-| [**Hudson Jameson**](https://www.linkedin.com/in/hudsonjameson/)\*\*\*\* | Ethereum Foundation |
-| \*\*\*\*[**Johann Eid**](https://www.linkedin.com/in/johanneid/)\*\*\*\* | Chainlink |
-| [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/)\*\*\*\* | Ernst & Young |
-| \*\*\*\*[**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)\*\*\*\* | Provide |
-| \*\*\*\*[**Nate McKervey**](https://www.linkedin.com/in/mckervey/)\*\*\*\* | Splunk |
-| \*\*\*\*[**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)\*\*\*\* | Unibright |
-| [**Zachary Williamson**](https://www.linkedin.com/in/zachary-williamson-b02b0192/)\*\*\*\* | Aztec |
+| [**Brian Chamberlain**](https://www.linkedin.com/in/blchamberlain/) | ConsenSys |
+| [**Conor Svensson**](https://www.linkedin.com/in/conor10/) | Web3Labs |
+| [**Eric Bravick**](https://www.linkedin.com/in/ebravick/) | Core Convergence |
+| [**Hudson Jameson**](https://www.linkedin.com/in/hudsonjameson/) | Ethereum Foundation |
+| [**Johann Eid**](https://www.linkedin.com/in/johanneid/) | Chainlink |
+| [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/) | Ernst & Young |
+| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/) | Provide |
+| [**Nate McKervey**](https://www.linkedin.com/in/mckervey/) | Splunk |
+| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/) | Unibright |
+| [**Zachary Williamson**](https://www.linkedin.com/in/zachary-williamson-b02b0192/) | Aztec |
 
 ### Your Specifications Steering Committee
 
@@ -43,16 +43,16 @@ SSC members are seated by consensus of the sitting members. There is no specific
 
 | Name | Company |
 | :--- | :--- |
-| [**Arwin Holmes**](https://www.linkedin.com/in/arwinholmes/)\*\*\*\* | Ernst & Young |
-| [**Bill Gleim**](https://www.linkedin.com/in/williamgleim/)\*\*\*\* | ConsenSys Health |
-| [**Daniel Norkin**](https://www.linkedin.com/in/danielnorkin/)\*\*\*\* | Envision Blockchain |
-| [**Joerg Roskowetz**](https://www.linkedin.com/in/joergroskowetz/)\*\*\*\* | AMD |
-| [**Jon Stevens**](https://www.linkedin.com/in/lookfirst/)\*\*\*\* | Web3Cloud |
-| [**Joseph Bala**](https://www.linkedin.com/in/josephbala/)\*\*\*\* | Neocova |
-| [**Karen Scarborough**](https://www.linkedin.com/in/karenscarbrough/)\*\*\*\* | BP |
-| [**Stephan Baur**](https://www.linkedin.com/in/stephanbaur/)\*\*\*\* | Kaiser Permanente |
+| [**Arwin Holmes**](https://www.linkedin.com/in/arwinholmes/) | Ernst & Young |
+| [**Bill Gleim**](https://www.linkedin.com/in/williamgleim/) | ConsenSys Health |
+| [**Daniel Norkin**](https://www.linkedin.com/in/danielnorkin/) | Envision Blockchain |
+| [**Joerg Roskowetz**](https://www.linkedin.com/in/joergroskowetz/) | AMD |
+| [**Jon Stevens**](https://www.linkedin.com/in/lookfirst/) | Web3Cloud |
+| [**Joseph Bala**](https://www.linkedin.com/in/josephbala/) | Neocova |
+| [**Karen Scarborough**](https://www.linkedin.com/in/karenscarbrough/) | BP |
+| [**Stephan Baur**](https://www.linkedin.com/in/stephanbaur/) | Kaiser Permanente |
 | Steve Shortt | BP |
-| \*\*\*\*[**Yorke Rhodes**](https://www.linkedin.com/in/yorkerhodes/)\*\*\*\* | Microsoft |
+| [**Yorke Rhodes**](https://www.linkedin.com/in/yorkerhodes/) | Microsoft |
 
 ### Your Provisional Chair
 
@@ -62,11 +62,11 @@ The position is annual and chosen by popular vote of contributors who have had w
 
 | Name | Company |
 | :--- | :--- |
-| [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/)\*\*\*\* | ConsenSys |
+| [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) | ConsenSys |
 
 ## Founding Group on March 4, 2020
 
-### \*\*\*\*[**AMD**](https://www.amd.com/en/technologies/blockchain)**,** [**EY**](https://blockchain.ey.com/)**,** [**ChainLink**](https://chain.link/)**,** [**Core Convergence**](https://www.coreconvergence.us/)**,** [**ConsenSys**](https://consensys.net/)**,** [**Duke University**](https://pratt.duke.edu/)**,** [**Envision Blockchain**](https://envisionblockchain.com/)**,** [**MakerDAO**](https://makerdao.com/en/)**,** [**Microsoft**](http://www.microsoft.com/)**,** [**Neocova**](https://neocova.com/)**,** [**Splunk**](https://www.splunk.com/)**,** [**Unibright**](https://unibright.io/)**,** [**Provide**](https://provide.services/)**, and** [**W3BCLOUD**](https://www.w3bcloud.com/)**.**
+### [**AMD**](https://www.amd.com/en/technologies/blockchain)**,** [**EY**](https://blockchain.ey.com/)**,** [**ChainLink**](https://chain.link/)**,** [**Core Convergence**](https://www.coreconvergence.us/)**,** [**ConsenSys**](https://consensys.net/)**,** [**Duke University**](https://pratt.duke.edu/)**,** [**Envision Blockchain**](https://envisionblockchain.com/)**,** [**MakerDAO**](https://makerdao.com/en/)**,** [**Microsoft**](http://www.microsoft.com/)**,** [**Neocova**](https://neocova.com/)**,** [**Splunk**](https://www.splunk.com/)**,** [**Unibright**](https://unibright.io/)**,** [**Provide**](https://provide.services/)**, and** [**W3BCLOUD**](https://www.w3bcloud.com/)**.**
 
 ## New Stakeholders: March 19, 2020
 
@@ -76,7 +76,7 @@ Stay tuned...more coming in all the time.
 
 ## Contributors and Maintainers
 
-Stay tuned at the community bootstraps.
+Stay tuned as the community bootstraps.
 
 | Name | Github Handle | Company |
 | :--- | :--- | :--- |
