@@ -63,7 +63,7 @@ test('Should be able to throw when proof to verify function overflows prime boun
   expect.assertions(2);
   testdata.proofs_int.splice(0,1,PRIME_BOUND);
   // Alternately, the prime bound can be further incremented:
-  // testdata.proofs_int.splice(0,1,(BigInt(BigInt(PRIME_BOUND) + BigInt(testdata.inputs_hash[0]))).toString());
+  // testdata.proofs_int.splice(0,1,(BigInt(BigInt(PRIME_BOUND) + BigInt(testdata.proofs_int[0]))).toString());
   try {
     await verifier.verify(testdata.proofs_int, testdata.inputs_hash, testdata.vks_int);
   }

@@ -17,7 +17,8 @@ const profilerSubprovider = new ProfilerSubprovider(artifactAdapter, wallet.addr
 const coverageSubprovider = new CoverageSubprovider(artifactAdapter, wallet.address);
 
 const providerEngine = new Web3ProviderEngine();
-providerEngine.addProvider(new FakeGasEstimateSubprovider(4 * (10 ** 6)));
+// Note: Below line can be activated to get an estimate of the gas consumption if a real network were to be used for contract management
+// providerEngine.addProvider(new FakeGasEstimateSubprovider(4 * (10 ** 6)));
 providerEngine.addProvider(new RpcSubprovider({ rpcUrl: 'http://0.0.0.0:8545' }));
 providerEngine.addProvider(profilerSubprovider);
 providerEngine.addProvider(coverageSubprovider);

@@ -21,14 +21,15 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.9.0",
-    "big-integer": "^1.6.48",
-    "bignumber": "^1.1.0",
     "ethereum-doppelganger": "^0.0.7",
     "ethers": "^4.0.46",
     "openzeppelin-solidity": "^2.5.0"
   },
   "jest": {
     "testEnvironment": "node",
-    "verbose": true
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "./__tests__/mockVerifierData.js"
+    ]
   }
 }
