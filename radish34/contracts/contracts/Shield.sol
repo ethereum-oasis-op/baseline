@@ -75,8 +75,8 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         return ERC1820_ACCEPT_MAGIC;
     }
 
-    function assignManager(address _oldManager, address _newManager) external {
-        assignManagement(_oldManager, _newManager);
+    function assignManager(address _newManager) external {
+        assignManagement(_newManager);
     }
 
     /**

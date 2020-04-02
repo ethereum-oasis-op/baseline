@@ -37,9 +37,8 @@ contract Registrar is ERC1820Registry {
     /// @dev This enables assigning or changing manager
     /// @notice Since this is an internal method any contract inheriting this contract would be
     /// leveraged to call this function directly
-    /// @param _oldManager address of the current manager who can set new interface implementations
     /// @param _newManager address of the new manager who could set new interface implementations
-    function assignManagement(address _oldManager, address _newManager) internal {
-        ERC1820REGISTRY.setManager(_oldManager, _newManager);
+    function assignManagement(address _newManager) internal {
+        ERC1820REGISTRY.setManager(address(this), _newManager);
     }
 }

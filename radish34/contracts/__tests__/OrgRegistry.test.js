@@ -102,7 +102,7 @@ test('Should be able to get registrar info', async () => {
 });
 
 test('Should be able to assign new manager', async () => {
-  await orgRegistry.assignManager(orgRegistry.address, accounts[0]);
+  await orgRegistry.assignManager(accounts[0]);
   const newManager = await erc1820Registry.getManager(orgRegistry.address);
   expect(newManager).toBe(accounts[0]);
 });
