@@ -1,5 +1,5 @@
 import { ethers, utils } from 'ethers';
-import { getWallet, getAccounts, getSigner } from '../src/wallet';
+import { getWallet, getAccounts, getSigner } from '../src/utils';
 import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
 import SampleERC1820ImplementerArtifact from '../artifacts/SampleERC1820Implementer.json';
 

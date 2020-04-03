@@ -1,16 +1,14 @@
-import { getWallet, getAccounts, getSigner } from '../src/wallet';
+import { getWallet, getAccounts, getSigner } from '../src/utils';
 // import Doppelganger from 'ethereum-doppelganger';
 import { ethers, utils } from 'ethers';
 
 
 import OrgRegistryArtifact from '../artifacts/OrgRegistry.json';
 import RegistrarArtifact from '../artifacts/Registrar.json';
-import ERC165CompatibleArtifact from '../artifacts/ERC165Compatible.json';
 import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
 
 const wallet = getWallet();
 let orgRegistry, registrar, erc1820Registry;
-let doppelgangerRegistrar, doppelgangerERC1820;
 let accounts, signer;
 
 test('Deploy Org Registration', async () => {
@@ -23,11 +21,16 @@ test('Deploy Org Registration', async () => {
   let ERC1820Registry = new ethers.ContractFactory(ERC1820RegistryArtifact.compilerOutput.abi,
     ERC1820RegistryArtifact.compilerOutput.evm.bytecode, signer);
   erc1820Registry = await ERC1820Registry.deploy();
-  // doppelgangerERC1820 = new Doppelganger(ERC165CompatibleArtifact.compilerOutput.abi);
-  // await doppelgangerERC1820.deploy(wallet);
+  /* 
+  // The below lines also show use of doppelganger to be able to mock
+  // all inherited contracts, such as ERC1820Registry and Registrar.
+  let doppelganger1820 = new Doppelganger(ERC1820RegistryArtifact.compilerOutput.abi);
+  await doppelganger1820.deploy(signer); 
+  let doppelgangerReg = new Doppelganger(RegistrarArtifact.compilerOutput.abi);
+  await doppelgangerReg.deploy(doppelganger1820.address, signer);
   registrar = await Registrar.deploy(erc1820Registry.address);
-  // doppelgangerRegistrar = new Doppelganger(RegistrarArtifact.compilerOutput.abi);
-  // await doppelgangerRegistrar.deploy(wallet, [doppelgangerERC1820.address]);
+  orgRegistry = await OrgRegistry.deploy(erc1820Registry.address); */
+  registrar = await Registrar.deploy(erc1820Registry.address);
   orgRegistry = await OrgRegistry.deploy(erc1820Registry.address);
   expect(orgRegistry.address).toMatch(new RegExp('^0x[a-fA-F0-9]{40}$'));
 });
