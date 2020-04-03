@@ -2,14 +2,14 @@ const path = require('path');
 const assert = require('assert');
 
 const DEFAULT_PATHS = {
-	"ERC1820Registry": "../../../config/contract-artifacts/ERC1820Registry.json",
-	"Registrar": "../../../config/contract-artifacts/Registrar.json",
-	"OrgRegistry": "../../../config/contract-artifacts/OrgRegistry.json",
+	"ERC1820Registry": "./src/config/default-artifacts/ERC1820Registry.json",
+	"Registrar": "./src/config/default-artifacts/Registrar.json",
+	"OrgRegistry": "./src/config/default-artifacts/OrgRegistry.json",
 
-	"Pairing": "../../../config/contract-artifacts/Pairing.json",
-	"BN256G2": "../../../config/contract-artifacts/BN256G2.json",
-	"Verifier": "../../../config/contract-artifacts/Verifier.json",
-	"Shield": "../../../config/contract-artifacts/Shield.json"
+	"Pairing": "./src/config/default-artifacts/Pairing.json",
+	"BN256G2": "./src/config/default-artifacts/BN256G2.json",
+	"Verifier": "./src/config/default-artifacts/Verifier.json",
+	"Shield": "./src/config/default-artifacts/Shield.json"
 }
 
 
@@ -40,7 +40,7 @@ const _replaceLibraryReferenceToTruffleStyle = (bytecode, linkReferences) => {
 			const startChars = (startBytes * 2) + 2; // +2 to account for 0x
 
 			const bytecodeBeforeLibraryLink = bytecode.substring(0, startChars)
-			const bytecodeAfterLibraryLink = bytecode.substring(startChars+lengthChars);
+			const bytecodeAfterLibraryLink = bytecode.substring(startChars + lengthChars);
 			bytecode = `${bytecodeBeforeLibraryLink}__${key}__${bytecodeAfterLibraryLink}`
 		}
 	}
@@ -60,7 +60,7 @@ class RadishPathContractsResolver {
 	}
 
 	resolve(name) {
-		const contractPath = path.resolve(this.cwd, this.paths[name]);
+		const contractPath = path.resolve(this.paths[name]);
 		const contractJSON = require(contractPath);
 
 		const contractName = contractJSON.contractName;

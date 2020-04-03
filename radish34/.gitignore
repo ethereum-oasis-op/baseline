@@ -103,3 +103,5 @@ config/merkle-tree/
 docs/generated
 
 .vscode/
+
+.etherlime-store
