@@ -71,8 +71,8 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         return ERC1820_ACCEPT_MAGIC;
     }
 
-    function assignManager(address _oldManager, address _newManager) external {
-        assignManagement(_oldManager, _newManager);
+    function assignManager(address _newManager) external {
+        assignManagement(_newManager);
     }
 
     function verify(
