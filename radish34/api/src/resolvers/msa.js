@@ -48,51 +48,43 @@ const mapMSAsWithSignatureStatus = async msas => {
 export default {
   Query: {
     msa: async (_parent, args) => {
-      const { id } = args;
-      const msa = await getMSAById(id).then(res => res);
+      const msa = await getMSAById(args.id).then(res => res);
       const { constants, ...msaData } = msa;
       const { buyerSignatureStatus, supplierSignatureStatus } = getSignatureStatus(msa);
       const supplier = await getPartnerByzkpPublicKey(constants.zkpPublicKeyOfSupplier);
-      const { identity } = supplier;
       return {
         ...msaData,
         ...constants,
-        whisperPublicKeySupplier: identity,
+        whisperPublicKeySupplier: supplier.identity,
         supplierDetails: supplier,
         buyerSignatureStatus,
         supplierSignatureStatus,
       };
     },
     msas: async (_parent, args, context) => {
-      const { identity } = context;
-      const requester = await getPartnerByMessengerKey(identity);
+      const requester = await getPartnerByMessengerKey(context.identity);
       const msas = await getAllMSAs(requester);
       return mapMSAsWithSignatureStatus(msas);
     },
     msasBySKU: async (_parent, args) => {
-      const { sku } = args;
-      const msas = await getMSAsBySKU(sku);
+      const msas = await getMSAsBySKU(args.sku);
       return mapMSAsWithSignatureStatus(msas);
     },
     msasByRFPId: async (_parent, args) => {
-      const { rfpId } = args;
-      const msas = await getMSAsByRFPId(rfpId);
+      const msas = await getMSAsByRFPId(args.rfpId);
       return mapMSAsWithSignatureStatus(msas);
     }
   },
   Mutation: {
     createMSA: async (_parent, args, context) => {
-      const { input } = args;
-      const { supplierAddress } = input;
       console.log('\n\n\nRequest to create MSA with inputs:');
-      console.log(input);
-      const _supplier = await getPartnerByAddress(supplierAddress);
+      console.log(args.input);
+      const _supplier = await getPartnerByAddress(args.input.supplierAddress);
       delete _supplier._id;
       delete args.input.supplierAddress;
 
       const settings = await getServerSettings();
-      const { organization } = settings;
-      const { zkpPrivateKey, zkpPublicKey, name } = organization;
+      const { zkpPrivateKey, zkpPublicKey, name } = settings.organization;
 
       // Check the zkp key pair (throws an error if invalid pair):
       checkKeyPair(zkpPrivateKey, zkpPublicKey);
@@ -121,33 +113,25 @@ export default {
         },
       };
 
-      const { object } = msg;
-      const { rfpId } = args.input;
-
-      const msaObject = object;
-      const { sku } = msaObject.constants
-      msaObject.rfpId = rfpId;
+      const msaObject = msa.object;
+      msaObject.rfpId = args.input.rfpId;
 
       const msaDoc = await saveMSA(msaObject);
-
-      const { identity } = context;
-      const { _id } = msaDoc;
-
       await saveNotice({
         resolved: false,
         category: 'msa',
-        subject: `New MSA: for SKU ${sku}`,
+        subject: `New MSA: for SKU ${msaObject.constants.sku}`,
         from: name,
         statusText: 'Pending',
         status: 'outgoing',
-        categoryId: _id,
+        categoryId: msaDoc._id,
         lastModified: Math.floor(Date.now() / 1000),
       });
 
       console.log(`\nSending MSA (id: ${msaDoc._id}) to supplier for signing...`);
       msgDeliveryQueue.add({
-        documentId: _id,
-        senderId: identity,
+        documentId: msaDoc._id,
+        senderId: context.identity,
         recipientId: _supplier.identity,
         payload: {
           type: 'msa_create',
@@ -157,7 +141,7 @@ export default {
 
       const { constants, ...msaData } = msaObject;
       const msaDetails = {
-        _id,
+        _id: msaDoc._id,
         ...msaData,
         ...constants,
         supplier: { ..._supplier },

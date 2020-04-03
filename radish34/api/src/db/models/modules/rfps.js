@@ -95,10 +95,9 @@ export const saveRFP = async doc => {
 export const partnerCreateRFP = async doc => {
   // 1.) Checks blockchain txHash for the RFP and compares it with the hashed content from Buyer
   // 2.) Save RFP to local db
-  const { uuid } = doc;
   const newRFP = doc;
-  newRFP._id = uuid;
-  console.log(`Saving new RFP (uuid: ${uuid}) from partner...`);
+  newRFP._id = doc.uuid;
+  console.log(`Saving new RFP (uuid: ${doc.uuid}) from partner...`);
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   await createNotice('rfp', result[0]);
   console.log('Got RFP as supplier');

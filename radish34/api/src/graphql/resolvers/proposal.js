@@ -14,13 +14,11 @@ const NEW_PROPOSAL = 'NEW_PROPOSAL';
 export default {
   Query: {
     async proposal(_parent, args) {
-      const { id } = args;
-      const res = await getProposalById(id);
+      const res = await getProposalById(args.id);
       return res;
     },
     async getProposalsByRFPId(_parent, args) {
-      const { rfpId } = args;
-      const res = await getProposalByRFPId(rfpId);
+      const res = await getProposalByRFPId(args.rfpId);
       return res;
     },
     proposals() {
@@ -31,10 +29,9 @@ export default {
     createProposal: async (_parent, args, context) => {
       // TODO: Connect this to the new baseline function 'createProposal'
       const { recipient, ...input } = args.input;
-      const { identity } = context;
-      const currentUser = await getPartnerByIdentity(identity);
+      const currentUser = await getPartnerByIdentity(context.identity);
       input._id = uuid();
-      input.sender = identity;
+      input.sender = context.identity;
       const newProposal = await saveProposal(input);
       const proposal = newProposal.ops[0];
       const { rfpId, type } = proposal;

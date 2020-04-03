@@ -1,7 +1,6 @@
 export default (job, done) => {
   try {
-    const { data } = job;
-    done(null, data);
+    done(null, job.data);
   } catch (error) {
     console.error('Error', error);
   }

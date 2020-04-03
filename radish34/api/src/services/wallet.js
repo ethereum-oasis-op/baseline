@@ -5,8 +5,7 @@ import { getProvider, getWallet } from '../utils/ethers';
 
 export const getAddress = async () => {
   const config = await getServerSettings();
-  const { rpcProvider } = config;
-  const wallet = getWallet(rpcProvider, await getPrivateKey());
+  const wallet = getWallet(config.rpcProvider, await getPrivateKey());
   return wallet.signingKey.address;
 };
 
@@ -17,9 +16,8 @@ export const getAccounts = async () => {
 
 export const getBalance = async () => {
   const config = await getServerSettings();
-  const { rpcProvider } = config;
   const privateKey = await getPrivateKey();
-  const wallet = getWallet(rpcProvider, privateKey);
+  const wallet = getWallet(config.rpcProvider, privateKey);
   const balanceBN = await wallet.getBalance();
   const balance = utils.formatUnits(balanceBN, 'ether');
   return balance;

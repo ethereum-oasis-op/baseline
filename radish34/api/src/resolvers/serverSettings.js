@@ -40,15 +40,13 @@ export default {
   },
   Mutation: {
     setRPCProvider: async (_parent, args) => {
-      const { uri } = args;
-      await setRPCProvider(uri);
+      await setRPCProvider(args.uri);
       healthcheck();
       const settings = await getServerSettings();
       return settings;
     },
     setOrgRegistryAddress: async (_parent, args) => {
-      const { orgRegistryAddress } = args;
-      await setContractAddress('OrgRegistry', orgRegistryAddress);
+      await setContractAddress('OrgRegistry', args.orgRegistryAddress);
       healthcheck();
       const settings = await getServerSettings();
       return settings;

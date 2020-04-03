@@ -6,8 +6,7 @@ const NEW_RFP = 'NEW_RFP';
 export default {
   Query: {
     async rfp(_parent, args) {
-      const { uuid } = args;
-      const res = await getRFPById(uuid);
+      const res = await getRFPById(args.uuid);
       return res;
     },
     rfps() {

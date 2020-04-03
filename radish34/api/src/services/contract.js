@@ -79,18 +79,16 @@ export const getTxReceipt = async hash => {
 };
 
 export const saveSmartContract = async input => {
-  const { transactionHash } = input;
   const smartContract = await db
     .collection('smartcontract')
-    .updateOne({ _id: transactionHash }, { $set: input }, { upsert: true });
+    .updateOne({ _id: input.transactionHash }, { $set: input }, { upsert: true });
   return smartContract;
 };
 
 export const saveBlockchainTransaction = async input => {
-  const { transactionHash } = input;
   const blockchainTransaction = await db
     .collection('blockchaintransaction')
-    .updateOne({ _id: transactionHash }, { $set: input }, { upsert: true });
+    .updateOne({ _id: input.transactionHash }, { $set: input }, { upsert: true });
   return blockchainTransaction;
 };
 
@@ -128,9 +126,8 @@ export const deployERC1820Registry = async contractName => {
     } else {
       receiptSatus = 'failure';
     }
-    const { transactionHash } = receipt;
     const successRecord = {
-      transactionHash,
+      transactionHash: input.transactionHash,
       status: receiptSatus,
     };
     saveBlockchainTransaction(successRecord);
@@ -173,9 +170,8 @@ export const deployRegistrar = async addressOfERC1820 => {
     } else {
       receiptSatus = 'failure';
     }
-    const { transactionHash } = receipt;
     const successRecord = {
-      transactionHash,
+      transactionHash: input.transactionHash,
       status: receiptSatus,
     };
     saveBlockchainTransaction(successRecord);
@@ -218,9 +214,8 @@ export const deployOrgRegistry = async addressOfRegistrar => {
     } else {
       receiptSatus = 'failure';
     }
-    const { transactionHash } = receipt;
     const successRecord = {
-      transactionHash,
+      transactionHash: input.transactionHash,
       status: receiptSatus,
     };
     saveBlockchainTransaction(successRecord);

@@ -176,13 +176,12 @@ export const savePO = async poObject => {
 };
 
 export const updatePOWithNewCommitment = async poObject => {
-  const { _id } = poObject;
-  const exists = await getPOById(_id);
+  const exists = await getPOById(poObject._id);
   if (!exists)
-    throw new Error(`PO does not exist for this msaId ${_id}. Hence cannot be updated`);
+    throw new Error(`PO does not exist for this msaId ${poObject._id}. Hence cannot be updated`);
   try {
     const doc = await POModel.findOneAndUpdate(
-      { _id },
+      { _id: poObject._id },
       {
         $push: {
           commitments: poObject.commitments[0],
@@ -200,15 +199,13 @@ export const updatePOWithNewCommitment = async poObject => {
 };
 
 export const updatePOWithCommitmentIndex = async poObject => {
-  const { _id } = poObject;
-  const docBeforeUpdate = await getPOById(_id);
+  const docBeforeUpdate = await getPOById(poObject._id);
   if (!docBeforeUpdate)
-    throw new Error(`PO does not exist for this msaId ${_id}. Hence cannot be updated`);
-  const { index } = poObject.commitments[0];
+    throw new Error(`PO does not exist for this msaId ${poObject._id}. Hence cannot be updated`);
   try {
     const doc = await POModel.findOneAndUpdate(
       {
-        _id,
+        _id: poObject._id,
         commitments: {
           $elemMatch: {
             index: { $exists: false },
@@ -217,7 +214,7 @@ export const updatePOWithCommitmentIndex = async poObject => {
       },
       {
         $set: {
-          'commitments.$.index': index,
+          'commitments.$.index': poObject.commitments[0].index,
         },
       },
       { new: true, upsert: true },

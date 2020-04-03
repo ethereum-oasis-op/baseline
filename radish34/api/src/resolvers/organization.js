@@ -27,8 +27,7 @@ const getAllOrganizations = async () => {
 export default {
   Query: {
     async organization(_parent, args) {
-      const { address } = args;
-      const res = await getOrganizationById(address);
+      const res = await getOrganizationById(args.address);
       return res;
     },
     organizations() {
@@ -38,8 +37,7 @@ export default {
       return listOrganizations();
     },
     registeredOrganization(_parent, args) {
-      const { address } = args;
-      return getRegisteredOrganization(address);
+      return getRegisteredOrganization(args.address);
     },
     organizationCount() {
       return getOrganizationCount();

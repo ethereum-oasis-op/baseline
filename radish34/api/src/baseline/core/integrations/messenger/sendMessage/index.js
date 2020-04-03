@@ -34,8 +34,7 @@ responseQueue.on('completed', (job, data) => {
 });
 
 const createMessage = async (baselineId, taskId, inputs) => {
-  const { payload } = inputs;
-  await requestQueue.add({ baselineId, taskId, inputs: payload });
+  await requestQueue.add({ baselineId, taskId, inputs: inputs.payload });
 };
 
 export const register = async () => {

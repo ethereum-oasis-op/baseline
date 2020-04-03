@@ -7,8 +7,7 @@ const NEW_MSA = 'NEW_MSA';
 export default {
   Query: {
     async msa(_parent, args) {
-      const { id } = args;
-      const res = await getMSAById(id);
+      const res = await getMSAById(args.id);
       return res;
     },
     msas() {
@@ -21,8 +20,7 @@ export default {
   Mutation: {
     createMSA: async (_parent, args) => {
       // TODO: Connect this to the new baseline createMSA function
-      const { input } = args;
-      const newMSA = await saveMSA(input);
+      const newMSA = await saveMSA(args.input);
       const msa = newMSA.ops[0];
       const { proposalId, _id } = msa;
       await saveNotice({

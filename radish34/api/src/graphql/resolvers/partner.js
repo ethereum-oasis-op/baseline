@@ -15,8 +15,7 @@ export default {
       // return getPartnerByID(args.address).then(res => res);
     },
     async getPartnerByIdentity(_parent, args) {
-      const { identity } = args;
-      const res = await getPartnerByIdentity(identity);
+      const res = await getPartnerByIdentity(args.identity);
       return res;
     },
     partners() {
@@ -34,15 +33,13 @@ export default {
   },
   Mutation: {
     addPartner: async (_parent, args) => {
-      const { input } = args;
-      await setPartner(input, true);
+      await setPartner(args.input, true);
       // TODO: Reconnect this
       // const partners = await getMyPartners();
       // return partners;
     },
     removePartner: async (_parent, args) => {
-      const { input } = args;
-      await setPartner(input, false);
+      await setPartner(args.input, false);
       // TODO: Reconnect this
       // const partners = await getMyPartners();
       // return partners;

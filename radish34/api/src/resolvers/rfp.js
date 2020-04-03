@@ -10,8 +10,7 @@ const NEW_RFP = 'NEW_RFP';
 export default {
   Query: {
     async rfp(_parent, args) {
-      const { uuid } = args;
-      const res = await getRFPById(uuid);
+      const res = await getRFPById(args.uuid);
       return res;
     },
     rfps() {
@@ -20,15 +19,13 @@ export default {
   },
   Mutation: {
     createRFP: async (_parent, args, context) => {
-      const { identity } = context;
-      const currentUser = identity
-        ? await getPartnerByMessengerKey(identity)
+      const currentUser = context.identity
+        ? await getPartnerByMessengerKey(context.identity)
         : null;
-      const { input } = args;
       const currentTime = Math.floor(Date.now() / 1000);
-      const myRFP = input;
+      const myRFP = args.input;
       myRFP.createdDate = currentTime;
-      myRFP.sender = identity;
+      myRFP.sender = context.identity;
       const rfp = (await saveRFP(myRFP))._doc;
       const { description: rfpDesc, _id: rfpId } = rfp;
       await saveNotice({
@@ -54,8 +51,8 @@ export default {
         msgDeliveryQueue.add(
           {
             documentId: rfpId,
-            senderId: identity,
-            recipientId: recipient.partner.identity,
+            senderId: context.identity,
+            recipientId: recipient.partner.context.identity,
             payload: rfpToSend,
           },
           {

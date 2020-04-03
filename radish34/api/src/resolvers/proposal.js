@@ -16,13 +16,11 @@ const NEW_PROPOSAL = 'NEW_PROPOSAL';
 export default {
   Query: {
     async proposal(_parent, args) {
-      const { id } = args;
-      const res = await getProposalById(id);
+      const res = await getProposalById(args.id);
       return res;
     },
     async getProposalsByRFPId(_parent, args) {
-      const { rfpId } = args;
-      const res = await getProposalsByRFPId(rfpId);
+      const res = await getProposalsByRFPId(args.rfpId);
       return res;
     },
     proposals() {
@@ -36,11 +34,10 @@ export default {
   Mutation: {
     createProposal: async (_parent, args, context) => {
       const { recipient, ...input } = args.input;
-      const { identity } = context;
-      const currentUser = await getPartnerByMessengerKey(identity);
+      const currentUser = await getPartnerByMessengerKey(context.identity);
       const { name: userName } = currentUser;
       input._id = uuid();
-      input.sender = identity;
+      input.sender = context.identity;
       const newProposal = await saveProposal(input);
       const proposal = newProposal.ops[0];
       const { rfpId: proposalRfpId, _id: proposalId } = proposal;
@@ -58,7 +55,7 @@ export default {
       proposal.type = 'proposal_create';
       msgDeliveryQueue.add({
         documentId: proposalId,
-        senderId: identity,
+        senderId: context.identity,
         recipientId: recipient,
         payload: proposal,
       });

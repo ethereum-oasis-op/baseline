@@ -13,16 +13,14 @@ const NEW_NOTICE = 'NEW_NOTICE';
 export default {
   Query: {
     notice: async (_parent, args) => {
-      const { id } = args;
-      const res = await getNoticeById(id);
+      const res = await getNoticeById(args.id);
       return res;
     },
     notices: async () => {
       return getAllNotices();
     },
     getNoticesByCategory: async (_parent, args) => {
-      const { category } = args;
-      const res = await getNoticesByCategory(category);
+      const res = await getNoticesByCategory(args.category);
       return res;
     },
     getInbox: async () => {
@@ -42,8 +40,7 @@ export default {
   },
   Mutation: {
     createNotice: async (_parent, args) => {
-      const { input } = args;
-      const newNotice = await saveNotice(input);
+      const newNotice = await saveNotice(args.input);
       const notice = newNotice.ops[0];
       pubsub.publish(NEW_NOTICE, { newNotice: notice });
       return { ...notice };

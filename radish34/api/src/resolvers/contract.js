@@ -3,16 +3,14 @@ import { getContractById, getTxReceipt, getAllContracts } from '../services/cont
 export default {
   Query: {
     async contract(parent, args) {
-      const { transactionHash } = args;
-      const res = await getContractById(transactionHash);
+      const res = await getContractById(args.transactionHash);
       return res;
     },
     contracts() {
       return getAllContracts();
     },
     async transactionReceipt(parent, args) {
-      const { hash } = args;
-      const txReceipt = await getTxReceipt(hash);
+      const txReceipt = await getTxReceipt(args.hash);
       const { transactionHash, status, from, to, blockNumber, blockHash, confirmations, gasUsed, cumulativeGasUsed, contractAddress } = txReceipt;
       return {
         transactionHash,

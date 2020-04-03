@@ -34,15 +34,13 @@ export const getMyPartners = async () => {
 };
 
 export const savePartner = async input => {
-  const { address } = input;
   const partner = await db
     .collection('partner')
-    .updateOne({ _id: address }, { $set: input }, { upsert: true });
+    .updateOne({ _id: input.address }, { $set: input }, { upsert: true });
   return partner;
 };
 
 export const deletePartner = async input => {
-  const { address } = input;
-  const partner = await db.collection('partner').deleteOne({ _id: address });
+  const partner = await db.collection('partner').deleteOne({ _id: input.address });
   return partner;
 };

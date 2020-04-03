@@ -12,13 +12,11 @@ const PARTNERS_UPDATE = 'PARTNERS_UPDATE';
 export default {
   Query: {
     async partner(_parent, args) {
-      const { address } = args;
-      const res = await getPartnerByAddress(address);
+      const res = await getPartnerByAddress(args.address);
       return res;
     },
     async getPartnerByMessengerKey(_parent, args) {
-      const { identity } = args;
-      const res = await getPartnerByMessengerKey(identity);
+      const res = await getPartnerByMessengerKey(args.identity);
       return res;
     },
     partners() {
@@ -35,14 +33,12 @@ export default {
   },
   Mutation: {
     addPartner: async (_parent, args) => {
-      const { input } = args;
-      await savePartner(input);
+      await savePartner(args.input);
       const partners = await getMyPartners();
       return partners;
     },
     removePartner: async (_parent, args) => {
-      const { input } = args;
-      await deletePartner(input);
+      await deletePartner(args.input);
       const partners = await getMyPartners();
       return partners;
     },

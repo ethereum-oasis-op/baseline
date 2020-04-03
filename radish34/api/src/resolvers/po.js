@@ -12,13 +12,11 @@ const NEW_PO = 'NEW_PO';
 export default {
   Query: {
     po: async (_parent, args) => {
-      const { id } = args;
-      const po = await getPOById(id);
+      const po = await getPOById(args.id);
       const supplier = await getPartnerByzkpPublicKey(po.constants.zkpPublicKeyOfSupplier);
-      const { identity } = supplier;
       return {
         ...po,
-        whisperPublicKeyOfSupplier: identity,
+        whisperPublicKeyOfSupplier: supplier.identity,
       }
     },
     pos() {
@@ -27,13 +25,11 @@ export default {
   },
   Mutation: {
     createPO: async (_parent, args, context) => {
-      const { identity } = context;
-      const { input } = args;
-      const currentUser = await getPartnerByMessengerKey(identity);
+      const currentUser = await getPartnerByMessengerKey(context.identity);
       const { address: currentUserAddress, name: currentUserName } = currentUser;
       try {
         console.log('\n\n\nRequest to create PO with inputs:');
-        console.log(input);
+        console.log(args.input);
         /*
         currentUser: {
           _id: '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
@@ -51,7 +47,7 @@ export default {
           }
         });
 
-        const { msaId, volume, deliveryDate, description } = input;
+        const { msaId, volume, deliveryDate, description } = args.input;
 
         const oldMSADoc = await getMSAById(msaId);
 
@@ -61,13 +57,12 @@ export default {
 
         const price = oldMSA.price(volume);
         console.log(`\nCalculated a price of ${price} for this PO`);
-        const { constants } = oldMSAObject;
         const {
           zkpPublicKeyOfBuyer,
           zkpPublicKeyOfSupplier,
           sku,
           erc20ContractAddress,
-        } = constants;
+        } = oldMSAObject.constants;
 
         const po = new PO({
           metadata: {
@@ -87,17 +82,14 @@ export default {
         let { accumulatedVolumeOrdered } = oldMSAObject.commitments[0].variables;
         accumulatedVolumeOrdered += volume;
 
-        const { _id } = oldMSA;
-        const { variables } = oldMSA.object;
         const newMSA = new MSA({
-          _id,
-          constants,
+          _id: oldMSA._id,
+          constants: oldMSAObject.constants,
           variables: { ...variables, accumulatedVolumeOrdered },
         });
 
         const settings = await getServerSettings();
-        const { zkpPrivateKey } = settings.organization;
-        const zkpPrivateKeyOfBuyer = zkpPrivateKey;
+        const zkpPrivateKeyOfBuyer = settings.organization.zkpPrivateKey;
 
         // keep unused variables here for now; they might be used soon...
         const {
@@ -122,7 +114,6 @@ export default {
           deliveryDate,
           description,
         };
-        const { sku } = poObject.constants;
 
         const poDoc = await savePO(poObject);
         const { _id: poDocId } = poDoc;
@@ -131,7 +122,7 @@ export default {
         await saveNotice({
           resolved: false,
           category: 'po',
-          subject: `New PO for SKU: ${sku}`,
+          subject: `New PO for SKU: ${poObject.constants.sku}`,
           from: currentUserName,
           statusText: 'Pending',
           status: 'outgoing',

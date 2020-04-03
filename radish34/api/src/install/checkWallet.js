@@ -4,8 +4,7 @@ import { getWallet } from '../utils/wallet';
 export default async () => {
   const wallet = await getWallet();
   if (wallet) {
-    const { address } = wallet.signingKey;
-    console.log(`Loading wallet with address ${address}`);
+    console.log(`Loading wallet with address ${wallet.signingKey.address}`);
     setOrganizationWalletAddress(address);
     return true;
   }

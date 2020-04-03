@@ -247,12 +247,11 @@ export const getMSAsByRFPId = async rfpId => {
 
 export const getAllMSAs = async requester => {
   try {
-    const { zkpPublicKey } = requester;
     const msas = await MSAModel
       .find({
         $or: [
-          { 'constants.zkpPublicKeyOfBuyer': zkpPublicKey },
-          { 'constants.zkpPublicKeyOfSupplier': zkpPublicKey }
+          { 'constants.zkpPublicKeyOfBuyer': requester.zkpPublicKey },
+          { 'constants.zkpPublicKeyOfSupplier': requester.zkpPublicKey }
         ]
       })
       .lean();
@@ -335,16 +334,15 @@ export const updateMSAWithSupplierSignature = async msaObject => {
 };
 
 export const updateMSAWithNewCommitment = async msaObject => {
-  const { _id } = msaObject;
-  const exists = await getMSAById(_id);
+  const exists = await getMSAById(msaObject._id);
   if (!exists)
-    throw new Error(`MSA does not exist for this msaId ${_id}. Hence cannot be updated`);
+    throw new Error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated`);
 
   const latestCommitmentIndex = msaObject.commitments.length - 1;
 
   try {
     const doc = await MSAModel.findOneAndUpdate(
-      { _id },
+      { _id: msaObject._id },
       {
         $push: {
           commitments: msaObject.commitments[latestCommitmentIndex],
@@ -362,15 +360,13 @@ export const updateMSAWithNewCommitment = async msaObject => {
 };
 
 export const updateMSAWithCommitmentIndex = async msaObject => {
-  const { _id } = msaObject;
-  const docBeforeUpdate = await getMSAById(_id);
+  const docBeforeUpdate = await getMSAById(msaObject._id);
   if (!docBeforeUpdate)
-    throw new Error(`MSA does not exist for this msaId ${_id}. Hence cannot be updated`);
-  const { index } = msaObject.commitments[0];
+    throw new Error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated`);
   try {
     const doc = await MSAModel.findOneAndUpdate(
       {
-        _id,
+        _id: msaObject._id,
         commitments: {
           $elemMatch: {
             index: { $exists: false },
@@ -379,7 +375,7 @@ export const updateMSAWithCommitmentIndex = async msaObject => {
       },
       {
         $set: {
-          'commitments.$.index': index,
+          'commitments.$.index': msaObject.commitments[0].index,
         },
       },
       { new: true, upsert: true },
@@ -531,8 +527,6 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
 
 export const onReceiptMSABuyer = async (msaObj, senderWhisperKey) => {
   const partner = await getPartnerByMessengerKey(senderWhisperKey);
-  const { zkpPublicKey } = partner;
-
   const {
     constants: { EdDSASignatures },
     commitments: commitment,
@@ -541,7 +535,7 @@ export const onReceiptMSABuyer = async (msaObj, senderWhisperKey) => {
   const { supplier } = EdDSASignatures;
 
   // Sender of the MSA message should be the same as the party that signed the MSA
-  if (msaObj.constants.zkpPublicKeyOfSupplier === zkpPublicKey) {
+  if (msaObj.constants.zkpPublicKeyOfSupplier === partner.zkpPublicKey) {
     const isSignVerified = await pycryptojs.verify(
       strip0x(msaObj.constants.zkpPublicKeyOfSupplier),
       strip0x(commitment[0].commitment),
@@ -571,7 +565,7 @@ export const onReceiptMSABuyer = async (msaObj, senderWhisperKey) => {
     throw new Error(`Supplier's signature verification failed`);
   } else {
     throw new Error(
-      `The public key for signature ${supplier.A} doesn't match with the sender of the MSA creation message ${zkpPublicKey}`,
+      `The public key for signature ${supplier.A} doesn't match with the sender of the MSA creation message ${partner.zkpPublicKey}`,
     );
   }
 };

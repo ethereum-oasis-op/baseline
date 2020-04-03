@@ -66,9 +66,8 @@ export const getAllPartners = async () => {
 };
 
 export const setPartner = async (input, state = true) => {
-  const { address } = input;
   const partner = await Organization.updateOne(
-    { _id: address, partner: state },
+    { _id: input.address, partner: state },
     { $set: input },
     { upsert: true },
   );
