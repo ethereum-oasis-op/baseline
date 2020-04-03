@@ -1,0 +1,1064 @@
+{
+	"schemaVersion": "2.0.0",
+	"contractName": "Shield",
+	"compilerOutput": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_verifier",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_erc1820",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "nullifier",
+						"type": "bytes32"
+					}
+				],
+				"name": "DeletedCommitment",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "byShieldContract",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "byVerifierContract",
+						"type": "uint256"
+					}
+				],
+				"name": "GasUsed",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "bytes32",
+						"name": "interfaceHash",
+						"type": "bytes32"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "implementer",
+						"type": "address"
+					}
+				],
+				"name": "InterfaceImplementerSet",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "newManager",
+						"type": "address"
+					}
+				],
+				"name": "ManagerChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "newCommitment",
+						"type": "bytes32"
+					}
+				],
+				"name": "NewCommitment",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "leafIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "leafValue",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "root",
+						"type": "bytes32"
+					}
+				],
+				"name": "NewLeaf",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "minLeafIndex",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32[]",
+						"name": "leafValues",
+						"type": "bytes32[]"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "root",
+						"type": "bytes32"
+					}
+				],
+				"name": "NewLeaves",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes27",
+						"name": "leftInput",
+						"type": "bytes27"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes27",
+						"name": "rightInput",
+						"type": "bytes27"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "output",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "nodeIndex",
+						"type": "uint256"
+					}
+				],
+				"name": "Output",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "previousOwner",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "OwnershipTransferred",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "nullifier",
+						"type": "bytes32"
+					},
+					{
+						"indexed": false,
+						"internalType": "bytes32",
+						"name": "newCommitment",
+						"type": "bytes32"
+					}
+				],
+				"name": "UpdatedCommitment",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "address",
+						"name": "newVerifierContract",
+						"type": "address"
+					}
+				],
+				"name": "VerifierChanged",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": false,
+						"internalType": "enum Shield.TransactionTypes",
+						"name": "txType",
+						"type": "uint8"
+					}
+				],
+				"name": "VkChanged",
+				"type": "event"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "_owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_newManager",
+						"type": "address"
+					}
+				],
+				"name": "assignManager",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "interfaceHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "canImplementInterfaceForAddress",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_verifier",
+						"type": "address"
+					}
+				],
+				"name": "changeVerifier",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "close",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "commitments",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "_proof",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "_inputs",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_newMSACommitment",
+						"type": "bytes32"
+					}
+				],
+				"name": "createMSA",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "_proof",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "_inputs",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_root",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_nullifierOfOldMSACommitment",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_newMSACommitment",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_newPOCommitment",
+						"type": "bytes32"
+					}
+				],
+				"name": "createPO",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "frontier",
+				"outputs": [
+					{
+						"internalType": "bytes27",
+						"name": "",
+						"type": "bytes27"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_interfaceHash",
+						"type": "bytes32"
+					}
+				],
+				"name": "getInterfaceImplementer",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getInterfaces",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "",
+						"type": "bytes4"
+					}
+				],
+				"payable": false,
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					}
+				],
+				"name": "getManager",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "getVerifier",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_contract",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "_interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "implementsERC165Interface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_contract",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "_interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "implementsERC165InterfaceNoCache",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "leafValue",
+						"type": "bytes32"
+					}
+				],
+				"name": "insertLeaf",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "root",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "bytes32[]",
+						"name": "leafValues",
+						"type": "bytes32[]"
+					}
+				],
+				"name": "insertLeaves",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "root",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "_interfaceLabel",
+						"type": "string"
+					}
+				],
+				"name": "interfaceAddr",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_interfaceName",
+						"type": "string"
+					}
+				],
+				"name": "interfaceHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "latestRoot",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "leafCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "nullifiers",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "uint256[]",
+						"name": "_vk",
+						"type": "uint256[]"
+					},
+					{
+						"internalType": "enum Shield.TransactionTypes",
+						"name": "_txType",
+						"type": "uint8"
+					}
+				],
+				"name": "registerVerificationKey",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"name": "roots",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_interfaceHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "address",
+						"name": "_implementer",
+						"type": "address"
+					}
+				],
+				"name": "setInterfaceImplementer",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [],
+				"name": "setInterfaces",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_addr",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "_newManager",
+						"type": "address"
+					}
+				],
+				"name": "setManager",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "newOwner",
+						"type": "address"
+					}
+				],
+				"name": "transferOwnership",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "treeHeight",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "treeWidth",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": false,
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_contract",
+						"type": "address"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "_interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "updateERC165Cache",
+				"outputs": [],
+				"payable": false,
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "vks",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"constant": true,
+				"inputs": [],
+				"name": "zero",
+				"outputs": [
+					{
+						"internalType": "bytes27",
+						"name": "",
+						"type": "bytes27"
+					}
+				],
+				"payable": false,
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"evm": {
+			"bytecode": {
+				"linkReferences": {},
+				"object": "0x6080604052600460015560015460020a600255600060281b600460006101000a8154817affffffffffffffffffffffffffffffffffffffffffffffffffffff021916908360281c02179055503480156200005857600080fd5b50604051620041b7380380620041b7833981810160405260408110156200007e57600080fd5b81019080805190602001909291908051906020019092919050505080620000ab33620001c860201b60201c565b620000c36301ffc9a760e01b6200020b60201b60201c565b620000d36200031560201b60201c565b5080602b60006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050620001266200043f60201b60201c565b5081602c60006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550620001786200031560201b60201c565b50620001c06040518060400160405280600781526020017f49536869656c6400000000000000000000000000000000000000000000000000815250306200046860201b60201c565b5050620005dc565b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b63ffffffff60e01b817bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19161415620002a8576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601c8152602001807f4552433136353a20696e76616c696420696e746572666163652069640000000081525060200191505060405180910390fd5b600160266000837bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060006101000a81548160ff02191690831515021790555050565b6000620003276200043f60201b60201c565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614620003ac576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602e81526020018062004189602e913960400191505060405180910390fd5b600160276000630f1d6e6c60e01b63d7cc65e960e01b6346657fe960e01b63cf04fb9460e01b1818187bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060006101000a81548160ff0219169083151502179055506001905090565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b6000826040516020018082805190602001908083835b60208310620004a357805182526020820191506020810190506020830392506200047e565b6001836020036101000a038019825116818451168082178552505050505050905001915050604051602081830303815290604052805190602001209050602b60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166329965a1d3083856040518463ffffffff1660e01b8152600401808473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019350505050600060405180830381600087803b158015620005be57600080fd5b505af1158015620005d3573d6000803e3d6000fd5b50505050505050565b613b9d80620005ec6000396000f3fe608060405234801561001057600080fd5b50600436106102115760003560e01c8063839df94511610125578063bc1b392d116100ad578063dc52bf9f1161007c578063dc52bf9f14610d9d578063ebac15f914610e69578063f2fde38b14610ec5578063f712f3e814610f09578063fca85eb314610f8e57610211565b8063bc1b392d14610c05578063cf04fb9414610c33578063d7b0fef114610c8f578063d7cc65e914610cad57610211565b8063a8f4324e116100f4578063a8f4324e14610a1a578063aabbb8ca14610a66578063ae6dead714610af4578063b2bdfa7b14610b36578063b705676514610b8057610211565b8063839df945146108875780638da5cb5b146108c9578063a039276914610913578063a41e7d51146109ad57610211565b80633d584063116101a85780635c8b80ab116101775780635c8b80ab146106e45780635df8122f1461072657806365ba36c11461078a5780636e0c3fee1461081757806376c601b11461086957610211565b80633d5840631461051b57806343d726d61461059f578063449a09a4146105c157806346657fe91461069a57610211565b806329965a1d116101e457806329965a1d146104095780632997e86b146104775780632d2dcc48146104b957806330e69fc3146104fd57610211565b806301e3e9151461021657806301ffc9a7146102345780630f1d6e6c14610299578063249cb3fa146103a7575b600080fd5b61021e610fb0565b6040518082815260200191505060405180910390f35b61027f6004803603602081101561024a57600080fd5b8101908080357bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19169060200190929190505050610fb6565b604051808215151515815260200191505060405180910390f35b61038d600480360360c08110156102af57600080fd5b81019080803590602001906401000000008111156102cc57600080fd5b8201836020820111156102de57600080fd5b8035906020019184602083028401116401000000008311171561030057600080fd5b90919293919293908035906020019064010000000081111561032157600080fd5b82018360208201111561033357600080fd5b8035906020019184602083028401116401000000008311171561035557600080fd5b90919293919293908035906020019092919080359060200190929190803590602001909291908035906020019092919050505061101e565b604051808215151515815260200191505060405180910390f35b6103f3600480360360408110156103bd57600080fd5b8101908080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506117d3565b6040518082815260200191505060405180910390f35b6104756004803603606081101561041f57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080359060200190929190803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050611824565b005b6104a36004803603602081101561048d57600080fd5b8101908080359060200190929190505050611c61565b6040518082815260200191505060405180910390f35b6104fb600480360360208110156104cf57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050611c79565b005b610505611c85565b6040518082815260200191505060405180910390f35b61055d6004803603602081101561053157600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190505050611c8b565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6105a7611d90565b604051808215151515815260200191505060405180910390f35b610658600480360360408110156105d757600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291908035906020019064010000000081111561061457600080fd5b82018360208201111561062657600080fd5b8035906020019184600183028401116401000000008311171561064857600080fd5b9091929391929390505050611e3d565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6106a2611f5e565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b610710600480360360208110156106fa57600080fd5b8101908080359060200190929190505050611f88565b6040518082815260200191505060405180910390f35b6107886004803603604081101561073c57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506121f3565b005b610801600480360360208110156107a057600080fd5b81019080803590602001906401000000008111156107bd57600080fd5b8201836020820111156107cf57600080fd5b803590602001918460018302840111640100000000831117156107f157600080fd5b90919293919293905050506123b3565b6040518082815260200191505060405180910390f35b6108436004803603602081101561082d57600080fd5b81019080803590602001909291905050506123ed565b604051808264ffffffffff191664ffffffffff1916815260200191505060405180910390f35b61087161240d565b6040518082815260200191505060405180910390f35b6108b36004803603602081101561089d57600080fd5b8101908080359060200190929190505050612413565b6040518082815260200191505060405180910390f35b6108d161242b565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6109976004803603604081101561092957600080fd5b810190808035906020019064010000000081111561094657600080fd5b82018360208201111561095857600080fd5b8035906020019184602083028401116401000000008311171561097a57600080fd5b9091929391929390803560ff169060200190929190505050612454565b6040518082815260200191505060405180910390f35b610a18600480360360408110156109c357600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080357bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916906020019092919050505061255b565b005b610a5060048036036040811015610a3057600080fd5b8101908080359060200190929190803590602001909291905050506126ca565b6040518082815260200191505060405180910390f35b610ab260048036036040811015610a7c57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff169060200190929190803590602001909291905050506126f8565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b610b2060048036036020811015610b0a57600080fd5b81019080803590602001909291905050506127e7565b6040518082815260200191505060405180910390f35b610b3e6127ff565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b610beb60048036036040811015610b9657600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080357bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19169060200190929190505050612824565b604051808215151515815260200191505060405180910390f35b610c0d6128d9565b604051808264ffffffffff191664ffffffffff1916815260200191505060405180910390f35b610c7560048036036020811015610c4957600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506128ec565b604051808215151515815260200191505060405180910390f35b610c97612a25565b6040518082815260200191505060405180910390f35b610d8360048036036060811015610cc357600080fd5b8101908080359060200190640100000000811115610ce057600080fd5b820183602082011115610cf257600080fd5b80359060200191846020830284011164010000000083111715610d1457600080fd5b909192939192939080359060200190640100000000811115610d3557600080fd5b820183602082011115610d4757600080fd5b80359060200191846020830284011164010000000083111715610d6957600080fd5b909192939192939080359060200190929190505050612a2b565b604051808215151515815260200191505060405180910390f35b610e5360048036036020811015610db357600080fd5b8101908080359060200190640100000000811115610dd057600080fd5b820183602082011115610de257600080fd5b80359060200191846020830284011164010000000083111715610e0457600080fd5b919080806020026020016040519081016040528093929190818152602001838360200280828437600081840152601f19601f820116905080830192505050505050509192919290505050612e2f565b6040518082815260200191505060405180910390f35b610e716132ba565b60405180827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200191505060405180910390f35b610f0760048036036020811015610edb57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506132e4565b005b610f7460048036036040811015610f1f57600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919080357bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19169060200190929190505050613453565b604051808215151515815260200191505060405180910390f35b610f966135cd565b604051808215151515815260200191505060405180910390f35b60015481565b600060276000837bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060009054906101000a900460ff169050919050565b60006110286138fc565b5a8160006003811061103657fe5b602002018181525050600060088989600081811061105057fe5b9050602002013560001b901b905060006008600289898989604051602001808581526020018481526020018381526020018281526020019450505050506040516020818303038152906040526040518082805190602001908083835b602083106110cf57805182526020820191506020810190506020830392506110ac565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015611111573d6000803e3d6000fd5b5050506040513d602081101561112657600080fd5b8101908080519060200190929190505050901b90508160ff19168160ff19161461119b576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526024815260200180613b246024913960400191505060405180910390fd5b5a836000600381106111a957fe5b602002015103836001600381106111bc57fe5b6020020181815250505a836000600381106111d357fe5b6020020181815250506000602c60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166387d9d0238e8e8e8e6032600060018081111561123057fe5b81526020019081526020016000206040518663ffffffff1660e01b8152600401808060200180602001806020018481038452898982818152602001925060200280828437600081840152601f19601f8201169050808301925050508481038352878782818152602001925060200280828437600081840152601f19601f82011690508083019250505084810382528581815481526020019150805480156112f657602002820191906000526020600020905b8154815260200190600101908083116112e2575b505098505050505050505050602060405180830381600087803b15801561131c57600080fd5b505af1158015611330573d6000803e3d6000fd5b505050506040513d602081101561134657600080fd5b81019080805190602001909291905050509050806113af576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602f8152602001806139d6602f913960400191505060405180910390fd5b5a846000600381106113bd57fe5b602002015103846002600381106113d057fe5b6020020181815250505a846000600381106113e757fe5b60200201818152505088603060008b8152602001908152602001600020541461145b576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526039815260200180613a9c6039913960400191505060405180910390fd5b858714156114b4576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252604f815260200180613ad5604f913960600191505060405180910390fd5b6000801b602e60008981526020019081526020016000205414611522576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526022815260200180613a7a6022913960400191505060405180910390fd5b6000801b602f60008a81526020019081526020016000205414611590576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526047815260200180613a056047913960600191505060405180910390fd5b6000801b602e600088815260200190815260200160002054146115fe576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526021815260200180613b486021913960400191505060405180910390fd5b87602f60008a815260200190815260200160002081905550606060026040519080825280602002602001820160405280156116485781602001602082028038833980820191505090505b509050878160008151811061165957fe5b602002602001018181525050868160018151811061167357fe5b60200260200101818152505061168881612e2f565b603181905550603154603060006031548152602001908152602001600020819055507ff4ae4f4740a11f664366d6184e7e128d91c53fc7935127134646199bc78b39378989604051808381526020018281526020019250505060405180910390a17f641830526c905804af3625676cc835cb33e4b5da323f21948a17d5404687ca49876040518082815260200191505060405180910390a15a8560006003811061172e57fe5b60200201518660016003811061174057fe5b602002015101038560016003811061175457fe5b6020020181815250507f853720e5a853f80d6ab997d85a0ddd977b89b1e70cc4a1303975d10974c60e158560016003811061178b57fe5b60200201518660026003811061179d57fe5b6020020151604051808381526020018281526020019250505060405180910390a160019550505050505098975050505050505050565b600060405160200180807f455243313832305f4143434550545f4d41474943000000000000000000000000815250601401905060405160208183030381529060405280519060200120905092915050565b60008073ffffffffffffffffffffffffffffffffffffffff168473ffffffffffffffffffffffffffffffffffffffff161461185f5783611861565b335b90503373ffffffffffffffffffffffffffffffffffffffff1661188382611c8b565b73ffffffffffffffffffffffffffffffffffffffff161461190c576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252600f8152602001807f4e6f7420746865206d616e61676572000000000000000000000000000000000081525060200191505060405180910390fd5b611915836136ed565b15611988576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252601a8152602001807f4d757374206e6f7420626520616e20455243313635206861736800000000000081525060200191505060405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16141580156119f157503373ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff1614155b15611b715760405160200180807f455243313832305f4143434550545f4d414749430000000000000000000000008152506014019050604051602081830303815290604052805190602001208273ffffffffffffffffffffffffffffffffffffffff1663249cb3fa85846040518363ffffffff1660e01b8152600401808381526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060206040518083038186803b158015611ac257600080fd5b505afa158015611ad6573d6000803e3d6000fd5b505050506040513d6020811015611aec57600080fd5b810190808051906020019092919050505014611b70576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260208152602001807f446f6573206e6f7420696d706c656d656e742074686520696e7465726661636581525060200191505060405180910390fd5b5b81602860008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600085815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508173ffffffffffffffffffffffffffffffffffffffff16838273ffffffffffffffffffffffffffffffffffffffff167f93baa6efbd2244243bfee6ce4cfdd1d04fc4c0e9a786abd3a41313bd352db15360405160405180910390a450505050565b602f6020528060005260406000206000915090505481565b611c828161371d565b50565b60035481565b60008073ffffffffffffffffffffffffffffffffffffffff16602960008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff161415611d2857819050611d8b565b602960008373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1690505b919050565b6000611d9a61242b565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614611e1d576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602e815260200180613a4c602e913960400191505060405180910390fd5b611e2561242b565b73ffffffffffffffffffffffffffffffffffffffff16ff5b6000808383604051602001808383808284378083019250505092505050604051602081830303815290604052805190602001209050602b60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663aabbb8ca86836040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018281526020019250505060206040518083038186803b158015611f1957600080fd5b505afa158015611f2d573d6000803e3d6000fd5b505050506040513d6020811015611f4357600080fd5b81019080805190602001909291905050509150509392505050565b6000602c60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b600060035460025411611fe6576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260238152602001806139b36023913960400191505060405180910390fd5b6000611ff360035461380d565b905060006001600254600354010390506000602885901b905060008061201761391e565b600080600090505b600154811015612174578781141561207357856005896021811061203f57fe5b0160006101000a8154817affffffffffffffffffffffffffffffffffffffffffffffffffffff021916908360281c02179055505b60006002888161207f57fe5b061415612100576005816021811061209357fe5b0160009054906101000a900460281b945085935060405185815284601b8201526020846036836002600019fa925082600081146120cf576120d1565bfe5b50506028836000600181106120e257fe5b6020020151901b9550600260018803816120f857fe5b049650612167565b859450600460009054906101000a900460281b935060405185815284601b8201526020846036836002600019fa9250826000811461213d5761213f565bfe5b505060288360006001811061215057fe5b6020020151901b95506002878161216357fe5b0496505b808060010191505061201f565b508160006001811061218257fe5b602002015197507f6a82ba2aa1d2c039c41e6e2b5a5a1090d09906f060d32af9c1ac0beff7af75c06003548a8a60405180848152602001838152602001828152602001935050505060405180910390a160036000815480929190600101919050555087975050505050505050919050565b3373ffffffffffffffffffffffffffffffffffffffff1661221383611c8b565b73ffffffffffffffffffffffffffffffffffffffff161461229c576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252600f8152602001807f4e6f7420746865206d616e61676572000000000000000000000000000000000081525060200191505060405180910390fd5b8173ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16146122d557806122d8565b60005b602960008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508073ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff167f605c2dbf762e5f7d60a546d42e7205dcb1b011ebc62a61736a57c9089d3a435060405160405180910390a35050565b6000828260405160200180838380828437808301925050509250505060405160208183030381529060405280519060200120905092915050565b600581602181106123fa57fe5b016000915054906101000a900460281b81565b60025481565b602e6020528060005260406000206000915090505481565b60008060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b600061245e61242b565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16146124e1576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602e815260200180613a4c602e913960400191505060405180910390fd5b8383603260008560018111156124f357fe5b8152602001908152602001600020919061250e929190613940565b507fcfd8f8b734ebb05f1872379d344363750ce642d6cbd9f66a55aa3f1dbeb0c5d3826040518082600181111561254157fe5b60ff16815260200191505060405180910390a19392505050565b6125658282612824565b612570576000612572565b815b602860008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000837bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055506001602a60008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000837bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060006101000a81548160ff0219169083151502179055505050565b603260205281600052604060002081815481106126e357fe5b90600052602060002001600091509150505481565b600080600073ffffffffffffffffffffffffffffffffffffffff168473ffffffffffffffffffffffffffffffffffffffff16146127355783612737565b335b9050612742836136ed565b1561276c5760008390506127568282613453565b612761576000612763565b815b925050506127e1565b602860008273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff168152602001908152602001600020600084815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff169150505b92915050565b60306020528060005260406000206000915090505481565b6000809054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600080600061283a856301ffc9a760e01b613884565b809250819350505060008214806128515750600081145b15612861576000925050506128d3565b6128728563ffffffff60e01b613884565b8092508193505050600082148061288a575060008114155b1561289a576000925050506128d3565b6128a48585613884565b80925081935050506001821480156128bc5750600181145b156128cc576001925050506128d3565b6000925050505b92915050565b600460009054906101000a900460281b81565b60006128f661242b565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614612979576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602e815260200180613a4c602e913960400191505060405180910390fd5b81602c60006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055507eaccbf0787bf565863b49aef6d6d8ff2f631f1da95c76e016aed7a21a11a7b782604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390a160019050919050565b60315481565b6000805a90506000600886866000818110612a4257fe5b9050602002013560001b901b905060006008600286604051602001808281526020019150506040516020818303038152906040526040518082805190602001908083835b60208310612aa95780518252602082019150602081019050602083039250612a86565b6001836020036101000a038019825116818451168082178552505050505050905001915050602060405180830381855afa158015612aeb573d6000803e3d6000fd5b5050506040513d6020811015612b0057600080fd5b8101908080519060200190929190505050901b90508160ff19168160ff191614612b75576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401808060200182810382526024815260200180613b246024913960400191505060405180910390fd5b60005a840390505a93506000602c60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff166387d9d0238c8c8c8c60326000806001811115612bd357fe5b81526020019081526020016000206040518663ffffffff1660e01b8152600401808060200180602001806020018481038452898982818152602001925060200280828437600081840152601f19601f8201169050808301925050508481038352878782818152602001925060200280828437600081840152601f19601f8201169050808301925050508481038252858181548152602001915080548015612c9957602002820191906000526020600020905b815481526020019060010190808311612c85575b505098505050505050505050602060405180830381600087803b158015612cbf57600080fd5b505af1158015612cd3573d6000803e3d6000fd5b505050506040513d6020811015612ce957600080fd5b8101908080519060200190929190505050905080612d52576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602f8152602001806139d6602f913960400191505060405180910390fd5b60005a860390505a955087602e60008a815260200190815260200160002081905550612d7d88611f88565b603181905550603154603060006031548152602001908152602001600020819055507f641830526c905804af3625676cc835cb33e4b5da323f21948a17d5404687ca49886040518082815260200191505060405180910390a15a8684010392507f853720e5a853f80d6ab997d85a0ddd977b89b1e70cc4a1303975d10974c60e158382604051808381526020018281526020019250505060405180910390a16001965050505050505095945050505050565b6000808251905060035460025411612e92576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260238152602001806139b36023913960400191505060405180910390fd5b60035460025403811115612edb576000600354600254038203905060008090505b81811015612ecf57600185510385528080600101915050612eb3565b50600354600254039150505b6000806000806000612eeb61391e565b60008060035490505b88600354018110156130e45760288b600354830381518110612f1257fe5b6020026020010151901b955060016002548201039650612f318161380d565b97506000881415612f82578560058960218110612f4a57fe5b0160006101000a8154817affffffffffffffffffffffffffffffffffffffffffffffffffffff021916908360281c02179055506130d7565b6000600190505b88811161309457600060028981612f9c57fe5b0614156130205760056001820360218110612fb357fe5b0160009054906101000a900460281b955086945060405186815285601b8201526020856036836002600019fa93508360008114612fef57612ff1565bfe5b505060288460006001811061300257fe5b6020020151901b96506002600189038161301857fe5b049750613087565b869550600460009054906101000a900460281b945060405186815285601b8201526020856036836002600019fa9350836000811461305d5761305f565bfe5b505060288460006001811061307057fe5b6020020151901b96506002888161308357fe5b0497505b8080600101915050612f89565b5085600589602181106130a357fe5b0160006101000a8154817affffffffffffffffffffffffffffffffffffffffffffffffffffff021916908360281c02179055505b8080600101915050612ef4565b5060006001880190505b60015481116131fb5760006002888161310357fe5b061415613187576005600182036021811061311a57fe5b0160009054906101000a900460281b945085935060405185815284601b8201526020846036836002600019fa9250826000811461315657613158565bfe5b505060288360006001811061316957fe5b6020020151901b95506002600188038161317f57fe5b0496506131ee565b859450600460009054906101000a900460281b935060405185815284601b8201526020846036836002600019fa925082600081146131c4576131c6565bfe5b50506028836000600181106131d757fe5b6020020151901b9550600287816131ea57fe5b0496505b80806001019150506130ee565b508160006001811061320957fe5b602002015198507f8ec50f97970775682a68d3c6f9caedf60fd82448ea40706b8b65d6c03648b9226003548b8b6040518084815260200180602001838152602001828103825284818151815260200191508051906020019060200280838360005b8381101561328557808201518184015260208101905061326a565b5050505090500194505050505060405180910390a1876003600082825401925050819055508898505050505050505050919050565b6000630f1d6e6c60e01b63d7cc65e960e01b6346657fe960e01b63cf04fb9460e01b181818905090565b6132ec61242b565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461336f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602e815260200180613a4c602e913960400191505060405180910390fd5b600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1614156133a957600080fd5b7f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e06133d261242b565b82604051808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019250505060405180910390a1613450816138b9565b50565b6000602a60008473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000837bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060009054906101000a900460ff16613506576134ff8383612824565b90506135c7565b8273ffffffffffffffffffffffffffffffffffffffff16602860008573ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000206000847bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff161490505b92915050565b60006135d761242b565b73ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461365a576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040180806020018281038252602e815260200180613a4c602e913960400191505060405180910390fd5b600160276000630f1d6e6c60e01b63d7cc65e960e01b6346657fe960e01b63cf04fb9460e01b1818187bffffffffffffffffffffffffffffffffffffffffffffffffffffffff19167bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200190815260200160002060006101000a81548160ff0219169083151502179055506001905090565b60008060001b7bffffffffffffffffffffffffffffffffffffffffffffffffffffffff60001b8316149050919050565b602b60009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16635df8122f30836040518363ffffffff1660e01b8152600401808373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020018273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200192505050600060405180830381600087803b1580156137f257600080fd5b505af1158015613806573d6000803e3d6000fd5b5050505050565b600080905060016002838161381e57fe5b06141561387f576000600190506000600290506000600182901b90505b600084141561387b576000818360018801038161385457fe5b06141561386357829350613876565b809150600181901b905082806001019350505b61383b565b5050505b919050565b60008060006301ffc9a760e01b905060405181815284600482015260208160248389617530fa93508051925050509250929050565b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b6040518060600160405280600390602082028038833980820191505090505090565b6040518060200160405280600190602082028038833980820191505090505090565b82805482825590600052602060002090810192821561397c579160200282015b8281111561397b578235825591602001919060010190613960565b5b509050613989919061398d565b5090565b6139af91905b808211156139ab576000816000905550600101613993565b5090565b9056fe5468657265206973206e6f207370616365206c65667420696e2074686520747265652e5468652070726f6f6620686173206e6f74206265656e2076657269666965642062792074686520636f6e7472616374546865204d534120636f6d6d69746d656e7420287768696368206973206265696e672075706461746564292068617320616c7265616479206265656e206e756c6c696669656421596f7520617265206e6f7420617574686f726973656420746f20696e766f6b6520746869732066756e6374696f6e546865204d534120636f6d6d69746d656e7420616c7265616479206578697374732154686520696e70757420726f6f7420686173206e65766572206265656e2074686520726f6f74206f6620746865204d65726b6c652054726565546865206e657720636f6d6d69746d656e747320285f6e65774d5341436f6d6d69746d656e7420616e64205f6e6577504f436f6d6d69746d656e7429206d75737420626520646966666572656e74217075626c6963496e707574486173682063616e6e6f74206265207265636f6e63696c656454686520504f20636f6d6d69746d656e7420616c72656164792065786973747321a265627a7a723158205f71c1b98fe90eb250d67478aa7b9b3a0e45e7408cf098def4580a0c91df9a2764736f6c63430005110032596f7520617265206e6f7420617574686f726973656420746f20696e766f6b6520746869732066756e6374696f6e",
+				"opcodes": "PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x4 PUSH1 0x1 SSTORE PUSH1 0x1 SLOAD PUSH1 0x2 EXP PUSH1 0x2 SSTORE PUSH1 0x0 PUSH1 0x28 SHL PUSH1 0x4 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH27 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH1 0x28 SHR MUL OR SWAP1 SSTORE POP CALLVALUE DUP1 ISZERO PUSH3 0x58 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x40 MLOAD PUSH3 0x41B7 CODESIZE SUB DUP1 PUSH3 0x41B7 DUP4 CODECOPY DUP2 DUP2 ADD PUSH1 0x40 MSTORE PUSH1 0x40 DUP2 LT ISZERO PUSH3 0x7E JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP DUP1 PUSH3 0xAB CALLER PUSH3 0x1C8 PUSH1 0x20 SHL PUSH1 0x20 SHR JUMP JUMPDEST PUSH3 0xC3 PUSH4 0x1FFC9A7 PUSH1 0xE0 SHL PUSH3 0x20B PUSH1 0x20 SHL PUSH1 0x20 SHR JUMP JUMPDEST PUSH3 0xD3 PUSH3 0x315 PUSH1 0x20 SHL PUSH1 0x20 SHR JUMP JUMPDEST POP DUP1 PUSH1 0x2B PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP POP PUSH3 0x126 PUSH3 0x43F PUSH1 0x20 SHL PUSH1 0x20 SHR JUMP JUMPDEST POP DUP2 PUSH1 0x2C PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP PUSH3 0x178 PUSH3 0x315 PUSH1 0x20 SHL PUSH1 0x20 SHR JUMP JUMPDEST POP PUSH3 0x1C0 PUSH1 0x40 MLOAD DUP1 PUSH1 0x40 ADD PUSH1 0x40 MSTORE DUP1 PUSH1 0x7 DUP2 MSTORE PUSH1 0x20 ADD PUSH32 0x49536869656C6400000000000000000000000000000000000000000000000000 DUP2 MSTORE POP ADDRESS PUSH3 0x468 PUSH1 0x20 SHL PUSH1 0x20 SHR JUMP JUMPDEST POP POP PUSH3 0x5DC JUMP JUMPDEST DUP1 PUSH1 0x0 DUP1 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP POP JUMP JUMPDEST PUSH4 0xFFFFFFFF PUSH1 0xE0 SHL DUP2 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND EQ ISZERO PUSH3 0x2A8 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x1C DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH32 0x4552433136353A20696E76616C696420696E7465726661636520696400000000 DUP2 MSTORE POP PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x1 PUSH1 0x26 PUSH1 0x0 DUP4 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH1 0xFF MUL NOT AND SWAP1 DUP4 ISZERO ISZERO MUL OR SWAP1 SSTORE POP POP JUMP JUMPDEST PUSH1 0x0 PUSH3 0x327 PUSH3 0x43F PUSH1 0x20 SHL PUSH1 0x20 SHR JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH3 0x3AC JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2E DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH3 0x4189 PUSH1 0x2E SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x1 PUSH1 0x27 PUSH1 0x0 PUSH4 0xF1D6E6C PUSH1 0xE0 SHL PUSH4 0xD7CC65E9 PUSH1 0xE0 SHL PUSH4 0x46657FE9 PUSH1 0xE0 SHL PUSH4 0xCF04FB94 PUSH1 0xE0 SHL XOR XOR XOR PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH1 0xFF MUL NOT AND SWAP1 DUP4 ISZERO ISZERO MUL OR SWAP1 SSTORE POP PUSH1 0x1 SWAP1 POP SWAP1 JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 POP SWAP1 JUMP JUMPDEST PUSH1 0x0 DUP3 PUSH1 0x40 MLOAD PUSH1 0x20 ADD DUP1 DUP3 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 DUP1 DUP4 DUP4 JUMPDEST PUSH1 0x20 DUP4 LT PUSH3 0x4A3 JUMPI DUP1 MLOAD DUP3 MSTORE PUSH1 0x20 DUP3 ADD SWAP2 POP PUSH1 0x20 DUP2 ADD SWAP1 POP PUSH1 0x20 DUP4 SUB SWAP3 POP PUSH3 0x47E JUMP JUMPDEST PUSH1 0x1 DUP4 PUSH1 0x20 SUB PUSH2 0x100 EXP SUB DUP1 NOT DUP3 MLOAD AND DUP2 DUP5 MLOAD AND DUP1 DUP3 OR DUP6 MSTORE POP POP POP POP POP POP SWAP1 POP ADD SWAP2 POP POP PUSH1 0x40 MLOAD PUSH1 0x20 DUP2 DUP4 SUB SUB DUP2 MSTORE SWAP1 PUSH1 0x40 MSTORE DUP1 MLOAD SWAP1 PUSH1 0x20 ADD KECCAK256 SWAP1 POP PUSH1 0x2B PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH4 0x29965A1D ADDRESS DUP4 DUP6 PUSH1 0x40 MLOAD DUP5 PUSH4 0xFFFFFFFF AND PUSH1 0xE0 SHL DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP4 POP POP POP POP PUSH1 0x0 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 PUSH1 0x0 DUP8 DUP1 EXTCODESIZE ISZERO DUP1 ISZERO PUSH3 0x5BE JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP GAS CALL ISZERO DUP1 ISZERO PUSH3 0x5D3 JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP POP POP POP POP JUMP JUMPDEST PUSH2 0x3B9D DUP1 PUSH3 0x5EC PUSH1 0x0 CODECOPY PUSH1 0x0 RETURN INVALID PUSH1 0x80 PUSH1 0x40 MSTORE CALLVALUE DUP1 ISZERO PUSH2 0x10 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP PUSH1 0x4 CALLDATASIZE LT PUSH2 0x211 JUMPI PUSH1 0x0 CALLDATALOAD PUSH1 0xE0 SHR DUP1 PUSH4 0x839DF945 GT PUSH2 0x125 JUMPI DUP1 PUSH4 0xBC1B392D GT PUSH2 0xAD JUMPI DUP1 PUSH4 0xDC52BF9F GT PUSH2 0x7C JUMPI DUP1 PUSH4 0xDC52BF9F EQ PUSH2 0xD9D JUMPI DUP1 PUSH4 0xEBAC15F9 EQ PUSH2 0xE69 JUMPI DUP1 PUSH4 0xF2FDE38B EQ PUSH2 0xEC5 JUMPI DUP1 PUSH4 0xF712F3E8 EQ PUSH2 0xF09 JUMPI DUP1 PUSH4 0xFCA85EB3 EQ PUSH2 0xF8E JUMPI PUSH2 0x211 JUMP JUMPDEST DUP1 PUSH4 0xBC1B392D EQ PUSH2 0xC05 JUMPI DUP1 PUSH4 0xCF04FB94 EQ PUSH2 0xC33 JUMPI DUP1 PUSH4 0xD7B0FEF1 EQ PUSH2 0xC8F JUMPI DUP1 PUSH4 0xD7CC65E9 EQ PUSH2 0xCAD JUMPI PUSH2 0x211 JUMP JUMPDEST DUP1 PUSH4 0xA8F4324E GT PUSH2 0xF4 JUMPI DUP1 PUSH4 0xA8F4324E EQ PUSH2 0xA1A JUMPI DUP1 PUSH4 0xAABBB8CA EQ PUSH2 0xA66 JUMPI DUP1 PUSH4 0xAE6DEAD7 EQ PUSH2 0xAF4 JUMPI DUP1 PUSH4 0xB2BDFA7B EQ PUSH2 0xB36 JUMPI DUP1 PUSH4 0xB7056765 EQ PUSH2 0xB80 JUMPI PUSH2 0x211 JUMP JUMPDEST DUP1 PUSH4 0x839DF945 EQ PUSH2 0x887 JUMPI DUP1 PUSH4 0x8DA5CB5B EQ PUSH2 0x8C9 JUMPI DUP1 PUSH4 0xA0392769 EQ PUSH2 0x913 JUMPI DUP1 PUSH4 0xA41E7D51 EQ PUSH2 0x9AD JUMPI PUSH2 0x211 JUMP JUMPDEST DUP1 PUSH4 0x3D584063 GT PUSH2 0x1A8 JUMPI DUP1 PUSH4 0x5C8B80AB GT PUSH2 0x177 JUMPI DUP1 PUSH4 0x5C8B80AB EQ PUSH2 0x6E4 JUMPI DUP1 PUSH4 0x5DF8122F EQ PUSH2 0x726 JUMPI DUP1 PUSH4 0x65BA36C1 EQ PUSH2 0x78A JUMPI DUP1 PUSH4 0x6E0C3FEE EQ PUSH2 0x817 JUMPI DUP1 PUSH4 0x76C601B1 EQ PUSH2 0x869 JUMPI PUSH2 0x211 JUMP JUMPDEST DUP1 PUSH4 0x3D584063 EQ PUSH2 0x51B JUMPI DUP1 PUSH4 0x43D726D6 EQ PUSH2 0x59F JUMPI DUP1 PUSH4 0x449A09A4 EQ PUSH2 0x5C1 JUMPI DUP1 PUSH4 0x46657FE9 EQ PUSH2 0x69A JUMPI PUSH2 0x211 JUMP JUMPDEST DUP1 PUSH4 0x29965A1D GT PUSH2 0x1E4 JUMPI DUP1 PUSH4 0x29965A1D EQ PUSH2 0x409 JUMPI DUP1 PUSH4 0x2997E86B EQ PUSH2 0x477 JUMPI DUP1 PUSH4 0x2D2DCC48 EQ PUSH2 0x4B9 JUMPI DUP1 PUSH4 0x30E69FC3 EQ PUSH2 0x4FD JUMPI PUSH2 0x211 JUMP JUMPDEST DUP1 PUSH4 0x1E3E915 EQ PUSH2 0x216 JUMPI DUP1 PUSH4 0x1FFC9A7 EQ PUSH2 0x234 JUMPI DUP1 PUSH4 0xF1D6E6C EQ PUSH2 0x299 JUMPI DUP1 PUSH4 0x249CB3FA EQ PUSH2 0x3A7 JUMPI JUMPDEST PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH2 0x21E PUSH2 0xFB0 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x27F PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x24A JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0xFB6 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x38D PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0xC0 DUP2 LT ISZERO PUSH2 0x2AF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0x2CC JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0x2DE JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x20 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0x300 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP1 SWAP2 SWAP3 SWAP4 SWAP2 SWAP3 SWAP4 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0x321 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0x333 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x20 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0x355 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP1 SWAP2 SWAP3 SWAP4 SWAP2 SWAP3 SWAP4 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x101E JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x3F3 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0x3BD JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x17D3 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x475 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x60 DUP2 LT ISZERO PUSH2 0x41F JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x1824 JUMP JUMPDEST STOP JUMPDEST PUSH2 0x4A3 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x48D JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x1C61 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x4FB PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x4CF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x1C79 JUMP JUMPDEST STOP JUMPDEST PUSH2 0x505 PUSH2 0x1C85 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x55D PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x531 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x1C8B JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x5A7 PUSH2 0x1D90 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x658 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0x5D7 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0x614 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0x626 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x1 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0x648 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP1 SWAP2 SWAP3 SWAP4 SWAP2 SWAP3 SWAP4 SWAP1 POP POP POP PUSH2 0x1E3D JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x6A2 PUSH2 0x1F5E JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x710 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x6FA JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x1F88 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x788 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0x73C JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x21F3 JUMP JUMPDEST STOP JUMPDEST PUSH2 0x801 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x7A0 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0x7BD JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0x7CF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x1 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0x7F1 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP1 SWAP2 SWAP3 SWAP4 SWAP2 SWAP3 SWAP4 SWAP1 POP POP POP PUSH2 0x23B3 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x843 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x82D JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x23ED JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH5 0xFFFFFFFFFF NOT AND PUSH5 0xFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x871 PUSH2 0x240D JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x8B3 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x89D JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x2413 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x8D1 PUSH2 0x242B JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0x997 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0x929 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0x946 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0x958 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x20 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0x97A JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP1 SWAP2 SWAP3 SWAP4 SWAP2 SWAP3 SWAP4 SWAP1 DUP1 CALLDATALOAD PUSH1 0xFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x2454 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xA18 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0x9C3 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x255B JUMP JUMPDEST STOP JUMPDEST PUSH2 0xA50 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0xA30 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x26CA JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xAB2 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0xA7C JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x26F8 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xB20 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0xB0A JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x27E7 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xB3E PUSH2 0x27FF JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xBEB PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0xB96 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x2824 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xC0D PUSH2 0x28D9 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH5 0xFFFFFFFFFF NOT AND PUSH5 0xFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xC75 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0xC49 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x28EC JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xC97 PUSH2 0x2A25 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xD83 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x60 DUP2 LT ISZERO PUSH2 0xCC3 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0xCE0 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0xCF2 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x20 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0xD14 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP1 SWAP2 SWAP3 SWAP4 SWAP2 SWAP3 SWAP4 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0xD35 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0xD47 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x20 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0xD69 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP1 SWAP2 SWAP3 SWAP4 SWAP2 SWAP3 SWAP4 SWAP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x2A2B JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xE53 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0xDB3 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH5 0x100000000 DUP2 GT ISZERO PUSH2 0xDD0 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP3 ADD DUP4 PUSH1 0x20 DUP3 ADD GT ISZERO PUSH2 0xDE2 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP1 CALLDATALOAD SWAP1 PUSH1 0x20 ADD SWAP2 DUP5 PUSH1 0x20 DUP4 MUL DUP5 ADD GT PUSH5 0x100000000 DUP4 GT OR ISZERO PUSH2 0xE04 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST SWAP2 SWAP1 DUP1 DUP1 PUSH1 0x20 MUL PUSH1 0x20 ADD PUSH1 0x40 MLOAD SWAP1 DUP2 ADD PUSH1 0x40 MSTORE DUP1 SWAP4 SWAP3 SWAP2 SWAP1 DUP2 DUP2 MSTORE PUSH1 0x20 ADD DUP4 DUP4 PUSH1 0x20 MUL DUP1 DUP3 DUP5 CALLDATACOPY PUSH1 0x0 DUP2 DUP5 ADD MSTORE PUSH1 0x1F NOT PUSH1 0x1F DUP3 ADD AND SWAP1 POP DUP1 DUP4 ADD SWAP3 POP POP POP POP POP POP POP SWAP2 SWAP3 SWAP2 SWAP3 SWAP1 POP POP POP PUSH2 0x2E2F JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xE71 PUSH2 0x32BA JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xF07 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x20 DUP2 LT ISZERO PUSH2 0xEDB JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x32E4 JUMP JUMPDEST STOP JUMPDEST PUSH2 0xF74 PUSH1 0x4 DUP1 CALLDATASIZE SUB PUSH1 0x40 DUP2 LT ISZERO PUSH2 0xF1F JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 CALLDATALOAD PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 DUP1 CALLDATALOAD PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP PUSH2 0x3453 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH2 0xF96 PUSH2 0x35CD JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 DUP3 ISZERO ISZERO ISZERO ISZERO DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 RETURN JUMPDEST PUSH1 0x1 SLOAD DUP2 JUMP JUMPDEST PUSH1 0x0 PUSH1 0x27 PUSH1 0x0 DUP4 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0xFF AND SWAP1 POP SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x0 PUSH2 0x1028 PUSH2 0x38FC JUMP JUMPDEST GAS DUP2 PUSH1 0x0 PUSH1 0x3 DUP2 LT PUSH2 0x1036 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD DUP2 DUP2 MSTORE POP POP PUSH1 0x0 PUSH1 0x8 DUP10 DUP10 PUSH1 0x0 DUP2 DUP2 LT PUSH2 0x1050 JUMPI INVALID JUMPDEST SWAP1 POP PUSH1 0x20 MUL ADD CALLDATALOAD PUSH1 0x0 SHL SWAP1 SHL SWAP1 POP PUSH1 0x0 PUSH1 0x8 PUSH1 0x2 DUP10 DUP10 DUP10 DUP10 PUSH1 0x40 MLOAD PUSH1 0x20 ADD DUP1 DUP6 DUP2 MSTORE PUSH1 0x20 ADD DUP5 DUP2 MSTORE PUSH1 0x20 ADD DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP5 POP POP POP POP POP PUSH1 0x40 MLOAD PUSH1 0x20 DUP2 DUP4 SUB SUB DUP2 MSTORE SWAP1 PUSH1 0x40 MSTORE PUSH1 0x40 MLOAD DUP1 DUP3 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 DUP1 DUP4 DUP4 JUMPDEST PUSH1 0x20 DUP4 LT PUSH2 0x10CF JUMPI DUP1 MLOAD DUP3 MSTORE PUSH1 0x20 DUP3 ADD SWAP2 POP PUSH1 0x20 DUP2 ADD SWAP1 POP PUSH1 0x20 DUP4 SUB SWAP3 POP PUSH2 0x10AC JUMP JUMPDEST PUSH1 0x1 DUP4 PUSH1 0x20 SUB PUSH2 0x100 EXP SUB DUP1 NOT DUP3 MLOAD AND DUP2 DUP5 MLOAD AND DUP1 DUP3 OR DUP6 MSTORE POP POP POP POP POP POP SWAP1 POP ADD SWAP2 POP POP PUSH1 0x20 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 DUP6 GAS STATICCALL ISZERO DUP1 ISZERO PUSH2 0x1111 JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP PUSH1 0x40 MLOAD RETURNDATASIZE PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x1126 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP SWAP1 SHL SWAP1 POP DUP2 PUSH1 0xFF NOT AND DUP2 PUSH1 0xFF NOT AND EQ PUSH2 0x119B JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x24 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3B24 PUSH1 0x24 SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST GAS DUP4 PUSH1 0x0 PUSH1 0x3 DUP2 LT PUSH2 0x11A9 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SUB DUP4 PUSH1 0x1 PUSH1 0x3 DUP2 LT PUSH2 0x11BC JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD DUP2 DUP2 MSTORE POP POP GAS DUP4 PUSH1 0x0 PUSH1 0x3 DUP2 LT PUSH2 0x11D3 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD DUP2 DUP2 MSTORE POP POP PUSH1 0x0 PUSH1 0x2C PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH4 0x87D9D023 DUP15 DUP15 DUP15 DUP15 PUSH1 0x32 PUSH1 0x0 PUSH1 0x1 DUP1 DUP2 GT ISZERO PUSH2 0x1230 JUMPI INVALID JUMPDEST DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x40 MLOAD DUP7 PUSH4 0xFFFFFFFF AND PUSH1 0xE0 SHL DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP1 PUSH1 0x20 ADD DUP1 PUSH1 0x20 ADD DUP5 DUP2 SUB DUP5 MSTORE DUP10 DUP10 DUP3 DUP2 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP PUSH1 0x20 MUL DUP1 DUP3 DUP5 CALLDATACOPY PUSH1 0x0 DUP2 DUP5 ADD MSTORE PUSH1 0x1F NOT PUSH1 0x1F DUP3 ADD AND SWAP1 POP DUP1 DUP4 ADD SWAP3 POP POP POP DUP5 DUP2 SUB DUP4 MSTORE DUP8 DUP8 DUP3 DUP2 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP PUSH1 0x20 MUL DUP1 DUP3 DUP5 CALLDATACOPY PUSH1 0x0 DUP2 DUP5 ADD MSTORE PUSH1 0x1F NOT PUSH1 0x1F DUP3 ADD AND SWAP1 POP DUP1 DUP4 ADD SWAP3 POP POP POP DUP5 DUP2 SUB DUP3 MSTORE DUP6 DUP2 DUP2 SLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP DUP1 SLOAD DUP1 ISZERO PUSH2 0x12F6 JUMPI PUSH1 0x20 MUL DUP3 ADD SWAP2 SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 SWAP1 JUMPDEST DUP2 SLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP1 PUSH1 0x1 ADD SWAP1 DUP1 DUP4 GT PUSH2 0x12E2 JUMPI JUMPDEST POP POP SWAP9 POP POP POP POP POP POP POP POP POP PUSH1 0x20 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 PUSH1 0x0 DUP8 DUP1 EXTCODESIZE ISZERO DUP1 ISZERO PUSH2 0x131C JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP GAS CALL ISZERO DUP1 ISZERO PUSH2 0x1330 JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP POP PUSH1 0x40 MLOAD RETURNDATASIZE PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x1346 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP SWAP1 POP DUP1 PUSH2 0x13AF JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2F DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x39D6 PUSH1 0x2F SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST GAS DUP5 PUSH1 0x0 PUSH1 0x3 DUP2 LT PUSH2 0x13BD JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SUB DUP5 PUSH1 0x2 PUSH1 0x3 DUP2 LT PUSH2 0x13D0 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD DUP2 DUP2 MSTORE POP POP GAS DUP5 PUSH1 0x0 PUSH1 0x3 DUP2 LT PUSH2 0x13E7 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD DUP2 DUP2 MSTORE POP POP DUP9 PUSH1 0x30 PUSH1 0x0 DUP12 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 SLOAD EQ PUSH2 0x145B JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x39 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A9C PUSH1 0x39 SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST DUP6 DUP8 EQ ISZERO PUSH2 0x14B4 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x4F DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3AD5 PUSH1 0x4F SWAP2 CODECOPY PUSH1 0x60 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 DUP1 SHL PUSH1 0x2E PUSH1 0x0 DUP10 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 SLOAD EQ PUSH2 0x1522 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x22 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A7A PUSH1 0x22 SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 DUP1 SHL PUSH1 0x2F PUSH1 0x0 DUP11 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 SLOAD EQ PUSH2 0x1590 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x47 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A05 PUSH1 0x47 SWAP2 CODECOPY PUSH1 0x60 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 DUP1 SHL PUSH1 0x2E PUSH1 0x0 DUP9 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 SLOAD EQ PUSH2 0x15FE JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x21 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3B48 PUSH1 0x21 SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST DUP8 PUSH1 0x2F PUSH1 0x0 DUP11 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 DUP2 SWAP1 SSTORE POP PUSH1 0x60 PUSH1 0x2 PUSH1 0x40 MLOAD SWAP1 DUP1 DUP3 MSTORE DUP1 PUSH1 0x20 MUL PUSH1 0x20 ADD DUP3 ADD PUSH1 0x40 MSTORE DUP1 ISZERO PUSH2 0x1648 JUMPI DUP2 PUSH1 0x20 ADD PUSH1 0x20 DUP3 MUL DUP1 CODESIZE DUP4 CODECOPY DUP1 DUP3 ADD SWAP2 POP POP SWAP1 POP JUMPDEST POP SWAP1 POP DUP8 DUP2 PUSH1 0x0 DUP2 MLOAD DUP2 LT PUSH2 0x1659 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL PUSH1 0x20 ADD ADD DUP2 DUP2 MSTORE POP POP DUP7 DUP2 PUSH1 0x1 DUP2 MLOAD DUP2 LT PUSH2 0x1673 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL PUSH1 0x20 ADD ADD DUP2 DUP2 MSTORE POP POP PUSH2 0x1688 DUP2 PUSH2 0x2E2F JUMP JUMPDEST PUSH1 0x31 DUP2 SWAP1 SSTORE POP PUSH1 0x31 SLOAD PUSH1 0x30 PUSH1 0x0 PUSH1 0x31 SLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 DUP2 SWAP1 SSTORE POP PUSH32 0xF4AE4F4740A11F664366D6184E7E128D91C53FC7935127134646199BC78B3937 DUP10 DUP10 PUSH1 0x40 MLOAD DUP1 DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 PUSH32 0x641830526C905804AF3625676CC835CB33E4B5DA323F21948A17D5404687CA49 DUP8 PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 GAS DUP6 PUSH1 0x0 PUSH1 0x3 DUP2 LT PUSH2 0x172E JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD DUP7 PUSH1 0x1 PUSH1 0x3 DUP2 LT PUSH2 0x1740 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD ADD SUB DUP6 PUSH1 0x1 PUSH1 0x3 DUP2 LT PUSH2 0x1754 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD DUP2 DUP2 MSTORE POP POP PUSH32 0x853720E5A853F80D6AB997D85A0DDD977B89B1E70CC4A1303975D10974C60E15 DUP6 PUSH1 0x1 PUSH1 0x3 DUP2 LT PUSH2 0x178B JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD DUP7 PUSH1 0x2 PUSH1 0x3 DUP2 LT PUSH2 0x179D JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD PUSH1 0x40 MLOAD DUP1 DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 PUSH1 0x1 SWAP6 POP POP POP POP POP POP SWAP9 SWAP8 POP POP POP POP POP POP POP POP JUMP JUMPDEST PUSH1 0x0 PUSH1 0x40 MLOAD PUSH1 0x20 ADD DUP1 DUP1 PUSH32 0x455243313832305F4143434550545F4D41474943000000000000000000000000 DUP2 MSTORE POP PUSH1 0x14 ADD SWAP1 POP PUSH1 0x40 MLOAD PUSH1 0x20 DUP2 DUP4 SUB SUB DUP2 MSTORE SWAP1 PUSH1 0x40 MSTORE DUP1 MLOAD SWAP1 PUSH1 0x20 ADD KECCAK256 SWAP1 POP SWAP3 SWAP2 POP POP JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x185F JUMPI DUP4 PUSH2 0x1861 JUMP JUMPDEST CALLER JUMPDEST SWAP1 POP CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH2 0x1883 DUP3 PUSH2 0x1C8B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x190C JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0xF DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH32 0x4E6F7420746865206D616E616765720000000000000000000000000000000000 DUP2 MSTORE POP PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH2 0x1915 DUP4 PUSH2 0x36ED JUMP JUMPDEST ISZERO PUSH2 0x1988 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x1A DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH32 0x4D757374206E6F7420626520616E204552433136352068617368000000000000 DUP2 MSTORE POP PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ ISZERO DUP1 ISZERO PUSH2 0x19F1 JUMPI POP CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ ISZERO JUMPDEST ISZERO PUSH2 0x1B71 JUMPI PUSH1 0x40 MLOAD PUSH1 0x20 ADD DUP1 DUP1 PUSH32 0x455243313832305F4143434550545F4D41474943000000000000000000000000 DUP2 MSTORE POP PUSH1 0x14 ADD SWAP1 POP PUSH1 0x40 MLOAD PUSH1 0x20 DUP2 DUP4 SUB SUB DUP2 MSTORE SWAP1 PUSH1 0x40 MSTORE DUP1 MLOAD SWAP1 PUSH1 0x20 ADD KECCAK256 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH4 0x249CB3FA DUP6 DUP5 PUSH1 0x40 MLOAD DUP4 PUSH4 0xFFFFFFFF AND PUSH1 0xE0 SHL DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP POP POP PUSH1 0x20 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 DUP7 DUP1 EXTCODESIZE ISZERO DUP1 ISZERO PUSH2 0x1AC2 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP GAS STATICCALL ISZERO DUP1 ISZERO PUSH2 0x1AD6 JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP POP PUSH1 0x40 MLOAD RETURNDATASIZE PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x1AEC JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP EQ PUSH2 0x1B70 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x20 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH32 0x446F6573206E6F7420696D706C656D656E742074686520696E74657266616365 DUP2 MSTORE POP PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST JUMPDEST DUP2 PUSH1 0x28 PUSH1 0x0 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 DUP6 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP4 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH32 0x93BAA6EFBD2244243BFEE6CE4CFDD1D04FC4C0E9A786ABD3A41313BD352DB153 PUSH1 0x40 MLOAD PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG4 POP POP POP POP JUMP JUMPDEST PUSH1 0x2F PUSH1 0x20 MSTORE DUP1 PUSH1 0x0 MSTORE PUSH1 0x40 PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP2 POP SWAP1 POP SLOAD DUP2 JUMP JUMPDEST PUSH2 0x1C82 DUP2 PUSH2 0x371D JUMP JUMPDEST POP JUMP JUMPDEST PUSH1 0x3 SLOAD DUP2 JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH1 0x29 PUSH1 0x0 DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ ISZERO PUSH2 0x1D28 JUMPI DUP2 SWAP1 POP PUSH2 0x1D8B JUMP JUMPDEST PUSH1 0x29 PUSH1 0x0 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 POP JUMPDEST SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x0 PUSH2 0x1D9A PUSH2 0x242B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x1E1D JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2E DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A4C PUSH1 0x2E SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH2 0x1E25 PUSH2 0x242B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SELFDESTRUCT JUMPDEST PUSH1 0x0 DUP1 DUP4 DUP4 PUSH1 0x40 MLOAD PUSH1 0x20 ADD DUP1 DUP4 DUP4 DUP1 DUP3 DUP5 CALLDATACOPY DUP1 DUP4 ADD SWAP3 POP POP POP SWAP3 POP POP POP PUSH1 0x40 MLOAD PUSH1 0x20 DUP2 DUP4 SUB SUB DUP2 MSTORE SWAP1 PUSH1 0x40 MSTORE DUP1 MLOAD SWAP1 PUSH1 0x20 ADD KECCAK256 SWAP1 POP PUSH1 0x2B PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH4 0xAABBB8CA DUP7 DUP4 PUSH1 0x40 MLOAD DUP4 PUSH4 0xFFFFFFFF AND PUSH1 0xE0 SHL DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP POP POP PUSH1 0x20 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 DUP7 DUP1 EXTCODESIZE ISZERO DUP1 ISZERO PUSH2 0x1F19 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP GAS STATICCALL ISZERO DUP1 ISZERO PUSH2 0x1F2D JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP POP PUSH1 0x40 MLOAD RETURNDATASIZE PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x1F43 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP SWAP2 POP POP SWAP4 SWAP3 POP POP POP JUMP JUMPDEST PUSH1 0x0 PUSH1 0x2C PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 POP SWAP1 JUMP JUMPDEST PUSH1 0x0 PUSH1 0x3 SLOAD PUSH1 0x2 SLOAD GT PUSH2 0x1FE6 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x23 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x39B3 PUSH1 0x23 SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 PUSH2 0x1FF3 PUSH1 0x3 SLOAD PUSH2 0x380D JUMP JUMPDEST SWAP1 POP PUSH1 0x0 PUSH1 0x1 PUSH1 0x2 SLOAD PUSH1 0x3 SLOAD ADD SUB SWAP1 POP PUSH1 0x0 PUSH1 0x28 DUP6 SWAP1 SHL SWAP1 POP PUSH1 0x0 DUP1 PUSH2 0x2017 PUSH2 0x391E JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 SWAP1 POP JUMPDEST PUSH1 0x1 SLOAD DUP2 LT ISZERO PUSH2 0x2174 JUMPI DUP8 DUP2 EQ ISZERO PUSH2 0x2073 JUMPI DUP6 PUSH1 0x5 DUP10 PUSH1 0x21 DUP2 LT PUSH2 0x203F JUMPI INVALID JUMPDEST ADD PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH27 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH1 0x28 SHR MUL OR SWAP1 SSTORE POP JUMPDEST PUSH1 0x0 PUSH1 0x2 DUP9 DUP2 PUSH2 0x207F JUMPI INVALID JUMPDEST MOD EQ ISZERO PUSH2 0x2100 JUMPI PUSH1 0x5 DUP2 PUSH1 0x21 DUP2 LT PUSH2 0x2093 JUMPI INVALID JUMPDEST ADD PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL SWAP5 POP DUP6 SWAP4 POP PUSH1 0x40 MLOAD DUP6 DUP2 MSTORE DUP5 PUSH1 0x1B DUP3 ADD MSTORE PUSH1 0x20 DUP5 PUSH1 0x36 DUP4 PUSH1 0x2 PUSH1 0x0 NOT STATICCALL SWAP3 POP DUP3 PUSH1 0x0 DUP2 EQ PUSH2 0x20CF JUMPI PUSH2 0x20D1 JUMP JUMPDEST INVALID JUMPDEST POP POP PUSH1 0x28 DUP4 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x20E2 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP1 SHL SWAP6 POP PUSH1 0x2 PUSH1 0x1 DUP9 SUB DUP2 PUSH2 0x20F8 JUMPI INVALID JUMPDEST DIV SWAP7 POP PUSH2 0x2167 JUMP JUMPDEST DUP6 SWAP5 POP PUSH1 0x4 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL SWAP4 POP PUSH1 0x40 MLOAD DUP6 DUP2 MSTORE DUP5 PUSH1 0x1B DUP3 ADD MSTORE PUSH1 0x20 DUP5 PUSH1 0x36 DUP4 PUSH1 0x2 PUSH1 0x0 NOT STATICCALL SWAP3 POP DUP3 PUSH1 0x0 DUP2 EQ PUSH2 0x213D JUMPI PUSH2 0x213F JUMP JUMPDEST INVALID JUMPDEST POP POP PUSH1 0x28 DUP4 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x2150 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP1 SHL SWAP6 POP PUSH1 0x2 DUP8 DUP2 PUSH2 0x2163 JUMPI INVALID JUMPDEST DIV SWAP7 POP JUMPDEST DUP1 DUP1 PUSH1 0x1 ADD SWAP2 POP POP PUSH2 0x201F JUMP JUMPDEST POP DUP2 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x2182 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP8 POP PUSH32 0x6A82BA2AA1D2C039C41E6E2B5A5A1090D09906F060D32AF9C1AC0BEFF7AF75C0 PUSH1 0x3 SLOAD DUP11 DUP11 PUSH1 0x40 MLOAD DUP1 DUP5 DUP2 MSTORE PUSH1 0x20 ADD DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP4 POP POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 PUSH1 0x3 PUSH1 0x0 DUP2 SLOAD DUP1 SWAP3 SWAP2 SWAP1 PUSH1 0x1 ADD SWAP2 SWAP1 POP SSTORE POP DUP8 SWAP8 POP POP POP POP POP POP POP POP SWAP2 SWAP1 POP JUMP JUMPDEST CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH2 0x2213 DUP4 PUSH2 0x1C8B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x229C JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0xF DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH32 0x4E6F7420746865206D616E616765720000000000000000000000000000000000 DUP2 MSTORE POP PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x22D5 JUMPI DUP1 PUSH2 0x22D8 JUMP JUMPDEST PUSH1 0x0 JUMPDEST PUSH1 0x29 PUSH1 0x0 DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP DUP1 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH32 0x605C2DBF762E5F7D60A546D42E7205DCB1B011EBC62A61736A57C9089D3A4350 PUSH1 0x40 MLOAD PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG3 POP POP JUMP JUMPDEST PUSH1 0x0 DUP3 DUP3 PUSH1 0x40 MLOAD PUSH1 0x20 ADD DUP1 DUP4 DUP4 DUP1 DUP3 DUP5 CALLDATACOPY DUP1 DUP4 ADD SWAP3 POP POP POP SWAP3 POP POP POP PUSH1 0x40 MLOAD PUSH1 0x20 DUP2 DUP4 SUB SUB DUP2 MSTORE SWAP1 PUSH1 0x40 MSTORE DUP1 MLOAD SWAP1 PUSH1 0x20 ADD KECCAK256 SWAP1 POP SWAP3 SWAP2 POP POP JUMP JUMPDEST PUSH1 0x5 DUP2 PUSH1 0x21 DUP2 LT PUSH2 0x23FA JUMPI INVALID JUMPDEST ADD PUSH1 0x0 SWAP2 POP SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL DUP2 JUMP JUMPDEST PUSH1 0x2 SLOAD DUP2 JUMP JUMPDEST PUSH1 0x2E PUSH1 0x20 MSTORE DUP1 PUSH1 0x0 MSTORE PUSH1 0x40 PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP2 POP SWAP1 POP SLOAD DUP2 JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP1 POP SWAP1 JUMP JUMPDEST PUSH1 0x0 PUSH2 0x245E PUSH2 0x242B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x24E1 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2E DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A4C PUSH1 0x2E SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST DUP4 DUP4 PUSH1 0x32 PUSH1 0x0 DUP6 PUSH1 0x1 DUP2 GT ISZERO PUSH2 0x24F3 JUMPI INVALID JUMPDEST DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 SWAP2 SWAP1 PUSH2 0x250E SWAP3 SWAP2 SWAP1 PUSH2 0x3940 JUMP JUMPDEST POP PUSH32 0xCFD8F8B734EBB05F1872379D344363750CE642D6CBD9F66A55AA3F1DBEB0C5D3 DUP3 PUSH1 0x40 MLOAD DUP1 DUP3 PUSH1 0x1 DUP2 GT ISZERO PUSH2 0x2541 JUMPI INVALID JUMPDEST PUSH1 0xFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 SWAP4 SWAP3 POP POP POP JUMP JUMPDEST PUSH2 0x2565 DUP3 DUP3 PUSH2 0x2824 JUMP JUMPDEST PUSH2 0x2570 JUMPI PUSH1 0x0 PUSH2 0x2572 JUMP JUMPDEST DUP2 JUMPDEST PUSH1 0x28 PUSH1 0x0 DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 DUP4 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP PUSH1 0x1 PUSH1 0x2A PUSH1 0x0 DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 DUP4 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH1 0xFF MUL NOT AND SWAP1 DUP4 ISZERO ISZERO MUL OR SWAP1 SSTORE POP POP POP JUMP JUMPDEST PUSH1 0x32 PUSH1 0x20 MSTORE DUP2 PUSH1 0x0 MSTORE PUSH1 0x40 PUSH1 0x0 KECCAK256 DUP2 DUP2 SLOAD DUP2 LT PUSH2 0x26E3 JUMPI INVALID JUMPDEST SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 ADD PUSH1 0x0 SWAP2 POP SWAP2 POP POP SLOAD DUP2 JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x2735 JUMPI DUP4 PUSH2 0x2737 JUMP JUMPDEST CALLER JUMPDEST SWAP1 POP PUSH2 0x2742 DUP4 PUSH2 0x36ED JUMP JUMPDEST ISZERO PUSH2 0x276C JUMPI PUSH1 0x0 DUP4 SWAP1 POP PUSH2 0x2756 DUP3 DUP3 PUSH2 0x3453 JUMP JUMPDEST PUSH2 0x2761 JUMPI PUSH1 0x0 PUSH2 0x2763 JUMP JUMPDEST DUP2 JUMPDEST SWAP3 POP POP POP PUSH2 0x27E1 JUMP JUMPDEST PUSH1 0x28 PUSH1 0x0 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 DUP5 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND SWAP2 POP POP JUMPDEST SWAP3 SWAP2 POP POP JUMP JUMPDEST PUSH1 0x30 PUSH1 0x20 MSTORE DUP1 PUSH1 0x0 MSTORE PUSH1 0x40 PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP2 POP SWAP1 POP SLOAD DUP2 JUMP JUMPDEST PUSH1 0x0 DUP1 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 PUSH2 0x283A DUP6 PUSH4 0x1FFC9A7 PUSH1 0xE0 SHL PUSH2 0x3884 JUMP JUMPDEST DUP1 SWAP3 POP DUP2 SWAP4 POP POP POP PUSH1 0x0 DUP3 EQ DUP1 PUSH2 0x2851 JUMPI POP PUSH1 0x0 DUP2 EQ JUMPDEST ISZERO PUSH2 0x2861 JUMPI PUSH1 0x0 SWAP3 POP POP POP PUSH2 0x28D3 JUMP JUMPDEST PUSH2 0x2872 DUP6 PUSH4 0xFFFFFFFF PUSH1 0xE0 SHL PUSH2 0x3884 JUMP JUMPDEST DUP1 SWAP3 POP DUP2 SWAP4 POP POP POP PUSH1 0x0 DUP3 EQ DUP1 PUSH2 0x288A JUMPI POP PUSH1 0x0 DUP2 EQ ISZERO JUMPDEST ISZERO PUSH2 0x289A JUMPI PUSH1 0x0 SWAP3 POP POP POP PUSH2 0x28D3 JUMP JUMPDEST PUSH2 0x28A4 DUP6 DUP6 PUSH2 0x3884 JUMP JUMPDEST DUP1 SWAP3 POP DUP2 SWAP4 POP POP POP PUSH1 0x1 DUP3 EQ DUP1 ISZERO PUSH2 0x28BC JUMPI POP PUSH1 0x1 DUP2 EQ JUMPDEST ISZERO PUSH2 0x28CC JUMPI PUSH1 0x1 SWAP3 POP POP POP PUSH2 0x28D3 JUMP JUMPDEST PUSH1 0x0 SWAP3 POP POP POP JUMPDEST SWAP3 SWAP2 POP POP JUMP JUMPDEST PUSH1 0x4 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL DUP2 JUMP JUMPDEST PUSH1 0x0 PUSH2 0x28F6 PUSH2 0x242B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x2979 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2E DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A4C PUSH1 0x2E SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST DUP2 PUSH1 0x2C PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP PUSH31 0xACCBF0787BF565863B49AEF6D6D8FF2F631F1DA95C76E016AED7A21A11A7B7 DUP3 PUSH1 0x40 MLOAD DUP1 DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 PUSH1 0x1 SWAP1 POP SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x31 SLOAD DUP2 JUMP JUMPDEST PUSH1 0x0 DUP1 GAS SWAP1 POP PUSH1 0x0 PUSH1 0x8 DUP7 DUP7 PUSH1 0x0 DUP2 DUP2 LT PUSH2 0x2A42 JUMPI INVALID JUMPDEST SWAP1 POP PUSH1 0x20 MUL ADD CALLDATALOAD PUSH1 0x0 SHL SWAP1 SHL SWAP1 POP PUSH1 0x0 PUSH1 0x8 PUSH1 0x2 DUP7 PUSH1 0x40 MLOAD PUSH1 0x20 ADD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD PUSH1 0x20 DUP2 DUP4 SUB SUB DUP2 MSTORE SWAP1 PUSH1 0x40 MSTORE PUSH1 0x40 MLOAD DUP1 DUP3 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 DUP1 DUP4 DUP4 JUMPDEST PUSH1 0x20 DUP4 LT PUSH2 0x2AA9 JUMPI DUP1 MLOAD DUP3 MSTORE PUSH1 0x20 DUP3 ADD SWAP2 POP PUSH1 0x20 DUP2 ADD SWAP1 POP PUSH1 0x20 DUP4 SUB SWAP3 POP PUSH2 0x2A86 JUMP JUMPDEST PUSH1 0x1 DUP4 PUSH1 0x20 SUB PUSH2 0x100 EXP SUB DUP1 NOT DUP3 MLOAD AND DUP2 DUP5 MLOAD AND DUP1 DUP3 OR DUP6 MSTORE POP POP POP POP POP POP SWAP1 POP ADD SWAP2 POP POP PUSH1 0x20 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 DUP6 GAS STATICCALL ISZERO DUP1 ISZERO PUSH2 0x2AEB JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP PUSH1 0x40 MLOAD RETURNDATASIZE PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x2B00 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP SWAP1 SHL SWAP1 POP DUP2 PUSH1 0xFF NOT AND DUP2 PUSH1 0xFF NOT AND EQ PUSH2 0x2B75 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x24 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3B24 PUSH1 0x24 SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 GAS DUP5 SUB SWAP1 POP GAS SWAP4 POP PUSH1 0x0 PUSH1 0x2C PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH4 0x87D9D023 DUP13 DUP13 DUP13 DUP13 PUSH1 0x32 PUSH1 0x0 DUP1 PUSH1 0x1 DUP2 GT ISZERO PUSH2 0x2BD3 JUMPI INVALID JUMPDEST DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x40 MLOAD DUP7 PUSH4 0xFFFFFFFF AND PUSH1 0xE0 SHL DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP1 PUSH1 0x20 ADD DUP1 PUSH1 0x20 ADD DUP5 DUP2 SUB DUP5 MSTORE DUP10 DUP10 DUP3 DUP2 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP PUSH1 0x20 MUL DUP1 DUP3 DUP5 CALLDATACOPY PUSH1 0x0 DUP2 DUP5 ADD MSTORE PUSH1 0x1F NOT PUSH1 0x1F DUP3 ADD AND SWAP1 POP DUP1 DUP4 ADD SWAP3 POP POP POP DUP5 DUP2 SUB DUP4 MSTORE DUP8 DUP8 DUP3 DUP2 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP PUSH1 0x20 MUL DUP1 DUP3 DUP5 CALLDATACOPY PUSH1 0x0 DUP2 DUP5 ADD MSTORE PUSH1 0x1F NOT PUSH1 0x1F DUP3 ADD AND SWAP1 POP DUP1 DUP4 ADD SWAP3 POP POP POP DUP5 DUP2 SUB DUP3 MSTORE DUP6 DUP2 DUP2 SLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP DUP1 SLOAD DUP1 ISZERO PUSH2 0x2C99 JUMPI PUSH1 0x20 MUL DUP3 ADD SWAP2 SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 SWAP1 JUMPDEST DUP2 SLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP1 PUSH1 0x1 ADD SWAP1 DUP1 DUP4 GT PUSH2 0x2C85 JUMPI JUMPDEST POP POP SWAP9 POP POP POP POP POP POP POP POP POP PUSH1 0x20 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 PUSH1 0x0 DUP8 DUP1 EXTCODESIZE ISZERO DUP1 ISZERO PUSH2 0x2CBF JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP GAS CALL ISZERO DUP1 ISZERO PUSH2 0x2CD3 JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP POP PUSH1 0x40 MLOAD RETURNDATASIZE PUSH1 0x20 DUP2 LT ISZERO PUSH2 0x2CE9 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST DUP2 ADD SWAP1 DUP1 DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 SWAP3 SWAP2 SWAP1 POP POP POP SWAP1 POP DUP1 PUSH2 0x2D52 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2F DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x39D6 PUSH1 0x2F SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 GAS DUP7 SUB SWAP1 POP GAS SWAP6 POP DUP8 PUSH1 0x2E PUSH1 0x0 DUP11 DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 DUP2 SWAP1 SSTORE POP PUSH2 0x2D7D DUP9 PUSH2 0x1F88 JUMP JUMPDEST PUSH1 0x31 DUP2 SWAP1 SSTORE POP PUSH1 0x31 SLOAD PUSH1 0x30 PUSH1 0x0 PUSH1 0x31 SLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 DUP2 SWAP1 SSTORE POP PUSH32 0x641830526C905804AF3625676CC835CB33E4B5DA323F21948A17D5404687CA49 DUP9 PUSH1 0x40 MLOAD DUP1 DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 GAS DUP7 DUP5 ADD SUB SWAP3 POP PUSH32 0x853720E5A853F80D6AB997D85A0DDD977B89B1E70CC4A1303975D10974C60E15 DUP4 DUP3 PUSH1 0x40 MLOAD DUP1 DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 PUSH1 0x1 SWAP7 POP POP POP POP POP POP POP SWAP6 SWAP5 POP POP POP POP POP JUMP JUMPDEST PUSH1 0x0 DUP1 DUP3 MLOAD SWAP1 POP PUSH1 0x3 SLOAD PUSH1 0x2 SLOAD GT PUSH2 0x2E92 JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x23 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x39B3 PUSH1 0x23 SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x3 SLOAD PUSH1 0x2 SLOAD SUB DUP2 GT ISZERO PUSH2 0x2EDB JUMPI PUSH1 0x0 PUSH1 0x3 SLOAD PUSH1 0x2 SLOAD SUB DUP3 SUB SWAP1 POP PUSH1 0x0 DUP1 SWAP1 POP JUMPDEST DUP2 DUP2 LT ISZERO PUSH2 0x2ECF JUMPI PUSH1 0x1 DUP6 MLOAD SUB DUP6 MSTORE DUP1 DUP1 PUSH1 0x1 ADD SWAP2 POP POP PUSH2 0x2EB3 JUMP JUMPDEST POP PUSH1 0x3 SLOAD PUSH1 0x2 SLOAD SUB SWAP2 POP POP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 DUP1 PUSH1 0x0 PUSH2 0x2EEB PUSH2 0x391E JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x3 SLOAD SWAP1 POP JUMPDEST DUP9 PUSH1 0x3 SLOAD ADD DUP2 LT ISZERO PUSH2 0x30E4 JUMPI PUSH1 0x28 DUP12 PUSH1 0x3 SLOAD DUP4 SUB DUP2 MLOAD DUP2 LT PUSH2 0x2F12 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL PUSH1 0x20 ADD ADD MLOAD SWAP1 SHL SWAP6 POP PUSH1 0x1 PUSH1 0x2 SLOAD DUP3 ADD SUB SWAP7 POP PUSH2 0x2F31 DUP2 PUSH2 0x380D JUMP JUMPDEST SWAP8 POP PUSH1 0x0 DUP9 EQ ISZERO PUSH2 0x2F82 JUMPI DUP6 PUSH1 0x5 DUP10 PUSH1 0x21 DUP2 LT PUSH2 0x2F4A JUMPI INVALID JUMPDEST ADD PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH27 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH1 0x28 SHR MUL OR SWAP1 SSTORE POP PUSH2 0x30D7 JUMP JUMPDEST PUSH1 0x0 PUSH1 0x1 SWAP1 POP JUMPDEST DUP9 DUP2 GT PUSH2 0x3094 JUMPI PUSH1 0x0 PUSH1 0x2 DUP10 DUP2 PUSH2 0x2F9C JUMPI INVALID JUMPDEST MOD EQ ISZERO PUSH2 0x3020 JUMPI PUSH1 0x5 PUSH1 0x1 DUP3 SUB PUSH1 0x21 DUP2 LT PUSH2 0x2FB3 JUMPI INVALID JUMPDEST ADD PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL SWAP6 POP DUP7 SWAP5 POP PUSH1 0x40 MLOAD DUP7 DUP2 MSTORE DUP6 PUSH1 0x1B DUP3 ADD MSTORE PUSH1 0x20 DUP6 PUSH1 0x36 DUP4 PUSH1 0x2 PUSH1 0x0 NOT STATICCALL SWAP4 POP DUP4 PUSH1 0x0 DUP2 EQ PUSH2 0x2FEF JUMPI PUSH2 0x2FF1 JUMP JUMPDEST INVALID JUMPDEST POP POP PUSH1 0x28 DUP5 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x3002 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP1 SHL SWAP7 POP PUSH1 0x2 PUSH1 0x1 DUP10 SUB DUP2 PUSH2 0x3018 JUMPI INVALID JUMPDEST DIV SWAP8 POP PUSH2 0x3087 JUMP JUMPDEST DUP7 SWAP6 POP PUSH1 0x4 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL SWAP5 POP PUSH1 0x40 MLOAD DUP7 DUP2 MSTORE DUP6 PUSH1 0x1B DUP3 ADD MSTORE PUSH1 0x20 DUP6 PUSH1 0x36 DUP4 PUSH1 0x2 PUSH1 0x0 NOT STATICCALL SWAP4 POP DUP4 PUSH1 0x0 DUP2 EQ PUSH2 0x305D JUMPI PUSH2 0x305F JUMP JUMPDEST INVALID JUMPDEST POP POP PUSH1 0x28 DUP5 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x3070 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP1 SHL SWAP7 POP PUSH1 0x2 DUP9 DUP2 PUSH2 0x3083 JUMPI INVALID JUMPDEST DIV SWAP8 POP JUMPDEST DUP1 DUP1 PUSH1 0x1 ADD SWAP2 POP POP PUSH2 0x2F89 JUMP JUMPDEST POP DUP6 PUSH1 0x5 DUP10 PUSH1 0x21 DUP2 LT PUSH2 0x30A3 JUMPI INVALID JUMPDEST ADD PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH27 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH1 0x28 SHR MUL OR SWAP1 SSTORE POP JUMPDEST DUP1 DUP1 PUSH1 0x1 ADD SWAP2 POP POP PUSH2 0x2EF4 JUMP JUMPDEST POP PUSH1 0x0 PUSH1 0x1 DUP9 ADD SWAP1 POP JUMPDEST PUSH1 0x1 SLOAD DUP2 GT PUSH2 0x31FB JUMPI PUSH1 0x0 PUSH1 0x2 DUP9 DUP2 PUSH2 0x3103 JUMPI INVALID JUMPDEST MOD EQ ISZERO PUSH2 0x3187 JUMPI PUSH1 0x5 PUSH1 0x1 DUP3 SUB PUSH1 0x21 DUP2 LT PUSH2 0x311A JUMPI INVALID JUMPDEST ADD PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL SWAP5 POP DUP6 SWAP4 POP PUSH1 0x40 MLOAD DUP6 DUP2 MSTORE DUP5 PUSH1 0x1B DUP3 ADD MSTORE PUSH1 0x20 DUP5 PUSH1 0x36 DUP4 PUSH1 0x2 PUSH1 0x0 NOT STATICCALL SWAP3 POP DUP3 PUSH1 0x0 DUP2 EQ PUSH2 0x3156 JUMPI PUSH2 0x3158 JUMP JUMPDEST INVALID JUMPDEST POP POP PUSH1 0x28 DUP4 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x3169 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP1 SHL SWAP6 POP PUSH1 0x2 PUSH1 0x1 DUP9 SUB DUP2 PUSH2 0x317F JUMPI INVALID JUMPDEST DIV SWAP7 POP PUSH2 0x31EE JUMP JUMPDEST DUP6 SWAP5 POP PUSH1 0x4 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0x28 SHL SWAP4 POP PUSH1 0x40 MLOAD DUP6 DUP2 MSTORE DUP5 PUSH1 0x1B DUP3 ADD MSTORE PUSH1 0x20 DUP5 PUSH1 0x36 DUP4 PUSH1 0x2 PUSH1 0x0 NOT STATICCALL SWAP3 POP DUP3 PUSH1 0x0 DUP2 EQ PUSH2 0x31C4 JUMPI PUSH2 0x31C6 JUMP JUMPDEST INVALID JUMPDEST POP POP PUSH1 0x28 DUP4 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x31D7 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP1 SHL SWAP6 POP PUSH1 0x2 DUP8 DUP2 PUSH2 0x31EA JUMPI INVALID JUMPDEST DIV SWAP7 POP JUMPDEST DUP1 DUP1 PUSH1 0x1 ADD SWAP2 POP POP PUSH2 0x30EE JUMP JUMPDEST POP DUP2 PUSH1 0x0 PUSH1 0x1 DUP2 LT PUSH2 0x3209 JUMPI INVALID JUMPDEST PUSH1 0x20 MUL ADD MLOAD SWAP9 POP PUSH32 0x8EC50F97970775682A68D3C6F9CAEDF60FD82448EA40706B8B65D6C03648B922 PUSH1 0x3 SLOAD DUP12 DUP12 PUSH1 0x40 MLOAD DUP1 DUP5 DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH1 0x20 ADD DUP4 DUP2 MSTORE PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE DUP5 DUP2 DUP2 MLOAD DUP2 MSTORE PUSH1 0x20 ADD SWAP2 POP DUP1 MLOAD SWAP1 PUSH1 0x20 ADD SWAP1 PUSH1 0x20 MUL DUP1 DUP4 DUP4 PUSH1 0x0 JUMPDEST DUP4 DUP2 LT ISZERO PUSH2 0x3285 JUMPI DUP1 DUP3 ADD MLOAD DUP2 DUP5 ADD MSTORE PUSH1 0x20 DUP2 ADD SWAP1 POP PUSH2 0x326A JUMP JUMPDEST POP POP POP POP SWAP1 POP ADD SWAP5 POP POP POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 DUP8 PUSH1 0x3 PUSH1 0x0 DUP3 DUP3 SLOAD ADD SWAP3 POP POP DUP2 SWAP1 SSTORE POP DUP9 SWAP9 POP POP POP POP POP POP POP POP POP SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x0 PUSH4 0xF1D6E6C PUSH1 0xE0 SHL PUSH4 0xD7CC65E9 PUSH1 0xE0 SHL PUSH4 0x46657FE9 PUSH1 0xE0 SHL PUSH4 0xCF04FB94 PUSH1 0xE0 SHL XOR XOR XOR SWAP1 POP SWAP1 JUMP JUMPDEST PUSH2 0x32EC PUSH2 0x242B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x336F JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2E DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A4C PUSH1 0x2E SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x0 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ ISZERO PUSH2 0x33A9 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST PUSH32 0x8BE0079C531659141344CD1FD0A4F28419497F9722A3DAAFE3B4186F6B6457E0 PUSH2 0x33D2 PUSH2 0x242B JUMP JUMPDEST DUP3 PUSH1 0x40 MLOAD DUP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 LOG1 PUSH2 0x3450 DUP2 PUSH2 0x38B9 JUMP JUMPDEST POP JUMP JUMPDEST PUSH1 0x0 PUSH1 0x2A PUSH1 0x0 DUP5 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 DUP4 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH1 0xFF AND PUSH2 0x3506 JUMPI PUSH2 0x34FF DUP4 DUP4 PUSH2 0x2824 JUMP JUMPDEST SWAP1 POP PUSH2 0x35C7 JUMP JUMPDEST DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH1 0x28 PUSH1 0x0 DUP6 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 DUP5 PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ SWAP1 POP JUMPDEST SWAP3 SWAP2 POP POP JUMP JUMPDEST PUSH1 0x0 PUSH2 0x35D7 PUSH2 0x242B JUMP JUMPDEST PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND CALLER PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND EQ PUSH2 0x365A JUMPI PUSH1 0x40 MLOAD PUSH32 0x8C379A000000000000000000000000000000000000000000000000000000000 DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP1 PUSH1 0x20 ADD DUP3 DUP2 SUB DUP3 MSTORE PUSH1 0x2E DUP2 MSTORE PUSH1 0x20 ADD DUP1 PUSH2 0x3A4C PUSH1 0x2E SWAP2 CODECOPY PUSH1 0x40 ADD SWAP2 POP POP PUSH1 0x40 MLOAD DUP1 SWAP2 SUB SWAP1 REVERT JUMPDEST PUSH1 0x1 PUSH1 0x27 PUSH1 0x0 PUSH4 0xF1D6E6C PUSH1 0xE0 SHL PUSH4 0xD7CC65E9 PUSH1 0xE0 SHL PUSH4 0x46657FE9 PUSH1 0xE0 SHL PUSH4 0xCF04FB94 PUSH1 0xE0 SHL XOR XOR XOR PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF NOT AND DUP2 MSTORE PUSH1 0x20 ADD SWAP1 DUP2 MSTORE PUSH1 0x20 ADD PUSH1 0x0 KECCAK256 PUSH1 0x0 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH1 0xFF MUL NOT AND SWAP1 DUP4 ISZERO ISZERO MUL OR SWAP1 SSTORE POP PUSH1 0x1 SWAP1 POP SWAP1 JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 SHL PUSH28 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF PUSH1 0x0 SHL DUP4 AND EQ SWAP1 POP SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x2B PUSH1 0x0 SWAP1 SLOAD SWAP1 PUSH2 0x100 EXP SWAP1 DIV PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH4 0x5DF8122F ADDRESS DUP4 PUSH1 0x40 MLOAD DUP4 PUSH4 0xFFFFFFFF AND PUSH1 0xE0 SHL DUP2 MSTORE PUSH1 0x4 ADD DUP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD DUP3 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND DUP2 MSTORE PUSH1 0x20 ADD SWAP3 POP POP POP PUSH1 0x0 PUSH1 0x40 MLOAD DUP1 DUP4 SUB DUP2 PUSH1 0x0 DUP8 DUP1 EXTCODESIZE ISZERO DUP1 ISZERO PUSH2 0x37F2 JUMPI PUSH1 0x0 DUP1 REVERT JUMPDEST POP GAS CALL ISZERO DUP1 ISZERO PUSH2 0x3806 JUMPI RETURNDATASIZE PUSH1 0x0 DUP1 RETURNDATACOPY RETURNDATASIZE PUSH1 0x0 REVERT JUMPDEST POP POP POP POP POP JUMP JUMPDEST PUSH1 0x0 DUP1 SWAP1 POP PUSH1 0x1 PUSH1 0x2 DUP4 DUP2 PUSH2 0x381E JUMPI INVALID JUMPDEST MOD EQ ISZERO PUSH2 0x387F JUMPI PUSH1 0x0 PUSH1 0x1 SWAP1 POP PUSH1 0x0 PUSH1 0x2 SWAP1 POP PUSH1 0x0 PUSH1 0x1 DUP3 SWAP1 SHL SWAP1 POP JUMPDEST PUSH1 0x0 DUP5 EQ ISZERO PUSH2 0x387B JUMPI PUSH1 0x0 DUP2 DUP4 PUSH1 0x1 DUP9 ADD SUB DUP2 PUSH2 0x3854 JUMPI INVALID JUMPDEST MOD EQ ISZERO PUSH2 0x3863 JUMPI DUP3 SWAP4 POP PUSH2 0x3876 JUMP JUMPDEST DUP1 SWAP2 POP PUSH1 0x1 DUP2 SWAP1 SHL SWAP1 POP DUP3 DUP1 PUSH1 0x1 ADD SWAP4 POP POP JUMPDEST PUSH2 0x383B JUMP JUMPDEST POP POP POP JUMPDEST SWAP2 SWAP1 POP JUMP JUMPDEST PUSH1 0x0 DUP1 PUSH1 0x0 PUSH4 0x1FFC9A7 PUSH1 0xE0 SHL SWAP1 POP PUSH1 0x40 MLOAD DUP2 DUP2 MSTORE DUP5 PUSH1 0x4 DUP3 ADD MSTORE PUSH1 0x20 DUP2 PUSH1 0x24 DUP4 DUP10 PUSH2 0x7530 STATICCALL SWAP4 POP DUP1 MLOAD SWAP3 POP POP POP SWAP3 POP SWAP3 SWAP1 POP JUMP JUMPDEST DUP1 PUSH1 0x0 DUP1 PUSH2 0x100 EXP DUP2 SLOAD DUP2 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF MUL NOT AND SWAP1 DUP4 PUSH20 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF AND MUL OR SWAP1 SSTORE POP POP JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 PUSH1 0x60 ADD PUSH1 0x40 MSTORE DUP1 PUSH1 0x3 SWAP1 PUSH1 0x20 DUP3 MUL DUP1 CODESIZE DUP4 CODECOPY DUP1 DUP3 ADD SWAP2 POP POP SWAP1 POP POP SWAP1 JUMP JUMPDEST PUSH1 0x40 MLOAD DUP1 PUSH1 0x20 ADD PUSH1 0x40 MSTORE DUP1 PUSH1 0x1 SWAP1 PUSH1 0x20 DUP3 MUL DUP1 CODESIZE DUP4 CODECOPY DUP1 DUP3 ADD SWAP2 POP POP SWAP1 POP POP SWAP1 JUMP JUMPDEST DUP3 DUP1 SLOAD DUP3 DUP3 SSTORE SWAP1 PUSH1 0x0 MSTORE PUSH1 0x20 PUSH1 0x0 KECCAK256 SWAP1 DUP2 ADD SWAP3 DUP3 ISZERO PUSH2 0x397C JUMPI SWAP2 PUSH1 0x20 MUL DUP3 ADD JUMPDEST DUP3 DUP2 GT ISZERO PUSH2 0x397B JUMPI DUP3 CALLDATALOAD DUP3 SSTORE SWAP2 PUSH1 0x20 ADD SWAP2 SWAP1 PUSH1 0x1 ADD SWAP1 PUSH2 0x3960 JUMP JUMPDEST JUMPDEST POP SWAP1 POP PUSH2 0x3989 SWAP2 SWAP1 PUSH2 0x398D JUMP JUMPDEST POP SWAP1 JUMP JUMPDEST PUSH2 0x39AF SWAP2 SWAP1 JUMPDEST DUP1 DUP3 GT ISZERO PUSH2 0x39AB JUMPI PUSH1 0x0 DUP2 PUSH1 0x0 SWAP1 SSTORE POP PUSH1 0x1 ADD PUSH2 0x3993 JUMP JUMPDEST POP SWAP1 JUMP JUMPDEST SWAP1 JUMP INVALID SLOAD PUSH9 0x657265206973206E6F KECCAK256 PUSH20 0x70616365206C65667420696E2074686520747265 PUSH6 0x2E5468652070 PUSH19 0x6F6F6620686173206E6F74206265656E207665 PUSH19 0x69666965642062792074686520636F6E747261 PUSH4 0x74546865 KECCAK256 0x4D MSTORE8 COINBASE KECCAK256 PUSH4 0x6F6D6D69 PUSH21 0x6D656E7420287768696368206973206265696E6720 PUSH22 0x706461746564292068617320616C7265616479206265 PUSH6 0x6E206E756C6C PUSH10 0x6669656421596F752061 PUSH19 0x65206E6F7420617574686F726973656420746F KECCAK256 PUSH10 0x6E766F6B652074686973 KECCAK256 PUSH7 0x756E6374696F6E SLOAD PUSH9 0x65204D534120636F6D PUSH14 0x69746D656E7420616C7265616479 KECCAK256 PUSH6 0x786973747321 SLOAD PUSH9 0x6520696E7075742072 PUSH16 0x6F7420686173206E6576657220626565 PUSH15 0x2074686520726F6F74206F66207468 PUSH6 0x204D65726B6C PUSH6 0x205472656554 PUSH9 0x65206E657720636F6D PUSH14 0x69746D656E747320285F6E65774D MSTORE8 COINBASE NUMBER PUSH16 0x6D6D69746D656E7420616E64205F6E65 PUSH24 0x504F436F6D6D69746D656E7429206D757374206265206469 PUSH7 0x666572656E7421 PUSH17 0x75626C6963496E70757448617368206361 PUSH15 0x6E6F74206265207265636F6E63696C PUSH6 0x645468652050 0x4F KECCAK256 PUSH4 0x6F6D6D69 PUSH21 0x6D656E7420616C72656164792065786973747321A2 PUSH6 0x627A7A723158 KECCAK256 0x5F PUSH18 0xC1B98FE90EB250D67478AA7B9B3A0E45E740 DUP13 CREATE SWAP9 0xDE DELEGATECALL PC EXP 0xC SWAP2 0xDF SWAP11 0x27 PUSH5 0x736F6C6343 STOP SDIV GT STOP ORIGIN MSIZE PUSH16 0x7520617265206E6F7420617574686F72 PUSH10 0x73656420746F20696E76 PUSH16 0x6B6520746869732066756E6374696F6E ",
+				"sourceMap": "437:8336:15:-;;;2125:1:9;2100:26;;2161:10;;2156:1;:15;2132:39;;2788:56;2766:78;;;;;;;;;;;;;;;;;;;;;;1974:257:15;8:9:-1;5:2;;;30:1;27;20:12;5:2;1974:257:15;;;;;;;;;;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;1974:257:15;;;;;;;;;;;;;;;;;;;;;;;;;2069:8;810:20:11;819:10;810:8;;;:20;;:::i;:::-;718:40:1;385:10;737:20;;718:18;;;:40;;:::i;:::-;172:15:2;:13;;;:15;;:::i;:::-;;802:22:13;768:15;;:57;;;;;;;;;;;;;;;;;;479:353;2089:7:15;:5;;;:7;;:::i;:::-;;2127:9;2106:8;;:31;;;;;;;;;;;;;;;;;;2147:15;:13;;;:15;;:::i;:::-;;2172:52;;;;;;;;;;;;;;;;;;2218:4;2172:26;;;:52;;:::i;:::-;1974:257;;437:8336;;1052:73:11;1112:8;1103:6;;:17;;;;;;;;;;;;;;;;;;1052:73;:::o;1442:190:1:-;1532:10;1517:25;;:11;:25;;;;;1509:66;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1621:4;1585:20;:33;1606:11;1585:33;;;;;;;;;;;;;;;;;;:40;;;;;;;;;;;;;;;;;;1442:190;:::o;2237:314:15:-;2288:4;608:7:11;:5;;;:7;;:::i;:::-;594:21;;:10;:21;;;586:80;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;2519:4:15;2304:19;:212;2493:22;;;2439:23;;;2383:25;;;2324:28;;;:84;:138;:191;2304:212;;;;;;;;;;;;;;;;;;:219;;;;;;;;;;;;;;;;;;2540:4;2533:11;;2237:314;:::o;930:71:11:-;968:7;990:6;;;;;;;;;;;983:13;;930:71;:::o;1219:282:13:-;1330:21;1381:15;1364:33;;;;;;;;;;;;;;;36:153:-1;66:2;61:3;58:11;36:153;;182:3;176:10;171:3;164:23;98:2;93:3;89:12;82:19;;123:2;118:3;114:12;107:19;;148:2;143:3;139:12;132:19;;36:153;;;274:1;267:3;263:2;259:12;254:3;250:22;246:30;315:4;311:9;305:3;299:10;295:26;356:4;350:3;344:10;340:21;389:7;380;377:20;372:3;365:33;3:399;;;1364:33:13;;;;;;;;;;;49:4:-1;39:7;30;26:21;22:32;13:7;6:49;1364:33:13;;;1354:44;;;;;;1330:68;;1408:15;;;;;;;;;;;:39;;;1456:4;1463:13;1478:15;1408:86;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;1408:86:13;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;1408:86:13;;;;1219:282;;;:::o;437:8336:15:-;;;;;;;"
+			}
+		}
+	},
+	"sources": {
+		"Shield.sol": {
+			"id": 15
+		},
+		"ERC165Compatible.sol": {
+			"id": 2
+		},
+		"ERC165.sol": {
+			"id": 1
+		},
+		"IERC165.sol": {
+			"id": 5
+		},
+		"MerkleTree.sol": {
+			"id": 9
+		},
+		"IShield.sol": {
+			"id": 7
+		},
+		"IVerifier.sol": {
+			"id": 8
+		},
+		"Registrar.sol": {
+			"id": 13
+		},
+		"ERC1820Registry.sol": {
+			"id": 3
+		},
+		"Ownable.sol": {
+			"id": 11
+		},
+		"ERC20Interface.sol": {
+			"id": 4
+		}
+	},
+	"sourceCodes": {
+		"Shield.sol": "/**\nContract to enable the management of private fungible token (ERC-20) transactions using zk-SNARKs.\n@Author Westlad, Chaitanya-Konda, iAmMichaelConnor\n*/\n\npragma solidity ^0.5.8;\n\n//TODO: Use openzeppelin interfaces inside the timber service\nimport \"./ERC165Compatible.sol\";\nimport \"./MerkleTree.sol\";\nimport \"./IShield.sol\";\nimport \"./IVerifier.sol\";\nimport \"./Registrar.sol\";\nimport \"./Ownable.sol\";\nimport \"./ERC20Interface.sol\";\n\ncontract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {\n    // ENUMS:\n    enum TransactionTypes { CreateMSA, CreatePO }\n\n    // EVENTS:\n    // Observers may wish to listen for nullification of commitments:\n    event NewCommitment(bytes32 newCommitment);\n    event UpdatedCommitment(bytes32 nullifier, bytes32 newCommitment);\n    event DeletedCommitment(bytes32 nullifier);\n\n    // Observers may wish to listen for zkSNARK-related changes:\n    event VerifierChanged(address newVerifierContract);\n    event VkChanged(TransactionTypes txType);\n\n    // For testing only. This SHOULD be deleted before mainnet deployment:\n    event GasUsed(uint256 byShieldContract, uint256 byVerifierContract);\n\n    // CONTRACT INSTANCES:\n    IVerifier private verifier; // the verification smart contract\n    ERC20Interface private erc20ContractInstance; // the  ERC-20 token contract\n\n    // PRIVATE TRANSACTIONS' PUBLIC STATES:\n    mapping(bytes32 => bytes32) public commitments; // store commitments\n    mapping(bytes32 => bytes32) public nullifiers; // store nullifiers of spent commitments\n    mapping(bytes32 => bytes32) public roots; // holds each root we've calculated so that we can pull the one relevant to the prover\n    bytes32 public latestRoot; // holds the index for the latest root so that the prover can provide it later and this contract can look up the relevant root\n\n    // VERIFICATION KEY STORAGE:\n    mapping(uint => uint256[]) public vks; // mapped to by an enum uint(TransactionTypes):\n\n    // FUNCTIONS:\n    constructor(address _verifier, address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {\n        owner();\n        verifier = IVerifier(_verifier);\n        setInterfaces();\n        setInterfaceImplementation(\"IShield\", address(this));\n    }\n\n    function setInterfaces() public onlyOwner returns (bool) {\n        supportedInterfaces[this.changeVerifier.selector ^\n                            this.getVerifier.selector ^\n                            this.createMSA.selector ^\n                            this.createPO.selector] = true;\n        return true;\n    }\n\n    function getInterfaces() external pure returns (bytes4) {\n        return this.changeVerifier.selector ^\n                this.getVerifier.selector ^\n                this.createMSA.selector ^\n                this.createPO.selector;\n    }\n\n    function supportsInterface(bytes4 interfaceId) external view returns (bool) {\n        return supportedInterfaces[interfaceId];\n    }\n\n    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {\n        return ERC1820_ACCEPT_MAGIC;\n    }\n\n    function assignManager(address _newManager) external {\n        assignManagement(_newManager);\n    }\n\n    /**\n    self destruct\n    */\n    function close() external onlyOwner returns (bool) {\n        selfdestruct(address(uint160(owner())));\n        return true;\n    }\n\n    /**\n    function to change the address of the underlying Verifier contract\n    */\n    function changeVerifier(address _verifier) external onlyOwner returns (bool) {\n        verifier = IVerifier(_verifier);\n        emit VerifierChanged(_verifier);\n        return true;\n    }\n\n    /**\n    returns the verifier-interface contract address that this shield contract is calling\n    */\n    function getVerifier() external view returns (address) {\n        return address(verifier);\n    }\n\n    /**\n    Stores verification keys (for the 'mint', 'transfer' and 'burn' computations).\n    */\n    function registerVerificationKey(\n        uint256[] calldata _vk,\n        TransactionTypes _txType\n    ) external onlyOwner returns (bytes32) {\n        // CAUTION: we do not prevent overwrites of vk's. Users must listen for the emitted event to detect updates to a vk.\n        vks[uint(_txType)] = _vk;\n\n        emit VkChanged(_txType);\n    }\n\n    /**\n    createMSA\n    */\n    function createMSA(\n        uint256[] calldata _proof,\n        uint256[] calldata _inputs,\n        bytes32 _newMSACommitment\n    ) external returns (bool) {\n\n        // gas measurement:\n        uint256 gasCheckpoint = gasleft();\n\n        // Check that the publicInputHash equals the hash of the 'public inputs':\n        bytes31 publicInputHash = bytes31(bytes32(_inputs[0]) << 8);\n        bytes31 publicInputHashCheck = bytes31(sha256(abi.encodePacked(_newMSACommitment)) << 8);\n        require(publicInputHashCheck == publicInputHash, \"publicInputHash cannot be reconciled\");\n\n        // gas measurement:\n        uint256 gasUsedByShieldContract = gasCheckpoint - gasleft();\n        gasCheckpoint = gasleft();\n\n        // verify the proof\n        bool result = verifier.verify(_proof, _inputs, vks[uint(TransactionTypes.CreateMSA)]);\n        require(result, \"The proof has not been verified by the contract\");\n\n        // gas measurement:\n        uint256 gasUsedByVerifierContract = gasCheckpoint - gasleft();\n        gasCheckpoint = gasleft();\n\n        // check inputs vs on-chain states\n        // COMMENTED OUT THE BELOW, FOR QUICKER REPEATED TESTING.\n        // require(commitments[_newMSACommitment] == 0, \"The MSA commitment already exists!\");\n\n        // update contract states\n        commitments[_newMSACommitment] = _newMSACommitment;\n        latestRoot = insertLeaf(_newMSACommitment); // recalculate the root of the merkleTree as it's now different\n        roots[latestRoot] = latestRoot; // and save the new root to the list of roots\n\n        emit NewCommitment(_newMSACommitment);\n\n        // gas measurement:\n        gasUsedByShieldContract = gasUsedByShieldContract + gasCheckpoint - gasleft();\n        emit GasUsed(gasUsedByShieldContract, gasUsedByVerifierContract);\n        return true;\n    }\n\n    /**\n    createPO\n    */\n    function createPO(\n        uint256[] calldata _proof,\n        uint256[] calldata _inputs,\n        bytes32 _root,\n        bytes32 _nullifierOfOldMSACommitment,\n        bytes32 _newMSACommitment,\n        bytes32 _newPOCommitment\n    ) external returns(bool) {\n\n        // gas measurement:\n        uint256[3] memory gasUsed; // array needed to stay below local stack limit\n        gasUsed[0] = gasleft();\n\n        // Check that the publicInputHash equals the hash of the 'public inputs':\n        bytes31 publicInputHash = bytes31(bytes32(_inputs[0]) << 8);\n        bytes31 publicInputHashCheck = bytes31(sha256(abi.encodePacked(_root, _nullifierOfOldMSACommitment, _newMSACommitment, _newPOCommitment)) << 8);\n        require(publicInputHashCheck == publicInputHash, \"publicInputHash cannot be reconciled\");\n\n        // gas measurement:\n        gasUsed[1] = gasUsed[0] - gasleft();\n        gasUsed[0] = gasleft();\n\n        // verify the proof\n        bool result = verifier.verify(_proof, _inputs, vks[uint(TransactionTypes.CreatePO)]);\n        require(result, \"The proof has not been verified by the contract\");\n\n        // gas measurement:\n        gasUsed[2] = gasUsed[0] - gasleft();\n        gasUsed[0] = gasleft();\n\n        // check inputs vs on-chain states\n        require(roots[_root] == _root, \"The input root has never been the root of the Merkle Tree\");\n        require(_newMSACommitment != _newPOCommitment, \"The new commitments (_newMSACommitment and _newPOCommitment) must be different!\"); // Is this check necessary?\n        require(commitments[_newMSACommitment] == 0, \"The MSA commitment already exists!\");\n        require(nullifiers[_nullifierOfOldMSACommitment] == 0, \"The MSA commitment (which is being updated) has already been nullified!\");\n        require(commitments[_newPOCommitment] == 0, \"The PO commitment already exists!\");\n\n        // update contract states\n        nullifiers[_nullifierOfOldMSACommitment] = _nullifierOfOldMSACommitment; //remember we spent it\n\n        bytes32[] memory leaves = new bytes32[](2);\n        leaves[0] = _newMSACommitment;\n        leaves[1] = _newPOCommitment;\n\n        latestRoot = insertLeaves(leaves); // recalculate the root of the merkleTree as it's now different\n        roots[latestRoot] = latestRoot; // and save the new root to the list of roots\n\n        emit UpdatedCommitment(_nullifierOfOldMSACommitment, _newMSACommitment);\n        emit NewCommitment(_newPOCommitment);\n\n        // gas measurement:\n        gasUsed[1] = gasUsed[1] + gasUsed[0] - gasleft();\n        emit GasUsed(gasUsed[1], gasUsed[2]);\n        return true;\n    }\n}\n",
+		"ERC165Compatible.sol": "pragma solidity ^0.5.8;\nimport \"./ERC165.sol\";\n\ncontract ERC165Compatible is ERC165 {\n    mapping (bytes4 => bool) supportedInterfaces;\n\n    constructor() public {\n        setInterfaces();\n    }\n\n    function setInterfaces() public returns (bool) {\n        supportedInterfaces[this.supportsInterface.selector] = true;\n    }\n\n    /// @notice Query if a contract implements an interface\n    /// @param interfaceID The interface identifier, as specified in ERC-165\n    /// @dev Interface identification is specified in ERC-165. This function\n    ///  uses less than 30,000 gas.\n    /// @return `true` if the contract implements `interfaceID` and\n    ///  `interfaceID` is not 0xffffffff, `false` otherwise\n    function supportsInterface(bytes4 interfaceID) external view returns (bool){\n        return supportedInterfaces[interfaceID];\n    }\n}\n",
+		"ERC165.sol": "pragma solidity ^0.5.8;\n\nimport \"./IERC165.sol\";\n\n/**\n * @dev Implementation of the {IERC165} interface.\n *\n * Contracts may inherit from this and call {_registerInterface} to declare\n * their support of an interface.\n */\ncontract ERC165 is IERC165 {\n    /*\n     * bytes4(keccak256('supportsInterface(bytes4)')) == 0x01ffc9a7\n     */\n    bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7;\n\n    /**\n     * @dev Mapping of interface ids to whether or not it's supported.\n     */\n    mapping(bytes4 => bool) private _supportedInterfaces;\n\n    constructor () internal {\n        // Derived contracts need only register support for their own interfaces,\n        // we register support for ERC165 itself here\n        _registerInterface(_INTERFACE_ID_ERC165);\n    }\n\n    /**\n     * @dev See {IERC165-supportsInterface}.\n     *\n     * Time complexity O(1), guaranteed to always use less than 30 000 gas.\n     */\n    function supportsInterface(bytes4 interfaceId) external view returns (bool) {\n        return _supportedInterfaces[interfaceId];\n    }\n\n    /**\n     * @dev Registers the contract as an implementer of the interface defined by\n     * `interfaceId`. Support of the actual ERC165 interface is automatic and\n     * registering its interface id is not required.\n     *\n     * See {IERC165-supportsInterface}.\n     *\n     * Requirements:\n     *\n     * - `interfaceId` cannot be the ERC165 invalid interface (`0xffffffff`).\n     */\n    function _registerInterface(bytes4 interfaceId) internal {\n        require(interfaceId != 0xffffffff, \"ERC165: invalid interface id\");\n        _supportedInterfaces[interfaceId] = true;\n    }\n}\n",
+		"IERC165.sol": "pragma solidity ^0.5.8;\n\n/**\n * @dev Interface of the ERC165 standard, as defined in the\n * https://eips.ethereum.org/EIPS/eip-165[EIP].\n *\n * Implementers can declare support of contract interfaces, which can then be\n * queried by others ({ERC165Checker}).\n *\n * For an implementation, see {ERC165}.\n */\ninterface IERC165 {\n    /**\n     * @dev Returns true if this contract implements the interface defined by\n     * `interfaceId`. See the corresponding\n     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]\n     * to learn more about how these ids are created.\n     *\n     * This function call must use less than 30 000 gas.\n     */\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\n}\n",
+		"MerkleTree.sol": "/**\nA base contract which handles Merkle Tree inserts (and consequent updates to the root and 'frontier' (see below)).\nThe intention is for other 'derived' contracts to import this contract, and for those derived contracts to manage permissions to actually call the insertLeaf/insertleaves functions of this base contract.\n\n@Author iAmMichaelConnor\n*/\n\npragma solidity ^0.5.8;\n\n\ncontract MerkleTree {\n\n    /*\n    @notice Explanation of the Merkle Tree in this contract:\n    This is an append-only merkle tree; populated from left to right.\n    We do not store all of the merkle tree's nodes. We only store the right-most 'frontier' of nodes required to calculate the new root when the next new leaf value is added.\n\n                      TREE (not stored)                       FRONTIER (stored)\n\n                                 0                                     ?\n                          /             \\\n                   1                             2                     ?\n               /       \\                     /       \\\n           3             4               5               6             ?\n         /   \\         /   \\           /   \\           /    \\\n       7       8      9      10      11      12      13      14        ?\n     /  \\    /  \\   /  \\    /  \\    /  \\    /  \\    /  \\    /  \\\n    15  16  17 18  19  20  21  22  23  24  25  26  27  28  29  30      ?\n\n    level  row  width  start#     end#\n      4     0   2^0=1   w=0     2^1-1=0\n      3     1   2^1=2   w=1     2^2-1=2\n      2     2   2^2=4   w=3     2^3-1=6\n      1     3   2^3=8   w=7     2^4-1=14\n      0     4   2^4=16  w=15    2^5-1=30\n\n    height = 4\n    w = width = 2 ** height = 2^4 = 16\n    #nodes = (2 ** (height + 1)) - 1 = 2^5-1 = 31\n\n    */\n\n    /**\n    These events are what the merkle-tree microservice's filters will listen for.\n    */\n    event NewLeaf(uint leafIndex, bytes32 leafValue, bytes32 root);\n    event NewLeaves(uint minLeafIndex, bytes32[] leafValues, bytes32 root);\n\n    event Output(bytes27 leftInput, bytes27 rightInput, bytes32 output, uint nodeIndex); // for debugging only\n\n    uint public treeHeight = 4;\n    uint public treeWidth = 2 ** treeHeight; // 2 ** treeHeight\n    uint256 public leafCount; // the number of leaves currently in the tree\n\n    /**\n    Whilst ordinarily, we'd work solely with bytes32, we need to truncate nodeValues up the tree. Therefore, we need to declare certain variables with lower byte-lengths:\n    LEAF_HASHLENGTH = 32 bytes;\n    NODE_HASHLENGTH = 27 bytes;\n    5 byte difference * 8 bits per byte = 40 bit shift to truncate hashlengths.\n    27 bytes * 2 inputs to sha() = 54 byte input to sha(). 54 = 0x36.\n    If in future you want to change the truncation values, search for '27', '40' and '0x36'.\n    */\n    bytes27 public zero = 0x000000000000000000000000000000000000000000000000000000;\n    // bytes32 zero = 0x0000000000000000000000000000000000000000000000000000000000000000;\n    bytes27[33] public frontier; // the right-most 'frontier' of nodes required to calculate the new root when the next new leaf value is added.\n\n    /**\n    @notice Get the index of the frontier (or 'storage slot') into which we will next store a nodeValue (based on the leafIndex currently being inserted). See the top-level README for a detailed explanation.\n    @return uint - the index of the frontier (or 'storage slot') into which we will next store a nodeValue\n    */\n    function getFrontierSlot(uint leafIndex) private pure returns (uint slot) {\n        slot = 0;\n        if (leafIndex % 2 == 1) {\n            uint exp1 = 1;\n            uint pow1 = 2;\n            uint pow2 = pow1 << 1;\n            while (slot == 0) {\n                if ((leafIndex + 1 - pow1) % pow2 == 0) {\n                    slot = exp1;\n                } else {\n                    pow1 = pow2;\n                    pow2 = pow2 << 1;\n                    exp1++;\n                }\n            }\n        }\n    }\n\n    /**\n    @notice Insert a leaf into the Merkle Tree, update the root, and update any values in the (persistently stored) frontier.\n    @param leafValue - the value of the leaf being inserted.\n    @return bytes32 - the root of the merkle tree, after the insert.\n    */\n    function insertLeaf(bytes32 leafValue) public returns (bytes32 root) {\n\n        // check that space exists in the tree:\n        require(treeWidth > leafCount, \"There is no space left in the tree.\");\n\n        uint slot = getFrontierSlot(leafCount);\n        uint nodeIndex = leafCount + treeWidth - 1;\n        bytes27 nodeValue = bytes27(leafValue << 40); // nodeValue is the hash, which iteratively gets overridden to the top of the tree until it becomes the root.\n\n        bytes27 leftInput;\n        bytes27 rightInput;\n        bytes32[1] memory output; // output of the hash function\n        bool success;\n\n        for (uint level = 0; level < treeHeight; level++) {\n\n            if (level == slot) frontier[slot] = nodeValue;\n\n            if (nodeIndex % 2 == 0) {\n                // even nodeIndex\n                leftInput = frontier[level];\n                rightInput = nodeValue;\n\n                // compute the hash of the inputs:\n                // note: we don't extract this hashing into a separate function because that would cost more gas.\n                /*\n                  * gasLimit: calling with gas equal to not(0), as we have here, will send all available gas to the function being called. This removes the need to guess or upper-bound the amount of gas being sent yourself. As an alternative, we could have guessed the gas needed with: sub(gas, 2000)\n                  * to: the sha256 precompiled contract is at address 0x2: Sending the amount of gas currently available to us (or after subtracting 2000 gas if using the alternative mentioned above);\n                  * inputOffset: Input data to the sha256 precompiled contract.\n                  * inputSize:\n                    hex input size = 0x40 = 2 x 32-bytes\n                    OR\n                    hex input size = 0x36 = 2 x 27-bytes\n                  * outputOffset: \"where will the output be stored?\" (in variable 'output' in our case)\n                  * outputSize: sha256 outputs 256-bits = 32-bytes = 0x20 in hex\n                */\n                assembly {\n                    // define pointer\n                    let input := mload(0x40) // 0x40 is always the free memory pointer. Don't change this.\n                    mstore(input, leftInput) // push first input\n                    mstore(add(input, 0x1b), rightInput) // push second input at position 27bytes = 0x1b\n                    success := staticcall(not(0), 2, input, 0x36, output, 0x20)\n                    // Use \"invalid\" to make gas estimation work\n                    switch success case 0 { invalid() }\n                }\n\n                nodeValue = bytes27(output[0] << 40); // the parentValue, but will become the nodeValue of the next level\n                nodeIndex = (nodeIndex - 1) / 2; // move one row up the tree\n\n                // emit Output(leftInput, rightInput, output[0], nodeIndex); // for debugging only\n            } else {\n                // odd nodeIndex\n                leftInput = nodeValue;\n                rightInput = zero;\n\n                // compute the hash of the inputs:\n                assembly {\n                    // define pointer\n                    let input := mload(0x40) // 0x40 is always the free memory pointer. Don't change this.\n                    mstore(input, leftInput) // push first input\n                    mstore(add(input, 0x1b), rightInput) // push second input at position 27bytes = 0x1b\n                    success := staticcall(not(0), 2, input, 0x36, output, 0x20)\n                    // Use \"invalid\" to make gas estimation work\n                    switch success case 0 { invalid() }\n                }\n\n                nodeValue = bytes27(output[0] << 40); // the parentValue, but will become the nodeValue of the next level\n                nodeIndex = nodeIndex / 2; // move one row up the tree\n\n                // emit Output(leftInput, rightInput, output[0], nodeIndex); // for debugging only\n            }\n        }\n\n        root = output[0];\n\n        emit NewLeaf(leafCount, leafValue, root); // this event is what the merkle-tree microservice's filter will listen for.\n\n        leafCount++; // the incrememnting of leafCount costs us 20k for the first leaf, and 5k thereafter\n\n        return root; //the root of the tree\n    }\n\n    /**\n    @notice Insert multiple leaves into the Merkle Tree, and then update the root, and update any values in the (persistently stored) frontier.\n    @param leafValues - the values of the leaves being inserted.\n    @return bytes32[] - the root of the merkle tree, after all the inserts.\n    */\n    function insertLeaves(bytes32[] memory leafValues) public returns (bytes32 root) {\n        uint numberOfLeaves = leafValues.length;\n\n        // check that space exists in the tree:\n        require(treeWidth > leafCount, \"There is no space left in the tree.\");\n        if (numberOfLeaves > treeWidth - leafCount) {\n            uint numberOfExcessLeaves = numberOfLeaves - (treeWidth - leafCount);\n            // remove the excess leaves, because we only want to emit those we've added as an event:\n            for (uint xs = 0; xs < numberOfExcessLeaves; xs++) {\n                /**\n                  CAUTION!!! This attempts to succinctly achieve leafValues.pop() on a **memory** dynamic array. Not thoroughly tested!\n                  Credit: https://ethereum.stackexchange.com/a/51897/45916\n                */\n                assembly {\n                    mstore(leafValues, sub(mload(leafValues), 1))\n                }\n            }\n            numberOfLeaves = treeWidth - leafCount;\n        }\n\n        uint slot;\n        uint nodeIndex;\n        bytes27 nodeValue;\n\n        bytes27 leftInput;\n        bytes27 rightInput;\n        bytes32[1] memory output; // the output of the hash\n        bool success;\n\n        // consider each new leaf in turn, from left to right:\n        for (uint leafIndex = leafCount; leafIndex < leafCount + numberOfLeaves; leafIndex++) {\n            nodeValue = bytes27(leafValues[leafIndex - leafCount] << 40);\n            nodeIndex = leafIndex + treeWidth - 1; // convert the leafIndex to a nodeIndex\n\n            slot = getFrontierSlot(leafIndex); // determine at which level we will next need to store a nodeValue\n\n            if (slot == 0) {\n                frontier[slot] = nodeValue; // store in frontier\n                continue;\n            }\n\n            // hash up to the level whose nodeValue we'll store in the frontier slot:\n            for (uint level = 1; level <= slot; level++) {\n                if (nodeIndex % 2 == 0) {\n                    // even nodeIndex\n                    leftInput = frontier[level - 1];\n                    rightInput = nodeValue;\n                    // compute the hash of the inputs:\n                    // note: we don't extract this hashing into a separate function because that would cost more gas.\n                    assembly {\n                        // define pointer\n                        let input := mload(0x40) // 0x40 is always the free memory pointer. Don't change this.\n                        mstore(input, leftInput) // push first input\n                        mstore(add(input, 0x1b), rightInput) // push second input at position 27bytes = 0x1b\n                        success := staticcall(not(0), 2, input, 0x36, output, 0x20)\n                        // Use \"invalid\" to make gas estimation work\n                        switch success case 0 { invalid() }\n                    }\n\n                    // emit Output(leftInput, rightInput, output[0], level, nodeIndex); // for debugging only\n\n                    nodeValue = bytes27(output[0] << 40); // the parentValue, but will become the nodeValue of the next level\n                    nodeIndex = (nodeIndex - 1) / 2; // move one row up the tree\n                } else {\n                    // odd nodeIndex\n                    leftInput = nodeValue;\n                    rightInput = zero;\n                    // compute the hash of the inputs:\n                    assembly {\n                        // define pointer\n                        let input := mload(0x40) // 0x40 is always the free memory pointer. Don't change this.\n                        mstore(input, leftInput) // push first input\n                        mstore(add(input, 0x1b), rightInput) // push second input at position 27bytes = 0x1b\n                        success := staticcall(not(0), 2, input, 0x36, output, 0x20)\n                        // Use \"invalid\" to make gas estimation work\n                        switch success case 0 { invalid() }\n                    }\n\n                    // emit Output(leftInput, rightInput, output[0], level, nodeIndex); // for debugging only\n\n                    nodeValue = bytes27(output[0] << 40); // the parentValue, but will become the nodeValue of the next level\n                    nodeIndex = nodeIndex / 2; // the parentIndex, but will become the nodeIndex of the next level\n                }\n            }\n            frontier[slot] = nodeValue; // store in frontier\n        }\n\n        // So far we've added all leaves, and hashed up to a particular level of the tree. We now need to continue hashing from that level until the root:\n        for (uint level = slot + 1; level <= treeHeight; level++) {\n\n            if (nodeIndex % 2 == 0) {\n                // even nodeIndex\n                leftInput = frontier[level - 1];\n                rightInput = nodeValue;\n                // compute the hash of the inputs:\n                assembly {\n                    // define pointer\n                    let input := mload(0x40) // 0x40 is always the free memory pointer. Don't change this.\n                    mstore(input, leftInput) // push first input\n                    mstore(add(input, 0x1b), rightInput) // push second input at position 27bytes = 0x1b\n                    success := staticcall(not(0), 2, input, 0x36, output, 0x20)\n                    // Use \"invalid\" to make gas estimation work\n                    switch success case 0 { invalid() }\n                }\n\n                // emit Output(leftInput, rightInput, output[0], level, nodeIndex); // for debugging only\n\n                nodeValue = bytes27(output[0] << 40); // the parentValue, but will become the nodeValue of the next level\n                nodeIndex = (nodeIndex - 1) / 2;  // the parentIndex, but will become the nodeIndex of the next level\n            } else {\n                // odd nodeIndex\n                leftInput = nodeValue;\n                rightInput = zero;\n                // compute the hash of the inputs:\n                assembly {\n                    // define pointer\n                    let input := mload(0x40) // 0x40 is always the free memory pointer. Don't change this.\n                    mstore(input, leftInput) // push first input\n                    mstore(add(input, 0x1b), rightInput) // push second input at position 27bytes = 0x1b\n                    success := staticcall(not(0), 2, input, 0x36, output, 0x20)\n                    // Use \"invalid\" to make gas estimation work\n                    switch success case 0 { invalid() }\n                }\n\n                // emit Output(leftInput, rightInput, output[0], level, nodeIndex); // for debugging only\n\n                nodeValue = bytes27(output[0] << 40); // the parentValue, but will become the nodeValue of the next level\n                nodeIndex = nodeIndex / 2;  // the parentIndex, but will become the nodeIndex of the next level\n            }\n        }\n\n        root = output[0];\n\n        emit NewLeaves(leafCount, leafValues, root); // this event is what the merkle-tree microservice's filter will listen for.\n\n        leafCount += numberOfLeaves; // the incrememnting of leafCount costs us 20k for the first leaf, and 5k thereafter\n\n        return root; //the root of the tree\n    }\n}\n",
+		"IShield.sol": "pragma solidity ^0.5.8;\n\ninterface IShield {\n    function close() external returns (bool);\n    function changeVerifier(address _verifier) external returns (bool);\n    function getVerifier() external view returns (address);\n    function createMSA(\n        uint256[] calldata,\n        uint256[] calldata,\n        bytes32 _newMSACommitment\n    ) external returns (bool);\n    function createPO(\n        uint256[] calldata,\n        uint256[] calldata,\n        bytes32,\n        bytes32,\n        bytes32,\n        bytes32\n    ) external returns(bool);\n\n}\n",
+		"IVerifier.sol": "/**\n@title IVerifier\n@dev Example Verifier Implementation\n@notice Do not use this example in any production code!\n*/\n\npragma solidity ^0.5.8;\n\n\ninterface IVerifier {\n\n    function verify(\n        uint256[] calldata _proof,\n        uint256[] calldata _inputs,\n        uint256[] calldata _vk\n    ) external returns (bool result);\n\n}\n",
+		"Registrar.sol": "pragma solidity ^0.5.8;\n\nimport \"./ERC1820Registry.sol\";\n\n/// @dev Contract that acts as a client for interacting with the ERC1820Registry\ncontract Registrar is ERC1820Registry {\n\n    ERC1820Registry ERC1820REGISTRY;\n    \n    /// @notice Constructor that takes an argument of the ERC1820RegistryAddress\n    /// @dev Upon actual deployment of a static registry contract, this argument can be removed\n    /// @param ERC1820RegistryAddress pre-deployed ERC1820 registry address\n    constructor (address ERC1820RegistryAddress) public {\n        // Below line is to be uncommented during actual deployment since mainnet has a version of this address\n        // ERC1820Registry constant ERC1820REGISTRY = ERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);\n        ERC1820REGISTRY = ERC1820Registry(ERC1820RegistryAddress);\n    }\n\n    /// @dev This enables setting the interface implementation\n    /// @notice Since this is an internal method any contract inheriting this contract would be\n    /// leveraged as the sender for the interface registry\n    /// @param _interfaceLabel label for the interface or the contract that is to be registered\n    /// @param _implementation the implementing contract's address\n    function setInterfaceImplementation(string memory _interfaceLabel, address _implementation) internal {\n        bytes32 interfaceHash = keccak256(abi.encodePacked(_interfaceLabel));\n        ERC1820REGISTRY.setInterfaceImplementer(address(this), interfaceHash, _implementation);\n    }\n\n    /// @dev This enables getting the address of the implementer\n    /// @param addr the address for which the implementer is deployed\n    /// @param _interfaceLabel label for the interface or the contract that is registered\n    function interfaceAddr(address addr, string calldata _interfaceLabel) external view returns(address) {\n        bytes32 interfaceHash = keccak256(abi.encodePacked(_interfaceLabel));\n        return ERC1820REGISTRY.getInterfaceImplementer(addr, interfaceHash);\n    }\n\n    /// @dev This enables assigning or changing manager\n    /// @notice Since this is an internal method any contract inheriting this contract would be\n    /// leveraged to call this function directly\n    /// @param _newManager address of the new manager who could set new interface implementations\n    function assignManagement(address _newManager) internal {\n        ERC1820REGISTRY.setManager(address(this), _newManager);\n    }\n}\n",
+		"ERC1820Registry.sol": "/* ERC1820 Pseudo-introspection Registry Contract\n * This standard defines a universal registry smart contract where any address (contract or regular account) can\n * register which interface it supports and which smart contract is responsible for its implementation.\n *\n * Written in 2019 by Jordi Baylina and Jacques Dafflon\n *\n * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to\n * this software to the public domain worldwide. This software is distributed without any warranty.\n *\n * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see\n * <http://creativecommons.org/publicdomain/zero/1.0/>.\n *\n *    ███████╗██████╗  ██████╗ ██╗ █████╗ ██████╗  ██████╗\n *    ██╔════╝██╔══██╗██╔════╝███║██╔══██╗╚════██╗██╔═████╗\n *    █████╗  ██████╔╝██║     ╚██║╚█████╔╝ █████╔╝██║██╔██║\n *    ██╔══╝  ██╔══██╗██║      ██║██╔══██╗██╔═══╝ ████╔╝██║\n *    ███████╗██║  ██║╚██████╗ ██║╚█████╔╝███████╗╚██████╔╝\n *    ╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═╝ ╚════╝ ╚══════╝ ╚═════╝\n *\n *    ██████╗ ███████╗ ██████╗ ██╗███████╗████████╗██████╗ ██╗   ██╗\n *    ██╔══██╗██╔════╝██╔════╝ ██║██╔════╝╚══██╔══╝██╔══██╗╚██╗ ██╔╝\n *    ██████╔╝█████╗  ██║  ███╗██║███████╗   ██║   ██████╔╝ ╚████╔╝\n *    ██╔══██╗██╔══╝  ██║   ██║██║╚════██║   ██║   ██╔══██╗  ╚██╔╝\n *    ██║  ██║███████╗╚██████╔╝██║███████║   ██║   ██║  ██║   ██║\n *    ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝\n *\n */\npragma solidity ^0.5.8;\n// IV is value needed to have a vanity address starting with '0x1820'.\n// IV: 53759\n\n/// @dev The interface a contract MUST implement if it is the implementer of\n/// some (other) interface for any address other than itself.\ninterface ERC1820ImplementerInterface {\n    /// @notice Indicates whether the contract implements the interface 'interfaceHash' for the address 'addr' or not.\n    /// @param interfaceHash keccak256 hash of the name of the interface\n    /// @param addr Address for which the contract will implement the interface\n    /// @return ERC1820_ACCEPT_MAGIC only if the contract implements 'interfaceHash' for the address 'addr'.\n    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32);\n}\n\n\n/// @title ERC1820 Pseudo-introspection Registry Contract\n/// @author Jordi Baylina and Jacques Dafflon\n/// @notice This contract is the official implementation of the ERC1820 Registry.\n/// @notice For more details, see https://eips.ethereum.org/EIPS/eip-1820\ncontract ERC1820Registry {\n    /// @notice ERC165 Invalid ID.\n    bytes4 constant internal INVALID_ID = 0xffffffff;\n    /// @notice Method ID for the ERC165 supportsInterface method (= `bytes4(keccak256('supportsInterface(bytes4)'))`).\n    bytes4 constant internal ERC165ID = 0x01ffc9a7;\n    /// @notice Magic value which is returned if a contract implements an interface on behalf of some other address.\n    bytes32 constant internal ERC1820_ACCEPT_MAGIC = keccak256(abi.encodePacked(\"ERC1820_ACCEPT_MAGIC\"));\n\n    /// @notice mapping from addresses and interface hashes to their implementers.\n    mapping(address => mapping(bytes32 => address)) internal interfaces;\n    /// @notice mapping from addresses to their manager.\n    mapping(address => address) internal managers;\n    /// @notice flag for each address and erc165 interface to indicate if it is cached.\n    mapping(address => mapping(bytes4 => bool)) internal erc165Cached;\n\n    /// @notice Indicates a contract is the 'implementer' of 'interfaceHash' for 'addr'.\n    event InterfaceImplementerSet(address indexed addr, bytes32 indexed interfaceHash, address indexed implementer);\n    /// @notice Indicates 'newManager' is the address of the new manager for 'addr'.\n    event ManagerChanged(address indexed addr, address indexed newManager);\n\n    /// @notice Query if an address implements an interface and through which contract.\n    /// @param _addr Address being queried for the implementer of an interface.\n    /// (If '_addr' is the zero address then 'msg.sender' is assumed.)\n    /// @param _interfaceHash Keccak256 hash of the name of the interface as a string.\n    /// E.g., 'web3.utils.keccak256(\"ERC777TokensRecipient\")' for the 'ERC777TokensRecipient' interface.\n    /// @return The address of the contract which implements the interface '_interfaceHash' for '_addr'\n    /// or '0' if '_addr' did not register an implementer for this interface.\n    function getInterfaceImplementer(address _addr, bytes32 _interfaceHash) external view returns (address) {\n        address addr = _addr == address(0) ? msg.sender : _addr;\n        if (isERC165Interface(_interfaceHash)) {\n            bytes4 erc165InterfaceHash = bytes4(_interfaceHash);\n            return implementsERC165Interface(addr, erc165InterfaceHash) ? addr : address(0);\n        }\n        return interfaces[addr][_interfaceHash];\n    }\n\n    /// @notice Sets the contract which implements a specific interface for an address.\n    /// Only the manager defined for that address can set it.\n    /// (Each address is the manager for itself until it sets a new manager.)\n    /// @param _addr Address for which to set the interface.\n    /// (If '_addr' is the zero address then 'msg.sender' is assumed.)\n    /// @param _interfaceHash Keccak256 hash of the name of the interface as a string.\n    /// E.g., 'web3.utils.keccak256(\"ERC777TokensRecipient\")' for the 'ERC777TokensRecipient' interface.\n    /// @param _implementer Contract address implementing '_interfaceHash' for '_addr'.\n    function setInterfaceImplementer(address _addr, bytes32 _interfaceHash, address _implementer) external {\n        address addr = _addr == address(0) ? msg.sender : _addr;\n        require(getManager(addr) == msg.sender, \"Not the manager\");\n\n        require(!isERC165Interface(_interfaceHash), \"Must not be an ERC165 hash\");\n        if (_implementer != address(0) && _implementer != msg.sender) {\n            require(\n                ERC1820ImplementerInterface(_implementer)\n                    .canImplementInterfaceForAddress(_interfaceHash, addr) == ERC1820_ACCEPT_MAGIC,\n                \"Does not implement the interface\"\n            );\n        }\n        interfaces[addr][_interfaceHash] = _implementer;\n        emit InterfaceImplementerSet(addr, _interfaceHash, _implementer);\n    }\n\n    /// @notice Sets '_newManager' as manager for '_addr'.\n    /// The new manager will be able to call 'setInterfaceImplementer' for '_addr'.\n    /// @param _addr Address for which to set the new manager.\n    /// @param _newManager Address of the new manager for 'addr'. (Pass '0x0' to reset the manager to '_addr'.)\n    function setManager(address _addr, address _newManager) external {\n        require(getManager(_addr) == msg.sender, \"Not the manager\");\n        managers[_addr] = _newManager == _addr ? address(0) : _newManager;\n        emit ManagerChanged(_addr, _newManager);\n    }\n\n    /// @notice Get the manager of an address.\n    /// @param _addr Address for which to return the manager.\n    /// @return Address of the manager for a given address.\n    function getManager(address _addr) public view returns(address) {\n        // By default the manager of an address is the same address\n        if (managers[_addr] == address(0)) {\n            return _addr;\n        } else {\n            return managers[_addr];\n        }\n    }\n\n    /// @notice Compute the keccak256 hash of an interface given its name.\n    /// @param _interfaceName Name of the interface.\n    /// @return The keccak256 hash of an interface name.\n    function interfaceHash(string calldata _interfaceName) external pure returns(bytes32) {\n        return keccak256(abi.encodePacked(_interfaceName));\n    }\n\n    /* --- ERC165 Related Functions --- */\n    /* --- Developed in collaboration with William Entriken. --- */\n\n    /// @notice Updates the cache with whether the contract implements an ERC165 interface or not.\n    /// @param _contract Address of the contract for which to update the cache.\n    /// @param _interfaceId ERC165 interface for which to update the cache.\n    function updateERC165Cache(address _contract, bytes4 _interfaceId) external {\n        interfaces[_contract][_interfaceId] = implementsERC165InterfaceNoCache(\n            _contract, _interfaceId) ? _contract : address(0);\n        erc165Cached[_contract][_interfaceId] = true;\n    }\n\n    /// @notice Checks whether a contract implements an ERC165 interface or not.\n    //  If the result is not cached a direct lookup on the contract address is performed.\n    //  If the result is not cached or the cached value is out-of-date, the cache MUST be updated manually by calling\n    //  'updateERC165Cache' with the contract address.\n    /// @param _contract Address of the contract to check.\n    /// @param _interfaceId ERC165 interface to check.\n    /// @return True if '_contract' implements '_interfaceId', false otherwise.\n    function implementsERC165Interface(address _contract, bytes4 _interfaceId) public view returns (bool) {\n        if (!erc165Cached[_contract][_interfaceId]) {\n            return implementsERC165InterfaceNoCache(_contract, _interfaceId);\n        }\n        return interfaces[_contract][_interfaceId] == _contract;\n    }\n\n    /// @notice Checks whether a contract implements an ERC165 interface or not without using nor updating the cache.\n    /// @param _contract Address of the contract to check.\n    /// @param _interfaceId ERC165 interface to check.\n    /// @return True if '_contract' implements '_interfaceId', false otherwise.\n    function implementsERC165InterfaceNoCache(address _contract, bytes4 _interfaceId) public view returns (bool) {\n        uint256 success;\n        uint256 result;\n\n        (success, result) = noThrowCall(_contract, ERC165ID);\n        if (success == 0 || result == 0) {\n            return false;\n        }\n\n        (success, result) = noThrowCall(_contract, INVALID_ID);\n        if (success == 0 || result != 0) {\n            return false;\n        }\n\n        (success, result) = noThrowCall(_contract, _interfaceId);\n        if (success == 1 && result == 1) {\n            return true;\n        }\n        return false;\n    }\n\n    /// @notice Checks whether the hash is a ERC165 interface (ending with 28 zeroes) or not.\n    /// @param _interfaceHash The hash to check.\n    /// @return True if '_interfaceHash' is an ERC165 interface (ending with 28 zeroes), false otherwise.\n    function isERC165Interface(bytes32 _interfaceHash) internal pure returns (bool) {\n        return _interfaceHash & 0x00000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF == 0;\n    }\n\n    /// @dev Make a call on a contract without throwing if the function does not exist.\n    function noThrowCall(address _contract, bytes4 _interfaceId)\n        internal view returns (uint256 success, uint256 result)\n    {\n        bytes4 erc165ID = ERC165ID;\n\n        assembly {\n            let x := mload(0x40)               // Find empty storage location using \"free memory pointer\"\n            mstore(x, erc165ID)                // Place signature at beginning of empty storage\n            mstore(add(x, 0x04), _interfaceId) // Place first argument directly next to signature\n\n            success := staticcall(\n                30000,                         // 30k gas\n                _contract,                     // To addr\n                x,                             // Inputs are stored at location x\n                0x24,                          // Inputs are 36 (4 + 32) bytes long\n                x,                             // Store output over input (saves space)\n                0x20                           // Outputs are 32 bytes long\n            )\n\n            result := mload(x)                 // Load the result\n        }\n    }\n}\n",
+		"Ownable.sol": "pragma solidity ^0.5.8;\n\n\n/**\n * @title Ownable\n * @dev This contract has the owner address providing basic authorization control\n */\ncontract Ownable {\n  /**\n   * @dev Event to show ownership has been transferred\n   * @param previousOwner representing the address of the previous owner\n   * @param newOwner representing the address of the new owner\n   */\n  event OwnershipTransferred(address previousOwner, address newOwner);\n\n  // Owner of the contract\n  address public _owner;\n\n  /**\n   * @dev Throws if called by any account other than the owner.\n   */\n  modifier onlyOwner() {\n    require(msg.sender == owner(), \"You are not authorised to invoke this function\");\n    _;\n  }\n\n  /**\n   * @dev The constructor sets the original owner of the contract to the sender account.\n   */\n  constructor() public {\n    setOwner(msg.sender);\n  }\n\n  /**\n   * @dev Tells the address of the owner\n   * @return the address of the owner\n   */\n  function owner() public view returns (address) {\n    return _owner;\n  }\n\n  /**\n   * @dev Sets a new owner address\n   */\n  function setOwner(address newOwner) internal {\n    _owner = newOwner;\n  }\n\n  /**\n   * @dev Allows the current owner to transfer control of the contract to a newOwner.\n   * @param newOwner The address to transfer ownership to.\n   */\n  function transferOwnership(address newOwner) public onlyOwner {\n    require(newOwner != address(0));\n    emit OwnershipTransferred(owner(), newOwner);\n    setOwner(newOwner);\n  }\n}\n",
+		"ERC20Interface.sol": "pragma solidity ^0.5.8;\n\n/**\n * @title ERC-20 interface\n * @dev see https://github.com/ethereum/EIPs/issues/20\n The MIT License\n\nCopyright (c) 2017-2018 0xcert, d.o.o. https://0xcert.org\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in\nall copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN\nTHE SOFTWARE.\n */\ninterface ERC20Interface {\n  function totalSupply() external view returns (uint256);\n\n  function balanceOf(address who) external view returns (uint256);\n\n  function allowance(address owner, address spender)\n    external view returns (uint256);\n\n  function transfer(address to, uint256 value) external returns (bool);\n\n  function approve(address spender, uint256 value)\n    external returns (bool);\n\n  function transferFrom(address from, address to, uint256 value)\n    external returns (bool);\n\n  event Transfer(\n    address indexed from,\n    address indexed to,\n    uint256 value\n  );\n\n  event Approval(\n    address indexed owner,\n    address indexed spender,\n    uint256 value\n  );\n}\n"
+	},
+	"sourceTreeHashHex": "0x15ab3d08e51b86631f78b3abbd70bfed86b3a4ab4cd2f765dd9f75a2c20c48bc",
+	"compiler": {
+		"name": "solc",
+		"version": "soljson-v0.5.17+commit.d19bba13.js",
+		"settings": {
+			"optimizer": {
+				"enabled": false
+			},
+			"outputSelection": {
+				"*": {
+					"*": [
+						"abi",
+						"evm.bytecode.object"
+					]
+				}
+			},
+			"remappings": []
+		}
+	},
+	"chains": {}
+}

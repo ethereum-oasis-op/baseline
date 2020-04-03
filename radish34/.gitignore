@@ -101,3 +101,5 @@ config/merkle-tree/
 
 # Ignore generated docs
 docs/generated
+
+.vscode/
