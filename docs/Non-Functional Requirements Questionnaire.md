@@ -5,7 +5,7 @@
 * [Performance](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#performance)  
 
 ## Barriers and Challenges
-The sections below (Technology, Compliance, and Business) may act as significant barriers to implementation or adopt your application on Mainnet.
+The sections below ([Technology](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#technology-barriers), [Compliance](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#compliance-barriers), and [Business](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#business-barriers) may act as significant barriers to implementation or adoption of your application on Mainnet. Go through each section and check off everything that applies. Please feel free to add anything else that's not included.
 
 ### Technology Barriers
 Check off all that apply below:
