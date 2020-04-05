@@ -16,7 +16,7 @@
 
 __Baseline__ is an open source initiative with a large and growing team of supporting companies. The first code was donated by Ernst & Young and ConsenSys, with support from Microsoft, and is now receiving contributions from many other companies. The purpose of the project is to bring enterprises and complex business processes to the Ethereum Mainnet, while guarding the privacy constraints and needs of a typical group of enterprises. 
 
-The __Baseline Protocol__ defines a series of steps to follow to privately and securely synchronize data inside two independent databases, using the Ethereum Mainnet as an auditable common frame of reference. This protocol implements best practices around data consistency and compartmentalization, and leverages public Ethereum for verifying execution of private transactions, contracts and tokens on the mainnet using ZKP (zkSnarks). The __Baseline Protocol__ is designed such that it can be extended and applied to any database/workflow.
+The __Baseline Protocol__ defines a series of steps to privately and securely synchronize data and business logic between multiple independent systems of record, using the Ethereum Mainnet as an auditable common frame of reference. This protocol implements best practices around data consistency and compartmentalization, and leverages public Ethereum for verifying execution of private transactions, contracts and tokens on the Mainnet using ZKP (zkSnarks). The __Baseline Protocol__ is designed such that it can be extended and applied to any database/workflow.
 
 # Radish34 Demo
 
@@ -28,8 +28,18 @@ The __Baseline Protocol__ code is currently embedded inside the `/radish-api` di
 
 A `Makefile` has been included for convenience; most of its targets wrap `npm`, `docker` and `solc` invocations.
 
-Just want to get the __Baseline Protocol__ running locally?
-`make && make start && make test` will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes between [] and [] minutes to complete.*
+Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete. [You will need dotdocker running.](./radish34/README.md#prerequisites-to-run-the-demo) *
+
+```
+make
+make deploy-contracts
+make start
+make test
+```
+
+### The demo UI
+
+After running the above (`make test` optional) you can view the Radish34 demo by opening [http://radish34-ui.docker](http://radish34-ui.docker) in your browser.
 
 Here are the targets currently exposed by the `Makefile`:
 
@@ -43,6 +53,7 @@ Here are the targets currently exposed by the `Makefile`:
 | `make npm-install` | `npm ci` wrapper for all modules in the monorepo. |
 | `make start` | Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation. |
 | `make stop` | Stop the running __Baseline__ stack. |
+| `make reset` | Clean out the docker networks and volumes. Requires `make deploy-contracts` before the next `make start`. |
 | `make test` | Run the full test suite. Requires the stack to be running. |
 | `make zk-circuits` | Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits` |
 

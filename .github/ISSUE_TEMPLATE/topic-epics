@@ -1,0 +1,5 @@
+Description usually as series of nouns (if action verbs in header, consider whether this is better as an issue/task).
+
+Don't forget to convert issue to Epic (and use Zenhub to manage).
+
+You can embed these Epics inside other Epics. Terminate ideally in a set of User Stories...which ideally connect to Issues as Engineering tasks or to-dos.
