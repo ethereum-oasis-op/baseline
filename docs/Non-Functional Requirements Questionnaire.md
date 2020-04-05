@@ -33,22 +33,23 @@ Check off all that apply below:
 ## General
 
 ### Which vertical or horizontal is your use case in?
-* Finance
-* Insurance
-* Media
-* Gaming & Entertainment
-* Education
-* Energy
-* Healthcare
-* Manufacturing
-* Supply Chain
-* Transportation
-* Retail
-* Real Estate
-* Food & Beverage
-* Hospitality
-* Telecommunications
-* Technology
+Check off the vertical or horizontal that that applies:
+- [ ] Finance
+- [ ] Insurance
+- [ ] Media
+- [ ] Gaming & Entertainment
+- [ ] Education
+- [ ] Energy
+- [ ] Healthcare
+- [ ] Manufacturing
+- [ ] Supply Chain
+- [ ] Transportation
+- [ ] Retail
+- [ ] Real Estate
+- [ ] Food & Beverage
+- [ ] Hospitality
+- [ ] Telecommunications
+- [ ] Technology
 
 ### Please describe your application/use case involving Mainnet in as much detail as possible.
 
