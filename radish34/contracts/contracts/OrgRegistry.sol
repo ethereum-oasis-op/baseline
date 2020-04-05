@@ -118,7 +118,7 @@ contract OrgRegistry is MultiOwnable, ERC165Compatible, Registrar, IOrgRegistry 
         uint _role,
         bytes calldata _messagingKey,
         bytes calldata _zkpPublicKey
-    ) external returns (bool) {
+    ) external onlyOwner returns (bool) {
         Org memory org = Org(_address, _name, _role, _messagingKey, _zkpPublicKey);
         roleMap[_role].add(_address);
         orgMap[_address] = org;
@@ -146,7 +146,7 @@ contract OrgRegistry is MultiOwnable, ERC165Compatible, Registrar, IOrgRegistry 
         address _tokenAddress,
         address _shieldAddress,
         address _verifierAddress
-    ) external returns (bool) {
+    ) external onlyOwner returns (bool) {
         orgInterfaceMap[orgInterfaceCount] = OrgInterfaces(
             _groupName,
             _tokenAddress,

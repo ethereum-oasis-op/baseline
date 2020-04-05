@@ -59,10 +59,43 @@ test('Should be able to register an org', async () => {
     utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
     utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128')
   );
+  const orgCountBefore = await orgRegistry.getOrgCount();
+  expect(orgCountBefore.toNumber()).toBe(1);
+});
+
+test('Should not be able to register an org from non-owner', async () => {
+  const nonOwner = await getSigner(accounts[4]);
+  const nonOwnerOrgRegistry = orgRegistry.connect(nonOwner);
+  try {
+    await nonOwnerOrgRegistry.registerOrg(
+      accounts[1],
+      utils.formatBytes32String("Name"),
+      2,
+      utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
+      utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128')
+    );
+  } catch(e) {
+    expect(e.message).toMatch('revert');
+  }
+
+  const orgCountAfter = await orgRegistry.getOrgCount();
+  expect(orgCountAfter.toNumber()).toBe(1);
 });
 
 test('Should be able to register an orgs interfaces', async () => {
   const txReceipt = await orgRegistry.registerInterfaces(utils.formatBytes32String("RandomInterface"), accounts[0], accounts[1], accounts[2]);
+});
+
+test('Should not be able to register an orgs interfaces from non owner', async () => {
+  const nonOwner = await getSigner(accounts[4]);
+  const nonOwnerOrgRegistry = orgRegistry.connect(nonOwner);
+  try {
+    await nonOwnerOrgRegistry.registerInterfaces(utils.formatBytes32String("RandomInterface2"), accounts[0], accounts[1], accounts[2]);
+  } catch(e) {
+    expect(e.message).toMatch('revert');
+    return;
+  }
+  expect(false).toBeTruthy();
 });
 
 test('Should be able to get all interface details for an org', async () => {
