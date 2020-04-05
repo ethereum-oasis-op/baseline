@@ -53,31 +53,32 @@ Check off the vertical or horizontal that that applies:
 
 ### Please describe your application/use case involving Mainnet in as much detail as possible.
 
-
+> A description of your application or use case goes here. 
 
 ### What systems does your use case need to integrate with?
 
-
+> List specific systems such as CRM, ERP, IMS, etc.
 
 ### Please list the types of user roles in your use case.
 
-
-
-
+> User roles that will need to interact with the application. For example in an Procurement use cases you may have a Buyer and a Supplier.
 
 ### What are your concerns about using Mainnet in this application?
 
-
+> Similar to the Barriers and Challenges section above, but will allow for an open ended answer to collect feedback.
 
 ### What are the business processes and user journeys that are most critical?
 
-
+> Narratives and diagrams are a good way to explain your business process and user journey. To see an example of the procurement use case defined in the Radish34 demo click [here](https://docs.baseline-protocol.org/radish34/radish34-workflow).
 
 ### If you have a preferred architectural stack in mind for this use case, please explain.
 
-
+> Please include any considerations for cloud technologies, software components, etc. 
 
 ### How would you like to provide access to users of the system?
+
+> Please include any considerations for where end users would access the system. Check all that apply: 
+
 - [ ] Web/Mobile Interface
 - [ ] Desktop Application
 - [ ] Command Line Interface (CLI)
@@ -119,6 +120,9 @@ Check off the vertical or horizontal that that applies:
 
 
 ### Are there any specific blockchains your use case would need to be interoperable with? Please explain.
+
+
+
 
 
 
