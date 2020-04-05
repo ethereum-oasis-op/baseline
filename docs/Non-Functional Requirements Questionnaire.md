@@ -1,9 +1,8 @@
-Table of Contents
-=================
+## Table of Contents
 
-      * [Barriers and Challenges](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#barriers-and-challenges)
-      * [General](#general)
-      * [Performance](#performance)
+* [Barriers and Challenges](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#barriers-and-challenges)  
+* [General](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#general)  
+* [Performance](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#performance)  
 
 ## Barriers and Challenges
 Which of the following do you consider as significant barriers to implementation or adoption of your application on Mainnet?
