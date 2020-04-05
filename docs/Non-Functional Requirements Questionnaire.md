@@ -7,12 +7,12 @@ Which of the following do you consider as significant barriers to implementation
 * Noisy Neighbors must not disrupt my operations: As an enterprise conducting mission-critical operations that rely on predictable operation timing, I need to be comfortable that a “cryptokitty” event isn’t a possibility. I need to know that, even though the Mainnet is a public utility, there is reasonable assurance by some means that the reads, writes and computations I need to conduct business on the Mainnet will not be reduced to a crawl by the activities of others.
 * Finality Problem: Ethereum is an “eventual consistency”. If that’s changing with Eth2.0, I don’t understand it...something about a magical fast finality something. I dunno. What I do know is that all my systems are ones where a change to data is final the second it’s written.
 
-### Compliance Barriers
+### Compliance Barriers:
 * Data Locality Problem: GDPR requires that I can account for where PII data is stored, even when it is encrypted. And I need to be able to delete that data permanently upon request. If the data is sitting permanently on any number of nodes not controlled by me everywhere...yeah.
 * Responsible Party Problem: My legal structure requires that there be a responsible party handling all aspects of my data and business logic. If I put data on the Mainnet, I lose a key responsible party.
 * Opt-In KYC: I need to know who I'm transacting with, and to register an Ethereum address/identity with KYC/AML: "TSA Precheck" for Identity.
 
-### Business Barriers
+### Business Barriers:
 * Cost Problem: It’s not about how much it costs per transaction or that our company isn’t yet set up to hold ETH for “gas.” It’s also about the unpredictability of the cost. And I don’t want to have to go back for my degree in finance to understand stablecoins just to manage IT.
 * Gas Reserves: As a company whose treasury still isn’t comfortable holding cryptocurrency, I need an easy and safe way to maintain gas reserves necessary to conduct operations. (This does not include custodianship of coins and tokens held as assets or currency, but rather as a commodity needed to run non-financial operations, store data and proofs, generate shield contracts and other cryptographic methods, and power transactions that may or may not be conducting financial transfers.).
 * Private Data Problem: Eighty percent of our data is considered sensitive, internal or personally identifiable client, customer or user data. Encryption isn’t enough. Any data can be deanonymized and decrypted given time. And anyone with a full node has forever to crunch the bits on the ledger.  So I don't like putting even encrypted data on a public chain.
