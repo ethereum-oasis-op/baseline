@@ -1,3 +1,10 @@
+Table of Contents
+=================
+
+      * [Barriers and Challenges](#barriers-and-challenges)
+      * [General](#general)
+      * [Performance](#performance)
+
 ## Barriers and Challenges
 Which of the following do you consider as significant barriers to implementation or adoption of your application on Mainnet?
 
