@@ -1,3 +1,9 @@
+# Non-Functional Requirement Questionnaire
+
+This questionnaire is based on the Enterprise Ethereum Alliance's (EEA) Non-Functional Requirement (NFR) Survey that was developed by the EEA Mainnet Working Group - Use Cases Task Force. The EEA Mainnet Working Group Task Force's survey can be accessed [here](https://forms.gle/gCv5WZK9yiaCK5Y86) and will remain open for the community to submit their responses until **May 1, 2020**. 
+
+The purpose of this document is to serve as a reference to a methodology that can be used to gathering and communicate NFRs to stakeholders. 
+
 ## Table of Contents
 
 * [Barriers and Challenges](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#barriers-and-challenges)  
