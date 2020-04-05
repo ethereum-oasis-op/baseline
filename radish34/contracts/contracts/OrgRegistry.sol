@@ -100,8 +100,8 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     /// @dev Since this is an inherited method from Registrar, it allows for a new manager to be set
     /// for this contract instance
-    function assignManager(address _oldManager, address _newManager) external {
-        assignManagement(_oldManager, _newManager);
+    function assignManager(address _newManager) external {
+        assignManagement(_newManager);
     }
 
     /// @notice Function to register an organization
