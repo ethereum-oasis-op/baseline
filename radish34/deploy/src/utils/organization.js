@@ -22,11 +22,9 @@ const assignManager = async (manageeName, newManagerName, msgSenderName) => {
     Wallet.getPrivateKey(msgSenderName),
   );
 
-  // the 'old manager' of OrgRegistry is the OrgRegistry itself.
-  const manageeAddress = Contract.getContractAddress(manageeName);
   const newManagerAddress = Wallet.getAddress(newManagerName);
 
-  const tx = await contractWithWallet.assignManager(manageeAddress, newManagerAddress);
+  const tx = await contractWithWallet.assignManager(newManagerAddress);
   const transactionHash = { transactionHash: tx.hash };
 
   return transactionHash;

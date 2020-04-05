@@ -112,7 +112,6 @@ const main = async () => {
   const registerAll = process.env.MODE === 'register-all';
 
   await deployContracts('deployer');
-  await assignManager('deployer');
   await setInterfaceImplementer('deployer');
   await register('buyer');
   await register('supplier1');

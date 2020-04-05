@@ -42,7 +42,7 @@ test('Should be able to successfully execute verify transaction', async() => {
   expect(txLogs.name).toEqual('Verified');
   expect(txLogs.topic).toEqual(topic);
   expect(txLogs.values['0']).toEqual(true);
-}, 10000);
+}, 20000);
 
 test('Should be able to throw when input to verify function overflows snark scalar bound', async() => {
   expect.assertions(2);

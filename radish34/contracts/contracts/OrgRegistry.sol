@@ -12,7 +12,7 @@ import "./Ownable.sol";
 /// Contract inherits from Ownable and ERC165Compatible
 /// Ownable contains ownership criteria of the organization registry
 /// ERC165Compatible contains interface compatibility checks
-contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
+contract OrgRegistry is ERC165Compatible, Registrar, IOrgRegistry {
     /// @notice Leverages roles contract as imported above to assign different roles
     using Roles for Roles.Role;
 
@@ -53,7 +53,8 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// registry. Ideally, this contract is a publicly known address:
     /// 0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24. Inherently, the constructor
     /// sets the interfaces and registers the current contract with the global registry
-    constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
+    constructor(address _erc1820) public ERC165Compatible() Registrar(_erc1820) {
+        assignManagement(msg.sender);
         setInterfaces();
         setInterfaceImplementation("IOrgRegistry", address(this));
     }
@@ -63,7 +64,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @dev the character '^' corresponds to bit wise xor of individual interface id's
     /// which are the parsed 4 bytes of the function signature of each of the functions
     /// in the org registry contract
-    function setInterfaces() public onlyOwner returns (bool) {
+    function setInterfaces() public onlyManager returns (bool) {
         /// 0x54ebc817 is equivalent to the bytes4 of the function selectors in IOrgRegistry
         supportedInterfaces[this.registerOrg.selector ^
                             this.registerInterfaces.selector ^
