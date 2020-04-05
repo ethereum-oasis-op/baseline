@@ -87,41 +87,37 @@ Check off the vertical or horizontal that that applies:
 ## Performance
 
 
-### Do you have performance requirements regarding transaction completion time for your use case? Please explain.
+### Do you have performance requirements regarding transaction completion time for your use case?
 
-
-
-
-
-
+> Please explain any specific requirements that involve transaction completion time. For example, a work flow may require a transaction to complete before starting.
 
 ### Do you have performance requirements regarding user interface responsiveness, data updates, queries, etc? Please explain.
 
-
+> Please explain any specific requirements that involve transaction completion time. For example, a workflow may require a transaction to complete before starting a new state.
 
 ### How many write transactions per year do you anticipate for your use case?
 
+> Think about your use case process flow and try to quantify the number of write transactions. You can think in terms of days, weeks, or months. 
 
+### How do you anticipate transaction volume changing in the future?
 
-### How do you anticipate transaction volume changing in the future (e.g. over the next 6 months, 2 years, and 5 years)?
-
-
+> Try to imagine how you number of write transactions will change over the next year, 2 years, 5 years, etc. 
 
 ### What is the impact of not meeting the performance requirement for use case? Please explain.
 
+> This question intends to capture the impact of the application not meeting performance requirements. For example, you can think in terms of monetary impact such as dollar loss.
 
+### How important is the ability to prevent unauthorized changes (writes) or viewing access (reads) to data to your use case? What would be the legal and cost implications if an unauthorized change occurred.
 
-### How important is the ability to prevent unauthorized changes (writes) or viewing access (reads) to data to your use case? What would be the legal and cost implications if an unauthorized change occurred. Please explain.
+> For example, is it a regulatory factor? Be as descriptive as possible. 
 
+### Do you have any Service Level Agreements (SLA) that need to be met for your use case?
 
+> Explain any SLAs that your use case will need to honor.
 
-### Do you have any Service Level Agreements (SLA) that need to be met for your use case? Please explain?
+### Are there any specific blockchains your use case would need to be interoperable with?
 
-
-
-### Are there any specific blockchains your use case would need to be interoperable with? Please explain.
-
-
+> This could include any public blockchain and private blockchain.
 
 
 
