@@ -1,7 +1,7 @@
 Table of Contents
 =================
 
-      * [Barriers and Challenges](#barriers-and-challenges)
+      * [Barriers and Challenges](https://github.com/EnvisionBlockchain/baseline/blob/specs/docs/Non-Functional%20Requirements%20Questionnaire.md#barriers-and-challenges)
       * [General](#general)
       * [Performance](#performance)
 
