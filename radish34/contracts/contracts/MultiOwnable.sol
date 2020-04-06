@@ -3,7 +3,7 @@ pragma solidity ^0.5.8;
 contract MultiOwnable {
     mapping(address => bool) public isOwner;
 
-    event SetOwner(address[] owners);
+    event SetOwner(address owner);
 
     modifier onlyOwner() {
         require(isOwner[msg.sender] == true);
@@ -24,7 +24,7 @@ contract MultiOwnable {
     function setOwner(address owner) public {
         require(isOwner[msg.sender]);
         isOwner[owner] = true;
-
+        emit SetOwner(owner);
     }
 
 }
