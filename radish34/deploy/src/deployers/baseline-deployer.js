@@ -53,12 +53,12 @@ class BaselineDeployer {
 		let result = {}
 
 		if (typeof deployWorkgroupTask.orgRegistryArtifacts !== 'undefined') {
-			const orgRegistryContract = await this._deployOrgRegistry(deployer, deployWorkgroupTask.orgRegistryArtifacts);
+			const orgRegistryContract = await this._deployOrgRegistry(deployer, deployWorkgroupTask.orgRegistryArtifacts, deployWorkgroupTask.erc1820RegistryAddress);
 			result['OrgRegistry'] = orgRegistryContract;
 		}
 
 		if (typeof deployWorkgroupTask.shieldArtifacts !== 'undefined') {
-			const shieldContracts = await this._deployShield(deployer, deployWorkgroupTask.BN256G2Artifacts, deployWorkgroupTask.verifierArtifacts, deployWorkgroupTask.shieldArtifacts);
+			const shieldContracts = await this._deployShield(deployer, deployWorkgroupTask.BN256G2Artifacts, deployWorkgroupTask.verifierArtifacts, deployWorkgroupTask.shieldArtifacts, deployWorkgroupTask.erc1820RegistryAddress);
 			result = {
 				...result,
 				...shieldContracts
@@ -68,15 +68,15 @@ class BaselineDeployer {
 		return result;
 	}
 
-	async _deployOrgRegistry(deployer, contractArtifacts) {
+	async _deployOrgRegistry(deployer, contractArtifacts, erc1820RegistryAddress) {
 		if (typeof contractArtifacts === 'undefined') {
 			throw new Error('No OrgRegistry contract artifacts supplied');
 		}
 
-		return await deployer.deploy(contractArtifacts, {}, contractArtifacts.erc1820RegistryAddress);
+		return await deployer.deploy(contractArtifacts, {}, erc1820RegistryAddress);
 	}
 
-	async _deployShield(deployer, bnArtifacts, verifierArtifacts, shieldArtifacts) {
+	async _deployShield(deployer, bnArtifacts, verifierArtifacts, shieldArtifacts, erc1820RegistryAddress) {
 		if (typeof bnArtifacts === 'undefined') {
 			throw new Error('No BN256G2 contract artifacts supplied');
 		}
@@ -94,9 +94,9 @@ class BaselineDeployer {
 
 		const VerifierContract = await deployer.deploy(verifierArtifacts, {
 			'BN256G2': BNContract.contractAddress
-		}, verifierArtifacts.erc1820RegistryAddress);
+		}, erc1820RegistryAddress);
 
-		const ShieldContract = await deployer.deploy(shieldArtifacts, {}, VerifierContract.contractAddress, shieldArtifacts.erc1820RegistryAddress)
+		const ShieldContract = await deployer.deploy(shieldArtifacts, {}, VerifierContract.contractAddress, erc1820RegistryAddress)
 
 		const result = {}
 		result['BN256G2'] = BNContract;

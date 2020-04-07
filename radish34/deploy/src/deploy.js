@@ -2,17 +2,24 @@ const path = require('path');
 const assert = require('assert');
 const ethers = require('ethers');
 
-const RadishPathContractsResolver = require('./resolvers/contract-resolvers/radish-path-resolver.js');
-const RadishPathKeystoreResolver = require('./resolvers/keystore-resolvers/radish-path-resolver.js');
+const RadishPathContractsResolver = require('./resolvers/contract-resolvers/radish-configpath-resolver.js');
+const RadishPathKeystoreResolver = require('./resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
 
 const BaselineDeployer = require('./deployers/baseline-deployer.js');
+const WorkgroupManager = require('./managers/workgroup-manager.js');
 
 const main = async (pathKeystoreResolver, pathContractsResolver) => {
 
   const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_PROVIDER);
 
-  await deployContracts(pathKeystoreResolver, pathContractsResolver, provider);
+  const { ERC1820Registry, OrgRegistry, Verifier, Shield } = await deployContracts(pathKeystoreResolver, pathContractsResolver, provider);
 
+  const workgroupManager = new WorkgroupManager(OrgRegistry, Verifier, Shield);
+
+  const transaction = await workgroupManager.registerOrganisation();
+
+  // TODO set manager if needed - this might not be needed - double check
+  // TODO set interface implementer if needed - this is needed to set the organisation implementers
 
 };
 
@@ -22,26 +29,33 @@ const deployContracts = async (pathKeystoreResolver, pathContractsResolver, prov
   const baselineDeployer = new BaselineDeployer(deployerWallet, provider);
 
   const protocolBuilder = baselineDeployer.getProtocolBuilder(pathContractsResolver);
-  const buildProtocolTask = protocolBuilder
+  const buildProtocolTask = await protocolBuilder
     .addErc1820Registry()
     .build();
 
-  const deployedProtocolContracts = await baselineDeployer.deployProtocol(buildProtocolTask);
-  console.log('✅  ERC1820Registry deployed:', deployedProtocolContracts.ERC1820Registry.contractAddress);
+  const { ERC1820Registry } = await baselineDeployer.deployProtocol(buildProtocolTask);
+  console.log('✅  ERC1820Registry deployed:', ERC1820Registry.contractAddress);
 
   const workgroupBuilder = baselineDeployer.getWorkgroupBuilder(pathContractsResolver);
-  const buildWorkgroupTask = workgroupBuilder
-    .addOrgRegistry(deployedProtocolContracts.ERC1820Registry.contractAddress)
-    .addShield(deployedProtocolContracts.ERC1820Registry.contractAddress)
+  const buildWorkgroupTask = await workgroupBuilder
+    .addOrgRegistry(ERC1820Registry.contractAddress)
+    .addShield(ERC1820Registry.contractAddress)
     .build();
 
-  const deployedWorkgroupContracts = await baselineDeployer.deployWorkgroup(buildWorkgroupTask);
+  const { OrgRegistry, Verifier, Shield } = await baselineDeployer.deployWorkgroup(buildWorkgroupTask);
 
-  console.log('✅  OrgRegistry deployed:', deployedWorkgroupContracts.OrgRegistry.contractAddress);
-  console.log('✅  Verifier deployed:', deployedWorkgroupContracts.Verifier.contractAddress);
-  console.log('✅  Shield deployed:', deployedWorkgroupContracts.Shield.contractAddress);
+  console.log('✅  OrgRegistry deployed:', OrgRegistry.contractAddress);
+  console.log('✅  Verifier deployed:', Verifier.contractAddress);
+  console.log('✅  Shield deployed:', Shield.contractAddress);
+
+  return {
+    ERC1820Registry,
+    OrgRegistry,
+    Verifier,
+    Shield
+  }
+  
 }
-
 
 const run = async () => {
 

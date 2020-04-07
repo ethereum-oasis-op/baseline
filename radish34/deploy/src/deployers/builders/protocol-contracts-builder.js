@@ -8,9 +8,9 @@ class ProtocolContractsBuilder {
 		return this;
 	}
 
-	build() {
+	async build() {
 		return {
-			erc1820Artifacts: this.erc1820Artifacts
+			erc1820Artifacts: await this.erc1820Artifacts
 		}
 	}
 

@@ -1,5 +1,6 @@
 const path = require('path');
 const assert = require('assert');
+const ethers = require('ethers');
 
 const DEFAULT_PATHS = {
 	"ERC1820Registry": "./src/config/default-artifacts/ERC1820Registry.json",
@@ -59,7 +60,8 @@ class RadishPathContractsResolver {
 		this.cwd = process.cwd();
 	}
 
-	resolve(name) {
+	async resolve(name) {
+		assert(name, 'No name supplied to the resolver resolve method');
 		const contractPath = path.resolve(this.paths[name]);
 		const contractJSON = require(contractPath);
 
@@ -72,6 +74,20 @@ class RadishPathContractsResolver {
 			abi,
 			bytecode
 		}
+	}
+
+	async resolveContract(name, address, provider) {
+		assert(name, 'No name supplied to the resolver resolveContract method');
+		assert(address, 'No address supplied to the resolver resolveContract method');
+		assert(provider, 'No provider supplied to the resolver resolveContract method');
+		const contractPath = path.resolve(this.paths[name]);
+		const contractJSON = require(contractPath);
+
+		const abi = contractJSON.compilerOutput.abi;
+
+		const contract = new ethers.Contract(address, abi, provider);
+
+		return contract;
 	}
 
 

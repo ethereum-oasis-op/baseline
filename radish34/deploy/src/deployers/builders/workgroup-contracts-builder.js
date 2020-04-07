@@ -19,17 +19,17 @@ class WorkgroupContractsBuilder {
 		this.BN256G2Artifacts = this.contractsResolver.resolve('BN256G2');
 		this.verifierArtifacts = this.contractsResolver.resolve('Verifier');
 		this.shieldArtifacts = this.contractsResolver.resolve('Shield');
-		this.verifierArtifacts.erc1820RegistryAddress = erc1820RegistryAddress;
-		this.shieldArtifacts.erc1820RegistryAddress = erc1820RegistryAddress;
+		this.erc1820RegistryAddress = erc1820RegistryAddress;
 		return this;
 	}
 
-	build() {
+	async build() {
 		return {
-			orgRegistryArtifacts: this.orgRegistryArtifacts,
-			BN256G2Artifacts: this.BN256G2Artifacts,
-			verifierArtifacts: this.verifierArtifacts,
-			shieldArtifacts: this.shieldArtifacts
+			orgRegistryArtifacts: await this.orgRegistryArtifacts,
+			BN256G2Artifacts: await this.BN256G2Artifacts,
+			verifierArtifacts: await this.verifierArtifacts,
+			shieldArtifacts: await this.shieldArtifacts,
+			erc1820RegistryAddress: this.erc1820RegistryAddress
 		}
 	}
 
