@@ -68,14 +68,16 @@ test('Should not be able to register an org from non-owner', async () => {
   const nonOwnerOrgRegistry = orgRegistry.connect(nonOwner);
   try {
     await nonOwnerOrgRegistry.registerOrg(
-      accounts[1],
-      utils.formatBytes32String("Name"),
+      accounts[4],
+      utils.formatBytes32String("Name2"),
       2,
       utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
       utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128')
     );
   } catch(e) {
     expect(e.message).toMatch('revert');
+    expect(e.message).toMatch('Unauthorised access: needs to be called by an owner!');
+    expect(e.code).toBe(-32000);
   }
 
   const orgCountAfter = await orgRegistry.getOrgCount();
@@ -93,6 +95,8 @@ test('Should not be able to register an orgs interfaces from non owner', async (
     await nonOwnerOrgRegistry.registerInterfaces(utils.formatBytes32String("RandomInterface2"), accounts[0], accounts[1], accounts[2]);
   } catch(e) {
     expect(e.message).toMatch('revert');
+    expect(e.message).toMatch('Unauthorised access: needs to be called by an owner!');
+    expect(e.code).toBe(-32000);
     return;
   }
   expect(false).toBeTruthy();
