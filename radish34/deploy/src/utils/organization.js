@@ -23,10 +23,10 @@ const assignManager = async (manageeName, newManagerName, msgSenderName) => {
   );
 
   // the 'old manager' of OrgRegistry is the OrgRegistry itself.
-  const manageeAddress = Contract.getContractAddress(manageeName);
+  // const manageeAddress = Contract.getContractAddress(manageeName);
   const newManagerAddress = Wallet.getAddress(newManagerName);
 
-  const tx = await contractWithWallet.assignManager(manageeAddress, newManagerAddress);
+  const tx = await contractWithWallet.assignManager(newManagerAddress);
   const transactionHash = { transactionHash: tx.hash };
 
   return transactionHash;
@@ -55,7 +55,7 @@ const registerOrgInterfaces = async (
   groupName,
   tokenFactoryAddress,
   shieldAddress,
-  verifierAddress
+  verifierAddress,
 ) => {
   const OrgRegistryMetadata = await Ethers.getContractMetadata(Paths.OrgRegistry);
   const tx = await Ethers.getContractWithWallet(
@@ -67,7 +67,7 @@ const registerOrgInterfaces = async (
     utils.formatBytes32String(groupName),
     tokenFactoryAddress,
     shieldAddress,
-    verifierAddress
+    verifierAddress,
   );
   const transactionHash = { transactionHash: tx.hash };
   return transactionHash;
