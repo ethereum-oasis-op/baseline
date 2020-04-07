@@ -50,7 +50,7 @@ const _replaceLibraryReferenceToTruffleStyle = (bytecode, linkReferences) => {
 
 }
 
-class RadishPathContractsResolver {
+class RadishConfigpathContractsResolver {
 
 	constructor(paths) {
 		this.paths = DEFAULT_PATHS;
@@ -93,4 +93,4 @@ class RadishPathContractsResolver {
 
 }
 
-module.exports = RadishPathContractsResolver
+module.exports = RadishConfigpathContractsResolver

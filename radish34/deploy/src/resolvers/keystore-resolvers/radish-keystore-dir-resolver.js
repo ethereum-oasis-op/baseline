@@ -2,7 +2,7 @@ const fs = require('fs');
 const assert = require('assert');
 const ethers = require('ethers');
 
-class RadishPathKeystoreResolver {
+class RadishPathKeystoreDirResolver {
 
 	constructor(keystoreDir) {
 		if(typeof keystoreDir === 'undefined') {
@@ -15,7 +15,7 @@ class RadishPathKeystoreResolver {
 		This method will work with file named ${role}.eth in the keystore directory. 
 		The file needs to have structure of { signingKey : { privateKey: "0x..."}}
 	*/
-	getWallet(role) {
+	async getWallet(role) {
 		const walletFilePath = `${this.keystoreDir}/${role}.eth`;
 		assert(fs.existsSync(walletFilePath), `The desired wallet does not exist at ${walletFilePath}`);
 		const walletJSON = JSON.parse(fs.readFileSync(walletFilePath));
@@ -24,4 +24,4 @@ class RadishPathKeystoreResolver {
 
 }
 
-module.exports = RadishPathKeystoreResolver
+module.exports = RadishPathKeystoreDirResolver

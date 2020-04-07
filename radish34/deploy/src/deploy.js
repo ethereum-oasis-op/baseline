@@ -2,8 +2,8 @@ const path = require('path');
 const assert = require('assert');
 const ethers = require('ethers');
 
-const RadishPathContractsResolver = require('./resolvers/contract-resolvers/radish-configpath-resolver.js');
-const RadishPathKeystoreResolver = require('./resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
+const RadishConfigpathContractsResolver = require('./resolvers/contract-resolvers/radish-configpath-resolver.js');
+const RadishPathKeystoreDirResolver = require('./resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
 
 const BaselineDeployer = require('./deployers/baseline-deployer.js');
 const WorkgroupManager = require('./managers/workgroup-manager.js');
@@ -24,7 +24,7 @@ const main = async (pathKeystoreResolver, pathContractsResolver) => {
 };
 
 const deployContracts = async (pathKeystoreResolver, pathContractsResolver, provider) => {
-  const deployerWallet = pathKeystoreResolver.getWallet('deployer');
+  const deployerWallet = await pathKeystoreResolver.getWallet('deployer');
 
   const baselineDeployer = new BaselineDeployer(deployerWallet, provider);
 
@@ -65,8 +65,8 @@ const run = async () => {
   let keystoreDir = path.resolve(process.env.KEYSTORE_PATH);
   let paths = (process.env.CONTRACTS_PATH) ? path.resolve(process.env.CONTRACTS_PATH) : undefined;
 
-  const pathKeystoreResolver = new RadishPathKeystoreResolver(keystoreDir)
-  const pathContractsResolver = new RadishPathContractsResolver(paths);
+  const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir)
+  const pathContractsResolver = new RadishConfigpathContractsResolver(paths);
 
   console.log('Patiently waiting 10 seconds for ganache container to init ...');
   setTimeout(async () => {
