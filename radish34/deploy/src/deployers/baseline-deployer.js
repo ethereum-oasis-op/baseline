@@ -31,7 +31,7 @@ class BaselineDeployer {
 
 		const erc1820RegistryContract = await this._deployErc1820Registry(deployer, deployProtocolTask.erc1820Artifacts);
 
-		result['ERC1820Registry'] = erc1820RegistryContract;
+		result['ERC1820Registry'] = erc1820RegistryContract.contract;
 
 		return result;
 	}
@@ -99,9 +99,9 @@ class BaselineDeployer {
 		const ShieldContract = await deployer.deploy(shieldArtifacts, {}, VerifierContract.contractAddress, erc1820RegistryAddress)
 
 		const result = {}
-		result['BN256G2'] = BNContract;
-		result['Verifier'] = VerifierContract;
-		result['Shield'] = ShieldContract;
+		result['BN256G2'] = BNContract.contract;
+		result['Verifier'] = VerifierContract.contract;
+		result['Shield'] = ShieldContract.contract;
 
 		return result;
 	}

@@ -1,15 +1,27 @@
-const path = require('path');
+const fs = require('fs');
 const assert = require('assert');
-const ethers = require('ethers');
+const { getWhisperIdentity } = require('../../utils/identities')
 
-class RadishOrganistionConfigpathResolver {
+class RadishOrganisationConfigpathResolver {
 
-	constructor(paths) {
+	constructor(configDir) {
+		if(typeof configDir === 'undefined') {
+			throw new Error('Organisational config directory not supplied');
+		}
+		this.configDir = configDir;
+		this.configCache = {}
 	}
 
-	resolve(filename) {
+	async resolve(organisationName, organisationWhisperURL) {
+		const organisationConfigPath = `${this.configDir}/config-${organisationName}.json`;
+		assert(fs.existsSync(organisationConfigPath), `The desired wallet does not exist at ${organisationConfigPath}`);
+		const { organization } = JSON.parse(fs.readFileSync(organisationConfigPath));
+
+		const messagingKey = await getWhisperIdentity(`${organisationWhisperURL}/api/v1/identities`);
+
+		return { ...organization, messagingKey };
 	}
 
 }
 
-module.exports = RadishOrganistionConfigpathResolver
+module.exports = RadishOrganisationConfigpathResolver

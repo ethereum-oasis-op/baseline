@@ -34,4 +34,5 @@ const getWhisperIdentities = async () => {
 
 module.exports = {
   getWhisperIdentities,
+  getWhisperIdentity
 };
