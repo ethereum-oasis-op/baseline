@@ -335,6 +335,9 @@ export const createPO = async (_zkpPrivateKeyOfBuyer, oldMSA, newMSA, po) => {
   } = await createPOTransaction(proofArray, publicInputHash.field(248, 1, true), publicInputs);
 
   console.log('\nCREATE PO TRANSACTION COMPLETE');
+  console.log('proofArray:', proofArray);
+  console.log('publicInputHash.field:', publicInputHash.field(248, 1, true));
+  console.log('publicInputs:', publicInputs);
 
   return {
     transactionHash,
