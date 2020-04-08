@@ -63,18 +63,6 @@ To run the __Radish34__ application, follow the instructions in [radish34/README
 
 `cd radish34` and go from there 🚀
 
-# What is here?
-
-The root directory of this repo (where this Readme currently lives) contains the following folders:
-
-```
-.
-├── baseline  <-- Future home to the Baseline Protocol libraries
-├── bin <-- Scripts to run across the entire project
-├── docs <-- auto-generated and artisanal hand crafted documentation
-└── radish34 <-- The demonstration POC (you probably are looking for this)
-```
-
 ## Run Splunk integrated version
 
 The steps are similar to the Quickstart guide above, but instead run the commands below.
@@ -95,6 +83,17 @@ make stop-splunk
 make reset-splunk
 ```
 
+# What is here?
+
+The root directory of this repo (where this Readme currently lives) contains the following folders:
+
+```
+.
+├── baseline  <-- Future home to the Baseline Protocol libraries
+├── bin <-- Scripts to run across the entire project
+├── docs <-- auto-generated and artisanal hand crafted documentation
+└── radish34 <-- The demonstration POC (you probably are looking for this)
+```
 
 ## Running scripts across the project
 
