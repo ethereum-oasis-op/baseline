@@ -5,7 +5,7 @@ const ethers = require('ethers');
 class RadishPathKeystoreDirResolver {
 
 	constructor(keystoreDir, provider) {
-		if(typeof keystoreDir === 'undefined') {
+		if (typeof keystoreDir === 'undefined') {
 			throw new Error('Keystore directory not supplied');
 		}
 		this.keystoreDir = keystoreDir;
@@ -18,7 +18,7 @@ class RadishPathKeystoreDirResolver {
 		The file needs to have structure of { signingKey : { privateKey: "0x..."}}
 	*/
 	async getWallet(role) {
-		if(typeof this.cachedWallets[role] !== 'undefined') {
+		if (typeof this.cachedWallets[role] !== 'undefined') {
 			return this.cachedWallets[role];
 		}
 		const walletFilePath = `${this.keystoreDir}/${role}.eth`;

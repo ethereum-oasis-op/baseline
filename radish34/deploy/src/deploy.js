@@ -9,7 +9,7 @@ const RadishOrganisationConfigpathResolver = require('./resolvers/organisation-r
 const BaselineDeployer = require('./deployers/baseline-deployer.js');
 const WorkgroupManager = require('./managers/baseline-workgroup-manager.js');
 
-const main = async (pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider) => {
+const main = async (radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider) => {
 
   const {
     ERC1820Registry,
@@ -20,15 +20,15 @@ const main = async (pathKeystoreResolver, pathContractsResolver, pathOrganisatio
 
   const workgroupManager = new WorkgroupManager(OrgRegistry, Verifier, Shield);
   workgroupManager.setOrganisationResolver(pathOrganisationResolver);
-  await registerParty(workgroupManager, pathKeystoreResolver, 'buyer', process.env.MESSENGER_BUYER_URI);
-  await registerParty(workgroupManager, pathKeystoreResolver, 'supplier1', process.env.MESSENGER_SUPPLIER1_URI);
-  await registerParty(workgroupManager, pathKeystoreResolver, 'supplier2', process.env.MESSENGER_SUPPLIER2_URI);
 
+  for (const organisation of radishOrganisations) {
+    console.log(`ℹ️   Registering workgroup member: ${organisation.name}`);
+    await registerOrganisation(workgroupManager, pathKeystoreResolver, organisation.name, organisation.messengerUri);
+    await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, organisation.name);
+  }
   await registerRadishInterface(workgroupManager, Shield, Verifier);
 
-  await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, 'buyer')
-  await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, 'supplier1')
-  await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, 'supplier2')
+  await printNetworkInfo(workgroupManager, radishOrganisations, pathKeystoreResolver);
 
   // TODO set manager if needed - this might not be needed - double check
   // TODO set interface implementer if needed - this is needed to set the organisation implementers
@@ -75,11 +75,11 @@ const deployContracts = async (pathKeystoreResolver, pathContractsResolver, prov
 
 }
 
-const registerParty = async (workgroupManager, pathKeystoreResolver, partyName, partyMessangerURL) => {
-  const buyerWallet = await pathKeystoreResolver.getWallet(partyName);
-  const transaction = await workgroupManager.registerOrganisation(partyName, buyerWallet.address, partyMessangerURL);
+const registerOrganisation = async (workgroupManager, pathKeystoreResolver, organisationName, organisationMessengerURL) => {
+  const buyerWallet = await pathKeystoreResolver.getWallet(organisationName);
+  const transaction = await workgroupManager.registerOrganisation(organisationName, buyerWallet.address, organisationMessengerURL);
 
-  console.log(`✅  Registered ${partyName} in the OrgRegistry with transaction hash: ${transaction.transactionHash}`);
+  console.log(`✅  Registered ${organisationName} in the OrgRegistry with transaction hash: ${transaction.transactionHash}`);
 }
 
 const registerRadishInterface = async (workgroupManager, shieldContract, verifierContract) => {
@@ -88,23 +88,35 @@ const registerRadishInterface = async (workgroupManager, shieldContract, verifie
   console.log(`✅  Registered the Radish34 interface in the OrgRegistry with transaction hash: ${transaction.transactionHash}`);
 }
 
-const registerOrganisationInterfaceImplementers = async (erc1820Contract, OrgRegistryContract, ShieldContract, VerifierContract, keystoreResolver, partyName) => {
-  const partyWallet = await keystoreResolver.getWallet(partyName);
-  const partyErc1820ContractInstance = await erc1820Contract.connect(partyWallet);
-  const partyAddress = await partyWallet.getAddress();
-  const orgRegistryTransaction = await partyErc1820ContractInstance.setInterfaceImplementer(partyAddress, ethers.utils.id('IOrgRegistry'), OrgRegistryContract.address);
+const registerOrganisationInterfaceImplementers = async (erc1820Contract, OrgRegistryContract, ShieldContract, VerifierContract, keystoreResolver, organisationName) => {
+  const organisationWallet = await keystoreResolver.getWallet(organisationName);
+  const organisationErc1820Instance = await erc1820Contract.connect(organisationWallet);
+  const organisationAddress = await organisationWallet.getAddress();
+  const orgRegistryTransaction = await organisationErc1820Instance.setInterfaceImplementer(organisationAddress, ethers.utils.id('IOrgRegistry'), OrgRegistryContract.address);
   const orgRegistryReceipt = await orgRegistryTransaction.wait();
 
-  const verifierTransaction = await partyErc1820ContractInstance.setInterfaceImplementer(partyAddress, ethers.utils.id('IVerifier'), VerifierContract.address);
+  const verifierTransaction = await organisationErc1820Instance.setInterfaceImplementer(organisationAddress, ethers.utils.id('IVerifier'), VerifierContract.address);
   const verifierReceipt = await verifierTransaction.wait();
 
-  const shieldTransaction = await partyErc1820ContractInstance.setInterfaceImplementer(partyAddress, ethers.utils.id('IShield'), ShieldContract.address);
+  const shieldTransaction = await organisationErc1820Instance.setInterfaceImplementer(organisationAddress, ethers.utils.id('IShield'), ShieldContract.address);
   const shieldReceipt = await shieldTransaction.wait();
 
-  console.log(`✅  Registered OrgRegistry as IOrgRegistry for ${partyName} with transaction hash: ${orgRegistryReceipt.transactionHash}`);
-  console.log(`✅  Registered Verifier as IVerifier for ${partyName} with transaction hash: ${verifierReceipt.transactionHash}`);
-  console.log(`✅  Registered Shield as IShield for ${partyName} with transaction hash: ${shieldReceipt.transactionHash}`);
+  console.log(`✅  Registered OrgRegistry as IOrgRegistry for ${organisationName} with transaction hash: ${orgRegistryReceipt.transactionHash}`);
+  console.log(`✅  Registered Verifier as IVerifier for ${organisationName} with transaction hash: ${verifierReceipt.transactionHash}`);
+  console.log(`✅  Registered Shield as IShield for ${organisationName} with transaction hash: ${shieldReceipt.transactionHash}`);
 }
+
+const printNetworkInfo = async (workgroupManager, radishOrganisations, keystoreResolver) => {
+  console.log(`ℹ️   Network information:`);
+  const registeredOrgCount = await workgroupManager.getOrganisationsCount();
+  console.log(`✅  Radish network of ${registeredOrgCount.toString(10)} organizations have successfully been set up!`);
+  for (const organisation of radishOrganisations) {
+    const organisationWallet = await keystoreResolver.getWallet(organisation.name);
+    const organisationAddress = await organisationWallet.getAddress();
+    const organisationInfo = await workgroupManager.getOrganisationInfo(organisationAddress);
+    console.log(`✅  Information about ${organisation.name}: ${organisationInfo}`);
+  }
+};
 
 const run = async () => {
 
@@ -125,10 +137,25 @@ const run = async () => {
   const pathContractsResolver = new RadishConfigpathContractsResolver(paths);
   const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir)
 
+  // TODO get this from param
+  const radishOrganisations = [{
+      name: 'buyer',
+      messengerUri: process.env.MESSENGER_BUYER_URI
+    },
+    {
+      name: 'supplier1',
+      messengerUri: process.env.MESSENGER_SUPPLIER1_URI
+    },
+    {
+      name: 'supplier2',
+      messengerUri: process.env.MESSENGER_SUPPLIER2_URI
+    }
+  ]
+
   console.log('Patiently waiting 10 seconds for ganache container to init ...');
   setTimeout(async () => {
     console.log('Checking for ganache ...');
-    await main(pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider);
+    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider);
   }, 500);
 }
 

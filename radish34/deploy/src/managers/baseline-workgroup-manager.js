@@ -6,7 +6,7 @@ class WorkgroupManager {
 	/*
 	@dev pass ethers contracts instances
 	*/
-	constructor(orgRegistryContract, verifierContract, shieldContract,) {
+	constructor(orgRegistryContract, verifierContract, shieldContract, ) {
 		assert(orgRegistryContract, "orgRegistryContract was not provided");
 		assert(verifierContract, "verifierContract wallet was not provided");
 		assert(shieldContract, "shieldContract wallet was not provided");
@@ -26,7 +26,7 @@ class WorkgroupManager {
 	 * @param {*} organisationMessengerURI - the URI to the organisation messenger. Will be used by the organisation resolver to ask for the messenger key
 	 */
 	async registerOrganisation(organisationName, organisationAddress, organisationMessengerURI, transactionOverrides) {
-		if(typeof transactionOverrides === 'undefined') {
+		if (typeof transactionOverrides === 'undefined') {
 			transactionOverrides = {}
 		}
 		const organisation = await this.organisationResolver.resolve(organisationName, organisationMessengerURI);
@@ -52,10 +52,10 @@ class WorkgroupManager {
 	 * @param {*} verifierAddress The address for the verifier contract of the group
 	 */
 	async registerOrganisationInterfaces(groupName, tokenAddress, shieldAddress, verifierAddress, transactionOverrides) {
-		if(typeof transactionOverrides === 'undefined') {
+		if (typeof transactionOverrides === 'undefined') {
 			transactionOverrides = {}
 		}
-		
+
 		const tx = await this.orgRegistryContract
 			.registerInterfaces(
 				ethers.utils.formatBytes32String(groupName),
@@ -66,6 +66,30 @@ class WorkgroupManager {
 			)
 
 		return tx.wait();
+	}
+
+	async getOrganisationsCount() {
+		return this.orgRegistryContract.getOrgCount();
+	}
+
+	async getOrganisationInfo(organisationAddress) {
+		const result = await this.orgRegistryContract.getOrg(organisationAddress);
+		const [address, name, role, messagingKey, zkpPublicKey] = result;
+		return {
+			address,
+			name: ethers.utils.parseBytes32String(name),
+			role: parseInt(role, 16),
+			messagingKey,
+			zkpPublicKey,
+			toString: function () {
+				return `
+Organisation Address: ${this.address}
+Organisation Name: ${this.name}
+Organisation Role: ${this.role}
+Organisation MessagingKey: ${this.messagingKey}
+Organisation zkpPublicKey: ${this.zkpPublicKey}`
+			}
+		};
 	}
 }
 
