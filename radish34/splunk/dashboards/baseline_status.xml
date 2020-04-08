@@ -1,0 +1,270 @@
+<dashboard theme="dark">
+  <label>baseline status</label>
+  <row>
+    <panel>
+      <single>
+        <title>geth-node last block</title>
+        <search>
+          <query>index=logs sourcetype=docker geth-node
+| stats latest(number)</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <refresh>15s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>geth-node peers</title>
+        <search>
+          <query>index=logs sourcetype=docker geth-node
+| stats latest(peercount)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <refresh>1m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>geth-miner1 last block</title>
+        <search>
+          <query>index=logs sourcetype=docker geth-miner1
+| stats latest(number)</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <refresh>15s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>geth-miner1 peers</title>
+        <search>
+          <query>index=logs sourcetype=docker geth-miner1
+| stats latest(peercount)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <refresh>1m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>geth-miner2 last block</title>
+        <search>
+          <query>index=logs sourcetype=docker geth-miner2
+| stats latest(number)</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <refresh>15s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>geth-miner2 peers</title>
+        <search>
+          <query>index=logs sourcetype=docker geth-miner2
+| stats latest(peercount)</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+          <refresh>1m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>api buyer logs</title>
+      <table>
+        <search>
+          <query>index=logs sourcetype=docker api-buyer
+| eval time = strftime(_time, "%H:%M:%S")
+| eval msg = log_api
+| table time msg</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>5s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>api supplier1 logs</title>
+      <table>
+        <search>
+          <query>index=logs sourcetype=docker api-supplier1
+| eval time = strftime(_time, "%H:%M:%S")
+| eval msg = log_api
+| table time msg</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>5s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <title>api supplier2 logs</title>
+      <table>
+        <search>
+          <query>index=logs sourcetype=docker api-supplier2
+| eval time = strftime(_time, "%H:%M:%S")
+| eval msg = log_api
+| table time msg</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>5s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>zkp logs</title>
+      <table>
+        <search>
+          <query>index=logs sourcetype=docker zkp
+| eval time = strftime(_time, "%H:%M:%S")
+| eval msg = log_zkp
+| table time msg</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <sampleRatio>1</sampleRatio>
+          <refresh>5s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="dataOverlayMode">none</option>
+        <option name="drilldown">none</option>
+        <option name="percentagesRow">false</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="rowNumbers">false</option>
+        <option name="totalsRow">false</option>
+        <option name="wrap">true</option>
+      </table>
+    </panel>
+    <panel>
+      <table>
+        <title>ethlogger logs</title>
+        <search>
+          <query>index=logs sourcetype=ethlogger
+| eval time = strftime(_time, "%H:%M:%S")
+| eval msg = log_ethlogger
+| table time msg</query>
+          <earliest>-4h@m</earliest>
+          <latest>now</latest>
+          <refresh>5s</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="count">20</option>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </table>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <title>add geth-node to geth-miner1</title>
+        <search>
+          <query>index=logs geth-node
+| eval enode = replace(self,"127\.0\.0\.1", "geth-node")
+| eval cmd = "docker exec -it geth-miner1 geth --exec \"admin.addPeer('".enode."')\" attach"
+| stats latest(cmd)</query>
+          <earliest>0</earliest>
+          <latest></latest>
+          <refresh>2m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <title>add geth-miner1 to geth-miner2</title>
+        <search>
+          <query>index=logs geth-miner1
+| eval enode = replace(self,"127\.0\.0\.1", "geth-miner1")
+| eval cmd = "docker exec -it geth-miner2 geth --exec \"admin.addPeer('".enode."')\" attach"
+| stats latest(cmd)</query>
+          <earliest>0</earliest>
+          <latest></latest>
+          <refresh>2m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <single>
+        <title>add geth-miner2 to geth-node</title>
+        <search>
+          <query>index=logs geth-miner2
+| eval enode = replace(self,"127\.0\.0\.1", "geth-miner2")
+| eval cmd = "docker exec -it geth-node geth --exec \"admin.addPeer('".enode."')\" attach"
+| stats latest(cmd)</query>
+          <earliest>0</earliest>
+          <latest></latest>
+          <refresh>2m</refresh>
+          <refreshType>delay</refreshType>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </single>
+    </panel>
+  </row>
+</dashboard>

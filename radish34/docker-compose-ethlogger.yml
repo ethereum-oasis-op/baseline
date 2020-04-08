@@ -1,0 +1,47 @@
+version: '3.6'
+
+services:
+  ethlogger:
+    image: docker.pkg.github.com/splunk/splunk-connect-for-ethereum/ethlogger:latest
+    container_name: ethlogger
+    environment:
+      - ETH_RPC_URL=http://ganache:8545
+      - NETWORK_NAME=baseline
+      # Use these environment variables to connect to infura
+      # - ETH_RPC_URL=https://mainnet.infura.io/v3/<your infura project id>
+      # - NETWORK_NAME=mainnet
+      - START_AT_BLOCK=0
+      - SPLUNK_HEC_URL=https://172.25.0.201:8088
+      - SPLUNK_HEC_TOKEN=11111111-1111-1111-1111-1111111111113
+      - SPLUNK_EVENTS_INDEX=main
+      - SPLUNK_METRICS_INDEX=metrics
+      - SPLUNK_INTERNAL_INDEX=metrics
+      - SPLUNK_HEC_REJECT_INVALID_CERTS=false
+      - ABI_DIR=/app/abis
+    volumes:
+      - ./splunk/abis:/app/abis
+      - ./splunk:/app
+    networks:
+      network-buyer:
+      network-geth:
+        ipv4_address: 172.25.0.202
+    logging:
+      driver: splunk
+      options:
+        splunk-token: 11111111-1111-1111-1111-1111111111113
+        splunk-url: https://localhost:18088
+        splunk-index: logs
+        splunk-sourcetype: ethlogger
+        splunk-insecureskipverify: "true"
+        splunk-verify-connection: "false"
+        splunk-format: "raw"
+        tag: "{{.Name}}-{{.ID}}"
+
+
+networks:
+  network-geth:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.25.0.0/24
+  network-buyer:

@@ -1,0 +1,110 @@
+splunk:
+  conf:
+    indexes:
+      directory: /opt/splunk/etc/apps/search/local
+      content:
+        metrics:
+          coldPath: $SPLUNK_DB/metrics/colddb
+          datatype: metric
+          homePath: $SPLUNK_DB/metrics/db
+          maxTotalDataSizeMB: 512000
+          thawedPath: $SPLUNK_DB/metrics/thaweddb
+        baseline_metrics:
+          coldPath: $SPLUNK_DB/baseline_metrics/colddb
+          datatype: metric
+          homePath: $SPLUNK_DB/baseline_metrics/db
+          maxTotalDataSizeMB: 512000
+          thawedPath: $SPLUNK_DB/baseline_metrics/thaweddb
+        logs:
+          coldPath: $SPLUNK_DB/logs/colddb
+          datatype: event
+          homePath: $SPLUNK_DB/logs/db
+          maxTotalDadtaSizeMB: 512000
+          thawedPath: $SPLUNK_DB/logs/thaweddb
+    inputs:
+      directory: /opt/splunk/etc/apps/search/local
+      content:
+        "udp://8125":
+          connection_host: ip
+          index: baseline_metrics
+          sourcetype: statsd
+        "logs://ethlogger":
+          index: logs
+          disabled: 0
+        "logs://cadivsor":
+          index: logs
+          disabled: 0
+        "logs://mongo-merkle-tree":
+          index: logs
+          disabled: 0
+        "logs://merkle-tree":
+          index: logs
+          disabled: 0
+        "logs://messenger-supplier1":
+          index: logs
+          disabled: 0
+        "logs://messenger-supplier2":
+          index: logs
+          disabled: 0
+        "logs://redis-buyer":
+          index: logs
+          disabled: 0
+        "logs://redis-supplier1":
+          index: logs
+          disabled: 0
+        "logs://redis-supplier2":
+          index: logs
+          disabled: 0
+        "logs://messenger-buyer":
+          index: logs
+          disabled: 0
+        "logs://geth-node":
+          index: logs
+          disabled: 0
+        "logs://geth-bootnode":
+          index: logs
+          disabled: 0
+        "logs://geth-miner1":
+          index: logs
+          disabled: 0
+        "logs://geth-miner2":
+          index: logs
+          disabled: 0
+        "logs://mongo-buyer":
+          index: logs
+          disabled: 0
+        "logs://mongo-supplier1":
+          index: logs
+          disabled: 0
+        "logs://mongo-supplier2":
+          index: logs
+          disabled: 0
+        "logs://api-buyer":
+          index: logs
+          disabled: 0
+        "logs://api-supplier1":
+          index: logs
+          disabled: 0
+        "logs://api-supplier2":
+          index: logs
+          disabled: 0
+        "logs://ganache":
+          index: logs
+          disabled: 0
+        "logs://zkp":
+          index: logs
+          disabled: 0
+        "logs://ui":
+          index: logs
+          disabled: 0
+        "logs://deploy":
+          index: logs
+          disabled: 0
+    props:
+      directory: /opt/splunk/etc/apps/search/local
+      content:
+        docker:
+          EXTRACT-log_api: api-[a-z0-9]+-[a-f0-9]{12}\s(?P<log_api>.*)
+          EXTRACT-log_zkp: zkp-[a-f0-9]{12}\s(?P<log_zkp>.*)
+        ethlogger:
+          EXTRACT-log_ethlogger: ethlogger-[a-f0-9]{12}.*ethlogger:(?P<log_ethlogger>.*)

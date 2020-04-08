@@ -1,0 +1,72 @@
+version: '3.6'
+
+services:
+  splunk:
+    image: splunk/splunk:latest
+    container_name: splunk
+    environment:
+      - VIRTUAL_HOST=splunk.docker
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_HEC_TOKEN=11111111-1111-1111-1111-1111111111113
+      - SPLUNK_PASSWORD=changeme
+      - SPLUNK_APPS_URL=https://github.com/splunk/ethereum-basics/releases/download/latest/ethereum-basics.tgz,https://github.com/j4ys0n/mongodb-monitoring/releases/download/2.3/mongodb-monitoring_23.tgz
+    ports:
+      - 18000:8000
+      - 18088:8088
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - ./splunk/splunk.yml:/tmp/defaults/default.yml
+      - ./splunk/dashboards:/opt/splunk/etc/apps/search/local/data/ui/views/
+      - ./splunk/mongodb_local:/opt/splunk/etc/apps/mongodb/local/
+      - splunk-var:/opt/splunk/var
+      - splunk-etc:/opt/splunk/etc
+    networks:
+      network-buyer:
+      network-geth:
+        ipv4_address: 172.25.0.201
+
+  cadivsor:
+    container_name: cadvisor
+    image: google/cadvisor:latest
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    command:
+      - --storage_driver=statsd
+      - --storage_driver_host=172.25.0.201:8125
+      - --docker_only=true
+    depends_on:
+      - splunk
+    networks:
+      - network-geth
+      # - network-buyer
+    user: root
+    logging:
+      driver: splunk
+      options:
+        splunk-token: 11111111-1111-1111-1111-1111111111113
+        splunk-url: https://localhost:18088
+        splunk-index: logs
+        splunk-sourcetype: cadivsor
+        splunk-insecureskipverify: "true"
+        splunk-verify-connection: "false"
+        splunk-format: "raw"
+        tag: "{{.Name}}-{{.ID}}"
+
+volumes:
+  splunk-var:
+  splunk-etc:
+
+networks:
+  network-buyer:
+  network-geth:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.25.0.0/24

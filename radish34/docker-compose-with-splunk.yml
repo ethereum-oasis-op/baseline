@@ -1,0 +1,498 @@
+version: '3.5'
+
+x-logging:
+    &default-logging
+    driver: splunk
+    options:
+      splunk-token: 11111111-1111-1111-1111-1111111111113
+      splunk-url: https://localhost:18088
+      splunk-index: logs
+      splunk-sourcetype: docker
+      splunk-insecureskipverify: "true"
+      splunk-verify-connection: "false"
+      splunk-format: "raw"
+      tag: "{{.Name}}-{{.ID}}"
+
+services:
+  ganache:
+    image: trufflesuite/ganache-cli:latest
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0xdad57e191799c38233bb7897f5ca66eb42d4f2f6d05ec657f8121b57e5d3bde6, 1000000000000000000000" --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 10000000
+    ports:
+      - 8545:8545
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    volumes:
+      - chaindata:/chaindata
+    logging: *default-logging
+
+  zkp:
+    container_name: zkp
+    build:
+      context: ./zkp/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    volumes:
+      - ./zkp/circuits:/app/circuits:delegated
+      - ./zkp/src:/app/src:delegated
+      - ./zkp/dist:/app/dist:delegated
+      - ./zkp/output:/app/output:delegated
+    environment:
+      PROVING_SCHEME: 'gm17'
+      VIRTUAL_HOST: radish34-zkp.docker
+      MONGO_URL: mongodb://mongo-buyer # TODO: radish-zkp's db of proving materials shouldn't depend on the Buyer's mongodb. Each user should probably read proving files from their local disk rather than from a shared mongodb?
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+    depends_on:
+      - mongo-buyer # TODO: remove dependency on mongo-buyer.
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    ports:
+      - 8080:80
+    logging: *default-logging
+
+  ui:
+    build:
+      context: ./ui/
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./ui/src:/app/src:delegated
+      - ./ui/.env:/app/.env:delegated
+      - ./ui/public/index.html:/app/public/index.html:delegated
+      - ./ui/public/favicon.ico:/app/public/favicon.ico:delegated
+      - ./ui/public/config.js:/app/public/config.js:delegated
+      - ./ui/public/manifest.json:/app/public/manifest.json:delegated
+      - ./ui/public/logo.svg:/app/public/logo.svg:delegated
+      - ./ui/public/images:/app/public/images:delegated
+      - ./ui/public/fonts:/app/public/fonts:delegated
+    environment:
+      VIRTUAL_HOST: radish34-ui.docker
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    logging:
+      options:
+        max-size: 10m
+    tty: true
+    logging: *default-logging
+
+  deploy:
+    build:
+      context: ./deploy/
+    depends_on:
+      - ganache
+      - messenger-buyer
+      - messenger-supplier1
+      - messenger-supplier2
+      - mongo-buyer
+      - mongo-supplier1
+      - mongo-supplier2
+      - zkp
+    environment:
+      RPC_PROVIDER: http://ganache:8545
+      MESSENGER_BUYER_URI: http://messenger-buyer:4001
+      MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001
+      MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001
+      ZKP_URL: http://zkp:80
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    volumes:
+      - ./deploy/src:/app/src:delegated
+      - ./deploy/package.json:/app/package.json:delegated
+      - ./contracts/artifacts:/app/artifacts:delegated
+      - ./config/keystore:/keystore:delegated
+      - ./config:/app/src/config
+    logging: *default-logging
+
+  api-buyer:
+    container_name: api-buyer
+    build:
+      context: ./api/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    restart: on-failure
+    volumes:
+      - ./api/src:/app/src:delegated
+      - ./api/dist:/app/dist:delegated
+      - ./api/package.json:/app/package.json:delegated
+      - ./config/keystore/buyer.eth:/keystore/account.eth
+      - ./config/config-buyer.json:/app/config/default.json
+      - ./contracts/artifacts:/app/artifacts:delegated
+    depends_on:
+      - mongo-buyer
+      - ganache
+      - messenger-buyer
+      - redis-buyer
+      - merkle-tree
+    environment:
+      VIRTUAL_HOST: radish34-api-buyer.docker
+      MONGO_URL: mongodb://mongo-buyer
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URI: http://messenger-buyer:4001
+      REDIS_URL: redis://redis-buyer:6379
+      ZKP_URL: http://zkp:80
+      MERKLE_TREE_URL: http://merkle-tree:80
+    networks:
+      - network-buyer
+    ports:
+      - 8001:8001
+      - 8101:8101
+    logging: *default-logging
+
+  api-supplier1:
+    container_name: api-supplier1
+    build:
+      context: ./api/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    restart: on-failure
+    volumes:
+      - ./api/src:/app/src:delegated
+      - ./api/dist:/app/dist:delegated
+      - ./api/package.json:/app/package.json:delegated
+      - ./config/keystore/supplier1.eth:/keystore/account.eth
+      - ./config/config-supplier1.json:/app/config/default.json
+      - ./contracts/artifacts:/app/artifacts:delegated
+    depends_on:
+      - mongo-supplier1
+      - ganache
+      - messenger-supplier1
+      - redis-supplier1
+      - merkle-tree
+    environment:
+      VIRTUAL_HOST: radish34-api-supplier1.docker
+      MONGO_URL: mongodb://mongo-supplier1
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URI: http://messenger-supplier1:4001
+      REDIS_URL: redis://redis-supplier1:6379
+      ZKP_URL: http://zkp:80
+      MERKLE_TREE_URL: http://merkle-tree:80
+    networks:
+      - network-supplier1
+    ports:
+      - 8002:8001
+      - 8102:8101
+    logging: *default-logging
+
+  api-supplier2:
+    container_name: api-supplier2
+    build:
+      context: ./api/
+      dockerfile: dev.Dockerfile
+    command: npm run dev
+    restart: on-failure
+    volumes:
+      - ./api/src:/app/src:delegated
+      - ./api/dist:/app/dist:delegated
+      - ./api/package.json:/app/package.json:delegated
+      - ./config/keystore/supplier2.eth:/keystore/account.eth
+      - ./config/config-supplier2.json:/app/config/default.json
+      - ./contracts/artifacts:/app/artifacts:delegated
+    depends_on:
+      - mongo-supplier2
+      - ganache
+      - messenger-supplier2
+      - merkle-tree
+    environment:
+      VIRTUAL_HOST: radish34-api-supplier2.docker
+      MONGO_URL: mongodb://mongo-supplier2
+      MONGO_DB_NAME: 'radish34'
+      MONGO_CONNECTION_RETRIES: 5
+      MESSENGER_URI: http://messenger-supplier2:4001
+      REDIS_URL: redis://redis-supplier2:6379
+      ZKP_URL: http://zkp:80
+      MERKLE_TREE_URL: http://merkle-tree:80
+    networks:
+      - network-supplier2
+    ports:
+      - 8003:8001
+    logging: *default-logging
+
+  mongo-buyer:
+    image: mongo:latest
+    container_name: mongo-buyer
+    volumes:
+      - mongo-buyer:/data/db
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - network-buyer
+    ports:
+      - 27117:27017
+    logging: *default-logging
+
+  mongo-supplier1:
+    image: mongo:latest
+    container_name: mongo-supplier1
+    volumes:
+      - mongo-supplier1:/data/db
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - network-supplier1
+    ports:
+      - 27217:27017
+    logging: *default-logging
+
+  mongo-supplier2:
+    image: mongo:latest
+    container_name: mongo-supplier2
+    volumes:
+      - mongo-supplier2:/data/db
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - network-supplier2
+    ports:
+      - 27317:27017
+    logging: *default-logging
+
+  geth-node:
+    hostname: geth-node
+    container_name: geth-node
+    depends_on:
+       - geth-miner1
+       - geth-miner2
+    env_file:
+      - ./geth-env/node/docker.env
+    build:
+      context: ./geth-env
+      dockerfile: ./node/Dockerfile
+      args:
+        privatekey: 54c68a6104df07a9661b9b8fe1106263feeeddfd67aed8dafed1438040e421d1
+        password: word
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-geth
+    ports:
+       - 8547:8545
+       - 8548:8546
+    healthcheck:
+      test: wget http://localhost:8545
+      interval: 2s
+      timeout: 5s
+      retries: 30
+    logging: *default-logging
+
+  geth-bootnode:
+    hostname: geth-bootnode
+    container_name: geth-bootnode
+    env_file:
+      - ./geth-env/bootnode/docker.env
+    build:
+      context: ./geth-env
+      dockerfile: ./bootnode/Dockerfile
+    networks:
+      network-geth:
+        ipv4_address: 172.25.0.101 # The miners need to know the IP address later on
+    ports:
+      - 30301:30301/udp
+    logging: *default-logging
+
+  geth-miner1:
+    hostname: geth-miner1
+    container_name: geth-miner1
+    depends_on:
+      - geth-bootnode
+    env_file:
+      - ./geth-env/miner/miner_1.env
+    ports:
+      - 8544:8545/tcp
+    networks:
+      - network-geth
+    build:
+      context: ./geth-env
+      dockerfile: ./miner/Dockerfile
+      args:
+        privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46
+        password: pass
+    logging: *default-logging
+
+  geth-miner2:
+    hostname: geth-miner2
+    container_name: geth-miner2
+    depends_on:
+      - geth-miner1
+    env_file:
+      - ./geth-env/miner/miner_2.env
+    ports:
+      - 8542:8545/tcp
+    networks:
+      - network-geth
+    build:
+      context: ./geth-env
+      dockerfile: ./miner/Dockerfile
+      args:
+        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
+        password: word
+    logging: *default-logging
+
+  redis-buyer:
+    image: redis
+    container_name: redis-buyer
+    networks:
+      - network-buyer
+    ports:
+      - 6379:6379
+    logging: *default-logging
+
+  redis-supplier1:
+    image: redis
+    container_name: redis-supplier1
+    networks:
+      - network-supplier1
+    expose:
+      - 6379
+    logging: *default-logging
+
+  redis-supplier2:
+    image: redis
+    container_name: redis-supplier2
+    networks:
+      - network-supplier2
+    expose:
+      - 6379
+    logging: *default-logging
+
+  messenger-buyer:
+    hostname: messenger-buyer
+    container_name: messenger-buyer
+    links:
+      - mongo-buyer
+      - redis-buyer
+      - geth-node
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./messenger/docker.env
+    environment:
+      VIRTUAL_HOST: messenger-buyer.docker
+      MONGO_URL: mongodb://mongo-buyer:27017/radish34
+      RADISH_API_URL: http://api-buyer:8101
+      REDIS_URL: redis://redis-buyer:6379
+    networks:
+      - network-buyer
+    ports:
+     - 4001:4001
+    logging: *default-logging
+
+  messenger-supplier1:
+    hostname: messenger-supplier1
+    container_name: messenger-supplier1
+    links:
+      - mongo-supplier1
+      - redis-supplier1
+      - geth-node
+    env_file:
+      - ./messenger/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      VIRTUAL_HOST: messenger-supplier1.docker
+      MONGO_URL: mongodb://mongo-supplier1:27017/radish34
+      RADISH_API_URL: http://api-supplier1:8101
+      REDIS_URL: redis://redis-supplier1:6379
+    networks:
+      - network-supplier1
+    ports:
+     - 4002:4001
+    logging: *default-logging
+
+  messenger-supplier2:
+    hostname: messenger-supplier2
+    container_name: messenger-supplier2
+    links:
+      - mongo-supplier2
+      - redis-supplier2
+      - geth-node
+    env_file:
+      - ./messenger/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      VIRTUAL_HOST: messenger-supplier2.docker
+      MONGO_URL: mongodb://mongo-supplier2:27017/radish34
+      RADISH_API_URL: http://api-supplier2:8101
+      REDIS_URL: redis://redis-supplier2:6379
+    networks:
+      - network-supplier2
+    ports:
+      - 4003:4001
+    logging: *default-logging
+
+  merkle-tree:
+    image: eyblockchain/timber:v2.0.1
+    restart: on-failure
+    depends_on:
+      - mongo-merkle-tree
+      - ganache
+    volumes: # ensure relative paths are correct if embedding this microservice in another application:
+      - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
+      - ./contracts/contracts:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+    ports:
+      - 9000:80
+    environment:
+      BLOCKCHAIN_HOST: ws://ganache
+      BLOCKCHAIN_PORT: 8545
+      CONTRACT_ORIGIN: 'compile' # Where to find the contractInstances?
+      # Specify one of:
+      # - 'remote' (to GET a solc-compiled contract interface json from a remote microservice); or
+      # - 'mongodb' (to get a solc-compiled contract interface json from mongodb); or
+      # - 'default' (to get a solc-compiled contract interface json from the app/build/ folder)
+      # - 'compile' (to compile contracts from a .sol file, at startup, with solc, from the /app/contracts/ folder). Useful if the application using Timber doesn't use solc to generate contract interface json's.
+    networks: # we'll have all users sharing the one tree for now. TODO: explore separation of merkle-tree db's (difficult).
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    logging: *default-logging
+
+  # The database storing the merkle tree
+  mongo-merkle-tree:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=merkle_tree
+    volumes:
+      - ./config/merkle-tree/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - mongo-merkle-tree-volume:/data/db
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    ports:
+      - 27417:27017
+    logging: *default-logging
+
+volumes:
+  mongo-buyer:
+  mongo-supplier1:
+  mongo-supplier2:
+  mongo-merkle-tree-volume:
+  chaindata:
+
+networks:
+  network-geth:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.25.0.0/24
+  network-buyer:
+  network-supplier1:
+  network-supplier2:
