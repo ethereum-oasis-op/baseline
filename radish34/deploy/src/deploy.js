@@ -116,7 +116,6 @@ const saveSettings = async role => {
 };
 
 const main = async () => {
-  // const registerAll = process.env.MODE === 'register-all';
 
   await deployContracts('deployer');
   await assignManager('deployer');

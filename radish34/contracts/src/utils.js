@@ -78,6 +78,10 @@ export const link = (bytecode, libraryName, libraryAddress) => {
   return bytecode.object.replace(pattern, address);
 };
 
+// TODO: Remove the following functions from this file. They are duplicates 
+// from /api/src/utils/crypto/conversions.js. Ideally these would be part of an importable
+// utils package that can be used by multiple services.
+// flattenDeep, parseToDigitsArray, add, multiplyByNumber, convertBase, hexToDec, formatProof
 export const flattenDeep = arr => {
   return arr.reduce(
     (acc, val) => (Array.isArray(val) ? acc.concat(flattenDeep(val)) : acc.concat(val)),
