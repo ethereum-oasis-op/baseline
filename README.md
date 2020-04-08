@@ -67,7 +67,9 @@ To run the __Radish34__ application, follow the instructions in [radish34/README
 
 The steps are similar to the Quickstart guide above, but instead run the commands below.
 
-After starting, go to: http://splunk.docker:18000/en-US/app/search/baseline_status
+Make sure you check out the [prerequisites to running the radish34 demo](https://github.com/splunk/baseline/blob/master/radish34/README.md#prerequisites-to-run-the-demo). Step 3 is not optional, you will need to complete that step to run the [Splunk Connect for Ethereum](https://github.com/splunk/splunk-connect-for-ethereum/) application that will parse transaction event data associated with the baseline contracts.
+
+After start tasks complete, go to: http://splunk.docker:18000/en-US/app/search/baseline_status
 Log in with user `admin` and password [`changeme`](https://github.com/splunk/baseline/blob/integrate-splunk/radish34/docker-compose-splunk.yml#L11)
 
 To start:
