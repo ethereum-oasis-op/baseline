@@ -40,7 +40,7 @@ All provisional maintainers must meet with the existing maintainers and demonstr
  - Explaining the components of the system architecture
  - Walking through the code and explain the baseline process
 
-Once the provisional maintainer demonstrates their capabilities they existing maintainers will vote during the next scheduled maintainer meeting to give the prospect full maintainer status. Members must vote with 2/3rds majority to add a new maintainer. Voting that results in a tie or potentially other issue will be brought to the TSC for review.
+Once the provisional maintainer demonstrates their capabilities, the existing maintainers will vote during the next scheduled maintainer meeting to give the prospect full maintainer status. Members must vote with 2/3rds majority to add a new maintainer. Voting that results in a tie or potentially other issue will be brought to the TSC for review.
 
 # What is expected of maintainers?
 
@@ -53,10 +53,8 @@ In general, a maintainer needs to:
  - follow the project style and testing guidelines
  - have a high degree of understanding of the project architecture
  - be welcoming to others in the community who are using the project
- - contribute in ways that substantially improve the quality of the project and the experience of people using it
- - follow good branch naming conventions: [good references here](https://gist.github.com/digitaljhelms/4287848)
- - Follow linting conventions for committing changes and by others
- - follow PR naming conventions
+ - contribute in ways that substantially improve the quality of the project and the experience of people who use it
+ - follow branch, PR, and code style conventions
 
 # How maintainers organize?
 
@@ -68,10 +66,10 @@ There are weekly *Maintainers meetings* where members can discuss plans and issu
 
 # How to stop being a maintainer?
 
-If you are a maintainer you loose maintainer status if any of the following occur: 
+Any of the following ways: 
 
  - You stop reviewing PR's, responding to messages, answering emails, and/or generally ghost the project.
- - You are disrespectful towards anyone in the community and/or involved in the project in some way.
+ - You are disrespectful towards anyone in the community and/or involved in the project.
  - You are disruptive to the general process of maintaining the project, meetings, discussions, issues, or other. 
  - You violate [the code of conduct](./CODE_OF_CONDUCT.md).
  - You notify the other maintainers you would like to relinquish your maintainer status.
