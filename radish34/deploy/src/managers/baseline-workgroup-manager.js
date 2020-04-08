@@ -91,6 +91,28 @@ Organisation zkpPublicKey: ${this.zkpPublicKey}`
 			}
 		};
 	}
+
+	async registerVerificationKey(verificationKeyResolver, circuitName, transactionOverrides) {
+		assert(verificationKeyResolver, 'No verification key resolver supplied');
+		assert(circuitName, 'No circuit name supplied');
+
+		if (typeof transactionOverrides === 'undefined') {
+			transactionOverrides = {}
+		}
+
+		const {
+			vkArray,
+			actionType
+		} = await verificationKeyResolver.resolveVerificationKey(circuitName);
+
+		const tx = await this.shieldContract.registerVerificationKey(
+			vkArray,
+			actionType,
+			transactionOverrides
+		)
+
+		return tx.wait();
+	}
 }
 
 module.exports = WorkgroupManager

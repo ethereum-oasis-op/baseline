@@ -5,11 +5,12 @@ const ethers = require('ethers');
 const RadishConfigpathContractsResolver = require('./resolvers/contract-resolvers/radish-configpath-resolver.js');
 const RadishPathKeystoreDirResolver = require('./resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
 const RadishOrganisationConfigpathResolver = require('./resolvers/organisation-resolvers/radish-configpath-resolver.js');
+const RadishZKPRestResolver = require('./resolvers/verification-key-resolvers/radish-zkp-rest-resolver');
 
 const BaselineDeployer = require('./deployers/baseline-deployer.js');
 const WorkgroupManager = require('./managers/baseline-workgroup-manager.js');
 
-const main = async (radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider) => {
+const main = async (radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider) => {
 
   const {
     ERC1820Registry,
@@ -28,10 +29,14 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   }
   await registerRadishInterface(workgroupManager, Shield, Verifier);
 
+  console.log(`ℹ️   Registering zkp verification keys`);
+  await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA');
+  await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createPO');
+
+  console.log(`ℹ️   Network information:`);
   await printNetworkInfo(workgroupManager, radishOrganisations, pathKeystoreResolver);
 
   // TODO set manager if needed - this might not be needed - double check
-  // TODO set interface implementer if needed - this is needed to set the organisation implementers
 
 };
 
@@ -106,8 +111,13 @@ const registerOrganisationInterfaceImplementers = async (erc1820Contract, OrgReg
   console.log(`✅  Registered Shield as IShield for ${organisationName} with transaction hash: ${shieldReceipt.transactionHash}`);
 }
 
+const registerVerificationKey = async (workgroupManager, verificationKeyResolver, circuitName) => {
+  const transaction = await workgroupManager.registerVerificationKey(verificationKeyResolver, circuitName);
+
+  console.log(`✅  Registered verification key for ${circuitName} with transaction hash: ${transaction.transactionHash}`);
+}
+
 const printNetworkInfo = async (workgroupManager, radishOrganisations, keystoreResolver) => {
-  console.log(`ℹ️   Network information:`);
   const registeredOrgCount = await workgroupManager.getOrganisationsCount();
   console.log(`✅  Radish network of ${registeredOrgCount.toString(10)} organizations have successfully been set up!`);
   for (const organisation of radishOrganisations) {
@@ -123,6 +133,7 @@ const run = async () => {
   assert(typeof process.env.KEYSTORE_PATH === 'string', "KEYSTORE_PATH not provided or not string");
   assert(typeof process.env.ORGANISATION_CONFIG_PATH === 'string', "ORGANISATION_CONFIG_PATH not provided or not string");
   assert(typeof process.env.RPC_PROVIDER === 'string', "RPC_PROVIDER not provided or not string");
+  assert(typeof process.env.ZKP_URL === 'string', "ZKP_URL not provided or not string");
 
   assert(typeof process.env.MESSENGER_BUYER_URI === 'string', "MESSENGER_BUYER_URI not provided or not string");
   assert(typeof process.env.MESSENGER_SUPPLIER1_URI === 'string', "MESSENGER_SUPPLIER1_URI not provided or not string");
@@ -136,6 +147,7 @@ const run = async () => {
   const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir, provider)
   const pathContractsResolver = new RadishConfigpathContractsResolver(paths);
   const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir)
+  const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL)
 
   // TODO get this from param
   const radishOrganisations = [{
@@ -155,7 +167,7 @@ const run = async () => {
   console.log('Patiently waiting 10 seconds for ganache container to init ...');
   setTimeout(async () => {
     console.log('Checking for ganache ...');
-    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider);
+    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider);
   }, 500);
 }
 
