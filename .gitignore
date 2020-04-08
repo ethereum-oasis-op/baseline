@@ -98,6 +98,8 @@ build
 dist
 *config*/config-*.json
 *config*/merkle-tree/
+radish34/splunk/checkpoints.json
+radish34/splunk/.ethlogger-state.json
 
 # Ignore generated docs
 docs/generated
