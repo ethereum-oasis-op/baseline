@@ -14,13 +14,13 @@
   <br/>
 </div>
 
-__Baseline__ is an open source initiative with a large and growing team of supporting companies. The first code was donated by Ernst & Young and ConsenSys, with support from Microsoft, and is now receiving contributions from many other companies. The purpose of the project is to bring enterprises and complex business processes to the Ethereum Mainnet, while guarding the privacy constraints and needs of a typical group of enterprises. 
+__Baseline__ is an open source initiative with a large and growing team of supporting companies. The first code was donated by Ernst & Young and ConsenSys, with support from Microsoft, and is now receiving contributions from many other companies. The purpose of the project is to bring enterprises and complex business processes to the Ethereum Mainnet, while guarding the privacy constraints and needs of a typical group of enterprises.
 
 The __Baseline Protocol__ defines a series of steps to privately and securely synchronize data and business logic between multiple independent systems of record, using the Ethereum Mainnet as an auditable common frame of reference. This protocol implements best practices around data consistency and compartmentalization, and leverages public Ethereum for verifying execution of private transactions, contracts and tokens on the Mainnet using ZKP (zkSnarks). The __Baseline Protocol__ is designed such that it can be extended and applied to any database/workflow.
 
 # Radish34 Demo
 
-In order to demonstrate the __Baseline Protocol__, we needed a use-case. The use-case chosen was product procurement within a supply-chain, and the custom application built for this workflow is called __Radish34__. This application was built as a proof of concept for the Baseline Protocol. 
+In order to demonstrate the __Baseline Protocol__, we needed a use-case. The use-case chosen was product procurement within a supply-chain, and the custom application built for this workflow is called __Radish34__. This application was built as a proof of concept for the Baseline Protocol.
 
 The __Baseline Protocol__ code is currently embedded inside the `/radish-api` directory, but we are in the process of moving that code into the `/baseline` directory to clearly distinguish the protocol from the use-case. Once this move is complete, `radish-api` will import `baseline` as a module, which will be the same process that other projects will need to follow to implement __Baseline__.
 
@@ -71,13 +71,34 @@ The root directory of this repo (where this Readme currently lives) contains the
 .
 ├── baseline  <-- Future home to the Baseline Protocol libraries
 ├── bin <-- Scripts to run across the entire project
-├── docs <-- auto-generated and artisanal hand crafted documentation 
+├── docs <-- auto-generated and artisanal hand crafted documentation
 └── radish34 <-- The demonstration POC (you probably are looking for this)
 ```
 
+## Run Splunk integrated version
+
+The steps are similar to the Quickstart guide above, but instead run the commands below.
+
+After starting, go to: http://splunk.docker:18000/en-US/app/search/baseline_status
+Log in with user `admin` and password [`changeme`](https://github.com/splunk/baseline/blob/integrate-splunk/radish34/docker-compose-splunk.yml#L11)
+
+To start:
+```
+make
+make start-splunk
+```
+
+To stop and reset:
+```
+make stop-ethlogger
+make stop-splunk
+make reset-splunk
+```
+
+
 ## Running scripts across the project
 
-To use the top level scripts (currently just documentation auto-generation and collection) do the following: 
+To use the top level scripts (currently just documentation auto-generation and collection) do the following:
 
 Required: NodeJS 11.15 (nvm is recommended)
 
