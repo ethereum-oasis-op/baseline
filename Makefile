@@ -83,9 +83,7 @@ reset-splunk:
 	docker-compose -f docker-compose-with-splunk.yml down && \
 	docker container prune -f && \
 	docker volume rm radish34_mongo-buyer radish34_mongo-supplier1 radish34_mongo-supplier2 radish34_mongo-merkle-tree-volume radish34_chaindata && \
-	pushd ${splunk} && \
-	rm checkpoints.json && \
-	popd && \
+	rm splunk/checkpoints.json && \
 	popd
 
 test:
