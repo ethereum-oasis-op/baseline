@@ -4,9 +4,9 @@ const ethers = require('ethers');
 class WorkgroupManager {
 
 	/*
-	@dev either pass an deployed instance.
+	@dev pass ethers contracts instances
 	*/
-	constructor(orgRegistryContract, verifierContract, shieldContract) {
+	constructor(orgRegistryContract, verifierContract, shieldContract,) {
 		assert(orgRegistryContract, "orgRegistryContract was not provided");
 		assert(verifierContract, "verifierContract wallet was not provided");
 		assert(shieldContract, "shieldContract wallet was not provided");
@@ -25,7 +25,10 @@ class WorkgroupManager {
 	 * @param {*} organisationAddress - the address of the organisation admin or interface implementers
 	 * @param {*} organisationMessengerURI - the URI to the organisation messenger. Will be used by the organisation resolver to ask for the messenger key
 	 */
-	async registerOrganisation(organisationName, organisationAddress, organisationMessengerURI) {
+	async registerOrganisation(organisationName, organisationAddress, organisationMessengerURI, transactionOverrides) {
+		if(typeof transactionOverrides === 'undefined') {
+			transactionOverrides = {}
+		}
 		const organisation = await this.organisationResolver.resolve(organisationName, organisationMessengerURI);
 
 		const tx = await this.orgRegistryContract
@@ -35,6 +38,7 @@ class WorkgroupManager {
 				organisation.role,
 				ethers.utils.hexlify(organisation.messagingKey),
 				ethers.utils.hexlify(organisation.zkpPublicKey),
+				transactionOverrides
 			)
 
 		return tx.wait();
@@ -47,13 +51,18 @@ class WorkgroupManager {
 	 * @param {*} shieldAddress The address for the shield contract of the group
 	 * @param {*} verifierAddress The address for the verifier contract of the group
 	 */
-	async registerOrganisationInterfaces(groupName, tokenAddress, shieldAddress, verifierAddress) {
+	async registerOrganisationInterfaces(groupName, tokenAddress, shieldAddress, verifierAddress, transactionOverrides) {
+		if(typeof transactionOverrides === 'undefined') {
+			transactionOverrides = {}
+		}
+		
 		const tx = await this.orgRegistryContract
 			.registerInterfaces(
 				ethers.utils.formatBytes32String(groupName),
 				tokenAddress,
 				shieldAddress,
-				verifierAddress
+				verifierAddress,
+				transactionOverrides
 			)
 
 		return tx.wait();

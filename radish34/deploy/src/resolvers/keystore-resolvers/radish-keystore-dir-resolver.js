@@ -4,11 +4,13 @@ const ethers = require('ethers');
 
 class RadishPathKeystoreDirResolver {
 
-	constructor(keystoreDir) {
+	constructor(keystoreDir, provider) {
 		if(typeof keystoreDir === 'undefined') {
 			throw new Error('Keystore directory not supplied');
 		}
 		this.keystoreDir = keystoreDir;
+		this.provider = provider;
+		this.cachedWallets = {}
 	}
 
 	/* 
@@ -16,10 +18,15 @@ class RadishPathKeystoreDirResolver {
 		The file needs to have structure of { signingKey : { privateKey: "0x..."}}
 	*/
 	async getWallet(role) {
+		if(typeof this.cachedWallets[role] !== 'undefined') {
+			return this.cachedWallets[role];
+		}
 		const walletFilePath = `${this.keystoreDir}/${role}.eth`;
 		assert(fs.existsSync(walletFilePath), `The desired wallet does not exist at ${walletFilePath}`);
 		const walletJSON = JSON.parse(fs.readFileSync(walletFilePath));
-		return new ethers.Wallet(walletJSON.signingKey.privateKey);
+		const result = new ethers.Wallet(walletJSON.signingKey.privateKey, this.provider);
+		this.cachedWallets[role] = result;
+		return this.cachedWallets[role];
 	}
 
 }

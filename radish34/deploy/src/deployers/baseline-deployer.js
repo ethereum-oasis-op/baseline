@@ -21,12 +21,12 @@ class BaselineDeployer {
 		return new WorkgroupContractsBuilder(contractsResolver);
 	}
 
-	async deployProtocol(deployProtocolTask) {
+	async deployProtocol(deployProtocolTask, deployTransactionOverrides) {
 		if (typeof deployProtocolTask === 'undefined') {
 			throw new Error('No deployment task supplied. Get one from  protocolBuilder.build()');
 		}
 
-		const deployer = new etherlimeLib.Deployer(this.deployerWallet, this.provider);
+		const deployer = new etherlimeLib.Deployer(this.deployerWallet, this.provider, deployTransactionOverrides);
 		const result = {}
 
 		const erc1820RegistryContract = await this._deployErc1820Registry(deployer, deployProtocolTask.erc1820Artifacts);
@@ -44,17 +44,17 @@ class BaselineDeployer {
 		return await deployer.deploy(contractArtifacts);
 	}
 
-	async deployWorkgroup(deployWorkgroupTask) {
+	async deployWorkgroup(deployWorkgroupTask, deployTransactionOverrides) {
 		if (typeof deployWorkgroupTask === 'undefined') {
 			throw new Error('No deployment task supplied. Get one from  workgroupBuilder.build()');
 		}
 
-		const deployer = new etherlimeLib.Deployer(this.deployerWallet, this.provider);
+		const deployer = new etherlimeLib.Deployer(this.deployerWallet, this.provider, deployTransactionOverrides);
 		let result = {}
 
 		if (typeof deployWorkgroupTask.orgRegistryArtifacts !== 'undefined') {
 			const orgRegistryContract = await this._deployOrgRegistry(deployer, deployWorkgroupTask.orgRegistryArtifacts, deployWorkgroupTask.erc1820RegistryAddress);
-			result['OrgRegistry'] = orgRegistryContract;
+			result['OrgRegistry'] = orgRegistryContract.contract;
 		}
 
 		if (typeof deployWorkgroupTask.shieldArtifacts !== 'undefined') {

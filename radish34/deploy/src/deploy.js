@@ -9,9 +9,7 @@ const RadishOrganisationConfigpathResolver = require('./resolvers/organisation-r
 const BaselineDeployer = require('./deployers/baseline-deployer.js');
 const WorkgroupManager = require('./managers/baseline-workgroup-manager.js');
 
-const main = async (pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver) => {
-
-  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_PROVIDER);
+const main = async (pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider) => {
 
   const {
     ERC1820Registry,
@@ -27,6 +25,10 @@ const main = async (pathKeystoreResolver, pathContractsResolver, pathOrganisatio
   await registerParty(workgroupManager, pathKeystoreResolver, 'supplier2', process.env.MESSENGER_SUPPLIER2_URI);
 
   await registerRadishInterface(workgroupManager, Shield, Verifier);
+
+  await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, 'buyer')
+  await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, 'supplier1')
+  await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, 'supplier2')
 
   // TODO set manager if needed - this might not be needed - double check
   // TODO set interface implementer if needed - this is needed to set the organisation implementers
@@ -86,6 +88,24 @@ const registerRadishInterface = async (workgroupManager, shieldContract, verifie
   console.log(`✅  Registered the Radish34 interface in the OrgRegistry with transaction hash: ${transaction.transactionHash}`);
 }
 
+const registerOrganisationInterfaceImplementers = async (erc1820Contract, OrgRegistryContract, ShieldContract, VerifierContract, keystoreResolver, partyName) => {
+  const partyWallet = await keystoreResolver.getWallet(partyName);
+  const partyErc1820ContractInstance = await erc1820Contract.connect(partyWallet);
+  const partyAddress = await partyWallet.getAddress();
+  const orgRegistryTransaction = await partyErc1820ContractInstance.setInterfaceImplementer(partyAddress, ethers.utils.id('IOrgRegistry'), OrgRegistryContract.address);
+  const orgRegistryReceipt = await orgRegistryTransaction.wait();
+
+  const verifierTransaction = await partyErc1820ContractInstance.setInterfaceImplementer(partyAddress, ethers.utils.id('IVerifier'), VerifierContract.address);
+  const verifierReceipt = await verifierTransaction.wait();
+
+  const shieldTransaction = await partyErc1820ContractInstance.setInterfaceImplementer(partyAddress, ethers.utils.id('IShield'), ShieldContract.address);
+  const shieldReceipt = await shieldTransaction.wait();
+
+  console.log(`✅  Registered OrgRegistry as IOrgRegistry for ${partyName} with transaction hash: ${orgRegistryReceipt.transactionHash}`);
+  console.log(`✅  Registered Verifier as IVerifier for ${partyName} with transaction hash: ${verifierReceipt.transactionHash}`);
+  console.log(`✅  Registered Shield as IShield for ${partyName} with transaction hash: ${shieldReceipt.transactionHash}`);
+}
+
 const run = async () => {
 
   assert(typeof process.env.KEYSTORE_PATH === 'string', "KEYSTORE_PATH not provided or not string");
@@ -100,14 +120,15 @@ const run = async () => {
   let organisationsConfigDir = path.resolve(process.env.ORGANISATION_CONFIG_PATH);
   let paths = (process.env.CONTRACTS_PATH) ? path.resolve(process.env.CONTRACTS_PATH) : undefined;
 
-  const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir)
+  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_PROVIDER);
+  const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir, provider)
   const pathContractsResolver = new RadishConfigpathContractsResolver(paths);
   const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir)
 
   console.log('Patiently waiting 10 seconds for ganache container to init ...');
   setTimeout(async () => {
     console.log('Checking for ganache ...');
-    await main(pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver);
+    await main(pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, provider);
   }, 500);
 }
 
