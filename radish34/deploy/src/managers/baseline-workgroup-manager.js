@@ -15,29 +15,18 @@ class WorkgroupManager {
 		this.shieldContract = shieldContract;
 	}
 
-	setOrganisationResolver(organisationResolver) {
-		this.organisationResolver = organisationResolver;
-	}
-
-	/**
-	 * 
-	 * @param {*} organisationName - the name of the organisation that is going to be resolved by the organisation resolver supplied via setOrganisationResolver
-	 * @param {*} organisationAddress - the address of the organisation admin or interface implementers
-	 * @param {*} organisationMessengerURI - the URI to the organisation messenger. Will be used by the organisation resolver to ask for the messenger key
-	 */
-	async registerOrganisation(organisationName, organisationAddress, organisationMessengerURI, transactionOverrides) {
+	async registerOrganisation(organisationAddress, organisationName, organisationRole, organisationMessagingKey, organisationZkpPublicKey, transactionOverrides) {
 		if (typeof transactionOverrides === 'undefined') {
 			transactionOverrides = {}
 		}
-		const organisation = await this.organisationResolver.resolve(organisationName, organisationMessengerURI);
 
 		const tx = await this.orgRegistryContract
 			.registerOrg(
 				organisationAddress,
-				ethers.utils.formatBytes32String(organisation.name),
-				organisation.role,
-				ethers.utils.hexlify(organisation.messagingKey),
-				ethers.utils.hexlify(organisation.zkpPublicKey),
+				ethers.utils.formatBytes32String(organisationName),
+				organisationRole,
+				ethers.utils.hexlify(organisationMessagingKey),
+				ethers.utils.hexlify(organisationZkpPublicKey),
 				transactionOverrides
 			)
 

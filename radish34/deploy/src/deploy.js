@@ -20,11 +20,10 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   } = await deployContracts(pathKeystoreResolver, pathContractsResolver, provider);
 
   const workgroupManager = new WorkgroupManager(OrgRegistry, Verifier, Shield);
-  workgroupManager.setOrganisationResolver(pathOrganisationResolver);
 
   for (const organisation of radishOrganisations) {
     console.log(`ℹ️   Registering workgroup member: ${organisation.name}`);
-    await registerOrganisation(workgroupManager, pathKeystoreResolver, organisation.name, organisation.messengerUri);
+    await registerOrganisation(workgroupManager, pathKeystoreResolver, pathOrganisationResolver, organisation.name, organisation.messengerUri);
     await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, organisation.name);
   }
   await registerRadishInterface(workgroupManager, Shield, Verifier);
@@ -80,9 +79,10 @@ const deployContracts = async (pathKeystoreResolver, pathContractsResolver, prov
 
 }
 
-const registerOrganisation = async (workgroupManager, pathKeystoreResolver, organisationName, organisationMessengerURL) => {
+const registerOrganisation = async (workgroupManager, pathKeystoreResolver, organisationResolver, organisationName, organisationMessengerURL) => {
   const buyerWallet = await pathKeystoreResolver.getWallet(organisationName);
-  const transaction = await workgroupManager.registerOrganisation(organisationName, buyerWallet.address, organisationMessengerURL);
+  const organisation = await organisationResolver.resolve(organisationName, organisationMessengerURL);
+  const transaction = await workgroupManager.registerOrganisation(buyerWallet.address, organisation.name, organisation.role, organisation.messagingKey, organisation.zkpPublicKey);
 
   console.log(`✅  Registered ${organisationName} in the OrgRegistry with transaction hash: ${transaction.transactionHash}`);
 }
