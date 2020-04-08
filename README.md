@@ -85,6 +85,38 @@ make stop-splunk
 make reset-splunk
 ```
 
+If you're on linux, you run the commands directly.
+
+To make:
+```
+npm-install contracts && \
+cd radish34 && \
+docker-compose build && \
+npm run setup
+```
+
+To start:
+```
+docker-compose -f docker-compose-splunk.yml up -d && \
+echo "Patiently waiting 75 seconds for splunk container to init ..." && \
+sleep 75 && \
+npm run deploy && \
+docker-compose -f docker-compose-with-splunk.yml up -d && \
+docker-compose -f docker-compose-ethlogger.yml up -d
+```
+
+To stop and reset:
+(from the radish34 directory)
+```
+docker-compose -f docker-compose-ethlogger.yml down
+docker-compose -f docker-compose-splunk.yml down
+docker-compose -f docker-compose-with-splunk.yml down && \
+docker container prune -f && \
+docker volume rm radish34_mongo-buyer radish34_mongo-supplier1 radish34_mongo-supplier2 radish34_mongo-merkle-tree-volume radish34_chaindata && \
+rm splunk/checkpoints.json
+```
+
+
 # What is here?
 
 The root directory of this repo (where this Readme currently lives) contains the following folders:
