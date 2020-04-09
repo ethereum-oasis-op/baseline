@@ -2,13 +2,13 @@ const path = require('path');
 const assert = require('assert');
 const ethers = require('ethers');
 
-const RadishConfigpathContractsResolver = require('./resolvers/contract-resolvers/radish-configpath-resolver.js');
-const RadishPathKeystoreDirResolver = require('./resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
-const RadishOrganisationConfigpathResolver = require('./resolvers/organisation-resolvers/radish-configpath-resolver.js');
-const RadishZKPRestResolver = require('./resolvers/verification-key-resolvers/radish-zkp-rest-resolver');
+const RadishConfigpathContractsResolver = require('./baseline-administrator-lib/resolvers/contract-resolvers/radish-configpath-resolver.js');
+const RadishPathKeystoreDirResolver = require('./baseline-administrator-lib/resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
+const RadishOrganisationConfigpathResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-configpath-resolver.js');
+const RadishZKPRestResolver = require('./baseline-administrator-lib/resolvers/verification-key-resolvers/radish-zkp-rest-resolver');
 
-const BaselineDeployer = require('./deployers/baseline-deployer.js');
-const BaselineWorkgroupManager = require('./managers/baseline-workgroup-manager.js');
+const BaselineDeployer = require('./baseline-administrator-lib/deployers/baseline-deployer.js');
+const BaselineWorkgroupManager = require('./baseline-administrator-lib/managers/baseline-workgroup-manager.js');
 
 const SettingsSaver = require('./utils/SettingsSaver');
 
@@ -48,9 +48,7 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   }
 
   // TODO set manager if needed - this might not be needed - double check
-  // TODO save to config files
-  // Move to separate library folder
-  // Test full integration
+  // Update app.js
   // Diagrams - objects, classes
   // TODO Javascript docs
   // Remove old files

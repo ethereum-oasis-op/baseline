@@ -5,7 +5,7 @@ const {
 const {
 	hexToDec,
 	flattenDeep
-} = require('./../../utils/conversions');
+} = require('./utils/conversions');
 
 const DEFAULT_CIRCUIT_NAMES = {
 	createMSA: {

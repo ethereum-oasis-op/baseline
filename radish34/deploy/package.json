@@ -15,7 +15,7 @@
   "scripts": {
     "check": "node ./src/app.js",
     "deploy": "node ./src/deploy-old.js",
-    "deploy-dev": "RPC_PROVIDER=http://localhost:8545 KEYSTORE_PATH=./../config/keystore CONTRACTS_PATH=./paths-contracts.json ORGANISATION_CONFIG_PATH=./../config MESSENGER_BUYER_URI=http://localhost:4001 MESSENGER_SUPPLIER1_URI=http://localhost:4002 MESSENGER_SUPPLIER2_URI=http://localhost:4003 ZKP_URL=http://localhost:8080 node ./src/deploy.js"
+    "deploy-dev": "RPC_PROVIDER=http://localhost:8545 KEYSTORE_PATH=./../config/keystore CONTRACTS_PATH=./paths-contracts-dev.json ORGANISATION_CONFIG_PATH=./../config MESSENGER_BUYER_URI=http://localhost:4001 MESSENGER_SUPPLIER1_URI=http://localhost:4002 MESSENGER_SUPPLIER2_URI=http://localhost:4003 ZKP_URL=http://localhost:8080 node ./src/deploy.js"
   },
   "dependencies": {
     "axios": "^0.19.0",

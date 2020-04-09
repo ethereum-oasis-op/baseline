@@ -1,7 +1,4 @@
 {
-  "Config": "../config",
-  "Keystore": "../config/keystore",
-
   "ERC1820Registry": "../contracts/artifacts/ERC1820Registry.json",
   "Registrar": "../contracts/artifacts/Registrar.json",
   "OrgRegistry": "../contracts/artifacts/OrgRegistry.json",

@@ -1,10 +1,10 @@
 {
-  "ERC1820Registry": "../contracts/artifacts/ERC1820Registry.json",
-  "Registrar": "../contracts/artifacts/Registrar.json",
-  "OrgRegistry": "../contracts/artifacts/OrgRegistry.json",
+  "ERC1820Registry": "/app/artifacts/ERC1820Registry.json",
+  "Registrar": "/app/artifacts/Registrar.json",
+  "OrgRegistry": "/app/artifacts/OrgRegistry.json",
 
-  "Pairing": "../contracts/artifacts/Pairing.json",
-  "BN256G2": "../contracts/artifacts/BN256G2.json",
-  "Verifier": "../contracts/artifacts/Verifier.json",
-  "Shield": "../contracts/artifacts/Shield.json"
+  "Pairing": "/app/artifacts/Pairing.json",
+  "BN256G2": "/app/artifacts/BN256G2.json",
+  "Verifier": "/app/artifacts/Verifier.json",
+  "Shield": "/app/artifacts/Shield.json"
 }

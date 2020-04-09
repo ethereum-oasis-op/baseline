@@ -82,6 +82,9 @@ services:
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001
       ZKP_URL: http://zkp:80
+      KEYSTORE_PATH: /keystore
+      ORGANISATION_CONFIG_PATH: /app/src/config
+      CONTRACTS_PATH: /app/paths-contracts.json
     networks:
       - network-buyer
       - network-supplier1
@@ -89,6 +92,7 @@ services:
     volumes:
       - ./deploy/src:/app/src:delegated
       - ./deploy/package.json:/app/package.json:delegated
+      - ./deploy/paths-contracts.json:/app/paths-contracts.json:delegated
       - ./contracts/artifacts:/app/artifacts:delegated
       - ./config/keystore:/keystore:delegated
       - ./config:/app/src/config

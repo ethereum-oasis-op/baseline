@@ -1,7 +1,7 @@
 const request = require('request');
 const {
   poll
-} = require('./../../../utils/poll');
+} = require('./../utils/poll');
 
 // TODO: create config for this value?
 const POLLING_FREQUENCY = 6000; // milliseconds
