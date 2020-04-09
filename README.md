@@ -72,6 +72,8 @@ Make sure you check out the [prerequisites to running the radish34 demo](https:/
 After start tasks complete, go to: http://splunk.docker:18000/en-US/app/search/baseline_status
 Log in with user `admin` and password [`changeme`](https://github.com/splunk/baseline/blob/integrate-splunk/radish34/docker-compose-splunk.yml#L11)
 
+### macOS
+
 To start:
 ```
 make
@@ -85,20 +87,18 @@ make stop-splunk
 make reset-splunk
 ```
 
-If you're on linux, run the commands directly. Make sure you have node.js v10 installed. If your docker users aren't set up and you need to use `sudo` to interact with docker, make sure you take that into account when running the commands below.
+### Ubuntu
+
+If you're on linux (only tested on Ubuntu 18), you have to run the commands directly. Make sure you have node.js v10 installed. If your docker users aren't set up and you need to use `sudo` to interact with docker (this is already added below), make sure you take that into account when running the commands below.
 
 To make:
 ```
-cd radish34 && \
-npm ci && \
-cd messenger && npm ci && cd.. && \
-cd api && npm ci && cd.. && \
-cd deploy && npm ci && cd.. && \
-cd ui && npm ci && cd.. && \
-cd zkp && npm ci && cd.. && \
-cd contracts && npm ci && cd.. && \
-docker-compose build && \
-npm run setup
+cd radish34
+npm ci
+npm run postinstall
+npm run build:contracts
+sudo docker-compose build
+sudo npm run setup
 ```
 
 To start:
