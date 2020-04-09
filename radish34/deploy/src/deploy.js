@@ -30,17 +30,21 @@ const deployContracts = async role => {
   );
   console.log('✅  Verifier deployed:', addresses.Verifier);
 
-  addresses.Shield = await Contract.deployContract('Shield', [addresses.Verifier, addresses.ERC1820Registry], role);
+  addresses.Shield = await Contract.deployContract(
+    'Shield',
+    [addresses.Verifier, addresses.ERC1820Registry],
+    role,
+  );
   console.log('✅  Shield deployed:', addresses.Shield);
 };
 
-//TODO: Add managers for Shield and Verifier contracts
+// TODO: Add managers for Shield and Verifier contracts
 const assignManager = async role => {
-  const { transactionHash } = await Organization.assignManager('OrgRegistry', role, role);
+  const { transactionHash } = await Organization.assignManager('OrgRegistry', role);
   console.log(`✅  Assigned the ${role} as the manager for OrgRegistry. TxHash:`, transactionHash);
 };
 
-//TODO: Add set interface implementers for Shield and Verifier contracts
+// TODO: Add set interface implementers for Shield and Verifier contracts
 const setInterfaceImplementer = async role => {
   const roleAddress = await Wallet.getAddress(role);
   const { transactionHash } = await Organization.setInterfaceImplementer(
@@ -78,12 +82,15 @@ const registerInterfaces = async role => {
     role,
     addresses.OrgRegistry,
     'Radish34',
-    //TODO: Deploy ERC1155 token and add deployed token address here
+    // TODO: Deploy ERC1155 token and add deployed token address here
     '0x0000000000000000000000000000000000000000',
     addresses.Shield,
-    addresses.Verifier
+    addresses.Verifier,
   );
-  console.log(`✅  Registered interfaces for shield & verifier with OrgRegistry with tx hash:`, transactionHash);
+  console.log(
+    `✅  Registered interfaces for shield & verifier with OrgRegistry with tx hash:`,
+    transactionHash,
+  );
 };
 
 const checkOrgCount = async () => {
@@ -109,7 +116,6 @@ const saveSettings = async role => {
 };
 
 const main = async () => {
-  const registerAll = process.env.MODE === 'register-all';
 
   await deployContracts('deployer');
   await assignManager('deployer');

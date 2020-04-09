@@ -209,7 +209,7 @@ const getEventValuesFromTxReceipt = (eventName, contract, txReceipt) => {
   for (let i = 0; i < logs.length; i++) {
     const log = logs[i];
     const logDescription = contract.interface.parseLog(log);
-    if (logDescription.name === eventName) {
+    if (logDescription && logDescription.name === eventName) {
       let { values } = logDescription;
       values = removeNumericKeys(values); // values contains duplicate numeric keys for each event parameter.
       values = parseBigNumbers(values); // convert uints (returned as BigNumber) to numbers.
