@@ -89,26 +89,33 @@ make reset-splunk
 
 ### Ubuntu
 
-If you're on linux (only tested on Ubuntu 18), you have to run the commands directly. Make sure you have node.js v10 installed. If your docker users aren't set up and you need to use `sudo` to interact with docker (this is already added below), make sure you take that into account when running the commands below.
+If you're on linux (only tested on Ubuntu 18), you have to run the commands directly. Make sure you have node.js v11 installed. If your docker users aren't set up and you need to use `sudo` to interact with docker (this is already added below), make sure you take that into account when running the commands below.
+
+Install dependencies
+
+```
+sudo apt-get install g++
+```
 
 To make:
 ```
 cd radish34
-npm ci
-npm run postinstall
-npm run build:contracts
-sudo docker-compose build
+npm ci && \
+npm run postinstall && \
+sudo npm run build:contracts
+
+sudo docker-compose build && \
 sudo npm run setup
 ```
 
 To start:
 ```
-docker-compose -f docker-compose-splunk.yml up -d && \
+sudo docker-compose -f docker-compose-splunk.yml up -d && \
 echo "Patiently waiting 75 seconds for splunk container to init ..." && \
 sleep 75 && \
-npm run deploy && \
-docker-compose -f docker-compose-with-splunk.yml up -d && \
-docker-compose -f docker-compose-ethlogger.yml up -d
+sudo npm run deploy && \
+sudo docker-compose -f docker-compose-with-splunk.yml up -d && \
+sudo docker-compose -f docker-compose-ethlogger.yml up -d
 ```
 
 To stop and reset:
