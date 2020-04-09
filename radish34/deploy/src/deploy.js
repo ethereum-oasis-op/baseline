@@ -8,9 +8,11 @@ const RadishOrganisationConfigpathResolver = require('./resolvers/organisation-r
 const RadishZKPRestResolver = require('./resolvers/verification-key-resolvers/radish-zkp-rest-resolver');
 
 const BaselineDeployer = require('./deployers/baseline-deployer.js');
-const WorkgroupManager = require('./managers/baseline-workgroup-manager.js');
+const BaselineWorkgroupManager = require('./managers/baseline-workgroup-manager.js');
 
-const main = async (radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider) => {
+const SettingsSaver = require('./utils/SettingsSaver');
+
+const main = async (radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider, settingsSaver) => {
 
   const {
     ERC1820Registry,
@@ -19,7 +21,7 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
     Shield
   } = await deployContracts(pathKeystoreResolver, pathContractsResolver, provider);
 
-  const workgroupManager = new WorkgroupManager(OrgRegistry, Verifier, Shield);
+  const workgroupManager = new BaselineWorkgroupManager(OrgRegistry, Verifier, Shield);
 
   for (const organisation of radishOrganisations) {
     console.log(`ℹ️   Registering workgroup member: ${organisation.name}`);
@@ -35,7 +37,23 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   console.log(`ℹ️   Network information:`);
   await printNetworkInfo(workgroupManager, radishOrganisations, pathKeystoreResolver);
 
+  for (const organisation of radishOrganisations) {
+    console.log(`ℹ️   Saving settings to config file for: ${organisation.name}`);
+    await saveOrganisationConfig(settingsSaver, organisation.name, organisation.messengerUri, {
+      ERC1820Registry: ERC1820Registry.address,
+      OrgRegistry: OrgRegistry.address,
+      Verifier: Verifier.address,
+      Shield: Shield.address
+    })
+  }
+
   // TODO set manager if needed - this might not be needed - double check
+  // TODO save to config files
+  // Move to separate library folder
+  // Test full integration
+  // Diagrams - objects, classes
+  // TODO Javascript docs
+  // Remove old files
 
 };
 
@@ -128,6 +146,11 @@ const printNetworkInfo = async (workgroupManager, radishOrganisations, keystoreR
   }
 };
 
+const saveOrganisationConfig = async (settingsSaver, organisationName, organisationWhisperURL, addresses) => {
+  const settings = await settingsSaver.updateSettings(organisationName, organisationWhisperURL, addresses)
+  console.log(`✅  Saved information about ${organisationName}: ${JSON.stringify(settings)}`);
+}
+
 const run = async () => {
 
   assert(typeof process.env.KEYSTORE_PATH === 'string', "KEYSTORE_PATH not provided or not string");
@@ -144,10 +167,11 @@ const run = async () => {
   let paths = (process.env.CONTRACTS_PATH) ? path.resolve(process.env.CONTRACTS_PATH) : undefined;
 
   const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_PROVIDER);
-  const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir, provider)
+  const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir, provider);
   const pathContractsResolver = new RadishConfigpathContractsResolver(paths);
-  const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir)
-  const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL)
+  const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir);
+  const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL);
+  const settingsSaver = new SettingsSaver(organisationsConfigDir, process.env.RPC_PROVIDER);
 
   // TODO get this from param
   const radishOrganisations = [{
@@ -167,7 +191,7 @@ const run = async () => {
   console.log('Patiently waiting 10 seconds for ganache container to init ...');
   setTimeout(async () => {
     console.log('Checking for ganache ...');
-    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider);
+    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider, settingsSaver);
   }, 500);
 }
 

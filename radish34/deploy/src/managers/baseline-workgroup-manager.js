@@ -1,7 +1,7 @@
 const assert = require('assert');
 const ethers = require('ethers');
 
-class WorkgroupManager {
+class BaselineWorkgroupManager {
 
 	/*
 	@dev pass ethers contracts instances
@@ -104,4 +104,4 @@ Organisation zkpPublicKey: ${this.zkpPublicKey}`
 	}
 }
 
-module.exports = WorkgroupManager
+module.exports = BaselineWorkgroupManager
