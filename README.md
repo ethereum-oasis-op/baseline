@@ -85,12 +85,18 @@ make stop-splunk
 make reset-splunk
 ```
 
-If you're on linux, you run the commands directly.
+If you're on linux, run the commands directly. Make sure you have node.js v10 installed. If your docker users aren't set up and you need to use `sudo` to interact with docker, make sure you take that into account when running the commands below.
 
 To make:
 ```
-npm-install contracts && \
 cd radish34 && \
+npm ci && \
+cd messenger && npm ci && cd.. && \
+cd api && npm ci && cd.. && \
+cd deploy && npm ci && cd.. && \
+cd ui && npm ci && cd.. && \
+cd zkp && npm ci && cd.. && \
+cd contracts && npm ci && cd.. && \
 docker-compose build && \
 npm run setup
 ```
@@ -116,6 +122,26 @@ docker volume rm radish34_mongo-buyer radish34_mongo-supplier1 radish34_mongo-su
 rm splunk/checkpoints.json
 ```
 
+#### Dependency troubleshooting
+
+When starting `dotdocker`, if you get the following error, here's how you can resolve it.
+```
+Error starting userland proxy: listen tcp 0.0.0.0:53: bind: address already in use
+```
+run:
+```
+sudo systemctl stop systemd-resolved
+sudo systemctl disable systemd-resolved
+```
+
+When logging into the github docker repository, if you get the following error, here's how to resolve it.
+```
+Error saving credentials: error storing credentials - err: exit status 1, out: `Error calling StartServiceByName for org.freedesktop.secrets: Timeout was reached`
+```
+run:
+```
+sudo apt-get install gnupg2 pass
+```
 
 # What is here?
 
