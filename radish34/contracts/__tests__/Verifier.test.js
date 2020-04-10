@@ -4,7 +4,7 @@ import { ethers, utils } from 'ethers';
 import testdata from './mockVerifierData';
 
 import VerifierArtifact from '../artifacts/Verifier.json';
-import BN256G2Artifact from '../artifacts/BN256G2.json'; 
+import BN256G2Artifact from '../artifacts/BN256G2.json';
 import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
 
 const wallet = getWallet();
@@ -27,12 +27,12 @@ test('Should be able to deploy Verifier contract', async () => {
   expect(verifier.address).toMatch(new RegExp('^0x[a-fA-F0-9]{40}$'));
 });
 
-test('Should be able to successfully execute verify transaction', async() => {
+test('Should be able to successfully execute verify transaction', async () => {
   // Note: Alternatively, hex inputs from interaction with the zkp service during set up and proof generation
   // can be used. To be able to convert the proof and vk arrays to BigInt, `formatProof` a util in 
   // api/src/utils/crypto/conversions.js can be used to handle this conversion
   let topic = utils.id("Verified(bool)");
-  const tx = await verifier.verify(testdata.proofs_int, testdata.inputs_hash, testdata.vks_int);
+  const tx = await verifier.verify(testdata.msa.proofs_int, testdata.msa.inputs_hash, testdata.msa.vks_int);
   await tx.wait();
   const txReceipt = await getProvider().getTransactionReceipt(tx.hash);
   const txLogs = verifier.interface.parseLog(txReceipt.logs[0]);
@@ -42,16 +42,16 @@ test('Should be able to successfully execute verify transaction', async() => {
   expect(txLogs.name).toEqual('Verified');
   expect(txLogs.topic).toEqual(topic);
   expect(txLogs.values['0']).toEqual(true);
-}, 10000);
+}, 20000);
 
-test('Should be able to throw when input to verify function overflows snark scalar bound', async() => {
+test('Should be able to throw when input to verify function overflows snark scalar bound', async () => {
   expect.assertions(2);
   let overflow_input = [];
   overflow_input.push(SNARK_SCALAR_BOUND);
   // Alternately, the scalar bound can be further incremented:
-  // overflow_input.push((BigInt(BigInt(SNARK_SCALAR_BOUND) + BigInt(testdata.inputs_hash[0]))).toString());
+  // overflow_input.push((BigInt(BigInt(SNARK_SCALAR_BOUND) + BigInt(testdata.msa.inputs_hash[0]))).toString());
   try {
-    await verifier.verify(testdata.proofs_int, overflow_input, testdata.vks_int);
+    await verifier.verify(testdata.msa.proofs_int, overflow_input, testdata.msa.vks_int);
   }
   catch (err) {
     expect(err.code).toBe(-32000);
@@ -59,13 +59,13 @@ test('Should be able to throw when input to verify function overflows snark scal
   }
 }, 10000);
 
-test('Should be able to throw when proof to verify function overflows prime bound', async() => {
+test('Should be able to throw when proof to verify function overflows prime bound', async () => {
   expect.assertions(2);
-  testdata.proofs_int.splice(0,1,PRIME_BOUND);
+  testdata.msa.proofs_int.splice(0, 1, PRIME_BOUND);
   // Alternately, the prime bound can be further incremented:
-  // testdata.proofs_int.splice(0,1,(BigInt(BigInt(PRIME_BOUND) + BigInt(testdata.proofs_int[0]))).toString());
+  // testdata.msa.proofs_int.splice(0,1,(BigInt(BigInt(PRIME_BOUND) + BigInt(testdata.msa.proofs_int[0]))).toString());
   try {
-    await verifier.verify(testdata.proofs_int, testdata.inputs_hash, testdata.vks_int);
+    await verifier.verify(testdata.msa.proofs_int, testdata.msa.inputs_hash, testdata.msa.vks_int);
   }
   catch (err) {
     expect(err.code).toBe(-32000);
