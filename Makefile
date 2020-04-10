@@ -74,6 +74,7 @@ reset:
 	docker-compose down && \
 	docker container prune -f && \
 	docker volume rm radish34_mongo-buyer radish34_mongo-supplier1 radish34_mongo-supplier2 radish34_mongo-merkle-tree-volume radish34_chaindata && \
+	docker network rm radish34_network-buyer radish34_network-supplier1 radish34_network-supplier2 radish34_geth && \
 	popd
 
 reset-splunk:
