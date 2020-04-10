@@ -48,8 +48,8 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   }
 
   // TODO set manager if needed - this might not be needed - double check
-  // Update app.js
-  // Diagrams - objects, classes
+  // Update Radish34 Docs
+  // Deploy README - Diagrams - objects, classes
   // TODO Javascript docs
   // Remove old files
 
