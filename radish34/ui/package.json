@@ -17,7 +17,8 @@
     "lint:md": "markdownlint -i node_modules -i build .",
     "start": "react-scripts start",
     "test": "cod-scripts test",
-    "validate": "cod-scripts validate"
+    "validate": "cod-scripts validate",
+    "health-check": "curl -f -s http://localhost || exit 1"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.2",

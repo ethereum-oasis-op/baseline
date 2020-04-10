@@ -37,7 +37,8 @@
     "start": "NODE_ENV=production node ./src/index.js",
     "start:dev": "NODE_ENV=development nodemon ./src/index.js",
     "start:test": "NODE_ENV=test nodemon ./src/index.js",
-    "test": "NODE_ENV=test jest --runInBand --forceExit --coverage"
+    "test": "NODE_ENV=test jest --runInBand --forceExit --coverage",
+    "health-check": "curl -f -s http://localhost/health || exit 1"
   },
   "dependencies": {
     "axios": "^0.19.0",

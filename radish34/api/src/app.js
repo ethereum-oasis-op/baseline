@@ -78,8 +78,8 @@ export default async function startServer() {
   const app = express();
 
   app.use(bodyParser.json({ limit: '2mb' }));
+  app.use('/', healthRoutes);
   app.use('/api/v1', messageRoutes);
-  app.use('/api/v1', healthRoutes);
   app.use('/bulls', UI);
 
   app.listen(REST_PORT, () =>

@@ -256,6 +256,8 @@ nvm use 11
 4. Running tests
    - In some cases, while running the test suite `npm run test` there could be a socket hang up error. This is potentially due to race conditions across the different containers for the API services. To resolve this issue run `docker-compose restart api-buyer api-supplier1 api-supplier2` to get rid of errors while running the test suite.
 
+1. Check health of the containers. Running `docker ps` will show all the containers for the Radish34 demo and if they are healthy or not. To inspect the health check results of a container run the following `docker inspect --format='{{json .State.Health}}' your-container-name`
+
 ### Front-end Environment
 
 1. When the above setup is run successfully, the UI is ready at `http://localhost:3000`

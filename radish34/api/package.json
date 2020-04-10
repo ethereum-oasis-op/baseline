@@ -24,7 +24,8 @@
     "lint:md": "markdownlint -i node_modules -i dist .",
     "test": "jest --watchAll --verbose=true --silent",
     "test:ci": "jest --verbose=true --silent --ci --coverage",
-    "validate": "npm run lint && npm run lint:md"
+    "validate": "npm run lint && npm run lint:md",
+    "health-check": "curl -f -s http://localhost/health || exit 1"
   },
   "dependencies": {
     "apollo-server": "^2.11.0",
