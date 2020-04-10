@@ -41,19 +41,19 @@ There are 4 (+1 included in the last section for Radish specific config) main lo
 - Organisation Config - object carring organisation specific information. At minimum these should have the organisation name, role and zero knowledge private key. In Radish34 these are taken from a predefined configuration files.
 - Verification Key - object carring a verification key and type for a specific ZK circuit. In Radish these should be requested from the zkp service.
 ### Resolvers
-All main logical input objects can have multiple ways to be inputted. In order to allow for new ways of resolving these objects, the notion of Resolvers is introduced. As long as Resolvers, follow a similar interface, the "action" classes will be able to use them to resolve the necessary logical input objects. In the Radish34 demo, each logical object has it's specific resolver based on the source of the object.
+All main logical input objects can have multiple ways to be inputted. In order to allow for new ways of resolving these objects, the notion of Resolvers is introduced. As long as Resolvers follow a similar interface, the "action" classes will be able to use them to resolve the necessary logical input objects. In the Radish34 demo, each logical object has it's specific resolver based on the source of the object.
 
 For Contract Artifacts it is based on a .json configuration file. For Keystore it is based on directory and the name of the organisation. For Organisation it is based on directory and the name of the organisation leading to a config file. For the verification key it is based on a http request.
 
-Many new resolvers can be defined and included in the library, which will allow different methods of getting these. This would be beneficial especially for remote resolving of sensitive objects (like private keys);
+Using this approach, new resolvers can be defined and included in the library, which will allow for better extensibility. This would be beneficial, especially for resolving sensitive data (like private keys) remotely;
 
 ### Baseline Deployer
 The baseline deployer is an action class allowing its user to deploy the current baseline contracts (currently these are only the Radish34 contracts).
 
-The deployer expects a an ethers.Signer object and ethers.Provider object as creation parameters. These will be used in all subsequent deployments.
+The deployer expects an ethers.Signer object and ethers.Provider object as creation parameters. These will be used in all subsequent deployments.
 At the moment, two types of contracts can be logically outlined - protocol contracts and workgroup contracts.
 
-The protocol contracts are contracts that are expected to be already in place in the public networks. For local development these need to be deployed. Example of these is the ERC1820Registry contract that is available on mainnet, but not on your local ganache.
+The protocol contracts are contracts that are expected to be already in place in the public networks. For local development these need to be deployed. Example of these is the ERC1820Registry contract that is available on Mainnet, but not on your local ganache.
 
 The workgroup contracts are contracts specific for the workgroup being created. These will be deployed on any network you are using - mainnet or local. Example of these contracts are the OrgRegistry, Shield and Verifier.
 
@@ -65,15 +65,15 @@ Once the builders are used to create deployment tasks, these tasks are submitted
 ### Baseline Workgroup Manager
 The baseline workgroup manager class is an action class allowing its user to manage a workgroup. At present times, a workgroup is defined by three contracts - OrgRegistry, Shield and Verifier. Once these are supplied (connected to the intended transaction sender), the workgroup manager can start managing and configuring the workgroup.
 
-Some of the abilities of the current workgroup manager are:
+Current abilities of the workgroup manager are:
 - Registering organisations
 - Registering organisation interfaces
 - Registering verification keys
 
 ### Radish specific config 
-One additional logical object specific to Radish is Defined. This object defines the different organisations that the Demo will be bootstrapped with. 
+One additional logical object specific to Radish is defined. This object defines the different organisations that the Demo will be bootstrapped with. 
 
-Outside of the demo context of Radish34, the processes of deployment and administration will probably be detached. This means that this configuration object will probably will be passed separately for each organisation. Current version is only tailored for Radish34.
+Outside of the demo context of Radish34, the processes of deployment and administration will probably be detached. This means that this configuration object will probably be passed separately for each organisation. Current version is only tailored for Radish34.
 
 ## How can this be improved?
 
