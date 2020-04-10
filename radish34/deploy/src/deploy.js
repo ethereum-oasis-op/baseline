@@ -51,6 +51,7 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   console.log(`Please restart the radish-apis for the config to take effect`);
 
   // TODO set manager if needed - this might not be needed - double check
+  // Abstract Messanger URI too
   // Update Radish34 Docs
   // Deploy README - Diagrams - objects, classes
   // TODO Javascript docs
@@ -157,6 +158,21 @@ const saveOrganisationConfig = async (settingsSaver, organisationName, organisat
   console.log(`✅  Saved information about ${organisationName}: ${JSON.stringify(settings)}`);
 }
 
+// Radish34 Specific organisations and their messenger URLS.
+const radishOrganisations = [{
+    name: 'buyer',
+    messengerUri: process.env.MESSENGER_BUYER_URI
+  },
+  {
+    name: 'supplier1',
+    messengerUri: process.env.MESSENGER_SUPPLIER1_URI
+  },
+  {
+    name: 'supplier2',
+    messengerUri: process.env.MESSENGER_SUPPLIER2_URI
+  }
+]
+
 const run = async () => {
 
   assert(typeof process.env.KEYSTORE_PATH === 'string', "KEYSTORE_PATH not provided or not string");
@@ -178,21 +194,6 @@ const run = async () => {
   const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir);
   const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL);
   const settingsSaver = new SettingsSaver(organisationsConfigDir, process.env.RPC_PROVIDER);
-
-  // TODO get this from param
-  const radishOrganisations = [{
-      name: 'buyer',
-      messengerUri: process.env.MESSENGER_BUYER_URI
-    },
-    {
-      name: 'supplier1',
-      messengerUri: process.env.MESSENGER_SUPPLIER1_URI
-    },
-    {
-      name: 'supplier2',
-      messengerUri: process.env.MESSENGER_SUPPLIER2_URI
-    }
-  ]
 
   console.log('Patiently waiting 10 seconds for ganache container to init ...');
   setTimeout(async () => {
