@@ -33,8 +33,10 @@ beforeAll(async () => {
   // Clear out saved msas so there aren't unintended collisions
   nativeClient = await MongoClient.connect(buyerMongoURL, { useUnifiedTopology: true });
   db = nativeClient.db();
+  await db.collection('RFPs').deleteMany();
   await db.collection('msas').deleteMany();
-  await db.collection('RFP').deleteMany();
+  await db.collection('pos').deleteMany();
+  await db.collection('proposals').deleteMany();
 });
 
 afterAll(async () => {
@@ -133,7 +135,6 @@ describe('Buyer sends new RFP to supplier', () => {
         .post('/graphql')
         .send({ query: postBody });
       expect(res.statusCode).toEqual(200);
-      console.log(res.body);
       rfpId = res.body.data.createRFP._id;
     });
   });
@@ -185,7 +186,6 @@ describe('Buyer sends new RFP to supplier', () => {
         .post('/graphql')
         .send({ query: queryBody });
       expect(res.statusCode).toEqual(200);
-      console.log(res.body.data.rfp.recipients[0]);
       const origination = res.body.data.rfp.recipients[0].origination;
       expect(origination.receiptDate).not.toBeUndefined();
       messageId = origination.messageId;
@@ -321,7 +321,7 @@ describe('Buyer creates MSA, signs it, sends to supplier, supplier responds with
       }
       expect(res.statusCode).toEqual(200);
       expect(res.body.data.msa._id).not.toBeUndefined();
-      expect(res.body.data.msa.index).not.toBeNull();
+      expect(res.body.data.msa.commitments[0].index).not.toBeNull();
     });
   });
 });

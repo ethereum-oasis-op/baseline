@@ -406,6 +406,8 @@ services:
 
   merkle-tree:
     image: eyblockchain/timber:v2.0.1
+    hostname: merkle-tree
+    container_name: merkle-tree
     restart: on-failure
     depends_on:
       - mongo-merkle-tree

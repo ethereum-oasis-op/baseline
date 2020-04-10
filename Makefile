@@ -42,15 +42,20 @@ npm-install:
 
 start: system-check install-config build-containers
 	@pushd ${radish34} && \
-	docker-compose up -d && \
-	npm run await-stack && \
 	npm run setup-circuits && \
 	npm run deploy && \
+	docker-compose up -d api-buyer api-supplier1 api-supplier2 && \
 	popd
 
 stop:
 	@pushd ${radish34} && \
 	docker-compose down --remove-orphans && \
+	docker network rm \
+		radish34_network-buyer \
+		radish34_network-supplier1 \
+		radish34_network-supplier2 \
+		radish34_geth || true && \
+	docker volume rm radish34_mongo-merkle-tree-volume || true && \
 	popd
 
 system-check:
@@ -65,11 +70,6 @@ reset: stop
 		radish34_mongo-supplier2 \
 		radish34_mongo-merkle-tree-volume \
 		radish34_chaindata || true && \
-	docker network rm \
-		radish34_network-buyer \
-		radish34_network-supplier1 \
-		radish34_network-supplier2 \
-		radish34_geth || true && \
 	docker image rm \
 		radish34_api-buyer \
 		radish34_api-supplier1 \
@@ -86,6 +86,7 @@ restart: stop start
 
 test:
 	@pushd ${radish34} && \
+	npm run await-stack && \
 	npm run test && \
 	npm run postman-test-zkp-api && \
 	npm run postman-integration-test && \
