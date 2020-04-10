@@ -47,6 +47,9 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
     })
   }
 
+  console.log('----------------- Completed  -----------------');
+  console.log(`Please restart the radish-apis for the config to take effect`);
+
   // TODO set manager if needed - this might not be needed - double check
   // Update Radish34 Docs
   // Deploy README - Diagrams - objects, classes
@@ -190,7 +193,7 @@ const run = async () => {
   setTimeout(async () => {
     console.log('Checking for ganache ...');
     await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider, settingsSaver);
-  }, 500);
+  }, 10000);
 }
 
 run()
