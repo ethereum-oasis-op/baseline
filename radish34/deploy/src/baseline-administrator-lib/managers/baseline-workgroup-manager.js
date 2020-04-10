@@ -6,7 +6,7 @@ class BaselineWorkgroupManager {
 	/*
 	@dev pass ethers contracts instances
 	*/
-	constructor(orgRegistryContract, verifierContract, shieldContract, ) {
+	constructor(orgRegistryContract, verifierContract, shieldContract) {
 		assert(orgRegistryContract, "orgRegistryContract was not provided");
 		assert(verifierContract, "verifierContract wallet was not provided");
 		assert(shieldContract, "shieldContract wallet was not provided");
@@ -28,7 +28,7 @@ class BaselineWorkgroupManager {
 				ethers.utils.hexlify(organisationMessagingKey),
 				ethers.utils.hexlify(organisationZkpPublicKey),
 				transactionOverrides
-			)
+			);
 
 		return tx.wait();
 	}
@@ -42,7 +42,7 @@ class BaselineWorkgroupManager {
 	 */
 	async registerOrganisationInterfaces(groupName, tokenAddress, shieldAddress, verifierAddress, transactionOverrides) {
 		if (typeof transactionOverrides === 'undefined') {
-			transactionOverrides = {}
+			transactionOverrides = {};
 		}
 
 		const tx = await this.orgRegistryContract
@@ -52,7 +52,7 @@ class BaselineWorkgroupManager {
 				shieldAddress,
 				verifierAddress,
 				transactionOverrides
-			)
+			);
 
 		return tx.wait();
 	}
@@ -81,24 +81,19 @@ Organisation zkpPublicKey: ${this.zkpPublicKey}`
 		};
 	}
 
-	async registerVerificationKey(verificationKeyResolver, circuitName, transactionOverrides) {
-		assert(verificationKeyResolver, 'No verification key resolver supplied');
-		assert(circuitName, 'No circuit name supplied');
+	async registerVerificationKey(vk, actionType, transactionOverrides) {
+		assert(typeof vk !== 'undefined', 'No verification key supplied');
+		assert(typeof actionType !== 'undefined', 'No actionType supplied');
 
 		if (typeof transactionOverrides === 'undefined') {
-			transactionOverrides = {}
+			transactionOverrides = {};
 		}
 
-		const {
-			vkArray,
-			actionType
-		} = await verificationKeyResolver.resolveVerificationKey(circuitName);
-
 		const tx = await this.shieldContract.registerVerificationKey(
-			vkArray,
+			vk,
 			actionType,
 			transactionOverrides
-		)
+		);
 
 		return tx.wait();
 	}

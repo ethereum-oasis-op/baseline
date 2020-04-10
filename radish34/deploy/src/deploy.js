@@ -131,7 +131,12 @@ const registerOrganisationInterfaceImplementers = async (erc1820Contract, OrgReg
 }
 
 const registerVerificationKey = async (workgroupManager, verificationKeyResolver, circuitName) => {
-  const transaction = await workgroupManager.registerVerificationKey(verificationKeyResolver, circuitName);
+  const {
+    vkArray,
+    actionType
+  } = await verificationKeyResolver.resolveVerificationKey(circuitName);
+
+  const transaction = await workgroupManager.registerVerificationKey(vkArray, actionType);
 
   console.log(`✅  Registered verification key for ${circuitName} with transaction hash: ${transaction.transactionHash}`);
 }

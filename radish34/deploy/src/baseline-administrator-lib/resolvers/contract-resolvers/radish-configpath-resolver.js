@@ -76,10 +76,10 @@ class RadishConfigpathContractsResolver {
 		}
 	}
 
-	async resolveContract(name, address, provider) {
-		assert(name, 'No name supplied to the resolver resolveContract method');
-		assert(address, 'No address supplied to the resolver resolveContract method');
-		assert(provider, 'No provider supplied to the resolver resolveContract method');
+	async resolveContractInstance(name, address, provider) {
+		assert(name, 'No name supplied to the resolver resolveContractInstance method');
+		assert(address, 'No address supplied to the resolver resolveContractInstance method');
+		assert(provider, 'No provider supplied to the resolver resolveContractInstance method');
 		const contractPath = path.resolve(this.paths[name]);
 		const contractJSON = require(contractPath);
 

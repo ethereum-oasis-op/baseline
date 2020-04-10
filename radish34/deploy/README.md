@@ -17,12 +17,16 @@ During the initialization of the Radish34 system, smart contracts are deployed t
 
 Run `npm run deploy` to deploy the contracts, which utilize the artifacts updated in the `artifacts/` upon running the build step: `npm run build:contracts`.
 
-## What is the architecture? 
+## What is the contracts architecture? 
 
 ![Smart Contract Deployment](../../docs/assets/SmartContractDeployment.png)
 
 - Deployment is handled as a one time job wherein ERC1820 standard is used for deploying all the Radish34 contracts
 - Deployment operation is handled as being run by a `deployer` as a user. This is done so that the role of an administrative or operator entity could deploy contracts on behalf of a workgroup
+
+## What is the deployment library architecture?
+
+
 
 ## How can this be improved?
 
