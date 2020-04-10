@@ -129,8 +129,9 @@ docker volume rm radish34_mongo-buyer radish34_mongo-supplier1 radish34_mongo-su
 rm splunk/checkpoints.json
 ```
 
-#### Dependency troubleshooting
+#### Troubleshooting
 
+##### Error starting dotdocker
 When starting `dotdocker`, if you get the following error, here's how you can resolve it.
 ```
 Error starting userland proxy: listen tcp 0.0.0.0:53: bind: address already in use
@@ -141,6 +142,7 @@ sudo systemctl stop systemd-resolved
 sudo systemctl disable systemd-resolved
 ```
 
+##### Error logging into the github docker repo
 When logging into the github docker repository, if you get the following error, here's how to resolve it.
 ```
 Error saving credentials: error storing credentials - err: exit status 1, out: `Error calling StartServiceByName for org.freedesktop.secrets: Timeout was reached`
@@ -149,6 +151,10 @@ run:
 ```
 sudo apt-get install gnupg2 pass
 ```
+
+##### No blocks/peer connections after starting environment
+
+After starting the environment, if you see in the [baseline dashboard in splunk](http://splunk.docker:18000/en-US/app/search/baseline_status) that the node peer connections are 0 and you're not getting new blocks, scroll to the bottom of the dashboard and copy/paste the commands in your terminal. That will tell the nodes to connect to each other.
 
 # What is here?
 
