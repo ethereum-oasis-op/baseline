@@ -5,6 +5,7 @@ const ethers = require('ethers');
 const RadishConfigpathContractsResolver = require('./baseline-administrator-lib/resolvers/contract-resolvers/radish-configpath-resolver.js');
 const RadishPathKeystoreDirResolver = require('./baseline-administrator-lib/resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
 const RadishOrganisationConfigpathResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-configpath-resolver.js');
+const RadishMessengerKeyRestResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-messenger-key-rest-resolver.js');
 const RadishZKPRestResolver = require('./baseline-administrator-lib/resolvers/verification-key-resolvers/radish-zkp-rest-resolver');
 
 const BaselineDeployer = require('./baseline-administrator-lib/deployers/baseline-deployer.js');
@@ -12,7 +13,7 @@ const BaselineWorkgroupManager = require('./baseline-administrator-lib/managers/
 
 const SettingsSaver = require('./utils/SettingsSaver');
 
-const main = async (radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider, settingsSaver) => {
+const main = async (radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, organisationMessengerKeyResolver, zkpVerificationKeyResolver, provider, settingsSaver) => {
 
   const {
     ERC1820Registry,
@@ -24,9 +25,9 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   const workgroupManager = new BaselineWorkgroupManager(OrgRegistry, Verifier, Shield);
 
   for (const organisation of radishOrganisations) {
-    console.log(`ℹ️   Registering workgroup member: ${organisation.name}`);
-    await registerOrganisation(workgroupManager, pathKeystoreResolver, pathOrganisationResolver, organisation.name, organisation.messengerUri);
-    await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, organisation.name);
+    console.log(`ℹ️   Registering workgroup member: ${organisation}`);
+    await registerOrganisation(workgroupManager, pathKeystoreResolver, pathOrganisationResolver, organisationMessengerKeyResolver, organisation);
+    await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, organisation);
   }
   await registerRadishInterface(workgroupManager, Shield, Verifier);
 
@@ -38,8 +39,10 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   await printNetworkInfo(workgroupManager, radishOrganisations, pathKeystoreResolver);
 
   for (const organisation of radishOrganisations) {
-    console.log(`ℹ️   Saving settings to config file for: ${organisation.name}`);
-    await saveOrganisationConfig(settingsSaver, organisation.name, organisation.messengerUri, {
+    console.log(`ℹ️   Saving settings to config file for: ${organisation}`);
+    const organisationMessengerURL = process.env[`MESSENGER_${organisation.toUpperCase()}_URI`]; // Radish specific
+    const organisationMessagingKey = await organisationMessengerKeyResolver.resolveMessengerKey(organisationMessengerURL);
+    await saveOrganisationConfig(settingsSaver, organisation, organisationMessagingKey, {
       ERC1820Registry: ERC1820Registry.address,
       OrgRegistry: OrgRegistry.address,
       Verifier: Verifier.address,
@@ -99,9 +102,11 @@ const deployContracts = async (pathKeystoreResolver, pathContractsResolver, prov
 
 }
 
-const registerOrganisation = async (workgroupManager, pathKeystoreResolver, organisationResolver, organisationName, organisationMessengerURL) => {
+const registerOrganisation = async (workgroupManager, pathKeystoreResolver, organisationResolver, organisationMessengerKeyResolver, organisationName) => {
+  const organisationMessengerURL = process.env[`MESSENGER_${organisationName.toUpperCase()}_URI`]; // Radish specific
+  const organisationMessagingKey = await organisationMessengerKeyResolver.resolveMessengerKey(organisationMessengerURL);
   const buyerWallet = await pathKeystoreResolver.getWallet(organisationName);
-  const organisation = await organisationResolver.resolve(organisationName, organisationMessengerURL);
+  const organisation = await organisationResolver.resolve(organisationName, organisationMessagingKey);
   const transaction = await workgroupManager.registerOrganisation(buyerWallet.address, organisation.name, organisation.role, organisation.messagingKey, organisation.zkpPublicKey);
 
   console.log(`✅  Registered ${organisationName} in the OrgRegistry with transaction hash: ${transaction.transactionHash}`);
@@ -146,10 +151,10 @@ const printNetworkInfo = async (workgroupManager, radishOrganisations, keystoreR
   const registeredOrgCount = await workgroupManager.getOrganisationsCount();
   console.log(`✅  Radish network of ${registeredOrgCount.toString(10)} organizations have successfully been set up!`);
   for (const organisation of radishOrganisations) {
-    const organisationWallet = await keystoreResolver.getWallet(organisation.name);
+    const organisationWallet = await keystoreResolver.getWallet(organisation);
     const organisationAddress = await organisationWallet.getAddress();
     const organisationInfo = await workgroupManager.getOrganisationInfo(organisationAddress);
-    console.log(`✅  Information about ${organisation.name}: ${organisationInfo}`);
+    console.log(`✅  Information about ${organisation}: ${organisationInfo}`);
   }
 };
 
@@ -158,20 +163,8 @@ const saveOrganisationConfig = async (settingsSaver, organisationName, organisat
   console.log(`✅  Saved information about ${organisationName}: ${JSON.stringify(settings)}`);
 }
 
-// Radish34 Specific organisations and their messenger URLS.
-const radishOrganisations = [{
-    name: 'buyer',
-    messengerUri: process.env.MESSENGER_BUYER_URI
-  },
-  {
-    name: 'supplier1',
-    messengerUri: process.env.MESSENGER_SUPPLIER1_URI
-  },
-  {
-    name: 'supplier2',
-    messengerUri: process.env.MESSENGER_SUPPLIER2_URI
-  }
-]
+// Radish34 Specific organisations. Maybe can be passed from outside?
+const radishOrganisations = ['buyer', 'supplier1', 'supplier2'];
 
 const run = async () => {
 
@@ -180,9 +173,10 @@ const run = async () => {
   assert(typeof process.env.RPC_PROVIDER === 'string', "RPC_PROVIDER not provided or not string");
   assert(typeof process.env.ZKP_URL === 'string', "ZKP_URL not provided or not string");
 
-  assert(typeof process.env.MESSENGER_BUYER_URI === 'string', "MESSENGER_BUYER_URI not provided or not string");
-  assert(typeof process.env.MESSENGER_SUPPLIER1_URI === 'string', "MESSENGER_SUPPLIER1_URI not provided or not string");
-  assert(typeof process.env.MESSENGER_SUPPLIER2_URI === 'string', "MESSENGER_SUPPLIER2_URI not provided or not string");
+  for (const organisation of radishOrganisations) {
+    const messagingURIEnvKey = `MESSENGER_${organisation.toUpperCase()}_URI`;
+    assert(typeof process.env[messagingURIEnvKey] === 'string', `${messagingURIEnvKey} not provided or not string`);
+  }
 
   let keystoreDir = path.resolve(process.env.KEYSTORE_PATH);
   let organisationsConfigDir = path.resolve(process.env.ORGANISATION_CONFIG_PATH);
@@ -192,13 +186,14 @@ const run = async () => {
   const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir, provider);
   const pathContractsResolver = new RadishConfigpathContractsResolver(paths);
   const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir);
+  const organisationMessengerKeyResolver = new RadishMessengerKeyRestResolver();
   const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL);
   const settingsSaver = new SettingsSaver(organisationsConfigDir, process.env.RPC_PROVIDER);
 
   console.log('Patiently waiting 10 seconds for ganache container to init ...');
   setTimeout(async () => {
     console.log('Checking for ganache ...');
-    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, zkpVerificationKeyResolver, provider, settingsSaver);
+    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, organisationMessengerKeyResolver, zkpVerificationKeyResolver, provider, settingsSaver);
   }, 10000);
 }
 

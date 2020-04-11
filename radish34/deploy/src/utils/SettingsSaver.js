@@ -2,8 +2,6 @@ const fs = require('fs');
 const assert = require('assert');
 const axios = require('axios');
 
-const getWhisperIdentity = url => axios.get(url).then(response => response.data[0].publicKey);
-
 class SettingsSaver {
 
 	constructor(configDir, rpcProvider) {
@@ -14,9 +12,8 @@ class SettingsSaver {
 		this.rpcProvider = rpcProvider;
 	}
 
-	async updateSettings(organisationName, organisationWhisperURL, addresses) {
+	async updateSettings(organisationName, messagingKey, addresses) {
 		const organisationConfigPath = `${this.configDir}/config-${organisationName}.json`;
-		const messagingKey = await getWhisperIdentity(`${organisationWhisperURL}/api/v1/identities`);
 		const {
 			organization
 		} = JSON.parse(fs.readFileSync(organisationConfigPath));
