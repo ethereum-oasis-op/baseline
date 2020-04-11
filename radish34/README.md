@@ -257,7 +257,7 @@ After you've done that, log in to the Github package registry by running
       </p>
     </details> 
 
-9. Within about 5 minutes, UI is loaded on `http://radish34-ui` on your local browser
+9. Within about 5 minutes, UI is loaded on `http://localhost:3000` on your local browser
 
 ## Collection of Log Commands
 
@@ -299,7 +299,7 @@ nvm use 11
 
 ### Front-end Environment
 
-1. When the above setup is run successfully, the UI is ready at `http://radish34-ui`
+1. When the above setup is run successfully, the UI is ready at `http://localhost:3000`
 2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `ui` container.
     <details> 
       <summary>Example logs</summary>

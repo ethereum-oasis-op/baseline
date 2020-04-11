@@ -158,7 +158,7 @@ radish-34_radish-zkp_1 is up-to-date
 
    * This will start all `radish` containers
    * Wait about 10 seconds to give containers time to complete their initialization routines
-   * Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui` Example Logs:
+   * Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `api-{role}` and `ui` Example Logs:
 
    ```text
       radish-api-buyer        | Connected to db
@@ -178,7 +178,7 @@ radish-34_radish-zkp_1 is up-to-date
    ```
 
 5. Run integration tests: `npm run test`
-6. Within about 5 minutes, UI is loaded on `http://radish34-ui` on your local browser
+6. Within about 5 minutes, UI is loaded on `http://localhost:3000` on your local browser
 
 ## Troubleshooting
 
@@ -201,8 +201,8 @@ nvm use 11
 
 ### Front-end Environment
 
-1. When the above setup is run successfully, the UI is ready at `http://radish34-ui`
-2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `radish34-ui` container. Example Logs:
+1. When the above setup is run successfully, the UI is ready at `http://localhost:3000`
+2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `ui` container. Example Logs:
 
    ```text
       radish34-ui_1           | > @ start /app
