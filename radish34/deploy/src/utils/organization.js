@@ -10,7 +10,7 @@ const Paths = require('../paths.json');
 @param {string} newManagerName Name of the new manager we wish to assign.
 @param {string} msgSenderName Name of the person invoking the 'assignManager' function (not necessarily the same as the newManager).
 */
-const assignManager = async (manageeName, newManagerName, msgSenderName) => {
+const assignManager = async (managerName, msgSenderName) => {
   // we'll be calling the 'assignManager' method of OrgRegistry.sol:
   const OrgRegistryMetadata = Ethers.getContractMetadata(Paths.OrgRegistry);
 
@@ -22,10 +22,13 @@ const assignManager = async (manageeName, newManagerName, msgSenderName) => {
     Wallet.getPrivateKey(msgSenderName),
   );
 
-  const newManagerAddress = Wallet.getAddress(newManagerName);
+  // the 'old manager' of OrgRegistry is the OrgRegistry itself.
+  const managerAddress = Contract.getContractAddress(managerName);
 
-  const tx = await contractWithWallet.assignManager(newManagerAddress);
-  const transactionHash = { transactionHash: tx.hash };
+  const tx = await contractWithWallet.assignManager(managerAddress);
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
 
   return transactionHash;
 };
@@ -43,7 +46,9 @@ const setInterfaceImplementer = async (
     process.env.RPC_PROVIDER,
     Wallet.getPrivateKey(msgSenderName),
   ).setInterfaceImplementer(managerAddress, interfaceHash, implementerAddress);
-  const transactionHash = { transactionHash: tx.hash };
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
   return transactionHash;
 };
 
@@ -53,7 +58,7 @@ const registerOrgInterfaces = async (
   groupName,
   tokenFactoryAddress,
   shieldAddress,
-  verifierAddress
+  verifierAddress,
 ) => {
   const OrgRegistryMetadata = await Ethers.getContractMetadata(Paths.OrgRegistry);
   const tx = await Ethers.getContractWithWallet(
@@ -65,9 +70,11 @@ const registerOrgInterfaces = async (
     utils.formatBytes32String(groupName),
     tokenFactoryAddress,
     shieldAddress,
-    verifierAddress
+    verifierAddress,
   );
-  const transactionHash = { transactionHash: tx.hash };
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
   return transactionHash;
 }
 
@@ -82,7 +89,7 @@ const registerToOrgRegistry = async (
 ) => {
   const OrgRegistryMetadata = await Ethers.getContractMetadata(Paths.OrgRegistry);
   // we'll be calling the 'assignManager' method of OrgRegistry.sol:
-  //TODO: setInterfaceImplementer function can only be called once before being uncallable. If called again, the eventual call of ERC1820Registry's 'setManager' function would fail, because msg.sender would always be OrgRegistry's address, and not the current Manager.
+  // TODO: setInterfaceImplementer function can only be called once before being uncallable. If called again, the eventual call of ERC1820Registry's 'setManager' function would fail, because msg.sender would always be OrgRegistry's address, and not the current Manager.
   /* let contractMetadata; 
     switch (manageeName) {
     case 'OrgRegistry':
@@ -108,7 +115,9 @@ const registerToOrgRegistry = async (
     utils.hexlify(messagingKey),
     utils.hexlify(zkpPublicKey),
   );
-  const transactionHash = { transactionHash: tx.hash };
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
   return transactionHash;
 };
 
@@ -122,7 +131,9 @@ const getOrgCount = async (orgRegistryAddress, msgSenderName) => {
   );
 
   const hexCount = await contract.getOrgCount();
-  const { _hex: count } = Ethers.parseBigNumbers(hexCount);
+  const {
+    _hex: count
+  } = Ethers.parseBigNumbers(hexCount);
   return count;
 };
 
