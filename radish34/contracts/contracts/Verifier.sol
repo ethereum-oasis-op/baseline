@@ -30,9 +30,9 @@ import "./ERC165Compatible.sol";
 import "./Pairing.sol";
 import "./Registrar.sol";
 import "./IVerifier.sol";
-import "./MultiOwnable.sol";
+import "./Ownable.sol";
 
-contract Verifier is MultiOwnable, ERC165Compatible, Registrar, IVerifier {
+contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
 
     using Pairing for *;
 

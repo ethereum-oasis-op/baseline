@@ -11,10 +11,10 @@ import "./MerkleTree.sol";
 import "./IShield.sol";
 import "./IVerifier.sol";
 import "./Registrar.sol";
-import "./MultiOwnable.sol";
+import "./Ownable.sol";
 import "./ERC20Interface.sol";
 
-contract Shield is MultiOwnable, MerkleTree, ERC165Compatible, Registrar, IShield {
+contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     // ENUMS:
     enum TransactionTypes { CreateMSA, CreatePO }
 

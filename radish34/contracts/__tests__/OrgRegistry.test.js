@@ -76,7 +76,7 @@ test('Should not be able to register an org from non-owner', async () => {
     );
   } catch(e) {
     expect(e.message).toMatch('revert');
-    expect(e.message).toMatch('Unauthorised access: needs to be called by an owner!');
+    expect(e.message).toMatch('You are not authorised to invoke this function');
     expect(e.code).toBe(-32000);
   }
 
@@ -95,7 +95,7 @@ test('Should not be able to register an orgs interfaces from non owner', async (
     await nonOwnerOrgRegistry.registerInterfaces(utils.formatBytes32String("RandomInterface2"), accounts[0], accounts[1], accounts[2]);
   } catch(e) {
     expect(e.message).toMatch('revert');
-    expect(e.message).toMatch('Unauthorised access: needs to be called by an owner!');
+    expect(e.message).toMatch('You are not authorised to invoke this function');
     expect(e.code).toBe(-32000);
     return;
   }

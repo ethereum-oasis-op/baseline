@@ -6,13 +6,13 @@ import "./IOrgRegistry.sol";
 import "./Registrar.sol";
 import "./ERC165Compatible.sol";
 import "./Roles.sol";
-import "./MultiOwnable.sol";
+import "./Ownable.sol";
 
 /// @dev Contract for maintaining organization registry
 /// Contract inherits from Ownable and ERC165Compatible
 /// Ownable contains ownership criteria of the organization registry
 /// ERC165Compatible contains interface compatibility checks
-contract OrgRegistry is MultiOwnable, ERC165Compatible, Registrar, IOrgRegistry {
+contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @notice Leverages roles contract as imported above to assign different roles
     using Roles for Roles.Role;
 
