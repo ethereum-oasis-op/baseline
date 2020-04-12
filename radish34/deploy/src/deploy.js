@@ -30,6 +30,7 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
     await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, organisation);
   }
   await registerRadishInterface(workgroupManager, Shield, Verifier);
+  // If it is needed we can set deployer as manager of OrgRegistry in the ERC1820
 
   console.log(`ℹ️   Registering zkp verification keys`);
   await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA');
@@ -52,10 +53,6 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
 
   console.log('----------------- Completed  -----------------');
   console.log(`Please restart the radish-apis for the config to take effect`);
-
-  // TODO set manager if needed - this might not be needed - double check
-  // TODO Javascript docs
-  // Remove old files
 
 };
 
