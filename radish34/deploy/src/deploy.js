@@ -54,9 +54,6 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
   console.log(`Please restart the radish-apis for the config to take effect`);
 
   // TODO set manager if needed - this might not be needed - double check
-  // Abstract Messanger URI too
-  // Update Radish34 Docs
-  // Deploy README - Diagrams - objects, classes
   // TODO Javascript docs
   // Remove old files
 

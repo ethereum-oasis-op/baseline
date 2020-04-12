@@ -8,6 +8,7 @@ const POLLING_FREQUENCY = 6000; // milliseconds
 
 /**
 GET the verification key for a particular circuit
+@param {string} zkpUrl Url to the zkp service
 @param {string} id is the name of the circuit, e.g. 'createMSA'
 */
 async function getVk(zkpUrl, id) {

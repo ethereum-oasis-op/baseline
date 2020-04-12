@@ -50,16 +50,27 @@ const _replaceLibraryReferenceToTruffleStyle = (bytecode, linkReferences) => {
 
 }
 
+/**
+ * Radish specific resolver for contract artifacts based on a configuration file containing artifacts paths
+ */
 class RadishConfigpathContractsResolver {
 
+	/**
+	 * 
+	 * @param {object} paths - the configuration object. Keys in the object need to be the names of the contracts to be resolved. Values need to be path to the artifact files.
+	 */
 	constructor(paths) {
 		this.paths = DEFAULT_PATHS;
 		if (typeof paths !== 'undefined') {
 			this.paths = require(paths);
 		}
-		this.cwd = process.cwd();
 	}
 
+	/**
+	 * Resolves the contract artifacts for a contract with the supplied name
+	 * @param {string} name - the name of the contract to be resolved
+	 * @returns {object} - contains contractName, contract ABI and contract deployment unlinked bytecode
+	 */
 	async resolve(name) {
 		assert(name, 'No name supplied to the resolver resolve method');
 		const contractPath = path.resolve(this.paths[name]);
@@ -76,6 +87,12 @@ class RadishConfigpathContractsResolver {
 		}
 	}
 
+	/**
+	 * Resolves contract based on its name, address and connects it to the provider
+	 * @param {*} name - the name of the contract to be resolved
+	 * @param {*} address - the address it is located at
+	 * @param {*} provider - the provider to be connected to.
+	 */
 	async resolveContractInstance(name, address, provider) {
 		assert(name, 'No name supplied to the resolver resolveContractInstance method');
 		assert(address, 'No address supplied to the resolver resolveContractInstance method');
