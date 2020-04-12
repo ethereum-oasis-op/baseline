@@ -4,8 +4,16 @@ const etherlimeLib = require('etherlime-lib');
 const ProtocolContractsBuilder = require('./builders/protocol-contracts-builder.js');
 const WorkgroupContractsBuilder = require('./builders/workgroup-contracts-builder.js');
 
+/**
+ * Deployment class currently tailored to Radish34 usecase. To be abstracted further with the emergence of unified standard.
+ */
 class BaselineDeployer {
 
+	/**
+	 * 
+	 * @param {*} deployerWallet - The wallet to be used for deployment
+	 * @param {*} provider - The provider to connect to
+	 */
 	constructor(deployerWallet, provider) {
 		assert(deployerWallet, "Deployment wallet was not provided");
 		assert(provider, "Provider was not provided");
@@ -13,14 +21,29 @@ class BaselineDeployer {
 		this.deployerWallet = deployerWallet.connect(provider)
 	}
 
+	/**
+	 * Returns a new protocol contracts builder
+	 * @param {*} contractsResolver - resolver to be used to resolve the contracts artifacts
+	 */
 	getProtocolBuilder(contractsResolver) {
 		return new ProtocolContractsBuilder(contractsResolver);
 	}
 
+	/**
+	 * Returns a new workgroup contracts builder
+	 * @param {*} contractsResolver - resolver to be used to resolve the contracts artifacts
+	 */
 	getWorkgroupBuilder(contractsResolver) {
 		return new WorkgroupContractsBuilder(contractsResolver);
 	}
 
+	/**
+	 * Deploys the necessary contracts outlined in the deployProtocolTask
+	 * 
+	 * @param {object} deployProtocolTask - task object returned by the protocol builder build method
+	 * @param {*} deployTransactionOverrides - ethers transaction overrides object to be applied to the transaction
+	 * @returns object containing the resulting protocol contracts
+	 */
 	async deployProtocol(deployProtocolTask, deployTransactionOverrides) {
 		if (typeof deployProtocolTask === 'undefined') {
 			throw new Error('No deployment task supplied. Get one from  protocolBuilder.build()');
@@ -44,6 +67,13 @@ class BaselineDeployer {
 		return await deployer.deploy(contractArtifacts);
 	}
 
+	/**
+	 * Deploys the necessary contracts outlined in the deployWorkgroupTask
+	 * 
+	 * @param {*} deployWorkgroupTask  - task object returned by the workgroup builder build method
+	 * @param {*} deployTransactionOverrides  - ethers transaction overrides object to be applied to the transaction
+	 * @returns object containing the resulting protocol contracts
+	 */
 	async deployWorkgroup(deployWorkgroupTask, deployTransactionOverrides) {
 		if (typeof deployWorkgroupTask === 'undefined') {
 			throw new Error('No deployment task supplied. Get one from  workgroupBuilder.build()');
