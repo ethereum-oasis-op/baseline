@@ -1,6 +1,8 @@
 const fs = require('fs');
 
-
+/**
+ * Radish specific file for reading Radish configuration file. Used for checks.
+ */
 class SettingsReader {
 
 	constructor(configDir) {

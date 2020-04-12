@@ -2,6 +2,9 @@ const fs = require('fs');
 const assert = require('assert');
 const axios = require('axios');
 
+/**
+ * Radish specific class for saving settings to configuration file
+ */
 class SettingsSaver {
 
 	constructor(configDir, rpcProvider) {
