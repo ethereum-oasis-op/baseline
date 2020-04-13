@@ -35,7 +35,7 @@ const setServerSettings = (role, settings) => {
   return nextSettings;
 };
 
-const setMinimalServerSettings = (role, settings) => {};
+const setMinimalServerSettings = (role, settings) => { };
 
 module.exports = {
   getServerSettings,

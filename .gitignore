@@ -96,8 +96,9 @@ typings/
 artifacts/
 build
 dist
-*config*/config-*.json
-*config*/merkle-tree/
 
 # Ignore generated docs
 docs/generated
+
+# Ignore pycrypto
+pycrypto

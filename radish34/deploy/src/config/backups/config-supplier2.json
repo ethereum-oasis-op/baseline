@@ -1,0 +1,8 @@
+{
+  "rpcProvider": "http://ganache:8545",
+  "organization": {
+    "name": "Supplier 2",
+    "role": 2
+  },
+  "addresses": {}
+}

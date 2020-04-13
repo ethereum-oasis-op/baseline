@@ -25,7 +25,7 @@ Assumptions:
 
 ## How does this fit in to Radish34?
 
-During the set up of the Radish34 server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
+During the set up of the Radish34 server, the circuits are compiled and set up to generate proving and verifying keys. These are necessary to be present as part of the Zokrates container to be able to generate proofs at run time. Using `npm run setup-circuits`, at the root as part of setting up the system, all the necessary circuits can be set up for proof generation at run time
 
 ## How can I run it?
 
@@ -49,7 +49,7 @@ zkp_1            | [nodemon] starting `node ./dist/index.js`
 
 ```
 
-`zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/circuits/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using `http://radish34-zkp.docker` or expose a port in the `docker-compose.yml` (for example 8080, as in this case: replace with `http://localhost:8080` to run the below curl commands locally)
+`zkp` service is a RESTful service that makes use of `@eyblockchian/zokrates.js` package, and has the following end points. To be able to leverage the service, place the `.zok` file(s) at `/app/circuits/path/to/parent-dir/file.zok`, and run each of the instructions below per file. This service can be called from other containers using the local port exposed via the `docker-compose.yml`: `http://localhost:8080`.
 
 ### `generateKeys`
 This is a POST instruction that runs `compile`, `setup` and `exportVerifier` instructions.
@@ -61,7 +61,7 @@ E.g. for a file at `/app/circuits/path/to/test.zok` the filepath is `path/to/tes
 The `/app/output` dir will contain the outputs of these steps copied from within the container.
 
 Example: (Replace `path/to/test.zok` with the filepath of the file to be computed).  
-`curl -d '{"filepath": "path/to/test.zok"}' -H "Content-Type: application/json" -X POST http://radish34-zkp.docker/generate-keys`
+`curl -d '{"filepath": "path/to/test.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys`
 
 ### `generateProof`
 This is a POST instruction that runs `compute-witness` and `generate-proof` instructions.
@@ -73,7 +73,7 @@ Request body:
 The `/app/output` dir has the outputs of these steps copied from within the container. When the `generate-proof` instruction is run, the corresponding `proof.json` is stored in the `/app/output` dir.  
 
 Example: (Replace `filename` with the name of the file for which we're creating a witness).  
-`curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://radish34-zkp.docker/generate-proof`
+`curl -d '{"filename": "test", "inputs": [5, 25]}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-proof`
 
 Alternatively, the POSTMAN application can be used to run these curl requests.
 
@@ -87,7 +87,7 @@ Request body:
 `id`: the name of the `.zok` file (without the `.zok` file extension).
 
 Example:
-`curl -d '{"id": "test"}' -H "Content-Type: application/json" -X GET http://radish34-zkp.docker/vk`
+`curl -d '{"id": "test"}' -H "Content-Type: application/json" -X GET http://localhost:8080/vk`
 
 ### Testing individual `.zok` files
 
