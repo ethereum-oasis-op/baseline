@@ -6,11 +6,11 @@ Disclaimer: This implementation is a demo, and production aspects of key managem
 
 ## Prerequisites to run the demo
 
-1.  Install [Docker for Mac](https://www.docker.com/docker-mac), or
+1. Install [Docker for Mac](https://www.docker.com/docker-mac), or
     [Docker for Windows](https://www.docker.com/docker-windows)  
     - It's recommended that you allocate 12GB of RAM in Docker (see 'Troubleshooting').
 
-2.  (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
+2. (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
 
 After you've done that, log in to the Github package registry by running
 
@@ -25,6 +25,7 @@ After you've done that, log in to the Github package registry by running
 1. You are able to run the demo (☝️ see prerequisites above ☝️)
 
 ### Setup
+
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
 2. Run `npm i && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
 3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **

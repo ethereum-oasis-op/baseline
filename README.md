@@ -31,15 +31,12 @@ A `Makefile` has been included for convenience; most of its targets wrap `npm`, 
 Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete.
 
 ```
-make
-make deploy-contracts
-make start
-make test
+make && make start && make test
 ```
 
 ### The demo UI
 
-After running the above (`make test` optional) you can view the Radish34 demo by opening [http://radish34-ui.docker](http://radish34-ui.docker) in your browser.
+After running the above (`make test` optional) you can view the Radish34 demo by opening [http://localhost:3000](http://localhost:3000) in your browser.
 
 Here are the targets currently exposed by the `Makefile`:
 
@@ -84,10 +81,9 @@ To use the top level scripts (currently just documentation auto-generation and c
 
 Required: NodeJS 11.15 (nvm is recommended)
 
- - run `npm install` to install the top level packages
- - run `npm run bootstrap` to install all the packages in all the project components (using lerna)
+ - run `make npm-install` to install the top level packages
 
-optionally `npm run clean` to clean out any `node_modules` folders installed by the `bootstrap` command.
+optionally `make clean` to clean out any `node_modules` folders installed by the `make npm-install` command.
 
 # How to contribute?
 
