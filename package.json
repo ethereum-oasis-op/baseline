@@ -1,5 +1,5 @@
 {
-  "name": "Baseline",
+  "name": "baseline",
   "version": "0.0.1",
   "description": "Baseline protocol monorepo",
   "contributors": [
@@ -27,6 +27,7 @@
   },
   "homepage": "https://baseline-protocol.org",
   "devDependencies": {
-    "lerna": "^3.20.2"
+    "lerna": "^3.20.2",
+    "minimist": ">=0.2.1"
   }
 }

@@ -51,9 +51,10 @@
     "husky": "^4.2.3",
     "jest": "^24.8.0",
     "jsdoc": "^3.6.3",
+    "minimist": ">=0.2.1",
     "mongodb": "^3.5.5",
     "solhint": "2.1.0",
-    "solidity-docgen": "^0.3.14",
+    "solidity-docgen": "^0.4.1",
     "supertest": "^4.0.2"
   }
 }
