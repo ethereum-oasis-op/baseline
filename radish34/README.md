@@ -10,11 +10,7 @@ Disclaimer: This implementation is a demo, and production aspects of key managem
     [Docker for Windows](https://www.docker.com/docker-windows)  
     - It's recommended that you allocate 12GB of RAM in Docker (see 'Troubleshooting').
 
-1.  Install and start [dotdocker](https://github.com/aj-may/dotdocker)
-
-    `dotdocker start`
-
-1.  (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
+2.  (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
 
 After you've done that, log in to the Github package registry by running
 

@@ -14,9 +14,7 @@ This is the front end piece/demo to Radish. Something to keep in mind, however, 
 ## How can I run it?
 1. `cd ui/`
 2. `npm install`
-3. Make sure dotdocker is installed and running.
-  - `dotdocker start`
-4. Start up the ui service
+3. Start up the ui service
   - If you would like to run the UI service alone you can run: `docker-compose up -d ui`
   - Otherwise you can simply run `docker-compose up -d`
   - Navigate to `http://localhost:3000/`
