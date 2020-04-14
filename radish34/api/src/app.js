@@ -35,6 +35,9 @@ import ToastrResolver from './resolvers/toastr';
 import POSchema from './schemas/po';
 import POResolver from './resolvers/po';
 
+import AgreementSchema from './schemas/agreement';
+import AgreementResolver from './resolvers/agreement';
+
 import messageRoutes from './routes/messenger';
 import healthRoutes from './routes/healthCheck';
 
@@ -56,6 +59,7 @@ const typeDefs = [
   MSASchema,
   ToastrSchema,
   POSchema,
+  AgreementSchema,
 ];
 const resolvers = [
   OrganizationResolver,
@@ -72,6 +76,7 @@ const resolvers = [
   MSAResolver,
   ToastrResolver,
   POResolver,
+  AgreementResolver,
 ];
 
 export default async function startServer() {

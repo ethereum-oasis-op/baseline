@@ -29,7 +29,7 @@ const AgreementCommitmentSchema = new mongoose.Schema({
   },
 });
 
-const Agreementchema = new mongoose.Schema({
+const AgreementSchema = new mongoose.Schema({
   metadata: {
     type: AgreementMetadata,
     required: false,
