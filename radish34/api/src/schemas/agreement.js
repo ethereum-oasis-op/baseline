@@ -5,7 +5,7 @@ const AgreementSchema = gql`
   extend type Query {
     agreement(id: String!): Agreement
     agreementsByName(name: String!): [Agreement]
-    agreements: [Document]
+    agreements: [Agreement]
     agreementsByLinkedId(linkedId: String!): [Agreement]
   }
 
