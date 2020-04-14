@@ -35,6 +35,10 @@ export const extractAgreementFromDoc = (agreementDoc, index = 'latest') => {
   return agreementObject;
 };
 
+export const simpleGetter = () => {
+    return "done";
+}
+
 /**
 Structure of the database from which the class can be created:
 db schema Agreement: {
@@ -52,3 +56,4 @@ db schema Agreement: {
     }
   ]
 }
+**/
