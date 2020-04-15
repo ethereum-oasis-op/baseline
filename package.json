@@ -1,5 +1,5 @@
 {
-  "name": "Baseline",
+  "name": "baseline",
   "version": "0.0.1",
   "description": "Baseline protocol monorepo",
   "contributors": [
@@ -22,11 +22,11 @@
     "url": "https://github.com/ethereum-oasis/baseline/issues"
   },
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "clean": "bin/clean_npm.sh"
+    "clean": "bin/clean_npm.sh",
+    "system-check": "docker system info | awk 'match($0, /Total Memory: (.*)GiB/) {print $3}' | awk '{gsub(\" |GiB\", \"\"); print $0}' | awk '{if ($0 < 12.0) {print \"WARNING: Docker needs at least 12GB to run the baseline stack.\"; exit 1}}'"
   },
   "homepage": "https://baseline-protocol.org",
   "devDependencies": {
-    "lerna": "^3.20.2"
+    "minimist": ">=0.2.1"
   }
 }

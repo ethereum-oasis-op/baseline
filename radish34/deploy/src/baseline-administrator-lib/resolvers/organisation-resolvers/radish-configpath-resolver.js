@@ -1,5 +1,23 @@
 const fs = require('fs');
 const assert = require('assert');
+const { execSync } = require('child_process');
+
+const pycryptoCliPath = 'pycrypto/cli.py';
+
+const generateKeyPair = () => {
+  let keys = {};
+  if (fs.existsSync(pycryptoCliPath)) {
+    const stdout = execSync(`python3 ${pycryptoCliPath} keygen`);
+    const lines = stdout.toString().split(/\n/);
+    const keypair = lines[0].split(/ /);
+    if (keypair.length === 2) {
+      keys['privateKey'] = `0x${keypair[0]}`;
+      keys['publicKey'] = `0x${keypair[1]}`;
+    }
+  }
+
+  return keys;
+}
 
 /**
  * Radish specific class for resolving organisation artifacts based on a supplied directory containing config file(s).
@@ -32,6 +50,12 @@ class RadishOrganisationConfigpathResolver {
 		const {
 			organization
 		} = JSON.parse(fs.readFileSync(organisationConfigPath));
+
+		if (!organization.zkpPublicKey) {
+			const { privateKey, publicKey } = generateKeyPair();
+			organization.zkpPublicKey = publicKey;
+			organization.zkpPrivateKey = privateKey;
+		  }
 
 		return {
 			...organization,

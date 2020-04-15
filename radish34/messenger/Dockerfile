@@ -12,7 +12,7 @@ COPY package*.json ./
 RUN npm install
 
 # Bundle app source
-# See .dockerignore for exclusions
+# See ignore for exclusions
 COPY . .
 
 EXPOSE 4001

@@ -15,7 +15,7 @@ class SettingsSaver {
 		this.rpcProvider = rpcProvider;
 	}
 
-	async updateSettings(organisationName, messagingKey, addresses) {
+	async updateSettings(organisationName, messagingKey, zkpPublicKey, zkpPrivateKey, addresses) {
 		const organisationConfigPath = `${this.configDir}/config-${organisationName}.json`;
 		const {
 			organization
@@ -23,7 +23,9 @@ class SettingsSaver {
 
 		const newOrganization = {
 			...organization,
-			messengerKey: messagingKey
+			zkpPublicKey,
+			zkpPrivateKey,
+			messengerKey: messagingKey,
 		}
 
 		let settings = {
