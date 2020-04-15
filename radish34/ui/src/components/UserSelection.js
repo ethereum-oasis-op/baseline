@@ -3,6 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import { ServerSettingsContext } from '../contexts/server-settings-context';
+import { Config } from '../config.json';
+
+const uriBuyer = `${Config.radishBuyerAPIURL}/graphql`;
+const uriSupplier1 = `${Config.radishSupplier1APIURL}/graphql`;
+const uriSupplier2 = `${Config.radishSupplier2APIURL}/graphql`;
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -29,7 +34,7 @@ const useStyles = makeStyles(() => ({
 const UserSelection = () => {
   const classes = useStyles();
   const [data, setData] = useState({ status: 504 });
-  const apiURL = window.localStorage.getItem('api') || 'http://radish34-api-buyer.docker/graphql';
+  const apiURL = window.localStorage.getItem('api') || `http://${uriBuyer}`;
   const user = window.localStorage.getItem('username') || 'Org1';
   const { settings } = useContext(ServerSettingsContext);
   const { organizationAddress } = settings || {};
@@ -50,10 +55,11 @@ const UserSelection = () => {
 
   const handleChange = event => {
     const users = {
-      Org1: { url: 'radish34-api-buyer.docker/graphql', role: 1 },
-      Supplier1: { url: 'radish34-api-supplier1.docker/graphql', role: 2 },
-      Supplier2: { url: 'radish34-api-supplier2.docker/graphql', role: 2 },
+      Org1: { url: uriBuyer, role: 1 },
+      Supplier1: { url: uriSupplier1, role: 2 },
+      Supplier2: { url: uriSupplier2, role: 2 },
     };
+    console.log(`UI populating users" ${users}`);
 
     window.location.reload(false);
     window.localStorage.setItem('api', users[event.target.value].url);

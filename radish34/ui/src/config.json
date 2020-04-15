@@ -1,0 +1,7 @@
+{
+  "Config": {
+    "radishBuyerAPIURL": "radish-api-buyer.docker",
+    "radishSupplier1APIURL": "radish-api-supplier1.docker",
+    "radishSupplier2APIURL": "radish-api-supplier2.docker"
+  }
+}

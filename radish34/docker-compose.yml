@@ -59,6 +59,8 @@ services:
       - network-buyer
       - network-supplier1
       - network-supplier2
+    ports:
+      - 3000:3000
     logging:
       options:
         max-size: 10m

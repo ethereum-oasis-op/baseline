@@ -9,7 +9,7 @@ printf "\n${GREEN}*** Starting zokrates container ***${NC}\n"
 docker-compose up -d zkp
 
 # delay needed to ensure all container are in running state.
-sleep 5
+sleep 10
 
 printf "\n${GREEN}*** Running setup for createMSA ***${NC}\n"
 curl -d '{"filepath": "business-logic/createMSA.zok"}' -H "Content-Type: application/json" -X POST http://radish34-zkp.docker/generate-keys
