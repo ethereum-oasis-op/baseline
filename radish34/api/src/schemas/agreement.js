@@ -11,6 +11,7 @@ const AgreementSchema = gql`
 
   extend type Mutation {
     createAgreement(input: inputAgreement!): Agreement
+    generateCommitment(input: inputCommitment!): AgreementCommitment
   }
 
   extend type Subscription {
@@ -19,25 +20,25 @@ const AgreementSchema = gql`
 
   type Agreement {
     _id: String!
-    zkpPublicKeyOfBuyer: String!
-    zkpPublicKeyOfSupplier: String!
+    zkpPublicKeyOfSender: String!
+    zkpPublicKeyOfRecipient: String!
     name: String!
     description: String!
     erc20ContractAddress: String!
     commitments: [Commitment]!
     whisperPublicKeySupplier: String!
-    buyerSignatureStatus: Boolean!
-    supplierSignatureStatus: Boolean!
-    supplierDetails: Partner,
-    linkedId: String!
+    senderSignatureStatus: Boolean!
+    recipientSignatureStatus: Boolean!
+    recipientDetails: Partner,
+    prevId: String!
   }
 
   input inputAgreement {
-    supplierAddress: String!
+    recipientAddress: String!
     name: String!
     description: String!
     erc20ContractAddress: String!
-    linkedId: String!
+    prevId: String!
   }
 `;
 

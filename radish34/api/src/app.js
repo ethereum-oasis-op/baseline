@@ -36,6 +36,7 @@ import POSchema from './schemas/po';
 import POResolver from './resolvers/po';
 
 import AgreementSchema from './schemas/agreement';
+import CommitmentSchema from './schemas/commitment';
 import AgreementResolver from './resolvers/agreement';
 
 import messageRoutes from './routes/messenger';
@@ -60,6 +61,7 @@ const typeDefs = [
   ToastrSchema,
   POSchema,
   AgreementSchema,
+  CommitmentSchema,
 ];
 const resolvers = [
   OrganizationResolver,
