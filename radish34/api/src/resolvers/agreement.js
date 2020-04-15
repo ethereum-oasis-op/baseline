@@ -1,4 +1,5 @@
-import { simpleGetter } from '../services/agreement';
+import { generateCommitment } from '../services/agreement';
+import { strip0x } from '../utils/crypto/conversions';
 
 export default {
     Query: {
@@ -41,6 +42,17 @@ export default {
         console.log(args.input);
         return args.input;
       },
+      generateCommitment: async(_parent, args, context) => {
+        let data = {}
+        data.initType = args.input.initType;
+        data.constants = args.input.constants;
+        data.commitment = args.input.commitment;
+        let commitmentOut = await generateCommitment(data);
+        return {
+          commitment: commitmentOut.commitment._hex.toString(),
+          nullifier: commitmentOut.commitment._hex.toString()
+        }
+      }
     },
   };
   

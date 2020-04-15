@@ -35,11 +35,19 @@ const AgreementSchema = new mongoose.Schema({
     required: false,
   },
   constants: {
-    zkpPublicKeyOfBuyer: {
+    prevId: {
       type: String,
       required: true,
     },
-    zkpPublicKeyOfSupplier: {
+    zkpPublicKeyOfSender: {
+      type: String,
+      required: true,
+    },
+    zkpPublicKeyOfRecipient: {
+      type: String,
+      required: true,
+    },
+    erc20ContractAddress: {
       type: String,
       required: true,
     },
@@ -48,10 +56,6 @@ const AgreementSchema = new mongoose.Schema({
       required: true,
     },
     description: {
-      type: String,
-      required: true,
-    },
-    erc20ContractAddress: {
       type: String,
       required: true,
     },
@@ -69,9 +73,7 @@ const AgreementSchema = new mongoose.Schema({
   commitments: {
     type: [AgreementCommitmentSchema],
   },
-  linkedId: {
-    type: String,
-    required: true,
+  variables: {
   }
 });
 
