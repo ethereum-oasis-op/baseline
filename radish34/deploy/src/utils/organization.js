@@ -26,7 +26,9 @@ const assignManager = async (managerName, msgSenderName) => {
   const managerAddress = Contract.getContractAddress(managerName);
 
   const tx = await contractWithWallet.assignManager(managerAddress);
-  const transactionHash = { transactionHash: tx.hash };
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
 
   return transactionHash;
 };
@@ -44,7 +46,9 @@ const setInterfaceImplementer = async (
     process.env.RPC_PROVIDER,
     Wallet.getPrivateKey(msgSenderName),
   ).setInterfaceImplementer(managerAddress, interfaceHash, implementerAddress);
-  const transactionHash = { transactionHash: tx.hash };
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
   return transactionHash;
 };
 
@@ -68,7 +72,9 @@ const registerOrgInterfaces = async (
     shieldAddress,
     verifierAddress,
   );
-  const transactionHash = { transactionHash: tx.hash };
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
   return transactionHash;
 }
 
@@ -109,7 +115,9 @@ const registerToOrgRegistry = async (
     utils.hexlify(messagingKey),
     utils.hexlify(zkpPublicKey),
   );
-  const transactionHash = { transactionHash: tx.hash };
+  const transactionHash = {
+    transactionHash: tx.hash
+  };
   return transactionHash;
 };
 
@@ -123,7 +131,9 @@ const getOrgCount = async (orgRegistryAddress, msgSenderName) => {
   );
 
   const hexCount = await contract.getOrgCount();
-  const { _hex: count } = Ethers.parseBigNumbers(hexCount);
+  const {
+    _hex: count
+  } = Ethers.parseBigNumbers(hexCount);
   return count;
 };
 

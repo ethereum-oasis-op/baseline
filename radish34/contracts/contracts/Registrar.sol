@@ -3,9 +3,20 @@ pragma solidity ^0.5.8;
 import "./ERC1820Registry.sol";
 
 /// @dev Contract that acts as a client for interacting with the ERC1820Registry
-contract Registrar is ERC1820Registry {
+contract Registrar {
 
     ERC1820Registry ERC1820REGISTRY;
+
+    bytes32 constant internal ERC1820_ACCEPT_MAGIC = keccak256(abi.encodePacked("ERC1820_ACCEPT_MAGIC"));
+
+    /**
+    * @dev Throws if called by any account other than the owner.
+    */
+    modifier onlyManager() {
+        require(msg.sender == getManager(), "You are not authorised to invoke this function");
+        _;
+    }
+
     
     /// @notice Constructor that takes an argument of the ERC1820RegistryAddress
     /// @dev Upon actual deployment of a static registry contract, this argument can be removed
@@ -40,5 +51,10 @@ contract Registrar is ERC1820Registry {
     /// @param _newManager address of the new manager who could set new interface implementations
     function assignManagement(address _newManager) internal {
         ERC1820REGISTRY.setManager(address(this), _newManager);
+    }
+
+    /// @dev This allows you to get this contract manager address
+    function getManager() public view returns(address) {
+        return ERC1820REGISTRY.getManager(address(this));
     }
 }

@@ -76,7 +76,7 @@ const setInterfaceImplementer = async role => {
 
 // TODO Add a method to create commitment public key and private key for the user and receive these of the partners' from partners.
 // Remove these fields from config. Or just the organisationzkpPrivateKey
-const register = async role => {
+const register = async (admin, role) => {
   const roleAddress = await Wallet.getAddress(role);
   const config = await Settings.getServerSettings(role);
   let { organization } = config;
@@ -91,7 +91,7 @@ const register = async role => {
   }
 
   const { transactionHash } = await Organization.registerToOrgRegistry(
-    role,
+    admin,
     addresses.OrgRegistry,
     organization.address,
     organization.name,
@@ -149,12 +149,11 @@ const saveSettings = async role => {
 
 const main = async () => {
   await deployContracts('deployer');
-  await assignManager('deployer');
   await setInterfaceImplementer('deployer');
-  await register('buyer');
-  await register('supplier1');
-  await register('supplier2');
-  await registerInterfaces('buyer');
+  await register('deployer', 'buyer');
+  await register('deployer', 'supplier1');
+  await register('deployer', 'supplier2');
+  await registerInterfaces('deployer');
 
   await checkOrgCount();
   await checkOrgInfo('buyer');

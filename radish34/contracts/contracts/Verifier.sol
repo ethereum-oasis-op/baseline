@@ -58,7 +58,7 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
 
     Verification_Key_GM17 vk;
 
-    constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
+    constructor(address _erc1820) public ERC165Compatible() Registrar(_erc1820) {
         setInterfaces();
         setInterfaceImplementation("IVerifier", address(this));
     }
@@ -76,7 +76,7 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         return ERC1820_ACCEPT_MAGIC;
     }
 
-    function assignManager(address _newManager) external {
+    function assignManager(address _newManager) onlyOwner external {
         assignManagement(_newManager);
     }
 
