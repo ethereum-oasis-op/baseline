@@ -43,12 +43,6 @@ The figure below describes a particular aspect of creating an MSA, and represent
 
 ![](../.gitbook/assets/r34-queue-based-workflow-design-rfp-to-msa-flow.jpg)
 
-
-
-
-
-
-
 | Domain model of the Radish Baseline implementation |
 | :--- |
 
@@ -75,9 +69,5 @@ These objects are specific to the technology implementation. They encapsulate th
 
 These support the direct operation of the Radish system as it is installed for a specific environment/deployment in an organizations data center/cloud. Cryptographic keys are stored separately from configuration to support separate access controls and key rotation. These objects need not be managed in an RDMS or storage system. Cryptographic keys, however, should be stored in a HSM based vault of some kind.
 
-![](../.gitbook/assets/revised-radish-user-stories-business-objects-3.png)
-
-
-
-
+![](../.gitbook/assets/revised-radish-user-stories-business-objects-3%20%281%29.png)
 

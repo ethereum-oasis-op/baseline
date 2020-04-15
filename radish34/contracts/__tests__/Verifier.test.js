@@ -1,6 +1,15 @@
-import { getWallet, getAccounts, getSigner, getProvider, link } from '../src/utils';
+import {
+  getWallet,
+  getAccounts,
+  getSigner,
+  getProvider,
+  link
+} from '../src/utils';
 import Doppelganger from 'ethereum-doppelganger';
-import { ethers, utils } from 'ethers';
+import {
+  ethers,
+  utils
+} from 'ethers';
 import testdata from './mockVerifierData';
 
 import VerifierArtifact from '../artifacts/Verifier.json';
@@ -42,7 +51,7 @@ test('Should be able to successfully execute verify transaction', async () => {
   expect(txLogs.name).toEqual('Verified');
   expect(txLogs.topic).toEqual(topic);
   expect(txLogs.values['0']).toEqual(true);
-}, 20000);
+}, 30000);
 
 test('Should be able to throw when input to verify function overflows snark scalar bound', async () => {
   expect.assertions(2);
@@ -52,8 +61,7 @@ test('Should be able to throw when input to verify function overflows snark scal
   // overflow_input.push((BigInt(BigInt(SNARK_SCALAR_BOUND) + BigInt(testdata.msa.inputs_hash[0]))).toString());
   try {
     await verifier.verify(testdata.msa.proofs_int, overflow_input, testdata.msa.vks_int);
-  }
-  catch (err) {
+  } catch (err) {
     expect(err.code).toBe(-32000);
     expect(err.message).toMatch('Input greater than snark scalar field!');
   }
@@ -66,10 +74,8 @@ test('Should be able to throw when proof to verify function overflows prime boun
   // testdata.msa.proofs_int.splice(0,1,(BigInt(BigInt(PRIME_BOUND) + BigInt(testdata.msa.proofs_int[0]))).toString());
   try {
     await verifier.verify(testdata.msa.proofs_int, testdata.msa.inputs_hash, testdata.msa.vks_int);
-  }
-  catch (err) {
+  } catch (err) {
     expect(err.code).toBe(-32000);
     expect(err.message).toMatch('Proof value aX greater than prime bound!');
   }
 }, 10000);
-

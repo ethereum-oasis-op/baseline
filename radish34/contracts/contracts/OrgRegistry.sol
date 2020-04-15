@@ -53,7 +53,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// registry. Ideally, this contract is a publicly known address:
     /// 0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24. Inherently, the constructor
     /// sets the interfaces and registers the current contract with the global registry
-    constructor(address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
+    constructor(address _erc1820) public ERC165Compatible() Registrar(_erc1820) {
         setInterfaces();
         setInterfaceImplementation("IOrgRegistry", address(this));
     }
@@ -100,7 +100,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     /// @dev Since this is an inherited method from Registrar, it allows for a new manager to be set
     /// for this contract instance
-    function assignManager(address _newManager) external {
+    function assignManager(address _newManager) onlyOwner external {
         assignManagement(_newManager);
     }
 
@@ -118,7 +118,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         uint _role,
         bytes calldata _messagingKey,
         bytes calldata _zkpPublicKey
-    ) external returns (bool) {
+    ) external onlyOwner returns (bool) {
         Org memory org = Org(_address, _name, _role, _messagingKey, _zkpPublicKey);
         roleMap[_role].add(_address);
         orgMap[_address] = org;
@@ -146,7 +146,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         address _tokenAddress,
         address _shieldAddress,
         address _verifierAddress
-    ) external returns (bool) {
+    ) external onlyOwner returns (bool) {
         orgInterfaceMap[orgInterfaceCount] = OrgInterfaces(
             _groupName,
             _tokenAddress,

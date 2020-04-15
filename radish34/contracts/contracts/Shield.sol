@@ -45,8 +45,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     mapping(uint => uint256[]) public vks; // mapped to by an enum uint(TransactionTypes):
 
     // FUNCTIONS:
-    constructor(address _verifier, address _erc1820) public Ownable() ERC165Compatible() Registrar(_erc1820) {
-        owner();
+    constructor(address _verifier, address _erc1820) public ERC165Compatible() Registrar(_erc1820) {
         verifier = IVerifier(_verifier);
         setInterfaces();
         setInterfaceImplementation("IShield", address(this));
@@ -75,7 +74,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         return ERC1820_ACCEPT_MAGIC;
     }
 
-    function assignManager(address _newManager) external {
+    function assignManager(address _newManager) onlyOwner external {
         assignManagement(_newManager);
     }
 
@@ -83,7 +82,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     self destruct
     */
     function close() external onlyOwner returns (bool) {
-        selfdestruct(address(uint160(owner())));
+        selfdestruct(address(uint160(msg.sender)));
         return true;
     }
 

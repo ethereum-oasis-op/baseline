@@ -12,5 +12,5 @@ So how would you take this code and make it work for something we haven’t writ
 
 ## Baselining an Invoice
 
-We will shortly run a session on what one would do to modify the existing Radish34 code to make a new Workflow Step like a POC.  In that process, we will discover and discuss ways to abstract the Radish34 code and generalize it to develop a proper Baseline Protocol and standard.  **Stay tuned!**
+We will shortly run a session on what one would do to modify the existing Radish34 code to make a new Workflow Step like a POC. In that process, we will discover and discuss ways to abstract the Radish34 code and generalize it to develop a proper Baseline Protocol and standard. **Stay tuned!**
 
