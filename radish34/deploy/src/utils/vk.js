@@ -17,6 +17,10 @@ const vkData = {
     vk: '',
     txTypeEnumUint: 1,
   },
+  createAgreement: {
+    vk: '',
+    txTypeEnumUint: 2,
+  }
 };
 
 /**
