@@ -86,7 +86,6 @@ export default {
 
       const settings = await getServerSettings();
       const { zkpPrivateKey, zkpPublicKey, name } = settings.organization;
-
       // Check the zkp key pair (throws an error if invalid pair):
       checkKeyPair(zkpPrivateKey, zkpPublicKey);
 
@@ -97,12 +96,10 @@ export default {
           ...args.input,
         },
       });
-
       const signature = await pycryptojs.sign(
         strip0x(zkpPrivateKey),
-        strip0x(Agreement.commitment.commitment.hex()),
+        strip0x(agreement.commitment.commitment.hex()),
       );
-
       agreement.EdDSASignatures = {
         sender: {
           R: signature[0],
@@ -115,7 +112,7 @@ export default {
       };
 
       const agreementObject = agreement.object;
-      agreementObject.rfpId = args.input.prevId;
+      agreementObject.prevId = args.input.prevId;
 
       const agreementDoc = await saveAgreement(agreementObject);
 
