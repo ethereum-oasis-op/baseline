@@ -30,7 +30,7 @@ const main = async (radishOrganisations, pathKeystoreResolver, pathContractsReso
     await registerOrganisationInterfaceImplementers(ERC1820Registry, OrgRegistry, Shield, Verifier, pathKeystoreResolver, organisation);
 
     console.log(`ℹ️   Saving settings to config file for: ${organisation}`);
-    await saveOrganisationConfig(settingsSaver, organisation, organisationConfig.messagingKey, organisationConfig.zkpPublicKey, organisationConfig.zkpPrivateKey, {
+    await saveOrganisationConfig(settingsSaver, organisation, organisationConfig.address, organisationConfig.messagingKey, organisationConfig.zkpPublicKey, organisationConfig.zkpPrivateKey, {
       ERC1820Registry: ERC1820Registry.address,
       OrgRegistry: OrgRegistry.address,
       Verifier: Verifier.address,
@@ -95,10 +95,13 @@ const deployContracts = async (pathKeystoreResolver, pathContractsResolver, prov
 const registerOrganisation = async (workgroupManager, pathKeystoreResolver, organisationResolver, organisationMessengerKeyResolver, organisationName) => {
   const organisationMessengerURL = process.env[`MESSENGER_${organisationName.toUpperCase()}_URI`]; // Radish specific
   const organisationMessagingKey = await organisationMessengerKeyResolver.resolveMessengerKey(organisationMessengerURL);
-  const buyerWallet = await pathKeystoreResolver.getWallet(organisationName);
+  const organisationWallet = await pathKeystoreResolver.getWallet(organisationName);
   const organisation = await organisationResolver.resolve(organisationName, organisationMessagingKey);
+  if(typeof organisation.address == 'undefined') {
+    organisation.address = organisationWallet.address
+  }
   
-  const transaction = await workgroupManager.registerOrganisation(buyerWallet.address, organisation.name, organisation.role, organisation.messagingKey, organisation.zkpPublicKey);
+  const transaction = await workgroupManager.registerOrganisation(organisation.address, organisation.name, organisation.role, organisation.messagingKey, organisation.zkpPublicKey);
 
   console.log(`✅  Registered ${organisationName} in the OrgRegistry with transaction hash: ${transaction.transactionHash}`);
 
@@ -151,8 +154,8 @@ const printNetworkInfo = async (workgroupManager, radishOrganisations, keystoreR
   }
 };
 
-const saveOrganisationConfig = async (settingsSaver, organisationName, messagingKey, zkpPublicKey, zkpPrivateKey, addresses) => {
-  const settings = await settingsSaver.updateSettings(organisationName, messagingKey, zkpPublicKey, zkpPrivateKey, addresses)
+const saveOrganisationConfig = async (settingsSaver, organisationName, organisationAddress, messagingKey, zkpPublicKey, zkpPrivateKey, addresses) => {
+  const settings = await settingsSaver.updateSettings(organisationName, organisationAddress, messagingKey, zkpPublicKey, zkpPrivateKey, addresses)
   console.log(`✅  Saved information about ${organisationName}: ${JSON.stringify(settings)}`);
 }
 
