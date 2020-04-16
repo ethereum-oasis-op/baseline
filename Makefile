@@ -88,8 +88,6 @@ test:
 	@pushd ${radish34} && \
 	npm run await-stack && \
 	npm run test && \
-	npm run postman-test-zkp-api && \
-	npm run postman-integration-test && \
 	popd
 
 zk-circuits:
