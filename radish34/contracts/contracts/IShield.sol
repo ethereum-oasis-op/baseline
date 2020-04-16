@@ -7,7 +7,7 @@ interface IShield {
     function createMSA(
         uint256[] calldata,
         uint256[] calldata,
-        bytes32 _newMSACommitment
+        bytes32
     ) external returns (bool);
     function createPO(
         uint256[] calldata,
@@ -17,5 +17,10 @@ interface IShield {
         bytes32,
         bytes32
     ) external returns(bool);
+    function createAgreement(
+        uint256[] calldata,
+        uint256[] calldata,
+        bytes32
+    ) external returns (bool);
 
 }

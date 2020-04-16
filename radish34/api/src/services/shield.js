@@ -82,6 +82,42 @@ export const createMSA = async (proof, publicInputHash, publicInputs) => {
   };
 };
 
+// TO DO: Consolidate function calls for createAgreement and createMSA
+export const createAgreement = async (proof, publicInputHash, publicInputs) => {
+  console.log('\nCreating Agreement within the shield contract');
+  console.log('proof:');
+  console.log(proof);
+  console.log('publicInputHash:');
+  console.log(publicInputHash);
+  console.log('publicInputs:');
+  console.log(publicInputs);
+
+  const shieldContract = await getContractWithWalletByName('Shield');
+  const overrides = {
+    // The maximum units of gas for the transaction to use
+    gasLimit: 10000000,
+  };
+  const tx = await shieldContract.createAgreement(proof, publicInputHash, ...publicInputs, overrides);
+  // The operation is NOT complete yet; we must wait until it is mined
+  await tx.wait();
+  const txReceipt = await getTxReceipt(tx.hash);
+
+  const { leafIndex, leafValue, root: newRoot } = getEventValuesFromTxReceipt(
+    'NewLeaf',
+    shieldContract,
+    txReceipt,
+  );
+
+  gasUsedStats('createMSA', shieldContract, txReceipt);
+
+  return {
+    transactionHash: tx.hash,
+    leafIndex,
+    leafValue,
+    newRoot,
+  };
+};
+
 /**
 @param {string[]} proof - Array of private fields for the proof
 @param {string} publicInputHash - The public side of the hash

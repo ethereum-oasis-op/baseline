@@ -17,6 +17,13 @@ const AgreementSchema = gql`
     newAgreement: Agreement
   }
 
+  type AgreementCommitment {
+    commitment: String!
+    index: Int
+    salt: String!
+    nullifier: String
+  }
+
   type Agreement {
     _id: String!
     zkpPublicKeyOfSender: String!
@@ -24,7 +31,7 @@ const AgreementSchema = gql`
     name: String!
     description: String!
     erc20ContractAddress: String!
-    commitments: [Commitment]!
+    commitments: [AgreementCommitment]!
     whisperPublicKeySupplier: String!
     senderSignatureStatus: Boolean!
     recipientSignatureStatus: Boolean!
