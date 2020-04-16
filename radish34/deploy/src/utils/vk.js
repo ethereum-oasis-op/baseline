@@ -19,8 +19,8 @@ const vkData = {
   },
   createAgreement: {
     vk: '',
-    txTypeEnumUint: 2,
-  }
+    txTypeEnumUint: 0, // for testing purposes, this overrides createMSA
+  },
 };
 
 /**
