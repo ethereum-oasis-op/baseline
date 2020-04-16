@@ -60,11 +60,11 @@ const AgreementSchema = new mongoose.Schema({
       required: true,
     },
     EdDSASignatures: {
-      buyer: {
+      sender: {
         type: EdDSASignaturesSchema,
         required: true,
       },
-      supplier: {
+      recipient: {
         type: EdDSASignaturesSchema,
         required: false,
       },

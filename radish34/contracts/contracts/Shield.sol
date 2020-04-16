@@ -16,7 +16,7 @@ import "./ERC20Interface.sol";
 
 contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     // ENUMS:
-    enum TransactionTypes { CreateMSA, CreatePO }
+    enum TransactionTypes { CreateMSA, CreatePO, CreateAgreement }
 
     // EVENTS:
     // Observers may wish to listen for nullification of commitments:

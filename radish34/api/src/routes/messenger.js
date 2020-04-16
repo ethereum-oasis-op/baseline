@@ -5,6 +5,7 @@ import {
 } from '../db/models/modules/rfps';
 import { saveProposal } from '../db/models/modules/proposals';
 import { onReceiptMSABuyer, onReceiptMSASupplier } from '../services/msa';
+import { onReceiptAgreementSender, onReceiptAgreementRecipient } from '../services/agreement';
 import { onReceiptPOSupplier } from '../services/po';
 
 const router = express.Router();
@@ -37,6 +38,28 @@ router.post('/documents', async (req, res) => {
     case 'proposal_create':
       try {
         docId = (await saveProposal(messageObj))._id;
+      } catch (error) {
+        res.status(400);
+        res.send({ message: error });
+      }
+      break;
+    case 'agreement_create':
+      try {
+        console.log('\n\n\nReceived Agreement\n');
+        console.dir(messageObj, { depth: null });
+        onReceiptAgreementRecipient(messageObj, senderId);
+        docId = _id;
+      } catch (error) {
+        res.status(400);
+        res.send({ message: error });
+      }
+      break;
+    case 'signed_agreement':
+      try {
+        console.log('\n\n\nReceived Signed Agreement\n');
+        console.dir(messageObj, { depth: null });
+        onReceiptAgreementSender(messageObj, senderId);
+        docId = _id;
       } catch (error) {
         res.status(400);
         res.send({ message: error });

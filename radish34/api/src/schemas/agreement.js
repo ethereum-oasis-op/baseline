@@ -6,12 +6,11 @@ const AgreementSchema = gql`
     agreement(id: String!): Agreement
     agreementsByName(name: String!): [Agreement]
     agreements: [Agreement]
-    agreementsByLinkedId(linkedId: String!): [Agreement]
+    agreementsByPrevId(prevId: String!): [Agreement]
   }
 
   extend type Mutation {
     createAgreement(input: inputAgreement!): Agreement
-    generateCommitment(input: inputCommitment!): AgreementCommitment
   }
 
   extend type Subscription {
