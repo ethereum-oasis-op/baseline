@@ -32,7 +32,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8001/api/v1/health-check",
+									"raw": "http://localhost:8001/api/v1/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -41,7 +41,7 @@
 									"path": [
 										"api",
 										"v1",
-										"health-check"
+										"health"
 									]
 								}
 							},
@@ -132,7 +132,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:4001/api/v1/health-check",
+									"raw": "http://localhost:4001/api/v1/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -141,7 +141,7 @@
 									"path": [
 										"api",
 										"v1",
-										"health-check"
+										"health"
 									]
 								}
 							},
@@ -175,7 +175,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8001/api/v1/health-check",
+									"raw": "http://localhost:8001/api/v1/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -184,7 +184,7 @@
 									"path": [
 										"api",
 										"v1",
-										"health-check"
+										"health"
 									]
 								}
 							},
@@ -211,7 +211,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8003/api/v1/health-check",
+									"raw": "http://localhost:8003/api/v1/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -220,7 +220,7 @@
 									"path": [
 										"api",
 										"v1",
-										"health-check"
+										"health"
 									]
 								}
 							},
@@ -373,7 +373,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:4002/api/v1/health-check",
+									"raw": "http://localhost:4002/api/v1/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -382,7 +382,7 @@
 									"path": [
 										"api",
 										"v1",
-										"health-check"
+										"health"
 									]
 								}
 							},
@@ -409,7 +409,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:4003/api/v1/health-check",
+									"raw": "http://localhost:4003/api/v1/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -418,7 +418,7 @@
 									"path": [
 										"api",
 										"v1",
-										"health-check"
+										"health"
 									]
 								}
 							},

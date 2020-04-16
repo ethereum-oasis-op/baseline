@@ -178,11 +178,11 @@ After you've done that, log in to the Github package registry by running
       PASS  __tests__/integration.test.js (181.696s)
       Check that containers are ready
           Buyer containers
-            ✓ Buyer messenger GET /health-check returns 200 (13ms)
-            ✓ Buyer radish-api REST server GET /health-check returns 200 (16ms)
+            ✓ Buyer messenger GET /health returns 200 (13ms)
+            ✓ Buyer radish-api REST server GET /health returns 200 (16ms)
           Supplier containers
-            ✓ Supplier messenger GET /health-check returns 200 (6ms)
-            ✓ Supplier radish-api REST server GET /health-check returns 200 (12ms)
+            ✓ Supplier messenger GET /health returns 200 (6ms)
+            ✓ Supplier radish-api REST server GET /health returns 200 (12ms)
       Buyer sends new RFP to supplier
           Retrieve identities from messenger
             ✓ Supplier messenger GET /identities (7ms)

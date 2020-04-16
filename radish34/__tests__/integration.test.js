@@ -45,25 +45,25 @@ afterAll(async () => {
 
 describe('Check that containers are ready', () => {
   describe('Buyer containers', () => {
-    test('Buyer messenger GET /health-check returns 200', async () => {
-      const res = await request(buyerMessengerURL).get('/api/v1/health-check');
+    test('Buyer messenger GET /health returns 200', async () => {
+      const res = await request(buyerMessengerURL).get('/api/v1/health');
       expect(res.statusCode).toEqual(200);
     });
 
-    test('Buyer radish-api REST server GET /health-check returns 200', async () => {
-      const res = await request(buyerApiURL).get('/api/v1/health-check');
+    test('Buyer radish-api REST server GET /health returns 200', async () => {
+      const res = await request(buyerApiURL).get('/api/v1/health');
       expect(res.statusCode).toEqual(200);
     });
   });
 
   describe('Supplier containers', () => {
-    test('Supplier messenger GET /health-check returns 200', async () => {
-      const res = await request(supplierMessengerURL).get('/api/v1/health-check');
+    test('Supplier messenger GET /health returns 200', async () => {
+      const res = await request(supplierMessengerURL).get('/api/v1/health');
       expect(res.statusCode).toEqual(200);
     });
 
-    test('Supplier radish-api REST server GET /health-check returns 200', async () => {
-      const res = await request(supplierApiURL).get('/api/v1/health-check');
+    test('Supplier radish-api REST server GET /health returns 200', async () => {
+      const res = await request(supplierApiURL).get('/api/v1/health');
       expect(res.statusCode).toEqual(200);
     });
   });
