@@ -35,6 +35,7 @@
     "lint": "solhint \"contracts/**/*.sol\"",
     "setup-circuits": "./ops/setup_circuits.sh",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
+    "test-simple": "NODE_ENV=test jest -i __tests__/simple.test.js --verbose --runInBand --forceExit",
     "test:watch": "jest --watchAll --runInBand"
   },
   "repository": {

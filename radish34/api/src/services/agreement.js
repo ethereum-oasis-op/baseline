@@ -1,6 +1,6 @@
 import { Commitment } from './commitment';
 import { getPartnerByMessengerKey } from './partner';
-import { formatProof, createMSA as createAgreementTx } from './shield';
+import { formatProof, createAgreement as createAgreementTx } from './shield';
 import { generateProof } from './zkp';
 
 import AgreementModel from '../integrations/agreement';
@@ -77,8 +77,8 @@ const validate = (object, objectType) => {
 };
 
 export class Agreement {
-  constructor(agreemenObject) {
-    const { _id, constants, variables = {}, commitment = {} } = agreementObject;
+  constructor(agreementObject) {
+    const { _id, constants, commitment = {} } = agreementObject;
 
     this._id = _id; // will be undefined if this MSA is not yet in the db
 
@@ -94,8 +94,6 @@ export class Agreement {
     } = constants;
 
     this._constants = constants; // the newly assigned duplicate keys supersede any already within constants.
-
-    this._variables = {};
 
     // Case 1:
     // If commitment = {}, then we're either constructing the commitment from variables = {...} or variables = {} (which defaults values to 0).
@@ -126,11 +124,6 @@ export class Agreement {
 
   get commitment() {
     return this._commitment;
-  }
-
-  get variables() {
-    const variablesAsElements = elementify(this._variables);
-    return variablesAsElements;
   }
 
   /**
@@ -242,7 +235,7 @@ export const updateAgreementWithRecipientSignature = async agreementObject => {
   const {
     constants: {
       EdDSASignatures: {
-        Recipient: { R, S },
+        recipient: { R, S },
       },
     },
   } = agreementObject;
@@ -253,7 +246,7 @@ export const updateAgreementWithRecipientSignature = async agreementObject => {
     agreementObject.constants.name,
     agreementObject.prevId,
   );
-
+  console.log('Agreement object', agreementObject, 'exists', exists);
   if (!exists)
     throw new Error(
       `Agreement does not exist for this name ${agreementObject.constants.name} with this recipient. Hence cannot be updated`,
@@ -263,7 +256,7 @@ export const updateAgreementWithRecipientSignature = async agreementObject => {
       {
         'constants.zkpPublicKeyOfSender': agreementObject.constants.zkpPublicKeyOfSender,
         'constants.zkpPublicKeyOfRecipient': agreementObject.constants.zkpPublicKeyOfRecipient,
-        'constants.sku': agreementObject.constants.name,
+        'constants.name': agreementObject.constants.name,
         prevId: agreementObject.prevId,
       },
       {
@@ -280,7 +273,7 @@ export const updateAgreementWithRecipientSignature = async agreementObject => {
     console.dir(doc, { depth: null });
     return doc;
   } catch (e) {
-    console.log('\nError updating MSA in DB: ', e);
+    console.log('\nError updating Agreement in DB: ', e);
     return false;
   }
 };
@@ -363,7 +356,7 @@ export const createAgreement = async agreement => {
   const signatureOfRecipientR = elementify(
     edwardsDecompress(agreement.constants.EdDSASignatures.recipient.R.hex()),
   );
-  const signatureOfRecipientS = elementify(agreementObject.constants.EdDSASignatures.recipient.S.hex());
+  const signatureOfRecipientS = elementify(agreement.constants.EdDSASignatures.recipient.S.hex());
 
   // Structure the inputs array in the exact order expected by the zokrates main() function:
   const allInputs = [
@@ -440,7 +433,6 @@ export const onReceiptAgreementRecipient = async (agreementObject, senderWhisper
       };
 
       const agreementDoc = await updateAgreementWithRecipientSignature(agreement);
-
       await saveNotice({
         resolved: false,
         category: 'agreement',
@@ -498,7 +490,6 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
       // keep unused variables here for now; they might be used soon...
       const { transactionHash, leafIndex, leafValue, newRoot } = await createAgreement(agreement);
 
-      const agreementCommitment = await generateCommitment(agreement);
       agreement.commitment.index = leafIndex;
 
       await updateAgreementWithCommitmentIndex(agreement.object);

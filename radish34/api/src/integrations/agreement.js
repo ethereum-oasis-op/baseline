@@ -26,7 +26,7 @@ const AgreementCommitmentSchema = new mongoose.Schema({
   nullifier: {
     type: String,
     required: true,
-  },
+  }
 });
 
 const AgreementSchema = new mongoose.Schema({
@@ -35,10 +35,6 @@ const AgreementSchema = new mongoose.Schema({
     required: false,
   },
   constants: {
-    prevId: {
-      type: String,
-      required: true,
-    },
     zkpPublicKeyOfSender: {
       type: String,
       required: true,
@@ -73,7 +69,9 @@ const AgreementSchema = new mongoose.Schema({
   commitments: {
     type: [AgreementCommitmentSchema],
   },
-  variables: {
+  prevId: {
+    type: String,
+    required: true,
   }
 });
 
