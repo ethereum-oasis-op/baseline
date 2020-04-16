@@ -32,7 +32,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8001/api/v1/health",
+									"raw": "http://localhost:8001/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -175,7 +175,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8001/api/v1/health",
+									"raw": "http://localhost:8001/health",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -211,7 +211,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8003/api/v1/health",
+									"raw": "http://localhost:8003/health",
 									"protocol": "http",
 									"host": [
 										"localhost"

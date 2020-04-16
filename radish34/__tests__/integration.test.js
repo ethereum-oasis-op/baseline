@@ -51,7 +51,7 @@ describe('Check that containers are ready', () => {
     });
 
     test('Buyer radish-api REST server GET /health returns 200', async () => {
-      const res = await request(buyerApiURL).get('/api/v1/health');
+      const res = await request(buyerApiURL).get('/health');
       expect(res.statusCode).toEqual(200);
     });
   });
@@ -63,7 +63,7 @@ describe('Check that containers are ready', () => {
     });
 
     test('Supplier radish-api REST server GET /health returns 200', async () => {
-      const res = await request(supplierApiURL).get('/api/v1/health');
+      const res = await request(supplierApiURL).get('/health');
       expect(res.statusCode).toEqual(200);
     });
   });
