@@ -6,15 +6,11 @@ Disclaimer: This implementation is a demo, and production aspects of key managem
 
 ## Prerequisites to run the demo
 
-1.  Install [Docker for Mac](https://www.docker.com/docker-mac), or
+1. Install [Docker for Mac](https://www.docker.com/docker-mac), or
     [Docker for Windows](https://www.docker.com/docker-windows)  
     - It's recommended that you allocate 12GB of RAM in Docker (see 'Troubleshooting').
 
-1.  Install and start [dotdocker](https://github.com/aj-may/dotdocker)
-
-    `dotdocker start`
-
-1.  (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
+2. (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
 
 After you've done that, log in to the Github package registry by running
 
@@ -29,10 +25,11 @@ After you've done that, log in to the Github package registry by running
 1. You are able to run the demo (☝️ see prerequisites above ☝️)
 
 ### Setup
+
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
-2. Run `npm ci && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
+2. Run `npm i && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
 3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
-4. Run `npm run setup` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
+4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
     <details> 
       <summary>Example logs</summary>
       <p> 
@@ -257,7 +254,7 @@ After you've done that, log in to the Github package registry by running
       </p>
     </details> 
 
-9. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
+9. Within about 5 minutes, UI is loaded on `http://localhost:3000` on your local browser
 
 ## Collection of Log Commands
 
@@ -278,7 +275,7 @@ After you've done that, log in to the Github package registry by running
 
 ## Troubleshooting
 
-1. If you get errors during the `npm ci` step, please ensure that you are running node version `11`. The `nvm` (node version manager) tool allows you to easily switch between versions:
+1. If you get errors during the `npm i` step, please ensure that you are running node version `11`. The `nvm` (node version manager) tool allows you to easily switch between versions:
 ```
 nvm install 11
 nvm use 11
@@ -290,7 +287,7 @@ nvm use 11
    - In some cases, due to stale images application may have build issues owing to existing images and packages that were a part of those builds. To get around such issues, run `docker-compose build --no-cache` to run a clean re-build of the docker images
    - Run through the 'steps to start the application' in __Development/Test Environment__
 3. Increasing resource allocation for Docker
-   - During set up, `npm run setup`, there are cases where the setup instruction might fail, and the logs of the `zkp` container (`docker-compose logs -f zkp`) throws babel compilation errors. This is due to the memory consumption needed for running the compute intensive set up process. In these cases, it is recommended to toggle memory and CPU cores consumption
+   - During set up, `npm run setup-circuits`, there are cases where the setup instruction might fail, and the logs of the `zkp` container (`docker-compose logs -f zkp`) throws babel compilation errors. This is due to the memory consumption needed for running the compute intensive set up process. In these cases, it is recommended to toggle memory and CPU cores consumption
    - Consider these steps if you are running many of the `radish` containers and your PC is bogged down
    - Check the memory usage by running `docker stats`
    - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` (default is `2.0GiB`). Although not required in all cases, it is recommended to increase the swap memory to 4GB and CPU cores to 8 on Docker Preferences/Settings.
@@ -299,7 +296,7 @@ nvm use 11
 
 ### Front-end Environment
 
-1. When the above setup is run successfully, the UI is ready at `http://radish34-ui.docker`
+1. When the above setup is run successfully, the UI is ready at `http://localhost:3000`
 2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `ui` container.
     <details> 
       <summary>Example logs</summary>

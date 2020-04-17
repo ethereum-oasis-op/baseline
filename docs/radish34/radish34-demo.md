@@ -62,7 +62,7 @@ We broke down the supply chain procurement process into two phases; Contracting 
 4. Send PO to selected suppliers.
 5. Wait for suppliers to accept the PO and update the PO status to "in fulfillment."
 6. Wait for invoice.
-7. Receive invoice from suppler, open it, and click "pay."  
+7. Receive invoice from suppler, open it, and click "pay."
 8. This PO is now completed/closed. Other POs could be still open, I am able to view the status of those.
 
 **Supplier context**: We have an MSA for Part X with a Buyer. At this point I am just waiting for POs. Also, I am such a good supplier that I can always meet customer qty and time frame demands so I accept every PO I receive.

@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+
 /** Helper function for the converting any base to any base
  */
 const parseToDigitsArray = (str, base) => {
@@ -84,6 +86,28 @@ const convertBase = (str, fromBase, toBase) => {
   return out;
 };
 
+/**
+utility function to check that a string has a leading 0x (which the Solidity
+compiler uses to check for a hex string).  It adds it if it's not present. If
+it is present then it returns the string unaltered
+*/
+const ensure0x = (hex = '') => {
+  const hexString = hex.toString();
+  if (typeof hexString === 'string' && hexString.indexOf('0x') !== 0) {
+    return `0x${hexString}`;
+  }
+  return hexString;
+};
+
+/**
+function to generate a promise that resolves to a string of hex
+@param {int} bytes - the number of bytes of hex that should be returned
+*/
+const rndHex = bytes => {
+  const buf = crypto.randomBytes(bytes);
+  return `0x${buf.toString('hex')}`;
+};
+
 // Converts hex strings to decimal values
 const hexToDec = hexStr => {
   if (hexStr.substring(0, 2) === '0x') {
@@ -137,6 +161,8 @@ const flattenDeep = arr => {
 };
 
 module.exports = {
+  ensure0x,
   hexToDec,
+  rndHex,
   flattenDeep,
 };

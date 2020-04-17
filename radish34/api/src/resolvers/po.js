@@ -157,6 +157,7 @@ export default {
             userAddress: currentUser.address,
           }
         });
+        console.log('createPO error:', e);
         throw new Error(e);
       }
     },

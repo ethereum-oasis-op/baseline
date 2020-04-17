@@ -84,6 +84,3 @@ MSA: Master Service Agreement is a document/contract issued to mark the beginnin
 
 PO: Purchase order is a document/token issued to begin the ordering process and that needs to maintain linkage to the MSA and thereby the terms agreed upon in the MSA.
 
-\#
-¯\_(ツ)_/¯Noooooo!
-
