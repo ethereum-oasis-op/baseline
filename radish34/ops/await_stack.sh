@@ -52,7 +52,7 @@ if [ $(docker ps -a -q --filter="name=$NAME_FILTERS" | tr '\n' ' ' | wc -m | tr 
     echo 'Error: Stack wait timeout reached!'
     exit 1
   fi
-  echo "All sercvices reporting 'healthty'"
+  echo "All sercvices reporting 'healthy'"
 else 
   echo "No services appear to be running. Are they?"
   exit 1
