@@ -186,11 +186,7 @@ const run = async () => {
   const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL);
   const settingsSaver = new SettingsSaver(organisationsConfigDir, process.env.RPC_PROVIDER);
 
-  console.log('Patiently waiting 10 seconds for ganache container to init ...');
-  setTimeout(async () => {
-    console.log('Checking for ganache ...');
-    await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, organisationMessengerKeyResolver, zkpVerificationKeyResolver, provider, settingsSaver);
-  }, 10000);
+  await main(radishOrganisations, pathKeystoreResolver, pathContractsResolver, pathOrganisationResolver, organisationMessengerKeyResolver, zkpVerificationKeyResolver, provider, settingsSaver);
 }
 
 run()
