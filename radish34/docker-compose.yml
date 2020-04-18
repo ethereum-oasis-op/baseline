@@ -74,10 +74,10 @@ services:
     tty: true
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   ganache:
     container_name: shared-ganache
@@ -94,10 +94,10 @@ services:
       - ./bin/ganache_health.sh:/app/health-check.sh:delegated
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   zkp:
     container_name: shared-zkp
@@ -126,10 +126,10 @@ services:
       - 8080:80
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   api-buyer:
     container_name: api-buyer
@@ -167,10 +167,10 @@ services:
       - 8101:8101
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   api-supplier1:
     container_name: api-supplier1
@@ -208,10 +208,10 @@ services:
       - 8102:8101
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   api-supplier2:
     container_name: api-supplier2
@@ -247,10 +247,10 @@ services:
       - 8003:8001
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   messenger-buyer:
     hostname: messenger-buyer
@@ -275,10 +275,10 @@ services:
      - 4001:4001
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   messenger-supplier1:
     hostname: messenger-supplier1
@@ -303,10 +303,10 @@ services:
      - 4002:4001
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   messenger-supplier2:
     hostname: messenger-supplier2
@@ -331,10 +331,10 @@ services:
       - 4003:4001
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   mongo-buyer:
     image: mongo:latest
@@ -351,10 +351,10 @@ services:
       - 27117:27017
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   mongo-supplier1:
     image: mongo:latest
@@ -371,10 +371,10 @@ services:
       - 27217:27017
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   mongo-supplier2:
     image: mongo:latest
@@ -391,10 +391,10 @@ services:
       - 27317:27017
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   redis-buyer:
     image: redis
@@ -402,13 +402,13 @@ services:
     networks:
       - network-buyer
     ports:
-      - 6379
+      - 6379:6379
     healthcheck:
       test: ["CMD", "redis-cli", "PING"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   redis-supplier1:
     image: redis
@@ -419,10 +419,10 @@ services:
       - 6379
     healthcheck:
       test: ["CMD", "redis-cli", "PING"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   redis-supplier2:
     image: redis
@@ -433,10 +433,10 @@ services:
       - 6379
     healthcheck:
       test: ["CMD", "redis-cli", "PING"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   merkle-tree:
     container_name: shared-merkle-tree
@@ -484,10 +484,10 @@ services:
       - 27417:27017
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   geth-node:
     hostname: geth-node
@@ -513,10 +513,10 @@ services:
        - 8548:8546
     healthcheck:
       test: ["CMD", "wget", "-q", "http://localhost:8545"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   geth-bootnode:
     hostname: geth-bootnode
@@ -551,10 +551,10 @@ services:
         password: pass
     healthcheck:
       test: ["CMD", "wget", "-q", "http://localhost:8545"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
   geth-miner2:
     hostname: geth-miner2
@@ -575,10 +575,10 @@ services:
         password: word
     healthcheck:
       test: ["CMD", "wget", "-q", "http://localhost:8545"]
-      interval: 30s
+      interval: 15s
       timeout: 10s
       retries: 3
-      start_period: 30s
+      start_period: 10s
 
 volumes:
   mongo-buyer:
