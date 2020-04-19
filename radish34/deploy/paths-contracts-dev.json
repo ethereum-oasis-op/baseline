@@ -1,0 +1,10 @@
+{
+  "ERC1820Registry": "../contracts/artifacts/ERC1820Registry.json",
+  "Registrar": "../contracts/artifacts/Registrar.json",
+  "OrgRegistry": "../contracts/artifacts/OrgRegistry.json",
+
+  "Pairing": "../contracts/artifacts/Pairing.json",
+  "BN256G2": "../contracts/artifacts/BN256G2.json",
+  "Verifier": "../contracts/artifacts/Verifier.json",
+  "Shield": "../contracts/artifacts/Shield.json"
+}

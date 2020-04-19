@@ -9,7 +9,7 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY deploy.sh ./deploy.sh
-COPY ./package.json ./package-lock.json ./
+COPY ./package.json ./package-lock.json ./paths-contracts.json ./
 RUN \
   npm ci && \
   git clone https://github.com/Zokrates/pycrypto.git

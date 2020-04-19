@@ -100,4 +100,7 @@ config/
 
 # Ignore generated docs
 docs/generated
-.vscode
+
+.vscode/
+
+.etherlime-store
