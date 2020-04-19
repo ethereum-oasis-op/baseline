@@ -91,7 +91,7 @@ services:
       - network-supplier2
     volumes:
       - chaindata:/chaindata
-      - ./bin/ganache_health.sh:/app/health-check.sh:delegated
+      - ./ops/ganache_health.sh:/app/health-check.sh:delegated
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
       interval: 15s
@@ -341,7 +341,7 @@ services:
     container_name: mongo-buyer
     volumes:
       - mongo-buyer:/data/db
-      - ./bin/mongo_health.sh:/health-check.sh:delegated
+      - ./ops/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
@@ -361,7 +361,7 @@ services:
     container_name: mongo-supplier1
     volumes:
       - mongo-supplier1:/data/db
-      - ./bin/mongo_health.sh:/health-check.sh:delegated
+      - ./ops/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
@@ -381,7 +381,7 @@ services:
     container_name: mongo-supplier2
     volumes:
       - mongo-supplier2:/data/db
-      - ./bin/mongo_health.sh:/health-check.sh:delegated
+      - ./ops/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
