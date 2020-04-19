@@ -27,7 +27,7 @@
   "scripts": {
     "await-stack": "./ops/await_stack.sh",
     "build": "./ops/build.sh",
-    "build:contracts": "pushd contracts && npm run build && popd",
+    "build:contracts": "/bin/bash -c 'pushd contracts && npm run build && popd'",
     "deploy": "docker-compose run --rm deploy && docker-compose restart merkle-tree api-buyer api-supplier1 api-supplier2 || true",
     "docs:build": "./ops/build_docs.sh",
     "dockerize": "./ops/dockerize.sh",
