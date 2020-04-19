@@ -16,7 +16,6 @@ import VerifierArtifact from '../artifacts/Verifier.json';
 import BN256G2Artifact from '../artifacts/BN256G2.json';
 import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
 
-const wallet = getWallet();
 const SNARK_SCALAR_BOUND = "21888242871839275222246405745257275088548364400416034343698204186575808495617";
 const PRIME_BOUND = "21888242871839275222246405745257275088696311157297823662689037894645226208583";
 let verifier;
