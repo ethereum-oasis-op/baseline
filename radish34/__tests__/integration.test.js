@@ -395,7 +395,7 @@ describe('Supplier2 sends new Proposal to buyer', () => {
   });
 });
 
-describe('Buyer creates MSA, signs it, sends to supplier2, supplier2 responds with signed MSA', () => {
+describe('Buyer creates MSA, signs it, sends to Supplier2, Supplier2 responds with signed MSA', () => {
   const supplierAddressPadded = `0x000000000000000000000000${supplier2.address.substring(2)}`;
   const sku = 'FAKE-SKU-123';
   const skuPadded = '0x0000000046414b452d534b552d313233';
@@ -415,7 +415,7 @@ describe('Buyer creates MSA, signs it, sends to supplier2, supplier2 responds wi
     '0x00000000000000000000000000000008',
   ]
 
-  describe('Create new MSA through buyer radish-api', () => {
+  describe('Buyer creates new MSA for Supplier2 through radish-api', () => {
     test('Buyer graphql mutation createMSA() returns 400 without sku', async () => {
       const postBody = ` mutation {
           createMSA( input: {
@@ -484,15 +484,15 @@ describe('Buyer creates MSA, signs it, sends to supplier2, supplier2 responds wi
                             }
                           }`
       // Wait for db to update
-      console.log('This test can take up to 10 minutes to run. It will provide frequent status updates');
+      console.log('Waiting for new MSA commitment in Shield contract. This can take up to 10 minutes...');
       let res;
       for (let retry = 0; retry < 15; retry++) {
-        console.log('Checking for non-null msa index, attempt:', retry);
+        console.log('Checking for non-null MSA index, attempt:', retry);
         res = await request(buyerApiURL)
           .post('/graphql')
           .send({ query: queryBody });
         if (res.body.data.msa && res.body.data.msa.commitments[0].index !== null) {
-          console.log('Test complete');
+          console.log('MSA commitment test complete.');
           break;
         }
         await new Promise((r) => setTimeout(r, 20000));
@@ -504,7 +504,7 @@ describe('Buyer creates MSA, signs it, sends to supplier2, supplier2 responds wi
   });
 });
 
-describe('Buyer creates PO', () => {
+describe('Buyer creates PO for Supplier2 based on MSA', () => {
   describe('Create new PO through buyer radish-api', () => {
     test('Buyer graphql mutation createPO() returns 400 without volume', async () => {
       const postBody = ` mutation {
@@ -524,6 +524,7 @@ describe('Buyer creates PO', () => {
     });
 
     test('Buyer graphql mutation createPO() returns 200', async () => {
+      console.log('Buyer creating new PO for Supplier2. This test takes a while...');
       const postBody = ` mutation {
         createPO( input: {
           msaId: "${msaId}",
