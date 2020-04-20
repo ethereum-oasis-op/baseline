@@ -191,4 +191,3 @@ export const formatProof = proofObject => {
   proof = proof.map(el => hexToDec(el));
   return proof;
 };
-

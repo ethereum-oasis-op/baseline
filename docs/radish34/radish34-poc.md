@@ -2,9 +2,9 @@
 description: 'After migration to /baseline, point this file to /radish34 readme.md'
 ---
 
-# Radish34 MVP (as a reference implementation)
+# Radish34 POC
 
-If you’ve read the [Radish34 Explained](radish34-explained.md) section or played with the [user experience demo](radish34-demo.md) and now want to build and run the POC yourself, you’re in the right place.  Find the authoritative set-up documentation in the Github repo [here](https://github.com/ethereum-oasis/baseline/blob/master/radish34/README.md). 
+If you’ve read the [Radish34 Explained](radish34-explained.md) section or played with the [user experience demo](radish34-demo.md) and now want to build and run the POC yourself, you’re in the right place. Find the authoritative set-up documentation in the Github repo [here](https://github.com/ethereum-oasis/baseline/blob/master/radish34/README.md).
 
 {% embed url="https://github.com/ethereum-oasis/baseline/blob/master/radish34/README.md" caption="Radish34 POC Official Build Readme" %}
 
@@ -14,11 +14,7 @@ Below is a copy we will keep updated for quick reference.
 
 1. Install [Docker for Mac](https://www.docker.com/docker-mac), or [Docker for Windows](https://www.docker.com/docker-windows)
    * It's recommended that you allocate 12GB of RAM in Docker \(see 'Troubleshooting'\).
-2. Install and start [dotdocker](https://github.com/aj-may/dotdocker)
-
-   `dotdocker start`
-
-3. In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
+2. In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
 
 After you've done that, log in to the Github package registry by running
 
@@ -27,9 +23,9 @@ After you've done that, log in to the Github package registry by running
 ## Development/Test Environment
 
 1. As part of the development environment, we assume a procurement use-case with three users: \(1\) buyer and \(2\) supplier organizations.
-2. Run `npm ci && npm run postinstall`. \*\* This takes about 6 minutes to clean install npm packages in root and all sub directories \*\*
+2. Run `npm i && npm run postinstall`. \*\* This takes about 6 minutes to clean install npm packages in root and all sub directories \*\*
 3. Run `docker-compose build` to create the latest versions of the docker containers. \*\* Only do this the first time or when service source code is changed \*\*. \*\* This takes about 40 minutes for a fresh build \*\*
-4. Run `npm run setup` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. \*\* This takes about 5-10 minutes to complete \*\* Example logs:
+4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. \*\* This takes about 5-10 minutes to complete \*\* Example logs:
 
 \[ Need to fix the code segments below...maybe....at least it scrolls. \]
 
@@ -59,8 +55,6 @@ radish-34_radish-zkp_1 is up-to-date
 
    ```text
       > docker-compose run --rm radish-deploy sh deploy.sh
-      Patiently waiting 10 seconds for ganache container to init ...
-      Checking for ganache ...
       ✅  ERC1820Registry deployed:  0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397
       ✅  OrgRegistry deployed:  0x31088fd0eede771d5bda1558e06a666Cd9BF110c
       ✅  BN256G2 library deployed:  0x8f17969A8dc9cbAe2EB98541F33c7c396f615241
@@ -158,7 +152,7 @@ radish-34_radish-zkp_1 is up-to-date
 
    * This will start all `radish` containers
    * Wait about 10 seconds to give containers time to complete their initialization routines
-   * Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `radish-api-{role}` and `radish34-ui` Example Logs:
+   * Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `api-{role}` and `ui` Example Logs:
 
    ```text
       radish-api-buyer        | Connected to db
@@ -178,11 +172,11 @@ radish-34_radish-zkp_1 is up-to-date
    ```
 
 5. Run integration tests: `npm run test`
-6. Within about 5 minutes, UI is loaded on `http://radish34-ui.docker` on your local browser
+6. Within about 5 minutes, UI is loaded on `http://localhost:3000` on your local browser
 
 ## Troubleshooting
 
-1. If you get errors during the `npm ci` step, please ensure that you are running node version `11`. The `nvm` \(node version manager\) tool allows you to easily switch between versions:
+1. If you get errors during the `npm i` step, please ensure that you are running node version `11`. The `nvm` \(node version manager\) tool allows you to easily switch between versions:
 
 ```text
 nvm install 11
@@ -201,8 +195,8 @@ nvm use 11
 
 ### Front-end Environment
 
-1. When the above setup is run successfully, the UI is ready at `http://radish34-ui.docker`
-2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `radish34-ui` container. Example Logs:
+1. When the above setup is run successfully, the UI is ready at `http://localhost:3000`
+2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `ui` container. Example Logs:
 
    ```text
       radish34-ui_1           | > @ start /app

@@ -1,16 +1,10 @@
-const Settings = require('./utils/settings');
-const ethers = require('./utils/ethers');
-
-// const getBuyerSettings = () => Settings.getServerSettings('buyer');
-// const getSupplier1Settings = () => Settings.getServerSettings('supplier1');
-// const getSupplier2Settings = () => Settings.getServerSettings('supplier2');
+const SettingsReader = require('./utils/SettingsReader');
 
 const main = async () => {
-  const buyerSettings = await Settings.getServerSettings('buyer');
-  const supplier1Settings = await Settings.getServerSettings('supplier1');
-  const supplier2Settings = await Settings.getServerSettings('supplier2');
-
-  await ethers.getProvider(process.env.RPC_PROVIDER);
+  const settingsReader = new SettingsReader(process.env.ORGANISATION_CONFIG_PATH);
+  const buyerSettings = await settingsReader.resolveSettings('buyer');
+  const supplier1Settings = await settingsReader.resolveSettings('supplier1');
+  const supplier2Settings = await settingsReader.resolveSettings('supplier2');
 
   if (
     !buyerSettings.addresses.OrgRegistry ||

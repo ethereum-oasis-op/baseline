@@ -1,147 +1,295 @@
+const path = require('path');
+const assert = require('assert');
 const ethers = require('ethers');
-const Wallet = require('./utils/wallet');
-const Contract = require('./utils/contract');
-const Organization = require('./utils/organization');
-const Settings = require('./utils/settings');
-const { getWhisperIdentities } = require('./utils/identities');
-const { uploadVks } = require('./utils/vk');
 
-const addresses = {};
+const RadishConfigpathContractsResolver = require('./baseline-administrator-lib/resolvers/contract-resolvers/radish-configpath-resolver.js');
+const RadishPathKeystoreDirResolver = require('./baseline-administrator-lib/resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
+const RadishOrganisationConfigpathResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-configpath-resolver.js');
+const RadishMessengerKeyRestResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-messenger-key-rest-resolver.js');
+const RadishZKPRestResolver = require('./baseline-administrator-lib/resolvers/verification-key-resolvers/radish-zkp-rest-resolver');
 
-const deployContracts = async role => {
-  addresses.ERC1820Registry = await Contract.deployContract('ERC1820Registry', [], role);
-  console.log('✅  ERC1820Registry deployed:', addresses.ERC1820Registry);
+const BaselineDeployer = require('./baseline-administrator-lib/deployers/baseline-deployer.js');
+const BaselineWorkgroupManager = require('./baseline-administrator-lib/managers/baseline-workgroup-manager.js');
 
-  addresses.OrgRegistry = await Contract.deployContract(
-    'OrgRegistry',
-    [addresses.ERC1820Registry],
-    role,
+const SettingsSaver = require('./utils/SettingsSaver');
+
+const main = async (
+  radishOrganisations,
+  pathKeystoreResolver,
+  pathContractsResolver,
+  pathOrganisationResolver,
+  organisationMessengerKeyResolver,
+  zkpVerificationKeyResolver,
+  provider,
+  settingsSaver,
+) => {
+  const { ERC1820Registry, OrgRegistry, Verifier, Shield } = await deployContracts(
+    pathKeystoreResolver,
+    pathContractsResolver,
+    provider,
   );
-  console.log('✅  OrgRegistry deployed:', addresses.OrgRegistry);
 
-  addresses.BN256G2 = await Contract.deployContract('BN256G2', [], role);
-  console.log('✅  BN256G2 library deployed:', addresses.BN256G2);
+  const workgroupManager = new BaselineWorkgroupManager(OrgRegistry, Verifier, Shield);
 
-  addresses.Verifier = await Contract.deployContractWithLibraryLink(
-    'Verifier',
-    [addresses.ERC1820Registry],
-    'BN256G2',
-    role,
-  );
-  console.log('✅  Verifier deployed:', addresses.Verifier);
+  for (const organisation of radishOrganisations) {
+    console.log(`ℹ️   Registering workgroup member: ${organisation}`);
+    const organisationConfig = await registerOrganisation(
+      workgroupManager,
+      pathKeystoreResolver,
+      pathOrganisationResolver,
+      organisationMessengerKeyResolver,
+      organisation,
+    );
+    await registerOrganisationInterfaceImplementers(
+      ERC1820Registry,
+      OrgRegistry,
+      Shield,
+      Verifier,
+      pathKeystoreResolver,
+      organisation,
+    );
 
-  addresses.Shield = await Contract.deployContract(
-    'Shield',
-    [addresses.Verifier, addresses.ERC1820Registry],
-    role,
-  );
-  console.log('✅  Shield deployed:', addresses.Shield);
-};
+    console.log(`ℹ️   Saving settings to config file for: ${organisation}`);
+    await saveOrganisationConfig(
+      settingsSaver,
+      organisation,
+      organisationConfig.address,
+      organisationConfig.messagingKey,
+      organisationConfig.zkpPublicKey,
+      organisationConfig.zkpPrivateKey,
+      {
+        ERC1820Registry: ERC1820Registry.address,
+        OrgRegistry: OrgRegistry.address,
+        Verifier: Verifier.address,
+        Shield: Shield.address,
+      },
+    );
+  }
+  await registerRadishInterface(workgroupManager, Shield, Verifier);
+  // If it is needed we can set deployer as manager of OrgRegistry in the ERC1820
 
-// TODO: Add managers for Shield and Verifier contracts
-const assignManager = async role => {
-  const { transactionHash } = await Organization.assignManager('OrgRegistry', role);
-  console.log(`✅  Assigned the ${role} as the manager for OrgRegistry. TxHash:`, transactionHash);
-};
+  console.log(`ℹ️   Registering zkp verification keys`);
+  await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA');
+  await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createPO');
 
-// TODO: Add set interface implementers for Shield and Verifier contracts
-const setInterfaceImplementer = async role => {
-  const roleAddress = await Wallet.getAddress(role);
-  const { transactionHash } = await Organization.setInterfaceImplementer(
-    roleAddress,
-    ethers.utils.id('IOrgRegistry'),
-    addresses.OrgRegistry,
-    role,
-  );
-  console.log(`✅  Set OrgRegistry as Interface Implementer for ${role}. TxHash:`, transactionHash);
-};
-
-// TODO Add a method to create commitment public key and private key for the user and receive these of the partners' from partners.
-// Remove these fields from config. Or just the organisationzkpPrivateKey
-const register = async role => {
-  const roleAddress = await Wallet.getAddress(role);
-  const config = await Settings.getServerSettings(role);
-  let { organization } = config;
-  const messengerKey = (await getWhisperIdentities())[role];
-  organization = { ...organization, messengerKey };
-
-  const { transactionHash } = await Organization.registerToOrgRegistry(
-    role,
-    addresses.OrgRegistry,
-    roleAddress,
-    organization.name,
-    organization.role,
-    organization.messengerKey,
-    organization.zkpPublicKey,
-  );
-  console.log(`✅  Registered ${role} in the OrgRegistry with tx hash:`, transactionHash);
-};
-
-const registerInterfaces = async role => {
-  const { transactionHash } = await Organization.registerOrgInterfaces(
-    role,
-    addresses.OrgRegistry,
-    'Radish34',
-    // TODO: Deploy ERC1155 token and add deployed token address here
-    '0x0000000000000000000000000000000000000000',
-    addresses.Shield,
-    addresses.Verifier,
-  );
-  console.log(
-    `✅  Registered interfaces for shield & verifier with OrgRegistry with tx hash:`,
-    transactionHash,
-  );
-};
-
-const checkOrgCount = async () => {
-  const registeredOrgCount = await Organization.getOrgCount(addresses.OrgRegistry, 'deployer');
-  console.log(`✅  getOrg: ${registeredOrgCount} Organizations have successfully been set up!`);
-};
-
-const checkOrgInfo = async role => {
-  const roleAddress = await Wallet.getAddress(role);
-  const info = await Organization.getOrgInfo(addresses.OrgRegistry, roleAddress, 'deployer');
-  console.log(info);
-};
-
-const saveSettings = async role => {
-  const config = await Settings.getServerSettings(role);
-  let { organization } = config;
-  const messengerKey = (await getWhisperIdentities())[role];
-  organization = { ...organization, messengerKey };
-  Settings.setServerSettings(role, {
-    addresses,
-    organization,
-  });
-};
-
-const main = async () => {
-
-  await deployContracts('deployer');
-  await assignManager('deployer');
-  await setInterfaceImplementer('deployer');
-  await register('buyer');
-  await register('supplier1');
-  await register('supplier2');
-  await registerInterfaces('buyer');
-
-  await checkOrgCount();
-  await checkOrgInfo('buyer');
-  await checkOrgInfo('supplier1');
-  await checkOrgInfo('supplier2');
-
-  await saveSettings('buyer');
-  await saveSettings('supplier1');
-  await saveSettings('supplier2');
-
-  await uploadVks('deployer');
+  console.log(`ℹ️   Network information:`);
+  await printNetworkInfo(workgroupManager, radishOrganisations, pathKeystoreResolver);
 
   console.log('----------------- Completed  -----------------');
   console.log(`Please restart the radish-apis for the config to take effect`);
 };
 
-console.log('Patiently waiting 10 seconds for ganache container to init ...');
-setTimeout(() => {
-  console.log('Checking for ganache ...');
-  main();
-}, 10000);
+const deployContracts = async (pathKeystoreResolver, pathContractsResolver, provider) => {
+  const deployerWallet = await pathKeystoreResolver.getWallet('deployer');
+
+  const baselineDeployer = new BaselineDeployer(deployerWallet, provider);
+
+  const protocolBuilder = baselineDeployer.getProtocolBuilder(pathContractsResolver);
+  const buildProtocolTask = await protocolBuilder.addErc1820Registry().build();
+
+  const { ERC1820Registry } = await baselineDeployer.deployProtocol(buildProtocolTask);
+  console.log('✅  ERC1820Registry deployed:', ERC1820Registry.address);
+
+  const workgroupBuilder = baselineDeployer.getWorkgroupBuilder(pathContractsResolver);
+  const buildWorkgroupTask = await workgroupBuilder
+    .addOrgRegistry(ERC1820Registry.address)
+    .addShield(ERC1820Registry.address)
+    .build();
+
+  const { OrgRegistry, Verifier, Shield } = await baselineDeployer.deployWorkgroup(
+    buildWorkgroupTask,
+  );
+
+  console.log('✅  OrgRegistry deployed:', OrgRegistry.address);
+  console.log('✅  Verifier deployed:', Verifier.address);
+  console.log('✅  Shield deployed:', Shield.address);
+
+  return {
+    ERC1820Registry,
+    OrgRegistry,
+    Verifier,
+    Shield,
+  };
+};
+
+const registerOrganisation = async (
+  workgroupManager,
+  pathKeystoreResolver,
+  organisationResolver,
+  organisationMessengerKeyResolver,
+  organisationName,
+) => {
+  const organisationMessengerURL = process.env[`MESSENGER_${organisationName.toUpperCase()}_URI`]; // Radish specific
+  const organisationMessagingKey = await organisationMessengerKeyResolver.resolveMessengerKey(
+    organisationMessengerURL,
+  );
+  const organisationWallet = await pathKeystoreResolver.getWallet(organisationName);
+  const organisation = await organisationResolver.resolve(
+    organisationName,
+    organisationMessagingKey,
+  );
+  if (typeof organisation.address == 'undefined') {
+    organisation.address = organisationWallet.address;
+  }
+
+  const transaction = await workgroupManager.registerOrganisation(
+    organisation.address,
+    organisation.name,
+    organisation.role,
+    organisation.messagingKey,
+    organisation.zkpPublicKey,
+  );
+
+  console.log(
+    `✅  Registered ${organisationName} in the OrgRegistry with transaction hash: ${transaction.transactionHash}`,
+  );
+
+  return organisation;
+};
+
+const registerRadishInterface = async (workgroupManager, shieldContract, verifierContract) => {
+  const transaction = await workgroupManager.registerOrganisationInterfaces(
+    'Radish34',
+    ethers.constants.AddressZero,
+    shieldContract.address,
+    verifierContract.address,
+  );
+
+  console.log(
+    `✅  Registered the Radish34 interface in the OrgRegistry with transaction hash: ${transaction.transactionHash}`,
+  );
+};
+
+const registerOrganisationInterfaceImplementers = async (
+  erc1820Contract,
+  OrgRegistryContract,
+  ShieldContract,
+  VerifierContract,
+  keystoreResolver,
+  organisationName,
+) => {
+  const organisationWallet = await keystoreResolver.getWallet(organisationName);
+  const organisationErc1820Instance = await erc1820Contract.connect(organisationWallet);
+  const organisationAddress = await organisationWallet.getAddress();
+  const orgRegistryTransaction = await organisationErc1820Instance.setInterfaceImplementer(
+    organisationAddress,
+    ethers.utils.id('IOrgRegistry'),
+    OrgRegistryContract.address,
+  );
+  const orgRegistryReceipt = await orgRegistryTransaction.wait();
+
+  const verifierTransaction = await organisationErc1820Instance.setInterfaceImplementer(
+    organisationAddress,
+    ethers.utils.id('IVerifier'),
+    VerifierContract.address,
+  );
+  const verifierReceipt = await verifierTransaction.wait();
+
+  const shieldTransaction = await organisationErc1820Instance.setInterfaceImplementer(
+    organisationAddress,
+    ethers.utils.id('IShield'),
+    ShieldContract.address,
+  );
+  const shieldReceipt = await shieldTransaction.wait();
+
+  console.log(
+    `✅  Registered OrgRegistry as IOrgRegistry for ${organisationName} with transaction hash: ${orgRegistryReceipt.transactionHash}`,
+  );
+  console.log(
+    `✅  Registered Verifier as IVerifier for ${organisationName} with transaction hash: ${verifierReceipt.transactionHash}`,
+  );
+  console.log(
+    `✅  Registered Shield as IShield for ${organisationName} with transaction hash: ${shieldReceipt.transactionHash}`,
+  );
+};
+
+const registerVerificationKey = async (workgroupManager, verificationKeyResolver, circuitName) => {
+  const { vkArray, actionType } = await verificationKeyResolver.resolveVerificationKey(circuitName);
+
+  const transaction = await workgroupManager.registerVerificationKey(vkArray, actionType);
+
+  console.log(
+    `✅  Registered verification key for ${circuitName} with transaction hash: ${transaction.transactionHash}`,
+  );
+};
+
+const printNetworkInfo = async (workgroupManager, radishOrganisations, keystoreResolver) => {
+  const registeredOrgCount = await workgroupManager.getOrganisationsCount();
+  console.log(
+    `✅  Radish network of ${registeredOrgCount.toString(
+      10,
+    )} organizations have successfully been set up!`,
+  );
+  for (const organisation of radishOrganisations) {
+    const organisationWallet = await keystoreResolver.getWallet(organisation);
+    const organisationAddress = await organisationWallet.getAddress();
+    const organisationInfo = await workgroupManager.getOrganisationInfo(organisationAddress);
+    console.log(`✅  Information about ${organisation}: ${organisationInfo}`);
+  }
+};
+
+const saveOrganisationConfig = async (
+  settingsSaver,
+  organisationName,
+  organisationAddress,
+  messagingKey,
+  zkpPublicKey,
+  zkpPrivateKey,
+  addresses,
+) => {
+  const settings = await settingsSaver.updateSettings(
+    organisationName,
+    organisationAddress,
+    messagingKey,
+    zkpPublicKey,
+    zkpPrivateKey,
+    addresses,
+  );
+  console.log(`✅  Saved information about ${organisationName}: ${JSON.stringify(settings)}`);
+};
+
+// Radish34 Specific organisations. Maybe can be passed from outside?
+const radishOrganisations = ['buyer', 'supplier1', 'supplier2'];
+
+const run = async () => {
+  assert(typeof process.env.KEYSTORE_PATH === 'string', 'KEYSTORE_PATH not provided or not string');
+  assert(
+    typeof process.env.ORGANISATION_CONFIG_PATH === 'string',
+    'ORGANISATION_CONFIG_PATH not provided or not string',
+  );
+  assert(typeof process.env.RPC_PROVIDER === 'string', 'RPC_PROVIDER not provided or not string');
+  assert(typeof process.env.ZKP_URL === 'string', 'ZKP_URL not provided or not string');
+
+  for (const organisation of radishOrganisations) {
+    const messagingURIEnvKey = `MESSENGER_${organisation.toUpperCase()}_URI`;
+    assert(
+      typeof process.env[messagingURIEnvKey] === 'string',
+      `${messagingURIEnvKey} not provided or not string`,
+    );
+  }
+
+  let keystoreDir = path.resolve(process.env.KEYSTORE_PATH);
+  let organisationsConfigDir = path.resolve(process.env.ORGANISATION_CONFIG_PATH);
+  let paths = process.env.CONTRACTS_PATH ? path.resolve(process.env.CONTRACTS_PATH) : undefined;
+
+  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_PROVIDER);
+  const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir, provider);
+  const pathContractsResolver = new RadishConfigpathContractsResolver(paths);
+  const pathOrganisationResolver = new RadishOrganisationConfigpathResolver(organisationsConfigDir);
+  const organisationMessengerKeyResolver = new RadishMessengerKeyRestResolver();
+  const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL);
+  const settingsSaver = new SettingsSaver(organisationsConfigDir, process.env.RPC_PROVIDER);
+
+  await main(
+    radishOrganisations,
+    pathKeystoreResolver,
+    pathContractsResolver,
+    pathOrganisationResolver,
+    organisationMessengerKeyResolver,
+    zkpVerificationKeyResolver,
+    provider,
+    settingsSaver,
+  );
+};
+
+run();

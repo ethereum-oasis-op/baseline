@@ -144,9 +144,10 @@ export const getSiblingPath = async (contractName, _commitment, commitmentIndex)
   // }
 
   // check the database's mongodb aligns with the merkle-tree's mongodb: i.e. check leaf.commitmentIndex === commitment:
-  // console.log('\nChecking leaf...');
-  // console.log('commitment:', _commitment);
-  // console.log('commitmentIndex:', commitmentIndex);
+  console.log('\nChecking leaf...');
+  console.log('contractName:', contractName);
+  console.log('commitment:', _commitment);
+  console.log('commitmentIndex:', commitmentIndex);
   const leaf = await getLeafByLeafIndex(contractName, commitmentIndex);
   // console.log('leaf:', leaf);
   if (leaf.value !== _commitment)

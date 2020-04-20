@@ -54,7 +54,7 @@ const createIdentity = async myId => {
 
 const healthCheck = async () => {
   try {
-    return await axios.get(`${messengerUrl}/health-check`);
+    return await axios.get(`${messengerUrl}/health`);
   } catch (error) {
     console.error(error);
     return error;

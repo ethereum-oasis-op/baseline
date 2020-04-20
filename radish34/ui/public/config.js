@@ -1,3 +1,3 @@
 window.config = {
-  radishAPIURL: 'radish-api-buyer.docker',
+  radishAPIURL: 'radish-api-buyer',
 };

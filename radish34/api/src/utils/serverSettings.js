@@ -1,12 +1,15 @@
 import config from 'config';
-import { merge } from 'lodash';
 import { pubsub } from '../subscriptions';
 import db from '../db';
 
 export const loadServerSettingsFromFile = async () => {
   console.log('Loading config file ...');
   const storedSettings = await db.collection('serversettings').findOne({});
-  const settings = merge(config, storedSettings);
+  // Overwrite current settings stored in db with what is in config file
+  const settings = {
+    ...JSON.parse(JSON.stringify(storedSettings)),
+    ...JSON.parse(JSON.stringify(config))
+  }
   delete settings._id;
   delete settings.util;
   await db.collection('serversettings').findOneAndUpdate({}, { $set: settings }, { upsert: true });

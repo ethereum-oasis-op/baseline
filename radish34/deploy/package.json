@@ -11,15 +11,22 @@
     "Wenxing Wang <wenxing-wang-ey>"
   ],
   "license": "SEE LICENSE in root/license.md",
-  "main": "src/app.js",
+  "main": "src/deploy.js",
   "scripts": {
-    "check": "node ./src/app.js"
+    "check": "node ./src/app.js",
+    "deploy": "node ./src/deploy.js",
+    "deploy-dev": "RPC_PROVIDER=http://localhost:8545 KEYSTORE_PATH=./../config/keystore CONTRACTS_PATH=./paths-contracts-dev.json ORGANISATION_CONFIG_PATH=./../config MESSENGER_BUYER_URI=http://localhost:4001 MESSENGER_SUPPLIER1_URI=http://localhost:4002 MESSENGER_SUPPLIER2_URI=http://localhost:4003 ZKP_URL=http://localhost:8080 node ./src/deploy.js"
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "bl": ">=0.9.5",
     "config": "^3.2.4",
+    "etherlime-lib": "^1.2.1",
     "ethers": "^4.0.46",
-    "request": "^2.88.0"
+    "hex-to-binary": "1.0.1",
+    "keccak": "^2.1.0",
+    "request": "^2.88.0",
+    "safe-buffer": "^5.2.0"
   },
   "devDependencies": {
     "cod-scripts": "^3.2.0"

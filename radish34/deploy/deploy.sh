@@ -1,3 +1,9 @@
-#!/bin/sh
-cp -r ./src/config/backups/* ./src/config/
-node ./src/deploy.js done
+#!/bin/bash
+
+if [ ! -d ./../config ]; then
+    mkdir -p ./../config
+    cp -r ./src/config/backups/* ./../config
+    cp -r ./src/config/keystore ./../config
+fi
+
+npm run deploy done

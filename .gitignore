@@ -103,3 +103,6 @@ radish34/splunk/.ethlogger-state.json
 
 # Ignore generated docs
 docs/generated
+
+# Ignore pycrypto
+pycrypto

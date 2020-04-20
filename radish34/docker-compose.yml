@@ -1,7 +1,86 @@
 version: '3.5'
 
 services:
+
+  deploy:
+    container_name: deployer-service
+    build:
+      context: ./deploy/
+    depends_on:
+      - ganache
+      - messenger-buyer
+      - messenger-supplier1
+      - messenger-supplier2
+      - mongo-buyer
+      - mongo-supplier1
+      - mongo-supplier2
+      - zkp
+    environment:
+      RPC_PROVIDER: http://ganache:8545
+      MESSENGER_BUYER_URI: http://messenger-buyer:4001
+      MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001
+      MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001
+      ZKP_URL: http://zkp:80
+      KEYSTORE_PATH: /app/src/config/keystore
+      ORGANISATION_CONFIG_PATH: /app/src/config
+      CONTRACTS_PATH: /app/paths-contracts.json
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    volumes:
+      - ./deploy/src:/app/src:delegated
+      - ./deploy/package.json:/app/package.json:delegated
+      - ./deploy/paths-contracts.json:/app/paths-contracts.json:delegated
+      - ./contracts/artifacts:/app/artifacts:delegated
+      - ./config/keystore:/keystore:delegated
+      - ./config:/app/src/config
+
+  ui:
+    container_name: radish34-ui
+    build:
+      context: ./ui/
+      dockerfile: dev.Dockerfile
+    depends_on:
+      - ganache
+      - messenger-buyer
+      - messenger-supplier1
+      - messenger-supplier2
+      - mongo-buyer
+      - mongo-supplier1
+      - mongo-supplier2
+      - zkp
+    volumes:
+      - ./ui/src:/app/src:delegated
+      - ./ui/.env:/app/.env:delegated
+      - ./ui/public/index.html:/app/public/index.html:delegated
+      - ./ui/public/favicon.ico:/app/public/favicon.ico:delegated
+      - ./ui/public/config.js:/app/public/config.js:delegated
+      - ./ui/public/manifest.json:/app/public/manifest.json:delegated
+      - ./ui/public/logo.svg:/app/public/logo.svg:delegated
+      - ./ui/public/images:/app/public/images:delegated
+      - ./ui/public/fonts:/app/public/fonts:delegated
+    environment:
+      VIRTUAL_HOST: radish34-ui
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    ports:
+      - 3000:3000
+    logging:
+      options:
+        max-size: 10m
+    tty: true
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   ganache:
+    container_name: shared-ganache
     image: trufflesuite/ganache-cli:latest
     command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0xdad57e191799c38233bb7897f5ca66eb42d4f2f6d05ec657f8121b57e5d3bde6, 1000000000000000000000" --account="0x5aaa244692f54da4335a8553249b0db34316fbbc6ec353e1404cf77c415e59e8, 1000000000000000000000" --account="0x70441f8ed88f91416fbe21aa007357354e9bc30236211eda0022bdfb27beb227, 1000000000000000000000" --account="0x9ff4f711a85ed35d2cc66323abcd83f41e5981e0cd395800a262beb9a92b8abf, 1000000000000000000000" --account="0x77e701995d56e775bbb06559ece7d7352157106bbadc6aa5d8781c86c8d824bd, 1000000000000000000000" --networkId '333' --gasLimit 10000000
     ports:
@@ -12,9 +91,16 @@ services:
       - network-supplier2
     volumes:
       - chaindata:/chaindata
+      - ./ops/ganache_health.sh:/app/health-check.sh:delegated
+    healthcheck:
+      test: ["CMD", "sh", "health-check.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   zkp:
-    container_name: zkp
+    container_name: shared-zkp
     build:
       context: ./zkp/
       dockerfile: dev.Dockerfile
@@ -38,60 +124,12 @@ services:
       - network-supplier2
     ports:
       - 8080:80
-
-  ui:
-    build:
-      context: ./ui/
-      dockerfile: dev.Dockerfile
-    volumes:
-      - ./ui/src:/app/src:delegated
-      - ./ui/.env:/app/.env:delegated
-      - ./ui/public/index.html:/app/public/index.html:delegated
-      - ./ui/public/favicon.ico:/app/public/favicon.ico:delegated
-      - ./ui/public/config.js:/app/public/config.js:delegated
-      - ./ui/public/manifest.json:/app/public/manifest.json:delegated
-      - ./ui/public/logo.svg:/app/public/logo.svg:delegated
-      - ./ui/public/images:/app/public/images:delegated
-      - ./ui/public/fonts:/app/public/fonts:delegated
-    environment:
-      VIRTUAL_HOST: radish34-ui.docker
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-    logging:
-      options:
-        max-size: 10m
-    tty: true
-
-  deploy:
-    build:
-      context: ./deploy/
-    depends_on:
-      - ganache
-      - messenger-buyer
-      - messenger-supplier1
-      - messenger-supplier2
-      - mongo-buyer
-      - mongo-supplier1
-      - mongo-supplier2
-      - zkp
-    environment:
-      RPC_PROVIDER: http://ganache:8545
-      MESSENGER_BUYER_URI: http://messenger-buyer:4001
-      MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001
-      MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001
-      ZKP_URL: http://zkp:80
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-    volumes:
-      - ./deploy/src:/app/src:delegated
-      - ./deploy/package.json:/app/package.json:delegated
-      - ./contracts/artifacts:/app/artifacts:delegated
-      - ./config/keystore:/keystore:delegated
-      - ./config:/app/src/config
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   api-buyer:
     container_name: api-buyer
@@ -114,7 +152,7 @@ services:
       - redis-buyer
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish34-api-buyer.docker
+      VIRTUAL_HOST: radish34-api-buyer
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
@@ -127,6 +165,12 @@ services:
     ports:
       - 8001:8001
       - 8101:8101
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   api-supplier1:
     container_name: api-supplier1
@@ -149,7 +193,7 @@ services:
       - redis-supplier1
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish34-api-supplier1.docker
+      VIRTUAL_HOST: radish34-api-supplier1
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
@@ -162,6 +206,12 @@ services:
     ports:
       - 8002:8001
       - 8102:8101
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   api-supplier2:
     container_name: api-supplier2
@@ -183,7 +233,7 @@ services:
       - messenger-supplier2
       - merkle-tree
     environment:
-      VIRTUAL_HOST: radish34-api-supplier2.docker
+      VIRTUAL_HOST: radish34-api-supplier2
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
       MONGO_CONNECTION_RETRIES: 5
@@ -195,12 +245,103 @@ services:
       - network-supplier2
     ports:
       - 8003:8001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  messenger-buyer:
+    hostname: messenger-buyer
+    container_name: messenger-buyer
+    depends_on:
+      - mongo-buyer
+      - redis-buyer
+      - geth-node
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./messenger/docker.env
+    environment:
+      VIRTUAL_HOST: messenger-buyer.docker
+      MONGO_URL: mongodb://mongo-buyer:27017/radish34
+      RADISH_API_URL: http://api-buyer:8101
+      REDIS_URL: redis://redis-buyer:6379
+    networks:
+      - network-buyer
+    ports:
+     - 4001:4001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  messenger-supplier1:
+    hostname: messenger-supplier1
+    container_name: messenger-supplier1
+    depends_on:
+      - mongo-supplier1
+      - redis-supplier1
+      - geth-node
+    env_file:
+      - ./messenger/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      VIRTUAL_HOST: messenger-supplier1.docker
+      MONGO_URL: mongodb://mongo-supplier1:27017/radish34
+      RADISH_API_URL: http://api-supplier1:8101
+      REDIS_URL: redis://redis-supplier1:6379
+    networks:
+      - network-supplier1
+    ports:
+     - 4002:4001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  messenger-supplier2:
+    hostname: messenger-supplier2
+    container_name: messenger-supplier2
+    depends_on:
+      - mongo-supplier2
+      - redis-supplier2
+      - geth-node
+    env_file:
+      - ./messenger/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      VIRTUAL_HOST: messenger-supplier2.docker
+      MONGO_URL: mongodb://mongo-supplier2:27017/radish34
+      RADISH_API_URL: http://api-supplier2:8101
+      REDIS_URL: redis://redis-supplier2:6379
+    networks:
+      - network-supplier2
+    ports:
+      - 4003:4001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   mongo-buyer:
     image: mongo:latest
     container_name: mongo-buyer
     volumes:
       - mongo-buyer:/data/db
+      - ./ops/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
@@ -208,12 +349,19 @@ services:
       - network-buyer
     ports:
       - 27117:27017
+    healthcheck:
+      test: ["CMD", "sh", "health-check.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   mongo-supplier1:
     image: mongo:latest
     container_name: mongo-supplier1
     volumes:
       - mongo-supplier1:/data/db
+      - ./ops/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
@@ -221,12 +369,19 @@ services:
       - network-supplier1
     ports:
       - 27217:27017
+    healthcheck:
+      test: ["CMD", "sh", "health-check.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   mongo-supplier2:
     image: mongo:latest
     container_name: mongo-supplier2
     volumes:
       - mongo-supplier2:/data/db
+      - ./ops/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
@@ -234,6 +389,105 @@ services:
       - network-supplier2
     ports:
       - 27317:27017
+    healthcheck:
+      test: ["CMD", "sh", "health-check.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  redis-buyer:
+    image: redis
+    container_name: redis-buyer
+    networks:
+      - network-buyer
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  redis-supplier1:
+    image: redis
+    container_name: redis-supplier1
+    networks:
+      - network-supplier1
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  redis-supplier2:
+    image: redis
+    container_name: redis-supplier2
+    networks:
+      - network-supplier2
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  merkle-tree:
+    container_name: shared-merkle-tree
+    image: eyblockchain/timber:v2.0.1
+    restart: on-failure
+    depends_on:
+      - mongo-merkle-tree
+      - ganache
+    volumes: # ensure relative paths are correct if embedding this microservice in another application:
+      - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
+      - ./contracts/contracts:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+    ports:
+      - 9000:80
+    environment:
+      BLOCKCHAIN_HOST: ws://ganache
+      BLOCKCHAIN_PORT: 8545
+      CONTRACT_ORIGIN: 'compile' # Where to find the contractInstances?
+      # Specify one of:
+      # - 'remote' (to GET a solc-compiled contract interface json from a remote microservice); or
+      # - 'mongodb' (to get a solc-compiled contract interface json from mongodb); or
+      # - 'default' (to get a solc-compiled contract interface json from the app/build/ folder)
+      # - 'compile' (to compile contracts from a .sol file, at startup, with solc, from the /app/contracts/ folder). Useful if the application using Timber doesn't use solc to generate contract interface json's.
+    networks: # we'll have all users sharing the one tree for now. TODO: explore separation of merkle-tree db's (difficult).
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+
+  # The database storing the merkle tree
+  mongo-merkle-tree:
+    container_name: shared-merkle-mongo
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=merkle_tree
+    volumes:
+      - ./config/merkle-tree/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - mongo-merkle-tree-volume:/data/db
+      - ./bin/mongo_health.sh:/health-check.sh:delegated
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+    ports:
+      - 27417:27017
+    healthcheck:
+      test: ["CMD", "sh", "health-check.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   geth-node:
     hostname: geth-node
@@ -258,10 +512,11 @@ services:
        - 8547:8545
        - 8548:8546
     healthcheck:
-      test: wget http://localhost:8545
-      interval: 2s
-      timeout: 5s
-      retries: 30
+      test: ["CMD", "wget", "-q", "http://localhost:8545"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   geth-bootnode:
     hostname: geth-bootnode
@@ -294,12 +549,18 @@ services:
       args:
         privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46
         password: pass
+    healthcheck:
+      test: ["CMD", "wget", "-q", "http://localhost:8545"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   geth-miner2:
     hostname: geth-miner2
     container_name: geth-miner2
     depends_on:
-      - geth-miner1
+      - geth-bootnode
     env_file:
       - ./geth-env/miner/miner_2.env
     ports:
@@ -312,138 +573,12 @@ services:
       args:
         privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
         password: word
-
-  redis-buyer:
-    image: redis
-    container_name: redis-buyer
-    networks:
-      - network-buyer
-    ports:
-      - 6379:6379
-
-  redis-supplier1:
-    image: redis
-    container_name: redis-supplier1
-    networks:
-      - network-supplier1
-    expose:
-      - 6379
-
-  redis-supplier2:
-    image: redis
-    container_name: redis-supplier2
-    networks:
-      - network-supplier2
-    expose:
-      - 6379
-
-  messenger-buyer:
-    hostname: messenger-buyer
-    container_name: messenger-buyer
-    links:
-      - mongo-buyer
-      - redis-buyer
-      - geth-node
-    build:
-      context: ./messenger
-      dockerfile: ./Dockerfile
-    env_file:
-      - ./messenger/docker.env
-    environment:
-      VIRTUAL_HOST: messenger-buyer.docker
-      MONGO_URL: mongodb://mongo-buyer:27017/radish34
-      RADISH_API_URL: http://api-buyer:8101
-      REDIS_URL: redis://redis-buyer:6379
-    networks:
-      - network-buyer
-    ports:
-     - 4001:4001
-
-  messenger-supplier1:
-    hostname: messenger-supplier1
-    container_name: messenger-supplier1
-    links:
-      - mongo-supplier1
-      - redis-supplier1
-      - geth-node
-    env_file:
-      - ./messenger/docker.env
-    build:
-      context: ./messenger
-      dockerfile: ./Dockerfile
-    environment:
-      VIRTUAL_HOST: messenger-supplier1.docker
-      MONGO_URL: mongodb://mongo-supplier1:27017/radish34
-      RADISH_API_URL: http://api-supplier1:8101
-      REDIS_URL: redis://redis-supplier1:6379
-    networks:
-      - network-supplier1
-    ports:
-     - 4002:4001
-
-  messenger-supplier2:
-    hostname: messenger-supplier2
-    container_name: messenger-supplier2
-    links:
-      - mongo-supplier2
-      - redis-supplier2
-      - geth-node
-    env_file:
-      - ./messenger/docker.env
-    build:
-      context: ./messenger
-      dockerfile: ./Dockerfile
-    environment:
-      VIRTUAL_HOST: messenger-supplier2.docker
-      MONGO_URL: mongodb://mongo-supplier2:27017/radish34
-      RADISH_API_URL: http://api-supplier2:8101
-      REDIS_URL: redis://redis-supplier2:6379
-    networks:
-      - network-supplier2
-    ports:
-      - 4003:4001
-
-  merkle-tree:
-    image: eyblockchain/timber:v2.0.1
-    restart: on-failure
-    depends_on:
-      - mongo-merkle-tree
-      - ganache
-    volumes: # ensure relative paths are correct if embedding this microservice in another application:
-      - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
-      - ./contracts/contracts:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
-    ports:
-      - 9000:80
-    environment:
-      BLOCKCHAIN_HOST: ws://ganache
-      BLOCKCHAIN_PORT: 8545
-      CONTRACT_ORIGIN: 'compile' # Where to find the contractInstances?
-      # Specify one of:
-      # - 'remote' (to GET a solc-compiled contract interface json from a remote microservice); or
-      # - 'mongodb' (to get a solc-compiled contract interface json from mongodb); or
-      # - 'default' (to get a solc-compiled contract interface json from the app/build/ folder)
-      # - 'compile' (to compile contracts from a .sol file, at startup, with solc, from the /app/contracts/ folder). Useful if the application using Timber doesn't use solc to generate contract interface json's.
-    networks: # we'll have all users sharing the one tree for now. TODO: explore separation of merkle-tree db's (difficult).
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-
-  # The database storing the merkle tree
-  mongo-merkle-tree:
-    image: mongo:latest
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
-      - MONGO_INITDB_DATABASE=merkle_tree
-    volumes:
-      - ./config/merkle-tree/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-      - mongo-merkle-tree-volume:/data/db
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-    ports:
-      - 27417:27017
+    healthcheck:
+      test: ["CMD", "wget", "-q", "http://localhost:8545"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 volumes:
   mongo-buyer:

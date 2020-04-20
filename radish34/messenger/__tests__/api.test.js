@@ -20,15 +20,10 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-describe('/health-check', () => {
-  test('GET /health-check returns 200', async () => {
-    const res = await apiRequest.get('/api/v1/health-check');
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.serverAlive).toEqual(true);
-  });
+describe('/health', () => {
 
-  test('GET /health-check/client returns 200', async () => {
-    const res = await apiRequest.get('/api/v1/health-check/client');
+  test('GET /health returns 200', async () => {
+    const res = await apiRequest.get('/api/v1/health');
     expect(res.statusCode).toEqual(200);
     expect(res.body.connected).toEqual(true);
     expect(res.body.type).toEqual(Config.messagingType);
