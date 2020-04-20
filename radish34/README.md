@@ -173,7 +173,7 @@ After you've done that, log in to the Github package registry by running
           Checking for non-null MSA index, attempt: 3
 
         console.log __tests__/integration.test.js:495
-          MSA commitment test complete.
+          ...MSA commitment test complete.
 
         console.log __tests__/integration.test.js:527
           Buyer creating new PO for Supplier2. This test takes a few minutes...
@@ -188,10 +188,10 @@ After you've done that, log in to the Github package registry by running
             ✓ Buyer messenger GET /health returns 200 (28ms)
             ✓ Buyer radish-api REST server GET /health returns 200 (19ms)
           Supplier1 containers
-            ✓ Supplier1 messenger GET /health-check returns 200 (7ms)
+            ✓ Supplier1 messenger GET /health returns 200 (7ms)
             ✓ Supplier1 radish-api REST server GET /health returns 200 (21ms)
           Supplier2 containers
-            ✓ Supplier2 messenger GET /health-check returns 200 (5ms)
+            ✓ Supplier2 messenger GET /health returns 200 (5ms)
             ✓ Supplier2 radish-api REST server GET /health returns 200 (15ms)
         Buyer sends new RFP to both suppliers
           Retrieve identities from messenger

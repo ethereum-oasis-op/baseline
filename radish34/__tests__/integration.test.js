@@ -99,7 +99,7 @@ describe('Check that containers are ready', () => {
     });
 
     test('Supplier2 radish-api REST server GET /health returns 200', async () => {
-      const res = await request(supplier2ApiURL).get('/api/v1/health');
+      const res = await request(supplier2ApiURL).get('/health');
       expect(res.statusCode).toEqual(200);
     });
   });
@@ -492,7 +492,7 @@ describe('Buyer creates MSA, signs it, sends to Supplier2, Supplier2 responds wi
           .post('/graphql')
           .send({ query: queryBody });
         if (res.body.data.msa && res.body.data.msa.commitments[0].index !== null) {
-          console.log('MSA commitment test complete.');
+          console.log('...MSA commitment test complete.');
           break;
         }
         await new Promise((r) => setTimeout(r, 20000));
