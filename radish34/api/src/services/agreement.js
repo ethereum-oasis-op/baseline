@@ -506,3 +506,4 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
   }
 };
 
+export { Agreement as default };
