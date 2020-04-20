@@ -156,62 +156,80 @@ After you've done that, log in to the Github package registry by running
 
       ```
       > NODE_ENV=test jest --verbose --runInBand --forceExit
+        
+        console.log __tests__/integration.test.js:487
+          Waiting for new MSA commitment in Shield contract. This can take up to 5 minutes...
 
-      console.log __tests__/integration.test.js:287
-          This test can take up to 10 minutes to run. It will provide frequent status updates
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 0
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 0
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 1
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 1
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 2
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 2
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 3
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 3
+        console.log __tests__/integration.test.js:495
+          MSA commitment test complete.
 
-      console.log __tests__/integration.test.js:295
-          Test complete
+        console.log __tests__/integration.test.js:527
+          Buyer creating new PO for Supplier2. This test takes a few minutes...
 
-      PASS  __tests__/integration.test.js (181.696s)
-      Check that containers are ready
+      PASS  __tests__/integration.test.js (154.892s)
+        Get organization settings from config files
+          ✓ Buyer config retrieved (2ms)
+          ✓ Supplier1 config retrieved (1ms)
+          ✓ Supplier2 config retrieved
+        Check that containers are ready
           Buyer containers
-            ✓ Buyer messenger GET /health returns 200 (13ms)
-            ✓ Buyer radish-api REST server GET /health returns 200 (16ms)
-          Supplier containers
-            ✓ Supplier messenger GET /health returns 200 (6ms)
-            ✓ Supplier radish-api REST server GET /health returns 200 (12ms)
-      Buyer sends new RFP to supplier
+            ✓ Buyer messenger GET /health returns 200 (28ms)
+            ✓ Buyer radish-api REST server GET /health returns 200 (19ms)
+          Supplier1 containers
+            ✓ Supplier1 messenger GET /health-check returns 200 (7ms)
+            ✓ Supplier1 radish-api REST server GET /health returns 200 (21ms)
+          Supplier2 containers
+            ✓ Supplier2 messenger GET /health-check returns 200 (5ms)
+            ✓ Supplier2 radish-api REST server GET /health returns 200 (15ms)
+        Buyer sends new RFP to both suppliers
           Retrieve identities from messenger
-            ✓ Supplier messenger GET /identities (7ms)
-            ✓ Buyer messenger GET /identities (6ms)
+            ✓ Buyer messenger GET /identities (7ms)
+            ✓ Supplier2 messenger GET /identities (7ms)
           Create new RFP through buyer radish-api
-            ✓ Buyer graphql mutation createRFP() returns 400 withOUT sku (46ms)
-            ✓ Buyer graphql mutation createRFP() returns 200 (77ms)
+            ✓ Buyer graphql mutation createRFP() returns 400 withOUT sku (75ms)
+            ✓ Buyer graphql mutation createRFP() returns 200 (101ms)
           Check RFP existence through radish-api queries
-            ✓ Buyer graphql query rfp() returns 200 (23ms)
-            ✓ Supplier graphql query rfp() returns 200 (2116ms)
-          Check RFP contents through radish-api query
-            ✓ Buyer rfp.recipients.origination contents are correct (25ms)
-            ✓ Supplier messenger has raw message that delivered RFP from buyer (11ms)
-      Buyer creates MSA, signs it, sends to supplier, supplier responds with signed MSA
-          Create new MSA through buyer radish-api
-            ✓ Buyer graphql mutation createMSA() returns 400 without sku (11ms)
-            ✓ Buyer graphql mutation createMSA() returns 200 (447ms)
-            ✓ After a while, the commitment index should not be null (60131ms)
-      Buyer creates PO
+            ✓ Buyer graphql query rfp() returns 200 (32ms)
+            ✓ Supplier1 graphql query rfp() returns 200 (2115ms)
+            ✓ Supplier2 graphql query rfp() returns 200 (106ms)
+          Check that RFP creation messages exists in messenger databases
+            ✓ Buyer messenger has raw message that delivered RFP to supplier1 (29ms)
+            ✓ Buyer messenger has raw message that delivered RFP to supplier2 (17ms)
+            ✓ Supplier1 messenger has raw message that delivered RFP from buyer (9ms)
+            ✓ Supplier2 messenger has raw message that delivered RFP from buyer (8ms)
+        Supplier2 sends new Proposal to buyer
+          Create new Proposal through supplier2 radish-api
+            ✓ Supplier2 graphql mutation createProposal() returns 200 (43ms)
+          Check Proposal existence through radish-api queries
+            ✓ Supplier2 graphql query proposal() returns 200 (23ms)
+            ✓ Buyer graphql query proposal() returns 200 (3062ms)
+        Buyer creates MSA, signs it, sends to Supplier2, Supplier2 responds with signed MSA
+          Buyer creates new MSA for Supplier2 through radish-api
+            ✓ Buyer graphql mutation createMSA() returns 400 without sku (16ms)
+            ✓ Buyer graphql mutation createMSA() returns 200 (411ms)
+            ✓ After a while, the commitment index should not be null (60153ms)
+        Buyer creates PO for Supplier2 based on MSA
           Create new PO through buyer radish-api
-            ✓ Buyer graphql mutation createPO() returns 400 without volume (10ms)
-            ✓ Buyer graphql mutation createPO() returns 200 (117616ms)
+            ✓ Buyer graphql mutation createPO() returns 400 without volume (12ms)
+            ✓ Buyer graphql mutation createPO() returns 200 (86207ms)
 
       Test Suites: 1 passed, 1 total
-      Tests:       17 passed, 17 total
+      Tests:       28 passed, 28 total
       Snapshots:   0 total
-      Time:        181.74s
+      Time:        154.941s
       Ran all test suites.
-      npm run test  3.35s user 3.37s system 3% cpu 3:06.52 total
       ```
       </p>
     </details> 
