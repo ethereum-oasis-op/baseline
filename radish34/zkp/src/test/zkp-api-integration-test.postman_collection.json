@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "healthcheck",
+			"name": "health",
 			"event": [
 				{
 					"listen": "test",
@@ -42,12 +42,12 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{API_URL}}/healthcheck",
+					"raw": "{{API_URL}}/health",
 					"host": [
 						"{{API_URL}}"
 					],
 					"path": [
-						"healthcheck"
+						"health"
 					]
 				}
 			},

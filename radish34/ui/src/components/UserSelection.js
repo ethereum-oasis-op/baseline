@@ -37,7 +37,7 @@ const UserSelection = () => {
 
   const fetchHealthCheck = useCallback(async () => {
     const urlArray = apiURL.split('graphql');
-    const healthURL = `http://${urlArray[0]}api/v1/health-check`;
+    const healthURL = `http://${urlArray[0]}health`;
     const result = await fetch(healthURL);
     setData(result);
   }, [apiURL]);
