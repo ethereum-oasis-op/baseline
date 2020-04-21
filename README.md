@@ -30,8 +30,15 @@ A `Makefile` has been included for convenience; most of its targets wrap `npm`, 
 
 Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete.
 
+### On Mac
 ```
 make && make start && make test
+```
+
+### On Ubuntu
+
+```
+make -f UbuntuMakefile.mk && make start -f UbuntuMakefile.mk && make test -f UbuntuMakefile.mk
 ```
 
 ### The demo UI
