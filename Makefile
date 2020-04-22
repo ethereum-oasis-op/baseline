@@ -1,5 +1,7 @@
 # Makefile
 
+SHELL:=/bin/bash
+
 # relative path to the construction site
 radish34=./radish34
 
