@@ -94,7 +94,7 @@ If you're on linux (only tested on Ubuntu 18), you have to run the commands dire
 Install dependencies
 
 ```
-sudo apt-get install g++
+sudo apt-get install g++ build-essential
 ```
 
 To make:
