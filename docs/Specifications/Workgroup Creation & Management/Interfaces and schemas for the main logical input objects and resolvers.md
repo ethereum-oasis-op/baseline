@@ -8,11 +8,11 @@ The current version of this document is hugely influenced by the Radish34 demo u
 
 ## Logical Inputs
 
-The logical inputs in a workgroup creation and management are input parameters that have to be provided to be provided from the workgroup management body in order for certain actions to be done. The concrete inputs required by the various actions are yet to be defined in another specification. This document will highlight all the main logical inputs - Keystore, organisation config, zero-knowledge circuit verifier key, and contract artefacts.
+The logical inputs in a workgroup creation and management are input parameters that have to be provided from the workgroup management body in order for certain actions to be taken. The concrete inputs required by the various actions are yet to be defined in another specification. This document will highlight all the main logical inputs - Keystore, organisation config, zero-knowledge circuit verifier key, and contract artefacts.
 
 ## Resolvers
 
-The resolvers are objects/classes designed to allow for these logical objects to be inputted in different formats and through different mediums and be transformed(resolved) into a format(schema) that the baseline tools will be able to work with.
+The resolvers are objects/classes designed to allow for these logical objects to be input in different formats and through different mediums and be transformed(resolved) into a format(schema) that the baseline tools will be able to work with.
 
 The resolvers are a point of extensibility allowing for additional community-created resolvers to be developed as long as they adhere to the specific logical input resolver interface.
 
@@ -24,7 +24,7 @@ The keystores are containers of signing keys. These keys provide certain abiliti
 
 ## Keystore resolver interface
 
-The keystore resolver defines an abstract interface to be implemented. This interface governs how keystores are to be inputted in the baseline tooling and what the expected outputs are.
+The keystore resolver defines an abstract interface to be implemented. This interface governs how keystores are to be input in the baseline tooling and what the expected outputs are.
 
 Any keystore resolver should be a class that adheres to the following interface:
 
@@ -40,7 +40,7 @@ The `extraParams` are additional resolver-specific customization params passed a
 
 ### KeystorePathResolver
 
-As part of the Radish34, a `KeystorePathResolver` is to be developed. This resolver would adhere to the `KeystoreResolver` interface.
+An inbuilt `KeystorePathResolver` is to be developed. This resolver would adhere to the `KeystoreResolver` interface.
 
     class KeystorePathResolver {
     	constructor(keystorePath) { ... }
@@ -94,7 +94,7 @@ More info:
 
 ## Contract artifacts resolver interface
 
-The contract artefacts resolver defines an abstract interface to be implemented. This interface governs how contracts are to be inputted in the baseline tooling and what the expected outputs are.
+The contract artefacts resolver defines an abstract interface to be implemented. This interface governs how contracts are to be input in the baseline tooling and what the expected outputs are.
 
 Any contract artefacts resolver should be a class that adheres to the following interface:
 
@@ -158,7 +158,7 @@ The `extraParams` are additional resolver-specific customization params passed a
 
 ## Inbuilt Baseline verifier key resolvers
 
-### ContractArtifactsPathResolver
+### VerifierKeyPathResolver
 
 `VerifierKeyPathResolver` is to be developed. This resolver would adhere to the `VerifierKeyResolver` interface.
 
@@ -201,7 +201,7 @@ The organisation config has to adhere to the following schema.
 
 ## Organisation config resolver interface
 
-The organisation config resolver defines an abstract interface to be implemented. This interface governs how organisation configs are to be inputted in the baseline tooling and what the expected outputs are.
+The organisation config resolver defines an abstract interface to be implemented. This interface governs how organisation configs are to be input in the baseline tooling and what the expected outputs are.
 
 Any organisation config resolver should be a class that adheres to the following interface:
 
