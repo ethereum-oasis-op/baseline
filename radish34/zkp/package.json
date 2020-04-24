@@ -32,6 +32,7 @@
     "express": "^4.17.1",
     "mongodb": "^3.5.5",
     "supertest": "^4.0.2",
+    "ts-natsutil": "1.0.6",
     "yargs": "15.1.0"
   },
   "devDependencies": {
@@ -47,7 +48,7 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "output/*"
+      "*"
     ]
   },
   "jest": {

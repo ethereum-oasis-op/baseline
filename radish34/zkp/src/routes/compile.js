@@ -6,6 +6,8 @@ import zokrates from '@eyblockchain/zokrates.js';
 import { jsonifyVk } from '../utils/jsonifyVk';
 import { saveVerificationKeyToDB } from '../utils/fileToDB';
 
+const defaultProvingScheme = 'gm17';
+
 const router = express.Router();
 
 const publishArtifacts = (artifacts, bearerJWT) => {
@@ -26,43 +28,49 @@ const publishArtifacts = (artifacts, bearerJWT) => {
 
 router.post('/', async (req, res, next) => {
   req.setTimeout(900000);
-  const { filepath, jwt } = req.body;
+  const { name, source, scheme, jwt } = req.body;
   try {
-    const filename = path.basename(filepath, '.zok'); // filename without '.zok'
-    fs.mkdirSync(`./output/${filename}`, { recursive: true });
+    const circuitId = path.basename(`${name}-${new Date().getTime()}`, '.zok'); // filename without '.zok'
+    fs.mkdirSync(`/app/output/${circuitId}`, { recursive: true });
+    fs.writeFileSync(`/app/output/${circuitId}/${circuitId}.zok`, source);
 
     console.log('\nCompile...');
-    await zokrates.compile(`./circuits/${filepath}`, `./output/${filename}`, `${filename}_out`);
-    const source = fs.readFileSync(`./circuits/${filepath}`);
+    await zokrates.compile(
+      `/app/output/${circuitId}/${circuitId}.zok`,
+      `/app/output/${circuitId}`,
+      `${circuitId}_out`,
+    );
 
     console.log('\nSetup...');
     await zokrates.setup(
-      `./output/${filename}/${filename}_out`,
-      `./output/${filename}`,
-      `${process.env.PROVING_SCHEME}`,
-      `${filename}_vk`,
-      `${filename}_pk`,
+      `/app/output/${circuitId}/${circuitId}_out`,
+      `/app/output/${circuitId}`,
+      `${scheme || process.env.PROVING_SCHEME || defaultProvingScheme}`,
+      `${circuitId}_vk`,
+      `${circuitId}_pk`,
     );
 
     console.log('\nFormat VK...');
     await zokrates.exportVerifier(
-      `./output/${filename}/${filename}_vk.key`,
-      `./output/${filename}`,
-      `Verifier_${filename}.sol`,
-      `${process.env.PROVING_SCHEME}`,
+      `/app/output/${circuitId}/${circuitId}_vk.key`,
+      `/app/output/${circuitId}`,
+      `Verifier_${circuitId}.sol`,
+      `${scheme || process.env.PROVING_SCHEME || defaultProvingScheme}`,
     );
 
-    const proofRaw = fs.readFileSync(`./output/${filename}/${filename}_out.ztf`);
-    const provingKey = fs.readFileSync(`./output/${filename}/${filename}_pk.key`);
-    const verifierSolc = fs.readFileSync(`./output/${filename}/Verifier_${filename}.sol`);
-    const vkJson = await jsonifyVk(`./output/${filename}/Verifier_${filename}.sol`);
-    const vk = await saveVerificationKeyToDB(filename, JSON.parse(vkJson));
+    const proofRaw = fs.readFileSync(`/app/output/${circuitId}/${circuitId}_out.ztf`);
+    const provingKey = fs.readFileSync(`/app/output/${circuitId}/${circuitId}_pk.key`);
+    const verifierSolc = fs.readFileSync(`/app/output/${circuitId}/Verifier_${circuitId}.sol`);
+    const vkJson = await jsonifyVk(`/app/output/${circuitId}/Verifier_${circuitId}.sol`);
+    const vk = await saveVerificationKeyToDB(circuitId, JSON.parse(vkJson));
 
     console.log(`\nComplete`);
     const response = { verificationKey: vk };
 
+    // FIXME-- upload provingKey to IPFS or similar...
+
     const artifacts = {
-      key_id: filename,
+      circuit: circuitId,
       proof: proofRaw,
       proving_key: provingKey,
       source: source.toString(),
@@ -74,6 +82,7 @@ router.post('/', async (req, res, next) => {
 
     return res.send(response);
   } catch (err) {
+    console.log(err);
     return next(err);
   }
 });

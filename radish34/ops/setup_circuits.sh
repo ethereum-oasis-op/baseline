@@ -24,3 +24,11 @@ if [ ! -d ./zkp/output/createPO ]; then
     curl -d '{"filepath": "business-logic/createPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
     printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
 fi
+
+if [ ! -d ./zkp/output/createAgreement ]; then
+    sleep 5
+
+    printf "\n${GREEN}*** Running setup for createAgreement ***${NC}\n"
+    curl -d '{"filepath": "business-logic/createAgreement.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+    printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
+fi

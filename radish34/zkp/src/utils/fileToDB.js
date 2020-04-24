@@ -56,12 +56,12 @@ export const saveProofToDB = async (docID, keyID, filePath) => {
 export const checkForNewVks = async () => {
   console.log(`Checking for new verification keys...`);
   let newVkCount = 0;
-  const circuitNames = fs.readdirSync(`/app/output/`);
+  const circuitNames = fs.readdirSync(`./output/`);
 
   // eslint-disable-next-line no-restricted-syntax
   for (const circuitName of circuitNames) {
-    const verifierPath = `/app/output/${circuitName}/Verifier_${circuitName}.sol`;
-    const vkPath = `/app/output/${circuitName}/${circuitName}_vk.key`;
+    const verifierPath = `./output/${circuitName}/Verifier_${circuitName}.sol`;
+    const vkPath = `./output/${circuitName}/${circuitName}_vk.key`;
 
     if (!(fs.existsSync(vkPath) && fs.existsSync(verifierPath))) continue; // eslint-disable-line no-continue
 
