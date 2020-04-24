@@ -26,10 +26,12 @@ After you've done that, log in to the Github package registry by running
 
 ### Setup
 
+The steps below illustrate the individual steps, that can be viewed as the breakdown of the `make` scripts.
+
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
-2. Run `npm i && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
-3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
-4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
+2. Run `make npm-install` at the root level of the repo. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
+3. Run `cd radish34/ && docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
+4. Run `cd radish34/ && npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
     <details> 
       <summary>Example logs</summary>
       <p> 
@@ -49,8 +51,8 @@ After you've done that, log in to the Github package registry by running
       </p>
     </details> 
 
-5. Run `npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
-6. Run `npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
+5. Run `cd radish34/ && npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
+6. Run `cd radish34/ && npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
     - This docker container first deploys both the Registry contract and the OrgRegistry contract.
     - Then it registers (1) Buyer and (2) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
     - The goal of deployment is to initialize the Radish34 system by pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart contract, which holds the organization metadata to thus enable any ongoing procurement operations.
@@ -122,7 +124,7 @@ After you've done that, log in to the Github package registry by running
       </p>
     </details> 
 
-7. Run `docker-compose up -d && docker-compose restart`
+7. Run `cd radish34/ && docker-compose up -d && docker-compose restart`
    - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
    - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are api-{role} and ui. For example: `docker-compose logs -f api-buyer api-supplier1 api-supplier2 ui`
@@ -149,7 +151,7 @@ After you've done that, log in to the Github package registry by running
       </p>
     </details> 
 
-8. Run integration tests: `npm run test`. ** This takes about 3-5 minutes to run to completion **
+8. Run integration tests: `cd radish34/ && npm run test`. ** This takes about 3-5 minutes to run to completion **
     <details> 
       <summary>Example logs</summary>
       <p> 
