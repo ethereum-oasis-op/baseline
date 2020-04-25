@@ -1,40 +1,45 @@
 import express from 'express';
+import fs from 'fs';
 import zokrates from '@eyblockchain/zokrates.js';
 import { saveProofToDB } from '../utils/fileToDB';
+
+const defaultProvingScheme = 'gm17';
 
 const router = express.Router();
 
 router.post('/', async (req, res, next) => {
   req.setTimeout(900000);
-  const { docId, filename, inputs, outputDirectoryPath, proofFileName } = req.body;
+  const { docId, filename, inputs, scheme, outputDirectoryPath, proofFileName } = req.body;
   console.log(`\nReceived request to /generateProof`);
   console.log(req.body);
 
   const opts = {};
   opts.createFile = true;
-  opts.directory = `./output/${filename}` || outputDirectoryPath;
+  opts.directory = `/app/output/${filename}` || outputDirectoryPath;
   opts.fileName = `${filename}_proof.json` || proofFileName;
+  fs.mkdirSync(opts.directory, { recursive: true });
+
   try {
     console.log('\nCompute witness...');
     await zokrates.computeWitness(
-      `./output/${filename}/${filename}_out`,
-      `./output/${filename}/`,
+      `/app/output/${filename}/${filename}_out`,
+      `/app/output/${filename}/`,
       `${filename}_witness`,
       inputs,
     );
 
     console.log('\nGenerate proof...');
     await zokrates.generateProof(
-      `./output/${filename}/${filename}_pk.key`,
-      `./output/${filename}/${filename}_out`,
-      `./output/${filename}/${filename}_witness`,
-      `${process.env.PROVING_SCHEME}`,
+      `/app/output/${filename}/${filename}_pk.key`,
+      `/app/output/${filename}/${filename}_out`,
+      `/app/output/${filename}/${filename}_witness`,
+      `${scheme || process.env.PROVING_SCHEME || defaultProvingScheme}`,
       opts,
     );
     const storedProof = await saveProofToDB(
       docId,
       filename,
-      `./output/${filename}/${filename}_proof.json`,
+      `/app/output/${filename}/${filename}_proof.json`,
     );
 
     console.log(`\nComplete`);
@@ -49,7 +54,7 @@ router.post('/', async (req, res, next) => {
 router.post('/:circuitId', async (req, res, next) => {
   req.setTimeout(900000);
   const { circuitId } = req.params;
-  const { docId, inputs } = req.body;
+  const { docId, inputs, scheme } = req.body;
   console.log(`\nReceived request to /generateProof`);
 
   const timestamp = new Date().getTime();
@@ -58,35 +63,38 @@ router.post('/:circuitId', async (req, res, next) => {
 
   const opts = {};
   opts.createFile = true;
-  opts.directory = `./output/${circuitId}`;
+  opts.directory = `/app/output/${circuitId}/${timestamp}`;
   opts.fileName = proofFilename;
+  fs.mkdirSync(opts.directory, { recursive: true });
+
   try {
     console.log('\nCompute witness...');
     await zokrates.computeWitness(
-      `./output/${circuitId}/${circuitId}_out`,
-      `./output/${circuitId}/`,
+      `/app/output/${circuitId}/${circuitId}_out`,
+      `/app/output/${circuitId}/${timestamp}`,
       witnessFilename,
       inputs,
     );
 
     console.log('\nGenerate proof...');
     await zokrates.generateProof(
-      `./output/${circuitId}/${circuitId}_pk.key`,
-      `./output/${circuitId}/${circuitId}_out`,
-      `./output/${circuitId}/${witnessFilename}`,
-      `${process.env.PROVING_SCHEME}`,
+      `/app/output/${circuitId}/${circuitId}_pk.key`,
+      `/app/output/${circuitId}/${circuitId}_out`,
+      `/app/output/${circuitId}/${timestamp}/${witnessFilename}`,
+      `${scheme || process.env.PROVING_SCHEME || defaultProvingScheme}`,
       opts,
     );
-    const storedProof = await saveProofToDB(
+
+    const proof = await saveProofToDB(
       docId,
       circuitId,
-      `./output/${circuitId}/${proofFilename}`,
+      `/app/output/${circuitId}/${timestamp}/${proofFilename}`,
     );
 
     console.log(`\nComplete`);
     console.log(`\nResponding with proof:`);
-    console.log(storedProof);
-    return res.send(storedProof);
+    console.log(proof);
+    return res.send(proof);
   } catch (err) {
     return next(err);
   }
