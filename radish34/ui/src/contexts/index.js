@@ -16,7 +16,8 @@ import { MSAProvider } from './msa-context';
 import { ToastrProvider } from './ToastrContext';
 import { PurchaseOrderProvider } from './purchase-order-context';
 
-let uri = 'localhost:8001/graphql';
+
+  // if you want radish34 to be seen outside of localhost (ie. Azure, AWS, etc.) replace let uri = 'localhost:8001/graphql' with let uri = 'public ip address:8001/graphql'
 
 if (window.localStorage.getItem('api')) {
   uri = window.localStorage.getItem('api');
