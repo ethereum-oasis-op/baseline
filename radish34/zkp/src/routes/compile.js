@@ -58,7 +58,7 @@ router.post('/', async (req, res, next) => {
       `${scheme || process.env.PROVING_SCHEME || defaultProvingScheme}`,
     );
 
-    const proofRaw = fs.readFileSync(`/app/output/${circuitId}/${circuitId}_out.ztf`);
+    const zokTextFormat = fs.readFileSync(`/app/output/${circuitId}/${circuitId}_out.ztf`);
     const provingKey = fs.readFileSync(`/app/output/${circuitId}/${circuitId}_pk.key`);
     const verifierSolc = fs.readFileSync(`/app/output/${circuitId}/Verifier_${circuitId}.sol`);
     const vkJson = await jsonifyVk(`/app/output/${circuitId}/Verifier_${circuitId}.sol`);
@@ -71,11 +71,11 @@ router.post('/', async (req, res, next) => {
 
     const artifacts = {
       circuit: circuitId,
-      proof: proofRaw,
       proving_key: provingKey,
       source: source.toString(),
       verifier_solc: verifierSolc,
       verification_key: JSON.parse(vkJson),
+      ztf: zokTextFormat,
     };
 
     publishArtifacts(artifacts, jwt);
