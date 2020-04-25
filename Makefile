@@ -1,5 +1,7 @@
 # Makefile
 
+SHELL:=/bin/bash
+
 # relative path to the construction site
 radish34=./radish34
 
@@ -88,8 +90,6 @@ test:
 	@pushd ${radish34} && \
 	npm run await-stack && \
 	npm run test && \
-	npm run postman-test-zkp-api && \
-	npm run postman-integration-test && \
 	popd
 
 zk-circuits:

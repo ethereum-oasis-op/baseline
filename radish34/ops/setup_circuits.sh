@@ -7,7 +7,7 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 docker-compose up --no-recreate -d zkp
-./ops/await_tcp.sh -t 30 -h localhost -p 8080
+./ops/await_stack.sh
 
 if [ ! -d ./zkp/output/createMSA ]; then
     sleep 5

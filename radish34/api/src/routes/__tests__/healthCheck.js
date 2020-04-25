@@ -4,9 +4,9 @@ import app from '../../app';
 const supertest = SuperTest(app);
 
 describe('Health Check', () => {
-  describe('GET /health-check', () => {
+  describe('GET /health', () => {
     it('should resolve a 200 always', async () => {
-      await supertest.get('/health-check').expect(200);
+      await supertest.get('/health').expect(200);
     });
   });
 });

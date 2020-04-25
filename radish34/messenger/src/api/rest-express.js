@@ -7,23 +7,13 @@ const Config = require('../../config');
 let messenger;
 
 /**
- * @api {get} /health-check Check status of messenger system
+ * @api {get} /health Check the health status and the Web3 client connection
  * @apiName HealthCheck
- * @apiGroup Health
- */
-router.get('/health-check', async (req, res) => {
-  res.status(200);
-  res.send({ serverAlive: true });
-});
-
-/**
- * @api {get} /health-check/client Check the status of the Web3 client connection
- * @apiName ClientHealthCheck
  * @apiGroup Health
  * @apiSuccess {Object} connected If client is connected
  * @apiSuccess {Object} type The type of messaging client connected
  */
-router.get('/health-check/client', async (req, res) => {
+router.get('/health', async (req, res) => {
   const result = await messenger.isConnected();
   res.status(200);
   res.send({ connected: result, type: Config.messagingType });

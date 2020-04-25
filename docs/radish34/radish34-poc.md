@@ -55,8 +55,6 @@ radish-34_radish-zkp_1 is up-to-date
 
    ```text
       > docker-compose run --rm radish-deploy sh deploy.sh
-      Patiently waiting 10 seconds for ganache container to init ...
-      Checking for ganache ...
       ✅  ERC1820Registry deployed:  0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397
       ✅  OrgRegistry deployed:  0x31088fd0eede771d5bda1558e06a666Cd9BF110c
       ✅  BN256G2 library deployed:  0x8f17969A8dc9cbAe2EB98541F33c7c396f615241

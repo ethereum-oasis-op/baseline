@@ -1,24 +1,26 @@
 const request = require('request');
-const { poll } = require('../utils/poll');
-
-const url = process.env.ZKP_URL;
+const {
+  poll
+} = require('./../utils/poll');
 
 // TODO: create config for this value?
 const POLLING_FREQUENCY = 6000; // milliseconds
 
 /**
 GET the verification key for a particular circuit
+@param {string} zkpUrl Url to the zkp service
 @param {string} id is the name of the circuit, e.g. 'createMSA'
 */
-async function getVk(id) {
-  console.log(`\nCalling /vk(${id})`);
+async function getVk(zkpUrl, id) {
   return new Promise((resolve, reject) => {
     const options = {
-      url: `${url}/vk`,
+      url: `${zkpUrl}/vk`,
       method: 'GET',
       json: true,
       // headers: ,
-      body: { id },
+      body: {
+        id
+      },
     };
     request(options, (err, res, body) => {
       if (err) reject(err);
@@ -33,9 +35,12 @@ GET the verification key for a particular circuit.
 */
 const getVkPollingFunction = async args => {
   try {
-    const { id } = args;
+    const {
+      id,
+      zkpUrl
+    } = args;
 
-    const response = await getVk(id);
+    const response = await getVk(zkpUrl, id);
 
     return response;
   } catch (err) {
@@ -46,29 +51,20 @@ const getVkPollingFunction = async args => {
   }
 };
 
-/**
-GET the verification key for a particular circuit
-@param {Array(string)} circuitNames - An array of circuit names e.g. for 'createMSA.zok', the circuitName is 'createMSA'
-*/
-async function getVks(circuitNames) {
-  const vks = await Promise.all(
-    circuitNames.map(async circuitName => {
-      try {
-        const { vk } = await poll(getVkPollingFunction, POLLING_FREQUENCY, {
-          id: circuitName,
-        });
-        // console.log(`\nResponse from zkp microservice for ${circuitName}:`);
-        // console.log(vk);
-        return vk;
-      } catch (err) {
-        throw new Error(`Could not get the vk for ${circuitName}`);
-      }
-    }),
-  );
-
-  return vks;
+async function pollVk(zkpUrl, circuitName) {
+  try {
+    const {
+      vk
+    } = await poll(getVkPollingFunction, POLLING_FREQUENCY, {
+      zkpUrl,
+      id: circuitName,
+    });
+    return vk;
+  } catch (err) {
+    throw new Error(`Could not get the vk for ${circuitName}`);
+  }
 }
 
 module.exports = {
-  getVks,
+  pollVk,
 };

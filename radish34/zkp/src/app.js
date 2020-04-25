@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '2mb' }));
 app.use(bodyParser.urlencoded({ limit: '2mb', extended: false }));
 
-app.get('/healthcheck', (req, res) => res.sendStatus(200));
+app.get('/health', (req, res) => res.sendStatus(200));
 app.use('/generate-keys', generateKeys);
 app.use('/generate-proof', generateProof);
 app.use('/vk', vk);

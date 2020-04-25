@@ -6,4 +6,4 @@ if [ ! -d ./../config ]; then
     cp -r ./src/config/keystore ./../config
 fi
 
-node ./src/deploy.js done
+npm run deploy done

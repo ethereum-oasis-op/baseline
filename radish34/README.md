@@ -26,10 +26,12 @@ After you've done that, log in to the Github package registry by running
 
 ### Setup
 
+The steps below illustrate the individual steps, that can be viewed as the breakdown of the `make` scripts.
+
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
-2. Run `npm i && npm run postinstall`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
-3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
-4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
+2. Run `make npm-install` at the root level of the repo. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
+3. Run `cd radish34/ && docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
+4. Run `cd radish34/ && npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
     <details> 
       <summary>Example logs</summary>
       <p> 
@@ -49,8 +51,8 @@ After you've done that, log in to the Github package registry by running
       </p>
     </details> 
 
-5. Run `npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
-6. Run `npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
+5. Run `cd radish34/ && npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
+6. Run `cd radish34/ && npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
     - This docker container first deploys both the Registry contract and the OrgRegistry contract.
     - Then it registers (1) Buyer and (2) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
     - The goal of deployment is to initialize the Radish34 system by pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart contract, which holds the organization metadata to thus enable any ongoing procurement operations.
@@ -62,105 +64,67 @@ After you've done that, log in to the Github package registry by running
       <p> 
 
       ```
-      > docker-compose run --rm radish-deploy sh deploy.sh
       Patiently waiting 10 seconds for ganache container to init ...
       Checking for ganache ...
-      ✅  ERC1820Registry deployed: 0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397
-      ✅  OrgRegistry deployed: 0x31088fd0eede771d5bda1558e06a666Cd9BF110c
-      ✅  BN256G2 library deployed: 0x8f17969A8dc9cbAe2EB98541F33c7c396f615241
-      ✅  Verifier deployed: 0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3
-      ✅  Shield deployed: 0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB
-      ✅  Assigned the deployer as the manager for OrgRegistry. TxHash: 0x1689ac60fba5c25b5559e0fbca066c4063a433dec552adc9208977e161f05852
-      ✅  Set OrgRegistry as Interface Implementer for deployer. TxHash: 0x52660020dad54f7177896e16ba9e6956aa4c046e59c2bf92b53db06d387802a2
-      ✅  Retrieved all Whisper Identity for each user
-      ✅  Registered buyer in the OrgRegistry with tx hash: 0x77e39fc3398e405caaf895a2ea29966423dc8f01f0bffdc335579d0865837415
-      ✅  Registered supplier1 in the OrgRegistry with tx hash: 0xefc1142c39f95766d245eab0d7dc4fe0860fded16c4531d529e6636136888123
-      ✅  Registered supplier2 in the OrgRegistry with tx hash: 0x354c5a0745690f5c68a33f481e8c89cdbd103b24e549839374f589dc1b15c49c
-      ✅  getOrg: 3 Organizations have successfully been set up!
-      {
-      address: '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
-      name: 'Org1',
-      role: 1,
-      messagingKey: '0x04660083ec950731f412cb96cca49f55d443c370ed8e2d3d938769ce4b200ffc0e9597001574b165b4030235331de26f49b1c4ea1c03d902d2ba75302393fa050e',
-      zkpPublicKey: '0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965'
-      }
-      {
-      address: '0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f',
-      name: 'Supplier 1',
-      role: 2,
-      messagingKey: '0x047087e00ac5d68d752caab75c7107329f354a52a9e220d83a0bd14b9a76dbcc359a7e604548a48f0e9a45f5f0d9a31a2b9fa005ec5fd0cce49ccb229a6a28eaff',
-      zkpPublicKey: '0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387'
-      }
-      {
-      address: '0x3f7eB8a7d140366423e9551e9532F4bf1A304C65',
-      name: 'Supplier 2',
-      role: 2,
-      messagingKey: '0x04fa022574ff337d4e5ab9e529a9dc379c8e12fb9fb424c7c400de9ba42d9e24d9d37fb6cd88c182f9908a1451765d98c561006df44a637b9b72551f9f43dc73a7',
-      zkpPublicKey: '0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5'
-      }
-      Updated settings for buyer to include: {
-      addresses: {
-          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
-          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
-          BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
-          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
-          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
-      },
-      organization: {
-          messengerKey: '0x04660083ec950731f412cb96cca49f55d443c370ed8e2d3d938769ce4b200ffc0e9597001574b165b4030235331de26f49b1c4ea1c03d902d2ba75302393fa050e',
-          name: 'Org1',
-          role: 1,
-          zkpPublicKey: '0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965',
-          zkpPrivateKey: '0x29ae268c4e58726d63fb5b0dae75e8d70f77519d12063f1a8fa9ebec085e533d'
-      }
-      }
-      Updated settings for supplier1 to include: {
-      addresses: {
-          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
-          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
-          BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
-          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
-          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
-      },
-      organization: {
-          messengerKey: '0x047087e00ac5d68d752caab75c7107329f354a52a9e220d83a0bd14b9a76dbcc359a7e604548a48f0e9a45f5f0d9a31a2b9fa005ec5fd0cce49ccb229a6a28eaff',
-          name: 'Supplier 1',
-          role: 2,
-          zkpPublicKey: '0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387',
-          zkpPrivateKey: '0xb084bd09eea9612b5790a73d9f88bdf644d56194a410b08f6d2ae09d5fccbfe'
-      }
-      }
-      Updated settings for supplier2 to include: {
-      addresses: {
-          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
-          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
-          BN256G2: '0x8f17969A8dc9cbAe2EB98541F33c7c396f615241',
-          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
-          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
-      },
-      organization: {
-          messengerKey: '0x04fa022574ff337d4e5ab9e529a9dc379c8e12fb9fb424c7c400de9ba42d9e24d9d37fb6cd88c182f9908a1451765d98c561006df44a637b9b72551f9f43dc73a7',
-          name: 'Supplier 2',
-          role: 2,
-          zkpPublicKey: '0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5',
-          zkpPrivateKey: '0x111bc1d832ba0ea6804f031c6f0ec9550f4d2b55666c30d7b4cf532b22a45f25'
-      }
-      }
-
-      Calling /vk(createMSA)
-
-      Calling /vk(createPO)
-      Registering vk 18452423262158563026882841675284148407764318157675563070471972217739237880212,4277133668186723831235654096540406807435824845570986335989907942141598418256,14616192035444969003150436321512501628878979352937787850238113590938741010280,16177987224694778648394767874211717524305731735983237888308452790599874831256,1379364984911720626136072585337712693683924249341665513273559476871662484580,9156758973430525230183885922794684348950481245148957809524672239190422485446,20853181206633468719848310853413619676027324855469494224326295594157686487393,9321110026344006065486305790542153704131355025977797475517112642918390032489,20264675796796795709830270740195303883800970394987912963744700332878435563966,9617809250603145165440088584290061628278893233855154595575290228291958307382,5461648036022214211143369568016219712491248347178880605917470283234837405837,20267177760088363139518624979647286695343598308760404799328244803079201012712,2733093637597886369210205749822745181805572745097005975696082802272958732691,5290238555934889435703756934523226089301002621758403523617432452706499992947,8894885147880399898314634619246753739957540450191160311306953007213291775260,18820833068779199149030979951558447374152704724892152325431094507233231270030,21096788491815322535016425843114301240063117688587680689790922945196138729717,19286142148252889888118610521758324658736978834444902653793263786010395781024,11203539013152302732163359604934774718305715328124835655309460996779078298354,3308220779682536962176390239229157209211243587623820368961890312836741680647 against txTypeEnumUint 0
-      ✅  Uploaded verification key for createMSA. TxHash: 0x8967d201803467a818c332905d355050bdf7b698917276627d67823bbd2caa02
-      Registering vk 20522682982920878954594520278759298871294760675964764796460214555440489273133,1355684326038743620561541607821672442687007980490919311671186212947595425025,17127269861568797267541709762677184095889927147335292037601863383053224682011,12678116670384323664497410100274034092546770156661828399087071137612145079423,5977218531577562924693023811035666278242250033114290451697255598040978699747,11910898444400756692554841800903798844456503196287448234655645015860119566951,18835456375812065002333445288481415807355768040920100504693284277397399495300,7756334174082466369268236005053638756106862232385752031594640362579538174549,20392389658810310087927513615796829306670593413799627867169141543694610686447,20926253247509591845191645741470653974460714522358362695848905641897492888805,8055056222854724947534229729362938900393380623061729822034177100602552411684,8841305248627005490684435068554866336037281409872841166256499053913855667663,17393617880011961063722177156687167597785515650731345358017594453156801841750,9134812782946246477382749501756521033191131648169155399660755523243809924985,5874460545438495447360509618099907294916375005598494526462684352297251031338,16069591515142379111204703045096550819428436131949339386521861704948485407043,11962120239408032609083758269415656400682277263025948496448227609373701557647,2998751751135582910454267866182036306022286179637831158023751086688017088453,17361132210337219581729837662000018081706586352038127359850835578169064024627,16048207551507412141663801408246194149328805387019287537086161573266055846336 against txTypeEnumUint 1
-      ✅  Uploaded verification key for createPO. TxHash: 0x1cc5f0e43b810394e655cafc889b1191d5a874d1d3847269182662df13479e9f
+      ✅  ERC1820Registry deployed: 0x8CFd85A850E7fB9B37Ba2849012d2689AB293522
+      ✅  OrgRegistry deployed: 0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862
+      ✅  Verifier deployed: 0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2
+      ✅  Shield deployed: 0xE5a69331D7ba036cAAe587Ad610299e0e45F3309
+      ℹ️   Registering workgroup member: buyer
+      ✅  Registered buyer in the OrgRegistry with transaction hash: 0x6af81492ef5228f6e166b84e22697c667be15f94a001683ec6d61608c47bf6c5
+      ✅  Registered OrgRegistry as IOrgRegistry for buyer with transaction hash: 0x3cd5c5c0e9a1346ac21de4f702b1fb6f87eb4ecdc0da0a5491baa4d6bc8e5f6a
+      ✅  Registered Verifier as IVerifier for buyer with transaction hash: 0x1009e3ee6b081ee080e64c8ea08e2cae71ad9359b28314918152a678d91715a1
+      ✅  Registered Shield as IShield for buyer with transaction hash: 0x8b672ca878482791275a2180a0c679ae984bdfa2ef84fcd9282023f7f79eb66d
+      ℹ️   Registering workgroup member: supplier1
+      ✅  Registered supplier1 in the OrgRegistry with transaction hash: 0x562ed3fe5c8822d4525c6fd6aa866b81b965953781064d3fe946add78b3061aa
+      ✅  Registered OrgRegistry as IOrgRegistry for supplier1 with transaction hash: 0x08b97a912d4011392cf00f1a4adde4f4b56395290a9d2e33c0e22c639cbc2108
+      ✅  Registered Verifier as IVerifier for supplier1 with transaction hash: 0x844aee6e13e0ec128f6c408a41e49c7f6d141945cc20cb2bcf54e021c38b0282
+      ✅  Registered Shield as IShield for supplier1 with transaction hash: 0x7bdcb116d10ed41dd143cb065f780ee1fc154b08bdb46897403e4b4a2e371173
+      ℹ️   Registering workgroup member: supplier2
+      ✅  Registered supplier2 in the OrgRegistry with transaction hash: 0xec3a6cbe4f8f42cc6d5a6bb89a1413d5784bfbda9818b7dda67b778d86a449ae
+      ✅  Registered OrgRegistry as IOrgRegistry for supplier2 with transaction hash: 0xf2231be5abc5f39e4dc254a8ece5e9bc6866d9ca4dedef187da5c046e29f487e
+      ✅  Registered Verifier as IVerifier for supplier2 with transaction hash: 0xf9a836ad9e5c5c0e1134812812c735cef73fbe7b694010b7ebc95847abd1d247
+      ✅  Registered Shield as IShield for supplier2 with transaction hash: 0x855ccb81c39698ef453ec10419182323b308fc364bdf49f18f28bf1d01ce7836
+      ✅  Registered the Radish34 interface in the OrgRegistry with transaction hash: 0x29c7c0e8b145fb63fdfc1d8a3dc76cead21ab65ae6f1cf69aa5bdc8420614716
+      ℹ️   Registering zkp verification keys
+      ✅  Registered verification key for createMSA with transaction hash: 0xa391e86ebd7d3767755e5dfc605f9977e38b556261b519816c971c0fccee0b57
+      ✅  Registered verification key for createPO with transaction hash: 0x8ed5166cedf673ced7fa16d75fa05911e2d1947ca99ee170301a223211b8d267
+      ℹ️   Network information:
+      ✅  Radish network of 3 organizations have successfully been set up!
+      ✅  Information about buyer: 
+      Organisation Address: 0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41
+      Organisation Name: Org1
+      Organisation Role: 1
+      Organisation MessagingKey: 0x04b6e809d37d1e8544e1ff4b26cdb4476b36a59a412e7870fccae994880245401f38fd971cee0c1c1c7eb6a02a5fbe976b7a7fde6088bd1b35129f17a805e256d9
+      Organisation zkpPublicKey: 0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965
+      ✅  Information about supplier1: 
+      Organisation Address: 0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f
+      Organisation Name: Supplier 1
+      Organisation Role: 2
+      Organisation MessagingKey: 0x04fdd6b03524fe9116f274d25bc85c523e138281a2156bdbdfeab34dd214c09d9496ef7b4ed3d4a160124dc89f48df4b174cf8ac7de5de778f933a0afb65f0b213
+      Organisation zkpPublicKey: 0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387
+      ✅  Information about supplier2: 
+      Organisation Address: 0x3f7eB8a7d140366423e9551e9532F4bf1A304C65
+      Organisation Name: Supplier 2
+      Organisation Role: 2
+      Organisation MessagingKey: 0x04caa2fda8e260d1d1d6c482979c931414e9ecfd8c7d1b452bb0b5a7703571e81b21eb85809a842af0adcfbf5f2f951352109fcee7a243dbe418c17d63fb9c990d
+      Organisation zkpPublicKey: 0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5
+      ℹ️   Saving settings to config file for: buyer
+      Updated settings in file /app/src/config/config-buyer.json
+      ✅  Saved information about buyer: {"rpcProvider":"http://ganache:8545","organization":{"messengerKey":"0x04b6e809d37d1e8544e1ff4b26cdb4476b36a59a412e7870fccae994880245401f38fd971cee0c1c1c7eb6a02a5fbe976b7a7fde6088bd1b35129f17a805e256d9","name":"Org1","role":1,"zkpPublicKey":"0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965","zkpPrivateKey":"0x29ae268c4e58726d63fb5b0dae75e8d70f77519d12063f1a8fa9ebec085e533d"},"addresses":{"ERC1820Registry":"0x8CFd85A850E7fB9B37Ba2849012d2689AB293522","OrgRegistry":"0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862","Verifier":"0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2","Shield":"0xE5a69331D7ba036cAAe587Ad610299e0e45F3309"}}
+      ℹ️   Saving settings to config file for: supplier1
+      Updated settings in file /app/src/config/config-supplier1.json
+      ✅  Saved information about supplier1: {"rpcProvider":"http://ganache:8545","organization":{"messengerKey":"0x04fdd6b03524fe9116f274d25bc85c523e138281a2156bdbdfeab34dd214c09d9496ef7b4ed3d4a160124dc89f48df4b174cf8ac7de5de778f933a0afb65f0b213","name":"Supplier 1","role":2,"zkpPublicKey":"0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387","zkpPrivateKey":"0xb084bd09eea9612b5790a73d9f88bdf644d56194a410b08f6d2ae09d5fccbfe"},"addresses":{"ERC1820Registry":"0x8CFd85A850E7fB9B37Ba2849012d2689AB293522","OrgRegistry":"0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862","Verifier":"0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2","Shield":"0xE5a69331D7ba036cAAe587Ad610299e0e45F3309"}}
+      ℹ️   Saving settings to config file for: supplier2
+      Updated settings in file /app/src/config/config-supplier2.json
+      ✅  Saved information about supplier2: {"rpcProvider":"http://ganache:8545","organization":{"messengerKey":"0x04caa2fda8e260d1d1d6c482979c931414e9ecfd8c7d1b452bb0b5a7703571e81b21eb85809a842af0adcfbf5f2f951352109fcee7a243dbe418c17d63fb9c990d","name":"Supplier 2","role":2,"zkpPublicKey":"0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5","zkpPrivateKey":"0x111bc1d832ba0ea6804f031c6f0ec9550f4d2b55666c30d7b4cf532b22a45f25"},"addresses":{"ERC1820Registry":"0x8CFd85A850E7fB9B37Ba2849012d2689AB293522","OrgRegistry":"0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862","Verifier":"0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2","Shield":"0xE5a69331D7ba036cAAe587Ad610299e0e45F3309"}}
       ----------------- Completed  -----------------
       Please restart the radish-apis for the config to take effect
       ```
       </p>
     </details> 
 
-7. Run `docker-compose up -d && docker-compose restart`
+7. Run `cd radish34/ && docker-compose up -d && docker-compose restart`
    - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
    - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are api-{role} and ui. For example: `docker-compose logs -f api-buyer api-supplier1 api-supplier2 ui`
@@ -187,69 +151,87 @@ After you've done that, log in to the Github package registry by running
       </p>
     </details> 
 
-8. Run integration tests: `npm run test`. ** This takes about 3-5 minutes to run to completion **
+8. Run integration tests: `cd radish34/ && npm run test`. ** This takes about 3-5 minutes to run to completion **
     <details> 
       <summary>Example logs</summary>
       <p> 
 
       ```
       > NODE_ENV=test jest --verbose --runInBand --forceExit
+        
+        console.log __tests__/integration.test.js:487
+          Waiting for new MSA commitment in Shield contract. This can take up to 5 minutes...
 
-      console.log __tests__/integration.test.js:287
-          This test can take up to 10 minutes to run. It will provide frequent status updates
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 0
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 0
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 1
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 1
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 2
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 2
+        console.log __tests__/integration.test.js:490
+          Checking for non-null MSA index, attempt: 3
 
-      console.log __tests__/integration.test.js:290
-          Checking for non-null msa index, attempt: 3
+        console.log __tests__/integration.test.js:495
+          ...MSA commitment test complete.
 
-      console.log __tests__/integration.test.js:295
-          Test complete
+        console.log __tests__/integration.test.js:527
+          Buyer creating new PO for Supplier2. This test takes a few minutes...
 
-      PASS  __tests__/integration.test.js (181.696s)
-      Check that containers are ready
+      PASS  __tests__/integration.test.js (154.892s)
+        Get organization settings from config files
+          ✓ Buyer config retrieved (2ms)
+          ✓ Supplier1 config retrieved (1ms)
+          ✓ Supplier2 config retrieved
+        Check that containers are ready
           Buyer containers
-            ✓ Buyer messenger GET /health-check returns 200 (13ms)
-            ✓ Buyer radish-api REST server GET /health-check returns 200 (16ms)
-          Supplier containers
-            ✓ Supplier messenger GET /health-check returns 200 (6ms)
-            ✓ Supplier radish-api REST server GET /health-check returns 200 (12ms)
-      Buyer sends new RFP to supplier
+            ✓ Buyer messenger GET /health returns 200 (28ms)
+            ✓ Buyer radish-api REST server GET /health returns 200 (19ms)
+          Supplier1 containers
+            ✓ Supplier1 messenger GET /health returns 200 (7ms)
+            ✓ Supplier1 radish-api REST server GET /health returns 200 (21ms)
+          Supplier2 containers
+            ✓ Supplier2 messenger GET /health returns 200 (5ms)
+            ✓ Supplier2 radish-api REST server GET /health returns 200 (15ms)
+        Buyer sends new RFP to both suppliers
           Retrieve identities from messenger
-            ✓ Supplier messenger GET /identities (7ms)
-            ✓ Buyer messenger GET /identities (6ms)
+            ✓ Buyer messenger GET /identities (7ms)
+            ✓ Supplier2 messenger GET /identities (7ms)
           Create new RFP through buyer radish-api
-            ✓ Buyer graphql mutation createRFP() returns 400 withOUT sku (46ms)
-            ✓ Buyer graphql mutation createRFP() returns 200 (77ms)
+            ✓ Buyer graphql mutation createRFP() returns 400 withOUT sku (75ms)
+            ✓ Buyer graphql mutation createRFP() returns 200 (101ms)
           Check RFP existence through radish-api queries
-            ✓ Buyer graphql query rfp() returns 200 (23ms)
-            ✓ Supplier graphql query rfp() returns 200 (2116ms)
-          Check RFP contents through radish-api query
-            ✓ Buyer rfp.recipients.origination contents are correct (25ms)
-            ✓ Supplier messenger has raw message that delivered RFP from buyer (11ms)
-      Buyer creates MSA, signs it, sends to supplier, supplier responds with signed MSA
-          Create new MSA through buyer radish-api
-            ✓ Buyer graphql mutation createMSA() returns 400 without sku (11ms)
-            ✓ Buyer graphql mutation createMSA() returns 200 (447ms)
-            ✓ After a while, the commitment index should not be null (60131ms)
-      Buyer creates PO
+            ✓ Buyer graphql query rfp() returns 200 (32ms)
+            ✓ Supplier1 graphql query rfp() returns 200 (2115ms)
+            ✓ Supplier2 graphql query rfp() returns 200 (106ms)
+          Check that RFP creation messages exists in messenger databases
+            ✓ Buyer messenger has raw message that delivered RFP to supplier1 (29ms)
+            ✓ Buyer messenger has raw message that delivered RFP to supplier2 (17ms)
+            ✓ Supplier1 messenger has raw message that delivered RFP from buyer (9ms)
+            ✓ Supplier2 messenger has raw message that delivered RFP from buyer (8ms)
+        Supplier2 sends new Proposal to buyer
+          Create new Proposal through supplier2 radish-api
+            ✓ Supplier2 graphql mutation createProposal() returns 200 (43ms)
+          Check Proposal existence through radish-api queries
+            ✓ Supplier2 graphql query proposal() returns 200 (23ms)
+            ✓ Buyer graphql query proposal() returns 200 (3062ms)
+        Buyer creates MSA, signs it, sends to Supplier2, Supplier2 responds with signed MSA
+          Buyer creates new MSA for Supplier2 through radish-api
+            ✓ Buyer graphql mutation createMSA() returns 400 without sku (16ms)
+            ✓ Buyer graphql mutation createMSA() returns 200 (411ms)
+            ✓ After a while, the commitment index should not be null (60153ms)
+        Buyer creates PO for Supplier2 based on MSA
           Create new PO through buyer radish-api
-            ✓ Buyer graphql mutation createPO() returns 400 without volume (10ms)
-            ✓ Buyer graphql mutation createPO() returns 200 (117616ms)
+            ✓ Buyer graphql mutation createPO() returns 400 without volume (12ms)
+            ✓ Buyer graphql mutation createPO() returns 200 (86207ms)
 
       Test Suites: 1 passed, 1 total
-      Tests:       17 passed, 17 total
+      Tests:       28 passed, 28 total
       Snapshots:   0 total
-      Time:        181.74s
+      Time:        154.941s
       Ran all test suites.
-      npm run test  3.35s user 3.37s system 3% cpu 3:06.52 total
       ```
       </p>
     </details> 
@@ -293,6 +275,8 @@ nvm use 11
    - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` (default is `2.0GiB`). Although not required in all cases, it is recommended to increase the swap memory to 4GB and CPU cores to 8 on Docker Preferences/Settings.
 4. Running tests
    - In some cases, while running the test suite `npm run test` there could be a socket hang up error. This is potentially due to race conditions across the different containers for the API services. To resolve this issue run `docker-compose restart api-buyer api-supplier1 api-supplier2` to get rid of errors while running the test suite.
+
+1. Check health of the containers. Running `docker ps` will show all the containers for the Radish34 demo and if they are healthy or not. To inspect the health check results of a container run the following `docker inspect --format='{{json .State.Health}}' your-container-name`
 
 ### Front-end Environment
 
