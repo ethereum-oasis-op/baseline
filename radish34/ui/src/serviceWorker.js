@@ -10,9 +10,10 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://bit.ly/CRA-PWA
 
+  // if you want radish34 to be seen outside of localhost (ie. Azure, AWS, etc.) replace window.location.hostname === 'localhost' with window.location.hostname === 'public ip address'
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
-    // [::1] is the IPv6 localhost address.
+  // [::1] is the IPv6 localhost address.
     window.location.hostname === '[::1]' ||
     // 127.0.0.1/8 is considered localhost for IPv4.
     window.location.hostname.match(
