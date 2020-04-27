@@ -14,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist', 'umd'),
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: 'baseline',
+    library: '@baseline/persistence',
     globalObject: 'this'
   },
   resolve: {

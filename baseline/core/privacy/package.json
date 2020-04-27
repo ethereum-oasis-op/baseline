@@ -1,8 +1,8 @@
 {
-  "name": "@baseline/core",
-  "version": "0.0.1",
-  "description": "Baseline protocol type and interface definitions",
-  "license": "SEE LICENSE in license.md",
+  "name": "@baseline/privacy",
+  "version": "0.0.0",
+  "description": "Baseline core privacy",
+  "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "unpkg": "./dist/umd/index.min.js",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
+    "@types/jsonwebtoken": "^8.3.4",
     "@types/node": "^12.0.10",
     "jest": "^24.9.0",
     "ts-jest": "^24.1.0",
@@ -30,7 +31,8 @@
     "tslint-config-prettier": "1.18.0",
     "tslint-plugin-prettier": "2.0.1",
     "typescript": "^3.5.2",
-    "webpack": "^4.26.0",
-    "webpack-cli": "^3.1.2"
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2"
   }
 }
