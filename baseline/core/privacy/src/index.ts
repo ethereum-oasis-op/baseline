@@ -1,0 +1,1 @@
+export { ZeroKnowledgeService } from './zkp';
