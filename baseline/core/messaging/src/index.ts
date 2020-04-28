@@ -23,21 +23,19 @@ export async function messagingClientFactory(
   provider: string,
   config?: any,
 ): Promise<IMessagingService> {
-  let messenger;
+  let service;
 
   switch (provider) {
     case messagingProviderWhisper:
-      messenger = await new WhisperService();
-      await messenger.loadIdentities();
-      await messenger.createFirstIdentity();
+      service = await new WhisperService();
       await getWeb3();
       break;
     case messagingProviderNats:
-      messenger = await natsServiceFactory(config);
+      service = await natsServiceFactory(config);
       break;
     default:
-      throw new Error('messaging type configuration required');
+      throw new Error('messaging service provider required');
   }
 
-  return messenger;
+  return service;
 }
