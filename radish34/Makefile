@@ -3,7 +3,7 @@
 SHELL:=/bin/bash
 
 # relative path to the construction site
-radish34=./radish34
+radish34=./
 
 # over time, as the radish34 use-case is abstracted/generalized into
 # the baseline protocol, the pushd/popd hacks will fade away...
