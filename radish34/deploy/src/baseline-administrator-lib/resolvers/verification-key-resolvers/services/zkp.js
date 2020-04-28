@@ -14,13 +14,9 @@ GET the verification key for a particular circuit
 async function getVk(zkpUrl, id) {
   return new Promise((resolve, reject) => {
     const options = {
-      url: `${zkpUrl}/vk`,
+      url: `${zkpUrl}/vk/${encodeURIComponent(id)}`,
       method: 'GET',
       json: true,
-      // headers: ,
-      body: {
-        id
-      },
     };
     request(options, (err, res, body) => {
       if (err) reject(err);
