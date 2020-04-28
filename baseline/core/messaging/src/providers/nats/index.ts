@@ -1,3 +1,7 @@
 import { natsServiceFactory } from 'ts-natsutil';
+import { NatsService } from './nats';
 
-// TODO
+export {
+    natsServiceFactory,
+    NatsService,
+};
