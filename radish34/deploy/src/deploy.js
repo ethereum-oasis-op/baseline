@@ -71,6 +71,7 @@ const main = async (
   console.log(`ℹ️   Registering zkp verification keys`);
   await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA');
   await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createPO');
+  await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createAgreement');
 
   console.log(`ℹ️   Network information:`);
   await printNetworkInfo(workgroupManager, radishOrganisations, pathKeystoreResolver);
