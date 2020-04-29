@@ -1,4 +1,5 @@
-import { natsServiceFactory, INatsService, NatsConfig } from 'ts-natsutil';
+import { natsServiceFactory, INatsService } from 'ts-natsutil';
+import { NatsConfig } from './config';
 import { IMessagingService } from '../..';
 
 export class NatsService implements IMessagingService {
@@ -81,6 +82,7 @@ export class NatsService implements IMessagingService {
 
   async subscribe(
     subject: string,
+    keyId: string,
     callback: (msg: any) => void,
   ): Promise<void> {
     await this.service!.subscribe(subject, (msg: any, err?: any): void => {

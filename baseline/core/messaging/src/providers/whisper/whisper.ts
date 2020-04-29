@@ -1,10 +1,10 @@
-import { winston as logger } from 'winston';
+import logger from 'winston';
 
-// const Identity = require('../../../../../../messenger-tmp/src/db/models/Identity');
-// const Message = require('../../../../../../messenger-tmp/src/db/models/Message');
+import { Identity } from '../../../../../../radish34/messenger/src/db/models/Identity';
+import { Message } from '../../../../../../radish34/messenger/src/db/models/Message';
 
-const generalUtils = require('../../../../../../messenger-tmp/src/utils/generalUtils');
-import { getWeb3, isWeb3Connected as web3Connected } from './web3Utils';
+import { forwardMessage, hasJsonStructure, storeNewMessage } from '../../../../../../radish34/messenger/src/utils/generalUtils';
+import { getWeb3, isWeb3Connected } from './web3Utils';
 
 // Useful constants
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
@@ -14,7 +14,7 @@ const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
 
 export class WhisperService {
 
-  constructor() {}
+  constructor() { }
 
   // If the Identities collection is empty, create a new Identity
   async createFirstIdentity() {
@@ -29,7 +29,7 @@ export class WhisperService {
     const web3 = await getWeb3();
     const keyId = await web3.shh.newKeyPair();
     const pubKey = await web3.shh.getPublicKey(keyId);
-    this.subscribe(DEFAULT_TOPIC, pubKey);
+    this.subscribe(DEFAULT_TOPIC, pubKey, this.checkMessageContent);
 
     return {
       keyId: keyId,
@@ -37,8 +37,8 @@ export class WhisperService {
     };
   }
 
-  isConnected(): boolean {
-    return await web3Connected();
+  async isConnected(): Promise<any> {
+    return isWeb3Connected();
   }
 
   // Load previously created Whisper IDs from database into Whisper node
@@ -55,13 +55,69 @@ export class WhisperService {
           { keyId },
           { new: true },
         );
-        await this.subscribe(DEFAULT_TOPIC, pubKey);
+        await this.subscribe(DEFAULT_TOPIC, pubKey, this.checkMessageContent);
       } catch (err) {
         logger.error(
           `Error adding public key ${id.publicKey} to Whisper node: ${err}`,
         );
       }
     });
+  }
+
+  async checkMessageContent(data) {
+    const web3 = await getWeb3();
+    const content = await web3.utils.toAscii(data.payload);
+    // Check if this is a JSON structured message
+    const [isJSON, messageObj] = await hasJsonStructure(content);
+    // Store raw message
+    let doc = await storeNewMessage(data, content);
+    if (isJSON) {
+      if (messageObj.type === 'delivery_receipt') {
+        // Check if receipt came from original recipient
+        const originalMessage = await Message.findOne({
+          _id: messageObj.messageId,
+        });
+        if (!originalMessage) {
+          throw new Error(`Original message id (${messageObj.messageId}) not found. Cannot add delivery receipt.`);
+        } else if (originalMessage.recipientId === data.sig) {
+          // Update original message to indicate successful delivery
+          doc = await Message.findOneAndUpdate(
+            { _id: messageObj.messageId },
+            { deliveredDate: messageObj.deliveredDate },
+            { upsert: false, new: true },
+          );
+        }
+      } else {
+        this.sendDeliveryReceipt(data);
+      }
+      // Append source message ID to the object for tracking inbound
+      // messages from partners via the messenger API
+      messageObj.messageId = data.hash;
+      // Adding sender Id to message to know who sent the message
+      messageObj.senderId = data.sig;
+      // Send all JSON messages to processing service
+      forwardMessage(messageObj);
+    } else { // Text message
+      await this.sendDeliveryReceipt(data);
+    }
+    return doc;
+  }
+
+  async sendDeliveryReceipt(data) {
+    // Send delivery receipt back to sender
+    const time = await Math.floor(Date.now() / 1000);
+    const receiptObject = {
+      type: 'delivery_receipt',
+      deliveredDate: time,
+      messageId: data.hash,
+    };
+    const receiptString = JSON.stringify(receiptObject);
+    await this.publish(
+      undefined,
+      receiptString,
+      data.recipientPublicKey,
+      data.sig,
+    );
   }
 
   async publish(

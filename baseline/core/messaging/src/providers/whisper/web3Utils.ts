@@ -1,10 +1,9 @@
-import { Web3 } from 'web3';
-const logger = require('winston');
+import Web3 from 'web3';
+import logger from 'winston';
 const Config = require('../../../../../../messenger-tmp/config');
 
 const userIndex = process.env.USER_INDEX || 0;
-const { messengerPort } = Config.whisper.users[userIndex];
-const { ipAddress } = Config.whisper.users[userIndex];
+const { messengerPort, ipAddress } = Config.whisper.users[userIndex];
 
 let web3client;
 
