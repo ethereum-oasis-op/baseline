@@ -1,7 +1,9 @@
 import { Commitment } from './commitment';
+import { getTxReceipt, getContractWithWalletByName } from './contract';
 import { getPartnerByMessengerKey } from './partner';
+import { getEventValuesFromTxReceipt } from '../utils/ethers';
 import { formatProof, getRoot, createAgreement as createAgreementTx } from './shield';
-import { getSiblingPathByLeafIndex, checkRoot } from './merkle-tree';
+import { getSiblingPath, getSiblingPathByLeafIndex, checkRoot } from './merkle-tree';
 import { generateProof } from './zkp';
 
 import AgreementModel from '../integrations/agreement';
@@ -497,17 +499,15 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
 
       await updateAgreementWithCommitmentIndex(agreement.object);
 
-      // TODO: send the index in a message to the Recipient!!!
+      const commitmentSiblingPath = await getSiblingPathByLeafIndex('Shield', leafIndex);
 
-      const sibling = await getSiblingPathByLeafIndex('Shield', leafIndex);
-
-      console.log(sibling);
-
-      // const document = await getAgreementById(agreementObject._id);
+      const commitSiblingPathTrimmed = commitmentSiblingPath.map(leaf => leaf.value);
 
       let docToBeSent = {};
-      docToBeSent.siblingPath = sibling;
+      docToBeSent.siblingPath = commitSiblingPathTrimmed;
       docToBeSent.agreementCommitment = agreement.commitment;
+      docToBeSent.txHash = transactionHash;
+      docToBeSent.leafValue = leafValue;
 
       msgDeliveryQueue.add({
         documentId: agreement._id,
@@ -533,7 +533,7 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
 
 export const onReceiptProofRecipient = async (proofObject) => {
   const rootOnChain = await getRoot();
-  const rootOffChain = proofObject.siblingPath[0].value;
+  const rootOffChain = proofObject.siblingPath[0];
   if (rootOnChain == rootOffChain) {
     console.log('\nLatest root on chain, ', rootOnChain, 'matches with offchain value', rootOffChain);
   } else {
@@ -541,9 +541,30 @@ export const onReceiptProofRecipient = async (proofObject) => {
       `Latest root ${rootOnChain} doesnt match with offchain value ${rootOffChain}`
     );
   }
-  console.log('this is the proof object', proofObject);
-  //const check = await checkRoot(proofObject.agreementCommitment._commitment, proofObject.agreementCommitment._index, proofObject.siblingPath);
-  
+
+  const rootCheck = await checkRoot(proofObject.agreementCommitment._commitment, proofObject.agreementCommitment._index, proofObject.siblingPath, rootOnChain);
+  if (rootCheck == true) {
+    console.log('\nRoot verification successful');
+  } else {
+    throw new Error(
+      `Root doesnt match after recalculating based on updated commitment index`
+    );
+  }
+  const shieldContract = await getContractWithWalletByName('Shield');
+  const txReceipt = await getTxReceipt(proofObject.txHash);
+  const { newCommitment } = await getEventValuesFromTxReceipt(
+    'NewCommitment',
+    shieldContract,
+    txReceipt,
+  );
+
+  if (newCommitment == proofObject.leafValue) {
+    console.log('\nCommitment value matches with leaf value');
+  } else {
+    throw new Error(
+      `Commitment value from event doesnt match with leaf value on chain`
+    );
+  }
 };
 
 export { Agreement as default };
