@@ -238,5 +238,6 @@ export const checkRoot = (commitment, commitmentIndex, siblingPath, root) => {
     console.log(
       `\nRoot ${root} successfully reconciled from first principles using the commitment and its sister-path.`,
     );
+    return true;
   }
 };
