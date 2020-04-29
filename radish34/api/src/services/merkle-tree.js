@@ -108,7 +108,7 @@ Get the nodes on the sibling path from the given leafIndex to the root.
 @param {string} contractName
 @param {integer} leafIndex
 */
-async function getSiblingPathByLeafIndex(contractName, leafIndex) {
+export const getSiblingPathByLeafIndex = async (contractName, leafIndex) => {
   console.log(`\nCalling getSiblingPathByLeafIndex(${contractName}, ${leafIndex})`);
   return new Promise((resolve, reject) => {
     const options = {
