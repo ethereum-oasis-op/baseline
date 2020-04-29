@@ -1,0 +1,20 @@
+{
+  "name": "radish34-logger",
+  "version": "1.0.0",
+  "description": "Customized winston logger for Radish34 project",
+  "contributors": [
+    "Myron Rotter <myronrotter>"
+  ],
+  "main": "./src/logger.js",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "express-winston": "^4.0.3",
+    "path": "^0.12.7",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "SEE LICENSE in root/license.md"
+}
