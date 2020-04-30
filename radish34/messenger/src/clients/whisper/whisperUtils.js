@@ -8,6 +8,7 @@ const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
 const POW_TIME = process.env.WHISPER_POW_TIME || 100;
 const TTL = process.env.WHISPER_TTL || 20;
 const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
+
 // Call this function before sending Whisper commands
 async function isConnected() {
   return web3utils.isConnected();

@@ -22,61 +22,6 @@ class WhisperWrapper {
     this.getSingleMessage = generalUtils.getSingleMessage;
   }
 
-  // If the Identities collection is empty, create a new Identity
-  async createFirstIdentity() {
-    const identities = await Identity.find({});
-    if (identities.length === 0) {
-      await this.createIdentity();
-    }
-  }
-
-  async createIdentity() {
-    // Create new public/private key pair
-    const web3 = await web3utils.getWeb3();
-    const keyId = await web3.shh.newKeyPair();
-    const pubKey = await web3.shh.getPublicKey(keyId);
-    const privKey = await web3.shh.getPrivateKey(keyId);
-
-    // Store key's details in database
-    const time = await Math.floor(Date.now() / 1000);
-    const result = await Identity.findOneAndUpdate(
-      { _id: pubKey },
-      {
-        _id: pubKey,
-        publicKey: pubKey,
-        privateKey: privKey,
-        keyId,
-        createdDate: time,
-      },
-      { upsert: true, new: true },
-    );
-
-    this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
-    return { publicKey: result.publicKey, createdDate: result.createdDate };
-  }
-
-  // Load previously created Whisper IDs from database into Whisper node
-  async loadIdentities() {
-    const identities = await Identity.find({});
-    identities.forEach(async (id) => {
-      try {
-        const web3 = await web3utils.getWeb3();
-        const keyId = await web3.shh.addPrivateKey(id.privateKey);
-        const pubKey = await web3.shh.getPublicKey(keyId);
-        // keyId will change so need to update that in Mongo
-        await Identity.findOneAndUpdate(
-          { _id: pubKey },
-          { keyId },
-          { new: true },
-        );
-        await this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
-      } catch (err) {
-        logger.error(
-          `Error adding public key ${id.publicKey} to Whisper node: ${err}`,
-        );
-      }
-    });
-  }
 
   async checkMessageContent(data) {
     const web3 = await web3utils.getWeb3();
