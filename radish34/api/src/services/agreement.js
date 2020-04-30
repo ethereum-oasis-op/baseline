@@ -508,6 +508,7 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
       docToBeSent.agreementCommitment = agreement.commitment;
       docToBeSent.txHash = transactionHash;
       docToBeSent.leafValue = leafValue;
+      docToBeSent.agreementObject = agreement.object;
 
       msgDeliveryQueue.add({
         documentId: agreement._id,
@@ -565,6 +566,7 @@ export const onReceiptProofRecipient = async (proofObject) => {
       `Commitment value from event doesnt match with leaf value on chain`
     );
   }
+  await updateAgreementWithCommitmentIndex(proofObject.agreementObject);
 };
 
 export { Agreement as default };
