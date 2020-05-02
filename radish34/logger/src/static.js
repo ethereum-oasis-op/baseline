@@ -1,4 +1,5 @@
-const chalk = require("chalk");
+const chalk = require('chalk');
+const path = require('path');
 
 module.exports = {
   // Logging levels
@@ -14,7 +15,7 @@ module.exports = {
   // Colors for logging levels
   error: chalk.bold.red,
   warning: chalk.bold.blackBright,
-  deprecated: chalk.bold.keyword("orange"),
+  deprecated: chalk.bold.keyword('orange'),
   http: chalk.bold.blue,
   info: chalk.bold.whiteBright,
   verbose: chalk.bold.yellow,
@@ -25,4 +26,6 @@ module.exports = {
   redirection: chalk.cyan,
   client: chalk.yellow,
   server: chalk.red,
+  // Root path
+  rootPath: path.join(__dirname, '../../../'),
 };

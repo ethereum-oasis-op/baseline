@@ -1,8 +1,7 @@
-const winston = require("winston");
-const expressWinston = require("express-winston");
-const path = require("path");
-
-const { levels } = require("./static");
+const winston = require('winston');
+const expressWinston = require('express-winston');
+const path = require('path');
+const { levels, rootPath } = require('./static');
 const {
   defaultConsoleFormat,
   simpleHttpConsoleFormat,
@@ -12,23 +11,20 @@ const {
   reqHttpFileFormat,
   filterOnly,
   filterWithout,
-} = require("./format");
+} = require('./format');
 
-const rootPath = path.dirname(
-  require.main.filename || process.mainModule.filename
-);
-const logsPath = path.join(rootPath, "./logs");
+const logsPath = path.join(rootPath, './radish34/logs');
 
 // Logging level for environment level
-const env = process.env.NODE_ENV || "development";
-const __level__ = env === "production" ? "info" : "debug";
+const env = process.env.NODE_ENV || 'development';
+const __level__ = env === 'production' ? 'info' : 'debug';
 
 // Date for log filename
 const getDateString = () => {
   const date = new Date();
   const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, "0");
-  const day = `${date.getDate()}`.padStart(2, "0");
+  const month = `${date.getMonth() + 1}`.padStart(2, '0');
+  const day = `${date.getDate()}`.padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
 
@@ -38,32 +34,32 @@ const transports = {
     level: __level__,
     format: winston.format.combine(
       winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss",
+        format: 'YYYY-MM-DD HH:mm:ss',
       }),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
-      filterWithout("http"),
+      filterWithout('http'),
       defaultConsoleFormat
     ),
   }),
   simpleHttpConsole: new winston.transports.Console({
-    level: "http",
+    level: 'http',
     format: winston.format.combine(
       winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss",
+        format: 'YYYY-MM-DD HH:mm:ss',
       }),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
-      filterOnly("http"),
+      filterOnly('http'),
       simpleHttpConsoleFormat
     ),
   }),
   reqHttpConsole: new winston.transports.Console({
     format: winston.format.combine(
       winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss",
+        format: 'YYYY-MM-DD HH:mm:ss',
       }),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
@@ -76,26 +72,26 @@ const transports = {
     level: __level__,
     format: winston.format.combine(
       winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss",
+        format: 'YYYY-MM-DD HH:mm:ss',
       }),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
-      filterWithout("http"),
+      filterWithout('http'),
       defaultFileFormat
     ),
   }),
   simpleHttpFile: new winston.transports.File({
     filename: logsPath + `/${getDateString()}_debug.log`,
-    level: "http",
+    level: 'http',
     format: winston.format.combine(
       winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss",
+        format: 'YYYY-MM-DD HH:mm:ss',
       }),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
-      filterOnly("http"),
+      filterOnly('http'),
       simpleHttpFileFormat
     ),
   }),
@@ -103,7 +99,7 @@ const transports = {
     filename: logsPath + `/${getDateString()}_debug.log`,
     format: winston.format.combine(
       winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss",
+        format: 'YYYY-MM-DD HH:mm:ss',
       }),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
@@ -140,7 +136,7 @@ const reqErrorLogger = (message) =>
   expressWinston.errorLogger({
     transports: [
       new winston.transports.Console(),
-      new winston.transports.File({ filename: logsPath + "/full.log" }),
+      new winston.transports.File({ filename: logsPath + `/${getDateString()}_debug.log` }),
     ],
     format: winston.format.combine(
       winston.format.colorize(),

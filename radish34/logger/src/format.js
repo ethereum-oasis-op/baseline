@@ -1,4 +1,4 @@
-const winston = require("winston");
+const winston = require('winston');
 const {
   error,
   warning,
@@ -12,25 +12,25 @@ const {
   redirection,
   client,
   server,
-} = require("./static");
+} = require('./static');
 
-const LEVEL = Symbol.for("level");
+const LEVEL = Symbol.for('level');
 
 const levelFormat = (level) => {
   switch (level) {
-    case "error":
+    case 'error':
       return error(level.toUpperCase());
-    case "warning":
+    case 'warning':
       return warning(level.toUpperCase());
-    case "deprecated":
+    case 'deprecated':
       return deprecated(level.toUpperCase());
-    case "http":
+    case 'http':
       return http(level.toUpperCase());
-    case "info":
+    case 'info':
       return info(level.toUpperCase());
-    case "verbose":
+    case 'verbose':
       return verbose(level.toUpperCase());
-    case "debug":
+    case 'debug':
       return debug(level.toUpperCase());
     default:
       return level;
@@ -57,30 +57,30 @@ module.exports = {
   // Formats
   defaultConsoleFormat: winston.format.printf(
     ({ timestamp, level, service, message, ...args }) => {
-      const timestampFormated = timestamp.slice(0, 19).replace("T", " ");
+      const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
       return `[${timestampFormated}] [${levelFormat(
         level
       )}] [${service}]: ${message} ${
-        Object.keys(args).length ? JSON.stringify(args) : ""
+        Object.keys(args).length ? JSON.stringify(args) : ''
       }`;
     }
   ),
   simpleHttpConsoleFormat: winston.format.printf(
-    ({ timestamp, level, service, req, res, message, ...args }) => {
-      const timestampFormated = timestamp.slice(0, 19).replace("T", " ");
+    ({ timestamp, level, service, req, message, ...args }) => {
+      const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
       return `[${timestampFormated}] [${levelFormat(level)}] [${service}]: ${
         req.method
-      } ${req.originalUrl} ${message} ${
-        Object.keys(args).length ? JSON.stringify(args) : ""
+      } ${req.originalUrl} ${message} ${req.body !== undefined ? JSON.stringify(req.body) : ''} ${
+        Object.keys(args).length ? JSON.stringify(args) : ''
       }`;
     }
   ),
   reqHttpConsoleFormat: winston.format.printf(
     ({ timestamp, level, message, meta }) => {
-      const timestampFormated = timestamp.slice(0, 19).replace("T", " ");
-      level = "http";
+      const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
+      level = 'http';
       const service = message;
 
       return `[${timestampFormated}] [${levelFormat(
@@ -92,28 +92,28 @@ module.exports = {
   ),
   defaultFileFormat: winston.format.printf(
     ({ timestamp, level, service, message, ...args }) => {
-      const timestampFormated = timestamp.slice(0, 19).replace("T", " ");
+      const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
       return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]: ${message} ${
-        Object.keys(args).length ? JSON.stringify(args) : ""
+        Object.keys(args).length ? JSON.stringify(args) : ''
       }`;
     }
   ),
   simpleHttpFileFormat: winston.format.printf(
     ({ timestamp, level, service, req, message, ...args }) => {
-      const timestampFormated = timestamp.slice(0, 19).replace("T", " ");
+      const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
       return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]: ${
         req.method
-      } ${req.originalUrl} ${message} ${
-        Object.keys(args).length ? JSON.stringify(args) : ""
+      } ${req.originalUrl} ${message} ${req.body !== undefined ? JSON.stringify(req.body) : ''} ${
+        Object.keys(args).length ? JSON.stringify(args) : ''
       }`;
     }
   ),
   reqHttpFileFormat: winston.format.printf(
     ({ timestamp, level, message, meta }) => {
-      const timestampFormated = timestamp.slice(0, 19).replace("T", " ");
-      level = "http";
+      const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
+      level = 'http';
       const service = message;
 
       return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]: ${
