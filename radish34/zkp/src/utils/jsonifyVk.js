@@ -50,7 +50,6 @@ const keyExtractor = solFilePath => {
  */
 export const jsonifyVk = async solFilePath => {
   const vkJson = await keyExtractor(solFilePath);
-  // console.log('vkJson:', vkJson);
   return vkJson;
 };
 
