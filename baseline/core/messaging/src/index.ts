@@ -1,5 +1,5 @@
 import { natsServiceFactory } from './providers/nats';
-import { WhisperService, getWeb3 } from './providers/whisper';
+import { WhisperService } from './providers/whisper';
 
 export const messagePayloadTypeJson = 'json';
 export const messagePayloadTypeBinary = 'binary';
@@ -12,9 +12,9 @@ export interface IMessagingService {
   disconnect(): Promise<void>;
   getSubscribedSubjects(): string[];
   isConnected(): boolean;
-  publish(subject: string, payload: any, reply?: string): Promise<void>;
+  publish(subject: string, payload: any, reply?: string, recipientId?: string): Promise<void>;
   request(subject: string, timeout: number, data?: any): Promise<any | void>;
-  subscribe(subject: string, keyId?: string, callback?: (msg: any, err?: any) => void): Promise<any>;
+  subscribe(subject: string, callback?: (msg: any, err?: any) => void, myId?: string): Promise<any>;
   unsubscribe(subject: string);
   flush(): Promise<void>;
 }
@@ -28,7 +28,6 @@ export async function messagingServiceFactory(
   switch (provider) {
     case messagingProviderWhisper:
       service = await new WhisperService(config);
-      await getWeb3();
       break;
     case messagingProviderNats:
       service = await natsServiceFactory(config);

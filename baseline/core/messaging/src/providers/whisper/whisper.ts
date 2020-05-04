@@ -14,15 +14,15 @@ const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
 
 export class WhisperService {
   private keyId: string;
-  private recipientId: string;
+  private clientUrl: string;
 
   constructor(config) {
     this.keyId = config.keyId;
-    this.recipientId = config.recipientId;
+    this.clientUrl = config.clientUrl;
   }
 
   async connect() {
-    return getWeb3();
+    return getWeb3(this.clientUrl);
   }
 
   async isConnected(): Promise<any> {
@@ -40,12 +40,12 @@ export class WhisperService {
       messageString = JSON.stringify(payload);
     }
 
-    const web3 = await getWeb3();
+    const web3 = await getWeb3(this.clientUrl);
     const content = web3.utils.fromAscii(messageString);
 
     try {
       const messageObj = {
-        pubKey: this.recipientId,
+        pubKey: recipientId,
         sig: this.keyId,
         ttl: TTL,
         topic: subject,
@@ -55,21 +55,21 @@ export class WhisperService {
       };
       return web3.shh.post(messageObj);
     } catch (err) {
-      logger.error('Whisper error:', err);
-      return undefined;
+      logger.error('Whisper publish error:', err);
     }
   }
 
+  // Subscribe to enable receiving of new messages
   async subscribe(
     subject: string = DEFAULT_TOPIC,
     callback: (msg: any) => void,
+    myId: string
   ) {
-    // Subscribe to private messages
-    const web3 = await getWeb3();
+    const web3 = await getWeb3(this.clientUrl);
     web3.shh
       .subscribe('messages', {
         minPow: POW_TARGET,
-        privateKeyID: this.keyId,
+        privateKeyID: myId,
         topics: [subject],
       })
       .on('data', async (data) => {
@@ -84,38 +84,42 @@ export class WhisperService {
       });
   }
 
-  // Load previously created Whisper IDs from database into Whisper node
+  // Load any previously created Whisper IDs from database into Whisper node
+  // If no existing IDs provided, create a new one
   async loadIdentities(identities, topic, callback) {
-    let newIdentities = [];
+    let loadedIds;
     if (identities.length === 0) {
-      this.createIdentity(topic, callback);
+      let newId = await this.createIdentity(topic, callback)
+      this.keyId = newId.keyId;
+      loadedIds.push(newId)
     } else {
+      const web3 = await getWeb3(this.clientUrl);
       identities.forEach(async (id) => {
         try {
-          const web3 = await getWeb3();
           const keyId = await web3.shh.addPrivateKey(id.privateKey);
           const publicKey = await web3.shh.getPublicKey(keyId);
-          newIdentities.push({ publicKey, keyId });
-          await this.subscribe(topic = DEFAULT_TOPIC, callback);
+          loadedIds.push({ publicKey, keyId });
+          await this.subscribe(topic, callback, keyId);
         } catch (err) {
           logger.error(
             `Error adding public key ${id.publicKey} to Whisper node: ${err}`,
           );
         }
       });
+      this.keyId = loadedIds[0]['keyId'];
     }
-    return newIdentities;
+    return loadedIds;
   }
 
   async createIdentity(topic = DEFAULT_TOPIC, callback) {
     // Create new public/private key pair
-    const web3 = await getWeb3();
+    const web3 = await getWeb3(this.clientUrl);
     const keyId = await web3.shh.newKeyPair();
     const publicKey = await web3.shh.getPublicKey(keyId);
     const privateKey = await web3.shh.getPrivateKey(keyId);
     const createdDate = await Math.floor(Date.now() / 1000);
 
-    this.subscribe(topic, callback);
+    await this.subscribe(topic, callback, keyId);
     return { publicKey, privateKey, keyId, createdDate };
   }
 

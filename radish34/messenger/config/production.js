@@ -9,6 +9,7 @@ module.exports = {
     {
       ipAddress: 'geth-node',
       messengerPort: '8546',
+      clientUrl: 'ws://geth-node:8548',
       apiPort: '4001',
       origin: 'mychat2',
       dbUrl: process.env.MONGO_URL || 'mongodb://mongo-radish:27017/radish34',
