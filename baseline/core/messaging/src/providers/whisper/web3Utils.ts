@@ -17,13 +17,12 @@ export async function isWeb3Connected() {
 }
 
 // Function that gets the web3 instance
-export async function getWeb3() {
+export async function getWeb3(clientUrl) {
   if (typeof web3client === 'undefined') {
     // set the provider you want from Web3.providers
-    const nodeUrl = `ws://${ipAddress}:${messengerPort}`;
-    logger.debug(`Creating initial Web3 connection to ${nodeUrl}`);
+    logger.debug(`Creating initial Web3 connection to ${clientUrl}`);
     const newClient = await new Web3.providers.WebsocketProvider(
-      nodeUrl,
+      clientUrl,
       { headers: { Origin: 'mychat2' } },
     );
     web3client = await new Web3(newClient);
@@ -32,7 +31,7 @@ export async function getWeb3() {
   } else {
     logger.debug('Web3 connection missing. Will open a new one');
     const newClient = await new Web3.providers.WebsocketProvider(
-      `ws://${ipAddress}:${messengerPort}`,
+      clientUrl,
       { headers: { Origin: 'mychat2' } },
     );
     web3client = await new Web3(newClient);

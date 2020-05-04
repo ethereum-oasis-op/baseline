@@ -82,7 +82,6 @@ export class NatsService implements IMessagingService {
 
   async subscribe(
     subject: string,
-    keyId: string,
     callback: (msg: any) => void,
   ): Promise<void> {
     await this.service!.subscribe(subject, (msg: any, err?: any): void => {

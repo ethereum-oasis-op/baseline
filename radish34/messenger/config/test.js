@@ -12,6 +12,7 @@ module.exports = {
     {
       ipAddress: 'localhost',
       messengerPort: '8548',
+      clientUrl: 'ws://localhost:8548',
       apiPort: '4001',
       origin: 'mychat2',
       dbUrl: 'mongodb://localhost:27017/radish34_test',

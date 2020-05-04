@@ -63,11 +63,6 @@ async function forwardMessage(messageObj) {
 module.exports = {
   hasJsonStructure,
   safeJsonParse,
-  getIdentities,
-  findIdentity,
-  getMessages,
-  getSingleMessage,
-  storeNewMessage,
   forwardMessage,
   DEFAULT_TOPIC,
   POW_TIME,
