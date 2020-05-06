@@ -1,16 +1,11 @@
-const axios = require('axios');
-const logger = require('winston');
 require('../logger');
 const { receiveMessageQueue } = require('../queues/receiveMessage/');
 
-const {
-  DEFAULT_TOPIC,
-  POW_TIME,
-  TTL,
-  POW_TARGET,
-} = require('../clients/whisper/whisperUtils.js');
-
-const radishApiUrl = process.env.RADISH_API_URL ? `${process.env.RADISH_API_URL}/api/v1` : 'http://localhost:8101/api/v1';
+// Useful constants
+const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
+const POW_TIME = process.env.WHISPER_POW_TIME || 100;
+const TTL = process.env.WHISPER_TTL || 20;
+const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
 
 /**
  * Checks whether a given string can be converted to a proper JSON object.
@@ -41,29 +36,9 @@ function safeJsonParse(str) {
   }
 }
 
-
-/**
- * Function that forwards the message
- * @param {Object} messageObj 
- */
-async function forwardMessage(messageObj) {
-  logger.info(`Forwarding message to api service: POST ${radishApiUrl}/documents`);
-  try {
-    const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
-    logger.info(`SUCCESS: POST ${radishApiUrl}/documents`);
-    logger.info(`${response.status} -`, response.data);
-  } catch (error) {
-    logger.error(`ERROR: POST ${radishApiUrl}/documents`);
-    if (error.response) {
-      logger.error(`${error.response.status} -`, error.response.data);
-    }
-  }
-}
-
 module.exports = {
   hasJsonStructure,
   safeJsonParse,
-  forwardMessage,
   DEFAULT_TOPIC,
   POW_TIME,
   TTL,

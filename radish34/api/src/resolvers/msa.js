@@ -67,7 +67,7 @@ export default {
       const msas = await getAllMSAs(requester);
       return mapMSAsWithSignatureStatus(msas);
     },
-    msasBySKU: async (_parent, args)  => {
+    msasBySKU: async (_parent, args) => {
       const msas = await getMSAsBySKU(args.sku);
       return mapMSAsWithSignatureStatus(msas);
     },

@@ -4,6 +4,7 @@ const { UI } = require('bull-board');
 const logger = require('winston');
 const apiRouter = require('./api/rest-express');
 const { RequestLogger, RequestErrorLogger } = require('./api/loggers-express');
+const { getMessenger } = require('./api/service');
 
 async function startServer(apiPort) {
   logger.info('Starting Express ...');
@@ -17,7 +18,7 @@ async function startServer(apiPort) {
 
   app.listen(apiPort, () => logger.info(`🚀 REST-Express server listening on port ${apiPort}`));
 
-  await apiRouter.initialize();
+  await getMessenger();
 }
 
 module.exports = {

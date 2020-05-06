@@ -12,10 +12,10 @@ module.exports = {
     {
       ipAddress: 'localhost',
       messengerPort: '8548',
-      clientUrl: 'ws://localhost:8548',
       apiPort: '4001',
       origin: 'mychat2',
-      dbUrl: 'mongodb://localhost:27017/radish34_test',
+      clientUrl: 'ws://localhost:8548',
+      dbUrl: 'mongodb://localhost:27117/radish34_test',
       redisUrl: 'redis://localhost:6379',
     },
   ],

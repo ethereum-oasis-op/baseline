@@ -1,18 +1,30 @@
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
+const { DEFAULT_TOPIC } = require('../utils/generalUtils');
 
 // Fetch all of the Whisper Identities stored in database
 async function getIdentities() {
-  const identities = await Identity.find(
-    {},
-    '-_id publicKey createdDate',
-  ).lean();
+  //const identities = await Identity.find(
+  //{},
+  //'-_id publickey createddate privatekey',
+  //).lean();
+  const identities = await Identity.find({});
   return identities;
 }
 
 // Function to check whether an identity `myId` exists in the database
 async function findIdentity(myId) {
   return Identity.exists({ _id: myId });
+}
+
+async function addIdentity(newIdentity) {
+  const dbUpdate = { _id: newIdentity.publicKey, ...newIdentity };
+  const identity = await Identity.findOneAndUpdate(
+    { _id: newIdentity.publicKey },
+    dbUpdate,
+    { upsert: true, new: true },
+  );
+  return identity;
 }
 
 // Fetch messages for a given conversation
@@ -64,6 +76,11 @@ async function getSingleMessage(messageId) {
  */
 async function storeNewMessage(messageData, content) {
   const { hash, recipientPublicKey, sig, ttl, topic, pow, timestamp } = messageData;
+  let payload = content;
+  if (typeof content === 'object') {
+    payload = JSON.stringify(content);
+  }
+  console.log('storing new message')
   return Message.findOneAndUpdate(
     { _id: hash },
     {
@@ -73,7 +90,7 @@ async function storeNewMessage(messageData, content) {
       senderId: sig,
       ttl,
       topic,
-      payload: content,
+      payload,
       pow,
       sentDate: timestamp,
     },
@@ -84,6 +101,7 @@ async function storeNewMessage(messageData, content) {
 module.exports = {
   getIdentities,
   findIdentity,
+  addIdentity,
   getMessages,
   getSingleMessage,
   storeNewMessage

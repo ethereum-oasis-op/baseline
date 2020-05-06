@@ -1,9 +1,4 @@
 import logger from 'winston';
-
-import { Identity } from '../../../../../../radish34/messenger/src/db/models/Identity';
-import { Message } from '../../../../../../radish34/messenger/src/db/models/Message';
-
-import { forwardMessage, hasJsonStructure, storeNewMessage } from '../../../../../../radish34/messenger/src/utils/generalUtils';
 import { getWeb3, isWeb3Connected } from './web3Utils';
 
 // Useful constants
@@ -13,7 +8,7 @@ const TTL = process.env.WHISPER_TTL || 20;
 const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
 
 export class WhisperService {
-  private keyId: string;
+  public keyId: string;
   private clientUrl: string;
 
   constructor(config) {
@@ -53,7 +48,20 @@ export class WhisperService {
         powTime: POW_TIME,
         powTarget: POW_TARGET,
       };
-      return web3.shh.post(messageObj);
+      const hash = await web3.shh.post(messageObj);
+      const time = Math.floor(Date.now() / 1000);
+      const publicKey = await web3.shh.getPublicKey(this.keyId);
+      return {
+        payload: messageString,
+        _id: hash,
+        hash,
+        recipientPublicKey: recipientId,
+        sig: publicKey,
+        ttl: messageObj.ttl,
+        topic: messageObj.topic,
+        pow: POW_TARGET,
+        timestamp: time
+      };
     } catch (err) {
       logger.error('Whisper publish error:', err);
     }
@@ -87,14 +95,13 @@ export class WhisperService {
   // Load any previously created Whisper IDs from database into Whisper node
   // If no existing IDs provided, create a new one
   async loadIdentities(identities, topic, callback) {
-    let loadedIds;
+    let loadedIds = await new Array<object>();
     if (identities.length === 0) {
       let newId = await this.createIdentity(topic, callback)
-      this.keyId = newId.keyId;
-      loadedIds.push(newId)
+      loadedIds.push(newId);
     } else {
       const web3 = await getWeb3(this.clientUrl);
-      identities.forEach(async (id) => {
+      await Promise.all(identities.map(async id => {
         try {
           const keyId = await web3.shh.addPrivateKey(id.privateKey);
           const publicKey = await web3.shh.getPublicKey(keyId);
@@ -105,9 +112,9 @@ export class WhisperService {
             `Error adding public key ${id.publicKey} to Whisper node: ${err}`,
           );
         }
-      });
-      this.keyId = loadedIds[0]['keyId'];
-    }
+      }));
+    };
+    this.keyId = loadedIds[0]['keyId'];
     return loadedIds;
   }
 
@@ -120,6 +127,7 @@ export class WhisperService {
     const createdDate = await Math.floor(Date.now() / 1000);
 
     await this.subscribe(topic, callback, keyId);
+    this.keyId = keyId;
     return { publicKey, privateKey, keyId, createdDate };
   }
 
