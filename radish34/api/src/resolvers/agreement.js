@@ -1,6 +1,6 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
-import { Agreement, getAgreementById, getAllAgreements, getAgreementsByName, saveAgreement, getAgreementsByPrevId } from '../services/Agreement';
+import { Agreement, getAgreementById, getAllAgreements, getAgreementsByName, saveAgreement, getAgreementsByPrevId } from '../services/agreement';
 import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessengerKey } from '../services/partner';
 import { saveNotice } from '../services/notice';
 import { getServerSettings } from '../utils/serverSettings';

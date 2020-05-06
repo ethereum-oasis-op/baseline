@@ -16,6 +16,7 @@ const recipientApiURL = 'http://localhost:8003';
 let nativeClient;
 let db;
 let agreementId;
+let indexCheck;
 
 const getConfigFilePath = role => `./config/config-${role}.json`;
 
@@ -152,6 +153,7 @@ describe('Sender creates Agreement, signs it, sends to recipient, recipient resp
             .post('/graphql')
             .send({ query: queryBody });
           if (res.body.data.agreement && res.body.data.agreement.commitments[0].index !== null) {
+            indexCheck = res.body.data.agreement.commitments[0].index;
             console.log('Test complete');
             break;
           }
@@ -160,6 +162,29 @@ describe('Sender creates Agreement, signs it, sends to recipient, recipient resp
         expect(res.statusCode).toEqual(200);
         expect(res.body.data.agreement._id).not.toBeUndefined();
         expect(res.body.data.agreement.commitments[0].index).not.toBeNull();
+      });
+
+      test('Sender sends proof data which recipient validates for index consistency', async () => {
+        const queryBody = `{ agreement(id:"${agreementId}")
+                              {
+                                name,
+                                commitments {
+                                  index
+                                  commitment
+                                }
+                              }
+                            }`
+        let res;
+        res = await request(recipientApiURL)
+            .post('/graphql')
+            .send({ query: queryBody });
+          if (res.body.data.agreement && res.body.data.agreement.commitments[0].index !== null) {
+            console.log('Test complete');
+            break;
+        expect(res.statusCode).toEqual(200);
+        expect(res.body.data.agreement.commitments[0].index).not.toBeNull();
+        expect(res.body.data.agreement.commitments[0].index).toEqual(indexCheck);
+        expect(res.body.data.agreement.name).toEqual(name);
       });
     });
   });
