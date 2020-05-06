@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 const Config = require('../config');
-const WhisperWrapper = require('../src/clients/whisper/WhisperWrapper.js');
-const web3utils = require('../src/clients/whisper/web3Utils.js');
-const generalUtils = require('../src/utils/generalUtils.js');
+const { messagingServiceFactory } = require('../../../baseline/core/messaging');
+const { DEFAULT_TOPIC, forwardMessage } = require('../src/utils/generalUtils.js');
 const { decrypt } = require('../src/utils/encryptUtils.js');
 const { receiveMessageQueue } = require('../src/queues/receiveMessage/index.js');
+const { getIdentities, addIdentity, storeNewMessage } = require('../src/db/interactions');
+const { processWhisperMessage } = require('../src/api/callbacks');
 
 const Identity = require('../src/db/models/Identity');
 const Message = require('../src/db/models/Message');
@@ -14,7 +15,7 @@ let nativeClient;
 let db;
 
 beforeAll(async () => {
-  generalUtils.forwardMessage = jest.fn();
+  //forwardMessage = jest.fn();
 
   // Create mongoose connection to db
   await mongoose.connect(Config.users[0].dbUrl, Config.mongoose);
@@ -33,28 +34,32 @@ afterAll(async () => {
 
 let messenger;
 let whisperId;
+let web3;
 
-describe('WhisperWrapper', () => {
+describe('Whisper provider', () => {
   beforeAll(async () => {
-    messenger = await new WhisperWrapper();
+    messenger = await messagingServiceFactory(provider = 'whisper', { clientUrl: Config.users[0].clientUrl });
+    web3 = await messenger.connect();
   });
 
   describe('Identities', () => {
     test('getIdentities() returns empty array', async () => {
-      const result = await messenger.getIdentities();
+      const result = await getIdentities();
       expect(result).toEqual([]);
     });
 
-    test('createIdentity() returns new identity', async () => {
-      const result = await messenger.createIdentity();
-      expect(result).toHaveProperty('publicKey');
-      expect(result).toHaveProperty('createdDate');
-      whisperId = result;
+    test('messenger.createIdentity() returns new identity', async () => {
+      const newId = await messenger.createIdentity();
+      expect(newId).toHaveProperty('publicKey');
+      expect(newId).toHaveProperty('createdDate');
+      // Add new identity to database
+      whisperId = await addIdentity(newId);
     });
 
     test('getIdentities() returns identity', async () => {
-      const result = await messenger.getIdentities();
-      expect(result[0]).toEqual(whisperId);
+      const result = await getIdentities();
+      expect(result[0].publicKey).toEqual(whisperId.publicKey);
+      expect(result[0].keyId).toEqual(whisperId.keyId);
     });
 
     describe('Check encryption', () => {
@@ -75,37 +80,37 @@ describe('WhisperWrapper', () => {
     let messageId;
 
     describe('send messages', () => {
-      test('sendPrivateMessage() creates message from string', async () => {
+      test('messenger.publish() creates message from string', async () => {
         const messageContent = 'Test message 101';
-        const result = await messenger.sendPrivateMessage(
-          whisperId.publicKey,
-          fakeWhisperId,
-          undefined,
+        const result = await messenger.publish(
+          DEFAULT_TOPIC,
           messageContent,
+          undefined,
+          fakeWhisperId,
         );
         expect(result.payload).toEqual(messageContent);
       });
 
-      test('sendPrivateMessage() creates message from JSON', async () => {
+      test('messenger.publish() creates message from JSON', async () => {
         const messageContent = {
           type: 'test_message',
           content: 'testing 123',
         };
-        const result = await messenger.sendPrivateMessage(
-          whisperId.publicKey,
-          fakeWhisperId,
-          undefined,
+        const messageData = await messenger.publish(
+          DEFAULT_TOPIC,
           messageContent,
+          undefined,
+          fakeWhisperId,
         );
+        const result = await storeNewMessage(messageData, messageContent);
         messageId = result._id;
         expect(JSON.parse(result.payload)).toEqual(messageContent);
       });
     });
 
     describe('receive messages', () => {
-      test('checkMessageContent() processes message with string payload', async () => {
+      test('processWhisperMessage() processes message with string payload', async () => {
         const messageString = 'testing 456';
-        const web3 = await web3utils.getWeb3();
         const messageHex = await web3.utils.fromAscii(messageString);
         const messageObj = {
           sig: fakeWhisperId,
@@ -121,17 +126,16 @@ describe('WhisperWrapper', () => {
           recipientPublicKey: whisperId.publicKey,
         };
 
-        const result = await messenger.checkMessageContent(messageObj);
+        const result = await processWhisperMessage(messageObj);
         expect(result.payload).toEqual(messageString);
       });
 
-      test("checkMessageContent() does not process 'delivery_receipt' if original message does not exist", async () => {
+      test("processWhisperMessage() does not process 'delivery_receipt' if original message does not exist", async () => {
         const rawObj = {
           type: 'delivery_receipt',
           deliveredDate: 1576249522,
           messageId: '0x123',
         };
-        const web3 = await web3utils.getWeb3();
         const messageHex = await web3.utils.fromAscii(JSON.stringify(rawObj));
         const messageObj = {
           sig: fakeWhisperId,
@@ -150,7 +154,7 @@ describe('WhisperWrapper', () => {
         let result;
         let error = false;
         try {
-          result = await messenger.checkMessageContent(messageObj);
+          result = await processWhisperMessage(messageObj);
         } catch (err) {
           error = true;
           result = err.message;
@@ -161,13 +165,12 @@ describe('WhisperWrapper', () => {
         );
       });
 
-      test("checkMessageContent() processes 'delivery_receipt' if original message exists", async () => {
+      test("processWhisperMessage() processes 'delivery_receipt' if original message exists", async () => {
         const rawObj = {
           type: 'delivery_receipt',
           deliveredDate: 1576249522,
           messageId,
         };
-        const web3 = await web3utils.getWeb3();
         const messageHex = await web3.utils.fromAscii(JSON.stringify(rawObj));
         const messageObj = {
           sig: fakeWhisperId,
@@ -186,10 +189,10 @@ describe('WhisperWrapper', () => {
         let result;
         let error = false;
         try {
-          result = await messenger.checkMessageContent(messageObj);
+          result = await processWhisperMessage(messageObj);
         } catch (err) {
+          console.log('delivery_receipt ERROR:', err.message)
           error = true;
-          result = err.message;
         }
         expect(error).toEqual(false);
         expect(result.deliveredDate).not.toBeUndefined();

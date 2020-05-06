@@ -26,7 +26,7 @@ describe('/health', () => {
     const res = await apiRequest.get('/api/v1/health');
     expect(res.statusCode).toEqual(200);
     expect(res.body.connected).toEqual(true);
-    expect(res.body.type).toEqual(Config.messagingType);
+    expect(res.body.provider).toEqual(Config.messagingType);
   });
 });
 
@@ -74,11 +74,9 @@ describe('/messages', () => {
     let messengerId;
 
     beforeAll(async (done) => {
-      const res = await apiRequest
-        .post('/api/v1/identities')
-        .send({}); // no attributes required
+      const res = await apiRequest.get('/api/v1/identities');
       // Setting the messengerID used as context for the rest of the tests below
-      messengerId = res.body.publicKey;
+      messengerId = res.body[0].publicKey;
       done();
     });
 
@@ -125,6 +123,7 @@ describe('/messages', () => {
           });
         expect(res.statusCode).toEqual(201);
         expect(res.body.payload).toEqual('Message 1');
+        expect(res.body.senderId).toEqual(messengerId);
       });
     });
 

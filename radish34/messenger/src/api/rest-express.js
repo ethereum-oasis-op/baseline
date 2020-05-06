@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const logger = require('winston');
 const Config = require('../../config');
-const { checkMessageContent } = require('./callbacks.js');
-const { addIdentity, getIdentities, findIdentity, getMessages, getSingleMessage } = require('../db/interactions');
-const { messagingServiceFactory } = require('../../../../baseline/core/messaging/src/index.ts');
+const { processWhisperMessage } = require('./callbacks.js');
+const { storeNewMessage, addIdentity, getIdentities, findIdentity, getMessages, getSingleMessage } = require('../db/interactions');
 const { DEFAULT_TOPIC } = require('../utils/generalUtils');
-
-let messenger;
+const { getMessenger } = require('./service');
 
 /**
  * @api {get} /health Check the health status and the Web3 client connection
@@ -16,6 +13,7 @@ let messenger;
  * @apiSuccess {Object} provider The type of messaging client connected
  */
 router.get('/health', async (req, res) => {
+  const messenger = await getMessenger();
   const result = await messenger.isConnected();
   res.status(200);
   res.send({ connected: result, provider: Config.messagingType });
@@ -31,8 +29,16 @@ router.get('/health', async (req, res) => {
  */
 router.get('/identities', async (req, res) => {
   const result = await getIdentities();
+  let scrubbedIds = []
+  await Promise.all(result.map(async id => {
+    let newId = {
+      publicKey: id.publicKey,
+      createdDate: id.createdDate,
+    }
+    scrubbedIds.push(newId);
+  }));
   res.status(200);
-  res.send(result);
+  res.send(scrubbedIds);
 });
 
 /**
@@ -45,12 +51,17 @@ router.get('/identities', async (req, res) => {
  */
 router.post('/identities', async (req, res) => {
   // Create new identity in messenger client
-  const newId = await messenger.createIdentity(undefined, checkMessageContent);
+  const messenger = await getMessenger();
+  const newId = await messenger.createIdentity(DEFAULT_TOPIC, processWhisperMessage);
   // Add new identity to database
   const result = await addIdentity(newId);
+  let scrubbedId = {
+    publicKey: result.publicKey,
+    createdDate: result.createdDate,
+  }
   // TODO: do we need to add this identity to the Registry smart contract?
   res.status(201);
-  res.send(result);
+  res.send(scrubbedId);
 });
 
 // Filter to catch all messages and require an identity header
@@ -89,7 +100,7 @@ router.get('/messages', async (req, res) => {
   const myId = req.headers['x-messenger-id'];
   const messages = await getMessages(
     myId,
-    undefined,
+    DEFAULT_TOPIC,
     req.query.partnerId,
     req.query.since,
   );
@@ -123,8 +134,8 @@ router.get('/messages/:messageId', async (req, res) => {
 });
 
 /**
- * @api {post} /messages Create a new message
- * @apiDescription Create a new message to send via the connected client
+ * @api {post} /messages Send a new message
+ * @apiDescription Send a new message via the connected client
  * @apiName PostMessage
  * @apiGroup Messages
  * @apiHeader {String} x-messenger-id The Id of the identity to use for all /messages filtering
@@ -140,30 +151,13 @@ router.post('/messages', async (req, res) => {
     });
     return;
   }
-  const result = await messenger.publish(DEFAULT_TOPIC, req.body.payload, undefined, req.body.recipientId);
+  const messenger = await getMessenger();
+  const messageData = await messenger.publish(DEFAULT_TOPIC, req.body.payload, undefined, req.body.recipientId);
+  const result = await storeNewMessage(messageData, req.body.payload);
   res.status(201);
   res.send(result);
 });
 
-async function initialize() {
-  // Retrieve messenger instance and pass to helper classes
-  // Modularized here to enable use of other messenger services in the future
-  logger.info('Initializing server...');
-  messenger = await messagingServiceFactory(provider = 'whisper', { clientUrl: Config.clientUrl });
-  await messenger.connect();
-  const connected = await messenger.isConnected();
-
-  // Retrieve pre-existing whisper identities from db and load into geth node
-  // (this must be done each time the geth node is restarted)
-  if (Config.messagingType === 'whisper') {
-    const identities = await getIdentities();
-    await messenger.loadIdentities(identities, undefined, checkMessageContent);
-  }
-
-  return connected;
-}
-
 module.exports = {
   router,
-  initialize,
 };

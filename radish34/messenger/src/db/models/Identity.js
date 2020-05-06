@@ -20,12 +20,14 @@ const IdentitySchema = new mongoose.Schema(
     privateKey: {
       type: String,
       required: true,
-      set: encrypt,
       get: decrypt,
+      set: encrypt,
     },
     createdDate: String,
   },
   {
+    toObject: { getters: true },
+    toJSON: { getters: true },
     collection: 'Identities',
     versionKey: false,
   }
