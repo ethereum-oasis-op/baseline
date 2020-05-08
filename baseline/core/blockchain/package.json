@@ -17,7 +17,8 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
-
+    "ethers": "^4.0.47",
+    "provide-js": "^1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
