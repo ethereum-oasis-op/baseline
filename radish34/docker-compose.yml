@@ -24,6 +24,7 @@ services:
       KEYSTORE_PATH: /app/src/config/keystore
       ORGANISATION_CONFIG_PATH: /app/src/config
       CONTRACTS_PATH: /app/paths-contracts.json
+      MODE: 1
     networks:
       - network-buyer
       - network-supplier1
@@ -160,6 +161,7 @@ services:
       REDIS_URL: redis://redis-buyer:6379
       ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
+      MODE: 1
     networks:
       - network-buyer
     ports:
@@ -201,6 +203,7 @@ services:
       REDIS_URL: redis://redis-supplier1:6379
       ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
+      MODE: 1
     networks:
       - network-supplier1
     ports:
@@ -241,6 +244,7 @@ services:
       REDIS_URL: redis://redis-supplier2:6379
       ZKP_URL: http://zkp:80
       MERKLE_TREE_URL: http://merkle-tree:80
+      MODE: 1
     networks:
       - network-supplier2
     ports:
