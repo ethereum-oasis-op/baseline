@@ -7,20 +7,31 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 docker-compose up --no-recreate -d zkp
-./ops/await_stack.sh
-
-if [ ! -d ./zkp/output/createMSA ]; then
+#./ops/await_stack.sh
+echo "$1"
+if [ $# -eq 0 ] && [ ! -d ./zkp/output/createMSA ]; then
     sleep 5
 
     printf "\n${GREEN}*** Running setup for createMSA ***${NC}\n"
     curl -d '{"filepath": "business-logic/createMSA.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
     printf "\n${GREEN}*** createMSA setup complete ***${NC}\n"
+elif [ "$1" == "dummy" ] && [ ! -d ./zkp/output/createDummyMSA ]; then
+    sleep 5
+    printf "\n${GREEN}*** Running setup for createDummyMSA ***${NC}\n"
+    curl -d '{"filepath": "dummy-circuits/createDummyMSA.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+    printf "\n${GREEN}*** createDummyMSA setup complete ***${NC}\n"
 fi
 
-if [ ! -d ./zkp/output/createPO ]; then
+if [ $# -eq 0 ] && [ ! -d ./zkp/output/createPO ]; then
     sleep 5
 
     printf "\n${GREEN}*** Running setup for createPO ***${NC}\n"
     curl -d '{"filepath": "business-logic/createPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
     printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
+elif [ ! $1 -eq 0 ] && [ "$1" == "dummy" ] && [ ! -d ./zkp/output/createDummyPO ]; then
+    sleep 5
+    printf "\n${GREEN}*** Running setup for createDummyPO ***${NC}\n"
+    curl -d '{"filepath": "dummy-circuits/createDummyPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+    printf "\n${GREEN}*** createDummyPO setup complete ***${NC}\n"
 fi
+
