@@ -22,6 +22,7 @@ Code and Systems maintainers
   - [Brian Chamberlain](https://github.com/breakpointer)
   - [Kyle Thomas](https://github.com/kthomas)
   - [Hudson Jameson](https://github.com/souptacular)
+  - [George Spasov](https://github.com/Perseverance)
 
 Documentation maintainer/Technical Product Director
 
