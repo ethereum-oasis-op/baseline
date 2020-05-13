@@ -2,6 +2,12 @@ version: '3.5'
 
 services:
 
+  logger:
+    container_name: radish34-logger
+    build:
+      context: ./logger/
+      dockerfile: dev.Dockerfile
+
   deploy:
     container_name: deployer-service
     build:
