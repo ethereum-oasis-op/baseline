@@ -1,20 +1,27 @@
 {
   "name": "radish34-logger",
   "version": "1.0.0",
-  "description": "Customized winston logger for Radish34 project",
+  "description": "Customized winston logger for Radish34 project.",
   "contributors": [
     "Myron Rotter <myronrotter>"
   ],
-  "main": "./src/logger.js",
+  "main": "./dist/logger.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "start": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "chalk": "^4.0.0",
     "express-winston": "^4.0.3",
     "path": "^0.12.7",
     "winston": "^3.2.1"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.9.6"
   },
   "license": "SEE LICENSE in root/license.md"
 }
