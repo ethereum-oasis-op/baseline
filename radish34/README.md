@@ -253,7 +253,9 @@ The steps below illustrate the individual steps, that can be viewed as the break
 `docker-compose logs -f geth-node`   
 `docker-compose logs -f geth-miner1`  
 `docker-compose logs -f geth-miner2`  
-`docker-compose logs -f geth-bootnode`  
+`docker-compose logs -f geth-bootnode`
+
+Access docker container via `docker exec -it <container_id> /bin/bash` and read logs in `/app/logs` via `cat <log_name>`.
 
 ## Troubleshooting
 
