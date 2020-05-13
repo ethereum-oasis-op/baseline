@@ -49,14 +49,14 @@ start: system-check install-config build-containers
 	docker-compose up -d api-buyer api-supplier1 api-supplier2 ui && \
 	popd
 
-start-with-splunk:
-	pushd ${radish34} && \
+start-with-splunk: system-check install-config build-containers
+	@pushd ${radish34} && \
 	docker-compose -f docker-compose-splunk.yml up -d && \
 	echo "Patiently waiting 75 seconds for splunk container to init ..." && \
 	sleep 75 && \
+	npm run setup-circuits && \
 	npm run deploy && \
-	docker-compose -f docker-compose-with-splunk.yml up -d && \
-	docker-compose -f docker-compose-ethlogger.yml up -d && \
+	docker-compose up -f docker-compose-with-splunk.yml -d api-buyer api-supplier1 api-supplier2 ui && \
 	popd
 
 start-ethlogger:
