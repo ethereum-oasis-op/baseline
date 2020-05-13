@@ -4,7 +4,7 @@ import path from 'path';
 import zokrates from '@eyblockchain/zokrates.js';
 import { jsonifyVk } from '../utils/jsonifyVk';
 import { saveVerificationKeyToDB } from '../utils/fileToDB';
-const { logger } = require('radish34-logger');
+import { logger } from 'radish34-logger';
 
 const router = express.Router();
 

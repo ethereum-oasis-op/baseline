@@ -1,7 +1,7 @@
 import fs from 'fs';
 import db from './db';
 import { jsonifyVk } from './jsonifyVk';
-const { logger } = require('radish34-logger');
+import { logger } from 'radish34-logger';
 
 /**
 The vk's keys tend to be stored alphabetically in the db. But we need the following exact order, or everything will break:
@@ -76,7 +76,7 @@ export const checkForNewVks = async () => {
     }
   }
 
-  if (newVkCount === 0) logger.info('No new vks found', { service: 'ZKP' });
+  if (newVkCount === 0) logger.info('No new vks found.', { service: 'ZKP' });
 };
 
 export default {

@@ -4,7 +4,7 @@ import cors from 'cors';
 import generateProof from './routes/generateProof';
 import generateKeys from './routes/generateKeys';
 import vk from './routes/vk';
-const { reqLogger, reqErrorLogger } = require('radish34-logger');
+import { reqLogger, reqErrorLogger } from 'radish34-logger';
 
 const app = express();
 

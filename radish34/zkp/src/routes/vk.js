@@ -1,6 +1,6 @@
 import express from 'express';
 import { getVerificationKeyByID } from '../utils/fileToDB';
-const { logger } = require('radish34-logger');
+import { logger } from 'radish34-logger';
 
 const router = express.Router();
 

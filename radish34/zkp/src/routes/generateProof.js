@@ -1,7 +1,7 @@
 import express from 'express';
 import zokrates from '@eyblockchain/zokrates.js';
 import { saveProofToDB } from '../utils/fileToDB';
-const { logger } = require('radish34-logger');
+import { logger } from 'radish34-logger';
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.post('/', async (req, res, next) => {
       `./output/${filename}/${filename}_proof.json`,
     );
 
-    logger.info(`Proof generation complete. Responding with proof.`, { service: 'ZKP' });
+    logger.info('Proof generation complete. Responding with proof.', { service: 'ZKP' });
     logger.verbose(storedProof, { service: 'ZKP', storedProof: storedProof });
     return res.send(storedProof);
   } catch (err) {
