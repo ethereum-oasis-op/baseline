@@ -27,5 +27,5 @@ module.exports = {
   client: chalk.yellow,
   server: chalk.red,
   // Root path
-  rootPath: path.join(__dirname, '../../../'),
+  rootPath: path.join(__dirname, '../../'),
 };

@@ -13,7 +13,7 @@ const {
   filterWithout,
 } = require('./format');
 
-const logsPath = path.join(rootPath, './radish34/logs');
+const logsPath = path.join(rootPath, './app/logs');
 
 // Logging level for environment level
 const env = process.env.NODE_ENV || 'development';
@@ -110,7 +110,7 @@ const transports = {
 };
 
 // Logger
-const logger = winston.createLogger({
+export const logger = winston.createLogger({
   transports: [
     transports.defaultConsole,
     transports.simpleHttpConsole,
@@ -122,7 +122,7 @@ const logger = winston.createLogger({
   exitOnError: false,
 });
 
-const reqLogger = (service) =>
+export const reqLogger = (service) =>
   expressWinston.logger({
     transports: [transports.reqHttpConsole, transports.reqHttpFile],
     meta: true,
@@ -132,7 +132,7 @@ const reqLogger = (service) =>
     msg: service,
   });
 
-const reqErrorLogger = (message) =>
+export const reqErrorLogger = (message) =>
   expressWinston.errorLogger({
     transports: [
       new winston.transports.Console(),
@@ -145,4 +145,5 @@ const reqErrorLogger = (message) =>
     msg: message,
   });
 
+export default { logger, reqLogger, reqErrorLogger };
 module.exports = { logger, reqLogger, reqErrorLogger };
