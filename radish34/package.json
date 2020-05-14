@@ -28,7 +28,7 @@
     "await-stack": "./ops/await_stack.sh",
     "build": "./ops/build.sh",
     "build:contracts": "/bin/bash -c 'pushd contracts && npm run build && popd'",
-    "deploy": "docker-compose up -d ganache messenger-buyer messenger-supplier1 messenger-supplier2 && ./ops/await_stack.sh && docker-compose run --rm deploy && docker-compose restart merkle-tree api-buyer api-supplier1 api-supplier2 || true",
+    "deploy": "docker-compose up -d ganache messenger-buyer messenger-supplier1 messenger-supplier2 && ./ops/await_stack.sh && ZKP_MODE=$ZKP_MODE docker-compose run --rm deploy && docker-compose restart merkle-tree api-buyer api-supplier1 api-supplier2 || true",
     "docs:build": "./ops/build_docs.sh",
     "dockerize": "./ops/dockerize.sh",
     "install-config": "mkdir -p ./config && cp -r ./deploy/src/config/backups/* ./config && cp -r ./deploy/src/config/keystore ./config",

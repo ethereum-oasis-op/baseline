@@ -1,16 +1,3 @@
-struct OldCommitment {
-  field[2] commitment
-  field[2] salt
-  field index // only used when spending a commitment
-  field[2] nullifier // only used when spending a commitment
-  field[5] siblingPath // only used when spending a commitment
-}
-
-struct NewCommitment {
-  field[2] commitment
-  field[2] salt
-}
-
 struct OldMSAConstants {
   field[2] publicKeyOfBuyer
   field[2] publicKeyOfSupplier
@@ -19,7 +6,7 @@ struct OldMSAConstants {
   field[2] hashOfTieredPricing
   field minVolume
   field maxVolume
-  field[2] sku
+  field sku
   field[2] erc20ContractAddress
 }
 
@@ -29,13 +16,26 @@ struct NewMSAConstants {
   field[2] hashOfTieredPricing
   field minVolume
   field maxVolume
-  field[2] sku
+  field sku
   field[2] erc20ContractAddress
 }
 
 struct MSAVariables {
   field accumulatedVolumeOrdered
   field accumulatedVolumeDelivered
+}
+
+struct OldCommitment {
+  field[2] commitment
+  field[2] salt
+  field index // only used when spending a commitment
+  field[2] nullifier // only used when spending a commitment
+  field[4] siblingPath // only used when spending a commitment
+}
+
+struct NewCommitment {
+  field[2] value
+  field[2] salt
 }
 
 struct OldMSA {
@@ -55,7 +55,7 @@ struct POConstants {
   field[2] publicKeyOfSupplier
   field volume
   field price
-  field[2] sku
+  field sku
   field[2] erc20ContractAddress
 }
 

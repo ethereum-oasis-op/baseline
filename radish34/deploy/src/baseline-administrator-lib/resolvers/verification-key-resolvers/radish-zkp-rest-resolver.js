@@ -43,23 +43,23 @@ class RadishZKPRestResolver {
   async resolveVerificationKey(circuitName, mode) {
     assert(
       typeof DEFAULT_CIRCUITS[circuitName] !== 'undefined' ||
-        typeof DUMMY_CIRCUITS[circuitName] !== 'undefined',
+      typeof DUMMY_CIRCUITS[circuitName] !== 'undefined',
     );
     const vk = await pollVk(this.zkpUrl, circuitName);
     let vkArray = Object.values(vk);
     vkArray = flattenDeep(vkArray);
     vkArray = vkArray.map(coord => hexToDec(coord));
-    let circuitMode;
-    if (mode === 0) {
-      circuitMode = 'DEFAULT_CIRCUITS';
+    let actionType;
+    if (mode == 0) {
+      actionType = DEFAULT_CIRCUITS[circuitName].txTypeEnumUint;
+    } else if (mode == 1) {
+      actionType = DUMMY_CIRCUITS[circuitName].txTypeEnumUint;
     }
-    if (mode === 1) {
-      circuitMode = 'DUMMY_CIRCUITS';
-    }
+
     return {
       vk,
       vkArray,
-      actionType: `${circuitMode}`[circuitName].txTypeEnumUint,
+      actionType
     };
   }
 }

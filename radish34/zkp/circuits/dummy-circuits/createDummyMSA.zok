@@ -11,7 +11,7 @@ struct MSAConstants {
   field[2] hashOfTieredPricing
   field minVolume
   field maxVolume
-  field[2] sku
+  field sku
   field[2] erc20ContractAddress
   EdDSASignature buyerSignature
   EdDSASignature supplierSignature

@@ -71,17 +71,12 @@ const main = async (
   // If it is needed we can set deployer as manager of OrgRegistry in the ERC1820
 
   console.log(`ℹ️   Registering zkp verification keys`);
-  if (process.env.MODE === 0) {
+  const zkpMode = process.env.ZKP_MODE || 0; // Default to createMSA/createPO
+  if (zkpMode == 0) {
     await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA', 0);
     await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createPO', 0);
-  }
-  if (process.env.MODE === 1) {
-    await registerVerificationKey(
-      workgroupManager,
-      zkpVerificationKeyResolver,
-      'createDummyMSA',
-      1,
-    );
+  } else if (zkpMode == 1) {
+    await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createDummyMSA', 1);
     await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createDummyPO', 1);
   }
   console.log(`ℹ️   Network information:`);

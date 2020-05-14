@@ -45,8 +45,8 @@ npm-install:
 start: system-check install-config build-containers
 	@pushd ${radish34} && \
 	npm run setup-circuits ${mode} && \
-	npm run deploy && \
-	docker-compose up -d api-buyer api-supplier1 api-supplier2 ui && \
+	ZKP_MODE=${mode} npm run deploy && \
+	ZKP_MODE=${mode} docker-compose up -d api-buyer api-supplier1 api-supplier2 ui && \
 	popd
 
 stop:

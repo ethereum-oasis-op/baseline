@@ -21,10 +21,10 @@ services:
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${ZKP_MODE:-0}
       KEYSTORE_PATH: /app/src/config/keystore
       ORGANISATION_CONFIG_PATH: /app/src/config
       CONTRACTS_PATH: /app/paths-contracts.json
-      MODE: 1
     networks:
       - network-buyer
       - network-supplier1
@@ -160,8 +160,8 @@ services:
       MESSENGER_URI: http://messenger-buyer:4001
       REDIS_URL: redis://redis-buyer:6379
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${ZKP_MODE:-0}
       MERKLE_TREE_URL: http://merkle-tree:80
-      MODE: 1
     networks:
       - network-buyer
     ports:
@@ -202,8 +202,8 @@ services:
       MESSENGER_URI: http://messenger-supplier1:4001
       REDIS_URL: redis://redis-supplier1:6379
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${ZKP_MODE:-0}
       MERKLE_TREE_URL: http://merkle-tree:80
-      MODE: 1
     networks:
       - network-supplier1
     ports:
@@ -243,8 +243,8 @@ services:
       MESSENGER_URI: http://messenger-supplier2:4001
       REDIS_URL: redis://redis-supplier2:6379
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${ZKP_MODE:-0}
       MERKLE_TREE_URL: http://merkle-tree:80
-      MODE: 1
     networks:
       - network-supplier2
     ports:
