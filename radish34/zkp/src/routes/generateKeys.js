@@ -35,12 +35,9 @@ router.post('/', async (req, res, next) => {
     );
 
     const vkJson = await jsonifyVk(`./output/${filename}/Verifier_${filename}.sol`);
-    console.log(vkJson);
     const vk = await saveVerificationKeyToDB(filename, JSON.parse(vkJson));
-
     console.log(`\nComplete`);
     const response = { verificationKey: vk };
-    console.log(response);
     return res.send(response);
   } catch (err) {
     return next(err);
