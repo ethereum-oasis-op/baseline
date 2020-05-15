@@ -10,7 +10,7 @@ try {
   receiveMessageQueue = new Queue(requestNamespace, Config.users[0].redisUrl);
   logger.debug(`Successfully connected to bull queue "${requestNamespace}" at ${Config.users[0].redisUrl}.`, { service: 'MESSENGER' });
 } catch (error) {
-  logger.error(`Could not connect to bull queue "${requestNamespace}" at ${Config.users[0].redisUrl}.`, { service: 'MESSENGER' });
+  logger.error(`Could not connect to bull queue "${requestNamespace}" at ${Config.users[0].redisUrl.}`, { service: 'MESSENGER' });
 }
 
 // Adding Queue to BullBoard Admin UI
