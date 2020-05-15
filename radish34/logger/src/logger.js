@@ -16,6 +16,7 @@ const {
 const logsPath = path.join(rootPath, './app/logs');
 
 // Logging level for environment level
+// TODO: Adjust anyhow
 const env = process.env.NODE_ENV || 'development';
 const __level__ = env === 'production' ? 'info' : 'debug';
 
@@ -36,6 +37,7 @@ const transports = {
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss',
       }),
+      winston.format.colorize(),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
@@ -49,6 +51,7 @@ const transports = {
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss',
       }),
+      winston.format.colorize(),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
@@ -61,6 +64,7 @@ const transports = {
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss',
       }),
+      winston.format.colorize(),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
@@ -132,17 +136,18 @@ export const reqLogger = (service) =>
     msg: service,
   });
 
-export const reqErrorLogger = (message) =>
+export const reqErrorLogger = (service) =>
   expressWinston.errorLogger({
     transports: [
       new winston.transports.Console(),
       new winston.transports.File({ filename: logsPath + `/${getDateString()}_debug.log` }),
     ],
     format: winston.format.combine(
-      winston.format.colorize(),
+      //winston.format.colorize(),
       winston.format.json()
     ),
-    msg: message,
+    // Pass service string via msg
+    msg: service,
   });
 
 export default { logger, reqLogger, reqErrorLogger };
