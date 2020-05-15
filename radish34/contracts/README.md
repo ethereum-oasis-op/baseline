@@ -98,7 +98,7 @@ When the Radish34 system is initialized, all smart contracts are deployed and re
 All smart contract based tests are contained in `__tests__` directory under this directory. There is a service called `jest`, which looks for any `.test.js` files, and runs the test cases. Execute the following series of commands to run the tests:
 ```shell
 npm run build
-docker-compose up ganache
+docker-compose up -d ganache
 npm run test
 ```
 ** These tests take about 25 seconds to run **
