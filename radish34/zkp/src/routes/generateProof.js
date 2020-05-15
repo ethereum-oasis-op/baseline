@@ -37,10 +37,10 @@ router.post('/', async (req, res, next) => {
     );
 
     logger.info('Proof generation complete. Responding with proof.', { service: 'ZKP' });
-    logger.verbose(storedProof, { service: 'ZKP', storedProof: storedProof });
+    logger.verbose('%o', {storedProof: storedProof}, {service: 'ZKP'});
     return res.send(storedProof);
   } catch (err) {
-    logger.error(err, { service: 'ZKP' });
+    logger.error('%o', {error: err}, { service: 'ZKP' });
     return next(err);
   }
 });

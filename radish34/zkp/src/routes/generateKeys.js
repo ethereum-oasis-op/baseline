@@ -41,11 +41,12 @@ router.post('/', async (req, res, next) => {
     const vk = await saveVerificationKeyToDB(filename, JSON.parse(vkJson));
 
     logger.info('Complete.', { service: 'ZKP' });
-    logger.verbose(vk, { service: 'ZKP', verificationKey: vk });
+    logger.verbose('%o', {vk: vk}, {service: 'ZKP'});
+
     const response = { verificationKey: vk };
     return res.send(response);
   } catch (err) {
-    logger.error(err, { service: 'ZKP' });
+    logger.error('%o', {error: err}, { service: 'ZKP' });
     return next(err);
   }
 });

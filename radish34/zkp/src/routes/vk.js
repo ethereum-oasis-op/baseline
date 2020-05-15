@@ -14,12 +14,12 @@ router.get('/', async (req, res, next) => {
     const vk = await getVerificationKeyByID(id);
 
     logger.info(`Returning vk.`, { service: 'ZKP'});
-    logger.verbose(vk, { service: 'ZKP', vk: vk });
+    logger.verbose('%o', {vk: vk}, {service: 'ZKP'});
 
     const response = { vk };
     return res.send(response);
   } catch (err) {
-    logger.error(err, { service: 'ZKP' });
+    logger.error('%o', {error: err}, { service: 'ZKP' });
     return next(err);
   }
 });

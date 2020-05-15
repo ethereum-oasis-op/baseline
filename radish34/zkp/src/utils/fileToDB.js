@@ -31,7 +31,7 @@ const readJsonFile = filePath => {
     return JSON.parse(file);
   }
   logger.error(`Unable to locate file: ${filePath}.`, { service: 'ZKP' });
-  throw ReferenceError('file not found');
+  throw ReferenceError('File not found.');
 };
 
 export const getProofByDocID = async id => {
@@ -69,7 +69,7 @@ export const checkForNewVks = async () => {
     // check to see if any of these circuits are not yet stored in the mongo db:
     const doc = await getVerificationKeyByID(circuitName);
     if (doc === null) {
-      logger.info(`New VK for ${circuitName} found. Storing it in the Mongo db.`, { service: 'ZKP' });
+      logger.info(`New vk for ${circuitName} found. Storing it in the Mongo db.`, { service: 'ZKP' });
       newVkCount += 1;
       const vkJson = await jsonifyVk(verifierPath);
       await saveVerificationKeyToDB(circuitName, JSON.parse(vkJson));
