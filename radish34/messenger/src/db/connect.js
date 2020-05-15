@@ -10,7 +10,7 @@ let mongoUrl;
 
 // Registering db connection event listeners
 conn.once('open', () => {
-  logger.info('Successfully connected to mongo', { service: 'MESSENGER' });
+  logger.info('Successfully connected to mongo.', { service: 'MESSENGER' });
 
   // When successfully connected
   conn.on('connected', () => {
