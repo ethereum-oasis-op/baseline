@@ -37,7 +37,6 @@ const transports = {
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss',
       }),
-      winston.format.colorize(),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
@@ -51,7 +50,6 @@ const transports = {
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss',
       }),
-      winston.format.colorize(),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
@@ -64,7 +62,6 @@ const transports = {
       winston.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss',
       }),
-      winston.format.colorize(),
       winston.format.errors({ stack: true }),
       winston.format.splat(),
       winston.format.simple(),
@@ -143,7 +140,7 @@ export const reqErrorLogger = (service) =>
       new winston.transports.File({ filename: logsPath + `/${getDateString()}_debug.log` }),
     ],
     format: winston.format.combine(
-      //winston.format.colorize(),
+      winston.format.colorize(),
       winston.format.json()
     ),
     // Pass service string via msg
