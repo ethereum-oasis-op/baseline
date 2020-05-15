@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM radish34_logger
 
 # Create app directory
 WORKDIR /app

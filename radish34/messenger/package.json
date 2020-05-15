@@ -46,10 +46,9 @@
     "bull-board": "^0.6.0",
     "colors": "^1.4.0",
     "express": "^4.17.1",
-    "express-winston": "^4.0.3",
     "mongoose": "^5.9.5",
-    "web3": "^1.2.6",
-    "winston": "^3.2.1"
+    "radish34-logger": "file:../logger",
+    "web3": "^1.2.6"
   },
   "devDependencies": {
     "apidoc": "^0.20.1",
