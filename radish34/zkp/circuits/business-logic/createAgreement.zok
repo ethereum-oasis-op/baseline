@@ -1,9 +1,13 @@
 import "utils/pack/pack128" as pack128
+import "utils/pack/pack256" as pack256
 import "utils/pack/nonStrictUnpack256.zok" as unpack256
 import "../common/packing/unpack2x128To256x1" as unpack2x128To256x1
 
 import "../common/hashes/sha256/sha256of2x128.zok" as sha256of2x128
-import "../common/hashes/sha256/sha256of10x128.zok" as sha256of10x128
+import "../common/hashes/sha256/sha256of2x256.zok" as sha256of2x256
+import "../common/hashes/sha256/sha256of3x128.zok" as sha256of3x128
+import "../common/hashes/sha256/sha256of5x128.zok" as sha256of5x128
+import "../common/hashes/sha256/sha256of7x128.zok" as sha256of7x128
 
 import "../common/ecc/edwards-compress.zok" as edwardsCompress
 import "../common/ecc/verify-eddsa.zok" as verifyEddsa
@@ -34,6 +38,7 @@ struct AgreementCommitment {
   field[2] salt
   field index
   field[4] siblingPath
+  // field[2] root
 }
 
 // maintain all agrements' references as a linked list in the Shield.sol
@@ -42,13 +47,14 @@ struct Agreement {
   AgreementInputs inputs
   AgreementCommitment newCommitment
   field oldCommitmentValue
-  field calldata
+  field calldata // calldata to contain root bits at a certain position
 }
 // determine max upper bound of a struct in DSL
 // TODO: explore how rust manages dynamic expansion of 
 // field to other data types: structs, arrays, etc.
 
-def main(field publicInputHash, private field[2] root, private Agreement agreementData) -> ():
+def main(field publicInputHash, field[2] root, private Agreement agreementData) -> ():
+  // 
   // compressing public keys of type point (X,Y)
   field[256] publicKeyOfBuyerCompressed = edwardsCompress(agreementData.inputs.publicKeyOfBuyer)
   field[256] publicKeyOfSupplierCompressed = edwardsCompress(agreementData.inputs.publicKeyOfSupplier)
@@ -70,37 +76,27 @@ def main(field publicInputHash, private field[2] root, private Agreement agreeme
   // third step: calculate root
   // fourth step: hash (root, hash from 2)
   // final hash is the publicInputHash
-  agreementCommitmentBits = sha256of12x128([publicKeyOfBuyerCompressed1, 
-                                                 publicKeyOfBuyerCompressed2, 
-                                                 publicKeyOfSupplierCompressed1, 
-                                                 publicKeyOfSupplierCompressed2,
-                                                 calldata,
-                                                 salt])
+  agreementCommitmentBits = sha256of7x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, agreementData.calldata, ...agreementData.newCommitment.salt])
 
-  agreementNullifierBits = sha256of3x128([agreementData.newCommitment.value,
-                                          agreementData.inputs.nullifier,
-                                          agreementData.oldCommitmentValue
-                                          ])
+  field[256] agreementNullifierBits = sha256of5x128([...agreementData.newCommitment.value, ...agreementData.inputs.nullifier, agreementData.oldCommitmentValue])
   
-  calculatedRoot = calculateRoot(agreementData.newCommitment.siblingPath, 
-                                agreementData.newCommitment.value, 
-                                agreementData.newCommitment.index)
-
-  inputAgreementCommitment = unpack2x128To256x1(agreementData.newCommitment.value);
+  calculatedRoot = calculateRoot(agreementData.newCommitment.siblingPath, agreementData.newCommitment.value, agreementData.newCommitment.index)
+  inputAgreementCommitment = unpack2x128To256x1(agreementData.newCommitment.value)
   agreementCommitmentBits == inputAgreementCommitment
 
   // VERIFY SIGNATURES
-  context = context()
+  babyjubjubParamSet = context()
 
-  field isVerifiedBuyer = verifyEddsa(agreementData.inputs.buyerSignature.R, agreementData.inputs.buyerSignature.S, agreementData.inputs.publicKeyOfBuyer, agreementCommitmentBits, context)
-  field isVerifiedSupplier = verifyEddsa(agreementData.inputs.supplierSignature.R,  agreementData.inputs.supplierSignature.S, agreementData.inputs.publicKeyOfSupplier, agreementCommitmentBits, context)
+  field isVerifiedBuyer = verifyEddsa(agreementData.inputs.buyerSignature.R, agreementData.inputs.buyerSignature.S, agreementData.inputs.publicKeyOfBuyer, agreementCommitmentBits, babyjubjubParamSet)
+  field isVerifiedSupplier = verifyEddsa(agreementData.inputs.supplierSignature.R,  agreementData.inputs.supplierSignature.S, agreementData.inputs.publicKeyOfSupplier, agreementCommitmentBits, babyjubjubParamSet)
   isVerifiedBuyer == 1
   isVerifiedSupplier == 1
 
+  packedRoot = pack256(calculatedRoot)
+  packedNullifier = pack256(agreementNullifierBits)
   // Check the publicInputHash:
   publicInputHashBits = unpack256(publicInputHash)
-  publicInputHashBitsCheck = sha256of2x128([calculatedRoot,
-                                            agreementNullifierBits])
+  publicInputHashBitsCheck = sha256of2x256([packedRoot, packedNullifier])
   publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256]
 
   return
