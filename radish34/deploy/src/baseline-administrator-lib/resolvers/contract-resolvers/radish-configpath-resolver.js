@@ -75,13 +75,7 @@ class RadishConfigpathContractsResolver {
     assert(name, 'No name supplied to the resolver resolve method');
     const contractPath = path.resolve(this.paths[name]);
     const contractJSON = require(contractPath);
-
-    const contractName = contractJSON.contractName;
-    const abi = contractJSON.compilerOutput.abi;
-    console.log('bytecode.object:', contractJSON.compilerOutput.evm.bytecode.object)
-    console.log('bytecode.linkReferences:', contractJSON.compilerOutput.evm.bytecode.linkReferences)
-    const bytecode = _replaceLibraryReferenceToTruffleStyle(contractJSON.compilerOutput.evm.bytecode.object, contractJSON.compilerOutput.evm.bytecode.linkReferences)
-    console.log('bytecode:', bytecode);
+    const { contractName, abi, bytecode } = contractJSON;
 
     return {
       contractName,

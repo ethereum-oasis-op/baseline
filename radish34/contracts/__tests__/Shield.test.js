@@ -19,7 +19,7 @@ test('Successfully deploys Shield contract', async () => {
     BN256G2Artifact.bytecode, signer);
   const bn256g2Address = await BN256G2.deploy();
   let Verifier = new ethers.ContractFactory(VerifierArtifact.abi,
-    VerifierArtifact.bytecode, signer);
+    link(VerifierArtifact.bytecode, 'BN256G2', bn256g2Address.address), signer);
   let doppelganger = new Doppelganger(ERC1820RegistryArtifact.abi);
   await doppelganger.deploy(signer);
   verifier = await Verifier.deploy(doppelganger.address);
