@@ -132,10 +132,9 @@ async function forwardMessage(messageObj) {
     const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
     logger.http('Success', { service: 'MESSENGER', statusCode: response.status, responseData: response.data, requestMethod: 'POST', requestUrl: `${radishApiUrl}/documents`});
   } catch (err) {
-    logger.error(`POST ${radishApiUrl}/documents failed.`, { service: 'MESSENGER' });
-    logger.error('%o', {error: err}, { service: 'MESSENGER' });
+    logger.error(`POST ${radishApiUrl}/documents failed.\n%o`, err, { service: 'MESSENGER' });
     if (err.response) {
-      logger.error(`${error.response.status} - %o`, {dresponseData: error.response.data}, { service: 'MESSENGER' });
+      logger.error(`${err.response.status} - %o`, err.response.data, { service: 'MESSENGER' });
     }
   }
 }

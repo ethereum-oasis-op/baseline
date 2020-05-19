@@ -9,7 +9,7 @@ export default async (job, done) => {
   try {
     message = await messenger.sendPrivateMessage(senderId, recipientId, undefined, payload);
   } catch (err) {
-    logger.error('%o', {error: err}, { service: 'MESSENGER' });
+    logger.error('\n%o', err, { service: 'MESSENGER' });
   }
   done(null, { message });
 };

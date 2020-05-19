@@ -41,8 +41,7 @@ async function sendPrivateMessage(
     };
     hash = await web3.shh.post(payload);
   } catch (err) {
-    logger.error('Whisper error.');
-    logger.error('%o', {error: err}, { service: 'MESSENGER' });
+    logger.error('Whisper error.\n%o', err, { service: 'MESSENGER' });
     return undefined;
   }
 
@@ -66,8 +65,7 @@ async function sendPrivateMessage(
       { upsert: true, new: true },
     );
   } catch (err) {
-    logger.error('Mongoose error.');
-    logger.error('%o', {error: err}, { service: 'MESSENGER' });
+    logger.error('Mongoose error.\n%o', err, { service: 'MESSENGER' });
     return undefined;
   }
   return doc;

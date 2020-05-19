@@ -72,9 +72,8 @@ class WhisperWrapper {
         await this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
       } catch (err) {
         logger.error(
-          `Error adding public key ${id.publicKey} to Whisper node.`, { service: 'MESSENGER' }
+          `Error adding public key ${id.publicKey} to Whisper node.\n%o`, err, { service: 'MESSENGER' }
         );
-        logger.error('%o', {error: err}, { service: 'MESSENGER' });
       }
     });
   }
@@ -152,11 +151,11 @@ class WhisperWrapper {
         try {
           await this.checkMessageContent(data);
         } catch (error) {
-          logger.error(error.message);
+          logger.error('\n%o', err, { service: 'MESSENGER' });
         }
       })
       .on('error', (err) => {
-        logger.error('%o', {error: err}, { service: 'MESSENGER' });
+        logger.error('\n%o', err, { service: 'MESSENGER' });
       });
   }
 }

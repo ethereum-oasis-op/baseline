@@ -18,7 +18,7 @@ setQueues(receiveMessageQueue);
 
 // Queue listener
 receiveMessageQueue.on('global:completed', async (job, data) => {
-  logger.debug('Forwarded message processed by other service.\n%o', {data: data}, { service: 'MESSENGER' });
+  logger.debug('Forwarded message processed by other service.\n%o', data, { service: 'MESSENGER' });
 });
 
 module.exports = {

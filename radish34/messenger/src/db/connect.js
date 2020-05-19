@@ -10,7 +10,7 @@ let mongoUrl;
 
 // Registering db connection event listeners
 conn.once('open', () => {
-  logger.info('Successfully connected to mongo.', { service: 'MESSENGER' });
+  logger.info('Successfully connected to mongo db.', { service: 'MESSENGER' });
 
   // When successfully connected
   conn.on('connected', () => {
@@ -19,12 +19,12 @@ conn.once('open', () => {
 
   // If the connection throws an error
   conn.on('error', (err) => {
-    logger.error('%o', {error: err}, { service: 'MESSENGER' });
+    logger.error('\n%o', err, { service: 'MESSENGER' });
   });
 
   // When the connection is disconnected
   conn.on('disconnected', () => {
-    logger.error('Mongoose default connection disconnected.', { service: 'MESSENGER' });
+    logger.info('Mongoose default connection disconnected.', { service: 'MESSENGER' });
   });
 
   // If the Node process ends, close the Mongoose connection
@@ -46,7 +46,7 @@ async function connect(url) {
   mongoUrl = url;
   if (Config.mongo.debug == true) {
     mongoose.set('debug', function (collection, method, query, doc, options) {
-      logger.debug(`Mongoose ${method} on ${collection} query: ${JSON.stringify(query)}.`, { service: 'MESSENGER' }, {
+      logger.debug(`Mongoose ${method} on ${collection} with query:\n%o`, query, { service: 'MESSENGER' }, {
         doc,
         options
       });
@@ -60,8 +60,8 @@ async function connect(url) {
       await mongoose.connect(mongoUrl, Config.mongoose);
       connected = true;
     } catch (err) {
-      logger.error('%o', {error: err}, { service: 'MESSENGER' });
-      logger.info(`Retrying connection in ${firstConnectRetryDelaySecs} seconds.`, { service: 'MESSENGER' });
+      logger.error('\n%o', err, { service: 'MESSENGER' });
+      logger.info(`Retrying connection in ${firstConnectRetryDelaySecs}s.`, { service: 'MESSENGER' });
     }
 
     // eslint-disable-next-line no-await-in-loop

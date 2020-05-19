@@ -15,8 +15,7 @@ const main = async () => {
     await dbConnect(dbUrl);
     await startServer(apiPort);
   } catch (err) {
-    logger.error('Initialization error.', { service: 'MESSENGER' });
-    logger.error('%o', {error: err}, { service: 'MESSENGER' });
+    logger.error('Initialization error.\n%o', err, { service: 'MESSENGER' });
   }
 };
 
