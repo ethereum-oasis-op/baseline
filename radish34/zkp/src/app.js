@@ -4,8 +4,9 @@ import cors from 'cors';
 import generateProof from './routes/generateProof';
 import generateKeys from './routes/generateKeys';
 import vk from './routes/vk';
-import { reqLogger, reqErrorLogger } from 'radish34-logger';
+import { logger, reqLogger, reqErrorLogger } from 'radish34-logger';
 
+logger.info('Starting express ...', { service: 'ZKP' });
 const app = express();
 
 app.use(cors());

@@ -13,13 +13,12 @@ router.get('/', async (req, res, next) => {
     const { id } = req.body;
     const vk = await getVerificationKeyByID(id);
 
-    logger.info(`Returning vk.`, { service: 'ZKP'});
-    logger.verbose('%o', {vk: vk}, {service: 'ZKP'});
+    logger.info('Returning vk.\n%o', vk, { service: 'ZKP'});
 
     const response = { vk };
     return res.send(response);
   } catch (err) {
-    logger.error('%o', {error: err}, { service: 'ZKP' });
+    logger.error('\n%o', err, { service: 'ZKP' });
     return next(err);
   }
 });

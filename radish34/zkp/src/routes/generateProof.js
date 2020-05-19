@@ -36,11 +36,10 @@ router.post('/', async (req, res, next) => {
       `./output/${filename}/${filename}_proof.json`,
     );
 
-    logger.info('Proof generation complete. Responding with proof.', { service: 'ZKP' });
-    logger.verbose('%o', {storedProof: storedProof}, {service: 'ZKP'});
+    logger.info('Proof generation complete. Responding with proof.\n%o', storedProof, { service: 'ZKP' });
     return res.send(storedProof);
   } catch (err) {
-    logger.error('%o', {error: err}, { service: 'ZKP' });
+    logger.error('\n%o', err, { service: 'ZKP' });
     return next(err);
   }
 });
