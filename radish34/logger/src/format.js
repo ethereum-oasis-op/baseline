@@ -67,18 +67,33 @@ module.exports = {
     }
   ),
   simpleHttpConsoleFormat: winston.format.printf(
-    ({ timestamp, level, service, message, statusCode, responseTime, responseData, requestMethod, requestUrl, requestQuery, requestBody, ...args }) => {
+    ({
+      timestamp,
+      level,
+      service,
+      message,
+      statusCode,
+      responseTime,
+      responseData,
+      requestMethod,
+      requestUrl,
+      requestQuery,
+      requestBody,
+      ...args
+    }) => {
       const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
-      return `[${timestampFormated}] [${levelFormat(level)}] [${service}]:
-        ${statusCode !== undefined ? statusFormat(statusCode) : ''}
-        ${responseTime !== undefined ? responseTime + 'ms' : ''}
-        ${requestMethod !== undefined ? requestMethod : ''}
-        ${requestUrl !== undefined ? requestUrl : ''}${requestQuery !== undefined ? requestQuery : ''}
-        ${message}
-        ${requestBody !== undefined ? JSON.stringify(requestBody) : ''}
-        ${responseData !== undefined ? JSON.stringify(responseData) : ''}
-        ${Object.keys(args).length ? JSON.stringify(args) : ''}`;
+      return `[${timestampFormated}] [${levelFormat(level)}] [${service}]: ${
+        statusCode !== undefined ? statusFormat(statusCode) : ''
+      } ${responseTime !== undefined ? responseTime : '/'}ms ${
+        requestMethod !== undefined ? requestMethod : ''
+      } ${requestUrl !== undefined ? requestUrl : ''}${
+        requestQuery !== undefined ? requestQuery : ''
+      } ${message} ${
+        requestBody !== undefined ? '\n' + JSON.stringify(requestBody) : ''
+      } ${
+        responseData !== undefined ? '\n' + JSON.stringify(responseData) : ''
+      } ${Object.keys(args).length ? '\n' + JSON.stringify(args) : ''}`;
     }
   ),
   reqHttpConsoleFormat: winston.format.printf(
@@ -104,18 +119,33 @@ module.exports = {
     }
   ),
   simpleHttpFileFormat: winston.format.printf(
-    ({ timestamp, level, service, message, statusCode, responseTime, responseData, requestMethod, requestUrl, requestQuery, requestBody, ...args }) => {
+    ({
+      timestamp,
+      level,
+      service,
+      message,
+      statusCode,
+      responseTime,
+      responseData,
+      requestMethod,
+      requestUrl,
+      requestQuery,
+      requestBody,
+      ...args
+    }) => {
       const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
-      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]:
-        ${statusCode !== undefined ? statusCode : ''}
-        ${responseTime !== undefined ? responseTime + 'ms' : ''}
-        ${requestMethod !== undefined ? requestMethod : ''}
-        ${requestUrl !== undefined ? requestUrl : ''}${requestQuery !== undefined ? requestQuery : ''}
-        ${message}
-        ${requestBody !== undefined ? JSON.stringify(requestBody) : ''}
-        ${responseData !== undefined ? JSON.stringify(responseData) : ''}
-        ${Object.keys(args).length ? JSON.stringify(args) : ''}`;
+      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]: ${
+        statusCode !== undefined ? statusCode : ''
+      } ${responseTime !== undefined ? responseTime : '/'}ms ${
+        requestMethod !== undefined ? requestMethod : ''
+      } ${requestUrl !== undefined ? requestUrl : ''}${
+        requestQuery !== undefined ? requestQuery : ''
+      } ${message} ${
+        requestBody !== undefined ? '\n' + JSON.stringify(requestBody) : ''
+      } ${
+        responseData !== undefined ? '\n' + JSON.stringify(responseData) : ''
+      } ${Object.keys(args).length ? '\n' + JSON.stringify(args) : ''}`;
     }
   ),
   reqHttpFileFormat: winston.format.printf(

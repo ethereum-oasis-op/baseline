@@ -1,5 +1,7 @@
 FROM node:11.15
 
+ENV FORCE_COLOR=1
+
 RUN mkdir /logger
 WORKDIR /logger
 
