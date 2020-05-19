@@ -87,7 +87,7 @@ Refer to the [Deployment](../deploy/README.md) job component for details on the 
 
 ## How can I run it?
 
-All smart contracts contained in this directory, are compiled as part of the build process: `npm run build`. This process inherently leverages the `sol-compile` service, which compiles the solidity code to EVM bytecode and ABI definitions and stores them in `artifacts/`.
+All smart contracts contained in this directory, are compiled as part of the build process: `npm run build`. This process inherently leverages the `truffle compile` service, which compiles the solidity code to EVM bytecode and ABI definitions and stores them in `artifacts/`.
 
 To deploy the contracts, there is a deployment script that deploys these contracts using the artifacts of compilation process above, to a given network. This can be run by executing the following instruction in the parent folder: `npm run deploy`.
 
