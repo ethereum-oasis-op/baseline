@@ -120,16 +120,16 @@ To help baselining SAP environments (following the Buyer role in this demo), Uni
 
 ## Object Mapping in the Unibright Connector
 
-![](docs/images/image20.png)
+![](docs/images/image20.jpg)
 SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison
 
-![](docs/images/image19.png)
+![](docs/images/image19.jpg)
 Request for Quotation for 2 materials
 
-![](docs/images/image12.png)
+![](docs/images/image12.jpg)
 Quotation to the Request, incl PriceScale referenced to the OrderItem
 
-![](docs/images/image8.png)
+![](docs/images/image8.jpg)
 Resulting Purchase Order for Supplier ("Vendor" 100073)
 
 ## Using the action Dashboard of the webversion of the Unibright connector to monitor SAP <> Proxy communication
