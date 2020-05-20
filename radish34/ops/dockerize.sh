@@ -3,7 +3,7 @@
 # party-agnostic
 docker-compose build ganache geth-bootnode geth-node geth-miner1 geth-miner2
 
-git diff --exit-code --quiet HEAD ./logger && if [ $? -ne 0 ] || [[ ! -d ./logger/node_modules ]]; then docker-compose build --no-cache logger; fi
+docker-compose build --no-cache logger
 
 # party-specific, external dependencies
 docker-compose build mongo-buyer mongo-supplier1 mongo-supplier2 redis-buyer redis-supplier1 redis-supplier2
