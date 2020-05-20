@@ -50,7 +50,7 @@ Baseline itself is a microservice architecture, where the different components o
 
 The architecture proposal of this demo builds upon the existing microservices, and adds layers to extract communication and integration with baseline towards an external system.
 
-![Microservice Containers](/docs/images/image5.png)
+![Microservice Containers](docs/images/image5.png)
 Microservice container environment for a participant in a baselined business process.
 
 **Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis/baseline/tree/init-core) in GitHub, including several key fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment) and enhancements (i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements).
@@ -59,12 +59,10 @@ Microservice container environment for a participant in a baselined business pro
 
 **Unibright Proxy**: An extraction of the Unibright Connector (a blockchain integration platform), consisting of a simplified, context-related domain model and a RESTful api to integrate off-chain systems.
 
-![](/docs/images/image1.png)
-
+![](docs/images/image1.png)
 The actual system of record is integrated by on premise or cloud based integration software in the domain of the respective Operator, leading to the "full stack."
 
-![](/docs/images/image6.png)
-
+![](docs/images/image6.png)
 Each role in the process should run its own full-stack, connecting to the standardized Unibright Proxy by way of Shuttle.
 
 # Challenge: Automating the setup of a baseline environment for each process participant
@@ -95,13 +93,13 @@ The following complexities related to enabling the Baseline Protocol for a multi
     * Point-to-point messaging (i.e., proof receipts, etc.)
     * Translation for DTO → Baseline Protocol
 
-![](/docs/images/image2.png)
+![](docs/images/image2.png)
 Baseline smart contract deployment to Ropsten testnet -- as of today, new projects are automatically subsidized by the Provide platform faucet when transaction broadcasts fail due to insufficient funds on every testnet. This same meta transaction / relay functionality will be helpful to organizations who want to participate in mainnet-enabled business processes in the future but do not want to hold Ether (i.e., when the Baseline Protocol has been deployed to the public Ethereum mainnet).
 
-![](/docs/images/image15.png)
+![](docs/images/image15.png)
 Baseline smart contract suite intricacy, as illustrated by the contract-internal CREATE opcodes issued from within the Shuttle deployer contract. This functionality will become a standardized part of the Baseline protocol.
 
-![](/docs/images/image16.png)
+![](docs/images/image16.png)
 Container orchestration "work product" -- each organization, using its own AWS/Azure credentials, leverages Shuttle to automate the configuration and deployment of 13 microservice container runtimes to cloud infrastructure under their own auspices. Provide also has capability of supporting this for on-premise deployments via a rack appliance.
 
 # Challenge: Establishing Domain Model and Proxy
@@ -122,16 +120,16 @@ To help baselining SAP environments (following the Buyer role in this demo), Uni
 
 ## Object Mapping in the Unibright Connector
 
-![](/docs/images/image20.png)
+![](docs/images/image20.png)
 SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison
 
-![](/docs/images/image19.png)
+![](docs/images/image19.png)
 Request for Quotation for 2 materials
 
-![](/docs/images/image12.png)
+![](docs/images/image12.png)
 Quotation to the Request, incl PriceScale referenced to the OrderItem
 
-![](/docs/images/image8.png)
+![](docs/images/image8.png)
 Resulting Purchase Order for Supplier ("Vendor" 100073)
 
 ## Using the action Dashboard of the webversion of the Unibright connector to monitor SAP <> Proxy communication
@@ -140,42 +138,42 @@ Resulting Purchase Order for Supplier ("Vendor" 100073)
 
 To help baselining Dynamics 365 environments, Envision Blockchain built an extension called Radish34 for Dynamics 365 Finance and Operations. While this demo is showing the Dynamics 365 Supplier environment, it's important to note that the Radish34 extension is duly configured to support both roles (Buyer and Supplier). Below is a diagram showing the specific Dynamics 365 Finance and Operation modules used and the objects that are passing through the Radish34 extension.
 
-![](/docs/images/image11.gif)
+![](docs/images/image11.gif)
 Radish34 Implementation Flow Chart
 
 After importing the extension, organizations will need to configure parameters to interact with the Unibright Proxy, setup Customer codes, Vendor codes, and setup custom Number sequences (which creates identifiers for Dynamics 365 objects).
 
-![](/docs/images/image3.png)
+![](docs/images/image3.png)
 Radish34 Parameter Module
 
 Supplier Role
 
 When setting up Customers, you'll need to identify customers using the Customer Setup Module and input the External code used in the Radish Module. The Value is automatically filled out by the proxy.
 
-![](/docs/images/image14.png)
+![](docs/images/image14.png)
 Customer Setup Module
 
 You can use the Radish34 service operations feature to make periodic or on-demand calls of the UB Proxy and receive RFPs.
 
-![](/docs/images/image7.png)
+![](docs/images/image7.png)
 Radish34 Service Operations Module
 
 You can use the Sales Quotation module to view, adjust the prices for the items the Buyer is requesting, and send the quotation.
 
-![](/docs/images/image17.png)
+![](docs/images/image17.png)
 Sales Quotation Module
 
 The Radish 34 Outgoing Proposals module allows you to approve, and send the proposal to the Buyer
 
-![](/docs/images/image9.png)
+![](docs/images/image9.png)
 Radish34 Outgoing Proposals Module
 
 The Radish 34 Service Operations module will periodically check for incoming purchase orders from the Buyer
 
-![](/docs/images/image10.png)
+![](docs/images/image10.png)
 Radish34 Service Operations Module (Unchecked for incoming purchase orders)
 
 The Sales Order modules to look at the approved proposal from the Buyer and confirm the sales order
 
-![](/docs/images/image18.png)
+![](docs/images/image18.png)
 Sales Order module
