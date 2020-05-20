@@ -2,6 +2,7 @@
 import { pubsub } from '../../subscriptions';
 import { getServerSettings, setServerSetting } from '../../../db/models/baseline/server/settings';
 import { createWalletFromMnemonic } from '../../../wallet';
+import { logger } from 'radish34-logger';
 
 const SERVER_SETTINGS_UPDATE = 'SERVER_SETTINGS_UPDATE';
 
@@ -9,7 +10,7 @@ export default {
   Query: {
     async getServerSettings() {
       const settings = await getServerSettings();
-      console.log('Getting server settings', settings);
+      logger.info('Getting server settings\n%o', settings, { service: 'API' });
       return settings;
     },
   },

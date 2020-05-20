@@ -1,5 +1,6 @@
 import { getServerSettings } from '../utils/serverSettings';
 import { getProvider, getDefaultProvider } from '../utils/ethers';
+import { logger } from 'radish34-logger';
 
 const providers = ['homestead', 'rinkeby', 'ropsten', 'kovan', 'goerli'];
 
@@ -16,10 +17,10 @@ export default async () => {
   connection
     .getNetwork()
     .then(network => {
-      console.log('Connected to network:', network);
+      logger.info(`Connected to network: %o`, network, { service: 'API' });
     })
     .catch(err => {
-      console.error(`Could not connect to RPC server at '${config.rpcProvider}'`, err);
+      logger.error(`Could not connect to RPC server at ${config.rpcProvider}.\n%o`, err, { service: 'API' });
       return false;
     });
 

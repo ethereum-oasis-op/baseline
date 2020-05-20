@@ -8,6 +8,8 @@ import {
   getOrganizationCount,
   getRegisteredOrganization,
 } from '../../contracts/OrgRegistry/methods';
+import { logger } from 'radish34-logger';
+
 
 const NEW_ORG = 'NEW_ORG';
 
@@ -49,7 +51,7 @@ export default {
         organizationWhisperKey,
       );
 
-      console.log('Registering Organization with tx:', orgRegistryTxHash);
+      logger.info(`Registering organization with tx hash: ${orgRegistryTxHash}`, { service: 'API' });
     },
   },
   Subscription: {

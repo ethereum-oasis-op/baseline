@@ -14,6 +14,7 @@ import {
   callCoreResolver,
   isCoreResolver,
 } from './resolvers';
+import { logger } from 'radish34-logger';
 
 export const getUncompleteBaselineGroups = async () => {
   const uncompleted = await BaselineTaskGroup.find({
@@ -38,7 +39,7 @@ export const checkTaskRequirements = async (data, requirements) => {
       throw Error(`Baseline Task is missing required values: ${listOfMissing}`);
     }
   } catch (err) {
-    console.error(err);
+    logger.error('\n%o', err, { service: 'API' });
     return false;
   }
   return true;
@@ -56,10 +57,11 @@ export const checkTaskGroupResolvers = async baselineTasks => {
     const missing = filter(resolvers, ['exists', false]);
     if (missing.length) {
       const listOfMissing = missing.map(requirement => requirement.key).join(', ');
-      throw Error(`Baseline Task is missing required resolvers: ${listOfMissing}`);
+      logger.error(`Baseline Task is missing required resolvers: ${listOfMissing}.`, { service: 'API' });
+      throw Error(`Baseline Task is missing required resolvers: ${listOfMissing}.`);
     }
   } catch (err) {
-    console.error(err);
+    logger.error('\n%o', err, { service: 'API' });
     return false;
   }
   return true;
@@ -89,7 +91,8 @@ export const resumeTask = async (baselineId, data, task) => {
 export const resumeTaskGroupById = async baselineId => {
   const baselineTaskGroup = await getBaselineTaskGroupById(baselineId);
   if (!baselineTaskGroup) {
-    throw new Error('Baseline Task Group cannot resume');
+    logger.error('Baseline task group cannot resume.', { service: 'API' });
+    throw new Error('Baseline task group cannot resume.');
   }
   const { baselineTasks, data } = baselineTaskGroup;
   await checkTaskGroupResolvers(baselineTasks);
@@ -108,7 +111,7 @@ export const generateBaselineId = inputs => {
 
 // This is just for testing
 export const clearExperiment = async () => {
-  console.log('Running the experiment ...');
+  logger.info('Running the experiment ...', { service: 'API' });
   await BaselineTaskGroup.deleteMany({});
   await BaselineTask.deleteMany({});
 };

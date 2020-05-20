@@ -6,6 +6,7 @@ import { saveNotice } from '../services/notice';
 import { getServerSettings } from '../utils/serverSettings';
 import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../queues/message_delivery';
+import { logger } from 'radish34-logger';
 
 const NEW_PO = 'NEW_PO';
 
@@ -28,8 +29,7 @@ export default {
     createPO: async (_parent, args, context) => {
       const currentUser = await getPartnerByMessengerKey(context.identity);
       try {
-        console.log('\n\n\nRequest to create PO with inputs:');
-        console.log(args.input);
+        logger.info(`Request to create PO with inputs:\n%o`, args.input, { service: 'API' });
         /*
         currentUser: {
           _id: '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
@@ -56,7 +56,7 @@ export default {
         const oldMSAObject = oldMSA.object;
 
         const price = oldMSA.price(volume);
-        console.log(`\nCalculated a price of ${price} for this PO`);
+        logger.info(`Calculated a price of ${price} for this PO.`, { service: 'API' });
 
         const {
           zkpPublicKeyOfBuyer,
@@ -131,7 +131,7 @@ export default {
           lastModified: Math.floor(Date.now() / 1000),
         });
 
-        console.log(`\nSending PO (id: ${poDoc._id}) to supplier...`);
+        logger.info(`Sending PO with id ${poDoc._id} to supplier.`, { service: 'API' });
         const senderId = currentUser.identity;
         const recipientId = supplier.identity;
         // Add to BullJS queue
@@ -149,7 +149,7 @@ export default {
         pubsub.publish(NEW_PO, { newPO: { ...poDoc, whisperPublicKeyOfSupplier: supplier.zkpPublicKey } });
 
         return { ...poDoc, whisperPublicKeyOfSupplier: supplier.zkpPublicKey };
-      } catch (e) {
+      } catch (err) {
         pubsub.publish('INCOMING_TOASTR_NOTIFICATION', {
           onNotification: {
             success: false,
@@ -157,8 +157,8 @@ export default {
             userAddress: currentUser.address,
           }
         });
-        console.log('createPO error:', e);
-        throw new Error(e);
+        logger.error(`Error in createPO.\n%o`, err, { service: 'API' });
+        throw new Error(err);
       }
     },
   },

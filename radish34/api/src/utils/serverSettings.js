@@ -1,9 +1,10 @@
 import config from 'config';
 import { pubsub } from '../subscriptions';
 import db from '../db';
+import { logger } from 'radish34-logger';
 
 export const loadServerSettingsFromFile = async () => {
-  console.log('Loading config file ...');
+  logger.info('Loading config file ...', { service: 'API'});
   const storedSettings = await db.collection('serversettings').findOne({});
   // Overwrite current settings stored in db with what is in config file
   const settings = {

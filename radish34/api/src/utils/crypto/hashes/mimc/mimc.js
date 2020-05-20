@@ -80,7 +80,6 @@ export const mimcHash = (...preimage) => {
     .toString(16)
     .padStart(64, '0')}`;
 
-  console.log(hash);
   return hash;
 };
 
@@ -88,20 +87,17 @@ export const mimcHash = (...preimage) => {
  @param {Array} leaves - an array of hex strings or integer values
 */
 export const merkleHash = leaves => {
-  console.log('input leaves:', leaves);
   const leafCount = leaves.length;
   // if (leafCount !== 2 ** treeHeight) throw new Error("Incorrect number of leaves for tree height!");
   let inputs = [];
   if (leafCount === 2) {
     inputs = leaves;
     const hash = mimcHash(...inputs);
-    console.log('bottom level:', inputs, hash);
     return hash;
   }
   inputs[0] = merkleHash(leaves.slice(0, leafCount / 2));
   inputs[1] = merkleHash(leaves.slice(leafCount / 2, leafCount));
   const hash = mimcHash(...inputs);
-  console.log('upper levels:', leafCount, inputs, hash);
   return hash;
 };
 

@@ -1,6 +1,7 @@
 import { getEventValuesFromTxReceipt } from '../utils/ethers';
 import { hexToDec, flattenDeep } from '../utils/crypto/conversions';
 import { getTxReceipt, getContractWithWalletByName } from './contract';
+import { logger } from 'radish34-logger';
 
 /**
  * Converts a proof object to a flattened array of integers (field elements).
@@ -25,7 +26,6 @@ export const formatProof = proofObject => {
  * @param {string} txReceipt - transaction receipt
  */
 const gasUsedStats = (functionName, shieldContract, txReceipt) => {
-  console.group(`\nGas used in ${functionName}:`);
   const { gasUsed } = txReceipt;
   const { byShieldContract, byVerifierContract } = getEventValuesFromTxReceipt(
     'GasUsed',
@@ -33,13 +33,15 @@ const gasUsedStats = (functionName, shieldContract, txReceipt) => {
     txReceipt,
   );
   const refund = byVerifierContract + byShieldContract - gasUsed;
-  console.log('Total:', gasUsed.toNumber());
-  console.log('By shield contract:', byShieldContract);
-  console.log('By verifier contract (pre refund):', byVerifierContract);
-  console.log('Refund:', refund);
-  console.log('Attributing all of refund to the verifier contract...');
-  console.log('By verifier contract (post refund):', byVerifierContract - refund);
-  console.groupEnd();
+  logger.info(`
+    Gas used in ${functionName}:
+      Total: ${gasUsed.toNumber()}
+      By shield contract: ${byShieldContract}
+      By verifier contract (pre refund): ${byVerifierContract}
+      Refund: ${refund}
+      Attributing all of refund to the verifier contract.
+      By verifier contract (post refund): ${byVerifierContract - refund}
+  `, { service: 'API'});
 };
 
 /**
@@ -48,13 +50,12 @@ const gasUsedStats = (functionName, shieldContract, txReceipt) => {
  * @param {string[]} publicInputs - Other public proof fields
  */
 export const createMSA = async (proof, publicInputHash, publicInputs) => {
-  console.log('\nCreating MSA within the shield contract');
-  console.log('proof:');
-  console.log(proof);
-  console.log('publicInputHash:');
-  console.log(publicInputHash);
-  console.log('publicInputs:');
-  console.log(publicInputs);
+  logger.info(`
+    Creating MSA within the shield contract:
+      proof:\n%o
+      publicInputHash: ${publicInputHash}
+      publicInputs:\n%o
+  `, proof, publicInputs, { service: 'API'});
 
   const shieldContract = await getContractWithWalletByName('Shield');
   const overrides = {
@@ -85,16 +86,15 @@ export const createMSA = async (proof, publicInputHash, publicInputs) => {
 /**
 @param {string[]} proof - Array of private fields for the proof
 @param {string} publicInputHash - The public side of the hash
-@param {string[]} publicInputs - Other public proof fields  
+@param {string[]} publicInputs - Other public proof fields
  */
 export const createPO = async (proof, publicInputHash, publicInputs) => {
-  console.log('\nCreating PO within the shield contract');
-  console.log('proof:');
-  console.log(proof);
-  console.log('publicInputHash:');
-  console.log(publicInputHash);
-  console.log('publicInputs:');
-  console.log(publicInputs);
+  logger.info(`
+    Creating PO within the shield contract:
+      proof:\n%o
+      publicInputHash: ${publicInputHash}
+      publicInputs:\n%o
+  `, proof, publicInputs, { service: 'API'});
 
   const shieldContract = await getContractWithWalletByName('Shield');
   const overrides = {

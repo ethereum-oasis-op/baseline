@@ -38,6 +38,8 @@ import POResolver from './resolvers/po';
 import messageRoutes from './routes/messenger';
 import healthRoutes from './routes/healthCheck';
 
+import { logger, reqLogger, reqErrorLogger } from 'radish34-logger';
+
 const GRAPHQL_PORT = process.env.GRAPHQL_PORT || 8001;
 const REST_PORT = process.env.REST_PORT || 8101;
 
@@ -78,12 +80,15 @@ export default async function startServer() {
   const app = express();
 
   app.use(bodyParser.json({ limit: '2mb' }));
+
+  app.use(reqLogger('API'));
   app.use('/', healthRoutes);
   app.use('/api/v1', messageRoutes);
   app.use('/bulls', UI);
+  app.use(reqErrorLogger('API'));
 
   app.listen(REST_PORT, () =>
-    console.log(`🚀 Internal REST-Express server listening at http://localhost:${REST_PORT}`),
+    logger.info(`Internal REST based express server listening at http://localhost:${REST_PORT}.`, { service: 'API' })
   );
   await healthcheck();
 
@@ -101,12 +106,8 @@ export default async function startServer() {
   const httpServer = createServer(app);
   server.installSubscriptionHandlers(httpServer);
 
-  // Spin up workers
-
   httpServer.listen({ port: GRAPHQL_PORT }, () => {
-    console.log(`🚀 Server ready at http://localhost:${GRAPHQL_PORT}${server.graphqlPath}`);
-    console.log(
-      `🚀 Subscriptions ready at ws://localhost:${GRAPHQL_PORT}${server.subscriptionsPath}`,
-    );
+    logger.info(`Server ready at http://localhost:${GRAPHQL_PORT}${server.graphqlPath}.`, { service: 'API' });
+    logger.info(`Subscriptions ready at ws://localhost:${GRAPHQL_PORT}${server.subscriptionsPath}.`, { service: 'API' });
   });
 }

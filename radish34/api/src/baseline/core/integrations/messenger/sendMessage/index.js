@@ -1,5 +1,6 @@
 import Queue from 'bull';
 import { registerCoreResolver } from '../../../resolvers';
+import { logger } from 'radish34-logger';
 // import { createHasteMap } from 'jest-runtime';
 // import BLTS, { createNewBaselineTask } from '../../../db/models/baselineTask';
 
@@ -25,12 +26,12 @@ responseQueue.process(`${__dirname}/processResponse.js`);
 
 ackQueue.on('completed', (job, data) => {
   // Update Baseline Object with the job id
-  console.log('API: Request for sendMessage successfully receieved', data);
+  logger.info('Request for sendMessage successfully receieved:\n%o', data, { service: 'API' });
 });
 
 responseQueue.on('completed', (job, data) => {
   // Update Baseline Object
-  console.log('API: Response for sendMessage successfully completed', data);
+  logger.info('Response for sendMessage successfully completed:\n%o', data, { service: 'API' });
 });
 
 const createMessage = async (baselineId, taskId, inputs) => {
@@ -49,7 +50,7 @@ export default {
   create: createMessage,
   onComplete: func => {
     responseQueue.on('completed', (job, data) => {
-      console.log('API: Request for sendMessage successfully transmitted', data);
+      logger.info('Request for sendMessage successfully transmitted:\n%o', data, { service: 'API' });
       func(job, data);
     });
   },

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { BaselineTask } from './baselineTask';
+import { logger } from 'radish34-logger';
 
 const { Map } = mongoose.Schema.Types;
 const { Schema } = mongoose;
@@ -83,7 +84,7 @@ export const setBaselineTaskGroupToCompletedById = async baselineId => {
   baselineTaskGroup.completed = true;
   await baselineTaskGroup.save();
   const updatedBaselineTaskGroup = await getBaselineTaskGroupById(baselineId);
-  console.log('Saved', updatedBaselineTaskGroup);
+  logger.info('Saved: %o', updatedBaselineTaskGroup, { service: 'API' });
 };
 
 export default {

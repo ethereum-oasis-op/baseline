@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { getPartnerByMessengerKey } from '../../../services/partner';
+import { logger } from 'radish34-logger';
 // import { pubsub } from '../subscriptions';
 
 /**
@@ -69,7 +70,7 @@ export const getOutbox = async () => {
 };
 
 export const saveNotice = async input => {
-  console.log('Saving the notice');
+  logger.info('Saving the notice.', { service: 'API' });
   const count = await Notice.estimatedDocumentCount();
   const doc = Object.assign(input, { _id: count + 1 });
   const notice = await Notice.insertOne(doc);
@@ -97,8 +98,8 @@ export const createNotice = async (category, payload, categoryId = null) => {
     const notice = await Notice.create([newNotice], { upsert: true, new: true });
     // pubsub.publish('NEW_NOTICE', { newNotice: notice[0] });
     return notice;
-  } catch (e) {
-    console.log('Error creating notice: ', e);
+  } catch (err) {
+    logger.error('Error creating notice.\n%o', err, { service: 'API' });
   }
 };
 
