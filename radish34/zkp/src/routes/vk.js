@@ -6,11 +6,10 @@ const router = express.Router();
 
 /**
  * @param {string} id is the name of the circuit, e.g. 'createMSA'
-
-*/
-router.get('/', async (req, res, next) => {
+ */
+router.get('/:id', async (req, res, next) => {
   try {
-    const { id } = req.body;
+    const { id } = req.params;
     const vk = await getVerificationKeyByID(id);
 
     logger.info('Returning vk.\n%o', vk, { service: 'ZKP'});
