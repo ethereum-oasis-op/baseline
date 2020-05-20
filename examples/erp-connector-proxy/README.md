@@ -55,7 +55,8 @@ Baseline itself is a microservice architecture, where the different components o
 The architecture proposal of this demo builds upon the existing microservices, and adds layers to extract communication and integration with baseline towards an external system.
 
 ![Microservice Containers](docs/images/image5.png)
-Microservice container environment for a participant in a baselined business process.
+
+*Microservice container environment for a participant in a baselined business process.*
 
 **Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis/baseline/tree/init-core) in GitHub, including several key fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment) and enhancements (i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements).
 
