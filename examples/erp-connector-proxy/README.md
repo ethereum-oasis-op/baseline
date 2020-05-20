@@ -129,6 +129,7 @@ To help baselining SAP environments (following the Buyer role in this demo), Uni
 <br/><sub><sup>**Object Mapping in the Unibright Connector**</sub></sup>
 
 ![](docs/images/image20.jpg)
+<<<<<<< HEAD
 <br/><sub><sup>**SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison**</sub></sup>
 
 ![](docs/images/image19.jpg)
@@ -139,6 +140,18 @@ To help baselining SAP environments (following the Buyer role in this demo), Uni
 
 ![](docs/images/image8.jpg)
 <br/><sub><sup>**Resulting Purchase Order for Supplier ("Vendor" 100073)**</sub></sup>
+=======
+SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison
+
+![](docs/images/image19.jpg)
+Request for Quotation for 2 materials
+
+![](docs/images/image12.jpg)
+Quotation to the Request, incl PriceScale referenced to the OrderItem
+
+![](docs/images/image8.jpg)
+Resulting Purchase Order for Supplier ("Vendor" 100073)
+>>>>>>> Fix references to some images in erp connector readme
 
 ![](docs/images/image13.png)
 <br/><sub><sup>**Using the action Dashboard of the webversion of the Unibright connector to monitor SAP <> Proxy communication**</sub></sup>
