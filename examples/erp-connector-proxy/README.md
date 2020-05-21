@@ -125,6 +125,7 @@ The proxy does not perform any business logic on its own (apart from some basic 
 
 To help baselining SAP environments (following the Buyer role in this demo), Unibright configured the Unibright Connector (the integration platform of the Unibright Framework) to integrate and map the SAP models with the proxy automatically.
 
+<<<<<<< HEAD
 ![](docs/images/image4.jpg)
 <br/><sub><sup>**Object Mapping in the Unibright Connector**</sub></sup>
 
@@ -142,16 +143,22 @@ To help baselining SAP environments (following the Buyer role in this demo), Uni
 <br/><sub><sup>**Resulting Purchase Order for Supplier ("Vendor" 100073)**</sub></sup>
 =======
 SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison
+=======
+![](docs/images/image4.png)
+<br/><sub><sup>**Object Mapping in the Unibright Connector**</sub></sup>
+
+![](docs/images/image20.jpg)
+<br/><sub><sup>**SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison**</sub></sup>
+>>>>>>> Initial commit of the erp radishproxy example
 
 ![](docs/images/image19.jpg)
-Request for Quotation for 2 materials
+<br/><sub><sup>**Request for Quotation for 2 materials**</sub></sup>
 
 ![](docs/images/image12.jpg)
-Quotation to the Request, incl PriceScale referenced to the OrderItem
+<br/><sub><sup>**Quotation to the Request, incl PriceScale referenced to the OrderItem**</sub></sup>
 
 ![](docs/images/image8.jpg)
-Resulting Purchase Order for Supplier ("Vendor" 100073)
->>>>>>> Fix references to some images in erp connector readme
+<br/><sub><sup>**Resulting Purchase Order for Supplier ("Vendor" 100073)**</sub></sup>
 
 ![](docs/images/image13.png)
 <br/><sub><sup>**Using the action Dashboard of the webversion of the Unibright connector to monitor SAP <> Proxy communication**</sub></sup>
