@@ -1,6 +1,7 @@
 # Baselining Business Process Automation across SAP and Microsoft Dynamics
 
 ##### Stefan Schmidt ([Unibright](https://unibright.io)), Kyle Thomas ([Provide](https://provide.services)), Daniel Norkin ([Envision Blockchain](http://envisionblockchain.com))
+
 May 21, 2020
 
 # Introduction
@@ -50,20 +51,20 @@ Baseline itself is a microservice architecture, where the different components o
 
 The architecture proposal of this demo builds upon the existing microservices, and adds layers to extract communication and integration with baseline towards an external system.
 
-![Microservice Containers](docs/images/image5.png)
-Microservice container environment for a participant in a baselined business process.
+![Shuttle Microservice Containers](docs/images/image5.png)
+<br/><sub><sup>**Microservice container environment for a participant in a baselined business process.**</sub></sup>
 
 **Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis/baseline/tree/init-core) in GitHub, including several key fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment) and enhancements (i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements).
 
-**Provide Containers**: Provide identity, key management, blockchain and messaging microservice API containers representing the technical entry point and translation layer for data and baseline protocol messages, and the provider of messaging infrastructure leveraged by the Baseline stack for secure point-to-point messaging.
+**Provide Containers**: Provide's identity, key management, blockchain and messaging microservice API containers representing the technical entry point and translation layer for data and baseline protocol messages, and the provider of messaging infrastructure leveraged by the Baseline stack for secure point-to-point messaging.
 
 **Unibright Proxy**: An extraction of the Unibright Connector (a blockchain integration platform), consisting of a simplified, context-related domain model and a RESTful api to integrate off-chain systems.
 
 ![](docs/images/image1.png)
-The actual system of record is integrated by on premise or cloud based integration software in the domain of the respective Operator, leading to the "full stack."
+<br/><sub><sup>**The actual system of record is integrated by on premise or cloud based integration software in the domain of the respective Operator, leading to the "full stack."**</sub></sup><br/>
 
 ![](docs/images/image6.png)
-Each role in the process should run its own full-stack, connecting to the standardized Unibright Proxy by way of Shuttle.
+<br/><sub><sup>**Each role in the process should run its own full-stack, connecting to the standardized Unibright Proxy by way of [Shuttle](https://shuttle.provide.services).**</sub></sup>
 
 # Challenge: Automating the setup of a baseline environment for each process participant
 
@@ -75,32 +76,34 @@ A viable rendezvous point where every participant in a multiparty business proce
 * can automate container orchestration across major infrastructure vendors (i.e., AWS and Microsoft Azure); and
 * it can provide atomicity guarantees across all participants' container runtimes during protocol upgrades (i.e., to ensure forward compatibility and continuity for early adopters)
 
-Shuttle is a bring-your-own-keys rendezvous point enabling turnkey container orchestration and integration across infrastructure vendors. Shuttle is a product built by Provide to de-risk multiparty enterprise "production experiments " using the Baseline Protocol, providing continuity to early adopters of the Baseline approach. Provide is actively contributing to the standards of the Baseline Protocol while commercially supporting Shuttle projects .
+Shuttle is a bring-your-own-keys rendezvous point enabling turnkey container orchestration and integration across infrastructure vendors. Shuttle de-risks multiparty enterprise "production experiments " using the Baseline Protocol, providing continuity to early adopters of the Baseline approach. Provide is actively contributing to the standards and protocol while commercially supporting Shuttle projects.
 
-The following complexities related to enabling the Baseline Protocol for a multiparty process such as the one illustrated by the Radish34 use-case are addressed by Shuttle as an enterprise rendezvous point :
+The following complexities related to enabling the Baseline Protocol for a multiparty process such as the one illustrated by the Radish34 use-case are addressed by Shuttle as an enterprise rendezvous point:
 
 * Infrastructure
-  * Containers (and the dependency graph)
+  * Container Orchestration
+    * Security
+    * Dependency Graph
   * Blockchain
     * HD Wallets / Accounts
     * Meta transaction relay (i.e., enterprise "gas pump")
     * Smart Contracts (i.e., deployment, interaction)
     * Organization Identity / PKI / x509
     * Key material (i.e., for advanced privacy, messaging, zkSNARKs
-  * Baseline Protocol
-    * Circuit Registry
-    * Forward-compatibility
-    * Point-to-point messaging (i.e., proof receipts, etc.)
-    * Translation for DTO → Baseline Protocol
+* Baseline Protocol
+  * Circuit Registry
+  * Continuity & forward-compatibility (i.e., with rapidly-evolving protocols)
+  * Point-to-point messaging (i.e., proof receipts, etc.)
+  * Translation for DTO → Baseline Protocol
 
 ![](docs/images/image2.png)
-Baseline smart contract deployment to Ropsten testnet -- as of today, new projects are automatically subsidized by the Provide platform faucet when transaction broadcasts fail due to insufficient funds on every testnet. This same meta transaction / relay functionality will be helpful to organizations who want to participate in mainnet-enabled business processes in the future but do not want to hold Ether (i.e., when the Baseline Protocol has been deployed to the public Ethereum mainnet).
+<br/><sub><sup>Baseline smart contract deployment to Ropsten testnet -- as of today, new projects are automatically subsidized by the Provide platform faucet when transaction broadcasts fail due to insufficient funds on every testnet. This same meta transaction / relay functionality will be helpful to organizations who want to participate in mainnet-enabled business processes in the future but do not want to hold Ether (i.e., when the Baseline Protocol has been deployed to the public Ethereum mainnet).*</sub></sup>
 
 ![](docs/images/image15.png)
-Baseline smart contract suite intricacy, as illustrated by the contract-internal CREATE opcodes issued from within the Shuttle deployer contract. This functionality will become a standardized part of the Baseline protocol.
+<br/><sub><sup>Baseline smart contract suite intricacy, as illustrated by the contract-internal CREATE opcodes issued from within the Shuttle deployer contract. This functionality will become a standardized part of the Baseline protocol.*</sub></sup>
 
 ![](docs/images/image16.png)
-Container orchestration "work product" -- each organization, using its own AWS/Azure credentials, leverages Shuttle to automate the configuration and deployment of 13 microservice container runtimes to cloud infrastructure under their own auspices. Provide also has capability of supporting this for on-premise deployments via a rack appliance.
+<br/><sub><sup>Container orchestration "work product" -- each organization, using its own AWS/Azure credentials, leverages Shuttle to automate the configuration and deployment of 13 microservice container runtimes to cloud infrastructure under their own auspices. Provide also has capability of supporting this for on-premise deployments via a rack appliance.*</sub></sup>
 
 # Challenge: Establishing Domain Model and Proxy
 
@@ -110,7 +113,7 @@ A proxy is an intermediate layer that you establish in an integration process. T
 
 The proxy defines the entry point for all integration partners in the use case scenario, agreeing on a common domain model and service layer. Still, every participant runs its own proxy, keeping the decentralised structure in place.
 
-The proxy does not perform any business logic on its own (apart from some basic example mappings to make the first setup easier), but is calling the Provide Shuttle stack in this demo using [this](https://github.com/provideservices/provide-dotnet) open source project which provides the bridge between the proxy and Baseline protocol by way of the Provide stack.
+The proxy does not perform any business logic on its own (apart from some basic example mappings to make the first setup easier). The proxy leverages the local Provide stack as a gateway to the Baseline Protocol by way of [this](https://github.com/provideservices/provide-dotnet) open-source NuGet package.
 
 # Challenge: Integrating Systems of Record
 
@@ -118,62 +121,64 @@ The proxy does not perform any business logic on its own (apart from some basic 
 
 To help baselining SAP environments (following the Buyer role in this demo), Unibright configured the Unibright Connector (the integration platform of the Unibright Framework) to integrate and map the SAP models with the proxy automatically.
 
-## Object Mapping in the Unibright Connector
+![](docs/images/image4.png)
+<br/><sub><sup>**Object Mapping in the Unibright Connector**</sub></sup>
 
 ![](docs/images/image20.jpg)
-SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison
+<br/><sub><sup>**SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison**</sub></sup>
 
 ![](docs/images/image19.jpg)
-Request for Quotation for 2 materials
+<br/><sub><sup>**Request for Quotation for 2 materials**</sub></sup>
 
 ![](docs/images/image12.jpg)
-Quotation to the Request, incl PriceScale referenced to the OrderItem
+<br/><sub><sup>**Quotation to the Request, incl PriceScale referenced to the OrderItem**</sub></sup>
 
 ![](docs/images/image8.jpg)
-Resulting Purchase Order for Supplier ("Vendor" 100073)
+<br/><sub><sup>**Resulting Purchase Order for Supplier ("Vendor" 100073)**</sub></sup>
 
-## Using the action Dashboard of the webversion of the Unibright connector to monitor SAP <> Proxy communication
+![](docs/images/image13.png)
+<br/><sub><sup>**Using the action Dashboard of the webversion of the Unibright connector to monitor SAP <> Proxy communication**</sub></sup>
 
 ## Microsoft Dynamics
 
-To help baselining Dynamics 365 environments, Envision Blockchain built an extension called Radish34 for Dynamics 365 Finance and Operations. While this demo is showing the Dynamics 365 Supplier environment, it's important to note that the Radish34 extension is duly configured to support both roles (Buyer and Supplier). Below is a diagram showing the specific Dynamics 365 Finance and Operation modules used and the objects that are passing through the Radish34 extension.
+To help baselining Dynamics 365 environments, Envision Blockchain built an extension called Radish34 for Dynamics 365 Finance and Operations. While this demo is showing the Dynamics 365 Supplier environment, it's important to note that the Radish34 extension is dually configured to support both roles (Buyer and Supplier). Below is a diagram showing the specific Dynamics 365 Finance and Operation modules used and the objects that are passing through the Radish34 extension.
 
 ![](docs/images/image11.gif)
-Radish34 Implementation Flow Chart
+<br/><sub><sup>**Radish34 Implementation Flow Chart**</sub></sup>
 
 After importing the extension, organizations will need to configure parameters to interact with the Unibright Proxy, setup Customer codes, Vendor codes, and setup custom Number sequences (which creates identifiers for Dynamics 365 objects).
 
 ![](docs/images/image3.png)
-Radish34 Parameter Module
+<br/><sub><sup>**Radish34 Parameter Module**</sub></sup>
 
 Supplier Role
 
 When setting up Customers, you'll need to identify customers using the Customer Setup Module and input the External code used in the Radish Module. The Value is automatically filled out by the proxy.
 
 ![](docs/images/image14.png)
-Customer Setup Module
+<br/><sub><sup>**Customer Setup Module**</sub></sup>
 
 You can use the Radish34 service operations feature to make periodic or on-demand calls of the UB Proxy and receive RFPs.
 
 ![](docs/images/image7.png)
-Radish34 Service Operations Module
+<br/><sub><sup>**Radish34 Service Operations Module**</sub></sup>
 
 You can use the Sales Quotation module to view, adjust the prices for the items the Buyer is requesting, and send the quotation.
 
 ![](docs/images/image17.png)
-Sales Quotation Module
+<br/><sub><sup>**Sales Quotation Module**</sub></sup>
 
 The Radish 34 Outgoing Proposals module allows you to approve, and send the proposal to the Buyer
 
 ![](docs/images/image9.png)
-Radish34 Outgoing Proposals Module
+<br/><sub><sup>**Radish34 Outgoing Proposals Module**</sub></sup>
 
 The Radish 34 Service Operations module will periodically check for incoming purchase orders from the Buyer
 
 ![](docs/images/image10.png)
-Radish34 Service Operations Module (Unchecked for incoming purchase orders)
+<br/><sub><sup>**Radish34 Service Operations Module (Unchecked for incoming purchase orders)**</sub></sup>
 
 The Sales Order modules to look at the approved proposal from the Buyer and confirm the sales order
 
 ![](docs/images/image18.png)
-Sales Order module
+<br/><sub><sup>**Sales Order module**</sub></sup>
