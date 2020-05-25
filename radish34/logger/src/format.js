@@ -1,4 +1,5 @@
 const winston = require('winston');
+const os = require('os');
 const {
   error,
   warning,
@@ -61,7 +62,7 @@ module.exports = {
 
       return `[${timestampFormated}] [${levelFormat(
         level
-      )}] [${service}]: ${message} ${
+      )}] [${service}] [${os.hostname()}]: ${message} ${
         Object.keys(args).length ? JSON.stringify(args) : ''
       }`;
     }
@@ -83,7 +84,7 @@ module.exports = {
     }) => {
       const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
-      return `[${timestampFormated}] [${levelFormat(level)}] [${service}]: ${
+      return `[${timestampFormated}] [${levelFormat(level)}] [${service}] [${os.hostname()}]: ${
         statusCode !== undefined ? statusFormat(statusCode) : ''
       } ${responseTime !== undefined ? responseTime : '/'}ms ${
         requestMethod !== undefined ? requestMethod : ''
@@ -104,7 +105,7 @@ module.exports = {
 
       return `[${timestampFormated}] [${levelFormat(
         level
-      )}] [${service}]: ${statusFormat(meta.res.statusCode)} ${
+      )}] [${service}] [${os.hostname()}]: ${statusFormat(meta.res.statusCode)} ${
         meta.responseTime
       }ms ${meta.req.method} ${meta.req.originalUrl}`;
     }
@@ -113,7 +114,7 @@ module.exports = {
     ({ timestamp, level, service, message, ...args }) => {
       const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
-      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]: ${message} ${
+      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}] [${os.hostname()}]: ${message} ${
         Object.keys(args).length ? JSON.stringify(args) : ''
       }`;
     }
@@ -135,7 +136,7 @@ module.exports = {
     }) => {
       const timestampFormated = timestamp.slice(0, 19).replace('T', ' ');
 
-      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]: ${
+      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}] [${os.hostname()}]: ${
         statusCode !== undefined ? statusCode : ''
       } ${responseTime !== undefined ? responseTime : '/'}ms ${
         requestMethod !== undefined ? requestMethod : ''
@@ -154,7 +155,7 @@ module.exports = {
       level = 'http';
       const service = message;
 
-      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}]: ${
+      return `[${timestampFormated}] [${level.toUpperCase()}] [${service}] [${os.hostname()}]: ${
         meta.res.statusCode
       } ${meta.responseTime}ms ${meta.req.method} ${
         meta.req.originalUrl
