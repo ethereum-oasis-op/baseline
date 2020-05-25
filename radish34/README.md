@@ -30,7 +30,7 @@ The steps below illustrate the individual steps, that can be viewed as the break
 
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
 2. Run `make npm-install` at the root level of the repo. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
-3. Run `cd radish34/ && docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
+3. Run `cd radish34/ && docker build ./logger -f ./logger/dev.Dockerfile -t radish34_logger && docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
 4. Run `cd radish34/ && npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
     <details> 
       <summary>Example logs</summary>
