@@ -214,6 +214,8 @@ const getEventValuesFromTxReceipt = (eventName, contract, txReceipt) => {
       let { values } = logDescription;
       values = removeNumericKeys(values); // values contains duplicate numeric keys for each event parameter.
       values = parseBigNumbers(values); // convert uints (returned as BigNumber) to numbers.
+
+      logger.debug(`Event '${eventName}' and extracted values:\n%o`, values, { service: 'API' });
       return values;
     }
   }

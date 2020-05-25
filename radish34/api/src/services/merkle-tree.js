@@ -129,15 +129,16 @@ to the root by successive hashing.  This is needed for part of the private input
 to proofs that need demonstrate that a token is in a Merkle tree.
 It works for any size of Merkle tree, it just needs to know the tree depth, which it gets from config.js
 @param {string} contractName - the name of the contract being filtered by the merkle-tree service (most likely 'Shield')
-@param {string} commitment - the commitment value
+@param {string} _commitment - the commitment value
 @param {integer} commitmentIndex - the leafIndex within the shield contract's merkle tree of the commitment we're getting the sibling path for
 @returns {object} containing: an array of strings - where each element of the array is a node of the sister-path of
 the path from myToken to the Merkle Root and whether the sister node is to the left or the right (this is needed because the order of hashing matters)
 */
 export const getSiblingPath = async (contractName, _commitment, commitmentIndex) => {
   // check the commitment's format:
-  // if (commitment.length !== config.LEAF_HASHLENGTH * 2) {
-  //   throw new Error(`commitment has incorrect length: ${commitment}`);
+  // logger.debug(`_commitment: ${_commitment}`, { service: 'API' });
+  // if (_commitment.length !== config.LEAF_HASHLENGTH * 2) {
+  //   throw new Error(`commitment has incorrect length: ${_commitment}`);
   // }
 
   // check the database's mongodb aligns with the merkle-tree's mongodb: i.e. check leaf.commitmentIndex === commitment:
@@ -148,6 +149,7 @@ export const getSiblingPath = async (contractName, _commitment, commitmentIndex)
       commitmentIndex: ${commitmentIndex}
   `, { service: 'API' });
   const leaf = await getLeafByLeafIndex(contractName, commitmentIndex);
+  logger.debug(`Leaf:\n%o.`, leaf, { service: 'API' });
   if (leaf.value !== _commitment)
     throw new Error(
       `FATAL: The given commitmentIndex ${commitmentIndex} returns different commitment values in the database microservice (${_commitment}) vs the merkle-tree microservice (${leaf.value}).`,
@@ -157,11 +159,14 @@ export const getSiblingPath = async (contractName, _commitment, commitmentIndex)
   const siblingPath = await getSiblingPathByLeafIndex(contractName, commitmentIndex).then(result =>
     result.map(node => node.value),
   );
+  logger.debug('Sibling path:\n%o', siblingPath, { service: 'API' });
 
   // check the root has been correctly calculated, by cross-referencing with the roots() mapping on-chain:
   const rootInDb = siblingPath[0];
   const contract = await getContractByName(contractName);
   const rootOnChain = await contract.roots(rootInDb);
+  logger.debug(`Root in db: ${rootInDb}.`, { service: 'API' });
+  logger.debug(`Root on chain: ${rootOnChain}.`, { service: 'API' });
   if (rootOnChain !== rootInDb)
     throw new Error(
       'FATAL: The root calculated within the merkle-tree microservice does not match any historic on-chain roots.',
@@ -194,6 +199,16 @@ export const checkRoot = (commitment, commitmentIndex, siblingPath, root) => {
     .padStart(TREE_HEIGHT, '0') // pad to correct length
     .split(''); // convert to array for easier iterability
 
+  logger.debug(`
+    Check root:
+      commitment: ${commitment}
+      truncatedCommitment: ${truncatedCommitment}
+      commitmentIndex: ${commitmentIndex}
+      binaryCommitmentIndex: ${binaryCommitmentIndex}
+      siblingPath: %o
+      root: ${root}
+  `, siblingPath, { service: 'API' });
+
   const siblingPathTruncated = siblingPath.map(node => `0x${node.slice(-NODE_HASHLENGTH * 2)}`);
 
   let hash216 = truncatedCommitment;
@@ -201,10 +216,16 @@ export const checkRoot = (commitment, commitmentIndex, siblingPath, root) => {
 
   for (let r = TREE_HEIGHT; r > 0; r -= 1) {
     const pair = [hash216, siblingPathTruncated[r]];
+    logger.debug(`leftInput pre ordering: ${pair[0]}`, { service: 'API' });
+    logger.debug(`rightInput pre ordering: ${pair[1]}`, { service: 'API' });
+    logger.debug(`left or right?: ${binaryCommitmentIndex[r - 1]}`, { service: 'API' });
     const orderedPair = orderBeforeConcatenation(binaryCommitmentIndex[r - 1], pair);
+    logger.debug(`leftInput: ${orderedPair[0]}`, { service: 'API' });
+    logger.debug(`rightInput: ${orderedPair[1]}`, { service: 'API' });
     hash256 = concatenateThenHash(...orderedPair);
-    // keep the below comments for future debugging:
+    logger.debug(`output pre-slice at row ${r - 1}: ${hash256}`, { service: 'API' });
     hash216 = `0x${hash256.slice(-NODE_HASHLENGTH * 2)}`;
+    logger.debug(`output at row ${r - 1}: ${hash216}`, { service: 'API' });
   }
 
   const rootCheck = hash256;
