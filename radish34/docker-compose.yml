@@ -451,13 +451,13 @@ services:
       - ganache
     volumes: # ensure relative paths are correct if embedding this microservice in another application:
       - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
-      - ./contracts/contracts:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+      - ./contracts/artifacts:/app/build/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
     ports:
       - 9000:80
     environment:
       BLOCKCHAIN_HOST: ws://ganache
       BLOCKCHAIN_PORT: 8545
-      CONTRACT_ORIGIN: 'compile' # Where to find the contractInstances?
+      CONTRACT_ORIGIN: 'default' # Where to find the contractInstances?
       # Specify one of:
       # - 'remote' (to GET a solc-compiled contract interface json from a remote microservice); or
       # - 'mongodb' (to get a solc-compiled contract interface json from mongodb); or

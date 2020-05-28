@@ -5,8 +5,8 @@ pragma experimental ABIEncoderV2;
 import "./IOrgRegistry.sol";
 import "./Registrar.sol";
 import "./ERC165Compatible.sol";
-import "./Roles.sol";
-import "./Ownable.sol";
+import "openzeppelin-solidity/contracts/access/Roles.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
 /// @dev Contract for maintaining organization registry
 /// Contract inherits from Ownable and ERC165Compatible

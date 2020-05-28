@@ -41,8 +41,8 @@ const deployContract = async (contractJson, uri, privateKey, controllerAddress) 
   const wallet = getWallet(uri, privateKey);
   let contract;
   const factory = new ethers.ContractFactory(
-    contractJson.compilerOutput.abi,
-    contractJson.compilerOutput.evm.bytecode,
+    contractJson.abi,
+    contractJson.bytecode,
     wallet,
   );
   if (!controllerAddress) {
@@ -65,7 +65,7 @@ const getUnsignedContractDeployment = (contractJson, args = []) => {
 const getContract = (contractJson, uri, address) => {
   try {
     const provider = getProvider(uri);
-    return new ethers.Contract(address, contractJson.compilerOutput.abi, provider);
+    return new ethers.Contract(address, contractJson.abi, provider);
   } catch (e) {
     console.log('Failed to instantiate compiled contract', e);
   }
@@ -77,7 +77,7 @@ const getContractWithWallet = (contractJson, contractAddress, uri, privateKey) =
   try {
     const provider = getProvider(uri);
     const wallet = new ethers.Wallet(privateKey, provider);
-    contract = new ethers.Contract(contractAddress, contractJson.compilerOutput.abi, provider);
+    contract = new ethers.Contract(contractAddress, contractJson.abi, provider);
     const contractWithWallet = contract.connect(wallet);
     return contractWithWallet;
   } catch (e) {
