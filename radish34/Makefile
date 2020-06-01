@@ -42,11 +42,28 @@ npm-install:
 	npm run build && \
 	popd
 
-start: system-check install-config build-containers
+dev-env:
 	@pushd ${radish34} && \
-	npm run setup-circuits ${mode} && \
-	ZKP_MODE=${mode} npm run deploy && \
-	ZKP_MODE=${mode} docker-compose up -d api-buyer api-supplier1 api-supplier2 ui && \
+	./ops/dockerCompose_dev.sh && \
+	popd
+
+prod-env:
+	@pushd ${radish34} && \
+	./ops/dockerCompose_prod.sh && \
+	popd
+
+start: start-dev
+
+start-dev: system-check install-config build-containers dev-env
+	@pushd ${radish34} && \
+	npm run deploy && \
+	docker-compose -f docker-compose.yml -f config/docker-compose.tmp.yml up -d api-buyer api-supplier1 api-supplier2 ui && \
+	popd
+
+start-prod: system-check install-config build-containers prod-env
+	@pushd ${radish34} && \
+	npm run deploy && \
+	docker-compose -f docker-compose.yml -f config/docker-compose.tmp.yml up -d api-buyer api-supplier1 api-supplier2 ui && \
 	popd
 
 stop:
