@@ -1,6 +1,188 @@
+#!/usr/bin/env bash
+set -e
+
+echo "\nStarting creation of development docker-compose.yml..."
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+echo "dir=$dir"
+project="`cat $dir/../package.json | grep '"name":' | head -n 1 | cut -d '"' -f 4`"
+
+####################
+# Load env vars
+
+# alias env var
+BASELINE_LOG_LEVEL="$LOG_LEVEL";
+
+function extractEnv {
+  grep "$1" "$2" | cut -d "=" -f 2- | tr -d '\n\r"' | sed 's/ *#.*//'
+}
+
+# First choice: use existing env vars (dotEnv not called)
+# NOTE: .env file should reside in same directory as caller of this script (i.e. Makefile)
+function dotEnv {
+  key="$1"
+  if [[ -f .env && -n "`extractEnv $key .env`" ]] # Second choice: load from custom secret env
+  then extractEnv $key .env
+  elif [[ -f env.dev.env && -n "`extractEnv $key env.dev.env`" ]] # Third choice: load from public defaults
+  then extractEnv $key env.dev.env
+  fi
+}
+
+echo "Initializing environment variables..."
+export BASELINE_MESSENGER_PROVIDER="${BASELINE_MESSENGER_PROVIDER:-`dotEnv BASELINE_MESSENGER_PROVIDER`}"
+export BASELINE_ZKP_MODE="${BASELINE_ZKP_MODE:-`dotEnv BASELINE_ZKP_MODE`}"
+export BASELINE_ETH_PROVIDER="${BASELINE_ETH_PROVIDER:-`dotEnv BASELINE_ETH_PROVIDER`}"
+export BASELINE_LOG_LEVEL="${BASELINE_LOG_LEVEL:-`dotEnv BASELINE_LOG_LEVEL`}"
+export BASELINE_ADMIN_TOKEN="${BASELINE_ADMIN_TOKEN:-`dotEnv BASELINE_ADMIN_TOKEN`}"
+BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY="${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY:-`dotEnv BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY`}"
+BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY="${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY:-`dotEnv BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY`}"
+
+# Parse BASELINE_ETH_PROVIDER to create websocket URI required by merkle-tree service
+blockchain_proto="$(echo $BASELINE_ETH_PROVIDER | grep :// | sed -e's,^\(.*://\).*,\1,g')"
+blockchain_url="$(echo ${BASELINE_ETH_PROVIDER/$blockchain_proto/})"
+blockchain_host="$(echo $blockchain_url | sed -e 's,:.*,,g')"
+blockchain_port="$(echo $blockchain_url | sed -e 's,^.*:,:,g' -e 's,.*:\([0-9]*\).*,\1,g' -e 's,[^0-9],,g')"
+
+# Make sure keys have proper newlines inserted
+# (bc GitHub Actions strips newlines from secrets)
+export BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY=`
+  echo $BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY | tr -d '\n\r' |\
+  sed 's/-----BEGIN RSA PRIVATE KEY-----/\\\n-----BEGIN RSA PRIVATE KEY-----\\\n/' |\
+  sed 's/-----END RSA PRIVATE KEY-----/\\\n-----END RSA PRIVATE KEY-----\\\n/'`
+
+export BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY=`
+  echo $BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY | tr -d '\n\r' |\
+  sed 's/-----BEGIN PUBLIC KEY-----/\\\n-----BEGIN PUBLIC KEY-----\\\n/' | \
+  sed 's/-----END PUBLIC KEY-----/\\\n-----END PUBLIC KEY-----\\\n/'`
+
+if [[ "$BASELINE_MESSENGER_PROVIDER" == "whisper" ]]
+then
+  messenger_providers="
+  geth-node:
+    hostname: geth-node
+    container_name: geth-node
+    depends_on:
+       - geth-miner1
+       - geth-miner2
+    env_file:
+      - ./geth-env/node/docker.env
+    build:
+      context: ./geth-env
+      dockerfile: ./node/Dockerfile
+      args:
+        privatekey: 54c68a6104df07a9661b9b8fe1106263feeeddfd67aed8dafed1438040e421d1
+        password: word
+    networks:
+      - network-buyer
+      - network-supplier1
+      - network-supplier2
+      - network-geth
+    ports:
+       - 8547:8545
+       - 8548:8546
+    healthcheck:
+      test: ["CMD", "wget", "-q", "http://localhost:8545"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  geth-bootnode:
+    hostname: geth-bootnode
+    container_name: geth-bootnode
+    env_file:
+      - ./geth-env/bootnode/docker.env
+    build:
+      context: ./geth-env
+      dockerfile: ./bootnode/Dockerfile
+    networks:
+      network-geth:
+        ipv4_address: 172.25.0.101 # The miners need to know the IP address later on
+    ports:
+      - 30301:30301/udp
+
+  geth-miner1:
+    hostname: geth-miner1
+    container_name: geth-miner1
+    depends_on:
+      - geth-bootnode
+    env_file:
+      - ./geth-env/miner/miner_1.env
+    ports:
+      - 8544:8545/tcp
+    networks:
+      - network-geth
+    build:
+      context: ./geth-env
+      dockerfile: ./miner/Dockerfile
+      args:
+        privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46
+        password: pass
+    healthcheck:
+      test: ["CMD", "wget", "-q", "http://localhost:8545"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  geth-miner2:
+    hostname: geth-miner2
+    container_name: geth-miner2
+    depends_on:
+      - geth-bootnode
+    env_file:
+      - ./geth-env/miner/miner_2.env
+    ports:
+      - 8542:8545/tcp
+    networks:
+      - network-geth
+    build:
+      context: ./geth-env
+      dockerfile: ./miner/Dockerfile
+      args:
+        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
+        password: word
+    healthcheck:
+      test: ["CMD", "wget", "-q", "http://localhost:8545"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s "
+elif [[ "$BASELINE_MESSENGER_PROVIDER" == "nats" ]]
+then
+  messenger_providers="
+  nats:
+    container_name: nats
+    image: provide/nats-server
+    command: ["-auth", "testtoken", "-p", "4222", "-D", "-V"]
+    environment: 
+      JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
+      interval: 1m
+      timeout: 1s
+      retries: 2
+      start_period: 10s
+    hostname: nats
+    networks:
+      - network-buyer
+    ports:
+      - 4221:4221
+      - 4222:4222
+    restart: always
+    volumes:
+      - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached "
+else
+  messenger_providers=""
+fi
+
+
+echo "Creating /config/docker-compose.tmp.yml file..."
+mkdir -p config/
+cat - > config/docker-compose.tmp.yml <<EOF
 version: '3.5'
 
 services:
+  $messenger_providers
 
   deploy:
     container_name: deployer-service
@@ -16,11 +198,12 @@ services:
       - mongo-supplier2
       - zkp
     environment:
-      RPC_PROVIDER: http://ganache:8545
+      RPC_PROVIDER: ${BASELINE_ETH_PROVIDER}
       MESSENGER_BUYER_URI: http://messenger-buyer:4001
       MESSENGER_SUPPLIER1_URI: http://messenger-supplier1:4001
       MESSENGER_SUPPLIER2_URI: http://messenger-supplier2:4001
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${BASELINE_ZKP_MODE:-0}
       KEYSTORE_PATH: /app/src/config/keystore
       ORGANISATION_CONFIG_PATH: /app/src/config
       CONTRACTS_PATH: /app/paths-contracts.json
@@ -155,6 +338,7 @@ services:
       MESSENGER_URI: http://messenger-buyer:4001
       REDIS_URL: redis://redis-buyer:6379
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${BASELINE_ZKP_MODE:-0}
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-buyer
@@ -195,6 +379,7 @@ services:
       MESSENGER_URI: http://messenger-supplier1:4001
       REDIS_URL: redis://redis-supplier1:6379
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${BASELINE_ZKP_MODE:-0}
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier1
@@ -234,6 +419,7 @@ services:
       MESSENGER_URI: http://messenger-supplier2:4001
       REDIS_URL: redis://redis-supplier2:6379
       ZKP_URL: http://zkp:80
+      ZKP_MODE: ${BASELINE_ZKP_MODE:-0}
       MERKLE_TREE_URL: http://merkle-tree:80
     networks:
       - network-supplier2
@@ -259,6 +445,10 @@ services:
     env_file:
       - ./messenger/docker.env
     environment:
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
       MONGO_URL: mongodb://mongo-buyer:27017/radish34
       RADISH_API_URL: http://api-buyer:8101
       REDIS_URL: redis://redis-buyer:6379
@@ -286,6 +476,10 @@ services:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
       MONGO_URL: mongodb://mongo-supplier1:27017/radish34
       RADISH_API_URL: http://api-supplier1:8101
       REDIS_URL: redis://redis-supplier1:6379
@@ -313,6 +507,10 @@ services:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
       MONGO_URL: mongodb://mongo-supplier2:27017/radish34
       RADISH_API_URL: http://api-supplier2:8101
       REDIS_URL: redis://redis-supplier2:6379
@@ -438,13 +636,13 @@ services:
       - ganache
     volumes: # ensure relative paths are correct if embedding this microservice in another application:
       - ./config/merkle-tree:/app/config # mount point might be different if configuring from another application
-      - ./contracts/contracts:/app/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
+      - ./contracts/artifacts:/app/build/contracts:consistent # required if deploying/compiling contracts from within this service (if CONTRACT_ORIGIN = 'default' or 'compile')
     ports:
       - 9000:80
     environment:
-      BLOCKCHAIN_HOST: ws://ganache
-      BLOCKCHAIN_PORT: 8545
-      CONTRACT_ORIGIN: 'compile' # Where to find the contractInstances?
+      BLOCKCHAIN_HOST: 'ws://$blockchain_host'
+      BLOCKCHAIN_PORT: '$blockchain_port'
+      CONTRACT_ORIGIN: 'default' # Where to find the contractInstances?
       # Specify one of:
       # - 'remote' (to GET a solc-compiled contract interface json from a remote microservice); or
       # - 'mongodb' (to get a solc-compiled contract interface json from mongodb); or
@@ -480,97 +678,6 @@ services:
       retries: 3
       start_period: 10s
 
-  geth-node:
-    hostname: geth-node
-    container_name: geth-node
-    depends_on:
-       - geth-miner1
-       - geth-miner2
-    env_file:
-      - ./geth-env/node/docker.env
-    build:
-      context: ./geth-env
-      dockerfile: ./node/Dockerfile
-      args:
-        privatekey: 54c68a6104df07a9661b9b8fe1106263feeeddfd67aed8dafed1438040e421d1
-        password: word
-    networks:
-      - network-buyer
-      - network-supplier1
-      - network-supplier2
-      - network-geth
-    ports:
-       - 8547:8545
-       - 8548:8546
-    healthcheck:
-      test: ["CMD", "wget", "-q", "http://localhost:8545"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  geth-bootnode:
-    hostname: geth-bootnode
-    container_name: geth-bootnode
-    env_file:
-      - ./geth-env/bootnode/docker.env
-    build:
-      context: ./geth-env
-      dockerfile: ./bootnode/Dockerfile
-    networks:
-      network-geth:
-        ipv4_address: 172.25.0.101 # The miners need to know the IP address later on
-    ports:
-      - 30301:30301/udp
-
-  geth-miner1:
-    hostname: geth-miner1
-    container_name: geth-miner1
-    depends_on:
-      - geth-bootnode
-    env_file:
-      - ./geth-env/miner/miner_1.env
-    ports:
-      - 8544:8545/tcp
-    networks:
-      - network-geth
-    build:
-      context: ./geth-env
-      dockerfile: ./miner/Dockerfile
-      args:
-        privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46
-        password: pass
-    healthcheck:
-      test: ["CMD", "wget", "-q", "http://localhost:8545"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  geth-miner2:
-    hostname: geth-miner2
-    container_name: geth-miner2
-    depends_on:
-      - geth-bootnode
-    env_file:
-      - ./geth-env/miner/miner_2.env
-    ports:
-      - 8542:8545/tcp
-    networks:
-      - network-geth
-    build:
-      context: ./geth-env
-      dockerfile: ./miner/Dockerfile
-      args:
-        privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
-        password: word
-    healthcheck:
-      test: ["CMD", "wget", "-q", "http://localhost:8545"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
 volumes:
   mongo-buyer:
   mongo-supplier1:
@@ -587,3 +694,6 @@ networks:
   network-buyer:
   network-supplier1:
   network-supplier2:
+EOF
+
+./ops/setup_circuits.sh ${BASELINE_ZKP_MODE}

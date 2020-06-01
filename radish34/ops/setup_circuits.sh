@@ -6,7 +6,9 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-docker-compose up --no-recreate -d zkp
+printf "\nSetting up circuits within ZKP service.\n"
+
+docker-compose -f docker-compose.yml -f config/docker-compose.tmp.yml up --no-recreate -d zkp
 ./ops/await_stack.sh
 
 if [ ! -d ./zkp/output/createMSA ]; then
@@ -32,3 +34,5 @@ if [ ! -d ./zkp/output/createAgreement ]; then
     curl -d '{"filepath": "business-logic/createAgreement.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
     printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
 fi
+
+printf "\nFinished setting up zkp circuits.\n\n"
