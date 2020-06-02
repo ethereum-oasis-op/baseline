@@ -20,7 +20,7 @@ build-containers: build
 	popd
 
 clean: stop
-	@$(radish34)/../bin/clean_npm.sh
+	@$(radish34)/ops/clean_npm.sh
 
 contracts:
 	@pushd ${radish34} && \
@@ -78,7 +78,9 @@ stop:
 	popd
 
 system-check:
-	@npm run --silent system-check
+	@pushd ${radish34} && \
+	npm run --silent system-check && \
+	popd
 
 reset: stop
 	@pushd ${radish34} && \
