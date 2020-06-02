@@ -87,7 +87,7 @@ Refer to the [Deployment](../deploy/README.md) job component for details on the 
 
 ## How can I run it?
 
-All smart contracts contained in this directory, are compiled as part of the build process: `npm run build`. This process inherently leverages the `sol-compile` service, which compiles the solidity code to EVM bytecode and ABI definitions and stores them in `artifacts/`.
+All smart contracts contained in this directory, are compiled as part of the build process: `npm run build`. This process inherently leverages the `truffle compile` service, which compiles the solidity code to EVM bytecode and ABI definitions and stores them in `artifacts/`.
 
 To deploy the contracts, there is a deployment script that deploys these contracts using the artifacts of compilation process above, to a given network. This can be run by executing the following instruction in the parent folder: `npm run deploy`.
 
@@ -98,7 +98,7 @@ When the Radish34 system is initialized, all smart contracts are deployed and re
 All smart contract based tests are contained in `__tests__` directory under this directory. There is a service called `jest`, which looks for any `.test.js` files, and runs the test cases. Execute the following series of commands to run the tests:
 ```shell
 npm run build
-docker-compose up ganache
+docker-compose up -d ganache
 npm run test
 ```
 ** These tests take about 25 seconds to run **

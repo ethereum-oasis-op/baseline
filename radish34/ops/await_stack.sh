@@ -40,7 +40,7 @@ all_services_healthy () {
 
 # Check if we actually have services to monitor, none may be running.
 if [ $(docker ps -a -q --filter="name=$NAME_FILTERS" | tr '\n' ' ' | wc -m | tr -d ' ') -gt 1 ]; then
-  MAX_WAIT=30
+  MAX_WAIT=45
   WAIT_COUNT=0
   printf "Polling stack health..."
   until [ $WAIT_COUNT -eq $MAX_WAIT ] || all_services_healthy; do
