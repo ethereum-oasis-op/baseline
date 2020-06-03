@@ -17,6 +17,7 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 | [**Chaals Neville**](https://www.linkedin.com/in/chaals/) | Enterprise Ethereum Alliance |
 | [**Dan Burnett**](https://www.linkedin.com/in/daburnett/) | PegaSys |
 | [**Tas Dienes**](https://www.linkedin.com/in/tasdienes/) | Ethereum Foundation |
+| [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) | Baseline Technical Committee |
 
 ### Your Technical Steering Committee
 
