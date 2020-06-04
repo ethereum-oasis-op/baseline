@@ -1,10 +1,10 @@
 import { saveMSA } from '../../../../db/models/msa';
+import { logger } from 'radish34-logger';
 
 const createMSAInDB = async (params, options) => {
-  console.log('CUSTOM FUNC CALLED', params, options);
+  logger.info('CUSTOM FUNC CALLED:\n%o\n%o', params, options, { service: 'API' });
   const msa = await saveMSA(params);
-  console.log('MSA', msa);
-  console.log('NEW MSA MADE I THINNK', msa._id);
+  logger.info(`MSA with id ${msa._id}:\n%o`, msa, { service: 'API' });
   return {
     msaId: msa._id,
   };

@@ -73,6 +73,7 @@ reset: stop
 		radish34_mongo-merkle-tree-volume \
 		radish34_chaindata || true && \
 	docker image rm \
+		radish34_logger \
 		radish34_api-buyer \
 		radish34_api-supplier1 \
 		radish34_api-supplier2 \

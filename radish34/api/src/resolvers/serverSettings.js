@@ -2,6 +2,7 @@ import healthcheck from '../install/healthcheck';
 import { pubsub } from '../subscriptions';
 import { setRPCProvider, setContractAddress, getServerSettings } from '../utils/serverSettings';
 import { createWalletFromMnemonic } from '../utils/wallet';
+import { logger } from 'radish34-logger';
 
 const SERVER_SETTINGS_UPDATE = 'SERVER_SETTINGS_UPDATE';
 
@@ -9,10 +10,12 @@ export default {
   Query: {
     async getServerSettings() {
       const { rpcProvider, organization, addresses } = await getServerSettings();
-      console.log('Getting server settings:');
-      console.log(rpcProvider);
-      console.log(organization);
-      console.log(addresses);
+      logger.info(`
+        Getting server settings:
+        rpcProvider: ${rpcProvider}
+        organization: ${organization}
+        addresses: ${addresses}
+      `, { service: 'API' });
       // TODO: Edit ServerSettings graphQL schema to be a nested object with 'organizations' and 'addresses' sub-objects, to align with the radosh-api backend.
       const flattenedSettings = {
         rpcProvider,

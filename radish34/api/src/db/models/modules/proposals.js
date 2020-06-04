@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { createNotice } from '../baseline/notices';
+import { logger } from 'radish34-logger';
 
 const ProposalSchema = new mongoose.Schema({
   _id: {
@@ -84,12 +85,12 @@ export const saveProposal = async doc => {
   try {
     const newProposal = doc;
     newProposal._id = doc._id;
-    console.log(`Saving new Proposal (id: ${doc._id}) from partner...`);
+    logger.info(`Saving new proposal with id ${doc._id} from partner ...`, { service: 'API' });
     const result = await Proposal.create([newProposal], { upsert: true, new: true });
     await createNotice('proposal', result[0], newProposal.rfpId);
     return result[0];
-  } catch (e) {
-    console.log('Error creating proposal: ', e);
+  } catch (err) {
+    logger.error(`Error creating proposal.\n%o`, err, { service: 'API' });
   }
 };
 

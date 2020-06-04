@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logger } from 'radish34-logger';
 
 delete process.env.http_proxy;
 delete process.env.HTTP_PROXY;
@@ -10,8 +11,7 @@ const getIdentity = url =>
     .get(url)
     .then(response => response.data[0].publicKey)
     .catch(err => {
-      console.log('Could not get messenger identity');
-      console.error(err);
+      logger.error('Could not get messenger identity.\n%o', err, { service: 'API' });
     });
 
 export default async () => {
@@ -20,12 +20,12 @@ export default async () => {
   try {
     const loc = `${messengerURI}/api/v1/identities`;
     const messengerKey = await getIdentity(loc);
-    console.log('Whisper key:', messengerKey);
+    logger.info(`Whisper key: ${messengerKey}.`, { service: 'API' });
   } catch (error) {
     if (!error.response) {
-      console.error('Error: Network Error');
+      logger.error('Network error.\n%o', error, { service: 'API' });
     } else {
-      console.error(error.response.data.message);
+      logger.error('\n%o', error.response.data, { service: 'API' });
     }
   }
 

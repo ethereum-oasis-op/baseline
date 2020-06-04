@@ -1,7 +1,7 @@
-const logger = require('winston');
 const Identity = require('../../db/models/Identity.js');
 const Message = require('../../db/models/Message.js');
 const web3utils = require('./web3Utils.js');
+const { logger } = require('radish34-logger');
 
 // Useful constants
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
@@ -41,7 +41,7 @@ async function sendPrivateMessage(
     };
     hash = await web3.shh.post(payload);
   } catch (err) {
-    logger.error('Whisper error:', err);
+    logger.error('Whisper error.\n%o', err, { service: 'MESSENGER' });
     return undefined;
   }
 
@@ -65,7 +65,7 @@ async function sendPrivateMessage(
       { upsert: true, new: true },
     );
   } catch (err) {
-    logger.error('Mongoose error:', err);
+    logger.error('Mongoose error.\n%o', err, { service: 'MESSENGER' });
     return undefined;
   }
   return doc;

@@ -8,6 +8,7 @@ import {
 } from '../services/organization';
 import { getServerSettings } from '../utils/serverSettings';
 import db from '../db';
+import { logger } from 'radish34-logger';
 
 const NEW_ORG = 'NEW_ORG';
 
@@ -63,7 +64,7 @@ export default {
         zkpPublicKey,
       );
 
-      console.log('Registering Organization with tx:', orgRegistryTxHash);
+      logger.info(`Registering organization with tx hash: ${orgRegistryTxHash}`, { service: 'API' });
     },
   },
   Subscription: {

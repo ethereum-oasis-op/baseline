@@ -11,6 +11,8 @@ import { checkKeyPair } from '../utils/crypto/ecc/babyjubjub-ecc';
 
 const pycryptojs = require('zokrates-pycryptojs');
 
+import { logger } from 'radish34-logger';
+
 const NEW_MSA = 'NEW_MSA';
 
 const getSignatureStatus = msa => {
@@ -78,8 +80,7 @@ export default {
   },
   Mutation: {
     createMSA: async (_parent, args, context) => {
-      console.log('\n\n\nRequest to create MSA with inputs:');
-      console.log(args.input);
+      logger.info(`Request to create MSA with inputs:\n%o`, args.input, { service: 'API' });
       const _supplier = await getPartnerByAddress(args.input.supplierAddress);
       delete _supplier._id;
       delete args.input.supplierAddress;
@@ -130,7 +131,7 @@ export default {
         lastModified: Math.floor(Date.now() / 1000),
       });
 
-      console.log(`\nSending MSA (id: ${msaDoc._id}) to supplier for signing...`);
+      logger.info(`Sending MSA with id ${msaDoc._id} to supplier for signing.`, { service: 'API' });
       msgDeliveryQueue.add({
         documentId: msaDoc._id,
         senderId: context.identity,

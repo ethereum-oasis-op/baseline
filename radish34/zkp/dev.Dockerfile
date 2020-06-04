@@ -1,6 +1,6 @@
 FROM zokrates/zokrates:0.5.1 as builder
 
-FROM node:11.15
+FROM radish34_logger
 
 RUN mkdir /app
 WORKDIR /app

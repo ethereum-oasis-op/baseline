@@ -1,5 +1,6 @@
 import { MongoClient } from 'mongodb';
 import mongoose from 'mongoose';
+import { logger } from 'radish34-logger';
 
 let db = null;
 let client = null;
@@ -22,15 +23,17 @@ export default {
     for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
         client = await MongoClient.connect(process.env.MONGO_URL, options);
-        console.log('Connected to db');
+        logger.info('Conntected to mongo db.', { service: 'API' });
         break;
-      } catch (error) {
+      } catch (err) {
+        logger.error('\n%o', err, { service: 'API' });
         await wait(500);
       }
     }
 
     if (!client) {
-      throw new Error('Could not establish Mongo connection');
+      logger.error('Could not establish Mongo connection', { service: 'API' });
+      throw new Error('Could not establish mongo db connection.');
     }
 
     db = client.db(process.env.MONGO_DB_NAME);
@@ -51,12 +54,12 @@ export default {
     for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
         await mongoose.connect(dbFullName, options);
-        console.log('Mongoose connected to db');
+        logger.info('Mongoose connected to db.', { service: 'API' });
         break;
-      } catch (error) {
+      } catch (err) {
         const delayTime = 500;
-        console.error(error.message);
-        console.log(`Retrying Mongoose connection in ${delayTime} ms`);
+        logger.error('\n%o', err, { service: 'API' });
+        logger.info(`Retrying Mongoose connection in ${delayTime}ms.`, { service: 'API' });
         await wait(delayTime);
       }
     }

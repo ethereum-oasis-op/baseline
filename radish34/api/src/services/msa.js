@@ -17,6 +17,8 @@ import { saveNotice } from './notice';
 
 const pycryptojs = require('zokrates-pycryptojs');
 
+import { logger } from 'radish34-logger';
+
 /**
 An msaDoc object (from the mongodb) contains an array of commitments.
 But we only want to 'pop' the latest commitment from the array, to add it to our Commitment class.
@@ -209,8 +211,8 @@ export const getMSABySKUAndParties = async (zkpPublicKeyOfBuyer, zkpPublicKeyOfS
       rfpId,
     }).lean();
     return msa;
-  } catch (e) {
-    console.log('\nError getting MSA from DB: ', e);
+  } catch (err) {
+    logger.error('Error getting MSA from db.\n%o', err, { service: 'API' });
     return false;
   }
 };
@@ -219,8 +221,8 @@ export const getMSAById = async id => {
   try {
     const msa = await MSAModel.findOne({ _id: id }).lean();
     return msa;
-  } catch (e) {
-    console.log('\nError getting MSA from DB: ', e);
+  } catch (err) {
+    logger.error('Error getting MSA from db.\n%o', err, { service: 'API' });
     return false;
   }
 };
@@ -229,8 +231,8 @@ export const getMSAsBySKU = async sku => {
   try {
     const msas = await MSAModel.find({ 'constants.sku': sku }).lean();
     return msas;
-  } catch (e) {
-    console.log('\nError getting MSA from DB: ', e);
+  } catch (err) {
+    logger.error('Error getting MSA from db.\n%o', err, { service: 'API' });
     return false;
   }
 };
@@ -239,8 +241,8 @@ export const getMSAsByRFPId = async rfpId => {
   try {
     const msas = await MSAModel.find({ rfpId }).lean();
     return msas;
-  } catch (e) {
-    console.log('\nError getting MSA from DB: ', e);
+  } catch (err) {
+    logger.error('Error getting MSA from db.\n%o', err, { service: 'API' });
     return false;
   }
 }
@@ -256,8 +258,8 @@ export const getAllMSAs = async requester => {
       })
       .lean();
     return msas;
-  } catch (e) {
-    console.log('\nError getting MSA from DB: ', e);
+  } catch (err) {
+    logger.error('Error getting MSA from db.\n%o', err, { service: 'API' });
     return false;
   }
 };
@@ -270,17 +272,18 @@ export const saveMSA = async msaObject => {
     msaObject.constants.sku,
     msaObject.rfpId
   );
-  if (exists)
+  if (exists) {
+    logger.error(`MSA already exists for this SKU ${msaObject.constants.sku} with this supplier.`, { service: 'API' });
     throw new Error(
-      `MSA already exists for this SKU ${msaObject.constants.sku} with this supplier`,
+      `MSA already exists for this SKU ${msaObject.constants.sku} with this supplier.`,
     );
+  }
   try {
     const doc = await MSAModel.create([msaObject], { upsert: true, new: true });
-    console.log('\nSaved MSA to DB');
-    console.dir(doc[0].toObject(), { depth: null });
+    logger.info('Saved MSA to db:\n%o', doc[0].toObject(), { service: 'API' });
     return doc[0].toObject();
-  } catch (e) {
-    console.log('\nError saving MSA in DB: ', e);
+  } catch (err) {
+    logger.error('Error saving MSA in db.\n%o', err, { service: 'API' });
     return false;
   }
 };
@@ -301,10 +304,12 @@ export const updateMSAWithSupplierSignature = async msaObject => {
     msaObject.rfpId,
   );
 
-  if (!exists)
+  if (!exists) {
+    logger.error(`MSA does not exist for this SKU ${msaObject.constants.sku} with this supplier. Hence cannot be updated.`, { service: 'API' });
     throw new Error(
-      `MSA does not exist for this SKU ${msaObject.constants.sku} with this supplier. Hence cannot be updated`,
+      `MSA does not exist for this SKU ${msaObject.constants.sku} with this supplier. Hence cannot be updated.`,
     );
+  }
   try {
     const doc = await MSAModel.findOneAndUpdate(
       {
@@ -323,19 +328,20 @@ export const updateMSAWithSupplierSignature = async msaObject => {
       },
       { new: true },
     ).lean();
-    console.log("\nMSA has been updated with Supplier's signature\n");
-    console.dir(doc, { depth: null });
+    logger.info("MSA has been updated with supplier's signature:\n%o", doc, { service: 'API' });
     return doc;
-  } catch (e) {
-    console.log('\nError updating MSA in DB: ', e);
+  } catch (err) {
+    logger.error('Error updating MSA in db.\n%o', err, { service: 'API' });
     return false;
   }
 };
 
 export const updateMSAWithNewCommitment = async msaObject => {
   const exists = await getMSAById(msaObject._id);
-  if (!exists)
-    throw new Error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated`);
+  if (!exists) {
+    logger.error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated.`, { service: 'API' });
+    throw new Error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated.`);
+  }
 
   const latestCommitmentIndex = msaObject.commitments.length - 1;
 
@@ -349,19 +355,20 @@ export const updateMSAWithNewCommitment = async msaObject => {
       },
       { new: true, upsert: true },
     ).lean();
-    console.log('\nUpdated MSA with new commitment:');
-    console.dir(doc, { depth: null });
+    logger.info('Updated MSA with new commitment:\n%o', doc, { service: 'API' });
     return doc;
-  } catch (e) {
-    console.log('\nError updating MSA in DB: ', e);
+  } catch (err) {
+    logger.error('Error updating MSA in db.\n%o', err, { service: 'API' });
     return false;
   }
 };
 
 export const updateMSAWithCommitmentIndex = async msaObject => {
   const docBeforeUpdate = await getMSAById(msaObject._id);
-  if (!docBeforeUpdate)
-    throw new Error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated`);
+  if (!docBeforeUpdate) {
+    logger.error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated.`, { service: 'API' });
+    throw new Error(`MSA does not exist for this msaId ${msaObject._id}. Hence cannot be updated.`);
+  }
   const { index } = msaObject.commitments[0];
   try {
     const doc = await MSAModel.findOneAndUpdate(
@@ -380,11 +387,10 @@ export const updateMSAWithCommitmentIndex = async msaObject => {
       },
       { new: true, upsert: true },
     ).lean();
-    console.log('\nUpdated MSA with new commitment index:');
-    console.dir(doc, { depth: null });
+    logger.info('Updated MSA with new commitment index:\n%o', doc, { service: 'API' });
     return doc;
   } catch (e) {
-    console.log('\nError updating MSA in DB: ', e);
+    logger.error('Error updating MSA in db.\n%o', err, { service: 'API' });
     return false;
   }
 };
@@ -436,9 +442,10 @@ export const createMSA = async msa => {
     msa.commitment.commitment.field(128, 2),
     msa.commitment.salt.field(128, 2),
   ];
+  
   let proofOut;
   const flattenedInputs = flattenDeep(allInputs);
-  console.log(`\nRequesting a proof be generated by zokrates...`);
+  logger.info('Requesting a proof be generated by zokrates...', { service: 'API' });
   const zkpMode = process.env.ZKP_MODE || 0; // Default to createMSA/createPO
   if (zkpMode == 0) {
     proofOut = await generateProof('createMSA', flattenedInputs);
@@ -455,7 +462,7 @@ export const createMSA = async msa => {
     publicInputs,
   );
 
-  console.log('\nCREATE MSA TRANSACTION COMPLETE');
+  logger.info('Create MSA TX complete.', { service: 'API'});
 
   return {
     transactionHash,
@@ -486,7 +493,7 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
       buyer.R,
       buyer.S,
     );
-    console.log("\nBuyer's signature has been verified successfully");
+    logger.info("Buyer's signature has been verified successfully.", { service: 'API'});
 
     if (isSignVerified) {
       const signature = await pycryptojs.sign(
@@ -521,11 +528,12 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
           ...msaDoc,
         },
       });
-      console.log('\nSent signed MSA to Buyer');
+      logger.info("Sent signed MSA to buyer.", { service: 'API'});
     }
   } else {
+    logger.error(`The public key for signature ${buyer.A} doesn't match with the sender of the MSA creation message ${partner.zkpPublicKey}.`, { service: 'API' });
     throw new Error(
-      `The public key for signature ${buyer.A} doesn't match with the sender of the MSA creation message ${partner.zkpPublicKey}`,
+      `The public key for signature ${buyer.A} doesn't match with the sender of the MSA creation message ${partner.zkpPublicKey}.`,
     );
   }
 };
@@ -548,7 +556,7 @@ export const onReceiptMSABuyer = async (msaObj, senderWhisperKey) => {
       supplier.R,
       supplier.S,
     );
-    console.log('\nMSA signature verification success');
+    logger.info("MSA signature verification success.", { service: 'API'});
 
     if (isSignVerified) {
       const msaDoc = await updateMSAWithSupplierSignature(msaObj);

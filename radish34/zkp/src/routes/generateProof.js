@@ -1,21 +1,20 @@
 import express from 'express';
 import zokrates from '@eyblockchain/zokrates.js';
 import { saveProofToDB } from '../utils/fileToDB';
+import { logger } from 'radish34-logger';
 
 const router = express.Router();
 
 router.post('/', async (req, res, next) => {
   req.setTimeout(900000);
   const { docId, filename, inputs, outputDirectoryPath, proofFileName } = req.body;
-  console.log(`\nReceived request to /generateProof`);
-  console.log(req.body);
 
   const opts = {};
   opts.createFile = true;
   opts.directory = `./output/${filename}` || outputDirectoryPath;
   opts.fileName = `${filename}_proof.json` || proofFileName;
   try {
-    console.log('\nCompute witness...');
+    logger.info('Compute witness.', { service: 'ZKP' });
     await zokrates.computeWitness(
       `./output/${filename}/${filename}_out`,
       `./output/${filename}/`,
@@ -23,7 +22,7 @@ router.post('/', async (req, res, next) => {
       inputs,
     );
 
-    console.log('\nGenerate proof...');
+    logger.info('Generate proof.', { service: 'ZKP' });
     await zokrates.generateProof(
       `./output/${filename}/${filename}_pk.key`,
       `./output/${filename}/${filename}_out`,
@@ -37,11 +36,10 @@ router.post('/', async (req, res, next) => {
       `./output/${filename}/${filename}_proof.json`,
     );
 
-    console.log(`\nComplete`);
-    console.log(`\nResponding with proof:`);
-    console.log(storedProof);
+    logger.info('Proof generation complete. Responding with proof.\n%o', storedProof, { service: 'ZKP' });
     return res.send(storedProof);
   } catch (err) {
+    logger.error('\n%o', err, { service: 'ZKP' });
     return next(err);
   }
 });

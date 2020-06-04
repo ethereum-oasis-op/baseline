@@ -1,29 +1,30 @@
 import mongoose from 'mongoose';
+import { logger } from 'radish34-logger';
 
 const { connection } = mongoose;
 const mongoURL = `${process.env.MONGO_URL}/${process.env.MONGO_DB_NAME}`;
 
 const onConnected = () => {
-  console.log(`DB Connected to ${mongoURL}`);
+  logger.info(`Db conntect to ${mongoURL}.`, { service: 'API' });
 };
 
 const onError = err => {
-  console.log(`DB Error:`, err);
+  logger.error('Db error.\n%o', err, { service: 'API' });
 };
 
 const onDisconnected = () => {
-  console.log(`DB Disconnected from ${mongoURL}`);
+  logger.info(`Db disconnected from ${mongoURL}.`, { service: 'API' });
 };
 
 const onExit = () => {
   connection.close(() => {
-    console.log(`DB Disconnected due to process exit`);
+    logger.error('Db disconnected due to process exit.', { service: 'API' });
     process.exit();
   });
 };
 
 const connect = async () => {
-  console.log('DB Connecting ...');
+  logger.info(`Db connecting ...`, { service: 'API' });
 
   mongoose.Promise = global.Promise;
 

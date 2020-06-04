@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const logger = require('winston');
 const { getClient } = require('../utils/getClient.js');
 const Config = require('../../config');
+const { logger } = require('radish34-logger');
 
 let messenger;
 
@@ -148,7 +148,7 @@ router.post('/messages', async (req, res) => {
 async function initialize() {
   // Retrieve messenger instance and pass to helper classes
   // Modularized here to enable use of other messenger services in the future
-  logger.info('Initializing server...');
+  logger.info('Initializing server ...', { service: 'MESSENGER' });
   messenger = await getClient();
   const connected = await messenger.isConnected();
   await messenger.loadIdentities();

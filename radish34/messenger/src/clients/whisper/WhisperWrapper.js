@@ -1,9 +1,9 @@
-const logger = require('winston');
 const Identity = require('../../db/models/Identity');
 const Message = require('../../db/models/Message');
 const generalUtils = require('../../utils/generalUtils');
 const whisperUtils = require('./whisperUtils');
 const web3utils = require('./web3Utils.js');
+const { logger } = require('radish34-logger');
 
 // Useful constants
 const {
@@ -72,7 +72,7 @@ class WhisperWrapper {
         await this.subscribeToPrivateMessages(pubKey, DEFAULT_TOPIC);
       } catch (err) {
         logger.error(
-          `Error adding public key ${id.publicKey} to Whisper node: ${err}`,
+          `Error adding public key ${id.publicKey} to Whisper node.\n%o`, err, { service: 'MESSENGER' }
         );
       }
     });
@@ -92,7 +92,8 @@ class WhisperWrapper {
           _id: messageObj.messageId,
         });
         if (!originalMessage) {
-          throw new Error(`Original message id (${messageObj.messageId}) not found. Cannot add delivery receipt.`);
+          logger.error(`Original message id ${messageObj.messageId} not found. Cannot add delivery receipt.`, { service: 'MESSENGER' });
+          throw new Error(`Original message id ${messageObj.messageId} not found. Cannot add delivery receipt.`);
         } else if (originalMessage.recipientId === data.sig) {
           // Update original message to indicate successful delivery
           doc = await Message.findOneAndUpdate(
@@ -150,11 +151,11 @@ class WhisperWrapper {
         try {
           await this.checkMessageContent(data);
         } catch (error) {
-          logger.error(error.message);
+          logger.error('\n%o', err, { service: 'MESSENGER' });
         }
       })
       .on('error', (err) => {
-        logger.error(err);
+        logger.error('\n%o', err, { service: 'MESSENGER' });
       });
   }
 }

@@ -1,5 +1,6 @@
 import db from '../db';
 import { pubsub } from '../subscriptions';
+import { logger } from 'radish34-logger';
 
 export const getNoticeById = async id => {
   const notice = await db.collection('notices').findOne({ _id: id });
@@ -41,7 +42,7 @@ export const getOutbox = async () => {
 };
 
 export const saveNotice = async input => {
-  console.log('Saving the notices');
+  logger.info('Savin the notices.', { service: 'API' });
   const count = await db.collection('notices').estimatedDocumentCount();
   const doc = Object.assign(input, { _id: count + 1 });
   const notice = await db.collection('notices').insertOne(doc);

@@ -101,6 +101,7 @@ services:
       start_period: 10s
 
   zkp:
+    hostname: shared-zkp
     container_name: shared-zkp
     build:
       context: ./zkp/
@@ -133,6 +134,7 @@ services:
       start_period: 10s
 
   api-buyer:
+    hostname: api-buyer
     container_name: api-buyer
     build:
       context: ./api/
@@ -175,6 +177,7 @@ services:
       start_period: 10s
 
   api-supplier1:
+    hostname: api-supplier1
     container_name: api-supplier1
     build:
       context: ./api/
@@ -217,6 +220,7 @@ services:
       start_period: 10s
 
   api-supplier2:
+    hostname: api-supplier2
     container_name: api-supplier2
     build:
       context: ./api/

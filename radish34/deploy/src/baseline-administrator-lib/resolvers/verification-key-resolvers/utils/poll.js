@@ -3,14 +3,16 @@
 @author iAmMichaelConnor
 */
 
+const { logger } = require('radish34-logger');
+
 const poll = async (pollingFunction, interval, arg1, arg2) => {
-  // console.log('Polling...');
+  logger.info('Polling...', { service: 'DEPLOY'});
   // this is called as a Promise which only resolves when the conditions of the pollingFunction have been satisfied (i.e. once the pollingFunction returns something other than false).
   const checkPollCondition = async (resolve, reject) => {
     const response = await pollingFunction(arg1, arg2); // polling function must return a FALSE if unsuccessful.
     if (response === false) {
       // if the polling function was unsuccessful, poll again:
-      console.log('...');
+      logger.info('Polling again...', { service: 'DEPLOY'});
       setTimeout(checkPollCondition, interval, resolve, reject);
     } else {
       // if the polling function was successful, resolve this poll.
