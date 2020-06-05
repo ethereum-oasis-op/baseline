@@ -1,9 +1,9 @@
-const { messagingServiceFactory } = require('../../../../baseline/core/messaging');
+const { messagingServiceFactory } = require('@baseline-protocol/messaging');
 const logger = require('winston');
 const Config = require('../../config');
 const { getIdentities, addIdentity } = require('../db/interactions');
 const { DEFAULT_TOPIC } = require('../utils/generalUtils');
-const { processWhisperMessage } = require('./callbacks.js');
+const { processWhisperMessage } = require('./callbacks');
 
 let messenger;
 
@@ -11,7 +11,7 @@ async function initialize() {
   // Retrieve messenger instance and pass to helper classes
   // Modularized here to enable use of other messenger services in the future
   logger.info('Initializing server...');
-  messenger = await messagingServiceFactory(provider = 'whisper', { clientUrl: Config.users[0].clientUrl });
+  messenger = await messagingServiceFactory(provider = 'whisper', { clientUrl: Config.clientUrl });
   await messenger.connect();
   const connected = await messenger.isConnected();
 
@@ -19,6 +19,8 @@ async function initialize() {
   // (this must be done each time the geth node is restarted)
   if (Config.messagingType === 'whisper') {
     const identities = await getIdentities();
+    console.log('typeof processWhisperMessage:', typeof processWhisperMessage);
+    console.log('processWhisperMessage:', processWhisperMessage);
     const loadedIds = await messenger.loadIdentities(identities, DEFAULT_TOPIC, processWhisperMessage);
     // Update keyIds in db
     await loadedIds.forEach((id) => addIdentity(id));

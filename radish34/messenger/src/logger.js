@@ -7,7 +7,7 @@ const logger = winston.configure({
   transports: [
     new winston.transports.Console(),
   ],
-  level: Config.logging.level,
+  level: Config.logLevel,
   format: winston.format.combine(
     winston.format.colorize(),
     winston.format.timestamp({

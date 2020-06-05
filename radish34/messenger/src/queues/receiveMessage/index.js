@@ -7,10 +7,10 @@ const requestNamespace = `baseline:messenger:receiveMessage:req`;
 let receiveMessageQueue;
 
 try {
-  receiveMessageQueue = new Queue(requestNamespace, Config.users[0].redisUrl);
-  logger.debug(`SUCCESS: connected to bull queue "${requestNamespace}" at ${Config.users[0].redisUrl}`);
+  receiveMessageQueue = new Queue(requestNamespace, Config.redisUrl);
+  logger.debug(`SUCCESS: connected to bull queue "${requestNamespace}" at ${Config.redisUrl}`);
 } catch (error) {
-  logger.error(`ERROR: could not connect to bull queue "${requestNamespace}" at ${Config.users[0].redisUrl}`);
+  logger.error(`ERROR: could not connect to bull queue "${requestNamespace}" at ${Config.redisUrl}`);
 }
 
 // Adding Queue to BullBoard Admin UI

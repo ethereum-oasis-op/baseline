@@ -6,11 +6,10 @@ const generalUtils = require('../src/utils/generalUtils.js');
 const Identity = require('../src/db/models/Identity');
 const Message = require('../src/db/models/Message');
 
-const { ipAddress, apiPort } = Config.users[0];
-const apiRequest = request(`${ipAddress}:${apiPort}`);
+const apiRequest = request(`localhost:${Config.apiPort}`);
 
 beforeAll(async () => {
-  await mongoose.connect(Config.users[0].dbUrl, Config.mongoose);
+  await mongoose.connect(Config.dbUrl, Config.mongoose);
   await Identity.deleteMany();
   await Message.deleteMany();
   generalUtils.forwardMessage = jest.fn();

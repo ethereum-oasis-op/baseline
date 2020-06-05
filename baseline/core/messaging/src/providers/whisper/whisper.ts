@@ -82,7 +82,10 @@ export class WhisperService {
       })
       .on('data', async (data) => {
         try {
-          callback(data);
+          // Use .call() so that we can pass the Whisper class instance as "this",
+          // therefore we can call Whisper class methods. Otherwise "this" is 
+          // scoped by callback function.
+          callback.call(this, data);
         } catch (error) {
           logger.error(error.message);
         }

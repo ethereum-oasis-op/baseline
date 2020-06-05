@@ -18,12 +18,12 @@ beforeAll(async () => {
   //forwardMessage = jest.fn();
 
   // Create mongoose connection to db
-  await mongoose.connect(Config.users[0].dbUrl, Config.mongoose);
+  await mongoose.connect(Config.dbUrl, Config.mongoose);
   await Identity.deleteMany();
   await Message.deleteMany();
 
   // Create native mongo connection to db
-  nativeClient = await MongoClient.connect(Config.users[0].dbUrl, { useUnifiedTopology: true });
+  nativeClient = await MongoClient.connect(Config.dbUrl, { useUnifiedTopology: true });
   db = nativeClient.db();
 });
 
@@ -38,7 +38,7 @@ let web3;
 
 describe('Whisper provider', () => {
   beforeAll(async () => {
-    messenger = await messagingServiceFactory(provider = 'whisper', { clientUrl: Config.users[0].clientUrl });
+    messenger = await messagingServiceFactory(provider = 'whisper', { clientUrl: Config.clientUrl });
     web3 = await messenger.connect();
   });
 
