@@ -17,37 +17,42 @@ if [ "$1" = "" ]; then
 else
   circuit_selector=$1
 fi
-  
-if [ "$circuit_selector" = "0" ] && [ ! -d ./zkp/output/createMSA ]; then
-    sleep 5
-    printf "\n${GREEN}*** Running setup for createMSA ***${NC}\n"
-    curl -d '{"filepath": "business-logic/createMSA.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
-    printf "\n${GREEN}*** createMSA setup complete ***${NC}\n"
-elif [ "$circuit_selector" = "1" ] && [ ! -d ./zkp/output/createDummyMSA ]; then
-    sleep 5
-    printf "\n${GREEN}*** Running setup for createDummyMSA ***${NC}\n"
-    curl -d '{"filepath": "dummy-circuits/createDummyMSA.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
-    printf "\n${GREEN}*** createDummyMSA setup complete ***${NC}\n"
-fi
 
-if [ "$circuit_selector" = "0" ] && [ ! -d ./zkp/output/createPO ]; then
-    sleep 5
-    printf "\n${GREEN}*** Running setup for createPO ***${NC}\n"
-    curl -d '{"filepath": "business-logic/createPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
-    printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
-elif [ "$circuit_selector" = "1" ] && [ ! -d ./zkp/output/createDummyPO ]; then
-    sleep 5
-    printf "\n${GREEN}*** Running setup for createDummyPO ***${NC}\n"
-    curl -d '{"filepath": "dummy-circuits/createDummyPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
-    printf "\n${GREEN}*** createDummyPO setup complete ***${NC}\n"
-fi
-
-if [ ! -d ./zkp/output/createAgreement ]; then
-    sleep 5
-
-    printf "\n${GREEN}*** Running setup for createAgreement ***${NC}\n"
-    curl -d '{"filepath": "business-logic/createAgreement.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
-    printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
-fi
-
+case "$circuit_selector" in
+  "0")
+    if [ ! -d ./zkp/output/createMSA ]; then
+        printf "\n${GREEN}*** Running setup for createMSA ***${NC}\n"
+        curl -d '{"filepath": "business-logic/createMSA.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+        printf "\n${GREEN}*** createMSA setup complete ***${NC}\n"
+    fi
+    if [ ! -d ./zkp/output/createPO ]; then
+        printf "\n${GREEN}*** Running setup for createPO ***${NC}\n"
+        curl -d '{"filepath": "business-logic/createPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+        printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
+    fi
+    ;;
+  "1")
+    if [ ! -d ./zkp/output/createDummyMSA ]; then
+      printf "\n${GREEN}*** Running setup for createDummyMSA ***${NC}\n"
+      curl -d '{"filepath": "dummy-circuits/createDummyMSA.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+      printf "\n${GREEN}*** createDummyMSA setup complete ***${NC}\n"
+    fi
+    if [ ! -d ./zkp/output/createDummyPO ]; then
+      printf "\n${GREEN}*** Running setup for createDummyPO ***${NC}\n"
+      curl -d '{"filepath": "dummy-circuits/createDummyPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+      printf "\n${GREEN}*** createDummyPO setup complete ***${NC}\n"
+    fi
+    ;;
+  "2")
+    if [ ! -d ./zkp/output/createAgreement ]; then
+        printf "\n${GREEN}*** Running setup for createAgreement ***${NC}\n"
+        curl -d '{"filepath": "business-logic/createAgreement.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+        printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
+    fi
+    ;;
+  *)
+    printf "\nDid not receive valid zkp circuit selection.\n\n"
+    ;;
+esac
+    
 printf "\nFinished setting up zkp circuits.\n\n"

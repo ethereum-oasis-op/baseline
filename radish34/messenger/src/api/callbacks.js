@@ -3,12 +3,13 @@ const { storeNewMessage } = require('../db/interactions');
 const logger = require('winston');
 const Web3 = require('web3');
 const axios = require('axios');
-const { getMessenger } = require('./service');
+//const { getMessenger } = require('./service');
 const { DEFAULT_TOPIC } = require('../utils/generalUtils');
 const Message = require('../db/models/Message');
 
 const radishApiUrl = process.env.RADISH_API_URL ? `${process.env.RADISH_API_URL}/api/v1` : 'http://localhost:8101/api/v1';
 
+//const processWhisperMessage = async (metadata) => {
 async function processWhisperMessage(metadata) {
   const web3 = await new Web3();
   const payloadAscii = await web3.utils.toAscii(metadata.payload);
@@ -33,7 +34,18 @@ async function processWhisperMessage(metadata) {
         );
       }
     } else {
-      await sendDeliveryReceipt(metadata);
+      console.log('processWhisperMessage this=', this)
+      //await sendDeliveryReceipt(metadata);
+      const time = await Math.floor(Date.now() / 1000);
+      const receiptObject = {
+        type: 'delivery_receipt',
+        deliveredDate: time,
+        messageId: metadata.hash,
+      };
+      const receiptString = JSON.stringify(receiptObject);
+      //const messenger = await getMessenger();
+      //await messenger.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
+      this.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
     }
     // Append source message ID to the object for tracking inbound
     // messages from partners via the messenger API
@@ -48,7 +60,7 @@ async function processWhisperMessage(metadata) {
   return doc;
 }
 
-async function sendDeliveryReceipt(metadata) {
+const sendDeliveryReceipt = async (metadata) => {
   // Send delivery receipt back to sender
   const time = await Math.floor(Date.now() / 1000);
   const receiptObject = {
@@ -57,8 +69,9 @@ async function sendDeliveryReceipt(metadata) {
     messageId: metadata.hash,
   };
   const receiptString = JSON.stringify(receiptObject);
-  const messenger = await getMessenger();
-  await messenger.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
+  //const messenger = await getMessenger();
+  //await messenger.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
+  this.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
 }
 
 /**

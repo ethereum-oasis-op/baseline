@@ -443,19 +443,23 @@ services:
       context: ./messenger
       dockerfile: ./Dockerfile
     env_file:
-      - ./messenger/docker.env
+      - ./messenger/config/docker.env
     environment:
-      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
-      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
       LOG_LEVEL: ${BASELINE_LOG_LEVEL}
       MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
-      MONGO_URL: mongodb://mongo-buyer:27017/radish34
+      DB_URL: mongodb://mongo-buyer:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
       RADISH_API_URL: http://api-buyer:8101
       REDIS_URL: redis://redis-buyer:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
     networks:
       - network-buyer
     ports:
      - 4001:4001
+    volumes:
+      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
@@ -471,22 +475,26 @@ services:
       - redis-supplier1
       - geth-node
     env_file:
-      - ./messenger/docker.env
+      - ./messenger/config/docker.env
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
-      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
-      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
       LOG_LEVEL: ${BASELINE_LOG_LEVEL}
       MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
-      MONGO_URL: mongodb://mongo-supplier1:27017/radish34
+      DB_URL: mongodb://mongo-supplier1:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
       RADISH_API_URL: http://api-supplier1:8101
       REDIS_URL: redis://redis-supplier1:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
     networks:
       - network-supplier1
     ports:
      - 4002:4001
+    volumes:
+      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
@@ -502,22 +510,26 @@ services:
       - redis-supplier2
       - geth-node
     env_file:
-      - ./messenger/docker.env
+      - ./messenger/config/docker.env
     build:
       context: ./messenger
       dockerfile: ./Dockerfile
     environment:
-      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
-      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
       LOG_LEVEL: ${BASELINE_LOG_LEVEL}
       MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
-      MONGO_URL: mongodb://mongo-supplier2:27017/radish34
+      DB_URL: mongodb://mongo-supplier2:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
       RADISH_API_URL: http://api-supplier2:8101
       REDIS_URL: redis://redis-supplier2:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
     networks:
       - network-supplier2
     ports:
       - 4003:4001
+    volumes:
+      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
