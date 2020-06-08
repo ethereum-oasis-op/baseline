@@ -1,6 +1,10 @@
 #!/bin/bash
 
-git diff --exit-code --quiet HEAD ./package.json && if [ $? -ne 0 ] || [[ ! -d ./node_modules ]]; then npm ci; fi
+git diff --exit-code --quiet HEAD ./package.json
+if [ $? -ne 0 ] || [[ ! -d ./node_modules ]]
+then
+  npm ci
+fi
 
 ./ops/build_api.sh
 ./ops/build_contracts.sh

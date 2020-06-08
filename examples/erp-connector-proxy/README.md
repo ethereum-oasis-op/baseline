@@ -121,7 +121,7 @@ The proxy does not perform any business logic on its own (apart from some basic 
 
 To help baselining SAP environments (following the Buyer role in this demo), Unibright configured the Unibright Connector (the integration platform of the Unibright Framework) to integrate and map the SAP models with the proxy automatically.
 
-![](docs/images/image4.png)
+![](docs/images/image4.jpg)
 <br/><sub><sup>**Object Mapping in the Unibright Connector**</sub></sup>
 
 ![](docs/images/image20.jpg)

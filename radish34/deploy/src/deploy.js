@@ -1,3 +1,5 @@
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-restricted-syntax */
 const path = require('path');
 const assert = require('assert');
 const ethers = require('ethers');
@@ -69,9 +71,14 @@ const main = async (
   // If it is needed we can set deployer as manager of OrgRegistry in the ERC1820
 
   console.log(`ℹ️   Registering zkp verification keys`);
-  await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA');
-  await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createPO');
-
+  const zkpMode = process.env.ZKP_MODE || 0; // Default to createMSA/createPO
+  if (zkpMode == 0) {
+    await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA', 0);
+    await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createPO', 0);
+  } else if (zkpMode == 1) {
+    await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createDummyMSA', 1);
+    await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createDummyPO', 1);
+  }
   console.log(`ℹ️   Network information:`);
   await printNetworkInfo(workgroupManager, radishOrganisations, pathKeystoreResolver);
 
@@ -128,7 +135,7 @@ const registerOrganisation = async (
     organisationName,
     organisationMessagingKey,
   );
-  if (typeof organisation.address == 'undefined') {
+  if (typeof organisation.address === 'undefined') {
     organisation.address = organisationWallet.address;
   }
 
@@ -203,8 +210,16 @@ const registerOrganisationInterfaceImplementers = async (
   );
 };
 
-const registerVerificationKey = async (workgroupManager, verificationKeyResolver, circuitName) => {
-  const { vkArray, actionType } = await verificationKeyResolver.resolveVerificationKey(circuitName);
+const registerVerificationKey = async (
+  workgroupManager,
+  verificationKeyResolver,
+  circuitName,
+  mode,
+) => {
+  const { vkArray, actionType } = await verificationKeyResolver.resolveVerificationKey(
+    circuitName,
+    mode,
+  );
 
   const transaction = await workgroupManager.registerVerificationKey(vkArray, actionType);
 
@@ -268,9 +283,9 @@ const run = async () => {
     );
   }
 
-  let keystoreDir = path.resolve(process.env.KEYSTORE_PATH);
-  let organisationsConfigDir = path.resolve(process.env.ORGANISATION_CONFIG_PATH);
-  let paths = process.env.CONTRACTS_PATH ? path.resolve(process.env.CONTRACTS_PATH) : undefined;
+  const keystoreDir = path.resolve(process.env.KEYSTORE_PATH);
+  const organisationsConfigDir = path.resolve(process.env.ORGANISATION_CONFIG_PATH);
+  const paths = process.env.CONTRACTS_PATH ? path.resolve(process.env.CONTRACTS_PATH) : undefined;
 
   const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_PROVIDER);
   const pathKeystoreResolver = new RadishPathKeystoreDirResolver(keystoreDir, provider);

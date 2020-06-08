@@ -3,7 +3,6 @@ const { storeNewMessage } = require('../db/interactions');
 const logger = require('winston');
 const Web3 = require('web3');
 const axios = require('axios');
-//const { getMessenger } = require('./service');
 const { DEFAULT_TOPIC } = require('../utils/generalUtils');
 const Message = require('../db/models/Message');
 
@@ -34,18 +33,10 @@ async function processWhisperMessage(metadata) {
         );
       }
     } else {
-      console.log('processWhisperMessage this=', this)
-      //await sendDeliveryReceipt(metadata);
-      const time = await Math.floor(Date.now() / 1000);
-      const receiptObject = {
-        type: 'delivery_receipt',
-        deliveredDate: time,
-        messageId: metadata.hash,
-      };
-      const receiptString = JSON.stringify(receiptObject);
-      //const messenger = await getMessenger();
-      //await messenger.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
-      this.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
+      // Use .call() so that we can pass the Whisper class instance as "this",
+      // therefore we can call Whisper class methods. Otherwise "this" is 
+      // scoped by callback function.
+      await sendDeliveryReceipt.call(this, metadata);
     }
     // Append source message ID to the object for tracking inbound
     // messages from partners via the messenger API
@@ -55,7 +46,7 @@ async function processWhisperMessage(metadata) {
     // Send all JSON messages to processing service
     forwardMessage(messageObj);
   } else { // Text message
-    await sendDeliveryReceipt(metadata);
+    await sendDeliveryReceipt.call(this, metadata);
   }
   return doc;
 }
@@ -69,8 +60,6 @@ const sendDeliveryReceipt = async (metadata) => {
     messageId: metadata.hash,
   };
   const receiptString = JSON.stringify(receiptObject);
-  //const messenger = await getMessenger();
-  //await messenger.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
   this.publish(DEFAULT_TOPIC, receiptString, undefined, metadata.sig);
 }
 
