@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<base target="_top">
+	<link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+	<!-- The CSS package above applies Google styling to buttons and other elements. -->
+
+	<style>
+		.branding-below {
+			bottom: 56px;
+			top: 0;
+		}
+
+		.branding-text {
+			left: 7px;
+			position: relative;
+			top: 3px;
+		}
+
+		.col-contain {
+			overflow: hidden;
+		}
+
+		.col-one {
+			float: left;
+			width: 50%;
+		}
+
+		.logo {
+			vertical-align: middle;
+		}
+
+		.radio-spacer {
+			height: 20px;
+		}
+
+		.width-100 {
+			width: 100%;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="sidebar branding-below">
+		<p>Welcome to the demo baseline protocol integrator. Using the buttons below you will be able to interact with your baseline group.</p>
+		<div id="auth">
+			<hr />
+			<form>
+				<div class="block">
+					<b>Authenticate</b>
+					<p>Enter your baseline node authentication credentials</p>
+					<label for="node-url">Node URL:</label><br>
+					<input type="text" id="node-url" name="node-url" value="https://us-central1-baseline-spreadsheet.cloudfunctions.net"><br>
+					<label for="email">Email:</label><br>
+					<input type="email" id="email" name="email"><br>
+					<label for="pass">Password:</label><br>
+					<input type="password" id="pass" name="pass">
+					<button class="blue" id="send-authenticate">Authenticate</button>
+				</div>
+			</form>
+			<hr />
+		</div>
+		<form>
+			<div class="block" id="proposals">
+				<b>Proposals</b>
+				<p>Click the button bellow to send the pending proposals to the baseline group</p>
+				<button class="blue" id="send-proposals">Send Pending Proposals</button>
+			</div>
+		</form>
+		<!-- <hr />
+		<form>
+			<div class="block" id="pos">
+				<b>Purchase Orders</b>
+				<p>Click the button bellow to send the pending purchase orders to the baseline group</p>
+				<button class="blue" id="send-proposals">Send Pending Invoices</button>
+			</div>
+		</form> -->
+	</div>
+	<div class="sidebar bottom">
+		<img alt="Add-on logo" class="logo" src="https://gblobscdn.gitbook.com/spaces%2F-M2ZgeO6_fLS5V_kJ073%2Favatar-1584629644534.png?alt=media" width="27" height="27">
+		<span class="gray branding-text">Baseline - Spreadsheets Add On</span>
+	</div>
+
+
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script>
+		$(function () {
+			$('#send-proposals').click(sendProposals);
+			$('#send-authenticate').click(authenticate);
+		});
+
+		function authenticate() {
+			google.script.run
+				.withSuccessHandler(
+					function () {
+						$("#auth").hide()
+					})
+				.withFailureHandler(
+					function (msg, element) {
+						showError(msg, $('#send-authenticate'));
+					})
+				.withUserObject(this)
+				.authenticate($("#node-url").val(), $("#email").val(), $("#pass").val());
+		}
+
+		function sendProposals() {
+			google.script.run
+				.withSuccessHandler(
+					function () {})
+				.withFailureHandler(
+					function (msg, element) {
+						showError(msg, $('#send-proposals'));
+					})
+				.withUserObject(this)
+				.triggerSendProposals();
+		}
+
+		/**
+		 * Inserts a div that contains an error message after a given element.
+		 *
+		 * @param {string} msg The error message to display.
+		 * @param {DOMElement} element The element after which to display the error.
+		 */
+		function showError(msg, element) {
+			var div = $('<div id="error" class="error">' + msg + '</div>');
+			$(element).after(div);
+		}
+	</script>
+</body>
+
+</html>
