@@ -54,6 +54,19 @@ nvm install 12.16
 nvm use 12.16
 ```
 
+The messenger service imports `@baseline-protocol/messaging` npm package. If you want to make modifications to the package's source code, you can edit the files in `<repo_root>/baseline/core/messaging`. For a local node process to use those files instead of importing the npm package from a remote registry, you can create an `npm link`:
+```
+cd <repo_root>/baseline/core/messaging
+npm link
+cd ../../radish34/messenger
+npm link @baseline-protocol/messaging
+npm ls -g --depth=0 --link=true
+```
+To remove the npm link use the following command:
+```
+npm unlink @baseline-protocol/messaging -g 
+```
+
 ## What is the architecture? 
 
 <!---
@@ -70,7 +83,3 @@ write about or (ideally) link to existing issues in github that are important to
 If you link please use github issue filter for your component label (and if you don't have a component label, make one).
 E.g. https://github.com/EYBlockchain/radish-34/issues?q=is%3Aissue+is%3Aopen+label%3ADocumentation would show all the documentation issues that are open.
 -->
-
-
-
-

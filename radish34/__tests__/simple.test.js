@@ -146,7 +146,7 @@ describe('Sender creates Agreement, signs it, sends to recipient, recipient resp
       // Wait for db to update
       console.log('This test can take up to 10 minutes to run. It will provide frequent status updates');
       let res;
-      for (let retry = 0; retry < 15; retry++) {
+      for (let retry = 0; retry < 5; retry++) {
         console.log('Checking for non-null msa index, attempt:', retry);
         res = await request(senderApiURL)
           .post('/graphql')

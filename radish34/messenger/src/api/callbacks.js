@@ -51,7 +51,7 @@ async function processWhisperMessage(metadata) {
   return doc;
 }
 
-const sendDeliveryReceipt = async (metadata) => {
+async function sendDeliveryReceipt(metadata) {
   // Send delivery receipt back to sender
   const time = await Math.floor(Date.now() / 1000);
   const receiptObject = {

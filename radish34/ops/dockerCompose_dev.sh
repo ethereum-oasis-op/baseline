@@ -31,6 +31,7 @@ echo "Initializing environment variables..."
 export BASELINE_MESSENGER_PROVIDER="${BASELINE_MESSENGER_PROVIDER:-`dotEnv BASELINE_MESSENGER_PROVIDER`}"
 export BASELINE_ZKP_MODE="${BASELINE_ZKP_MODE:-`dotEnv BASELINE_ZKP_MODE`}"
 export BASELINE_ETH_PROVIDER="${BASELINE_ETH_PROVIDER:-`dotEnv BASELINE_ETH_PROVIDER`}"
+export BASELINE_NPM_PACKAGE="${BASELINE_NPM_PACKAGE:-`dotEnv BASELINE_NPM_PACKAGE`}"
 export BASELINE_LOG_LEVEL="${BASELINE_LOG_LEVEL:-`dotEnv BASELINE_LOG_LEVEL`}"
 export BASELINE_ADMIN_TOKEN="${BASELINE_ADMIN_TOKEN:-`dotEnv BASELINE_ADMIN_TOKEN`}"
 BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY="${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY:-`dotEnv BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY`}"
@@ -54,6 +55,8 @@ export BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY=`
   sed 's/-----BEGIN PUBLIC KEY-----/\\\n-----BEGIN PUBLIC KEY-----\\\n/' | \
   sed 's/-----END PUBLIC KEY-----/\\\n-----END PUBLIC KEY-----\\\n/'`
 
+# If BASELINE_MESSENGER_PROVIDER=="whisper" then we need Ethereum clients
+# with whisper enabled to act as the messenger service provider.
 if [[ "$BASELINE_MESSENGER_PROVIDER" == "whisper" ]]
 then
   messenger_providers="
@@ -175,6 +178,220 @@ else
   messenger_providers=""
 fi
 
+# If BASELINE_NPM_PACKAGE=="local" then mount baseline/core/messaging files to
+# the docker containers' file system. This allows local modifications to be 
+# picked up by the docker containers. Otherwise, that npm package will be 
+# installed from the remote npm registry.
+echo "BASELINE_NPM_PACKAGE"
+echo $BASELINE_NPM_PACKAGE
+if [[ "$BASELINE_NPM_PACKAGE" == "local" ]]
+then
+  messenger_services="
+  messenger-buyer:
+    hostname: messenger-buyer
+    container_name: messenger-buyer
+    depends_on:
+      - mongo-buyer
+      - redis-buyer
+      - geth-node
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./messenger/config/docker.env
+    environment:
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
+      DB_URL: mongodb://mongo-buyer:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
+      RADISH_API_URL: http://api-buyer:8101
+      REDIS_URL: redis://redis-buyer:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+    networks:
+      - network-buyer
+    ports:
+     - 4001:4001
+    volumes:
+      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  messenger-supplier1:
+    hostname: messenger-supplier1
+    container_name: messenger-supplier1
+    depends_on:
+      - mongo-supplier1
+      - redis-supplier1
+      - geth-node
+    env_file:
+      - ./messenger/config/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
+      DB_URL: mongodb://mongo-supplier1:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
+      RADISH_API_URL: http://api-supplier1:8101
+      REDIS_URL: redis://redis-supplier1:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+    networks:
+      - network-supplier1
+    ports:
+     - 4002:4001
+    volumes:
+      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  messenger-supplier2:
+    hostname: messenger-supplier2
+    container_name: messenger-supplier2
+    depends_on:
+      - mongo-supplier2
+      - redis-supplier2
+      - geth-node
+    env_file:
+      - ./messenger/config/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
+      DB_URL: mongodb://mongo-supplier2:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
+      RADISH_API_URL: http://api-supplier2:8101
+      REDIS_URL: redis://redis-supplier2:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+    networks:
+      - network-supplier2
+    ports:
+      - 4003:4001
+    volumes:
+      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s "
+else
+  messenger_services="
+  messenger-buyer:
+    hostname: messenger-buyer
+    container_name: messenger-buyer
+    depends_on:
+      - mongo-buyer
+      - redis-buyer
+      - geth-node
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./messenger/config/docker.env
+    environment:
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
+      DB_URL: mongodb://mongo-buyer:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
+      RADISH_API_URL: http://api-buyer:8101
+      REDIS_URL: redis://redis-buyer:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+    networks:
+      - network-buyer
+    ports:
+     - 4001:4001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  messenger-supplier1:
+    hostname: messenger-supplier1
+    container_name: messenger-supplier1
+    depends_on:
+      - mongo-supplier1
+      - redis-supplier1
+      - geth-node
+    env_file:
+      - ./messenger/config/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
+      DB_URL: mongodb://mongo-supplier1:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
+      RADISH_API_URL: http://api-supplier1:8101
+      REDIS_URL: redis://redis-supplier1:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+    networks:
+      - network-supplier1
+    ports:
+     - 4002:4001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  messenger-supplier2:
+    hostname: messenger-supplier2
+    container_name: messenger-supplier2
+    depends_on:
+      - mongo-supplier2
+      - redis-supplier2
+      - geth-node
+    env_file:
+      - ./messenger/config/docker.env
+    build:
+      context: ./messenger
+      dockerfile: ./Dockerfile
+    environment:
+      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
+      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
+      DB_URL: mongodb://mongo-supplier2:27017/radish34
+      MESSENGER_API_PORT: 4001
+      CLIENT_URL: ws://geth-node:8546
+      RADISH_API_URL: http://api-supplier2:8101
+      REDIS_URL: redis://redis-supplier2:6379
+      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
+      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
+    networks:
+      - network-supplier2
+    ports:
+      - 4003:4001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s "
+fi
 
 echo "Creating /config/docker-compose.tmp.yml file..."
 mkdir -p config/
@@ -183,6 +400,7 @@ version: '3.5'
 
 services:
   $messenger_providers
+  $messenger_services
 
   deploy:
     container_name: deployer-service
@@ -427,111 +645,6 @@ services:
       - 8003:8001
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8001/health"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  messenger-buyer:
-    hostname: messenger-buyer
-    container_name: messenger-buyer
-    depends_on:
-      - mongo-buyer
-      - redis-buyer
-      - geth-node
-    build:
-      context: ./messenger
-      dockerfile: ./Dockerfile
-    env_file:
-      - ./messenger/config/docker.env
-    environment:
-      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
-      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
-      DB_URL: mongodb://mongo-buyer:27017/radish34
-      MESSENGER_API_PORT: 4001
-      CLIENT_URL: ws://geth-node:8546
-      RADISH_API_URL: http://api-buyer:8101
-      REDIS_URL: redis://redis-buyer:6379
-      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
-      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
-    networks:
-      - network-buyer
-    ports:
-     - 4001:4001
-    volumes:
-      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  messenger-supplier1:
-    hostname: messenger-supplier1
-    container_name: messenger-supplier1
-    depends_on:
-      - mongo-supplier1
-      - redis-supplier1
-      - geth-node
-    env_file:
-      - ./messenger/config/docker.env
-    build:
-      context: ./messenger
-      dockerfile: ./Dockerfile
-    environment:
-      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
-      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
-      DB_URL: mongodb://mongo-supplier1:27017/radish34
-      MESSENGER_API_PORT: 4001
-      CLIENT_URL: ws://geth-node:8546
-      RADISH_API_URL: http://api-supplier1:8101
-      REDIS_URL: redis://redis-supplier1:6379
-      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
-      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
-    networks:
-      - network-supplier1
-    ports:
-     - 4002:4001
-    volumes:
-      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
-      interval: 15s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
-
-  messenger-supplier2:
-    hostname: messenger-supplier2
-    container_name: messenger-supplier2
-    depends_on:
-      - mongo-supplier2
-      - redis-supplier2
-      - geth-node
-    env_file:
-      - ./messenger/config/docker.env
-    build:
-      context: ./messenger
-      dockerfile: ./Dockerfile
-    environment:
-      LOG_LEVEL: ${BASELINE_LOG_LEVEL}
-      MESSENGER_PROVIDER: ${BASELINE_MESSENGER_PROVIDER}
-      DB_URL: mongodb://mongo-supplier2:27017/radish34
-      MESSENGER_API_PORT: 4001
-      CLIENT_URL: ws://geth-node:8546
-      RADISH_API_URL: http://api-supplier2:8101
-      REDIS_URL: redis://redis-supplier2:6379
-      NATS_JWT_SIGNER_PRIVATE_KEY: ${BASELINE_NATS_JWT_SIGNER_PRIVATE_KEY}
-      NATS_JWT_SIGNER_PUBLIC_KEY: ${BASELINE_NATS_JWT_SIGNER_PUBLIC_KEY}
-    networks:
-      - network-supplier2
-    ports:
-      - 4003:4001
-    volumes:
-      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
-    healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
       timeout: 10s
       retries: 3
