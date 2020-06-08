@@ -19,8 +19,6 @@ async function initialize() {
   // (this must be done each time the geth node is restarted)
   if (Config.messagingType === 'whisper') {
     const identities = await getIdentities();
-    console.log('typeof processWhisperMessage:', typeof processWhisperMessage);
-    console.log('processWhisperMessage:', processWhisperMessage);
     const loadedIds = await messenger.loadIdentities(identities, DEFAULT_TOPIC, processWhisperMessage);
     // Update keyIds in db
     await loadedIds.forEach((id) => addIdentity(id));

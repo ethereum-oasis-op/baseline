@@ -1,7 +1,3 @@
-**⚠️ The "Baseline SAP and Microsoft Dynamics" initiative is based on [this branch](https://github.com/ethereum-oasis/baseline/tree/init-core) which includes numerous fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment that is currently on `master`) and enhancements (i.e., point-to-point messaging between parties, use of a more generalized circuit for baselining agreements, inclusion of a commercial Ethereum client, etc.). The `init-core` branch represents a significant milestone in the abstraction of the Radish34 use-case into a generalized protocol. The maintainers will merge `init-core` into `master` in the coming weeks when it has fully absorbed all workstreams related to the initiative described below.**
-
-**🚀 The "Baseline SAP and Microsoft Dynamics" source code can be found [here](https://github.com/ethereum-oasis/baseline/tree/init-core/examples/erp-connector-proxy) on the `init-core` branch, as discussed above.**
-
 # Baselining Business Process Automation across SAP and Microsoft Dynamics
 
 ##### Stefan Schmidt ([Unibright](https://unibright.io)), Kyle Thomas ([Provide](https://provide.services)), Daniel Norkin ([Envision Blockchain](http://envisionblockchain.com))
@@ -125,31 +121,11 @@ The proxy does not perform any business logic on its own (apart from some basic 
 
 To help baselining SAP environments (following the Buyer role in this demo), Unibright configured the Unibright Connector (the integration platform of the Unibright Framework) to integrate and map the SAP models with the proxy automatically.
 
-<<<<<<< HEAD
 ![](docs/images/image4.jpg)
 <br/><sub><sup>**Object Mapping in the Unibright Connector**</sub></sup>
 
 ![](docs/images/image20.jpg)
-<<<<<<< HEAD
 <br/><sub><sup>**SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison**</sub></sup>
-
-![](docs/images/image19.jpg)
-<br/><sub><sup>**Request for Quotation for 2 materials**</sub></sup>
-
-![](docs/images/image12.jpg)
-<br/><sub><sup>**Quotation to the Request, incl PriceScale referenced to the OrderItem**</sub></sup>
-
-![](docs/images/image8.jpg)
-<br/><sub><sup>**Resulting Purchase Order for Supplier ("Vendor" 100073)**</sub></sup>
-=======
-SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison
-=======
-![](docs/images/image4.png)
-<br/><sub><sup>**Object Mapping in the Unibright Connector**</sub></sup>
-
-![](docs/images/image20.jpg)
-<br/><sub><sup>**SAP Main Navigation Hierarchy for Purchasing Process, incl ME49 -> Price Comparison**</sub></sup>
->>>>>>> Initial commit of the erp radishproxy example
 
 ![](docs/images/image19.jpg)
 <br/><sub><sup>**Request for Quotation for 2 materials**</sub></sup>
