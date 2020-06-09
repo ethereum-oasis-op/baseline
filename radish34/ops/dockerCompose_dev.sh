@@ -182,10 +182,19 @@ fi
 # the docker containers' file system. This allows local modifications to be 
 # picked up by the docker containers. Otherwise, that npm package will be 
 # installed from the remote npm registry.
-echo "BASELINE_NPM_PACKAGE"
-echo $BASELINE_NPM_PACKAGE
 if [[ "$BASELINE_NPM_PACKAGE" == "local" ]]
 then
+
+  # Build local @baseline-protocol/messaging node package
+  pushd ../baseline/core/messaging
+  # Install node_modules if the directory doesn't exist
+  if [[ ! -d ./node_modules ]]
+  then
+    npm install
+  fi
+  npm run build
+  popd
+
   messenger_services="
   messenger-buyer:
     hostname: messenger-buyer

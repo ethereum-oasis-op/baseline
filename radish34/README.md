@@ -9,29 +9,48 @@ Disclaimer: This implementation is a demo, and production aspects of key managem
 1. Install [Docker for Mac](https://www.docker.com/docker-mac), or
     [Docker for Windows](https://www.docker.com/docker-windows)  
     - It's recommended that you allocate 12GB of RAM in Docker (see 'Troubleshooting').
-
-2. (Optional) In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
-
-After you've done that, log in to the Github package registry by running
-
-`docker login -u <your-username> -p <the-token-you-just-generated> docker.pkg.github.com`
-
-## Development/Test Environment
-
-### Prerequisites/Assumptions
-
 1. MacOS development environment (Catalina or later - 10.15.X). Note: It is possible it works in other environments/versions of MacOS
 1. NodeJS version 11.15 installed (or use of NVM is recommended)
-1. You are able to run the demo (☝️ see prerequisites above ☝️)
 
-### Setup
+## Quickstart
+
+A `Makefile` has been included for convenience; most of its targets wrap `npm` and `docker` commands.
+
+Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete.
+```
+make && make start && make test
+```
+> Note: The file `./env.dev.env` contains environment variables that allow you to select between configurable options. For example, to speed up testing you can use "dummy" ZKP circuits (`createDummyMSA` and `createDummyPO`) instead of the `createMSA` and `createPO` by setting `BASELINE_ZKP_MODE="1"`. This shortens the integration test time significantly because the proof generation for the "dummy" circuits is trivial.
+
+### The demo UI
+
+After running the above (`make test` optional) you can view the Radish34 demo by opening [http://localhost:3000](http://localhost:3000) in your browser.
+
+Here are the targets currently exposed by the `Makefile`:
+
+- `make`: Alias for `make build`
+- `make build`: Build all modules within the monorepo.
+- `make build-containers`: Dockerize all modules within the monorepo.
+- `make clean`: Reclaim disk used by all modules (i.e. `node_modules/`) and the local docker environment. This effectively uninstalls your local __Baseline__ environment and will require building from scratch.
+- `make contracts`: Compile the Solidity contracts.
+- `make deploy-contracts`: Deploy the Solidity contracts. Requires the stack to be running.
+- `make npm-install`: `npm i` wrapper for all modules in the monorepo.
+- `make start`: Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation.
+- `make stop`: Stop the running __Baseline__ stack.
+- `make system-check`: Verify that `docker` is configured properly.
+- `make restart`: Stop and start the `docker` stack.
+- `make reset`: Clean the docker environment by pruning the docker networks and volumes.
+- `make test`: Run the full test suite. Requires the stack to be running.
+- `make zk-circuits`: Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits`
+
+## Detailed Setup
 
 The steps below illustrate the individual steps, that can be viewed as the breakdown of the `make` scripts.
 
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
-2. Run `make npm-install` at the root level of the repo. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
-3. Run `cd radish34/ && docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
-4. Run `cd radish34/ && npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
+2. Run `make npm-install`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
+3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
+4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
     <details> 
       <summary>Example logs</summary>
       <p> 
@@ -51,8 +70,8 @@ The steps below illustrate the individual steps, that can be viewed as the break
       </p>
     </details> 
 
-5. Run `cd radish34/ && npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
-6. Run `cd radish34/ && npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
+5. Run `npm run build:contracts` to compile the smart contracts in `contracts/contracts` to JSON files (containing ABI and Bytecode key value pairs) in the `contracts/artifacts` folder needed for deployment. ** This takes less than 15 seconds to run **
+6. Run `npm run deploy` to deploy the smart contracts. ** This takes about 2 minutes **
     - This docker container first deploys both the Registry contract and the OrgRegistry contract.
     - Then it registers (1) Buyer and (2) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
     - The goal of deployment is to initialize the Radish34 system by pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart contract, which holds the organization metadata to thus enable any ongoing procurement operations.
@@ -124,7 +143,7 @@ The steps below illustrate the individual steps, that can be viewed as the break
       </p>
     </details> 
 
-7. Run `cd radish34/ && docker-compose up -d && docker-compose restart`
+7. Run `docker-compose up -d && docker-compose restart`
    - This will reinstate and restart all `radish` containers
    - Wait about 10 seconds to give containers time to complete their initialization routines
    - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are api-{role} and ui. For example: `docker-compose logs -f api-buyer api-supplier1 api-supplier2 ui`
@@ -151,7 +170,7 @@ The steps below illustrate the individual steps, that can be viewed as the break
       </p>
     </details> 
 
-8. Run integration tests: `cd radish34/ && npm run test`. ** This takes about 3-5 minutes to run to completion **
+8. Run integration tests: `npm run test`. ** This takes about 3-5 minutes to run to completion **
     <details> 
       <summary>Example logs</summary>
       <p> 

@@ -24,44 +24,6 @@ In order to demonstrate the __Baseline Protocol__, we needed a use-case. The use
 
 The __Baseline Protocol__ code is currently embedded inside the `/radish-api` directory, but we are in the process of moving that code into the `/baseline` directory to clearly distinguish the protocol from the use-case. Once this move is complete, `radish-api` will import `baseline` as a module, which will be the same process that other projects will need to follow to implement __Baseline__.
 
-## Quickstart
-
-A `Makefile` has been included for convenience; most of its targets wrap `npm`, `docker` and `solc` invocations.
-
-Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete.
-
-```
-make && make start && make test
-```
-
-> Note: to speed up testing you can use "dummy" ZKP circuits (`createDummyMSA` and `createDummyPO`) instead of the `createMSA` and `createPO`. This shortens the integration test time significantly because the proof generation for the "dummy" circuits is trivial. To use the dummy circuits, add a `mode` argument to the `make start` command as shown here:
-```
-make && make start mode=1 && make test
-```
-
-### The demo UI
-
-After running the above (`make test` optional) you can view the Radish34 demo by opening [http://localhost:3000](http://localhost:3000) in your browser.
-
-Here are the targets currently exposed by the `Makefile`:
-
-| Target | Description |
-|:-------------|:------------------------------------------------------------|
-| `make` | Alias for `make build`. |
-| `make build` | Build all modules within the monorepo. |
-| `make build-containers` | Dockerize all modules within the monorepo. |
-| `make clean` | Reclaim disk used by all modules (i.e. `node_modules/`) and the local docker environment. This effectively uninstalls your local __Baseline__ environment and will require building from scratch. |
-| `make contracts` | Compile the Solidity contracts. |
-| `make deploy-contracts` | Deploy the Solidity contracts. Requires the stack to be running. |
-| `make npm-install` | `npm i` wrapper for all modules in the monorepo. |
-| `make start` | Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation. |
-| `make stop` | Stop the running __Baseline__ stack. |
-| `make system-check` | Verify that `docker` is configured properly. |
-| `make restart` | Stop and start the `docker` stack. |
-| `make reset` | Clean the docker environment by pruning the docker networks and volumes. |
-| `make test` | Run the full test suite. Requires the stack to be running. |
-| `make zk-circuits` | Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits` |
-
 ## Running Radish34
 
 To get more insight into the individual steps taken to run the __Radish34__ application, follow the instructions in [radish34/README.md](radish34/README.md).
@@ -74,10 +36,10 @@ The root directory of this repo (where this Readme currently lives) contains the
 
 ```
 .
-├── baseline  <-- Future home to the Baseline Protocol libraries
-├── bin <-- Scripts to run across the entire project
-├── docs <-- auto-generated and artisanal hand crafted documentation 
-└── radish34 <-- The demonstration POC (you probably are looking for this)
+├── baseline  <-- Home to the `@baseline-protocol` libraries
+├── docs <-- Auto-generated and artisanal hand crafted documentation 
+├── examples <-- Example implementations of the baseline-protocol
+└── radish34 <-- The original demonstration PoC for baseline (you probably are looking for this)
 ```
 
 ## Running scripts across the project
