@@ -12,7 +12,7 @@ export interface IMessagingService {
   disconnect(): Promise<void>;
   getSubscribedSubjects(): string[];
   isConnected(): boolean;
-  publish(subject: string, payload: any, reply?: string, recipientId?: string): Promise<void>;
+  publish(subject: string, payload: any, reply?: string, recipientId?: string, senderId?: string): Promise<void>;
   request(subject: string, timeout: number, data?: any): Promise<any | void>;
   subscribe(subject: string, callback?: (msg: any, err?: any) => void, myId?: string): Promise<any>;
   unsubscribe(subject: string);

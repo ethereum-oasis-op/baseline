@@ -44,7 +44,16 @@ describe('/identities', () => {
     });
   });
 
-  test('POST /identities to create a new one', async () => {
+  test('POST /identities creates a new identity', async () => {
+    const res = await apiRequest
+      .post('/api/v1/identities')
+      .send({}); // no attributes required
+    expect(res.statusCode).toEqual(201);
+    expect(res.body).toHaveProperty('publicKey');
+    expect(res.body).toHaveProperty('createdDate');
+  });
+
+  test('POST /identities creates a second identity', async () => {
     const res = await apiRequest
       .post('/api/v1/identities')
       .send({}); // no attributes required
@@ -56,7 +65,7 @@ describe('/identities', () => {
   test('GET /identities returns identities', async () => {
     const res = await apiRequest.get('/api/v1/identities');
     expect(res.statusCode).toEqual(200);
-    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body.length).toEqual(2);
   });
 });
 
@@ -70,12 +79,14 @@ describe('/messages', () => {
   });
 
   describe('Using an identityId header in the request', () => {
-    let messengerId;
+    let messengerId_1;
+    let messengerId_2;
 
     beforeAll(async (done) => {
       const res = await apiRequest.get('/api/v1/identities');
       // Setting the messengerID used as context for the rest of the tests below
-      messengerId = res.body[0].publicKey;
+      messengerId_1 = res.body[0].publicKey;
+      messengerId_2 = res.body[1].publicKey;
       done();
     });
 
@@ -84,7 +95,7 @@ describe('/messages', () => {
       test('GET /messages returns empty array', async () => {
         const res = await apiRequest
           .get('/api/v1/messages')
-          .set('x-messenger-id', messengerId);
+          .set('x-messenger-id', messengerId_1);
         expect(res.statusCode).toEqual(200);
         expect(res.body).toEqual([]);
       });
@@ -104,7 +115,7 @@ describe('/messages', () => {
       test('POST /messages returns 400 withOUT required attributes', async () => {
         const res = await apiRequest
           .post('/api/v1/messages')
-          .set('x-messenger-id', messengerId)
+          .set('x-messenger-id', messengerId_1)
           .send({});
         expect(res.statusCode).toEqual(400);
         expect(res.body.error).toEqual(
@@ -112,17 +123,30 @@ describe('/messages', () => {
         );
       });
 
-      test('POST /messages creates new message with required attributes', async () => {
+      test('POST /messages returns 200 using identities[0] as sender', async () => {
         const res = await apiRequest
           .post('/api/v1/messages')
-          .set('x-messenger-id', messengerId)
+          .set('x-messenger-id', messengerId_1)
           .send({
-            recipientId: messengerId,
+            recipientId: messengerId_1,
             payload: 'Message 1',
           });
         expect(res.statusCode).toEqual(201);
         expect(res.body.payload).toEqual('Message 1');
-        expect(res.body.senderId).toEqual(messengerId);
+        expect(res.body.senderId).toEqual(messengerId_1);
+      });
+
+      test('POST /messages returns 200 using identities[1] as sender', async () => {
+        const res = await apiRequest
+          .post('/api/v1/messages')
+          .set('x-messenger-id', messengerId_2)
+          .send({
+            recipientId: messengerId_2,
+            payload: 'Sent from second identity',
+          });
+        expect(res.statusCode).toEqual(201);
+        expect(res.body.payload).toEqual('Sent from second identity');
+        expect(res.body.senderId).toEqual(messengerId_2);
       });
     });
 
@@ -132,9 +156,9 @@ describe('/messages', () => {
       beforeAll(async (done) => {
         const newRes = await apiRequest
           .post('/api/v1/messages')
-          .set('x-messenger-id', messengerId)
+          .set('x-messenger-id', messengerId_1)
           .send({
-            recipientId: messengerId,
+            recipientId: messengerId_1,
             payload: 'Message 123',
           });
         messageId = newRes.body._id;
@@ -155,7 +179,7 @@ describe('/messages', () => {
         const fakeMessageId = '0x0';
         const res = await apiRequest
           .get(`/api/v1/messages/${fakeMessageId}`)
-          .set('x-messenger-id', messengerId);
+          .set('x-messenger-id', messengerId_1);
         expect(res.statusCode).toEqual(404);
         expect(res.body.error).toEqual(
           `Message with id ${fakeMessageId} was not found.`,
@@ -165,15 +189,15 @@ describe('/messages', () => {
       test('GET /messages/:messageId retrieves created message', async () => {
         const res = await apiRequest
           .get(`/api/v1/messages/${messageId}`)
-          .set('x-messenger-id', messengerId);
+          .set('x-messenger-id', messengerId_1);
 
         expect(res.statusCode).toEqual(200);
         const message = res.body;
         expect(message.id).not.toBeUndefined();
         expect(message.scope).toEqual('individual');
-        expect(message.senderId).toEqual(messengerId);
+        expect(message.senderId).toEqual(messengerId_1);
         expect(message.sentDate).not.toBeUndefined();
-        expect(message.recipientId).toEqual(messengerId); // sent message to self
+        expect(message.recipientId).toEqual(messengerId_1); // sent message to self
         expect(message.deliveredDate).toBeUndefined();
         expect(message.payload).toEqual('Message 123');
       });
@@ -186,15 +210,15 @@ describe('/messages', () => {
         // create a message
         await apiRequest
           .post('/api/v1/messages')
-          .set('x-messenger-id', messengerId)
+          .set('x-messenger-id', messengerId_1)
           .send({
-            recipientId: messengerId,
+            recipientId: messengerId_1,
             payload: 'Message Test 1',
           });
 
         const res = await apiRequest
           .get('/api/v1/messages')
-          .set('x-messenger-id', messengerId);
+          .set('x-messenger-id', messengerId_1);
 
         messageCount = res.body.length;
         expect(res.statusCode).toEqual(200);
@@ -211,7 +235,7 @@ describe('/messages', () => {
       test('GET /messages returns messages WITH "since" query param', async () => {
         const res = await apiRequest
           .get('/api/v1/messages?since=0')
-          .set('x-messenger-id', messengerId);
+          .set('x-messenger-id', messengerId_1);
 
         expect(res.statusCode).toEqual(200);
         expect(res.body.length).toEqual(messageCount);
@@ -222,7 +246,7 @@ describe('/messages', () => {
         // create a message for new recipientId
         await apiRequest
           .post('/api/v1/messages')
-          .set('x-messenger-id', messengerId)
+          .set('x-messenger-id', messengerId_1)
           .send({
             recipientId: newPartner,
             payload: 'Hello new partner, nice to meet you!',
@@ -230,7 +254,7 @@ describe('/messages', () => {
 
         const res = await apiRequest
           .get(`/api/v1/messages?since=0&partnerId=${newPartner}`)
-          .set('x-messenger-id', messengerId);
+          .set('x-messenger-id', messengerId_1);
 
         expect(res.statusCode).toEqual(200);
         expect(res.body.length).toEqual(1);

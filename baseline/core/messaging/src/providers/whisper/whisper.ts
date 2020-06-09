@@ -28,7 +28,8 @@ export class WhisperService {
     subject = DEFAULT_TOPIC,
     payload: any,
     reply,
-    recipientId: string
+    recipientId: string,
+    senderId: string
   ): Promise<any> {
     let messageString = payload;
     if (typeof payload === 'object') {
@@ -38,10 +39,15 @@ export class WhisperService {
     const web3 = await getWeb3(this.clientUrl);
     const content = web3.utils.fromAscii(messageString);
 
+    let keyId = this.keyId
+    if (senderId) {
+      keyId = senderId
+    }
+
     try {
       const messageObj = {
         pubKey: recipientId,
-        sig: this.keyId,
+        sig: keyId,
         ttl: TTL,
         topic: subject,
         payload: content,
@@ -50,7 +56,7 @@ export class WhisperService {
       };
       const hash = await web3.shh.post(messageObj);
       const time = Math.floor(Date.now() / 1000);
-      const publicKey = await web3.shh.getPublicKey(this.keyId);
+      const publicKey = await web3.shh.getPublicKey(keyId);
       return {
         payload: messageString,
         _id: hash,

@@ -126,7 +126,7 @@ describe('Whisper provider', () => {
           recipientPublicKey: whisperId.publicKey,
         };
 
-        const result = await processWhisperMessage(messageObj);
+        const result = await processWhisperMessage.call(messenger, messageObj);
         expect(result.payload).toEqual(messageString);
       });
 
@@ -154,7 +154,7 @@ describe('Whisper provider', () => {
         let result;
         let error = false;
         try {
-          result = await processWhisperMessage(messageObj);
+          result = await processWhisperMessage.call(messenger, messageObj);
         } catch (err) {
           error = true;
           result = err.message;
@@ -189,7 +189,7 @@ describe('Whisper provider', () => {
         let result;
         let error = false;
         try {
-          result = await processWhisperMessage(messageObj);
+          result = await processWhisperMessage.call(messenger, messageObj);
         } catch (err) {
           console.log('delivery_receipt ERROR:', err.message)
           error = true;

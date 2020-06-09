@@ -143,7 +143,12 @@ router.get('/messages/:messageId', async (req, res) => {
  * @apiParam {Object} recipient Message Identity ID of where to send the message
  */
 router.post('/messages', async (req, res) => {
-  const myId = req.headers['x-messenger-id'];
+  const myId = await findIdentity(req.headers['x-messenger-id']);
+  let senderId;
+  if (myId) {
+    senderId = myId.keyId;
+  }
+
   if (!req.body.payload) {
     res.status(400);
     res.send({
@@ -152,7 +157,7 @@ router.post('/messages', async (req, res) => {
     return;
   }
   const messenger = await getMessenger();
-  const messageData = await messenger.publish(DEFAULT_TOPIC, req.body.payload, undefined, req.body.recipientId);
+  const messageData = await messenger.publish(DEFAULT_TOPIC, req.body.payload, undefined, req.body.recipientId, senderId);
   const result = await storeNewMessage(messageData, req.body.payload);
   res.status(201);
   res.send(result);

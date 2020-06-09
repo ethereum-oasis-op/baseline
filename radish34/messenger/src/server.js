@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { UI } = require('bull-board');
 const logger = require('winston');
-const apiRouter = require('./api/rest-express');
+const apiRouter = require('./api/routes');
 const { RequestLogger, RequestErrorLogger } = require('./api/loggers-express');
 const { getMessenger } = require('./api/service');
 

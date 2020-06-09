@@ -61,6 +61,7 @@ npm link
 cd ../../radish34/messenger
 npm link @baseline-protocol/messaging
 npm ls -g --depth=0 --link=true
+npm install --link
 ```
 To remove the npm link use the following command:
 ```

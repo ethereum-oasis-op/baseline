@@ -4,17 +4,13 @@ const { DEFAULT_TOPIC } = require('../utils/generalUtils');
 
 // Fetch all of the Whisper Identities stored in database
 async function getIdentities() {
-  //const identities = await Identity.find(
-  //{},
-  //'-_id publickey createddate privatekey',
-  //).lean();
   const identities = await Identity.find({});
   return identities;
 }
 
 // Function to check whether an identity `myId` exists in the database
 async function findIdentity(myId) {
-  return Identity.exists({ _id: myId });
+  return Identity.findOne({ _id: myId });
 }
 
 async function addIdentity(newIdentity) {
