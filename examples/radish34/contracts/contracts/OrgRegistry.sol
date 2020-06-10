@@ -1,7 +1,6 @@
 pragma solidity ^0.5.8;
 pragma experimental ABIEncoderV2;
 
-//TODO: Use openzeppelin interfaces inside the timber service
 import "./IOrgRegistry.sol";
 import "./Registrar.sol";
 import "./ERC165Compatible.sol";
@@ -13,17 +12,14 @@ import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 /// Ownable contains ownership criteria of the organization registry
 /// ERC165Compatible contains interface compatibility checks
 contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
-    /// @notice Leverages roles contract as imported above to assign different roles
-    using Roles for Roles.Role;
-
-    enum Role {Null, Buyer, Supplier, Carrier}
 
     struct Org {
         address orgAddress;
         bytes32 name;
-        uint role;
-        bytes messagingKey;
+        bytes messagingEndpoint;
+        bytes whisperKey;
         bytes zkpPublicKey;
+        bytes metadata;
     }
 
     struct OrgInterfaces {
@@ -36,17 +32,17 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     mapping (address => Org) orgMap;
     mapping (uint => OrgInterfaces) orgInterfaceMap;
     uint orgInterfaceCount;
-    mapping (uint => Roles.Role) private roleMap;
-    // address[] public parties;
+
     Org[] orgs;
     mapping(address => address) managerMap;
 
     event RegisterOrg(
         bytes32 _name,
         address _address,
-        uint _role,
-        bytes _messagingKey,
-        bytes _zkpPublicKey
+        bytes _messagingEndpoint,
+        bytes _whisperKey,
+        bytes _zkpPublicKey,
+        bytes _metadata
     );
 
     /// @dev constructor function that takes the address of a pre-deployed ERC1820
@@ -67,7 +63,6 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         /// 0x54ebc817 is equivalent to the bytes4 of the function selectors in IOrgRegistry
         supportedInterfaces[this.registerOrg.selector ^
                             this.registerInterfaces.selector ^
-                            this.getOrgs.selector ^
                             this.getOrgCount.selector ^
                             this.getInterfaceAddresses.selector] = true;
         return true;
@@ -78,7 +73,6 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     function getInterfaces() external pure returns (bytes4) {
         return this.registerOrg.selector ^
                 this.registerInterfaces.selector ^
-                this.getOrgs.selector ^
                 this.getOrgCount.selector ^
                 this.getInterfaceAddresses.selector;
     }
@@ -107,30 +101,32 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @notice Function to register an organization
     /// @param _address ethereum address of the registered organization
     /// @param _name name of the registered organization
-    /// @param _role role of the registered organization
-    /// @param _messagingKey public key required for message communication
+    /// @param _messagingEndpoint public messaging endpoint
+    /// @param _whisperKey public key required for message communication
     /// @param _zkpPublicKey public key required for commitments & to verify EdDSA signatures with
     /// @dev Function to register an organization
     /// @return `true` upon successful registration of the organization
     function registerOrg(
         address _address,
         bytes32 _name,
-        uint _role,
-        bytes calldata _messagingKey,
-        bytes calldata _zkpPublicKey
-    ) external onlyOwner returns (bool) {
-        Org memory org = Org(_address, _name, _role, _messagingKey, _zkpPublicKey);
-        roleMap[_role].add(_address);
+        bytes calldata _messagingEndpoint,
+        bytes calldata _whisperKey,
+        bytes calldata _zkpPublicKey,
+        bytes calldata _metadata
+    ) external returns (bool) {
+        Org memory org = Org(_address, _name, _messagingEndpoint, _whisperKey, _zkpPublicKey, _metadata);
         orgMap[_address] = org;
         orgs.push(org);
-        // parties.push(_address);
+
         emit RegisterOrg(
             _name,
             _address,
-            _role,
-            _messagingKey,
-            _zkpPublicKey
+            _messagingEndpoint,
+            _whisperKey,
+            _zkpPublicKey,
+            _metadata
         );
+
         return true;
     }
 
@@ -167,16 +163,18 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     function getOrg(address _address) external view returns (
         address,
         bytes32,
-        uint,
+        bytes memory,
+        bytes memory,
         bytes memory,
         bytes memory
     ) {
         return (
             orgMap[_address].orgAddress,
             orgMap[_address].name,
-            orgMap[_address].role,
-            orgMap[_address].messagingKey,
-            orgMap[_address].zkpPublicKey
+            orgMap[_address].messagingEndpoint,
+            orgMap[_address].whisperKey,
+            orgMap[_address].zkpPublicKey,
+            orgMap[_address].metadata
         );
     }
 
@@ -204,42 +202,6 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
             tfAddress,
             sAddress,
             vrAddress
-        );
-    }
-
-    // @notice Function to retrieve a page of registered organizations along with details
-    // @notice start and end indices here are a convenience for pagination
-    // @param start starting index of the array where organization addresses are stored
-    // @param count ending index of the array where organization addresses are stored
-    // @dev Getter to retrieve details of the organization enabled for pagination
-    // @return array form of the details of the organization as stored in the struct
-    function getOrgs() external view returns (
-        address[] memory,
-        bytes32[] memory,
-        uint[] memory,
-        bytes[] memory,
-        bytes[] memory
-    ) {
-        address[] memory addresses = new address[](orgs.length);
-        bytes32[] memory names = new bytes32[](orgs.length);
-        uint[] memory roles = new uint[](orgs.length);
-        bytes[] memory messagingKeys = new bytes[](orgs.length);
-        bytes[] memory zkpPublicKeys = new bytes[](orgs.length);
-
-        for (uint i = 0; i < orgs.length; i++) {
-            addresses[i] = orgs[i].orgAddress;
-            names[i] = orgs[i].name;
-            roles[i] = orgs[i].role;
-            messagingKeys[i] = orgs[i].messagingKey;
-            zkpPublicKeys[i] = orgs[i].zkpPublicKey;
-        }
-
-        return (
-            addresses,
-            names,
-            roles,
-            messagingKeys,
-            zkpPublicKeys
         );
     }
 }
