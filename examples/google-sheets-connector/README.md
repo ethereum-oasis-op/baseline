@@ -76,7 +76,7 @@ The diagram above outlines the major architectural components. The following sec
 TODO Kyle
 
 ## Microsoft Dynamics ERP
-The Microsoft Dynamics ERP component is extension code written that connects to the Provide shuttle environments. It is written in X++ - the native language for Dynamics. It translates the native Dynamics objects to the ones required by the Baseline Service. Also regularly polls the Baseline service for news comming from the network.
+The Microsoft Dynamics ERP component is extension code written that connects to the Provide shuttle environments. It is written in X++ - the native language for Dynamics. It translates the native Dynamics objects to the ones required by the Baseline Service. Also regularly polls the Baseline service for news coming from the network.
 
 ![Microsoft Dynamics](images/dynamics.png)
 
