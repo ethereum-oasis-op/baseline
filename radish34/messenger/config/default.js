@@ -6,9 +6,6 @@ module.exports = {
     bufferMaxEntries: 8,
     firstConnectRetryDelaySecs: 5,
   },
-  logging: {
-    level: 'info'
-  },
   mongoose: {
     useUnifiedTopology: true,
     useNewUrlParser: true,

@@ -5,9 +5,6 @@ module.exports = {
     bufferMaxEntries: 8,
     firstConnectRetryDelaySecs: 5,
   },
-  logging: {
-    level: 'debug'
-  },
   users: [
     {
       ipAddress: '127.0.0.1',

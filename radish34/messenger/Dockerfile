@@ -1,7 +1,17 @@
-FROM node:12-alpine
+FROM radish34_logger as logger
+FROM node:12.16
 
-# Create app directory
-WORKDIR /app
+ENV FORCE_COLOR=1
+
+RUN mkdir /logger
+WORKDIR /logger
+
+COPY --from=logger /logger/dist ./dist
+COPY --from=logger /logger/package.json /logger/package-lock.json /logger/.babelrc ./
+RUN npm ci
+
+RUN mkdir ../app
+WORKDIR ../app
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
@@ -9,7 +19,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install packages
-RUN npm install
+RUN npm ci
 
 # Bundle app source
 # See ignore for exclusions

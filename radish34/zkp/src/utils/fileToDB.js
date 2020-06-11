@@ -1,6 +1,7 @@
 import fs from 'fs';
 import db from './db';
 import { jsonifyVk } from './jsonifyVk';
+import { logger } from 'radish34-logger';
 
 /**
 The vk's keys tend to be stored alphabetically in the db. But we need the following exact order, or everything will break:
@@ -15,7 +16,7 @@ export const getVerificationKeyByID = async id => {
     .collection('verificationKey')
     .findOne({ _id: id }, { projection: { _id: 0 } });
   const reorderedVk = vk === null ? vk : reorderVerificationKey(vk);
-  return reorderedVk; // reorderVerificationKey(vk);
+  return reorderedVk;
 };
 
 export const saveVerificationKeyToDB = async (keyID, _vk) => {
@@ -29,8 +30,8 @@ const readJsonFile = filePath => {
     const file = fs.readFileSync(filePath);
     return JSON.parse(file);
   }
-  console.log('Unable to locate file: ', filePath);
-  throw ReferenceError('file not found');
+  logger.error(`Unable to locate file: ${filePath}.`, { service: 'ZKP' });
+  throw ReferenceError('File not found.');
 };
 
 export const getProofByDocID = async id => {
@@ -54,7 +55,7 @@ export const saveProofToDB = async (docID, keyID, filePath) => {
 };
 
 export const checkForNewVks = async () => {
-  console.log(`Checking for new verification keys...`);
+  logger.info('Checking for new verification keys...', { service: 'ZKP' });
   let newVkCount = 0;
   const circuitNames = fs.readdirSync(`/app/output/`);
 
@@ -67,17 +68,15 @@ export const checkForNewVks = async () => {
 
     // check to see if any of these circuits are not yet stored in the mongo db:
     const doc = await getVerificationKeyByID(circuitName);
-    // console.log(circuitName);
-    // console.log('doc:', doc);
     if (doc === null) {
-      console.log(`New VK for ${circuitName} found; storing it in the mongodb. `);
+      logger.info(`New vk for ${circuitName} found. Storing it in the Mongo db.`, { service: 'ZKP' });
       newVkCount += 1;
       const vkJson = await jsonifyVk(verifierPath);
       await saveVerificationKeyToDB(circuitName, JSON.parse(vkJson));
     }
   }
 
-  if (newVkCount === 0) console.log(`No new vks found`);
+  if (newVkCount === 0) logger.info('No new vks found.', { service: 'ZKP' });
 };
 
 export default {

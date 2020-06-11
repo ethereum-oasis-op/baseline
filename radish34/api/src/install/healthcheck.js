@@ -6,37 +6,38 @@ import checkConnectedToRPC from './checkConnectedToRPC';
 import checkMessenger from './checkMessenger';
 import checkWallet from './checkWallet';
 import checkWalletBalance from './checkWalletBalance';
+import { logger } from 'radish34-logger';
 
 export default async () => {
   let state;
 
   if ((await checkNetworkSettings()) === false) {
-    console.log('Checking Network Settings failed ...');
+    logger.warning('Checking network settings failed.', { service: 'API' });
     state = 'nonetwork';
   } else if ((await checkConnectedToRPC()) === false) {
-    console.log('Checking Connection To RPC Server failed ...');
+    logger.warning('Checking connection to RPC server failed.', { service: 'API' });
     state = 'notconnected';
   } else if ((await checkMessenger()) === false) {
-    console.log('Checking Messenger Service Connection To Geth Client ...');
+    logger.warning('Checking messenger service connection to geth client.', { service: 'API' });
     state = 'nomessenger';
   } else if ((await checkWallet()) === false) {
-    console.log('Organization wallet not found');
+    logger.warning('Organization wallet not found.', { service: 'API' });
     state = 'nowallet';
   } else if ((await checkWalletBalance()) === false) {
-    console.log('Organization account has inadequite funds');
+    logger.warning('Organization account has inadequite funds.', { service: 'API' });
     state = 'nobalance';
   } else if ((await checkRegistrySettings()) === false) {
-    console.log('Checking Registry Settings failed ...');
+    logger.warning('Checking registry settings failed.', { service: 'API' });
     state = 'noregistry';
   } else if ((await checkIsRegistered()) === false) {
-    console.log('Checking If Registered failed...');
+    logger.warning('Checking if registered failed.', { service: 'API' });
     state = 'isregistered';
   } else {
-    console.log('All systems go.');
+    logger.info('All systems go.', { service: 'API' });
     state = 'ready';
   }
 
   await setServerState(state);
   const serverState = await getServerState();
-  console.log('🏥  Healthcheck Status:', serverState);
+  logger.info(`Healthcheck Status: ${serverState}.`, { service: 'API' });
 };

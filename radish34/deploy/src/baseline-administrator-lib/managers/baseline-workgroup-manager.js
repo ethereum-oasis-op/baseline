@@ -23,7 +23,7 @@ class BaselineWorkgroupManager {
 
 	/**
 	 * Registers an organisation with the given params into the workgroup organisation registry
-	 * 
+	 *
 	 * @param {address} organisationAddress - Address of the registered organisation
 	 * @param {string} organisationName - Name of the registered organisation
 	 * @param {number} organisationRole - Role of the registered organisation
@@ -52,7 +52,7 @@ class BaselineWorkgroupManager {
 
 	/**
 	 * Registers organisation interface for certain group
-	 * 
+	 *
 	 * @param {string} groupName The name of the registered interface group
 	 * @param {address} tokenAddress The address of the payment token of the group
 	 * @param {address} shieldAddress The address for the shield contract of the group
@@ -79,7 +79,7 @@ class BaselineWorkgroupManager {
 
 	/**
 	 * Returns the number of the currently registered organisations
-	 * 
+	 *
 	 * @returns - the number of organisations
 	 */
 	async getOrganisationsCount() {
@@ -88,7 +88,7 @@ class BaselineWorkgroupManager {
 
 	/**
 	 * Returns the registered information about an organisation with the given organisationAddress
-	 * 
+	 *
 	 * @param {address} organisationAddress - the address of the searched organisation
 	 * @returns the information written during the organisation registration
 	 */
@@ -103,18 +103,18 @@ class BaselineWorkgroupManager {
 			zkpPublicKey,
 			toString: function () {
 				return `
-Organisation Address: ${this.address}
-Organisation Name: ${this.name}
-Organisation Role: ${this.role}
-Organisation MessagingKey: ${this.messagingKey}
-Organisation zkpPublicKey: ${this.zkpPublicKey}`
+	Organisation Address: ${this.address}
+	Organisation Name: ${this.name}
+	Organisation Role: ${this.role}
+	Organisation MessagingKey: ${this.messagingKey}
+	Organisation zkpPublicKey: ${this.zkpPublicKey}`
 			}
 		};
 	}
 
 	/**
 	 * Registers a verification key in the shield contract.
-	 * 
+	 *
 	 * @param {*} vk - verification key. Probably resolved by verification key resolver
 	 * @param {*} actionType - circuit action type that you are registering the verification key for
 	 * @param {object} transactionOverrides - ethers transaction overrides object to be applied to the transaction

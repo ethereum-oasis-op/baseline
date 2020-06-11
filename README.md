@@ -34,6 +34,11 @@ Just want to get the __Baseline Protocol__ running locally? The following sequen
 make && make start && make test
 ```
 
+> Note: to speed up testing you can use "dummy" ZKP circuits (`createDummyMSA` and `createDummyPO`) instead of the `createMSA` and `createPO`. This shortens the integration test time significantly because the proof generation for the "dummy" circuits is trivial. To use the dummy circuits, add a `mode` argument to the `make start` command as shown here:
+```
+make && make start mode=1 && make test
+```
+
 ### The demo UI
 
 After running the above (`make test` optional) you can view the Radish34 demo by opening [http://localhost:3000](http://localhost:3000) in your browser.
@@ -59,7 +64,7 @@ Here are the targets currently exposed by the `Makefile`:
 
 ## Running Radish34
 
-To run the __Radish34__ application, follow the instructions in [radish34/README.md](radish34/README.md).
+To get more insight into the individual steps taken to run the __Radish34__ application, follow the instructions in [radish34/README.md](radish34/README.md).
 
 `cd radish34` and go from there 🚀
 

@@ -6,6 +6,7 @@ import {
 import { saveProposal } from '../db/models/modules/proposals';
 import { onReceiptMSABuyer, onReceiptMSASupplier } from '../services/msa';
 import { onReceiptPOSupplier } from '../services/po';
+import { logger } from 'radish34-logger';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.post('/documents', async (req, res) => {
   const messageObj = req.body;
   const { type, deliveredType, senderId, _id } = messageObj;
   let docId;
-  console.log(`\n\n\nReceived new document of type ${type}. Parsing now...`);
+  logger.info(`Received new document of type ${type}. Parsing now...`, { service: 'API' });
   switch (type) {
     case 'rfp_create': // inbound RFP from partner
       try {
@@ -44,8 +45,7 @@ router.post('/documents', async (req, res) => {
       break;
     case 'msa_create':
       try {
-        console.log('\n\n\nReceived MSA\n');
-        console.dir(messageObj, { depth: null });
+        logger.info(`Received MSA:\n%o`, messageObj, { service: 'API' });
         onReceiptMSASupplier(messageObj, senderId);
         docId = _id;
       } catch (error) {
@@ -55,8 +55,7 @@ router.post('/documents', async (req, res) => {
       break;
     case 'signed_msa':
       try {
-        console.log('\n\n\nReceived Signed MSA\n');
-        console.dir(messageObj, { depth: null });
+        logger.info(`Received signed MSA:\n%o`, messageObj, { service: 'API' });
         onReceiptMSABuyer(messageObj, senderId);
         docId = _id;
       } catch (error) {
@@ -76,8 +75,7 @@ router.post('/documents', async (req, res) => {
     // break;
     case 'po_create':
       try {
-        console.log('\n\n\nReceived PO\n');
-        console.dir(messageObj, { depth: null });
+        logger.info(`Received PO:\n%o`, messageObj, { service: 'API' });
         onReceiptPOSupplier(messageObj, senderId);
       } catch (error) {
         res.status(400);
@@ -94,7 +92,7 @@ router.post('/documents', async (req, res) => {
     // docId = await invoiceUtils.updateInvoice(messageObj);
     // break;
     default:
-      console.log('Did not recognize message object type:', messageObj);
+      logger.info(`Did not recognize message object type:\n%o`, messageObj, { service: 'API' });
   }
   res.status(200);
   res.send({ message: `Document (ID: ${docId}) added or updated in radish-api` });

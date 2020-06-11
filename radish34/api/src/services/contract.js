@@ -9,6 +9,7 @@ import {
   getContract,
   getContractWithWallet,
 } from '../utils/ethers';
+import { logger } from 'radish34-logger';
 
 export const getDefaultPath = contractName => {
   return `/app/artifacts/${contractName}.json`;
@@ -23,7 +24,7 @@ export const getContractJson = contractName => {
     const json = fs.readFileSync(path);
     return JSON.parse(json);
   }
-  console.log('Unable to locate file: ', path);
+  logger.error(`Unable to locate file: ${path}.`, { service: 'API' });
   throw ReferenceError(`contractName.json not found`);
 };
 

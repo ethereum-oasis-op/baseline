@@ -1,5 +1,6 @@
 import os from 'os';
 import fs from 'fs';
+import { logger } from 'radish34-logger';
 
 /**
  * @param {string} solFilePath
@@ -50,7 +51,7 @@ const keyExtractor = solFilePath => {
  */
 export const jsonifyVk = async solFilePath => {
   const vkJson = await keyExtractor(solFilePath);
-  // console.log('vkJson:', vkJson);
+  logger.debug('vkJson:\n%o', vkJson, { service: 'ZKP' });
   return vkJson;
 };
 

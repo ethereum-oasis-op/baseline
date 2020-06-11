@@ -1,5 +1,5 @@
 pragma solidity ^0.5.8;
-import "./ERC165.sol";
+import "openzeppelin-solidity/contracts/introspection/ERC165.sol";
 
 contract ERC165Compatible is ERC165 {
     mapping (bytes4 => bool) supportedInterfaces;

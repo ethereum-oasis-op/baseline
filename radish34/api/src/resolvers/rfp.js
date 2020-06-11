@@ -4,6 +4,7 @@ import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../queues/message_delivery';
 import { saveRFP } from '../db/models/modules/rfps';
 import { getPartnerByMessengerKey } from '../services/partner';
+import { logger } from 'radish34-logger';
 
 const NEW_RFP = 'NEW_RFP';
 
@@ -37,7 +38,7 @@ export default {
         lastModified: currentTime,
       });
       pubsub.publish(NEW_RFP, { newRFP: rfp });
-      console.log(`Sending RFP (uuid: ${rfp._id}) to recipients...`);
+      logger.info(`Sending RFP wit uuid ${rfp._id} to recipients.`, { service: 'API' });
       const { recipients, ...rfpDetails } = rfp;
       rfpDetails.type = 'rfp_create';
       rfpDetails.uuid = rfp._id;

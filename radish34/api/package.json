@@ -49,6 +49,7 @@
     "mongoose": "^5.9.5",
     "node-fetch": "^2.6.0",
     "object-hash": "^2.0.3",
+    "radish34-logger": "file:../logger",
     "request": "^2.88.2",
     "safe-buffer": "^5.2.0",
     "uuidv4": "^6.0.6",

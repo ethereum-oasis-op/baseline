@@ -1,4 +1,4 @@
-FROM node:11.15
+FROM radish34_logger
 
 RUN \
   apt-get update -y && \

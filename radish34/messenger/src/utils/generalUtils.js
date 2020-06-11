@@ -1,9 +1,8 @@
 const axios = require('axios');
-const logger = require('winston');
-require('../logger');
 const Identity = require('../db/models/Identity');
 const Message = require('../db/models/Message');
 const { receiveMessageQueue } = require('../queues/receiveMessage/');
+const { logger } = require('radish34-logger');
 
 const {
   DEFAULT_TOPIC,
@@ -17,7 +16,7 @@ const radishApiUrl = process.env.RADISH_API_URL ? `${process.env.RADISH_API_URL}
 /**
  * Checks whether a given string can be converted to a proper JSON object.
  * Edge cases: inputs of "true" or "null" return false
- * @param {String} str 
+ * @param {String} str
  */
 function hasJsonStructure(str) {
   if (typeof str !== 'string') return false;
@@ -101,8 +100,8 @@ async function getSingleMessage(messageId) {
 
 /**
  * Function to store new message in the database
- * @param {Object} messageData 
- * @param {String} content 
+ * @param {Object} messageData
+ * @param {String} content
  */
 async function storeNewMessage(messageData, content) {
   const { hash, recipientPublicKey, sig, ttl, topic, pow, timestamp } = messageData;
@@ -125,18 +124,17 @@ async function storeNewMessage(messageData, content) {
 
 /**
  * Function that forwards the message
- * @param {Object} messageObj 
+ * @param {Object} messageObj
  */
 async function forwardMessage(messageObj) {
-  logger.info(`Forwarding message to api service: POST ${radishApiUrl}/documents`);
+  logger.info(`Forwarding message to api microservice: POST ${radishApiUrl}/documents.`, { service: 'MESSENGER' });
   try {
     const response = await axios.post(`${radishApiUrl}/documents`, messageObj);
-    logger.info(`SUCCESS: POST ${radishApiUrl}/documents`);
-    logger.info(`${response.status} -`, response.data);
-  } catch (error) {
-    logger.error(`ERROR: POST ${radishApiUrl}/documents`);
-    if (error.response) {
-      logger.error(`${error.response.status} -`, error.response.data);
+    logger.http('Success', { service: 'MESSENGER', statusCode: response.status, responseData: response.data, requestMethod: 'POST', requestUrl: `${radishApiUrl}/documents`});
+  } catch (err) {
+    logger.error(`POST ${radishApiUrl}/documents failed.\n%o`, err, { service: 'MESSENGER' });
+    if (err.response) {
+      logger.error(`${err.response.status} - %o`, err.response.data, { service: 'MESSENGER' });
     }
   }
 }
