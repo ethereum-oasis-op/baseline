@@ -4,7 +4,7 @@ Over 400 people and companies signed up to be notified about the opening of the 
 
 ### Bootstrapping Phase and Ongoing Phase
 
-The technical steering committee and the chair listed below will be seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period will end when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceeding period\) vote on the new TSC and chair. The specifications steering committee \(SSC\) has a variable number, and membership is based on
+The technical steering committee and the chair listed below will be seated provisionally for six months, from From March 19, 2020 to September 30, 2020. This bootstrapping period will end when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceeding period\) vote on the new TSC and chair. The specifications steering committee \(SSC\) has a variable number, and membership is based on
 
 The people and companies listed below have stepped up to identify themselves as supporters, stakeholders, responsible parties, and accountable parties to help bootstrap the Baseline Protocol work.
 

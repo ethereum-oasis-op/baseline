@@ -38,7 +38,7 @@ A TSC member is eligible to lose their seat upon missing two consecutive TSC mee
 
 In all cases \(7, 9 or 11 member TSC\), the original three organizations \(EY, MSFT, ConsenSys\) hold less than 50% of the seats, during the initial six month bootstrapping period.
 
-One TSC Member shall serve as provisional chair of the TSC for six months. On September 31, 2020, all members and the chair shall be open for new elections. Members of the community shall have voting rights based on contribution \(see below\):  
+One TSC Member shall serve as provisional chair of the TSC for six months. On September 30, 2020, all members and the chair shall be open for new elections. Members of the community shall have voting rights based on contribution \(see below\):
 
 
 #### Steady State Periods: 
