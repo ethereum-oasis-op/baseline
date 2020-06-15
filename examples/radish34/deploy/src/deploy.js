@@ -142,9 +142,10 @@ const registerOrganisation = async (
   const transaction = await workgroupManager.registerOrganisation(
     organisation.address,
     organisation.name,
-    organisation.role,
+    organisationMessengerURL,
     organisation.messagingKey,
     organisation.zkpPublicKey,
+    "{}" // Freeform metadata
   );
 
   console.log(
