@@ -97,6 +97,7 @@ artifacts/
 build/
 dist/
 config/
+!messenger/config/
 
 # Ignore generated docs
 docs/generated
