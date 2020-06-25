@@ -14,7 +14,11 @@
     "build:umd": "webpack",
     "build": "yarn clean && yarn build:cjs && yarn build:umd",
     "clean": "rm -rf ./dist",
-    "test": "./node_modules/.bin/jest --passWithNoTests"
+    "nats:start": "npm run nats:stop 2&>/dev/null && docker run -td -p 4221:4221 -p 4222:4222 provide/nats-server -p 4222 -DV && sleep 2",
+    "nats:stop": "docker stop $(docker ps | grep provide/nats-server | sed 's/ .*//') 2&>/dev/null",
+    "test": "npm run nats:start && npm run geth:start $(./node_modules/.bin/jest --color --passWithNoTests && npm run nats:stop && npm run geth:stop) || npm run nats:stop && npm run geth:stop",
+    "geth:start": "npm run geth:stop 2&>/dev/null && docker run -td -p 8546:8546 ethereum/client-go --ws --wsaddr 0.0.0.0 0 --wsorigins * --wsapi web3,shh --networkid 100 && sleep 2",
+    "geth:stop": "docker stop $(docker ps | grep ethereum/client-go | sed 's/ .*//') 2&>/dev/null"
   },
   "dependencies": {
     "ts-natsutil": "^1.0.7",
