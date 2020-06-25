@@ -2,7 +2,7 @@ import logger from 'winston';
 import { getWeb3, isWeb3Connected } from './web3Utils';
 
 // Useful constants
-const DEFAULT_CONNECTED_INTERVAL = 10000; // FIXME-- make configurable via env and parseInt via constructor and private ivar
+const DEFAULT_CONNECTED_INTERVAL = 2000; // FIXME-- make configurable via env and parseInt via constructor and private ivar
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
 const POW_TIME = process.env.WHISPER_POW_TIME || 100;
 const TTL = process.env.WHISPER_TTL || 20;
@@ -110,9 +110,9 @@ export class WhisperService {
     subject: string = DEFAULT_TOPIC,
     callback: (msg: any) => void,
     myId: string
-  ) {
+  ): Promise<void> {
     const web3 = await getWeb3(this.clientUrl);
-    web3.shh
+    return web3.shh
       .subscribe('messages', {
         minPow: POW_TARGET,
         privateKeyID: myId,
@@ -135,7 +135,7 @@ export class WhisperService {
 
   // Load any previously created Whisper IDs from database into Whisper node
   // If no existing IDs provided, create a new one
-  async loadIdentities(identities, topic, callback) {
+  async loadIdentities(identities, topic = DEFAULT_TOPIC, callback) {
     const loadedIds = await new Array<object>();
     if (identities.length === 0) {
       const newId = await this.createIdentity(topic, callback)
