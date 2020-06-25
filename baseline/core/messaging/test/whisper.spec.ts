@@ -24,7 +24,7 @@ const requireWhisperConnection = async () => {
 
 beforeEach(async () => {
   whisperService = await whisperServiceFactory({
-    clientUrl: 'ws://localhost:8548',
+    clientUrl: 'ws://localhost:8546',
   });
   expect(whisperService).not.toBe(null);
 });
