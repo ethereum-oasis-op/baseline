@@ -14,7 +14,7 @@
     "build:umd": "webpack",
     "build": "yarn clean && yarn build:cjs && yarn build:umd",
     "clean": "rm -rf ./dist",
-    "test": "jest --passWithNoTests"
+    "test": "./node_modules/.bin/jest --passWithNoTests"
   },
   "dependencies": {
     "ts-natsutil": "^1.0.6",
