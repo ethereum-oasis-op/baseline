@@ -2,6 +2,7 @@ import logger from 'winston';
 import { getWeb3, isWeb3Connected } from './web3Utils';
 
 // Useful constants
+const DEFAULT_CONNECTED_INTERVAL = 10000; // FIXME-- make configurable via env and parseInt via constructor and private ivar
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
 const POW_TIME = process.env.WHISPER_POW_TIME || 100;
 const TTL = process.env.WHISPER_TTL || 20;
@@ -10,24 +11,55 @@ const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
 export class WhisperService {
   public keyId: string;
   private clientUrl: string;
+  private connectedInterval: any;
+  private web3Connected: boolean; // internal service reference to last-known web3 listener status
 
   constructor(config) {
     this.keyId = config.keyId;
     this.clientUrl = config.clientUrl;
+
+    this.web3Connected = false;
+    this.initConnectedInterval();
+  }
+
+  private initConnectedInterval() {
+    this.web3Connected = false;
+    if (this.connectedInterval) {
+      this.stopConnectedInterval();
+    }
+
+    this.connectedInterval = setInterval(async () => {
+      this.web3Connected = await isWeb3Connected();
+    }, DEFAULT_CONNECTED_INTERVAL);
+  }
+
+  private stopConnectedInterval() {
+    if (this.connectedInterval) {
+      clearInterval(this.connectedInterval);
+      this.connectedInterval = null;
+    }
+    this.web3Connected = false;
   }
 
   async connect() {
     return getWeb3(this.clientUrl);
   }
 
-  async isConnected(): Promise<any> {
-    return isWeb3Connected();
+  async disconnect() {
+    if (this.isConnected()) {
+      this.stopConnectedInterval();
+    }
+    return Promise.resolve();
+  }
+
+  isConnected(): boolean {
+    return this.web3Connected;
   }
 
   async publish(
     subject = DEFAULT_TOPIC,
     payload: any,
-    reply,
+    reply: any,
     recipientId: string,
     senderId: string
   ): Promise<any> {
@@ -39,9 +71,9 @@ export class WhisperService {
     const web3 = await getWeb3(this.clientUrl);
     const content = web3.utils.fromAscii(messageString);
 
-    let keyId = this.keyId
+    let keyId = this.keyId;
     if (senderId) {
-      keyId = senderId
+      keyId = senderId;
     }
 
     try {
@@ -104,9 +136,9 @@ export class WhisperService {
   // Load any previously created Whisper IDs from database into Whisper node
   // If no existing IDs provided, create a new one
   async loadIdentities(identities, topic, callback) {
-    let loadedIds = await new Array<object>();
+    const loadedIds = await new Array<object>();
     if (identities.length === 0) {
-      let newId = await this.createIdentity(topic, callback)
+      const newId = await this.createIdentity(topic, callback)
       loadedIds.push(newId);
     } else {
       const web3 = await getWeb3(this.clientUrl);
@@ -139,5 +171,4 @@ export class WhisperService {
     this.keyId = keyId;
     return { publicKey, privateKey, keyId, createdDate };
   }
-
 }

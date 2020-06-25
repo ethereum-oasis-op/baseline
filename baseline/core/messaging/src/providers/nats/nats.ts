@@ -57,42 +57,21 @@ export class NatsService implements IMessagingService {
     return this.service !== null;
   }
 
-  async onReceive(
-    subject: string,
-    callback: (msg: any) => void,
-  ): Promise<void> {
-    await this.service!.subscribe(subject, (msg: any, err?: any): void => {
-      if (err || !msg || !msg.data) {
-        // TODO: log and throw
-      } else {
-        const data = typeof msg.data === `string` ? JSON.parse(msg.data) : msg.data;
-        callback(data);
-      }
-    });
-  }
-
   async publish(subject: string, data: any): Promise<void> {
-    this.service!.publish(subject, JSON.stringify(data));
+    this.service!.publish(subject, data);
   }
 
   async request(subject: string, timeout: number, data: object = {}): Promise<any> {
-    const response = await this.service!.request(subject, timeout, JSON.stringify(data));
+    const response = await this.service!.request(subject, timeout, data);
     return response;
   }
 
   async subscribe(
     subject: string,
-    callback: (msg: any) => void,
+    callback: (msg: any, err?: any) => void,
   ): Promise<void> {
     await this.service!.subscribe(subject, (msg: any, err?: any): void => {
-      if (err || !msg || !msg.data) {
-        // TODO: log and throw
-      } else {
-        const parsedMsg = typeof msg === `string` ? JSON.parse(msg) : msg;
-        const parsedData = typeof msg.data === `string` ? JSON.parse(msg.data) : msg.data;
-        parsedMsg.data = parsedData;
-        callback(parsedMsg);
-      }
+      callback(msg, err);
     });
   }
 
