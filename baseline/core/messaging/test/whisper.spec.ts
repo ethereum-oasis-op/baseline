@@ -16,7 +16,7 @@ const requireWhisperConnection = async () => {
 
 beforeEach(async () => {
   whisperService = await whisperServiceFactory({
-    // FIXME :D
+    clientUrl: 'localhost:8546',
   });
   expect(whisperService).not.toBe(null);
 });
@@ -32,11 +32,11 @@ it('needs some actual tests ;)', async () => {
 });
 
 describe('connect', () => {
-  // it('should cache the Whisper connection for subsequent use by the service', async () => {
-  //   expect(whisperService.isConnected()).toBe(false);
-  //   await whisperService.connect();
-  //   expect(whisperService.isConnected()).toBe(true);
-  // });
+  it('should cache the Whisper connection for subsequent use by the service', async () => {
+    expect(whisperService.isConnected()).toBe(false);
+    await whisperService.connect();
+    expect(whisperService.isConnected()).toBe(true);
+  });
 });
 
 describe('disconnect', () => {
@@ -48,9 +48,5 @@ describe('publish', () => {
 });
 
 describe('subscribe', () => {
-
-});
-
-describe('unsubscribe', () => {
 
 });
