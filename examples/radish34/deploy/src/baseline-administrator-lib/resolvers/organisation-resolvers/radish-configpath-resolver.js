@@ -65,4 +65,4 @@ class RadishOrganisationConfigpathResolver {
 
 }
 
-module.exports = RadishOrganisationConfigpathResolver
+module.exports = RadishOrganisationConfigpathResolver;

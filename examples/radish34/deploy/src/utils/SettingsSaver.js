@@ -1,6 +1,4 @@
 const fs = require('fs');
-const assert = require('assert');
-const axios = require('axios');
 
 /**
  * Radish specific class for saving settings to configuration file
@@ -15,7 +13,7 @@ class SettingsSaver {
 		this.rpcProvider = rpcProvider;
 	}
 
-	async updateSettings(organisationName, organisationAddress, messagingKey, zkpPublicKey, zkpPrivateKey, addresses) {
+	async updateSettings(organisationName, organisationAddress, messagingEndpoint, messagingKey, zkpPublicKey, zkpPrivateKey, addresses) {
 		const organisationConfigPath = `${this.configDir}/config-${organisationName}.json`;
 		const {
 			organization
@@ -26,13 +24,14 @@ class SettingsSaver {
 			zkpPublicKey,
 			zkpPrivateKey,
 			address: organisationAddress,
+			messagingEndpoint: messagingEndpoint,
 			messengerKey: messagingKey,
 		}
 
-		let settings = {
+		const settings = {
 			rpcProvider: this.rpcProvider,
 			organization: newOrganization,
-			addresses
+			addresses,
 		}
 
 		try {
@@ -48,4 +47,4 @@ class SettingsSaver {
 
 }
 
-module.exports = SettingsSaver
+module.exports = SettingsSaver;
