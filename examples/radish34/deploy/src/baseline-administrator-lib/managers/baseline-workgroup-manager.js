@@ -36,7 +36,7 @@ class BaselineWorkgroupManager {
     organisationAddress,
     organisationName,
     organisationMessagingEndpoint,
-    organisationWhisperKey,
+    organisationMessagingKey,
     organisationZkpPublicKey,
     organisationMetadata,
     transactionOverrides,
@@ -44,10 +44,10 @@ class BaselineWorkgroupManager {
     const tx = await this.orgRegistryContract.registerOrg(
       organisationAddress,
       ethers.utils.formatBytes32String(organisationName),
-      ethers.utils.hexlify(organisationMessagingEndpoint),
-      ethers.utils.hexlify(organisationWhisperKey),
-      ethers.utils.hexlify(organisationZkpPublicKey),
-      ethers.utils.hexlify(JSON.stringify(organisationMetadata)),
+      ethers.utils.toUtf8Bytes(organisationMessagingEndpoint),
+      ethers.utils.toUtf8Bytes(organisationMessagingKey),
+      ethers.utils.toUtf8Bytes(organisationZkpPublicKey),
+      ethers.utils.toUtf8Bytes(JSON.stringify(organisationMetadata)),
       typeof transactionOverrides === 'undefined' ? {} : transactionOverrides,
     );
 

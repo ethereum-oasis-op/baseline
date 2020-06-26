@@ -40,11 +40,12 @@ class RadishOrganisationConfigpathResolver {
 	 * Resolves organisation information object.
 	 * 
 	 * @param {string} organisationName - name of the organisation will be used to search for ${this.configDir}/config-${organisationName}.json file
+	 * @param {string} messagingEndpoint - messaging endpoint for the organisation
 	 * @param {string} messagingKey - messaging key for the organisation
 	 * 
 	 * @returns unified organisation object containing organisation information and their messaging key.
 	 */
-	async resolve(organisationName, messagingKey) {
+	async resolve(organisationName, messagingEndpoint, messagingKey) {
 		const organisationConfigPath = `${this.configDir}/config-${organisationName}.json`;
 		assert(fs.existsSync(organisationConfigPath), `The desired wallet does not exist at ${organisationConfigPath}`);
 		const {
@@ -59,6 +60,7 @@ class RadishOrganisationConfigpathResolver {
 
 		return {
 			...organization,
+			messagingEndpoint,
 			messagingKey
 		};
 	}

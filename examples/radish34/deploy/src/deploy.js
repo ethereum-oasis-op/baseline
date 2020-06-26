@@ -147,7 +147,7 @@ const registerOrganisation = async (
   const organisation = await organisationResolver.resolve(
     organisationName,
     organisationMessagingEndpoint,
-    organisationMessagingKey,
+    organisationMessagingKey
   );
   if (typeof organisation.address === 'undefined') {
     organisation.address = organisationWallet.address;
