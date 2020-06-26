@@ -95,9 +95,10 @@ typings/
 
 artifacts/
 build/
-dist/
 config/
+dist/
 !messenger/config/
+!deploy/src/config/
 
 # Ignore generated docs
 docs/generated
