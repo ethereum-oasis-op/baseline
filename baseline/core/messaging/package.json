@@ -18,7 +18,7 @@
     "geth:stop": "docker stop $(docker ps | grep ethereum/client-go | sed 's/ .*//') || true",
     "nats:start": "npm run nats:stop 2&>/dev/null && docker run -td -p 4221:4221 -p 4222:4222 provide/nats-server -p 4222 -DV && sleep 2",
     "nats:stop": "docker stop $(docker ps | grep provide/nats-server | sed 's/ .*//') || true",
-    "test": "npm run test:startup && $(./node_modules/.bin/jest --verbose --color --passWithNoTests && npm run test:teardown) || npm run test:teardown",
+    "test": "npm run test:startup && $(./node_modules/.bin/jest --verbose --color --passWithNoTests || npm run test:teardown) || npm run test:teardown",
     "test:startup": "npm run nats:start && npm run geth:start",
     "test:teardown": "npm run nats:stop && npm run geth:stop"
   },
