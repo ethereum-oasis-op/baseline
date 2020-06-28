@@ -27,6 +27,9 @@ export interface IBaselineRPC {
   // Retrieve multiple leaves from a tree at the given shield contract address
   getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>;
 
+  // Retrieve the root of a tree at the given shield contract address
+  getRoot(address: string): Promise<string>;
+
   // Retrieve sibling paths/proof of the given leaf index
   getSiblings(leafIndex: number): Promise<MerkleTreeNode[]>;
 
@@ -41,6 +44,9 @@ export interface IBaselineRPC {
 
   // Initialize a merkle tree database and track changes at the given shield contract address
   track(address: string): Promise<boolean>;
+
+  // Verify a sibling path for a given root and leaf at the given shield contract address
+  verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
 }
 
 export async function blockchainServiceFactory(
