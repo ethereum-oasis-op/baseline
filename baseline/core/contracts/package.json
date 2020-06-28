@@ -1,0 +1,32 @@
+{
+  "name": "contracts",
+  "version": "1.0.0",
+  "description": "solidity contracts",
+  "scripts": {
+    "build": "./node_modules/.bin/truffle compile",
+    "test": "./node_modules/.bin/truffle test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ethereum-doppelganger": "^0.0.7",
+    "ethers": "^4.0.46",
+    "openzeppelin-solidity": "^2.5.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.9.0",
+    "ganache-cli": "^6.9.1",
+    "jest": "^25.1.0",
+    "solc": "0.5.8",
+    "truffle": "^5.1.21",
+    "truffle-flattener": "^1.4.3",
+    "truffle-jest": "^0.2.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "./__tests__/mockVerifierData.js"
+    ]
+  }
+}
