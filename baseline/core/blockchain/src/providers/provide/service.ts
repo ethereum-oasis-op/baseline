@@ -1,24 +1,24 @@
-import { Ident, Goldmine, Vault } from 'provide-js';
+import { Ident, RpcClient, Vault } from 'provide-js';
 import { ProvideConfig } from './config';
-import { IBlockchainService } from '../..';
+import { IBaselineRPC, IBlockchainService, MerkleTreeNode } from '../..';
 
 /**
- * This service provides access to the APIs exposed by the
- * Provide microservice architecture. This enables the
- * use of the automated subsidy faucet on certain testnets
- * when a broadcast transaction fails due to insufficient
- * funds.
+ * This class provides unified access to various microservices
+ * made available by the Provide stack as well as the configured
+ * JSON-RPC service.
  */
-export class ProvideService implements IBlockchainService {
+export class Provide implements IBaselineRPC, IBlockchainService {
+
+  // Baseline RPC client
+  private rpc: RpcClient;
 
   // Ident provides identity, authn & authz
   private ident: Ident;
 
-  // Ident provides identity, authn & authz
-  private goldmine: Goldmine;
-
   // Vault provides privacy-focused key management
   private vault: Vault;
+
+  // FIXME -- add ident/vault wires as needed to complete baseline-app RI
 
   constructor(
     private readonly config: ProvideConfig,
@@ -27,27 +27,68 @@ export class ProvideService implements IBlockchainService {
       throw new Error('provide jwt required');
     }
 
-    // tslint:disable: no-non-null-assertion
-    this.ident = Ident.clientFactory(config.token!);
-    this.goldmine = Goldmine.clientFactory(config.token!);
-    this.vault = Vault.clientFactory(config.token!);
+    this.ident = Ident.clientFactory(config.token);
+    this.rpc = new RpcClient(config.rpcScheme, config.rpcEndpoint);
+    this.vault = Vault.clientFactory(config.token);
+  }
+
+  // BaselineRPC impl
+
+  async deploy(sender: string, bytecode: string, abi: any): Promise<any> {
+    return this.rpc.call('baseline_deploy', [sender, bytecode, abi]);
+  }
+
+  async getLeaf(address: string, index: number): Promise<MerkleTreeNode> {
+    return this.rpc.call('baseline_getLeaf', [address, index]);
+  }
+
+  async getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]> {
+    return this.rpc.call('baseline_getLeaves', [address, indexes]);
+  }
+
+  async getRoot(address: string): Promise<string> {
+    return this.rpc.call('baseline_getRoot', [address]);
+  }
+
+  async getSiblings(leafIndex: number): Promise<MerkleTreeNode[]> {
+    return this.rpc.call('baseline_getSiblings', [leafIndex]);
+  }
+
+  async getTracked(): Promise<string[]> {
+    return this.rpc.call('baseline_getTracked', []);
+  }
+
+  async insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode> {
+    return this.rpc.call('baseline_insertLeaf', [sender, address, value]);
+  }
+
+  async insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode> {
+    return this.rpc.call('baseline_insertLeaves', [sender, address, value]);
+  }
+
+  async track(address: string): Promise<boolean> {
+    return this.rpc.call('baseline_track', [address]);
+  }
+
+  async verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean> {
+    return this.rpc.call('baseline_verify', [address, root, leaf, siblingPath]);
+  }
+
+  // IBlockchainService impl
+
+  async broadcast(tx: string): Promise<any> {
+    return this.rpc.call('eth_sendRawTransaction', [tx]);
   }
 
   async fetchTxReceipt(hash: string): Promise<any> {
-    return this.goldmine.fetchTransactionDetails(hash);
+    return this.rpc.call('eth_getTransactionReceipt', [hash]);
   }
 
-  async generateKeyPair(): Promise<any> {
-    return this.goldmine.createAccount({});
+  async generateKeypair(): Promise<any> {
+    return Promise.reject('generateKeypair() not yet implemented');
   }
 
-  async broadcast(tx: string): Promise<any> {
-    return this.goldmine.createTransaction({
-      raw: tx,
-    });
-  }
-
-  async sign(payload: string): Promise<any> {
-    throw new Error('impl pending');
+  async sign(params: any): Promise<any> {
+    return this.rpc.call('eth_signTransaction', [params]);
   }
 }

@@ -1,21 +1,9 @@
-import { ProvideService } from './providers/provide';
-import { EthersService } from './providers/ethers.js';
+import { Provide } from './providers/provide';
+import { Ethers } from './providers/ethers.js';
 import { MerkleTreeNode } from './utils/merkle-tree';
 
 export const blockchainProviderEthers = 'ethers';
 export const blockchainProviderProvide = 'provide';
-
-export interface IBlockchainService {
-  broadcast(tx: string): Promise<any>;
-  fetchTxReceipt(hash: string): Promise<any>;
-  generateKeyPair(): Promise<any>;
-  sign(payload: string): Promise<any>;
-
-  // TODO: add to interface:
-  // generatdeHDWallet(): Promise<any>;
-  // deriveAddress(index: number, chain?: number): Promise<any>;
-  // deriveHardened(purpose: number, coin: number, account: number): Promise<any>;
-}
 
 export interface IBaselineRPC {
   // Deploy a shield contract given the compiled artifact bytecode and ABI
@@ -49,18 +37,33 @@ export interface IBaselineRPC {
   verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
 }
 
+export interface IBlockchainService {
+  broadcast(tx: string): Promise<any>;
+  fetchTxReceipt(hash: string): Promise<any>;
+  generateKeypair(): Promise<any>;
+  sign(payload: string): Promise<any>;
+
+  // generateHDWallet(): Promise<any>;
+  // deriveAddress(index: number, chain?: number): Promise<any>;
+  // deriveHardened(purpose: number, coin: number, account: number): Promise<any>;
+}
+
+export {
+  MerkleTreeNode
+};
+
 export async function blockchainServiceFactory(
   provider: string,
   config?: any,
-): Promise<IBlockchainService> {
+): Promise<IBaselineRPC & IBlockchainService> {
   let service;
 
   switch (provider) {
     case blockchainProviderEthers:
-      service = await new EthersService(config);
+      service = await new Ethers(config);
       break;
     case blockchainProviderProvide:
-      service = await new ProvideService(config);
+      service = await new Provide(config);
       break;
     default:
       throw new Error('blockchain service provider required');

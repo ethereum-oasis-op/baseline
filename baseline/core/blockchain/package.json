@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "ethers": "^4.0.47",
-    "provide-js": "^1.0.12"
+    "provide-js": "^1.0.13"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",

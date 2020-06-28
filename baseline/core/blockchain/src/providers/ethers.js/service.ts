@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { IBlockchainService } from '../..';
 
-export class EthersService implements IBlockchainService {
+export class Ethers implements IBlockchainService {
 
   // private config: any;
 
@@ -12,18 +12,18 @@ export class EthersService implements IBlockchainService {
   }
 
   async fetchTxReceipt(hash: string): Promise<any> {
-    throw new Error('impl pending');
+    throw new Error('not implemented');
   }
 
-  async generateKeyPair(): Promise<any> {
-    throw new Error('impl pending');
+  async generateKeypair(): Promise<any> {
+    throw new Error('not implemented');
   }
 
   async broadcast(tx: string): Promise<any> {
-    throw new Error('impl pending');
+    throw new Error('not implemented');
   }
 
   async sign(payload: string): Promise<any> {
-    throw new Error('impl pending');
+    throw new Error('not implemented');
   }
 }

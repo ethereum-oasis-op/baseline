@@ -1,5 +1,5 @@
-import { EthersService } from './service';
+import { Ethers } from './service';
 
 export {
-    EthersService,
+    Ethers,
 };

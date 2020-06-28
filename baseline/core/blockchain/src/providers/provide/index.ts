@@ -1,5 +1,5 @@
-import { ProvideService } from './service';
+import { Provide } from './service';
 
 export {
-    ProvideService,
+    Provide,
 };
