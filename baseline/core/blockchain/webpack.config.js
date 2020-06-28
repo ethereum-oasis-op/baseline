@@ -14,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist', 'umd'),
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: '@baseline/blockchain',
+    library: '@baseline-protocol/blockchain',
     globalObject: 'this'
   },
   resolve: {
@@ -25,7 +25,7 @@ module.exports = {
       {
         test: /\.ts$/,
         loader: "ts-loader",
-        exclude:  /(node_modules|test)/,
+        exclude: /(node_modules|test)/,
       },
     ],
   },

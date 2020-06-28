@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/blockchain",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Baseline core blockchain",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
@@ -10,20 +10,20 @@
     "dist"
   ],
   "scripts": {
-    "nethermind:start": "npm run nethermind:stop 2&>/dev/null && docker run -td -p 8545:8545 -p 8546:8546 provide/nethermind --config baseline --JsonRpc.Enabled true --JsonRpc.Port 8511 --Network.DiscoveryPort 30111 --Network.P2PPort 30111 --KeyStore.TestNodeKey 120102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f && sleep 2",
+    "nethermind:start": "npm run nethermind:stop 2&>/dev/null && docker run -td -p 8545:8545 provide/nethermind --config baseline --JsonRpc.Enabled true --JsonRpc.Host 0.0.0.0 --JsonRpc.Port 8545 --KeyStore.TestNodeKey 120102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f && sleep 2",
     "nethermind:stop": "docker stop $(docker ps | grep provide/nethermind | sed 's/ .*//') || true",
-    "test": "npm run test:startup && $(./node_modules/.bin/jest --verbose --color --passWithNoTests && npm run test:teardown) || npm run test:teardown",
+    "test": "npm run test:startup && ./node_modules/.bin/jest --verbose --color --passWithNoTests --testTimeout 10000 && npm run test:teardown",
     "test:startup": "npm run nethermind:start",
     "test:teardown": "npm run nethermind:stop"
   },
   "dependencies": {
     "ethers": "^4.0.47",
-    "provide-js": "^1.0.0"
+    "provide-js": "^1.0.11"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
     "@types/jsonwebtoken": "^8.3.4",
-    "@types/node": "^12.0.10",
+    "@types/node": "^12.12.37",
     "jest": "^24.9.0",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.0.4",
