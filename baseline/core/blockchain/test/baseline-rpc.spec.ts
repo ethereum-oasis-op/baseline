@@ -32,8 +32,8 @@ afterEach(async () => {
 describe('off-chain merkle tree tracking', () => {
   describe('when no shield contract has been deployed to the given address', () => {
     it('should return false to indicate no new merkle tree is being tracked or persisted', async () => {
-      const result = await client.call('baseline_track', ['0xD16EEdE029C5c062255F1A37fa33b9D77BFC3282']); // no shield contract here...
-      expect(result).toBe(false);
+      const call = client.call('baseline_track', ['0xD16EEdE029C5c062255F1A37fa33b9D77BFC3282']); // no shield contract here...
+      await expect(call).rejects.toBeTruthy();
     });
   });
 
