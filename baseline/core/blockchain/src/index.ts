@@ -18,8 +18,8 @@ export interface IBaselineRPC {
   // Retrieve the root of a tree at the given shield contract address
   getRoot(address: string): Promise<string>;
 
-  // Retrieve sibling paths/proof of the given leaf index
-  getSiblings(leafIndex: number): Promise<MerkleTreeNode[]>;
+  // Retrieve sibling paths/proof of the given leaf index at the given shield contract address
+  getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>;
 
   // Retrieve a list of the shield contract addresses being tracked and persisted
   getTracked(): Promise<string[]>;
@@ -41,6 +41,7 @@ export interface IBlockchainService {
   broadcast(tx: string): Promise<any>;
   fetchTxReceipt(hash: string): Promise<any>;
   generateKeypair(): Promise<any>;
+  rpcExec(method: string, params: any[]): Promise<any>;
   sign(payload: string): Promise<any>;
 
   // generateHDWallet(): Promise<any>;
@@ -60,10 +61,10 @@ export async function blockchainServiceFactory(
 
   switch (provider) {
     case blockchainProviderEthers:
-      service = await new Ethers(config);
+      service = new Ethers(config);
       break;
     case blockchainProviderProvide:
-      service = await new Provide(config);
+      service = new Provide(config);
       break;
     default:
       throw new Error('blockchain service provider required');

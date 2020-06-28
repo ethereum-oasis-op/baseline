@@ -8,11 +8,11 @@ let sender;
 
 const deployShield = async () => {
   // deploy EYBlockchain's MerkleTreeSHA contract (see https://github.com/EYBlockchain/timber)
-  const txhash = await provide.deploy(sender, 'MerkleTreeSHA');
+  const txhash = await provide.rpcExec('baseline_deploy', [sender, 'MerkleTreeSHA']);
   expect(txhash).not.toBe(null);
   expect(txhash.length).toBe(66);
 
-  const receipt = await provide.getTransactionReceipt(txhash);
+  const receipt = await provide.fetchTxReceipt(txhash);
   expect(receipt).not.toBe(null);
   expect(receipt.contractAddress).not.toBe(null);
   expect(receipt.contractAddress.length).toBe(42);
@@ -21,7 +21,7 @@ const deployShield = async () => {
 
 beforeEach(async () => {
   sender = defaultAccountAddress;
-  provide = blockchainServiceFactory(blockchainProviderProvide);
+  provide = await blockchainServiceFactory(blockchainProviderProvide);
 });
 
 afterEach(async () => {

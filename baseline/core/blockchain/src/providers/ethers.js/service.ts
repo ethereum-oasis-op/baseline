@@ -23,6 +23,10 @@ export class Ethers implements IBlockchainService {
     throw new Error('not implemented');
   }
 
+  async rpcExec(method: string, params: any[]): Promise<any> {
+    throw new Error('not implemented');
+  }
+
   async sign(payload: string): Promise<any> {
     throw new Error('not implemented');
   }
