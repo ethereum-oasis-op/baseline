@@ -5,7 +5,7 @@ The intention is for other 'derived' contracts to import this contract, and for 
 @Author iAmMichaelConnor
 */
 
-pragma solidity ^0.5.8;
+pragma solidity ^0.6.9;
 
 
 contract MerkleTree {
@@ -66,7 +66,7 @@ contract MerkleTree {
 
     /**
     @notice Get the index of the frontier (or 'storage slot') into which we will next store a nodeValue (based on the leafIndex currently being inserted). See the top-level README for a detailed explanation.
-    @return uint - the index of the frontier (or 'storage slot') into which we will next store a nodeValue
+    @return slot uint - is the index of the frontier (or 'storage slot') into which we will next store a nodeValue
     */
     function getFrontierSlot(uint leafIndex) private pure returns (uint slot) {
         slot = 0;
@@ -89,7 +89,7 @@ contract MerkleTree {
     /**
     @notice Insert a leaf into the Merkle Tree, update the root, and update any values in the (persistently stored) frontier.
     @param leafValue - the value of the leaf being inserted.
-    @return bytes32 - the root of the merkle tree, after the insert.
+    @return root bytes32 - the root of the merkle tree, after the insert.
     */
     function insertLeaf(bytes32 leafValue) public returns (bytes32 root) {
 
@@ -176,7 +176,7 @@ contract MerkleTree {
     /**
     @notice Insert multiple leaves into the Merkle Tree, and then update the root, and update any values in the (persistently stored) frontier.
     @param leafValues - the values of the leaves being inserted.
-    @return bytes32[] - the root of the merkle tree, after all the inserts.
+    @return root bytes32[] - the root of the merkle tree, after all the inserts.
     */
     function insertLeaves(bytes32[] memory leafValues) public returns (bytes32 root) {
         uint numberOfLeaves = leafValues.length;

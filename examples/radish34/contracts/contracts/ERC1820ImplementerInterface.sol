@@ -1,7 +1,7 @@
-pragma solidity ^0.5.8;
+pragma solidity ^0.6.9;
 
 
-contract ERC1820ImplementerInterface {
+interface ERC1820ImplementerInterface {
     bytes32 constant ERC1820_ACCEPT_MAGIC = keccak256(abi.encodePacked("ERC1820_ACCEPT_MAGIC"));
 
     /// @notice Indicates whether the contract implements the interface `interfaceHash` for the address `addr`.

@@ -23,14 +23,14 @@ Harry R
 @notice Do not use this example in any production code!
 */
 
-pragma solidity ^0.5.8;
+pragma solidity ^0.6.9;
 
 //TODO: Use openzeppelin interfaces inside the timber service
 import "./ERC165Compatible.sol";
 import "./Pairing.sol";
 import "./Registrar.sol";
 import "./IVerifier.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
 
@@ -63,8 +63,8 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         setInterfaceImplementation("IVerifier", address(this));
     }
 
-    function setInterfaces() public onlyOwner returns (bool) {
-        supportedInterfaces[this.verify.selector] = true;
+    function setInterfaces() override public onlyOwner returns (bool) {
+        _registerInterface(this.verify.selector);
         return true;
     }
 
@@ -84,7 +84,7 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         uint256[] memory _proof,
         uint256[] memory _inputs,
         uint256[] memory _vk
-    ) public returns (bool result) {
+    ) override public returns (bool result) {
         if (verificationCalculation(_proof, _inputs, _vk) == 0) {
             result = true;
         } else {
