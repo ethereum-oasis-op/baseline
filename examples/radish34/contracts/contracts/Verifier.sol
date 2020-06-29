@@ -127,10 +127,10 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         vk.Ggamma = Pairing.G1Point(_vk[10], _vk[11]);
         vk.Hgamma = Pairing.G2Point([_vk[12], _vk[13]], [_vk[14], _vk[15]]);
 
-        vk.query.length = (_vk.length - 16)/2;
-        uint j = 0;
+
+        delete vk.query;
         for (uint i = 16; i < _vk.length; i += 2) {
-            vk.query[j++] = Pairing.G1Point(_vk[i], _vk[i+1]);
+            vk.query.push(Pairing.G1Point(_vk[i], _vk[i+1]));
         }
 
         require(_inputs.length + 1 == vk.query.length, "Length of inputs[] or vk.query is incorrect!");
