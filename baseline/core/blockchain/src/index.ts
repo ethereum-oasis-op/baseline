@@ -1,9 +1,11 @@
-import { Provide } from './providers/provide';
 import { Ethers } from './providers/ethers.js';
+import { Provide } from './providers/provide';
+import { Rpc } from './providers/rpc';
 import { MerkleTreeNode } from './utils/merkle-tree';
 
 export const blockchainProviderEthers = 'ethers';
 export const blockchainProviderProvide = 'provide';
+export const blockchainProviderRpc = 'rpc';
 
 export interface IBaselineRPC {
   // Deploy a shield contract given the compiled artifact bytecode and ABI
@@ -43,10 +45,63 @@ export interface IBlockchainService {
   generateKeypair(): Promise<any>;
   rpcExec(method: string, params: any[]): Promise<any>;
   sign(payload: string): Promise<any>;
+}
 
-  // generateHDWallet(): Promise<any>;
-  // deriveAddress(index: number, chain?: number): Promise<any>;
-  // deriveHardened(purpose: number, coin: number, account: number): Promise<any>;
+export interface IRegistry {
+  // workgroups
+  createWorkgroup(params: object): Promise<any>;
+  updateWorkgroup(workgroupId: string, params: object): Promise<any>;
+  fetchWorkgroups(params: object): Promise<any>;
+  fetchWorkgroupDetails(workgroupId: string): Promise<any>;
+  fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;
+  createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>;
+  updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>;
+  fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>;
+  fetchWorkgroupTokens(workgroupId: string): Promise<any>;
+  fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>;
+  createWorkgroupUser(workgroupId: string, params: object): Promise<any>;
+  updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>;
+  deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>;
+
+  // organizations
+  createOrganization(params: object): Promise<any>;
+  fetchOrganizations(params: object): Promise<any>;
+  fetchOrganizationDetails(organizationId: string): Promise<any>;
+  updateOrganization(organizationId: string, params: object): Promise<any>;
+
+  // organization users
+  fetchOrganizationInvitations(organizationId: string, params: object): Promise<any>;
+  fetchOrganizationUsers(organizationId: string, params: object): Promise<any>;
+  createOrganizationUser(organizationId: string, params: object): Promise<any>;
+  updateOrganizationUser(organizationId: string, userId: string, params: object): Promise<any>;
+  deleteOrganizationUser(organizationId: string, userId: string): Promise<any>;
+
+  // api tokens
+  createToken(params: object): Promise<any>;
+  fetchTokens(params: object): Promise<any>;
+  deleteToken(tokenId: string): Promise<any>;
+
+  // users
+  createInvitation(params: object): Promise<any>;
+  createUser(params: object): Promise<any>;
+  fetchUsers(): Promise<any>;
+  fetchUserDetails(userId: string): Promise<any>;
+  updateUser(userId: string, params: object): Promise<any>;
+}
+
+export interface IVault {
+  createVault(params: object): Promise<any>;
+  fetchVaults(params: object): Promise<any>;
+  fetchVaultKeys(vaultId: string, params: object): Promise<any>;
+  createVaultKey(vaultId: string, params: object): Promise<any>;
+  deleteVaultKey(vaultId: string, keyId: string): Promise<any>;
+  encrypt(vaultId: string, keyId: string, payload: string): Promise<any>;
+  decrypt(vaultId: string, keyId: string, payload: string): Promise<any>;
+  signMessage(vaultId: string, keyId: string, msg: string): Promise<any>;
+  verifySignature(vaultId: string, keyId: string, msg: string, sig: string): Promise<any>;
+  fetchVaultSecrets(vaultId: string, params: object): Promise<any>;
+  createVaultSecret(vaultId: string, params: object): Promise<any>;
+  deleteVaultSecret(vaultId: string, secretId: string): Promise<any>;
 }
 
 export {
@@ -56,7 +111,7 @@ export {
 export async function blockchainServiceFactory(
   provider: string,
   config?: any,
-): Promise<IBaselineRPC & IBlockchainService> {
+): Promise<IBaselineRPC & IBlockchainService & IRegistry & IVault> {
   let service;
 
   switch (provider) {
@@ -65,6 +120,9 @@ export async function blockchainServiceFactory(
       break;
     case blockchainProviderProvide:
       service = new Provide(config);
+      break;
+    case blockchainProviderRpc:
+      service = new Rpc(config);
       break;
     default:
       throw new Error('blockchain service provider required');
