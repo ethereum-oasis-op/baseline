@@ -55,9 +55,10 @@ test('Should be able to register an org', async () => {
   const txReceipt = await orgRegistry.registerOrg(
     accounts[1],
     utils.formatBytes32String("Name"),
-    2,
+    utils.toUtf8Bytes("http://messanger-buyer-1/"),
     utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
-    utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128')
+    utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
+    utils.toUtf8Bytes("{}")
   );
   const orgCountBefore = await orgRegistry.getOrgCount();
   expect(orgCountBefore.toNumber()).toBe(1);
@@ -70,9 +71,10 @@ test('Should not be able to register an org from non-owner', async () => {
     await nonOwnerOrgRegistry.registerOrg(
       accounts[4],
       utils.formatBytes32String("Name2"),
-      2,
+      utils.toUtf8Bytes("http://messanger-buyer-1/"),
       utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
-      utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128')
+      utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
+      utils.toUtf8Bytes("{}")
     );
   } catch (e) {
     expect(e.message).toMatch('revert');
@@ -122,18 +124,13 @@ test('Should be able to retrieve the incremented org count', async () => {
 });
 
 test('Should be able to retrieve registered org details', async () => {
-  const {
-    0: address,
-    1: name,
-    2: role,
-    3: messagingKey,
-    4: zkpKey
-  } = await orgRegistry.getOrgs();
-  expect(address[0]).toBe(accounts[1]);
-  expect(name[0]).toBe(utils.formatBytes32String('Name'));
-  expect(role[0].toNumber()).toBe(2);
-  expect(messagingKey[0]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
-  expect(zkpKey[0]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+  const res = await orgRegistry.getOrg(accounts[1]);
+  expect(res[0]).toBe(accounts[1]);
+  expect(res[1]).toBe(utils.formatBytes32String('Name'));
+  expect(utils.toUtf8String(res[2])).toBe("http://messanger-buyer-1/");
+  expect(res[3]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+  expect(res[4]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+  expect(utils.toUtf8String(res[5])).toBe("{}");
 });
 
 test('Should be able to get registrar info', async () => {

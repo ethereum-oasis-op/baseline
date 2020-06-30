@@ -32,7 +32,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     mapping (uint => OrgInterfaces) orgInterfaceMap;
     uint orgInterfaceCount;
 
-    Org[] orgs;
+    Org[] public orgs;
     mapping(address => address) managerMap;
 
     event RegisterOrg(
@@ -106,7 +106,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         bytes calldata _whisperKey,
         bytes calldata _zkpPublicKey,
         bytes calldata _metadata
-    ) override external returns (bool) {
+    ) onlyOwner override external returns (bool) {
         Org memory org = Org(_address, _name, _messagingEndpoint, _whisperKey, _zkpPublicKey, _metadata);
         orgMap[_address] = org;
         orgs.push(org);
