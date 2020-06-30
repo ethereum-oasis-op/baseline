@@ -1,6 +1,6 @@
-# @baseline/blockchain
+# @baseline/api
 
-Baseline core blockchain package.
+Baseline core registry, key management and RPC APIs.
 
 ## Installation
 

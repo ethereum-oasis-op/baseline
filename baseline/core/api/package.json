@@ -1,7 +1,7 @@
 {
-  "name": "@baseline-protocol/blockchain",
+  "name": "@baseline-protocol/api",
   "version": "0.0.1",
-  "description": "Baseline core blockchain",
+  "description": "Baseline core registry, key management and RPC APIs",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",

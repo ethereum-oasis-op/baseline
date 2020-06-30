@@ -14,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist', 'umd'),
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: '@baseline-protocol/blockchain',
+    library: '@baseline-protocol/api',
     globalObject: 'this'
   },
   resolve: {
