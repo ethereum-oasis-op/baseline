@@ -4,7 +4,7 @@
   "description": "solidity contracts",
   "scripts": {
     "build": "./node_modules/.bin/truffle compile",
-    "ganache:start": "npm run ganache:stop 2&>/dev/null && docker run -td -p 8545:8545 trufflesuite/ganache-cli",
+    "ganache:start": "npm run ganache:stop 2&>/dev/null && docker run -td -p 8545:8545 trufflesuite/ganache-cli --gasLimit 10000000",
     "ganache:stop": "docker stop $(docker ps | grep trufflesuite/ganache-cli | sed 's/ .*//') || true",
     "test": "npm run test:startup && npm run build && ./node_modules/.bin/jest --runInBand --color --forceExit --detectOpenHandles && npm run test:teardown",
     "test:startup": "npm run ganache:start",

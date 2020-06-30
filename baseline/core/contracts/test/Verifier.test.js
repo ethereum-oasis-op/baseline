@@ -16,7 +16,6 @@ import VerifierArtifact from '../artifacts/Verifier.json';
 import BN256G2Artifact from '../artifacts/BN256G2.json';
 import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
 
-const wallet = getWallet();
 const SNARK_SCALAR_BOUND = "21888242871839275222246405745257275088548364400416034343698204186575808495617";
 const PRIME_BOUND = "21888242871839275222246405745257275088696311157297823662689037894645226208583";
 let verifier;
@@ -25,12 +24,12 @@ let accounts, signer;
 test('Should be able to deploy Verifier contract', async () => {
   accounts = await getAccounts();
   signer = await getSigner(accounts[0]);
-  let BN256G2 = new ethers.ContractFactory(BN256G2Artifact.compilerOutput.abi,
-    BN256G2Artifact.compilerOutput.evm.bytecode, signer);
+  let BN256G2 = new ethers.ContractFactory(BN256G2Artifact.abi,
+    BN256G2Artifact.bytecode, signer);
   const bn256g2Address = await BN256G2.deploy();
-  let Verifier = new ethers.ContractFactory(VerifierArtifact.compilerOutput.abi,
-    link(VerifierArtifact.compilerOutput.evm.bytecode, 'BN256G2', bn256g2Address.address), signer);
-  let doppelganger = new Doppelganger(ERC1820RegistryArtifact.compilerOutput.abi);
+  let Verifier = new ethers.ContractFactory(VerifierArtifact.abi,
+    link(VerifierArtifact.bytecode, 'BN256G2', bn256g2Address.address), signer);
+  let doppelganger = new Doppelganger(ERC1820RegistryArtifact.abi);
   await doppelganger.deploy(signer);
   verifier = await Verifier.deploy(doppelganger.address);
   expect(verifier.address).toMatch(new RegExp('^0x[a-fA-F0-9]{40}$'));

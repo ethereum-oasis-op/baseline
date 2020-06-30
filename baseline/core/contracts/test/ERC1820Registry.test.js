@@ -15,10 +15,10 @@ describe('ERC1820 Registry tests', () => {
   beforeAll(async () => {
     accounts = await getAccounts();
     signer = await getSigner(accounts[0]);
-    SampleERC1820Implementer = new ethers.ContractFactory(SampleERC1820ImplementerArtifact.compilerOutput.abi,
-      SampleERC1820ImplementerArtifact.compilerOutput.evm.bytecode, signer);
-    ERC1820Registry = new ethers.ContractFactory(ERC1820RegistryArtifact.compilerOutput.abi,
-      ERC1820RegistryArtifact.compilerOutput.evm.bytecode, signer);
+    SampleERC1820Implementer = new ethers.ContractFactory(SampleERC1820ImplementerArtifact.abi,
+      SampleERC1820ImplementerArtifact.bytecode, signer);
+    ERC1820Registry = new ethers.ContractFactory(ERC1820RegistryArtifact.abi,
+      ERC1820RegistryArtifact.bytecode, signer);
     erc1820Registry = await ERC1820Registry.deploy();
     sampleImplementer = await SampleERC1820Implementer.deploy();
     expect(erc1820Registry.address).toMatch(new RegExp('^0x[a-fA-F0-9]{40}$'));
