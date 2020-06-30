@@ -11,12 +11,12 @@ import "./MerkleTree.sol";
 import "./IShield.sol";
 import "./IVerifier.sol";
 import "./Registrar.sol";
-import "./Ownable.sol";
-import "./ERC20Interface.sol";
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 
 contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     // ENUMS:
-    enum TransactionTypes { CreateMSA, CreatePO }
+    enum TransactionTypes { CreateMSA, CreatePO, CreateAgreement }
 
     // EVENTS:
     // Observers may wish to listen for nullification of commitments:
@@ -33,7 +33,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
 
     // CONTRACT INSTANCES:
     IVerifier private verifier; // the verification smart contract
-    ERC20Interface private erc20ContractInstance; // the  ERC-20 token contract
+    IERC20 private erc20ContractInstance; // the  ERC-20 token contract
 
     // PRIVATE TRANSACTIONS' PUBLIC STATES:
     mapping(bytes32 => bytes32) public commitments; // store commitments
@@ -154,6 +154,51 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         roots[latestRoot] = latestRoot; // and save the new root to the list of roots
 
         emit NewCommitment(_newMSACommitment);
+
+        // gas measurement:
+        gasUsedByShieldContract = gasUsedByShieldContract + gasCheckpoint - gasleft();
+        emit GasUsed(gasUsedByShieldContract, gasUsedByVerifierContract);
+        return true;
+    }
+
+    // TO DO: Consolidate common functionalities within Shield for
+    // createAgreement and createMSA
+    function createAgreement(
+        uint256[] calldata _proof,
+        uint256[] calldata _inputs,
+        bytes32 _newAgreementCommitment
+    ) external returns (bool) {
+
+        // gas measurement:
+        uint256 gasCheckpoint = gasleft();
+
+        // Check that the publicInputHash equals the hash of the 'public inputs':
+        bytes31 publicInputHash = bytes31(bytes32(_inputs[0]) << 8);
+        bytes31 publicInputHashCheck = bytes31(sha256(abi.encodePacked(_newAgreementCommitment)) << 8);
+        require(publicInputHashCheck == publicInputHash, "publicInputHash cannot be reconciled");
+
+        // gas measurement:
+        uint256 gasUsedByShieldContract = gasCheckpoint - gasleft();
+        gasCheckpoint = gasleft();
+
+        // verify the proof
+        bool result = verifier.verify(_proof, _inputs, vks[uint(TransactionTypes.CreateAgreement)]);
+        require(result, "The proof has not been verified by the contract");
+
+        // gas measurement:
+        uint256 gasUsedByVerifierContract = gasCheckpoint - gasleft();
+        gasCheckpoint = gasleft();
+
+        // check inputs vs on-chain states
+        // COMMENTED OUT THE BELOW, FOR QUICKER REPEATED TESTING.
+        // require(commitments[_newAgreementCommitment] == 0, "The Agreement commitment already exists!");
+
+        // update contract states
+        commitments[_newAgreementCommitment] = _newAgreementCommitment;
+        latestRoot = insertLeaf(_newAgreementCommitment); // recalculate the root of the merkleTree as it's now different
+        roots[latestRoot] = latestRoot; // and save the new root to the list of roots
+
+        emit NewCommitment(_newAgreementCommitment);
 
         // gas measurement:
         gasUsedByShieldContract = gasUsedByShieldContract + gasCheckpoint - gasleft();

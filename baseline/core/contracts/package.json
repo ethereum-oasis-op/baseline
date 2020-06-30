@@ -1,32 +1,33 @@
 {
-  "name": "contracts",
+  "name": "@baseline-protocol/contracts",
   "version": "1.0.0",
   "description": "solidity contracts",
   "scripts": {
     "build": "./node_modules/.bin/truffle compile",
-    "test": "./node_modules/.bin/truffle test"
+    "test": "./node_modules/.bin/jest --runInBand --forceExit --detectOpenHandles"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "CC0 1.0 Universal",
+  "devDependencies": {
+    "@0x/sol-coverage": "^4.0.8",
+    "@0x/sol-profiler": "^4.0.8",
+    "@0x/sol-trace": "^3.0.8",
+    "@0x/subproviders": "^6.0.8",
+    "@0x/utils": "^5.4.1",
+    "ganache-cli": "^6.9.1",
+    "jest": "^25.1.0",
+    "truffle": "^5.1.21"
+  },
   "dependencies": {
+    "@babel/preset-env": "^7.9.0",
     "ethereum-doppelganger": "^0.0.7",
     "ethers": "^4.0.46",
     "openzeppelin-solidity": "^2.5.0"
-  },
-  "devDependencies": {
-    "@babel/preset-env": "^7.9.0",
-    "ganache-cli": "^6.9.1",
-    "jest": "^25.1.0",
-    "solc": "0.5.8",
-    "truffle": "^5.1.21",
-    "truffle-flattener": "^1.4.3",
-    "truffle-jest": "^0.2.0"
   },
   "jest": {
     "testEnvironment": "node",
     "verbose": true,
     "testPathIgnorePatterns": [
-      "./__tests__/mockVerifierData.js"
+      "./test/mockVerifierData.js"
     ]
   }
 }
