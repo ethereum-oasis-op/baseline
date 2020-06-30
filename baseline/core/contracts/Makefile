@@ -32,4 +32,4 @@ flat:
 	rm -rf tmp/
 
 test:
-	node_modules/.bin/truffle test
+	npm test
