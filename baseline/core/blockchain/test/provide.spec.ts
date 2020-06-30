@@ -21,7 +21,7 @@ describe('baseline rpc', () => {
 
   const deployShield = async () => {
     // deploy EYBlockchain's MerkleTreeSHA contract (see https://github.com/EYBlockchain/timber)
-    const txhash = await provide.exec('baseline_deploy', [sender, 'MerkleTreeSHA']);
+    const txhash = await provide.rpcExec('baseline_deploy', [sender, 'MerkleTreeSHA']);
     expect(txhash).not.toBe(null);
     expect(txhash.length).toBe(66);
 
