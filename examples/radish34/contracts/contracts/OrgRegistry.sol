@@ -1,11 +1,10 @@
-pragma solidity ^0.5.8;
+pragma solidity ^0.6.9;
 pragma experimental ABIEncoderV2;
 
 import "./IOrgRegistry.sol";
 import "./Registrar.sol";
 import "./ERC165Compatible.sol";
-import "openzeppelin-solidity/contracts/access/Roles.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @dev Contract for maintaining organization registry
 /// Contract inherits from Ownable and ERC165Compatible
@@ -33,7 +32,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     mapping (uint => OrgInterfaces) orgInterfaceMap;
     uint orgInterfaceCount;
 
-    Org[] orgs;
+    Org[] public orgs;
     mapping(address => address) managerMap;
 
     event RegisterOrg(
@@ -59,12 +58,12 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @dev the character '^' corresponds to bit wise xor of individual interface id's
     /// which are the parsed 4 bytes of the function signature of each of the functions
     /// in the org registry contract
-    function setInterfaces() public onlyOwner returns (bool) {
+    function setInterfaces() override public onlyOwner returns (bool) {
         /// 0x54ebc817 is equivalent to the bytes4 of the function selectors in IOrgRegistry
-        supportedInterfaces[this.registerOrg.selector ^
+        _registerInterface(this.registerOrg.selector ^
                             this.registerInterfaces.selector ^
                             this.getOrgCount.selector ^
-                            this.getInterfaceAddresses.selector] = true;
+                            this.getInterfaceAddresses.selector);
         return true;
     }
 
@@ -75,12 +74,6 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
                 this.registerInterfaces.selector ^
                 this.getOrgCount.selector ^
                 this.getInterfaceAddresses.selector;
-    }
-
-    /// @dev Since this is an inherited method from ERC165 Compatible, it returns the value of the interface id
-    /// set during the deployment of this contract
-    function supportsInterface(bytes4 interfaceId) external view returns (bool) {
-        return supportedInterfaces[interfaceId];
     }
 
     /// @notice Indicates whether the contract implements the interface 'interfaceHash' for the address 'addr' or not.
@@ -113,7 +106,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         bytes calldata _whisperKey,
         bytes calldata _zkpPublicKey,
         bytes calldata _metadata
-    ) external returns (bool) {
+    ) onlyOwner override external returns (bool) {
         Org memory org = Org(_address, _name, _messagingEndpoint, _whisperKey, _zkpPublicKey, _metadata);
         orgMap[_address] = org;
         orgs.push(org);
@@ -155,12 +148,12 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     /// @dev Function to get the count of number of organizations to help with extraction
     /// @return length of the array containing organization addresses
-    function getOrgCount() external view returns (uint) {
+    function getOrgCount() override external view returns (uint) {
         return orgs.length;
     }
 
     /// @notice Function to get a single organization's details
-    function getOrg(address _address) external view returns (
+    function getOrg(address _address) override external view returns (
         address,
         bytes32,
         bytes memory,

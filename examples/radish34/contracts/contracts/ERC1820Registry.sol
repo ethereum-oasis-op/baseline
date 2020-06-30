@@ -25,7 +25,7 @@
  *    ╚═╝  ╚═╝╚══════╝ ╚═════╝ ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝
  *
  */
-pragma solidity ^0.5.8;
+pragma solidity ^0.6.9;
 // IV is value needed to have a vanity address starting with '0x1820'.
 // IV: 53759
 
@@ -45,18 +45,18 @@ interface ERC1820ImplementerInterface {
 /// @notice This contract is the official implementation of the ERC1820 Registry.
 /// @notice For more details, see https://eips.ethereum.org/EIPS/eip-1820
 contract ERC1820Registry {
-    /// @notice ERC165 Invalid ID.
+    /// @dev ERC165 Invalid ID.
     bytes4 constant internal INVALID_ID = 0xffffffff;
-    /// @notice Method ID for the ERC165 supportsInterface method (= `bytes4(keccak256('supportsInterface(bytes4)'))`).
+    /// @dev Method ID for the ERC165 supportsInterface method (= `bytes4(keccak256('supportsInterface(bytes4)'))`).
     bytes4 constant internal ERC165ID = 0x01ffc9a7;
-    /// @notice Magic value which is returned if a contract implements an interface on behalf of some other address.
+    /// @dev Magic value which is returned if a contract implements an interface on behalf of some other address.
     bytes32 constant internal ERC1820_ACCEPT_MAGIC = keccak256(abi.encodePacked("ERC1820_ACCEPT_MAGIC"));
 
-    /// @notice mapping from addresses and interface hashes to their implementers.
+    /// @dev mapping from addresses and interface hashes to their implementers.
     mapping(address => mapping(bytes32 => address)) internal interfaces;
-    /// @notice mapping from addresses to their manager.
+    /// @dev mapping from addresses to their manager.
     mapping(address => address) internal managers;
-    /// @notice flag for each address and erc165 interface to indicate if it is cached.
+    /// @dev flag for each address and erc165 interface to indicate if it is cached.
     mapping(address => mapping(bytes4 => bool)) internal erc165Cached;
 
     /// @notice Indicates a contract is the 'implementer' of 'interfaceHash' for 'addr'.

@@ -5,7 +5,7 @@ module.exports = {
   contracts_build_directory: "./artifacts",
   compilers: {
     solc: {
-      version: '0.5.8',
+      version: '0.6.9',
       optimizer: {
         enabled: true,
         runs: 200

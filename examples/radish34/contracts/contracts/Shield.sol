@@ -3,7 +3,7 @@ Contract to enable the management of private fungible token (ERC-20) transaction
 @Author Westlad, Chaitanya-Konda, iAmMichaelConnor
 */
 
-pragma solidity ^0.5.8;
+pragma solidity ^0.6.9;
 
 //TODO: Use openzeppelin interfaces inside the timber service
 import "./ERC165Compatible.sol";
@@ -11,8 +11,8 @@ import "./MerkleTree.sol";
 import "./IShield.sol";
 import "./IVerifier.sol";
 import "./Registrar.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     // ENUMS:
@@ -51,11 +51,11 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         setInterfaceImplementation("IShield", address(this));
     }
 
-    function setInterfaces() public onlyOwner returns (bool) {
-        supportedInterfaces[this.changeVerifier.selector ^
+    function setInterfaces() override public onlyOwner returns (bool) {
+        _registerInterface(this.changeVerifier.selector ^
                             this.getVerifier.selector ^
                             this.createMSA.selector ^
-                            this.createPO.selector] = true;
+                            this.createPO.selector);
         return true;
     }
 
@@ -64,10 +64,6 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
                 this.getVerifier.selector ^
                 this.createMSA.selector ^
                 this.createPO.selector;
-    }
-
-    function supportsInterface(bytes4 interfaceId) external view returns (bool) {
-        return supportedInterfaces[interfaceId];
     }
 
     function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
@@ -81,7 +77,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     /**
     self destruct
     */
-    function close() external onlyOwner returns (bool) {
+    function close() override external onlyOwner returns (bool) {
         selfdestruct(address(uint160(msg.sender)));
         return true;
     }
@@ -89,7 +85,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     /**
     function to change the address of the underlying Verifier contract
     */
-    function changeVerifier(address _verifier) external onlyOwner returns (bool) {
+    function changeVerifier(address _verifier) override external onlyOwner returns (bool) {
         verifier = IVerifier(_verifier);
         emit VerifierChanged(_verifier);
         return true;
@@ -98,7 +94,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     /**
     returns the verifier-interface contract address that this shield contract is calling
     */
-    function getVerifier() external view returns (address) {
+    function getVerifier() override external view returns (address) {
         return address(verifier);
     }
 
@@ -122,7 +118,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         uint256[] calldata _proof,
         uint256[] calldata _inputs,
         bytes32 _newMSACommitment
-    ) external returns (bool) {
+    ) override external returns (bool) {
 
         // gas measurement:
         uint256 gasCheckpoint = gasleft();
@@ -167,7 +163,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         uint256[] calldata _proof,
         uint256[] calldata _inputs,
         bytes32 _newAgreementCommitment
-    ) external returns (bool) {
+    ) override external returns (bool) {
 
         // gas measurement:
         uint256 gasCheckpoint = gasleft();
@@ -216,7 +212,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         bytes32 _nullifierOfOldMSACommitment,
         bytes32 _newMSACommitment,
         bytes32 _newPOCommitment
-    ) external returns(bool) {
+    ) override external returns(bool) {
 
         // gas measurement:
         uint256[3] memory gasUsed; // array needed to stay below local stack limit

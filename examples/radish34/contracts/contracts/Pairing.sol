@@ -1,4 +1,4 @@
-pragma solidity ^0.5.8;
+pragma solidity ^0.6.9;
 
 
 import "./BN256G2.sol";
@@ -44,7 +44,7 @@ library Pairing {
             return G1Point(0, 0);
         return G1Point(p.X, q - (p.Y % q));
     }
-    /// @return the sum of two points of G1
+
     function addition(G1Point memory p1, G1Point memory p2) internal returns (G1Point memory r) {
         uint[4] memory input;
         input[0] = p1.X;
@@ -53,19 +53,17 @@ library Pairing {
         input[3] = p2.Y;
         bool success;
         assembly {
-            success := call(sub(gas, 2000), 6, 0, input, 0xc0, r, 0x60)
+            success := call(sub(gas(), 2000), 6, 0, input, 0xc0, r, 0x60)
             // Use "invalid" to make gas estimation work
             switch success case 0 { invalid() }
         }
         require(success, "EC addition failed");
     }
-    /// @return the sum of two points of G2
     function addition2(G2Point memory p1, G2Point memory p2) internal pure returns (G2Point memory r) {
         (r.X[1], r.X[0], r.Y[1], r.Y[0]) = BN256G2.ECTwistAdd(p1.X[1],p1.X[0],p1.Y[1],p1.Y[0],p2.X[1],p2.X[0],p2.Y[1],p2.Y[0]);
 
     }
-    /// @return the product of a point on G1 and a scalar, i.e.
-    /// p == p.scalar_mul(1) and p.addition(p) == p.scalar_mul(2) for all points p.
+    
     function scalar_mul(G1Point memory p, uint s) internal returns (G1Point memory r) {
         uint[3] memory input;
         input[0] = p.X;
@@ -73,7 +71,7 @@ library Pairing {
         input[2] = s;
         bool success;
         assembly {
-            success := call(sub(gas, 2000), 7, 0, input, 0x80, r, 0x60)
+            success := call(sub(gas(), 2000), 7, 0, input, 0x80, r, 0x60)
             // Use "invalid" to make gas estimation work
             switch success case 0 { invalid() }
         }
@@ -100,7 +98,7 @@ library Pairing {
         uint[1] memory out;
         bool success;
         assembly {
-            success := call(sub(gas, 2000), 8, 0, add(input, 0x20), mul(inputSize, 0x20), out, 0x20)
+            success := call(sub(gas(), 2000), 8, 0, add(input, 0x20), mul(inputSize, 0x20), out, 0x20)
             // Use "invalid" to make gas estimation work
             //switch success case 0 { invalid() }   //MC has commented out so that 'false' can be returned (rather than an error being thrown)
         }
