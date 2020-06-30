@@ -14,19 +14,19 @@ let accounts, signer;
 test('Deploy Org Registration', async () => {
   accounts = await getAccounts();
   signer = await getSigner(accounts[0]);
-  let OrgRegistry = new ethers.ContractFactory(OrgRegistryArtifact.compilerOutput.abi,
-    OrgRegistryArtifact.compilerOutput.evm.bytecode, signer);
-  let Registrar = new ethers.ContractFactory(RegistrarArtifact.compilerOutput.abi,
-    RegistrarArtifact.compilerOutput.evm.bytecode, signer);
-  let ERC1820Registry = new ethers.ContractFactory(ERC1820RegistryArtifact.compilerOutput.abi,
-    ERC1820RegistryArtifact.compilerOutput.evm.bytecode, signer);
+  let OrgRegistry = new ethers.ContractFactory(OrgRegistryArtifact.abi,
+    OrgRegistryArtifact.bytecode, signer);
+  let Registrar = new ethers.ContractFactory(RegistrarArtifact.abi,
+    RegistrarArtifact.bytecode, signer);
+  let ERC1820Registry = new ethers.ContractFactory(ERC1820RegistryArtifact.abi,
+    ERC1820RegistryArtifact.bytecode, signer);
   erc1820Registry = await ERC1820Registry.deploy();
   /* 
   // The below lines also show use of doppelganger to be able to mock
   // all inherited contracts, such as ERC1820Registry and Registrar.
-  let doppelganger1820 = new Doppelganger(ERC1820RegistryArtifact.compilerOutput.abi);
+  let doppelganger1820 = new Doppelganger(ERC1820RegistryArtifact.abi);
   await doppelganger1820.deploy(signer); 
-  let doppelgangerReg = new Doppelganger(RegistrarArtifact.compilerOutput.abi);
+  let doppelgangerReg = new Doppelganger(RegistrarArtifact.abi);
   await doppelgangerReg.deploy(doppelganger1820.address, signer);
   registrar = await Registrar.deploy(erc1820Registry.address);
   orgRegistry = await OrgRegistry.deploy(erc1820Registry.address); */
@@ -55,9 +55,10 @@ test('Should be able to register an org', async () => {
   const txReceipt = await orgRegistry.registerOrg(
     accounts[1],
     utils.formatBytes32String("Name"),
-    2,
+    utils.toUtf8Bytes("http://messanger-buyer-1/"),
     utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
-    utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128')
+    utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
+    utils.toUtf8Bytes("{}")
   );
   const orgCountBefore = await orgRegistry.getOrgCount();
   expect(orgCountBefore.toNumber()).toBe(1);
@@ -70,13 +71,14 @@ test('Should not be able to register an org from non-owner', async () => {
     await nonOwnerOrgRegistry.registerOrg(
       accounts[4],
       utils.formatBytes32String("Name2"),
-      2,
+      utils.toUtf8Bytes("http://messanger-buyer-1/"),
       utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
-      utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128')
+      utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'),
+      utils.toUtf8Bytes("{}")
     );
-  } catch(e) {
+  } catch (e) {
     expect(e.message).toMatch('revert');
-    expect(e.message).toMatch('You are not authorised to invoke this function');
+    expect(e.message).toMatch('caller is not the owner');
     expect(e.code).toBe(-32000);
   }
 
@@ -93,9 +95,9 @@ test('Should not be able to register an orgs interfaces from non owner', async (
   const nonOwnerOrgRegistry = orgRegistry.connect(nonOwner);
   try {
     await nonOwnerOrgRegistry.registerInterfaces(utils.formatBytes32String("RandomInterface2"), accounts[0], accounts[1], accounts[2]);
-  } catch(e) {
+  } catch (e) {
     expect(e.message).toMatch('revert');
-    expect(e.message).toMatch('You are not authorised to invoke this function');
+    expect(e.message).toMatch('caller is not the owner');
     expect(e.code).toBe(-32000);
     return;
   }
@@ -122,18 +124,13 @@ test('Should be able to retrieve the incremented org count', async () => {
 });
 
 test('Should be able to retrieve registered org details', async () => {
-  const {
-    0: address,
-    1: name,
-    2: role,
-    3: messagingKey,
-    4: zkpKey
-  } = await orgRegistry.getOrgs();
-  expect(address[0]).toBe(accounts[1]);
-  expect(name[0]).toBe(utils.formatBytes32String('Name'));
-  expect(role[0].toNumber()).toBe(2);
-  expect(messagingKey[0]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
-  expect(zkpKey[0]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+  const res = await orgRegistry.getOrg(accounts[1]);
+  expect(res[0]).toBe(accounts[1]);
+  expect(res[1]).toBe(utils.formatBytes32String('Name'));
+  expect(utils.toUtf8String(res[2])).toBe("http://messanger-buyer-1/");
+  expect(res[3]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+  expect(res[4]).toBe(utils.hexlify('0x0471099dd873dacf9570f147b9e07ebd671e05bfa63912ee623a800ede8a294f7f60a13fadf1b53d681294cc9b9ff0a4abdf47338ff72d3c34c95cdc9328bd0128'));
+  expect(utils.toUtf8String(res[5])).toBe("{}");
 });
 
 test('Should be able to get registrar info', async () => {

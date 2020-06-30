@@ -19,15 +19,16 @@
   },
   "dependencies": {
     "@babel/preset-env": "^7.9.0",
+    "@openzeppelin/contracts": "^3.1.0",
     "ethereum-doppelganger": "^0.0.7",
     "ethers": "^4.0.46",
-    "openzeppelin-solidity": "^2.5.0"
+    "solc": "^0.6.10"
   },
   "jest": {
     "testEnvironment": "node",
     "verbose": true,
     "testPathIgnorePatterns": [
-      "./test/mockVerifierData.js"
+      "./__tests__/mockVerifierData.js"
     ]
   }
 }
