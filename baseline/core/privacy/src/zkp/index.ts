@@ -1,6 +1,6 @@
 import { initialize, ZoKratesProvider } from 'zokrates-js';
 
-export interface ZeroKnowledgeService {
+export interface ZKSnarkCircuitProvider {
   compile(source: string, location: string): Promise<any>;
   computeWitness(artifacts: any, args: any[]): Promise<any>;
   exportVerifier(verifyingKey): Promise<string>;

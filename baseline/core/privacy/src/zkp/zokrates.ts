@@ -1,5 +1,5 @@
 import { initialize, ComputationResult, CompilationArtifacts, ResolveCallback, SetupKeypair, ZoKratesProvider } from 'zokrates-js';
-import { ZeroKnowledgeService } from '.';
+import { ZKSnarkCircuitProvider } from '.';
 import { readFileSync } from 'fs';
 
 export class SetupArtifact {
@@ -7,7 +7,7 @@ export class SetupArtifact {
   verifierSource?: string;
 }
 
-export class ZoKratesService implements ZeroKnowledgeService {
+export class ZoKratesService implements ZKSnarkCircuitProvider {
 
   private importResolver: ResolveCallback;
   private zokrates: ZoKratesProvider;

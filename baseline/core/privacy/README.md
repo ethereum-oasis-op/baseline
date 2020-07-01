@@ -1,11 +1,29 @@
-# @baseline
+# @baseline-protocol/privacy
 
 Baseline core privacy package.
 
 ## Installation
 
-`npm install @baseline/privacy`
+`npm install @baseline-protocol/privacy`
 
 ## Building
 
-You can build the package locally with `npm run build`. The build compiles the Baseline core privacy package and its dependencies as a flat file and outputs it to `dist/`.
+You can build the package locally with `npm run build`.
+
+## Interfaces
+
+__ZKSnarkCircuitProvider__
+
+```
+compile(source: string, location: string): Promise<any>;
+computeWitness(artifacts: any, args: any[]): Promise<any>;
+exportVerifier(verifyingKey): Promise<string>;
+generateProof(circuit, witness, provingKey): Promise<string>;
+setup(circuit): Promise<any>;
+```
+
+## Supported Frontends
+
+The following zkSNARK toolboxes are supported:
+
+    - ZoKrates
