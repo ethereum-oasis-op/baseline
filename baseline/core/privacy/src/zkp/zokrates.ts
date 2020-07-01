@@ -43,5 +43,6 @@ export class ZoKratesService implements ZeroKnowledgeService {
 }
 
 export const zokratesServiceFactory = async (): Promise<ZoKratesService> => {
-  return initialize().then(zokratesProvider => new ZoKratesService(zokratesProvider));
+  const zokratesProvider = await initialize();
+  return new ZoKratesService(zokratesProvider);
 };
