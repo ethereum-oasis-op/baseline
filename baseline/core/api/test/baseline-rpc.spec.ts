@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { blockchainProviderRpc, blockchainServiceFactory } from '../src/index';
+import { baselineProviderRpc, baselineServiceFactory } from '../src/index';
 
 const defaultAccountAddress = '0x7e5f4552091a69125d5dfcb7b8c2659029395bdf';
 
@@ -21,7 +21,7 @@ const deployShield = async () => {
 
 beforeEach(async () => {
   sender = defaultAccountAddress;
-  rpc = await blockchainServiceFactory(blockchainProviderRpc);
+  rpc = await baselineServiceFactory(baselineProviderRpc);
 });
 
 afterEach(async () => {

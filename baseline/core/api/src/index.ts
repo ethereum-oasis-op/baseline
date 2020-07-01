@@ -3,9 +3,9 @@ import { Provide } from './providers/provide';
 import { Rpc } from './providers/rpc';
 import { MerkleTreeNode } from './utils/merkle-tree';
 
-export const blockchainProviderEthers = 'ethers';
-export const blockchainProviderProvide = 'provide';
-export const blockchainProviderRpc = 'rpc';
+export const baselineProviderEthers = 'ethers';
+export const baselineProviderProvide = 'provide';
+export const baselineProviderRpc = 'rpc';
 
 export interface IBaselineRPC {
   // Deploy a shield contract given the compiled artifact bytecode and ABI
@@ -108,20 +108,20 @@ export {
   MerkleTreeNode
 };
 
-export async function blockchainServiceFactory(
+export async function baselineServiceFactory(
   provider: string,
   config?: any,
 ): Promise<IBaselineRPC & IBlockchainService & IRegistry & IVault> {
   let service;
 
   switch (provider) {
-    case blockchainProviderEthers:
+    case baselineProviderEthers:
       service = new Ethers(config);
       break;
-    case blockchainProviderProvide:
+    case baselineProviderProvide:
       service = new Provide(config);
       break;
-    case blockchainProviderRpc:
+    case baselineProviderRpc:
       service = new Rpc(config);
       break;
     default:

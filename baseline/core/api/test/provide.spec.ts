@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { blockchainProviderProvide, blockchainServiceFactory } from '../src/index';
+import { baselineProviderProvide, baselineServiceFactory } from '../src/index';
 
 const defaultAccountAddress = '0x7e5f4552091a69125d5dfcb7b8c2659029395bdf';
 
@@ -8,7 +8,7 @@ let provide;
 
 beforeEach(async () => {
   // FIXME bearerToken = ;
-  provide = await blockchainServiceFactory(blockchainProviderProvide);
+  provide = await baselineServiceFactory(baselineProviderProvide);
 });
 
 afterEach(async () => {
