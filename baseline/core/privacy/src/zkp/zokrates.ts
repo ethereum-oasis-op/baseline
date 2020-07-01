@@ -1,9 +1,10 @@
 import { initialize, ComputationResult, CompilationArtifacts, ResolveCallback, SetupKeypair, ZoKratesProvider } from 'zokrates-js';
 import { ZeroKnowledgeService } from '.';
+import { readFileSync } from 'fs';
 
 export class SetupArtifact {
-  keypair: SetupKeypair;
-  verifierSource: string;
+  keypair?: SetupKeypair;
+  verifierSource?: string;
 }
 
 export class ZoKratesService implements ZeroKnowledgeService {
@@ -13,17 +14,10 @@ export class ZoKratesService implements ZeroKnowledgeService {
 
   constructor(
     zokrates: ZoKratesProvider,
-    importResolver?: ResolveCallback,
+    importResolver: ResolveCallback,
   ) {
     this.zokrates = zokrates;
-    this.importResolver = importResolver || this.defaultImportResolver;
-  }
-
-  private defaultImportResolver(location, path) {
-    return {
-      source: 'def main() -> (): return',
-      location: path,
-    };
+    this.importResolver = importResolver;
   }
 
   async compile(source: string, location: string): Promise<CompilationArtifacts> {
@@ -61,6 +55,17 @@ export class ZoKratesService implements ZeroKnowledgeService {
 }
 
 export const zokratesServiceFactory = async (): Promise<ZoKratesService> => {
+  const importResolver = (location, path) => {
+    let zokpath = `../../lib/circuits/baselineDocument/${path}`;
+    if (!zokpath.match(/\.zok$/i)) {
+      zokpath = `${zokpath}.zok`;
+    }
+    return {
+      source: readFileSync(zokpath).toString(),
+      location: path,
+    };
+  };
+
   const zokratesProvider = await initialize();
-  return new ZoKratesService(zokratesProvider);
+  return new ZoKratesService(zokratesProvider, importResolver);
 };
