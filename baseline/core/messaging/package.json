@@ -23,7 +23,7 @@
     "test:teardown": "npm run nats:stop && npm run geth:stop"
   },
   "dependencies": {
-    "ts-natsutil": "^1.0.7",
+    "ts-natsutil": "^1.1.0",
     "web3": "^1.2.6",
     "winston": "^3.2.1"
   },
