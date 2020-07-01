@@ -1,4 +1,4 @@
-# @baseline/contracts
+# @baseline-protocol/contracts
 
 Baseline core contracts package.
 

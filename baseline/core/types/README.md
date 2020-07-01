@@ -1,11 +1,11 @@
-# @baseline/type
+# @baseline-protocol/types
 
-Baseline core types.
+Baseline core types package. Shared types will live here.
 
 ## Installation
 
-`npm install @baseline/types`
+`npm install @baseline-protocol/types`
 
 ## Building
 
-You can build the package locally with `npm run build`. The build compiles the Baseline core types package and its dependencies as a flat file and outputs it to `dist/`.
+You can build the package locally with `npm run build`.

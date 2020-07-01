@@ -2,6 +2,8 @@
 
 Baseline core messaging package.
 
+[NATS](https://nats.io) is currently the default point-to-point messaging provider and the recommended way for organizations to exchange secure protocol messages. NATS was chosen due to its high-performance capabilities, community/enterprise footprint, interoperability with other systems and protocols (i.e. [Kafka](https://github.com/nats-io/nats-kafka) and MQTT) and its decentralized architecture.
+
 ## Installation
 
 `npm install @baseline-protocol/messaging`
