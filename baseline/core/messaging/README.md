@@ -1,11 +1,34 @@
-# @baseline/messaging
+# @baseline-protocol/messaging
 
 Baseline core messaging package.
 
 ## Installation
 
-`npm install @baseline/messaging`
+`npm install @baseline-protocol/messaging`
 
 ## Building
 
-You can build the package locally with `npm run build`. The build compiles the Baseline messaging package and its dependencies as a flat file and outputs it to `dist/`.
+You can build the package locally with `npm run build`.
+
+## Interfaces
+
+__IMessagingService__
+
+```
+connect(): Promise<any>;
+disconnect(): Promise<void>;
+getSubscribedSubjects(): string[];
+isConnected(): boolean;
+publish(subject: string, payload: any, reply?: string, recipientId?: string, senderId?: string): Promise<void>;
+request(subject: string, timeout: number, data?: any): Promise<any | void>;
+subscribe(subject: string, callback?: (msg: any, err?: any) => void, myId?: string): Promise<any>;
+unsubscribe(subject: string);
+flush(): Promise<void>;
+```
+
+## Supported Providers & Protocols
+
+The following messaging providers are available:
+
+- NATS
+- Whisper
