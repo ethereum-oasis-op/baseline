@@ -1,6 +1,11 @@
 import { initialize, ComputationResult, CompilationArtifacts, ResolveCallback, SetupKeypair, ZoKratesProvider } from 'zokrates-js';
 import { ZeroKnowledgeService } from '.';
 
+export class SetupArtifact {
+  keypair: SetupKeypair;
+  verifierSource: string;
+}
+
 export class ZoKratesService implements ZeroKnowledgeService {
 
   private importResolver: ResolveCallback;
@@ -37,8 +42,21 @@ export class ZoKratesService implements ZeroKnowledgeService {
     return this.zokrates.generateProof(circuit, witness, provingKey);
   }
 
-  async setup(circuit): Promise<SetupKeypair> {
-    return this.zokrates.setup(circuit);
+  async setup(circuit): Promise<SetupArtifact> {
+    const keypair = this.zokrates.setup(circuit);
+    if (keypair && keypair.pk && keypair.vk) {
+      return Promise.reject('failed to perform trusted setup')
+    }
+
+    const artifact = new SetupArtifact();
+    artifact.keypair = keypair;
+    artifact.verifierSource = this.zokrates.exportSolidityVerifier(keypair.vk, true);
+
+    if (!artifact.verifierSource) {
+      return Promise.reject('failed to export verifier');
+    }
+
+    return artifact;
   }
 }
 
