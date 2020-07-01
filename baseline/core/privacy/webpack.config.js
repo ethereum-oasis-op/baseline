@@ -4,6 +4,7 @@ const webpack = require('webpack');
 
 module.exports = {
   mode: 'production',
+  target: 'node',
   entry: path.resolve(__dirname, 'src', 'index.ts'),
   externals: [
     nodeExternals({
@@ -14,7 +15,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist', 'umd'),
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: '@baseline/privacy',
+    library: '@baseline-protocol/privacy',
     globalObject: 'this'
   },
   resolve: {
