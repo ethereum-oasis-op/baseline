@@ -1,13 +1,13 @@
 import { initialize, ComputationResult, CompilationArtifacts, ResolveCallback, SetupKeypair, ZoKratesProvider } from 'zokrates-js';
-import { ZKSnarkCircuitProvider } from '.';
+import { IZKSnarkCircuitProvider } from '.';
 import { readFileSync } from 'fs';
 
-export class SetupArtifact {
+export class ZokratesTrustedSetupArtifact {
   keypair?: SetupKeypair;
   verifierSource?: string;
 }
 
-export class ZoKratesService implements ZKSnarkCircuitProvider {
+export class ZoKratesService implements IZKSnarkCircuitProvider {
 
   private importResolver: ResolveCallback;
   private zokrates: ZoKratesProvider;
@@ -36,13 +36,13 @@ export class ZoKratesService implements ZKSnarkCircuitProvider {
     return this.zokrates.generateProof(circuit, witness, provingKey);
   }
 
-  async setup(circuit): Promise<SetupArtifact> {
+  async setup(circuit): Promise<ZokratesTrustedSetupArtifact> {
     const keypair = this.zokrates.setup(circuit);
     if (keypair && keypair.pk && keypair.vk) {
-      return Promise.reject('failed to perform trusted setup')
+      return Promise.reject('failed to perform trusted setup');
     }
 
-    const artifact = new SetupArtifact();
+    const artifact = new ZokratesTrustedSetupArtifact();
     artifact.keypair = keypair;
     artifact.verifierSource = this.zokrates.exportSolidityVerifier(keypair.vk, true);
 

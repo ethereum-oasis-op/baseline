@@ -12,7 +12,7 @@ You can build the package locally with `npm run build`.
 
 ## Interfaces
 
-__ZKSnarkCircuitProvider__
+__IZKSnarkCircuitProvider__
 
 ```
 compile(source: string, location: string): Promise<any>;
@@ -26,4 +26,4 @@ setup(circuit): Promise<any>;
 
 The following zkSNARK toolboxes are supported:
 
-    - ZoKrates
+- ZoKrates

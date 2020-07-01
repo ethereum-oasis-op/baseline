@@ -1,6 +1,8 @@
-import { initialize, ZoKratesProvider } from 'zokrates-js';
+import { zokratesServiceFactory } from './zokrates';
 
-export interface ZKSnarkCircuitProvider {
+export const zkSnarkCircuitProviderServiceZokrates = 'zokrates';
+
+export interface IZKSnarkCircuitProvider {
   compile(source: string, location: string): Promise<any>;
   computeWitness(artifacts: any, args: any[]): Promise<any>;
   exportVerifier(verifyingKey): Promise<string>;
@@ -8,12 +10,19 @@ export interface ZKSnarkCircuitProvider {
   setup(circuit): Promise<any>;
 }
 
-const zokratesFactory = async (): Promise<ZoKratesProvider> => {
-  return new Promise((resolve, reject) => {
-    initialize().then(zokrates => {
-      resolve(zokrates);
-    }).catch(err => {
-      reject(err);
-    });
-  });
-};
+export async function zkSnarkCircuitProviderServiceFactory(
+  provider: string,
+  config?: any,
+): Promise<IZKSnarkCircuitProvider> {
+  let service;
+
+  switch (provider) {
+    case zkSnarkCircuitProviderServiceZokrates:
+      service = await zokratesServiceFactory();
+      break;
+    default:
+      throw new Error('zkSnark circuit provider service required');
+  }
+
+  return service;
+}

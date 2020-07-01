@@ -1,2 +1,1 @@
-export { ZKSnarkCircuitProvider } from './zkp';
-export { zokratesServiceFactory } from './zkp/zokrates';
+export { IZKSnarkCircuitProvider, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from './zkp';
