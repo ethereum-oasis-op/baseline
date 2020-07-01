@@ -1,4 +1,5 @@
 export interface RpcConfig {
-  rpcEndpoint?: string;
-  rpcScheme?: string;
+  rpcEndpoint: string | 'localhost:8545';
+  rpcScheme: string | 'http';
+  rpcVersion: string | '2.0';
 }

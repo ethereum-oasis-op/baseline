@@ -1,75 +1,103 @@
-import { RpcClient } from 'provide-js';
+import axios from 'axios';
 import { RpcConfig } from './config';
 import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault } from '../..';
 
+const defaultJsonRpcUrl = 'http://localhost:8545';
+const defaultJsonRpcVersion = '2.0';
+
 /**
- * This class provides a generic JSON-RPC service.
+ * This class provides a generic JSON-RPC service implementing
+ * the Baseline JSON-RPC API.
  */
 export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault {
 
-  // RPC client
-  private client: RpcClient;
+  private id: number;
+  private readonly version: string;
+  private readonly url: string;
 
   constructor(
     private readonly config: RpcConfig,
   ) {
-    this.client = new RpcClient(config?.rpcScheme, config?.rpcEndpoint);
+    this.id = 1;
+    this.version = config ? config.rpcVersion : defaultJsonRpcVersion;
+    this.url = config ? `${config.rpcScheme}://${config.rpcEndpoint}` : defaultJsonRpcUrl;
+  }
+
+  private async call(method: string, params: any[]): Promise<any> {
+    const resp = await axios.post(this.url, {
+      id: this.id++,
+      method: method,
+      params: params,
+      version: this.version,
+    });
+
+    const data = resp ? resp.data : null;
+
+    if (data && typeof data.result !== 'undefined' && typeof data.error === 'undefined') {
+      return data.result;
+    } else if (data && typeof data.error !== 'undefined') {
+      return Promise.reject(data.error);
+    } else if (data) {
+      return data;
+    }
+
+    return Promise.reject('failed to receive json-rpc response');
   }
 
   // BaselineRPC impl
 
   async deploy(sender: string, bytecode: string, abi: any): Promise<any> {
-    return await this.client.call('baseline_deploy', [sender, bytecode, abi]);
+    return await this.call('baseline_deploy', [sender, bytecode, abi]);
   }
 
   async getLeaf(address: string, index: number): Promise<MerkleTreeNode> {
-    return await this.client.call('baseline_getLeaf', [address, index]);
+    return await this.call('baseline_getLeaf', [address, index]);
   }
 
   async getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]> {
-    return await this.client.call('baseline_getLeaves', [address, indexes]);
+    return await this.call('baseline_getLeaves', [address, indexes]);
   }
 
   async getRoot(address: string): Promise<string> {
-    return await this.client.call('baseline_getRoot', [address]);
+    return await this.call('baseline_getRoot', [address]);
   }
 
   async getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]> {
-    return await this.client.call('baseline_getSiblings', [address, leafIndex]);
+    return await this.call('baseline_getSiblings', [address, leafIndex]);
   }
 
   async getTracked(): Promise<string[]> {
-    return await this.client.call('baseline_getTracked', []);
+    return await this.call('baseline_getTracked', []);
   }
 
   async insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode> {
-    return await this.client.call('baseline_insertLeaf', [sender, address, value]);
+    return await this.call('baseline_insertLeaf', [sender, address, value]);
   }
 
   async insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode> {
-    return await this.client.call('baseline_insertLeaves', [sender, address, value]);
+    return await this.call('baseline_insertLeaves', [sender, address, value]);
   }
 
   async track(address: string): Promise<boolean> {
-    return await this.client.call('baseline_track', [address]);
+    return await this.call('baseline_track', [address]);
   }
 
   async verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean> {
-    return await this.client.call('baseline_verify', [address, root, leaf, siblingPath]);
+    return await this.call('baseline_verify', [address, root, leaf, siblingPath]);
   }
 
   // IBlockchainService impl
 
   async broadcast(tx: string): Promise<any> {
-    return this.client.call('eth_sendRawTransaction', [tx]);
+    return this.call('eth_sendRawTransaction', [tx]);
   }
 
   async fetchTxReceipt(hash: string): Promise<any> {
-    return this.client.call('eth_getTransactionReceipt', [hash]);
+    return this.call('eth_getTransactionReceipt', [hash]);
   }
 
   async exec(method: string, params: any[]): Promise<any> {
-    return this.client.call(method, params);
+    return this.call(method, params);
   }
 
   async generateKeypair(): Promise<any> {
@@ -81,7 +109,7 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
   }
 
   async sign(params: any): Promise<any> {
-    return this.client.call('eth_signTransaction', [params]);
+    return this.call('eth_signTransaction', [params]);
   }
 
   // IRegistry
