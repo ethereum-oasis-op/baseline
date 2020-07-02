@@ -41,7 +41,7 @@ During the initial RFP stage, there is an onset of pure off-chain communication.
 
 The figure below describes a particular aspect of creating an MSA, and represented as a sequence diagram.
 
-![](../.gitbook/assets/r34-queue-based-workflow-design-rfp-to-msa-flow.jpg)
+![](../.gitbook/assets/r34-queue-based-workflow-design-rfp-to-msa-flow%20%281%29.jpg)
 
 | Domain model of the Radish Baseline implementation |
 | :--- |
@@ -53,7 +53,7 @@ The figure below describes a particular aspect of creating an MSA, and represent
 
 These context specific top level business objects such as RFP, MSA Contract, PO, and Invoice are loosely coupled and only contain external reference to other objects in the previous process flow. This is because it is possible to create any of these on their own \(technically speaking\) depending on the Organizations role and/or phase of interaction with other organizations in the Radish network. However, the application process management logic will re-enforce the proper creation order. It is expected that these objects cross system boundaries and also have on-chain representation. These objects are prominent in the User Interface and the end user can interact with them.
 
-![](../.gitbook/assets/revised-radish-user-stories-business-objects-1.png)
+![](../.gitbook/assets/revised-radish-user-stories-business-objects-1%20%281%29.png)
 
 ### Generic Business Objects
 
@@ -63,7 +63,7 @@ These object are supporting generic business contexts and the usage of the Radis
 
 These objects are specific to the technology implementation. They encapsulate the delivery of objects, messages, data identity, etc... and help ensure reliability of the system as a whole and durability of the data. These objects are not indented to be used/interacted with by end-users \(but could be for diagnostic purposes\).
 
-![](../.gitbook/assets/revised-radish-user-stories-business-objects-2.png)
+![](../.gitbook/assets/revised-radish-user-stories-business-objects-2%20%281%29.png)
 
 ### Deployment/Configuration Objects
 

@@ -14,9 +14,15 @@ All repos in the Ethereum OASIS organization, including Baseline Protocol reposi
 
 In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](http://cla-assistant.io/ethereum-oasis/baseline) for community contributions. You must [sign the ICLA](http://cla-assistant.io/ethereum-oasis/baseline) before your pull requests to the baseline repository will be merged. [Check here](https://www.oasis-open.org/resources/projects/cla/projects-view-entity-cla) to see if your company has signed the ECLA. 
 
+## Code of Conduct
+
+{% embed url="https://github.com/ethereum-oasis/baseline/blob/master/CODE\_OF\_CONDUCT.md" %}
+
+
+
 ## **Charter: Baseline Open Source Project Governance**
 
-**Ratified on March 18, 2020 by the** [**PGB**](community-members.md#your-project-governance-board)**.**
+**Ratified on March 18, 2020 by the** [**PGB**](community-leaders.md#your-project-governance-board)**.**
 
 The Baseline Protocol shall be a project within the Ethereum-Oasis project of [OASIS](https://www.oasis-open.org/) through at least May 31, 2020. The Project Governing Board \(PGB\) of the Ethereum-OASIS project, which was established in 2019 and is currently supported by the EEA and the Ethereum Foundation \(EF\), currently consists of  Dan Burnett \(ConsenSys\), Tas Dienes \(EF\), and Chaals Neville \(EEA\) – supported by Jory Burson \(OASIS\). The Baseline Project shall be supported under the existing contract with OASIS and shall require no additional fees than those already paid by EEA/EF and the parties to the Open Ethereum Project until May 31, 2020. Negotiation to continue the Baseline Project with OASIS shall be conducted between March and May 2020. 
 
@@ -38,7 +44,7 @@ A TSC member is eligible to lose their seat upon missing two consecutive TSC mee
 
 In all cases \(7, 9 or 11 member TSC\), the original three organizations \(EY, MSFT, ConsenSys\) hold less than 50% of the seats, during the initial six month bootstrapping period.
 
-One TSC Member shall serve as provisional chair of the TSC for six months. On September 31, 2020, all members and the chair shall be open for new elections. Members of the community shall have voting rights based on contribution \(see below\):  
+One TSC Member shall serve as provisional chair of the TSC for six months. On September 30, 2020, all members and the chair shall be open for new elections. Members of the community shall have voting rights based on contribution \(see below\):  
 
 
 #### Steady State Periods: 
@@ -63,5 +69,9 @@ This document shall be ratified by the PGB before the public launch of the Basel
 
 #### Details on OASIS and the Open Ethereum Project
 
-Governance documents from the existing Open Ethereum Project:  [https://notes.ethereum.org/zE2f1mIcTf2jjfdmTOZx3w?view](https://notes.ethereum.org/zE2f1mIcTf2jjfdmTOZx3w?view)
+Governance documents from the existing Open Ethereum Project:  
+
+[https://github.com/ethereum-oasis/oasis-open-project/blob/master/GOVERNANCE.md](https://github.com/ethereum-oasis/oasis-open-project/blob/master/GOVERNANCE.md)
+
+
 

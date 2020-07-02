@@ -1,6 +1,10 @@
-# Community Members
+# Community Leaders
 
-Over 400 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th and 19th, 2020. Over 300 of them also signed in as group members. The [members](https://lists.oasis-open-projects.org/g/baseline/directory) represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
+Over 500 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th and 19th, 2020. Over 300 of them also signed in as group members. The [members](https://lists.oasis-open-projects.org/g/baseline/directory) represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
+
+#### People listed here or appearing on community videos or in the github repos should be assumed to be representing themselves, and not necessarily the companies they work for.\*
+
+> \*\(In the mid-1990s, the [Java](https://en.wikipedia.org/wiki/Java_%28programming_language%29) community amassed thousands of developers from many companies before any of those companies officially sanctioned their involvement.  Many of the companies participating in the Baseline Protocol initiative embrace the work, some already adding baselining to their strategic plans. But anyone observing someone's participation in the baseline community should assume that they do so as individuals. Please refrain from making assertions about the intentions of their employers.\)
 
 ### Bootstrapping Phase and Ongoing Phase
 
@@ -15,8 +19,9 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 | Name | Organization |
 | :--- | :--- |
 | [**Chaals Neville**](https://www.linkedin.com/in/chaals/) | Enterprise Ethereum Alliance |
-| [**Dan Burnett**](https://www.linkedin.com/in/daburnett/) | PegaSys |
+| [**Dan Burnett**](https://www.linkedin.com/in/daburnett/) | ConsenSys |
 | [**Tas Dienes**](https://www.linkedin.com/in/tasdienes/) | Ethereum Foundation |
+| [**John Wolpert**](https://linkedin.com/in/johnwolpert)\*\*\*\* | Current Baseline Protocol TSC Chair |
 
 ### Your Technical Steering Committee
 
@@ -39,7 +44,9 @@ The technical steering committee \(TSC\) is accountable to the Project Governanc
 
 The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products. These are senior industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://github.com/ethereum-oasis/baseline#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893).
 
-SSC members are seated by consensus of the sitting members. There is no specific maximum number of seats, and it is expected that the members will form sub-committees for topics like industry verticals.
+SSC members are seated by consensus of the sitting members. There is no specific maximum number of seats, and it is expected that the members will form sub-committees for topics like industry verticals. 
+
+_To be listed below, contact the_ [_TSC Chair_ ](community-leaders.md#your-provisional-chair)_to authorize listing your name and \(optionally\) your company, if you are accountable for at least one Epic in the baseline roadmap._ 
 
 | Name | Company |
 | :--- | :--- |
@@ -53,6 +60,20 @@ SSC members are seated by consensus of the sitting members. There is no specific
 | [**Stephan Baur**](https://www.linkedin.com/in/stephanbaur/) | Kaiser Permanente |
 | Steve Shortt | BP |
 | [**Yorke Rhodes**](https://www.linkedin.com/in/yorkerhodes/) | Microsoft |
+| [**Tim Coulter**](https://www.linkedin.com/in/timothyjcoulter/)\*\*\*\* | Truffle |
+| \*\*\*\*[**Christian Schmiedel**](https://www.linkedin.com/in/christian-schmiedel-0363b0a5/)\*\*\*\* | Fraunhofer IPK |
+| [**Peter Kris**](Https://linkedin.com/in/peter-kris-a7274054)\*\*\*\* | Block Unison |
+| [**John Monarch**](https://www.linkedin.com/in/johnmonarch/)\*\*\*\* | ShipChain |
+| [**Maciej Ziomek**](https://twitter.com/cryptoisland)\*\*\*\* | Baseline Community Videographer |
+| [**Stephen Garcia**](https://www.linkedin.com/in/stephengarciainfosec/)\*\*\*\* | ConsenSys CISO |
+| [**Avia Kraft**](https://www.linkedin.com/in/aviakraft/)\*\*\*\* | Core Convergence |
+| [**Juan Blanco**](https://www.linkedin.com/in/juanfranblanco/)\*\*\*\* | Nethereum |
+| [**Noam Eppel**](https://www.linkedin.com/in/noameppel/)\*\*\*\* | Morpheus.Network |
+| \*\*\*\*[**Nick Kritikos**](https://www.linkedin.com/in/kritikos40/)\*\*\*\* | ConsenSys |
+| \*\*\*\*[**Dominic Steil** ](https://www.linkedin.com/in/dominic-steil-b6092553/)\*\*\*\* | Stateset |
+| [**Zac Cole**](https://www.linkedin.com/in/zak-cole/)\*\*\*\* | Whiteblock |
+| [**Nate Blakely**](https://www.linkedin.com/in/nathaniel-blakely/)\*\*\*\* | Whiteblock |
+| [**David Goodman**](https://www.linkedin.com/in/dh6oodman/)\*\*\*\* | [Vitro](https://vitro.io/) |
 
 ### Your Provisional Chair
 
@@ -64,6 +85,23 @@ The position is annual and chosen by popular vote of contributors who have had w
 | :--- | :--- |
 | [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) | ConsenSys |
 
+### Maintainer Team
+
+The Maintainers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Master branch of the repo.
+
+Details on how to become a [Maintainer here](members.md).
+
+| Maintainer \(with link to Github ID\) | Company |
+| :--- | :--- |
+| [**Brian Chamberlain**](https://github.com/breakpointer)\*\*\*\* | ConsenSys |
+| [**Hudson Jameson**](https://github.com/souptacular)\*\*\*\* | Ethereum Foundation |
+| [**Patrick Macom**](https://github.com/pmacom)\*\*\*\* | EY |
+| [**Sam Stokes**](https://github.com/bitwiseguy)\*\*\*\* | ConsenSys |
+| [**Kartheek Solipuram**](https://github.com/skarred14)\*\*\*\* | EY |
+| \*\*\*\*[**Kyle Thomas**](https://github.com/kthomas)\*\*\*\* | Provide |
+| \*\*\*\*[**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/)\*\*\*\* | Nethermind |
+| [**George Spasov**](https://www.linkedin.com/in/george-spasov/)\*\*\*\* | LimeChain |
+
 ## Founding Group on March 4, 2020
 
 ### [**AMD**](https://www.amd.com/en/technologies/blockchain)**,** [**EY**](https://blockchain.ey.com/)**,** [**ChainLink**](https://chain.link/)**,** [**Core Convergence**](https://www.coreconvergence.us/)**,** [**ConsenSys**](https://consensys.net/)**,** [**Duke University**](https://pratt.duke.edu/)**,** [**Envision Blockchain**](https://envisionblockchain.com/)**,** [**MakerDAO**](https://makerdao.com/en/)**,** [**Microsoft**](http://www.microsoft.com/)**,** [**Neocova**](https://neocova.com/)**,** [**Splunk**](https://www.splunk.com/)**,** [**Unibright**](https://unibright.io/)**,** [**Provide**](https://provide.services/)**, and** [**W3BCLOUD**](https://www.w3bcloud.com/)**.**
@@ -74,11 +112,11 @@ The position is annual and chosen by popular vote of contributors who have had w
 
 Stay tuned...more coming in all the time.
 
-## Contributors and Maintainers
+## Contributors
 
-Stay tuned as the community bootstraps.
+The active contributors and maintainers of the Baseline Protocol repo are here:
 
-| Name | Github Handle | Company |
-| :--- | :--- | :--- |
-|  |  |  |
+{% embed url="https://github.com/ethereum-oasis/baseline/graphs/contributors" caption="Github Contributors Page" %}
+
+
 

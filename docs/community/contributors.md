@@ -1,19 +1,25 @@
-# Contributors Guide
+# Contributors
 
 All work of the Baseline Protocol initiative is maintained publicly at: [https://github.com/ethereum-oasis/baseline](https://github.com/ethereum-oasis/baseline)
 
+You don't need any special access to the [repo ](https://github.com/ethereum-oasis/baseline) to get involved and start contributing.  Follow these steps to [fork](contributors.md#submitting-a-pull-request) the repo and submit pull requests. Anyone with a Github ID can also create and edit their own Issues, participate in public meetings, and join the various communication and collaboration [channels](community.md#connecting-with-each-other-directly) that the community maintains.
+
 There are four ways to contribute: 
 
-* Write code \(Architecture, Spikes, Issues, Tasks\) 
+* Write code \(Architecture, Spikes, Issues, Tasks\)
 * Write specifications \(Epics, Stories, [Standards](../baseline-protocol/standards/), Prioritizations, Use Cases\)
-* Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders;
-* Help prioritize work and develop incentives to get it done. 
+* Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders -- Join the [communications team](https://ethereum-baseline.slack.com/archives/C011NCZ2ES1) on Slack
+* Help prioritize work and develop incentives to get it done by joining the [SSC](ssc.md) or becoming a [Maintainer](members.md) or [TSC](tsc.md) Member.
 
-There is one other way to contribute, and it's the most important: use the work in the Baseline Protocol to improve your own offerings. The Baseline Protocol is not a product or platform..the product is YOUR product. 
+There is one other way to contribute, and it's the most important: **use the work in the Baseline Protocol to improve your own offerings**. The Baseline Protocol is not a product or platform..**the product is YOUR product**. 
+
+## Code of Conduct
+
+{% embed url="https://github.com/ethereum-oasis/baseline/blob/master/CODE\_OF\_CONDUCT.md" caption="Code of Conduct" %}
 
 ## Technical Contributors
 
-Technical contributors either are working on architecture or developing code...but even correcting poorly written in-line docs counts as a technical contribution and qualifies you to vote in an upcoming [TSC](community-members.md#your-technical-steering-committee) election.
+Technical contributors either are working on architecture or developing code...but even correcting the language of in-line docs counts as a technical contribution and qualifies you to vote in upcoming [TSC](community-leaders.md#your-technical-steering-committee) elections.
 
 ### Issues Organization and Community "Sprints"
 
@@ -44,15 +50,15 @@ The iCLA happens automatically when people submit a pull request, or they can ac
 
 ### Maintainers and Commit Rules
 
-During the bootstrap phase \(March - June, 2020\) merging to Master will require review by THREE Maintainers. The TSC will seed the set of Maintainers. Thereafter, any active Committer can become a Maintainer. Maintainers may add more Maintainers by simple majority and \(rough consensus rules\), and the TSC may step in to resolve cases where this process fails. 
+During the bootstrap phase \(March - June, 2020\) merging to Master will require review by THREE Maintainers. The TSC will seed the set of Maintainers. Thereafter, any active Member can become a Maintainer. Maintainers may add more Maintainers by two-thirds majority \(rough consensus rules\), and the TSC may step in to resolve cases where this process fails. 
 
 ## Specifications Contributors
 
-The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [SSC](community-members.md#your-specifications-steering-committee) is the coordinating body for this work.
+The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [SSC](community-leaders.md#your-specifications-steering-committee) is the coordinating body for this work.
 
-### Epics, Stories Organization
+### Epics and Stories Organization
 
-The Baseline Protocol initiative uses [Zenhub](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. \(Zenhub should be a tab in your Github interface. There is a Chrome plugin also.\)
+The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. \(Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).\)
 
 Zenhub enables Epics to nest, while Issues don't nest...not really.  Therefore, the community will employ the practice of using Issues for engineering Tasks and Epics to contain high level topics, which may have nested within them a set of agile Epics, and in them a set of Stories, and even Stories may have other Stories nested in them.  Engineering meets planning where a Story \(in the form of a Zenhub Epic\) is referenced by an Issue/Task. \(This can work very well, but Zenhub's choice in calling Epics, _Epics_ can cause confusion.
 
@@ -66,11 +72,5 @@ A Zenhub "Epic" used as a Story should almost always follow the form: "As X, I n
 * [ ] A Party's System Administrator can quickly and easily verify a Counterparty's identity found in the OrgRegistry, so that they can be confident in adding the Counterparty to a Workgroup.
 * [ ] A Party's System Administrator can use some or all of the Counterparities and Workflow Steps defined in one Workgroup in Workflow Steps created within another Workgroup, so that Workgroups don't become yet another kind of silo. 
 
-## Task Groups
 
-There are no special task groups yet, but stay tuned. 
-
-Task Groups \(aka sub-groups in the [members portal](https://lists.oasis-open-projects.org/g/baseline/subgroups)\) can form to tackle an Industry Vertical, focus on a horizontal category like Cloud or B2B Contracting, or develop ways to integrate with a particular platform such as Corda or any of the Hyperledger projects. 
-
-To set up a Task Group, simply get committed people together, find and embrace others that might be forming something similar, communicate your plans, and get to work.
 

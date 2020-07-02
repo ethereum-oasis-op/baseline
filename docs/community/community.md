@@ -16,33 +16,37 @@ Below are the things you need to know to get informed, get involved and get valu
 
 ## Working Together
 
+Anyone can join the Baseline Protocol communication channels \(see below\), and anyone with a Github ID can view the [roadmap](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) \(don't forget to log in with github id\), fork the [repo](https://github.com/ethereum-oasis), and submit pull requests to contribute to the work. 
+
+You can also become a regular [**Member**](members.md) ****of the initiative, which will allow you to manage Issues and push directly to most repo branches \(other than Master\). Members who step up to be accountable for projects can become [**Specification Steering Committee**](ssc.md) \(SSC\) members. Members who take on responsibility for maintaining the integrity of the work and merging contributions to the master branch of the repo can become [**Maintainers**](members.md). And finally, contributors can nominate and vote-in members to be on the governing [**Technical Steering Committee**](tsc.md) \(TSC\) annually. 
+
+Below are the things to know about how to get involved and work with the team.
+
 ### Meetings and Meetups
 
-Check the [**group calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for times/dates of online \(and eventually face to face\) meetings. If the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. Chime in on the [**Slack**](https://communityinviter.com/apps/ethereum-baseline/join-us)...don't be shy.
+There are regular meetings of the TSC, SSC, Maintainers and other groups. These are typically listed [**here**](https://lists.oasis-open-projects.org/g/baseline/calendar). If the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule. 
 
 #### Onboarding: Help Getting Started
 
-It's critical that new contributors have a good idea about what the focal points of the community are and where one can make a real impact. Hard to beat having a real conversation about how to get started in an intimate setting where you can ask questions and get immediate answers. ****
+It's critical that new contributors have a good idea about what the focal points of the community are and where one can make a real impact. It's hard to beat having a real conversation about how to get started in an intimate setting where you can ask questions and get immediate answers. ****
 
-We will hold Onboarding office hours twice a week at least until June 2020. Sign up, or reach out on Slack to ask for 1-1 time. 
-
-#### **Roadmapping**
-
-There will be sessions \(online for now during the period of global pandemic\) to dive deep on the technology. Check the [calendar](https://lists.oasis-open-projects.org/g/baseline/calendar) for details. 
+We will hold Onboarding office hours once a week. Watch the [**Calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for details or inquire on one of the [communication channels](community.md#communications-connecting-with-each-other-directly) below.  Sessions and other learning material will be posted on our [YouTube Channel](https://www.youtube.com/playlist?list=PLxmhMSa49Q1CVwTdcUNeoqoME6GRwtSTA) and on [Medium](https://medium.com/baselineprotocol).
 
 #### Technical Steering Committee
 
-The [TSC](community-members.md#your-technical-steering-committee) will meet typically once a month, biweekly during the early direction setting period from March to June of 2020. Members of the TSC can check the TSC [sub-group calendar](https://lists.oasis-open-projects.org/g/baseline-tsc/calendar) and receive invitations.
+The [TSC](community-leaders.md#your-technical-steering-committee) meets typically once a month to review progress -- biweekly during the early direction setting period from March to June of 2020. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
 
 #### Specifications Steering Committee
 
-The [SSC](community-members.md#your-specifications-steering-committee) will meet typically once a month, biweekly during the early direction setting period from March to June of 2020. Members of the SSC can check the SSC [sub-group calendar](https://lists.oasis-open-projects.org/g/baseline/subgroups) and receive invitations.
+The [SSC](community-leaders.md#your-specifications-steering-committee) meets typically once a month to review roadmaps and set high-level priorities -- biweekly during the early direction setting period from March to June of 2020. Members of the SSC receive invitations, and you can join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
 
-### Connecting with Each Other Directly
+### Communications: Connecting with Each Other Directly
 
-#### Slack
+#### Slack / Discourse / Telegram
 
 The Baseline Protocol initiative maintains a Slack channel that is moderated but public. Sign up [**here**](https://communityinviter.com/apps/ethereum-baseline/join-us).  It's an active group, and you can directly connect with folks doing the work and coordinate with each other to get the work done.
+
+Thanks to an enterprising member of the community, we now also have a shared Matterbridge-enabled channel between [**Slack**](https://communityinviter.com/apps/ethereum-baseline/join-us), [**Telegram**](https://t.me/baselineprotocol), and [**Discord**](https://discord.gg/NE8AYD7).  You can post -- and read what anyone posts -- on the shared channel, regardless of which platform you are using. In Slack, use the \#community-chat channel to broadcast to Slack, Discord and Telegram. In Discord, use the \#general channel. In Telegram, just use the main /baselineprotocol thread.  
 
 #### Members Directory
 
@@ -50,19 +54,23 @@ You can [**sign up**](https://lists.oasis-open-projects.org/g/baseline) to the b
 
 #### Group Email
 
-When you [sign up](https://lists.oasis-open-projects.org/g/baseline) in the members directory, you will have the option to get email that's sent to the mailing list or directly from anyone in the group. You can control how that impacts your inbox [**here**](https://lists.oasis-open-projects.org/g/baseline/editsub). 
+While most communication seems to go through the Slack/Discord/Telegram channel, we do have email. When you [**sign up**](https://lists.oasis-open-projects.org/g/baseline) in the members directory, you will have the option to get email that's sent to the mailing list or directly from anyone in the group. You can control how that impacts your inbox [**here**](https://lists.oasis-open-projects.org/g/baseline/editsub). 
 
 #### Forums
 
-The team hasn't yet set up a Reddit or other public forum, but several new members are already talking about doing that. Stay tuned or help make it happen.
+The Baseline Protocol initiative is launching soon a [**Discourse forum**](https://discourse.baseline-protocol.org/). Reddit is also likely. We also actively use commenting on Epics and Issues to conduct threaded discussions on key projects and engineering topics. To View the [**Zenhub Board**](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/board?repos=239590893) for these, sign into Github with your ID, or you can install the Zenhub plugin to your Chrome browser and sign in that way. If you are member of the Ethereum-Oasis Org.
 
 #### Social Networking
 
-The Baseline Protocol initiative maintains the [@baselineproto](https://twitter.com/baselineproto) Twitter account, to which members of the TSC, SSC and some maintainers can post. We also use the [\#baselineprotoco](https://twitter.com/hashtag/Baselineprotocol)l tag.
+The Baseline Protocol initiative maintains the [**@baselineproto**](https://twitter.com/baselineproto) Twitter account, to which members of the TSC, SSC and some maintainers can post. We also use the [**\#baselineprotocol**](https://twitter.com/hashtag/Baselineprotocol) tag.
 
 #### Medium
 
-The Baseline Protocol initiative will use Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol).  Reach out on Slack to the chair, OASIS team or members of the steering committees, if you want to be a writer or editor.
+The Baseline Protocol initiative uses Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol).  Reach out on Slack to the [TSC Chair](community-leaders.md#your-provisional-chair), OASIS team or members of the steering committees, if you want to be a writer or editor.
+
+#### YouTube
+
+The Baseline Protocol initiative maintains a [**YouTube Channel**](https://www.youtube.com/playlist?list=PLxmhMSa49Q1CVwTdcUNeoqoME6GRwtSTA). If you have videos that you'd like to add to the Channel or would like to help on Baseline Protocol video assets, use the Slack [\#comms-and-marketing](https://ethereum-baseline.slack.com/archives/C011NCZ2ES1) channel and raise your hand. 
 
 
 
