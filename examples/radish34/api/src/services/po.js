@@ -1,7 +1,7 @@
 import { Commitment } from './commitment';
 import { checkRoot } from './merkle-tree';
 import { updateMSAWithNewCommitment } from './msa';
-import { getPartnerByMessengerKey } from './partner';
+import { getPartnerByMessagingKey } from './partner';
 import { formatProof, createPO as createPOTransaction } from './shield';
 import { generateProof } from './zkp';
 
@@ -354,7 +354,7 @@ export const createPO = async (_zkpPrivateKeyOfBuyer, oldMSA, newMSA, po) => {
 // TODO: we need to actually make sure that it was indeed the Buyer of this MSA who has sent us the MSA. Otherwise, we could be updating the MSA db with bogus information from a random person.
 // TODO: we need to check that the commitment actually exists at the purported index on-chain.
 export const onReceiptPOSupplier = async (messageObj, senderWhisperKey) => {
-  const sender = await getPartnerByMessengerKey(senderWhisperKey);
+  const sender = await getPartnerByMessagingKey(senderWhisperKey);
   const { po, msa } = messageObj;
 
   const poDoc = await savePO(po);

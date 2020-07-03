@@ -1,5 +1,5 @@
 import { Commitment } from './commitment';
-import { getPartnerByMessengerKey } from './partner';
+import { getPartnerByMessagingKey } from './partner';
 import { formatProof, createMSA as createMSATransaction } from './shield';
 import { generateProof } from './zkp';
 
@@ -467,7 +467,7 @@ export const createMSA = async msa => {
 
 export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
   const msa = await saveMSA(msaObj);
-  const partner = await getPartnerByMessengerKey(senderWhisperKey);
+  const partner = await getPartnerByMessagingKey(senderWhisperKey);
   const { organization } = await getServerSettings();
   const { zkpPrivateKey } = organization;
 
@@ -516,7 +516,7 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
         {
           documentId: msa._id,
           senderId: organization.messagingKey,
-          recipientId: partner.messengerKey,
+          recipientId: partner.messagingKey,
           payload: {
             type: 'signed_msa',
             ...msaDoc,
@@ -527,7 +527,7 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
           timeout: 20000,
         },
       );
-      console.log(`Sent signed MSA to Buyer's messengerKey: ${partner.messengerKey}`);
+      console.log(`Sent signed MSA to Buyer's messagingKey: ${partner.messagingKey}`);
     }
   } else {
     throw new Error(
@@ -537,7 +537,7 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
 };
 
 export const onReceiptMSABuyer = async (msaObj, senderWhisperKey) => {
-  const partner = await getPartnerByMessengerKey(senderWhisperKey);
+  const partner = await getPartnerByMessagingKey(senderWhisperKey);
 
   const {
     constants: { EdDSASignatures },

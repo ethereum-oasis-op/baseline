@@ -54,11 +54,11 @@ const CreatePurchaseOrder = () => {
   const { settings } = useContext(ServerSettingsContext);
   const { organizationWhisperKey } = settings || {};
 
-  const [getPartnerByMessengerKey, { data: partnerData }] = useLazyQuery(
+  const [getPartnerByMessagingKey, { data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
 
-  const { getPartnerByMessengerKey: currentUser } = partnerData || {};
+  const { getPartnerByMessagingKey: currentUser } = partnerData || {};
 
   const formik = useFormik({
     initialValues: {
@@ -101,8 +101,8 @@ const CreatePurchaseOrder = () => {
   }, [fetchMSAS, msas]);
 
   useEffect(() => {
-    if (!partnerData && organizationWhisperKey) getPartnerByMessengerKey({ variables: { identity: organizationWhisperKey } });
-  }, [getPartnerByMessengerKey, partnerData, organizationWhisperKey]);
+    if (!partnerData && organizationWhisperKey) getPartnerByMessagingKey({ variables: { identity: organizationWhisperKey } });
+  }, [getPartnerByMessagingKey, partnerData, organizationWhisperKey]);
 
   useEffect(() => {
     if (msas && currentUser && !selectedMSA) {

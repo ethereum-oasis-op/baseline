@@ -57,7 +57,7 @@ export const registerToOrgRegistry = async (
   address,
   name,
   messagingEndpoint,
-  messengerKey,
+  messagingKey,
   zkpPublicKey,
   metadata,
 ) => {
@@ -72,7 +72,7 @@ export const registerToOrgRegistry = async (
     address,
     utils.formatBytes32String(name),
     utils.hexlify(messagingEndpoint),
-    utils.hexlify(messengerKey),
+    utils.hexlify(messagingKey),
     utils.hexlify(zkpPublicKey),
     utils.hexlify(metadata),
   );
@@ -95,6 +95,7 @@ export const getOrganizationCount = async () => {
 };
 
 export const listOrganizations = async () => {
+  // TODO: instead of using hard-coded addresses below, pull them from config files
   const organizations = [
     '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
     '0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f',
@@ -104,13 +105,11 @@ export const listOrganizations = async () => {
   const organizationList = await Promise.all(organizations.map(async org => {
     const onchainOrg = await getRegisteredOrganization(org);
 
-    console.log('----------- onchainOrg:', onchainOrg)
-
     return {
       address: onchainOrg.address,
       name: onchainOrg.name,
       messagingEndpoint: onchainOrg.messagingEndpoint,
-      messengerKey: onchainOrg.messengerKey,
+      messagingKey: onchainOrg.messagingKey,
       zkpPublicKey: onchainOrg.zkpPublicKey,
       metadata: onchainOrg.metadata,
     };
@@ -131,7 +130,7 @@ export const getRegisteredOrganization = async walletAddress => {
     address: organization[0],
     name: utils.parseBytes32String(organization[1]),
     messagingEndpoint: utils.toUtf8String(organization[2]),
-    messengerKey: utils.toUtf8String(organization[3]),
+    messagingKey: utils.toUtf8String(organization[3]),
     zkpPublicKey: utils.toUtf8String(organization[4]),
     metadata: utils.toUtf8String(organization[5]),
   };
@@ -164,18 +163,16 @@ export const saveOrganizations = async () => {
   if (rpcProvider) {
     const orgCount = await getOrganizationCount();
     const org = await listOrganizations();
-    console.log('++++++ org:', org)
     for (let i = 0; i < orgCount; i += 1) {
       const record = {
         _id: org[i].address,
         address: org[i].address,
         name: org[i].name,
         messagingEndpoint: org[i].messagingEndpoint,
-        messengerKey: org[i].messengerKey,
+        messagingKey: org[i].messagingKey,
         zkpPublicKey: org[i].zkpPublicKey,
         metadata: org[i].metadata,
       };
-      console.log('++++++++++ record:', record)
       saveOrganization(record);
     }
   }

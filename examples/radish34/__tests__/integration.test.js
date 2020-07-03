@@ -486,7 +486,7 @@ describe('Buyer creates MSA, signs it, sends to Supplier2, Supplier2 responds wi
       // Wait for db to update
       console.log('Waiting for new MSA commitment in Shield contract. This can take up to 5 minutes...');
       let res;
-      for (let retry = 0; retry < 10; retry++) {
+      for (let retry = 0; retry < 15; retry++) {
         console.log('Checking for non-null MSA index, attempt:', retry);
         res = await request(buyerApiURL)
           .post('/graphql')

@@ -54,13 +54,13 @@ export default {
   Mutation: {
     registerOrganization: async (_root, args) => {
       const settings = await getServerSettings();
-      const { zkpPublicKey, messengerKey, messagingEndpoint, address } = settings.organization;
+      const { zkpPublicKey, messagingKey, messagingEndpoint, address } = settings.organization;
 
       const orgRegistryTxHash = await registerToOrgRegistry(
         address,
         args.organizationName,
         messagingEndpoint,
-        messengerKey,
+        messagingKey,
         zkpPublicKey,
         args.metadata,
       );

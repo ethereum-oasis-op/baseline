@@ -8,7 +8,7 @@ const RadishConfigpathContractsResolver = require('./baseline-administrator-lib/
 const RadishPathKeystoreDirResolver = require('./baseline-administrator-lib/resolvers/keystore-resolvers/radish-keystore-dir-resolver.js');
 const RadishOrganisationConfigpathResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-configpath-resolver.js');
 const RadishMessagingEndpointResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-messaging-endpoint-resolver.js');
-const RadishMessengerKeyRestResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-messenger-key-rest-resolver.js');
+const RadishMessagingKeyRestResolver = require('./baseline-administrator-lib/resolvers/organisation-resolvers/radish-messenger-key-rest-resolver.js');
 const RadishZKPRestResolver = require('./baseline-administrator-lib/resolvers/verification-key-resolvers/radish-zkp-rest-resolver');
 
 const BaselineDeployer = require('./baseline-administrator-lib/deployers/baseline-deployer.js');
@@ -22,7 +22,7 @@ const main = async (
   pathContractsResolver,
   pathOrganisationResolver,
   organisationMessagingEndpointResolver,
-  organisationMessengerKeyResolver,
+  organisationMessagingKeyResolver,
   zkpVerificationKeyResolver,
   provider,
   settingsSaver,
@@ -42,7 +42,7 @@ const main = async (
       pathKeystoreResolver,
       pathOrganisationResolver,
       organisationMessagingEndpointResolver,
-      organisationMessengerKeyResolver,
+      organisationMessagingKeyResolver,
       organisation,
     );
     await registerOrganisationInterfaceImplementers(
@@ -128,7 +128,7 @@ const registerOrganisation = async (
   pathKeystoreResolver,
   organisationResolver,
   organisationMessagingEndpointResolver,
-  organisationMessengerKeyResolver,
+  organisationMessagingKeyResolver,
   organisationName,
 ) => {
   let organisationMessagingEndpoint;
@@ -138,7 +138,7 @@ const registerOrganisation = async (
   );
   if (!organisationMessagingEndpoint) {
     organisationMessagingEndpoint = process.env[`MESSENGER_${organisationName.toUpperCase()}_URI`]; // Radish specific
-    organisationMessagingKey = await organisationMessengerKeyResolver.resolveMessengerKey(
+    organisationMessagingKey = await organisationMessagingKeyResolver.resolveMessagingKey(
       organisationMessagingEndpoint,
     );
   }
@@ -152,8 +152,6 @@ const registerOrganisation = async (
   if (typeof organisation.address === 'undefined') {
     organisation.address = organisationWallet.address;
   }
-
-  console.log('organisation details:', organisation)
 
   const transaction = await workgroupManager.registerOrganisation(
     organisation.address,
@@ -313,7 +311,7 @@ const run = async () => {
   const organisationMessengingEndpointResolver = new RadishMessagingEndpointResolver(
     organisationsConfigDir,
   );
-  const organisationMessengerKeyResolver = new RadishMessengerKeyRestResolver();
+  const organisationMessagingKeyResolver = new RadishMessagingKeyRestResolver();
   const zkpVerificationKeyResolver = new RadishZKPRestResolver(process.env.ZKP_URL);
   const settingsSaver = new SettingsSaver(organisationsConfigDir, process.env.RPC_PROVIDER);
 
@@ -323,7 +321,7 @@ const run = async () => {
     pathContractsResolver,
     pathOrganisationResolver,
     organisationMessengingEndpointResolver,
-    organisationMessengerKeyResolver,
+    organisationMessagingKeyResolver,
     zkpVerificationKeyResolver,
     provider,
     settingsSaver,

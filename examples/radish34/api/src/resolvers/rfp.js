@@ -3,7 +3,7 @@ import { saveNotice } from '../services/notice';
 import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../queues/message_delivery';
 import { saveRFP } from '../db/models/modules/rfps';
-import { getPartnerByMessengerKey } from '../services/partner';
+import { getPartnerByMessagingKey } from '../services/partner';
 
 const NEW_RFP = 'NEW_RFP';
 
@@ -19,7 +19,7 @@ export default {
   Mutation: {
     createRFP: async (_parent, args, context) => {
       const currentUser = context.identity
-        ? await getPartnerByMessengerKey(context.identity)
+        ? await getPartnerByMessagingKey(context.identity)
         : null;
       const currentTime = Math.floor(Date.now() / 1000);
       const myRFP = args.input;

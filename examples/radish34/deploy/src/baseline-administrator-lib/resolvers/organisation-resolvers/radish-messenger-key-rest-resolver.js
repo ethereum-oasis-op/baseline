@@ -7,7 +7,7 @@ const getWhisperIdentity = url => axios.get(url).then(response => response.data[
 /**
  * Radish specific resolver for secret communication messenger artifacts. Uses REST to ask an endpoint for info.
  */
-class RadishMessengerKeyRestResolver {
+class RadishMessagingKeyRestResolver {
 
 
 	/**
@@ -17,13 +17,13 @@ class RadishMessengerKeyRestResolver {
 	 * 
 	 * @param {string} organisationMessengerURL - url to call and ask for messaging key to use in secret communication
 	 */
-	async resolveMessengerKey(organisationMessengerURL) {
-		assert(organisationMessengerURL, `organisationMessengerURL is needed to resolve the messenger key`);
-		const messagingKey = await getWhisperIdentity(`${organisationMessengerURL}/api/v1/identities`);
+  async resolveMessagingKey(organisationMessengerURL) {
+    assert(organisationMessengerURL, `organisationMessengerURL is needed to resolve the messenger key`);
+    const messagingKey = await getWhisperIdentity(`${organisationMessengerURL}/api/v1/identities`);
 
-		return messagingKey;
-	}
+    return messagingKey;
+  }
 
 }
 
-module.exports = RadishMessengerKeyRestResolver
+module.exports = RadishMessagingKeyRestResolver

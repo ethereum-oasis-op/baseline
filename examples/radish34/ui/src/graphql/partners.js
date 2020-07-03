@@ -89,7 +89,7 @@ export const REMOVE_PARTNER = gql`
 
 export const GET_PARTNER_BY_IDENTITY = gql`
   query($identity: String!) {
-    getPartnerByMessengerKey(identity: $identity) {
+    getPartnerByMessagingKey(identity: $identity) {
       name
       address
       role

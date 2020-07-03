@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 import { Agreement, getAgreementById, getAllAgreements, getAgreementsByName, saveAgreement, getAgreementsByPrevId } from '../services/agreement';
-import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessengerKey } from '../services/partner';
+import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessagingKey } from '../services/partner';
 import { saveNotice } from '../services/notice';
 import { getServerSettings } from '../utils/serverSettings';
 import { pubsub } from '../subscriptions';
@@ -63,11 +63,11 @@ export default {
       };
     },
     agreements: async (_parent, args, context) => {
-      const requester = await getPartnerByMessengerKey(context.identity);
+      const requester = await getPartnerByMessagingKey(context.identity);
       const agreements = await getAllAgreements(requester);
       return mapAgreementsWithSignatureStatus(agreements);
     },
-    agreementsByName: async (_parent, args)  => {
+    agreementsByName: async (_parent, args) => {
       const agreements = await getAgreementsBySKU(args.name);
       return mapAgreementsWithSignatureStatus(agreements);
     },
@@ -131,7 +131,7 @@ export default {
       msgDeliveryQueue.add({
         documentId: agreementDoc._id,
         senderId: context.identity,
-        recipientId: _recipient.identity,
+        recipientId: _recipient.messagingKey,
         payload: {
           type: 'agreement_create',
           ...agreementDoc,
@@ -144,7 +144,7 @@ export default {
         ...agreementData,
         ...constants,
         recipient: { ..._recipient },
-        whisperPublicKeyRecipient: _recipient.identity,
+        whisperPublicKeyRecipient: _recipient.messagingKey,
         senderSignatureStatus: true,
         recipientSignatureStatus: false,
       };

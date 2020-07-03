@@ -18,7 +18,7 @@ export default {
         rpcProvider,
         organizationName: organization.name,
         organizationRole: organization.role,
-        organizationWhisperKey: organization.messengerKey,
+        organizationWhisperKey: organization.messagingKey,
         organizationAddress: organization.address,
         globalRegistryAddress: addresses.ERC1820Registry,
         orgRegistryAddress: addresses.OrgRegistry,

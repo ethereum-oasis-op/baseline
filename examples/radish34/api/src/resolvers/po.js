@@ -1,6 +1,6 @@
 import { getMSAById, extractMSAFromDoc, MSA, updateMSAWithNewCommitment } from '../services/msa';
 import { getPOById, getAllPOs, PO, savePO, createPO } from '../services/po';
-import { getPartnerByzkpPublicKey, getPartnerByMessengerKey } from '../services/partner';
+import { getPartnerByzkpPublicKey, getPartnerByMessagingKey } from '../services/partner';
 import { saveNotice } from '../services/notice';
 
 import { getServerSettings } from '../utils/serverSettings';
@@ -26,7 +26,7 @@ export default {
   },
   Mutation: {
     createPO: async (_parent, args, context) => {
-      const currentUser = await getPartnerByMessengerKey(context.identity);
+      const currentUser = await getPartnerByMessagingKey(context.identity);
       try {
         console.log('\n\n\nRequest to create PO with inputs:');
         console.log(args.input);
@@ -132,8 +132,8 @@ export default {
         });
 
         console.log(`\nSending PO (id: ${poDoc._id}) to supplier...`);
-        const senderId = currentUser.messengerKey;
-        const recipientId = supplier.messengerKey;
+        const senderId = currentUser.messagingKey;
+        const recipientId = supplier.messagingKey;
         // Add to BullJS queue
         msgDeliveryQueue.add(
           {

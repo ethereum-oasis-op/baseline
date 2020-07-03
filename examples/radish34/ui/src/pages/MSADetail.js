@@ -29,13 +29,13 @@ const MSADetail = () => {
   const [getPartnerByIdentity, { data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
-  const { getPartnerByMessengerKey: buyer } = partnerData || {};
+  const { getPartnerByMessagingKey: buyer } = partnerData || {};
   const { name, address } = buyer || {};
 
   const [getSupplierByIdentity, { data: supplierData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
-  const { getPartnerByMessengerKey: supplier } = supplierData || {};
+  const { getPartnerByMessagingKey: supplier } = supplierData || {};
 
   const { settings } = useContext(ServerSettingsContext);
   const { organizationAddress } = settings ? settings : {};

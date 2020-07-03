@@ -1,7 +1,7 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 import { MSA, getMSAById, getAllMSAs, getMSAsBySKU, saveMSA, getMSAsByRFPId } from '../services/msa';
-import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessengerKey } from '../services/partner';
+import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessagingKey } from '../services/partner';
 import { saveNotice } from '../services/notice';
 import { getServerSettings } from '../utils/serverSettings';
 import { pubsub } from '../subscriptions';
@@ -63,7 +63,7 @@ export default {
       };
     },
     msas: async (_parent, args, context) => {
-      const requester = await getPartnerByMessengerKey(context.identity);
+      const requester = await getPartnerByMessagingKey(context.identity);
       const msas = await getAllMSAs(requester);
       return mapMSAsWithSignatureStatus(msas);
     },
@@ -78,10 +78,9 @@ export default {
   },
   Mutation: {
     createMSA: async (_parent, args, context) => {
-      console.log('\n\n\nRequest to create MSA with inputs:');
+      console.log('\nRequest to create MSA with inputs:');
       console.log(args.input);
       const _supplier = await getPartnerByAddress(args.input.supplierAddress);
-      console.log('------------ _supplier:', _supplier)
       delete _supplier._id;
       delete args.input.supplierAddress;
 
@@ -136,7 +135,7 @@ export default {
         {
           documentId: msaDoc._id,
           senderId: context.identity,
-          recipientId: _supplier.messengerKey,
+          recipientId: _supplier.messagingKey,
           payload: {
             type: 'msa_create',
             ...msaDoc,

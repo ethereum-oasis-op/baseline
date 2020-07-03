@@ -1,5 +1,5 @@
 import { Commitment } from './commitment';
-import { getPartnerByMessengerKey } from './partner';
+import { getPartnerByMessagingKey } from './partner';
 import { formatProof, createAgreement as createAgreementTx } from './shield';
 import { generateProof } from './zkp';
 
@@ -400,7 +400,7 @@ export const createAgreement = async agreement => {
 
 export const onReceiptAgreementRecipient = async (agreementObject, senderWhisperKey) => {
   const agreement = await saveAgreement(agreementObject);
-  const partner = await getPartnerByMessengerKey(senderWhisperKey);
+  const partner = await getPartnerByMessagingKey(senderWhisperKey);
   const { organization } = await getServerSettings();
   const { zkpPrivateKey } = organization;
 
@@ -446,7 +446,7 @@ export const onReceiptAgreementRecipient = async (agreementObject, senderWhisper
 
       msgDeliveryQueue.add({
         documentId: agreement._id,
-        senderId: organization.messengerKey,
+        senderId: organization.messagingKey,
         recipientId: partner.identity,
         payload: {
           type: 'signed_agreement',
@@ -463,7 +463,7 @@ export const onReceiptAgreementRecipient = async (agreementObject, senderWhisper
 };
 
 export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey) => {
-  const partner = await getPartnerByMessengerKey(senderWhisperKey);
+  const partner = await getPartnerByMessagingKey(senderWhisperKey);
 
   const {
     constants: { EdDSASignatures },

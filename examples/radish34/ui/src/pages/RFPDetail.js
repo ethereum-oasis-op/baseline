@@ -28,7 +28,7 @@ const RFPDetail = () => {
       uuid: id,
     },
   });
-  const [getPartnerByMessengerKey, { loading: partnerLoading, data: partnerData }] = useLazyQuery(
+  const [getPartnerByMessagingKey, { loading: partnerLoading, data: partnerData }] = useLazyQuery(
     GET_PARTNER_BY_IDENTITY,
   );
 
@@ -83,13 +83,13 @@ const RFPDetail = () => {
 
   useEffect(() => {
     if (data && data.rfp) {
-      getPartnerByMessengerKey({ variables: { identity: data.rfp.sender } });
+      getPartnerByMessagingKey({ variables: { identity: data.rfp.sender } });
     }
-  }, [getPartnerByMessengerKey, data]);
+  }, [getPartnerByMessagingKey, data]);
 
   useEffect(() => {
     if (organizationAddress && partnerData) {
-      partnerData.getPartnerByMessengerKey.address === organizationAddress && setIsSender(true);
+      partnerData.getPartnerByMessagingKey.address === organizationAddress && setIsSender(true);
     };
   }, [organizationAddress, partnerData]);
 
@@ -102,7 +102,7 @@ const RFPDetail = () => {
       <Typography variant="h4">{data.rfp.description}</Typography>
       {!isSender && partnerData && (
         <Typography variant="body1">
-          for {partnerData.getPartnerByMessengerKey.name}
+          for {partnerData.getPartnerByMessagingKey.name}
         </Typography>
       )}
       <Typography>

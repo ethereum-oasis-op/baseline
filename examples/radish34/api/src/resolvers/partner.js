@@ -1,6 +1,6 @@
 import {
   getPartnerByAddress,
-  getPartnerByMessengerKey,
+  getPartnerByMessagingKey,
   getAllPartners,
   getMyPartners,
   savePartner,
@@ -14,8 +14,8 @@ export default {
     partner(_parent, args) {
       return getPartnerByAddress(args.address).then(res => res);
     },
-    getPartnerByMessengerKey(_parent, args) {
-      return getPartnerByMessengerKey(args.identity).then(res => res);
+    getPartnerByMessagingKey(_parent, args) {
+      return getPartnerByMessagingKey(args.identity).then(res => res);
     },
     partners() {
       return getAllPartners();

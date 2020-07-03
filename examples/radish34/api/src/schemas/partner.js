@@ -5,7 +5,7 @@ export default gql`
     partner(address: Address!): Partner
     partners: [Partner]
     myPartners: [Partner]
-    getPartnerByMessengerKey(identity: String!): Partner
+    getPartnerByMessagingKey(identity: String!): Partner
   }
 
   extend type Mutation {

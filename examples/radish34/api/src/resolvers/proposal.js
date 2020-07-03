@@ -8,7 +8,7 @@ import {
 } from '../services/proposal';
 import { pubsub } from '../subscriptions';
 import { saveNotice } from '../services/notice';
-import { getPartnerByMessengerKey } from '../services/partner';
+import { getPartnerByMessagingKey } from '../services/partner';
 import msgDeliveryQueue from '../queues/message_delivery';
 
 const NEW_PROPOSAL = 'NEW_PROPOSAL';
@@ -34,7 +34,7 @@ export default {
       console.log('---------- proposal args.input:', args.input)
       console.log('---------- recipient:', recipient)
       console.log('---------- context:', context.identity)
-      const currentUser = await getPartnerByMessengerKey(context.identity);
+      const currentUser = await getPartnerByMessagingKey(context.identity);
       input._id = uuid();
       input.sender = context.identity;
       const newProposal = await saveProposal(input);

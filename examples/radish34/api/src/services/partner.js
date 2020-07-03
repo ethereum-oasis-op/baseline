@@ -12,8 +12,8 @@ export const getPartnerByAddress = async address => {
   return partner;
 };
 
-export const getPartnerByMessengerKey = async messengerKey => {
-  const partner = await db.collection('organization').findOne({ messengerKey: messengerKey });
+export const getPartnerByMessagingKey = async messagingKey => {
+  const partner = await db.collection('organization').findOne({ messagingKey: messagingKey });
   return partner;
 };
 
