@@ -18,7 +18,7 @@ Below are the things you need to know to get informed, get involved and get valu
 
 Anyone can join the Baseline Protocol communication channels \(see below\), and anyone with a Github ID can view the [roadmap](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) \(don't forget to log in with github id\), fork the [repo](https://github.com/ethereum-oasis), and submit pull requests to contribute to the work. 
 
-You can also become a regular [**Member**](members.md) ****of the initiative, which will allow you to manage Issues and push directly to most repo branches \(other than Master\). Members who step up to be accountable for projects can become [**Specification Steering Committee**](ssc.md) \(SSC\) members. Members who take on responsibility for maintaining the integrity of the work and merging contributions to the master branch of the repo can become [**Maintainers**](members.md). And finally, contributors can nominate and vote-in members to be on the governing [**Technical Steering Committee**](tsc.md) \(TSC\) annually. 
+You can also become a regular [**Member**]() ****of the initiative, which will allow you to manage Issues and push directly to most repo branches \(other than Master\). Members who step up to be accountable for projects can become [**Specification Steering Committee**]() \(SSC\) members. Members who take on responsibility for maintaining the integrity of the work and merging contributions to the master branch of the repo can become [**Maintainers**](). And finally, contributors can nominate and vote-in members to be on the governing [**Technical Steering Committee**]() \(TSC\) annually. 
 
 Below are the things to know about how to get involved and work with the team.
 
@@ -34,11 +34,11 @@ We will hold Onboarding office hours once a week. Watch the [**Calendar**](https
 
 #### Technical Steering Committee
 
-The [TSC](community-leaders.md#your-technical-steering-committee) meets typically once a month to review progress -- biweekly during the early direction setting period from March to June of 2020. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
+The [TSC](community-members.md#your-technical-steering-committee) meets typically once a month to review progress -- biweekly during the early direction setting period from March to June of 2020. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](community-members.md#your-provisional-chair).
 
 #### Specifications Steering Committee
 
-The [SSC](community-leaders.md#your-specifications-steering-committee) meets typically once a month to review roadmaps and set high-level priorities -- biweekly during the early direction setting period from March to June of 2020. Members of the SSC receive invitations, and you can join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
+The [SSC](community-members.md#your-specifications-steering-committee) meets typically once a month to review roadmaps and set high-level priorities -- biweekly during the early direction setting period from March to June of 2020. Members of the SSC receive invitations, and you can join any meeting by sending a message to the [TSC Chair](community-members.md#your-provisional-chair).
 
 ### Communications: Connecting with Each Other Directly
 
@@ -66,7 +66,7 @@ The Baseline Protocol initiative maintains the [**@baselineproto**](https://twit
 
 #### Medium
 
-The Baseline Protocol initiative uses Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol).  Reach out on Slack to the [TSC Chair](community-leaders.md#your-provisional-chair), OASIS team or members of the steering committees, if you want to be a writer or editor.
+The Baseline Protocol initiative uses Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol).  Reach out on Slack to the [TSC Chair](community-members.md#your-provisional-chair), OASIS team or members of the steering committees, if you want to be a writer or editor.
 
 #### YouTube
 

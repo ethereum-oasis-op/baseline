@@ -5,12 +5,8 @@
 ## Community
 
 * [Open Source Community](community/community.md)
-* [Community Leaders](community/community-leaders.md)
-* [Contributors](community/contributors.md)
-* [Members](community/members.md)
-* [Maintainers](community/maintainers.md)
-* [Technical Steering Committee](community/tsc.md)
-* [Specifications Steering Committee](community/ssc.md)
+* [Contributors Guide](community/contributors-guide.md)
+* [Community Members](community/community-members.md)
 * [Governance](community/governance.md)
 
 ## Radish34
