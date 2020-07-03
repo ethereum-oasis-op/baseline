@@ -25,8 +25,9 @@ In order to demonstrate the __Baseline Protocol__, we needed a use-case. The use
 The __Baseline Protocol__ code is currently embedded inside the `/radish-api` directory, but we are in the process of moving that code into the `/baseline` directory to clearly distinguish the protocol from the use-case. Once this move is complete, `radish-api` will import `baseline` as a module, which will be the same process that other projects will need to follow to implement __Baseline__.
 
 ## Quickstart
-
 A `Makefile` has been included for convenience; most of its targets wrap `npm`, `docker` and `solc` invocations.
+
+Windows 10 users [should follow some initial setup instructions](windows_setup.md) first.
 
 Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete.
 
