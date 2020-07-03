@@ -90,37 +90,7 @@ export class Ethers implements IBlockchainService {
   fetchOrganizationUsers(organizationId: string, params: object): Promise<any> {
     throw new Error('not implemented');
   }
-  createOrganizationUser(organizationId: string, params: object): Promise<any> {
-    throw new Error('not implemented');
-  }
-  updateOrganizationUser(organizationId: string, userId: string, params: object): Promise<any> {
-    throw new Error('not implemented');
-  }
-  deleteOrganizationUser(organizationId: string, userId: string): Promise<any> {
-    throw new Error('not implemented');
-  }
-  createToken(params: object): Promise<any> {
-    throw new Error('not implemented');
-  }
-  fetchTokens(params: object): Promise<any> {
-    throw new Error('not implemented');
-  }
-  deleteToken(tokenId: string): Promise<any> {
-    throw new Error('not implemented');
-  }
-  createInvitation(params: object): Promise<any> {
-    throw new Error('not implemented');
-  }
-  createUser(params: object): Promise<any> {
-    throw new Error('not implemented');
-  }
-  fetchUsers(): Promise<any> {
-    throw new Error('not implemented');
-  }
-  fetchUserDetails(userId: string): Promise<any> {
-    throw new Error('not implemented');
-  }
-  updateUser(userId: string, params: object): Promise<any> {
+  inviteOrganizationUser(organizationId: string, params: object): Promise<any> {
     throw new Error('not implemented');
   }
 

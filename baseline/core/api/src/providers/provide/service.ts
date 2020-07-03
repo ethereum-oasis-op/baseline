@@ -173,48 +173,8 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return this.ident!.fetchOrganizationUsers(organizationId, params);
   }
 
-  createOrganizationUser(organizationId: string, params: object): Promise<any> {
+  inviteOrganizationUser(organizationId: string, params: object): Promise<any> {
     return this.ident!.createOrganizationUser(organizationId, params);
-  }
-
-  updateOrganizationUser(organizationId: string, userId: string, params: object): Promise<any> {
-    return this.ident!.updateOrganizationUser(organizationId, userId, params);
-  }
-
-  deleteOrganizationUser(organizationId: string, userId: string): Promise<any> {
-    return this.ident!.deleteOrganizationUser(organizationId, userId);
-  }
-
-  createToken(params: object): Promise<any> {
-    return this.ident!.createToken(params);
-  }
-
-  fetchTokens(params: object): Promise<any> {
-    return this.ident!.fetchTokens(params);
-  }
-
-  deleteToken(tokenId: string): Promise<any> {
-    return this.ident!.deleteToken(tokenId);
-  }
-
-  createInvitation(params: object): Promise<any> {
-    return this.ident!.createInvitation(params);
-  }
-
-  createUser(params: object): Promise<any> {
-    return this.ident!.createUser(params);
-  }
-
-  fetchUsers(): Promise<any> {
-    return this.ident!.fetchUsers();
-  }
-
-  fetchUserDetails(userId: string): Promise<any> {
-    return this.ident!.fetchUserDetails(userId);
-  }
-
-  updateUser(userId: string, params: object): Promise<any> {
-    return this.ident!.updateUser(userId, params);
   }
 
   // IVault

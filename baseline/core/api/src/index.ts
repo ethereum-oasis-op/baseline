@@ -72,21 +72,7 @@ export interface IRegistry {
   // organization users
   fetchOrganizationInvitations(organizationId: string, params: object): Promise<any>;
   fetchOrganizationUsers(organizationId: string, params: object): Promise<any>;
-  createOrganizationUser(organizationId: string, params: object): Promise<any>;
-  updateOrganizationUser(organizationId: string, userId: string, params: object): Promise<any>;
-  deleteOrganizationUser(organizationId: string, userId: string): Promise<any>;
-
-  // api tokens
-  createToken(params: object): Promise<any>;
-  fetchTokens(params: object): Promise<any>;
-  deleteToken(tokenId: string): Promise<any>;
-
-  // users
-  createInvitation(params: object): Promise<any>;
-  createUser(params: object): Promise<any>;
-  fetchUsers(): Promise<any>;
-  fetchUserDetails(userId: string): Promise<any>;
-  updateUser(userId: string, params: object): Promise<any>;
+  inviteOrganizationUser(organizationId: string, params: object): Promise<any>;
 }
 
 export interface IVault {
