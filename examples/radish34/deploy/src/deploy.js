@@ -153,6 +153,8 @@ const registerOrganisation = async (
     organisation.address = organisationWallet.address;
   }
 
+  console.log('organisation details:', organisation)
+
   const transaction = await workgroupManager.registerOrganisation(
     organisation.address,
     organisation.name,

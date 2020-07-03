@@ -512,16 +512,22 @@ export const onReceiptMSASupplier = async (msaObj, senderWhisperKey) => {
         lastModified: Math.floor(Date.now() / 1000),
       });
 
-      msgDeliveryQueue.add({
-        documentId: msa._id,
-        senderId: organization.messengerKey,
-        recipientId: partner.identity,
-        payload: {
-          type: 'signed_msa',
-          ...msaDoc,
+      msgDeliveryQueue.add(
+        {
+          documentId: msa._id,
+          senderId: organization.messagingKey,
+          recipientId: partner.messengerKey,
+          payload: {
+            type: 'signed_msa',
+            ...msaDoc,
+          }
         },
-      });
-      console.log('\nSent signed MSA to Buyer');
+        {
+          // Mark job as failed after 20sec so subsequent jobs are not stalled
+          timeout: 20000,
+        },
+      );
+      console.log(`Sent signed MSA to Buyer's messengerKey: ${partner.messengerKey}`);
     }
   } else {
     throw new Error(

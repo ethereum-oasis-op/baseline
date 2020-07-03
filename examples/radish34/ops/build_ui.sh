@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pushd ui
-git diff --exit-code --quiet HEAD .
+git diff --exit-code --quiet HEAD ./package.json
 if [ $? -ne 0 ] || [[ ! -d ./node_modules ]]
 then
   npm ci

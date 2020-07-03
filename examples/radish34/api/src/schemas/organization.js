@@ -28,7 +28,8 @@ export default gql`
 
   input RegisterOrganization {
     name: String!
-    role: Int!
+    role: Int
+    metadata: String
   }
 
   type OrganizationPayload {

@@ -9,29 +9,29 @@ docker-compose build mongo-buyer mongo-supplier1 mongo-supplier2 redis-buyer red
 git diff --exit-code --quiet HEAD ./api
 if [ $? -ne 0 ] || [[ ! -d ./api/node_modules ]]
 then
-  docker-compose build --no-cache api-buyer api-supplier1 api-supplier2
+  docker-compose build api-buyer api-supplier1 api-supplier2
 fi
 
 git diff --exit-code --quiet HEAD ./deploy
 if [ $? -ne 0 ] || [[ ! -d ./deploy/node_modules ]]
 then
-  docker-compose build --no-cache deploy
+  docker-compose build deploy
 fi
 
 git diff --exit-code --quiet HEAD ./messenger
 if [ $? -ne 0 ] || [[ ! -d ./messenger/node_modules ]]
 then
-  docker-compose build --no-cache messenger-buyer messenger-supplier1 messenger-supplier2
+  docker-compose build messenger-buyer messenger-supplier1 messenger-supplier2
 fi
 
 git diff --exit-code --quiet HEAD ./ui
 if [ $? -ne 0 ] || [[ ! -d ./ui/node_modules ]]
 then
-  docker-compose build --no-cache ui
+  docker-compose build ui
 fi
 
 git diff --exit-code --quiet HEAD ./zkp
 if [ $? -ne 0 ] || [[ ! -d ./zkp/node_modules ]]
 then
-  docker-compose build --no-cache zkp
+  docker-compose build zkp
 fi

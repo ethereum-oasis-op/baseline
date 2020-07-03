@@ -26,11 +26,11 @@ export default gql`
   }
 
   input AddPartnerInput {
-    name: String!
-    address: Address!
-    role: Role!
+    name: String
+    address: Address
+    role: Role
     identity: String!
-    zkpPublicKey: String!
+    zkpPublicKey: String
   }
 
   input RemovePartnerInput {

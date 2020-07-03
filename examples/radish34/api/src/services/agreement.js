@@ -186,7 +186,7 @@ export const getAgreementsByPrevId = async prevId => {
     const agreements = await AgreementModel.find({ prevId }).lean();
     return agreements;
   } catch (e) {
-    console.log('\nError getting MSA from DB: ', e);
+    console.log('\nError getting Agreement from DB: ', e);
     return false;
   }
 };

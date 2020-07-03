@@ -13,7 +13,7 @@ export const getPartnerByAddress = async address => {
 };
 
 export const getPartnerByMessengerKey = async messengerKey => {
-  const partner = await db.collection('organization').findOne({ identity: messengerKey });
+  const partner = await db.collection('organization').findOne({ messengerKey: messengerKey });
   return partner;
 };
 

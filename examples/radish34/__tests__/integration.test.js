@@ -114,14 +114,14 @@ describe('Buyer sends new RFP to both suppliers', () => {
       const res = await request(buyerMessengerURL).get('/api/v1/identities');
       expect(res.statusCode).toEqual(200);
       expect(res.body.length).toBeGreaterThan(0);
-      expect(buyer.messengerKey).toEqual(res.body[0].publicKey);
+      expect(buyer.messagingKey).toEqual(res.body[0].publicKey);
     });
 
     test('Supplier2 messenger GET /identities', async () => {
       const res = await request(supplier2MessengerURL).get('/api/v1/identities');
       expect(res.statusCode).toEqual(200);
       expect(res.body.length).toBeGreaterThan(0);
-      expect(supplier2.messengerKey).toEqual(res.body[0].publicKey);
+      expect(supplier2.messagingKey).toEqual(res.body[0].publicKey);
     });
 
   });
@@ -136,7 +136,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
             recipients: [
               {
                 partner: {
-                  identity: "${supplier1.messengerKey}",
+                  identity: "${supplier1.messagingKey}",
                   name: "Supplier 1",
                   address: "${supplier1.address}",
                   role: "supplier",
@@ -145,7 +145,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
               },
               {
                 partner: {
-                  identity: "${supplier2.messengerKey}",
+                  identity: "${supplier2.messagingKey}",
                   name: "Supplier 2",
                   address: "${supplier2.address}",
                   role: "supplier",
@@ -172,7 +172,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
               recipients: [
                 {
                   partner: {
-                    identity: "${supplier1.messengerKey}",
+                    identity: "${supplier1.messagingKey}",
                     name: "Supplier 1",
                     address: "${supplier1.address}",
                     role: "supplier",
@@ -181,7 +181,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
                 },
                 {
                   partner: {
-                    identity: "${supplier2.messengerKey}",
+                    identity: "${supplier2.messagingKey}",
                     name: "Supplier 2",
                     address: "${supplier2.address}",
                     role: "supplier",
@@ -272,7 +272,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
       messageId1 = origination.messageId;
       const messageRes = await request(buyerMessengerURL)
         .get(`/api/v1/messages/${messageId1}`)
-        .set('x-messenger-id', buyer.messengerKey);
+        .set('x-messenger-id', buyer.messagingKey);
       expect(messageRes.statusCode).toEqual(200);
       const payload = JSON.parse(messageRes.body.payload)
       expect(payload.uuid).toEqual(rfpId);
@@ -289,7 +289,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
       messageId2 = origination.messageId;
       const messageRes = await request(buyerMessengerURL)
         .get(`/api/v1/messages/${messageId2}`)
-        .set('x-messenger-id', buyer.messengerKey);
+        .set('x-messenger-id', buyer.messagingKey);
       expect(messageRes.statusCode).toEqual(200);
       const payload = JSON.parse(messageRes.body.payload)
       expect(payload.uuid).toEqual(rfpId);
@@ -298,7 +298,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
     test('Supplier1 messenger has raw message that delivered RFP from buyer', async () => {
       const messageRes = await request(supplier1MessengerURL)
         .get(`/api/v1/messages/${messageId1}`)
-        .set('x-messenger-id', supplier1.messengerKey);
+        .set('x-messenger-id', supplier1.messagingKey);
       expect(messageRes.statusCode).toEqual(200);
       const payload = JSON.parse(messageRes.body.payload)
       expect(payload.uuid).toEqual(rfpId);
@@ -307,7 +307,7 @@ describe('Buyer sends new RFP to both suppliers', () => {
     test('Supplier2 messenger has raw message that delivered RFP from buyer', async () => {
       const messageRes = await request(supplier2MessengerURL)
         .get(`/api/v1/messages/${messageId2}`)
-        .set('x-messenger-id', supplier2.messengerKey);
+        .set('x-messenger-id', supplier2.messagingKey);
       expect(messageRes.statusCode).toEqual(200);
       const payload = JSON.parse(messageRes.body.payload)
       expect(payload.uuid).toEqual(rfpId);
@@ -342,7 +342,7 @@ describe('Supplier2 sends new Proposal to buyer', () => {
               }
             ],
             erc20ContractAddress: "0xcd234a471b72ba2f1ccf0a70fcaba648a5eecd8d",
-            recipient: "${buyer.messengerKey}"
+            recipient: "${buyer.messagingKey}"
           })
           { _id, rfpId, rates { startRange, endRange, price, unitOfMeasure}, sender }
         } `
@@ -486,7 +486,7 @@ describe('Buyer creates MSA, signs it, sends to Supplier2, Supplier2 responds wi
       // Wait for db to update
       console.log('Waiting for new MSA commitment in Shield contract. This can take up to 5 minutes...');
       let res;
-      for (let retry = 0; retry < 15; retry++) {
+      for (let retry = 0; retry < 10; retry++) {
         console.log('Checking for non-null MSA index, attempt:', retry);
         res = await request(buyerApiURL)
           .post('/graphql')

@@ -132,19 +132,25 @@ export default {
         });
 
         console.log(`\nSending PO (id: ${poDoc._id}) to supplier...`);
-        const senderId = currentUser.identity;
-        const recipientId = supplier.identity;
+        const senderId = currentUser.messengerKey;
+        const recipientId = supplier.messengerKey;
         // Add to BullJS queue
-        msgDeliveryQueue.add({
-          documentId: poDoc._id,
-          senderId,
-          recipientId,
-          payload: {
-            type: 'po_create',
-            po: poDoc,
-            msa: newMSADoc,
+        msgDeliveryQueue.add(
+          {
+            documentId: poDoc._id,
+            senderId,
+            recipientId,
+            payload: {
+              type: 'po_create',
+              po: poDoc,
+              msa: newMSADoc,
+            },
           },
-        });
+          {
+            // Mark job as failed after 20sec so subsequent jobs are not stalled
+            timeout: 20000,
+          },
+        );
 
         pubsub.publish(NEW_PO, { newPO: { ...poDoc, whisperPublicKeyOfSupplier: supplier.zkpPublicKey } });
 

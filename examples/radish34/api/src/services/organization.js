@@ -4,8 +4,6 @@ import { getPrivateKey } from '../utils/wallet';
 import {
   getContractWithWallet,
   getContract,
-  parseBytes32ToStringArray,
-  parseBigNumbersToIntArray,
 } from '../utils/ethers';
 import { getContractJson } from './contract';
 import db from '../db';
@@ -58,9 +56,10 @@ export const setInterfaceImplementer = async (
 export const registerToOrgRegistry = async (
   address,
   name,
-  role,
-  messagingKey,
+  messagingEndpoint,
+  messengerKey,
   zkpPublicKey,
+  metadata,
 ) => {
   const config = await getServerSettings();
   const privateKey = await getPrivateKey();
@@ -72,10 +71,12 @@ export const registerToOrgRegistry = async (
   ).registerOrg(
     address,
     utils.formatBytes32String(name),
-    role,
-    utils.hexlify(messagingKey),
+    utils.hexlify(messagingEndpoint),
+    utils.hexlify(messengerKey),
     utils.hexlify(zkpPublicKey),
+    utils.hexlify(metadata),
   );
+
   const transactionHash = { transactionHash: tx.hash };
   return transactionHash;
 };
@@ -94,19 +95,28 @@ export const getOrganizationCount = async () => {
 };
 
 export const listOrganizations = async () => {
-  const config = await getServerSettings();
-  const organizationList = await getContract(
-    getContractJson('OrgRegistry'),
-    config.rpcProvider,
-    config.addresses.OrgRegistry,
-  ).getOrgs();
-  return {
-    addresses: organizationList[0],
-    names: parseBytes32ToStringArray(organizationList[1]),
-    roles: parseBigNumbersToIntArray(organizationList[2]),
-    messagingKeys: organizationList[3],
-    zkpPublicKeys: organizationList[4],
-  };
+  const organizations = [
+    '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
+    '0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f',
+    '0x3f7eB8a7d140366423e9551e9532F4bf1A304C65'
+  ]
+
+  const organizationList = await Promise.all(organizations.map(async org => {
+    const onchainOrg = await getRegisteredOrganization(org);
+
+    console.log('----------- onchainOrg:', onchainOrg)
+
+    return {
+      address: onchainOrg.address,
+      name: onchainOrg.name,
+      messagingEndpoint: onchainOrg.messagingEndpoint,
+      messengerKey: onchainOrg.messengerKey,
+      zkpPublicKey: onchainOrg.zkpPublicKey,
+      metadata: onchainOrg.metadata,
+    };
+  }));
+
+  return organizationList;
 };
 
 export const getRegisteredOrganization = async walletAddress => {
@@ -120,9 +130,10 @@ export const getRegisteredOrganization = async walletAddress => {
   return {
     address: organization[0],
     name: utils.parseBytes32String(organization[1]),
-    role: organization[2].toNumber(),
-    messagingKey: organization[3],
-    zkpPublicKey: organization[4],
+    messagingEndpoint: utils.toUtf8String(organization[2]),
+    messengerKey: utils.toUtf8String(organization[3]),
+    zkpPublicKey: utils.toUtf8String(organization[4]),
+    metadata: utils.toUtf8String(organization[5]),
   };
 };
 
@@ -153,15 +164,18 @@ export const saveOrganizations = async () => {
   if (rpcProvider) {
     const orgCount = await getOrganizationCount();
     const org = await listOrganizations();
+    console.log('++++++ org:', org)
     for (let i = 0; i < orgCount; i += 1) {
       const record = {
-        _id: org.addresses[i],
-        address: org.addresses[i],
-        name: org.names[i],
-        role: org.roles[i],
-        identity: org.messagingKeys[i],
-        zkpPublicKey: org.zkpPublicKeys[i]
+        _id: org[i].address,
+        address: org[i].address,
+        name: org[i].name,
+        messagingEndpoint: org[i].messagingEndpoint,
+        messengerKey: org[i].messengerKey,
+        zkpPublicKey: org[i].zkpPublicKey,
+        metadata: org[i].metadata,
       };
+      console.log('++++++++++ record:', record)
       saveOrganization(record);
     }
   }

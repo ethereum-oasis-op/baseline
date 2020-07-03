@@ -103,11 +103,11 @@ class BaselineWorkgroupManager {
     return {
       address,
       name: ethers.utils.parseBytes32String(name),
-      messagingEndpoint,
-      messagingKey,
-      zkpPublicKey,
-      metadata,
-      toString: function() {
+      messagingEndpoint: ethers.utils.toUtf8String(messagingEndpoint),
+      messagingKey: ethers.utils.toUtf8String(messagingKey),
+      zkpPublicKey: ethers.utils.toUtf8String(zkpPublicKey),
+      metadata: ethers.utils.toUtf8String(metadata),
+      toString: function () {
         return `
 Organisation Address: ${this.address}
 Organisation Name: ${this.name}

@@ -81,6 +81,7 @@ export default {
       console.log('\n\n\nRequest to create MSA with inputs:');
       console.log(args.input);
       const _supplier = await getPartnerByAddress(args.input.supplierAddress);
+      console.log('------------ _supplier:', _supplier)
       delete _supplier._id;
       delete args.input.supplierAddress;
 
@@ -131,15 +132,21 @@ export default {
       });
 
       console.log(`\nSending MSA (id: ${msaDoc._id}) to supplier for signing...`);
-      msgDeliveryQueue.add({
-        documentId: msaDoc._id,
-        senderId: context.identity,
-        recipientId: _supplier.identity,
-        payload: {
-          type: 'msa_create',
-          ...msaDoc,
+      msgDeliveryQueue.add(
+        {
+          documentId: msaDoc._id,
+          senderId: context.identity,
+          recipientId: _supplier.messengerKey,
+          payload: {
+            type: 'msa_create',
+            ...msaDoc,
+          }
         },
-      });
+        {
+          // Mark job as failed after 20sec so subsequent jobs are not stalled
+          timeout: 20000,
+        },
+      );
 
       const { constants, ...msaData } = msaObject;
       const msaDetails = {

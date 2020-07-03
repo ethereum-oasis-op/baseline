@@ -5,6 +5,7 @@ import {
   getRegisteredOrganization,
   getOrganizationCount,
   getInterfaceAddress,
+  saveOrganization
 } from '../services/organization';
 import { getServerSettings } from '../utils/serverSettings';
 import db from '../db';
@@ -53,14 +54,15 @@ export default {
   Mutation: {
     registerOrganization: async (_root, args) => {
       const settings = await getServerSettings();
-      const { zkpPublicKey, messengerKey, address } = settings.organization;
+      const { zkpPublicKey, messengerKey, messagingEndpoint, address } = settings.organization;
 
       const orgRegistryTxHash = await registerToOrgRegistry(
         address,
         args.organizationName,
-        args.organizationRole,
+        messagingEndpoint,
         messengerKey,
         zkpPublicKey,
+        args.metadata,
       );
 
       console.log('Registering Organization with tx:', orgRegistryTxHash);
