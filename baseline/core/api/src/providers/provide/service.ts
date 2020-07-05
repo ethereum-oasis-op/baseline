@@ -24,8 +24,8 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     private readonly config: ProvideConfig,
   ) {
     if (config && config.token) {
-      this.ident = Ident.clientFactory(config.token);
-      this.vault = Vault.clientFactory(config.token);
+      this.ident = Ident.clientFactory(config.token, config.identApiScheme, config.identApiHost);
+      this.vault = Vault.clientFactory(config.token, config.vaultApiScheme, config.vaultApiHost);
     }
 
     this.rpc = new RpcClient(config?.rpcScheme, config?.rpcEndpoint);
