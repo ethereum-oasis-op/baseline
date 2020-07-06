@@ -18,7 +18,7 @@ export async function zkSnarkCircuitProviderServiceFactory(
 
   switch (provider) {
     case zkSnarkCircuitProviderServiceZokrates:
-      service = await zokratesServiceFactory();
+      service = await zokratesServiceFactory(config);
       break;
     default:
       throw new Error('zkSnark circuit provider service required');

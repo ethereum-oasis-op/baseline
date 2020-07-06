@@ -2,6 +2,17 @@ import { initialize, ComputationResult, CompilationArtifacts, ResolveCallback, S
 import { IZKSnarkCircuitProvider } from '.';
 import { readFileSync } from 'fs';
 
+const defaultImportResolver = (location, path) => {
+  let zokpath = `../../lib/circuits/baselineDocument/${path}`;
+  if (!zokpath.match(/\.zok$/i)) {
+    zokpath = `${zokpath}.zok`;
+  }
+  return {
+    source: readFileSync(zokpath).toString(),
+    location: path,
+  };
+};
+
 export class ZokratesTrustedSetupArtifact {
   keypair?: SetupKeypair;
   verifierSource?: string;
@@ -54,18 +65,7 @@ export class ZoKratesService implements IZKSnarkCircuitProvider {
   }
 }
 
-export const zokratesServiceFactory = async (): Promise<ZoKratesService> => {
-  const importResolver = (location, path) => {
-    let zokpath = `../../lib/circuits/baselineDocument/${path}`;
-    if (!zokpath.match(/\.zok$/i)) {
-      zokpath = `${zokpath}.zok`;
-    }
-    return {
-      source: readFileSync(zokpath).toString(),
-      location: path,
-    };
-  };
-
+export const zokratesServiceFactory = async (config?: any): Promise<ZoKratesService> => {
   const zokratesProvider = await initialize();
-  return new ZoKratesService(zokratesProvider, importResolver);
+  return new ZoKratesService(zokratesProvider, config?.importResolver || defaultImportResolver);
 };
