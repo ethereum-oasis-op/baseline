@@ -1,0 +1,25 @@
+<div *ngFor="let item of dataSource">
+    <div class="row">
+        <div class="col-12">
+            <span style="display: table;">
+                <span style="display: table-row;"> 
+                    <span style="display: table-cell;"> Block Height: </span>
+                    <span style="display: table-cell;"><a [routerLink]="['/block', item.blockHeight]" [innerText]="item.blockHeight"></a></span>
+                </span>
+                <span style="display: table-row;"> 
+                    <span style="display: table-cell;"> Time Stamp: </span>
+                    <span style="display: table-cell;" [innerText]="item.timeStamp"></span>
+                </span>
+                <span style="display: table-row;"> 
+                    <span style="display: table-cell;"> Block Hash: </span>
+                    <span style="display: table-cell;" [innerText]="item.blockHash"></span>
+                </span>
+                <span style="display: table-row;"> 
+                    <span style="display: table-cell;"> Transaction Count: </span>
+                    <span style="display: table-cell;" [innerText]="item.transactionCount"></span>
+                </span>
+            </span>
+        </div>
+    </div>
+    <hr class="hr-space"> 
+</div>   
