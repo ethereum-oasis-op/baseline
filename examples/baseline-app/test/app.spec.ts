@@ -21,6 +21,7 @@ beforeEach(async () => {
       {
         identApiScheme: 'http',
         identApiHost: 'localhost:8085',
+        networkId: '66d44f30-9092-4182-a3c4-bc02736d6ae5', // ropsten
         token: bearerToken,
         vaultApiScheme: 'http',
         vaultApiHost: 'localhost:8083',
@@ -122,19 +123,19 @@ describe('baseline', () => {
         assert(workgroup.id, 'workgroup id should not be null');
       });
 
-      it('should associate the organization with the workgroup', async () => {
+      it('should associate the organization with the local workgroup', async () => {
         const orgs = (await app.getBaselineService()?.fetchWorkgroupOrganizations(workgroup.id, {})).responseBody;
         assert(orgs.length === 1, 'workgroup should have associated org');
       });
 
       it('should deploy the ERC1820 org registry contract for the workgroup', async () => {
-        const registryContract = app.getWorkgroupContract('registry');
-        assert(registryContract, 'workgroup registry contract should not be null');
-        // TODO: expand and verify organization-registry and others
+        await promisedTimeout(75000); // HACK!!! FIXME!!! -- make this cleaner so we dont hang the tests...
+        const orgRegistryContract = app.getWorkgroupContract('organization-registry');
+        assert(orgRegistryContract, 'workgroup organization registry contract should not be null');
       });
 
-      it('should register the organization with the on-chain registry', async () => {
-        // (WIP) adding assertions
+      it('should register the organization with the on-chain org registry contract', async () => {
+
       });
     });
   });

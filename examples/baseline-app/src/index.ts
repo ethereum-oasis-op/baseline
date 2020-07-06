@@ -31,7 +31,10 @@ export class BaselineApp {
   private zk?: IZKSnarkCircuitProvider;
 
   private org?: any;
+  private orgRegistryContractAddr?: string;
   private workgroup?: any;
+
+  private subsidyToken?: string;
 
   constructor(baselineConfig: any, natsConfig: any) {
     this.baselineConfig = baselineConfig;
@@ -84,12 +87,51 @@ export class BaselineApp {
     return setupArtifacts;
   }
 
+  async resolveWorkgroupContract(type: string): Promise<void> {
+    let nchain: NChain;
+    if (this.subsidyToken) {
+      nchain = NChain.clientFactory(this.subsidyToken);
+    } else {
+      // FIXME
+      console.log('WARNING: fix unimplemented path during workgroup contract resolution!');
+      return Promise.reject();
+    }
+
+    let interval;
+    interval = setInterval(async () => {
+      const contracts = (await nchain.fetchContracts({
+        type: type,
+      })).responseBody;
+      if (contracts && contracts.length === 1 && contracts[0]['address']) {
+        this.contracts[type] = contracts[0];
+        this.orgRegistryContractAddr = contracts[0]['address'];
+        clearInterval(interval);
+        interval = null;
+        return;
+      }
+    }, 5000);
+
+    return Promise.resolve();
+  }
+
   async deployWorkgroupContract(name: string, type: string, params: any): Promise<any> {
-    const prvdToken = this.baselineConfig?.prvdToken;
-    const resp = await NChain.clientFactory(prvdToken).createContract({
+    let nchain: NChain;
+    if (this.subsidyToken) {
+      nchain = NChain.clientFactory(this.subsidyToken);
+    } else {
+      // FIXME
+      console.log('WARNING: fix unimplemented path!');
+      return null;
+    }
+
+    const signerResp = (await nchain.createAccount({
+      network_id: this.baselineConfig?.networkId,
+    })).responseBody;
+
+    const resp = await nchain.createContract({
       address: '0x',
       params: {
-        account_id: this.baselineConfig?.signerAccountId,
+        account_id: signerResp['id'],
         compiled_artifact: params,
       },
       name: name,
@@ -113,16 +155,31 @@ export class BaselineApp {
 
   async createWorkgroup(name: string): Promise<any> {
     const resp = (await this.baseline?.createWorkgroup({
+      config: {
+        baselined: true,
+      },
       name: name,
+      network_id: this.baselineConfig?.networkId,
     })).responseBody;
 
     this.workgroup = resp.application;
+
+    if (this.baselineConfig && this.baselineConfig.prvdToken) {
+      // if configured, this "subsidy app" picks up the gas on certain testnets...
+      const workgroupSubsidyResp = (await Ident.clientFactory(this.baselineConfig.prvdToken).createApplication({
+        name: `${this.workgroup.name} subsidy`,
+        network_id: this.baselineConfig?.networkId,
+      })).responseBody;
+      this.subsidyToken = workgroupSubsidyResp['token'].token;
+    }
 
     if (this.workgroup && this.org) {
       const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
       const contractParams = registryContracts[2]; // "shuttle" launch contract
       // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
-      const contract = await this.deployWorkgroupContract('Shuttle', 'registry', contractParams);
+
+      await this.deployWorkgroupContract('Shuttle', 'registry', contractParams);
+      await this.resolveWorkgroupContract('organization-registry');
       await Ident.clientFactory(resp.token.token, 'http', 'localhost:8085').createApplicationOrganization(this.workgroup.id, {
         organization_id: this.org.id,
       });
