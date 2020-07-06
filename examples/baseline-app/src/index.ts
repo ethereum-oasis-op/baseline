@@ -31,7 +31,6 @@ export class BaselineApp {
   private zk?: IZKSnarkCircuitProvider;
 
   private org?: any;
-  private orgRegistryContractAddr?: string;
   private workgroup?: any;
 
   private subsidyToken?: string;
@@ -104,7 +103,7 @@ export class BaselineApp {
       })).responseBody;
       if (contracts && contracts.length === 1 && contracts[0]['address']) {
         this.contracts[type] = contracts[0];
-        this.orgRegistryContractAddr = contracts[0]['address'];
+        // this.orgRegistryContractAddr = contracts[0]['address'];
         clearInterval(interval);
         interval = null;
         return;
