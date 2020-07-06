@@ -142,12 +142,14 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-ident-consumer
       - NATS_URL=nats://alice-nats:4222
       - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
-      - REDIS_HOSTS=alice-redis:6379
-      - LOG_LEVEL=DEBUG
       - PORT=8080
+      - REDIS_HOSTS=alice-redis:6379
+      - VAULT_API_SCHEME=http
+      - VAULT_API_HOST=alice-vault:8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://alice-ident:8080/status"] # FIXME
       interval: 1m
@@ -196,7 +198,7 @@ services:
       - NETHERMIND_KEYSTORECONFIG_TESTNODEKEY=020102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f
       - NETHERMIND_NETWORKCONFIG_DISCOVERYPORT=30222
       - NETHERMIND_NETWORKCONFIG_P2PPORT=30222
-      - NETHERMIND_SYNCCONFIG_FASTSYNC=true
+      - NETHERMIND_SYNCCONFIG_FASTSYNC=false
     healthcheck:
       test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8522"]
       interval: 1m
@@ -253,7 +255,7 @@ services:
   bob-nats:
     image: provide/nats-server
     container_name: bob-provide-nats
-    command: ["-auth", "testtoken", "-p", "4224", "-D", "-V"]
+    command: ["-auth", "testtoken", "-p", "4222", "-D", "-V"]
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----
@@ -279,6 +281,9 @@ services:
     hostname: bob-nats
     networks:
       - bob
+    ports:
+      - 4223:4221
+      - 4224:4222
     restart: always
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
@@ -347,11 +352,13 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-ident-consumer
       - NATS_URL=nats://bob-nats:4222
       - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
       - REDIS_HOSTS=bob-redis:6379
-      - LOG_LEVEL=DEBUG
+      - VAULT_API_SCHEME=http
+      - VAULT_API_HOST=bob-vault:8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://bob-ident:8080/status"] # FIXME
       interval: 1m
@@ -400,7 +407,7 @@ services:
       - NETHERMIND_KEYSTORECONFIG_TESTNODEKEY=120102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f
       - NETHERMIND_NETWORKCONFIG_DISCOVERYPORT=30111
       - NETHERMIND_NETWORKCONFIG_P2PPORT=30111
-      - NETHERMIND_SYNCCONFIG_FASTSYNC=true
+      - NETHERMIND_SYNCCONFIG_FASTSYNC=false
     healthcheck:
       test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8511"]
       interval: 1m
