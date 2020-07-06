@@ -14,17 +14,28 @@ beforeEach(async () => {
 describe('when the underlying zokrates provider is available', () => {
   describe('compile', () => {
     describe('when the given circuit is valid', () => {
+      let artifact;
+
       beforeEach(async () => {
         baselineDocumentCircuitSource = readFileSync(baselineDocumentCircuitPath);
         assert(baselineDocumentCircuitSource, 'baselineDocuemntCircuitSource');
         assert(baselineDocumentCircuitSource.length > 0, 'baselineDocumentCircuitSource not read from lib');
-        console.log(baselineDocumentCircuitSource.toString());
       });
 
       it('should return the compiled artifact', async () => {
-        const artifact = await zokrates.compile(baselineDocumentCircuitSource.toString(), 'main');
+        artifact = await zokrates.compile(baselineDocumentCircuitSource.toString(), 'main');
         assert(artifact, 'compiled artifact not returned');
-        console.log(artifact);
+        assert(artifact.program, 'compiled artifact did not contain circuit');
+        assert(artifact.abi, 'compiled artifact did not include abi');
+      });
+
+      describe('setup', () => {
+        it('should return the setup artifacts', async () => {
+          const setupArtifacts = await zokrates.setup(artifact.program);
+          assert(setupArtifacts, 'setup artifacts not returned');
+          assert(setupArtifacts.keys, 'proving and verifier keys not returned');
+          assert(setupArtifacts.verifierSource, 'verifier contract source not returned');
+        });
       });
     });
   });
