@@ -26,7 +26,7 @@ The __Baseline Protocol__ code is currently embedded inside the `/radish-api` di
 
 ## Running Radish34
 
-To get more insight into the individual steps taken to run the __Radish34__ application, follow the instructions in [radish34/README.md](radish34/README.md).
+To get more insight into the individual steps taken to run the __Radish34__ application, follow the instructions in [examples/radish34/README.md](examples/radish34/README.md).
 
 `cd radish34` and go from there 🚀
 

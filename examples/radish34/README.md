@@ -6,8 +6,10 @@ Disclaimer: This implementation is a demo, and production aspects of key managem
 
 ## Prerequisites to run the demo
 
+Windows 10 users [should follow some initial setup instructions](windows_setup.md) first.
+
 1. Install [Docker for Mac](https://www.docker.com/docker-mac), or
-    [Docker for Windows](https://www.docker.com/docker-windows)  
+    [Docker for Windows](https://www.docker.com/docker-windows) (Windows users [using WSL](windows_setup.md) can skip this step).
     - It's recommended that you allocate 12GB of RAM in Docker (see 'Troubleshooting').
 1. MacOS development environment (Catalina or later - 10.15.X). Note: It is possible it works in other environments/versions of MacOS
 1. NodeJS version 11.15 installed (or use of NVM is recommended)
