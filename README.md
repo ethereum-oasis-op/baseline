@@ -16,7 +16,7 @@
 
 ## Architecture
 
-![baseline-protocol-architecture](https://user-images.githubusercontent.com/161261/86216093-7d754480-bb4b-11ea-9b43-cafa52454baf.png)
+![baseline-protocol-architecture](https://user-images.githubusercontent.com/161261/86484557-79504f00-bd24-11ea-8edb-d665cb55db20.png)
 
 ## Modules & Packages
 
