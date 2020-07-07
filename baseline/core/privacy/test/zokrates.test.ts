@@ -1,8 +1,8 @@
 import { assert } from 'console';
-import { expect, rejects } from 'chai';
+import { readFileSync } from 'fs';
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '../src/index';
 
-//const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument/baselineDocument.zok';
+const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument/baselineDocument.zok';
 
 let baselineDocumentCircuitSource;
 let zokrates;
@@ -17,7 +17,8 @@ describe('when the underlying zokrates provider is available', () => {
       let artifacts;
 
       beforeEach(async () => {
-        baselineDocumentCircuitSource = 'def main(private field a) -> (field): return a'; // readFileSync(baselineDocumentCircuitPath);
+        // console.log(path.resolve(__dirname, baselineDocumentCircuitPath));
+        baselineDocumentCircuitSource = readFileSync(baselineDocumentCircuitPath);
         assert(baselineDocumentCircuitSource, 'baselineDocuemntCircuitSource');
         assert(baselineDocumentCircuitSource.length > 0, 'baselineDocumentCircuitSource not read from lib');
       });

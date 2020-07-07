@@ -14,7 +14,7 @@
     "build:umd": "webpack",
     "build": "npm run clean && npm run build:cjs && npm run build:umd",
     "clean": "rm -rf ./dist",
-    "test": "./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.ts --timeout 30000"
+    "test": "./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.ts --timeout 30000 --max-old-space-size=8192"
   },
   "dependencies": {
     "zokrates-js": "^1.0.23"
