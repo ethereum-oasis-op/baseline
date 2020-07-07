@@ -31,7 +31,7 @@ The following "core" modules comprise the initial release of the Baseline protoc
 | `@baseline-protocol/privacy` | `core/privacy` | Core privacy package initially exposing a zkSnark circuit provider factory; designed to support future privacy implementations |
 | `@baseline-protocol/types` | `core/types` | Core reuseable type definitions; also provides a convenience wrapper around interacting with `lib/` assets (i.e. circuits) |
 
-Implementing a minimum set of these `core` packages will help you maintain *baseline-compliance* as the protocol evolves and standards emerge. As of the initial `core` release, depending on the `api`, `messaging` and `privacy` packages should be considered the most minimalistic approach to implementing the protocol, provided that your organization is participating in a workgroup that has deployed the `contracts` artifacts. A reference implementation and end-to-end test suite featuring Alice and Bob is being maintained under [`examples/baseline-app`](tree/master/examples).
+Implementing a minimum set of these `core` packages will help you maintain *baseline-compliance* as the protocol evolves and standards emerge. As of the initial `core` release, depending on the `api`, `messaging` and `privacy` packages should be considered the most minimalistic approach to implementing the protocol, provided that your organization is participating in a workgroup that has deployed the `contracts` artifacts. A reference implementation and end-to-end test suite featuring Alice and Bob is being maintained under [`examples/baseline-app`](examples/baseline-app).
 
 ## License
 
