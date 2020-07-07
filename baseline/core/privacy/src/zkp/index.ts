@@ -5,9 +5,9 @@ export const zkSnarkCircuitProviderServiceZokrates = 'zokrates';
 export interface IZKSnarkCircuitProvider {
   compile(source: string, location: string): Promise<any>;
   computeWitness(artifacts: any, args: any[]): Promise<any>;
-  exportVerifier(verifyingKey): Promise<string>;
-  generateProof(circuit, witness, provingKey): Promise<string>;
-  setup(circuit): Promise<any>;
+  exportVerifier(verifyingKey: any): Promise<any>;
+  generateProof(circuit: any, witness: any, provingKey: any): Promise<any>;
+  setup(circuit: any): Promise<any>;
 }
 
 export async function zkSnarkCircuitProviderServiceFactory(

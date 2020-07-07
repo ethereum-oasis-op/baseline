@@ -39,12 +39,12 @@ export class ZoKratesService implements IZKSnarkCircuitProvider {
     return this.zokrates.computeWitness(artifacts, args);
   }
 
-  async exportVerifier(verifyingKey): Promise<string> {
+  async exportVerifier(verifyingKey: any): Promise<string> {
     return this.zokrates.exportSolidityVerifier(verifyingKey, true);
   }
 
-  async generateProof(circuit: any, witness: string, provingKey: any): Promise<string> {
-    return this.zokrates.generateProof(circuit, witness, provingKey);
+  async generateProof(circuit: any, witness: string, provingKey: any): Promise<any> {
+    return JSON.parse(this.zokrates.generateProof(circuit, witness, provingKey));
   }
 
   async setup(circuit: any): Promise<ZokratesTrustedSetupArtifact> {
