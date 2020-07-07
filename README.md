@@ -1,7 +1,7 @@
 # Baseline Protocol
 
 <div align="center">
-  ![baseline-logo](docs/assets/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png)
+  <img alt="Baseline" src="docs/assets/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png" />
   <p>
     Combining advances in cryptography, messaging, and blockchain to execute
     <br/>
