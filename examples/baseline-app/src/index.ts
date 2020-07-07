@@ -1,7 +1,7 @@
 import { IBaselineRPC, IBlockchainService, IRegistry, IVault, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
 import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
 import { IZKSnarkCircuitProvider, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '@baseline-protocol/privacy';
-import { Capabilities, Ident, NChain, capabilitiesFactory } from 'provide-js';
+import { Capabilities, Ident, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
 
 const baselineDocumentCircuitPath = '../../baseline/lib/circuits/baselineDocument/baselineDocument.zok';
@@ -32,8 +32,7 @@ export class BaselineApp {
 
   private org?: any;
   private workgroup?: any;
-
-  private subsidyToken?: string;
+  private workgroupToken?: any; // workgroup bearer token; used for automated setup
 
   constructor(baselineConfig: any, natsConfig: any) {
     this.baselineConfig = baselineConfig;
@@ -73,6 +72,36 @@ export class BaselineApp {
     return this.contracts[type];
   }
 
+  async createWorkgroup(name: string): Promise<any> {
+    const resp = (await this.baseline?.createWorkgroup({
+      config: {
+        baselined: true,
+      },
+      name: name,
+      network_id: this.baselineConfig?.networkId,
+    })).responseBody;
+
+    this.workgroup = resp.application;
+    this.workgroupToken = resp.token.token;
+
+    if (this.workgroup && this.org) {
+      const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
+      const contractParams = registryContracts[2]; // "shuttle" launch contract
+      // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
+
+      await this.deployWorkgroupContract('Shuttle', 'registry', contractParams);
+      await this.resolveWorkgroupContract('organization-registry');
+      (await Ident.clientFactory(
+        this.workgroupToken,
+        this.baselineConfig?.identApiScheme,
+        this.baselineConfig?.identApiHost,
+      )).createApplicationOrganization(this.workgroup.id, {
+        organization_id: this.org.id,
+      });
+    }
+    return this.workgroup;
+  }
+
   async compileBaselineCircuit(): Promise<any> {
     const src = readFileSync(baselineDocumentCircuitPath).toString();
     this.baselineCircuitArtifacts = await this.zk?.compile(src, 'main');
@@ -86,42 +115,12 @@ export class BaselineApp {
     return setupArtifacts;
   }
 
-  async resolveWorkgroupContract(type: string): Promise<void> {
-    let nchain: NChain;
-    if (this.subsidyToken) {
-      nchain = NChain.clientFactory(this.subsidyToken);
-    } else {
-      // FIXME
-      console.log('WARNING: fix unimplemented path during workgroup contract resolution!');
-      return Promise.reject();
-    }
-
-    let interval;
-    interval = setInterval(async () => {
-      const contracts = (await nchain.fetchContracts({
-        type: type,
-      })).responseBody;
-      if (contracts && contracts.length === 1 && contracts[0]['address']) {
-        this.contracts[type] = contracts[0];
-        // this.orgRegistryContractAddr = contracts[0]['address'];
-        clearInterval(interval);
-        interval = null;
-        return;
-      }
-    }, 5000);
-
-    return Promise.resolve();
-  }
-
   async deployWorkgroupContract(name: string, type: string, params: any): Promise<any> {
-    let nchain: NChain;
-    if (this.subsidyToken) {
-      nchain = NChain.clientFactory(this.subsidyToken);
-    } else {
-      // FIXME
-      console.log('WARNING: fix unimplemented path!');
-      return null;
-    }
+    const nchain = nchainClientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.nchainApiScheme,
+      this.baselineConfig?.nchainApiHost,
+    );
 
     const signerResp = (await nchain.createAccount({
       network_id: this.baselineConfig?.networkId,
@@ -152,38 +151,28 @@ export class BaselineApp {
   //   this.nats?.publish(counterparty)
   // }
 
-  async createWorkgroup(name: string): Promise<any> {
-    const resp = (await this.baseline?.createWorkgroup({
-      config: {
-        baselined: true,
-      },
-      name: name,
-      network_id: this.baselineConfig?.networkId,
-    })).responseBody;
+  async resolveWorkgroupContract(type: string): Promise<void> {
+    const nchain = nchainClientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.nchainApiScheme,
+      this.baselineConfig?.nchainApiHost,
+    );
 
-    this.workgroup = resp.application;
-
-    if (this.baselineConfig && this.baselineConfig.prvdToken) {
-      // if configured, this "subsidy app" picks up the gas on certain testnets...
-      const workgroupSubsidyResp = (await Ident.clientFactory(this.baselineConfig.prvdToken).createApplication({
-        name: `${this.workgroup.name} subsidy`,
-        network_id: this.baselineConfig?.networkId,
+    let interval;
+    interval = setInterval(async () => {
+      const contracts = (await nchain.fetchContracts({
+        type: type,
       })).responseBody;
-      this.subsidyToken = workgroupSubsidyResp['token'].token;
-    }
+      if (contracts && contracts.length === 1 && contracts[0]['address']) {
+        this.contracts[type] = contracts[0];
+        // this.orgRegistryContractAddr = contracts[0]['address'];
+        clearInterval(interval);
+        interval = null;
+        return;
+      }
+    }, 5000);
 
-    if (this.workgroup && this.org) {
-      const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
-      const contractParams = registryContracts[2]; // "shuttle" launch contract
-      // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
-
-      await this.deployWorkgroupContract('Shuttle', 'registry', contractParams);
-      await this.resolveWorkgroupContract('organization-registry');
-      await Ident.clientFactory(resp.token.token, 'http', 'localhost:8085').createApplicationOrganization(this.workgroup.id, {
-        organization_id: this.org.id,
-      });
-    }
-    return this.workgroup;
+    return Promise.resolve();
   }
 
   async registerOrganization(name: string, messagingEndpoint: string): Promise<any> {

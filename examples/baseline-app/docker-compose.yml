@@ -327,6 +327,8 @@ services:
       - bob-db:/var/lib/postgresql/data
     networks:
       - bob
+    ports:
+      - 5433:5432
     restart: always
 
   bob-redis:

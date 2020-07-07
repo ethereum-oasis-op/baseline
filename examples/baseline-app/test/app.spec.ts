@@ -1,10 +1,15 @@
 import { BaselineApp } from '../src/index';
-import { assert } from 'console';
-import { authenticateUser, createUser, createOrgToken, promisedTimeout } from './utils';
 import { Vault } from 'provide-js';
+import { assert } from 'console';
+import { authenticateUser, configureRopstenFaucet, createUser, createOrgToken, promisedTimeout } from './utils';
+
+const faucetAddress = process.env['FAUCET_ADDRESS'];
+const faucetEncryptedPrivateKey = process.env['FAUCET_PRIVATE_KEY'];
+const ropstenNetworkId = '66d44f30-9092-4182-a3c4-bc02736d6ae5'; // ropsten
 
 let app: BaselineApp;
 let bearerToken; // user's API credential
+let configuredFaucet = false;
 let user;
 
 beforeEach(async () => {
@@ -14,6 +19,16 @@ beforeEach(async () => {
     const auth = await authenticateUser(email, 'bobp455');
     bearerToken = auth.responseBody['token'].token;
     assert(bearerToken, `failed to authorize bearer token for user ${email}`);
+
+    if (!configuredFaucet && faucetAddress && faucetEncryptedPrivateKey) {
+      configuredFaucet = await configureRopstenFaucet(
+        5433,
+        auth.responseBody['user'].id,
+        faucetEncryptedPrivateKey,
+        faucetAddress,
+      );
+      assert(configuredFaucet, 'failed to configure faucet');
+    }
   }
 
   if (!app) {
@@ -21,7 +36,9 @@ beforeEach(async () => {
       {
         identApiScheme: 'http',
         identApiHost: 'localhost:8085',
-        networkId: '66d44f30-9092-4182-a3c4-bc02736d6ae5', // ropsten
+        nchainApiScheme: 'http',
+        nchainApiHost: 'localhost:8086',
+        networkId: ropstenNetworkId, // FIXME-- boostrap network genesis if no public testnet faucet is configured...
         token: bearerToken,
         vaultApiScheme: 'http',
         vaultApiHost: 'localhost:8083',
@@ -32,11 +49,6 @@ beforeEach(async () => {
       },
     );
   }
-});
-
-afterEach(async () => {
-  // bearerToken = null;
-  // app = null;
 });
 
 describe('baseline', () => {
@@ -113,7 +125,7 @@ describe('baseline', () => {
     describe('creation', () => {
       beforeEach(async () => {
         if (!workgroup) {
-          await promisedTimeout(2500);
+          await promisedTimeout(3000);
           workgroup = (await app.createWorkgroup('baseline workgroup'));
           assert(workgroup, 'workgroup should not be null');
         }
