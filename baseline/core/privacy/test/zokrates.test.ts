@@ -2,7 +2,7 @@ import { assert } from 'console';
 import { readFileSync } from 'fs';
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '../src/index';
 
-const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument/baselineDocument.zok';
+//const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument/baselineDocument.zok';
 
 let baselineDocumentCircuitSource;
 let zokrates;
@@ -17,7 +17,7 @@ describe('when the underlying zokrates provider is available', () => {
       let artifact;
 
       beforeEach(async () => {
-        baselineDocumentCircuitSource = readFileSync(baselineDocumentCircuitPath);
+        baselineDocumentCircuitSource = 'def main(private field a) -> (field): return a'; // readFileSync(baselineDocumentCircuitPath);
         assert(baselineDocumentCircuitSource, 'baselineDocuemntCircuitSource');
         assert(baselineDocumentCircuitSource.length > 0, 'baselineDocumentCircuitSource not read from lib');
       });
@@ -33,7 +33,7 @@ describe('when the underlying zokrates provider is available', () => {
         it('should return the setup artifacts', async () => {
           const setupArtifacts = await zokrates.setup(artifact.program);
           assert(setupArtifacts, 'setup artifacts not returned');
-          assert(setupArtifacts.keys, 'proving and verifier keys not returned');
+          assert(setupArtifacts.keypair, 'proving and verifier keys not returned');
           assert(setupArtifacts.verifierSource, 'verifier contract source not returned');
         });
       });

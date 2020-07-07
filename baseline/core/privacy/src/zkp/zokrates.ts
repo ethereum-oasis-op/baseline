@@ -43,13 +43,13 @@ export class ZoKratesService implements IZKSnarkCircuitProvider {
     return this.zokrates.exportSolidityVerifier(verifyingKey, true);
   }
 
-  async generateProof(circuit, witness, provingKey): Promise<string> {
+  async generateProof(circuit: any, witness: string, provingKey: any): Promise<string> {
     return this.zokrates.generateProof(circuit, witness, provingKey);
   }
 
-  async setup(circuit): Promise<ZokratesTrustedSetupArtifact> {
+  async setup(circuit: any): Promise<ZokratesTrustedSetupArtifact> {
     const keypair = this.zokrates.setup(circuit);
-    if (keypair && keypair.pk && keypair.vk) {
+    if (!keypair || !keypair.pk || !keypair.vk) {
       return Promise.reject('failed to perform trusted setup');
     }
 
