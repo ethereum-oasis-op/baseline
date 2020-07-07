@@ -4,11 +4,11 @@ import { IZKSnarkCircuitProvider, zkSnarkCircuitProviderServiceFactory, zkSnarkC
 import { Capabilities, Ident, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
 
-const baselineDocumentCircuitPath = '../../baseline/lib/circuits/baselineDocument/baselineDocument.zok';
+const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument/baselineDocument.zok';
 const baselineProtocolMessageSubject = 'baseline.*';
 
 const zokratesImportResolver = (location, path) => {
-  let zokpath = `../../baseline/lib/circuits/baselineDocument/${path}`;
+  let zokpath = `../../lib/circuits/baselineDocument/${path}`;
   if (!zokpath.match(/\.zok$/i)) {
     zokpath = `${zokpath}.zok`;
   }
