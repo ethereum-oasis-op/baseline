@@ -27,3 +27,7 @@ setup(circuit): Promise<any>;
 The following zkSNARK toolboxes are supported:
 
 - ZoKrates
+
+## Architecture/Flow
+
+![baseline-zok-flow](https://user-images.githubusercontent.com/35908605/86961126-b35b8f80-c12e-11ea-9902-7367bb75dd34.png)
