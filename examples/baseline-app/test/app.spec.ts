@@ -24,8 +24,8 @@ beforeEach(async () => {
       configuredFaucet = await configureRopstenFaucet(
         5433,
         auth.responseBody['user'].id,
-        faucetEncryptedPrivateKey,
         faucetAddress,
+        faucetEncryptedPrivateKey,
       );
       assert(configuredFaucet, 'failed to configure faucet');
     }
