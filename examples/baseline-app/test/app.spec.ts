@@ -136,7 +136,7 @@ describe('baseline', () => {
       });
 
       it('should associate the organization with the local workgroup', async () => {
-        const orgs = (await app.getBaselineService()?.fetchWorkgroupOrganizations(workgroup.id, {})).responseBody;
+        const orgs = await app.fetchWorkgroupOrganizations();
         assert(orgs.length === 1, 'workgroup should have associated org');
       });
 

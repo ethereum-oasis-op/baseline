@@ -102,6 +102,14 @@ export class BaselineApp {
     return this.workgroup;
   }
 
+  async fetchWorkgroupOrganizations(): Promise<any> {
+    return (await Ident.clientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.identApiScheme,
+      this.baselineConfig?.identApiHost,
+    ).fetchApplicationOrganizations(this.workgroup.id, {})).responseBody;
+  }
+
   async compileBaselineCircuit(): Promise<any> {
     const src = readFileSync(baselineDocumentCircuitPath).toString();
     this.baselineCircuitArtifacts = await this.zk?.compile(src, 'main');
