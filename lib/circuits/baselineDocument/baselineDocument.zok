@@ -9,10 +9,10 @@ import "./sha256of7x128" as sha256of7x128
 import "./sha256of8x128" as sha256of8x128
 
 import "ecc/edwardsCompress" as edwardsCompress
-import "signatures/verifyEddsa" as verifyEddsa
+import "verifyEddsa" as verifyEddsa
 import "ecc/babyjubjubParams" as context
 
-import "./calc-root-from-siblingPath-sha256-height4" as calculateRoot
+import "calc-root-from-siblingPath-sha256-height4" as calculateRoot
 
 struct EdDSASignature {
   field[2] R
