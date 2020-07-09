@@ -1,7 +1,6 @@
 import express from 'express';
 import fs from 'fs';
 import path from 'path';
-import { NatsService } from 'ts-natsutil';
 import zokrates from '@eyblockchain/zokrates.js';
 import { jsonifyVk } from '../utils/jsonifyVk';
 import { saveVerificationKeyToDB } from '../utils/fileToDB';
@@ -11,19 +10,7 @@ const defaultProvingScheme = 'gm17';
 const router = express.Router();
 
 const publishArtifacts = (artifacts, bearerJWT) => {
-  const natsUrl = process.env.NATS_URL;
-  if (!natsUrl) {
-    return;
-  }
-  const natsBearerJWT = process.env.NATS_BEARER_JWT || bearerJWT;
-  const natsAuthToken = process.env.NATS_AUTH_TOKEN;
-  const natsService = new NatsService([natsUrl], natsBearerJWT, natsAuthToken);
-  natsService.connect().then(nc => {
-    const payload = JSON.stringify(artifacts);
-    nc.publish('zkp.compile.success', payload).then(() => {
-      console.log(`published ${payload.length} NATS message containing compiled zkp artifacts`);
-    });
-  });
+  // FIXME
 };
 
 router.post('/', async (req, res, next) => {
