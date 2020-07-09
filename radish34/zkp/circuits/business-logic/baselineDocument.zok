@@ -1,9 +1,9 @@
 import "utils/pack/pack128" as pack128
 import "utils/pack/pack256" as pack256
-import "utils/pack/nonStrictUnpack256.zok" as unpack256
+import "utils/pack/nonStrictUnpack256" as unpack256
 import "../common/packing/unpack2x128To256x1" as unpack2x128To256x1
 
-import "../common/hashes/sha256/sha256of2x256.zok" as sha256of2x256
+import "../common/hashes/sha256/sha256of2x256" as sha256of2x256
 import "../common/hashes/sha256/sha256of5x128.zok" as sha256of5x128
 import "../common/hashes/sha256/sha256of8x128.zok" as sha256of8x128
 
@@ -25,7 +25,6 @@ struct EdDSASignature {
 struct DocumentInputs {
   field[2] publicKeyOfBuyer
   field[2] publicKeyOfSupplier
-  field[2] erc20ContractAddress
   EdDSASignature buyerSignature
   EdDSASignature supplierSignature
 }
@@ -63,8 +62,8 @@ def main(field publicInputHash, private Document documentData) -> ():
   field publicKeyOfSupplierCompressed1 = pack128(publicKeyOfSupplierCompressed[0..128])
   field publicKeyOfSupplierCompressed2 = pack128(publicKeyOfSupplierCompressed[128..256])
 
-  field rawCalldataCompressed1 = pack128(documentData.calldata[257..384])
-  field rawCalldataCompressed2 = pack128(documentData.calldata[385..512])
+  field rawCalldataCompressed1 = pack128(documentData.calldata[256..384])
+  field rawCalldataCompressed2 = pack128(documentData.calldata[384..512])
   // TODO: Proof that the Buyer is indeed the Buyer for this Agreement (by recalculating the Agreement commitment):
   // one could choose sha or pedersen or poseidon, etc.
 
@@ -73,7 +72,7 @@ def main(field publicInputHash, private Document documentData) -> ():
   // third step: calculate root
   // fourth step: hash (root, hash from second step)
   // final hash is the publicInputHash
-  documentCommitmentBits = sha256of8x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, rawCalldataCompressed1, rawCalldataCompressed1, ...documentData.newCommitment.salt])
+  documentCommitmentBits = sha256of8x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, rawCalldataCompressed1, rawCalldataCompressed2, ...documentData.newCommitment.salt])
 
   field[256] documentNullifierBits = sha256of5x128([...documentData.newCommitment.value, ...documentData.newCommitment.nullifier, documentData.oldCommitmentValue])
   
