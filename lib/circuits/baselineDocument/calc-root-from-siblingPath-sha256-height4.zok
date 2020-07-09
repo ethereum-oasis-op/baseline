@@ -14,13 +14,13 @@
 
 // IMPORTS
 
-import "hashes/sha256/512bit.zok" as sha256of512
+import "hashes/sha256/512bit" as sha256of512
 
-import "utils/pack/unpack128.zok" as unpack128
-import "unpack1x216To216x1.zok" as unpack1x216To216x1
-import "unpack2x128To256x1.zok" as unpack2x128To256x1
+import "utils/pack/unpack128" as unpack128
+import "./unpack1x216To216x1" as unpack1x216To216x1
+import "./unpack2x128To256x1" as unpack2x128To256x1
 
-import "orderedConcatenate216x216.zok" as orderedConcatenate216x216
+import "./orderedConcatenate216x216" as orderedConcatenate216x216
 
 
 // MAIN

@@ -1,4 +1,4 @@
-import "utils/pack/unpack128.zok" as unpack128
+import "utils/pack/unpack128" as unpack128
 
 // Unpack a field[2] (assumed to be two 128-bit values) into 256 bits:
 // unpack2x128To256x1

@@ -1,18 +1,18 @@
 import "utils/pack/pack128" as pack128
 import "utils/pack/pack256" as pack256
 import "utils/pack/nonStrictUnpack256" as unpack256
-import "unpack2x128To256x1" as unpack2x128To256x1
+import "./unpack2x128To256x1" as unpack2x128To256x1
 
-import "sha256of2x256.zok" as sha256of2x256
-import "sha256of5x128.zok" as sha256of5x128
-import "sha256of7x128.zok" as sha256of7x128
-import "sha256of8x128.zok" as sha256of8x128
+import "./sha256of2x256" as sha256of2x256
+import "./sha256of5x128" as sha256of5x128
+import "./sha256of7x128" as sha256of7x128
+import "./sha256of8x128" as sha256of8x128
 
 import "ecc/edwardsCompress" as edwardsCompress
-import "verifyEddsa" as verifyEddsa
+import "signatures/verifyEddsa" as verifyEddsa
 import "ecc/babyjubjubParams" as context
 
-import "calc-root-from-siblingPath-sha256-height4.zok" as calculateRoot
+import "./calc-root-from-siblingPath-sha256-height4" as calculateRoot
 
 struct EdDSASignature {
   field[2] R
