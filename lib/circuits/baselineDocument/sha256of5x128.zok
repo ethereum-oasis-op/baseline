@@ -1,5 +1,5 @@
-import "hashes/sha256/1024bit.zok" as sha256of1024
-import "utils/pack/unpack128.zok" as unpack128
+import "hashes/sha256/1024bit" as sha256of1024
+import "utils/pack/unpack128" as unpack128
 
 // Concatenate, then hash, five inputs (each assumed to be at most 128 bits)
 
