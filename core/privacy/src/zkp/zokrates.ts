@@ -3,7 +3,7 @@ import { IZKSnarkCircuitProvider } from '.';
 import { readFileSync } from 'fs';
 
 const defaultImportResolver = (location, path) => {
-  let zokpath = `../../lib/circuits/baselineDocument/${path}`;
+  let zokpath = `../../lib/circuits/${path}`;
   if (!zokpath.match(/\.zok$/i)) {
     zokpath = `${zokpath}.zok`;
   }

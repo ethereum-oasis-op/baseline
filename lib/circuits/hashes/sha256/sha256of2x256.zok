@@ -1,0 +1,17 @@
+import "hashes/sha256/1024bit" as sha256of1024
+import "./hashes/sha256/padding/shaPad512To1024" as shaPad512To1024
+import "utils/pack/nonStrictUnpack256" as unpack256
+
+// Concatenate, then hash, two inputs (assumed to be safely within the zokrates prime)
+
+def main(field[2] inputs) -> (field[256]):
+
+  field[2][256] inputsAsBits = [unpack256(inputs[0]), unpack256(inputs[1])]
+
+  field[512] preimage512 = [...inputsAsBits[0], ...inputsAsBits[1]]
+
+  field[1024] preimage1024 = shaPad512To1024(preimage512)
+
+  field[256] output = sha256of1024(preimage1024[0..256], preimage1024[256..512], preimage1024[512..768], preimage1024[768..1024])
+
+  return output

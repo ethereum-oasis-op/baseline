@@ -1,18 +1,17 @@
 import "utils/pack/pack128" as pack128
 import "utils/pack/pack256" as pack256
 import "utils/pack/nonStrictUnpack256" as unpack256
-import "unpack2x128To256x1" as unpack2x128To256x1
-
-import "sha256of2x256" as sha256of2x256
-import "sha256of5x128" as sha256of5x128
-import "sha256of7x128" as sha256of7x128
-import "sha256of8x128" as sha256of8x128
-
 import "ecc/edwardsCompress" as edwardsCompress
-import "verifyEddsa" as verifyEddsa
+import "./verifyEddsa" as verifyEddsa
 import "ecc/babyjubjubParams" as context
 
-import "calc-root-from-siblingPath-sha256-height4" as calculateRoot
+import "./hashes/sha256/sha256of2x256" as sha256of2x256
+import "./hashes/sha256/sha256of5x128" as sha256of5x128
+import "./hashes/sha256/sha256of7x128" as sha256of7x128
+import "./hashes/sha256/sha256of8x128" as sha256of8x128
+import "./packing/unpack2x128To256x1.zok" as unpack2x128To256x1
+
+import "./merkle-tree/calc-root-from-siblingPath-sha256-height4" as calculateRoot
 
 struct EdDSASignature {
   field[2] R
@@ -51,10 +50,13 @@ struct Document {
 // field to other data types: structs, arrays, etc.
 
 def main(field publicInputHash, private Document documentData) -> ():
-  // 
+  
+  // VERIFY SIGNATURES
+  babyjubjubParamSet = context()
+
   // compressing public keys of type point (X,Y)
-  field[256] publicKeyOfBuyerCompressed = edwardsCompress(documentData.inputs.publicKeyOfBuyer, context())
-  field[256] publicKeyOfSupplierCompressed = edwardsCompress(documentData.inputs.publicKeyOfSupplier, context())
+  field[256] publicKeyOfBuyerCompressed = edwardsCompress(documentData.inputs.publicKeyOfBuyer, babyjubjubParamSet)
+  field[256] publicKeyOfSupplierCompressed = edwardsCompress(documentData.inputs.publicKeyOfSupplier, babyjubjubParamSet)
 
   // formatting public keys to pass as 128 bit field elements to sha256
   // TODO: find a way of not using the constraint-heavy 'pack' function.
@@ -83,9 +85,6 @@ def main(field publicInputHash, private Document documentData) -> ():
 
   // Verify root consistency
   calculatedRoot == documentData.calldata[0..256]
-
-  // VERIFY SIGNATURES
-  babyjubjubParamSet = context()
 
   //1. embed root bits as input in calldata; extract root bits; and match with calculatedRoot in circuit
   // Why? protocol is aiming to verify the signature of calldata: (rootBits, dynamic variables that are to be tracked)

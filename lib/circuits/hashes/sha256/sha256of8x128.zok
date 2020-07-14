@@ -1,5 +1,5 @@
 import "hashes/sha256/1536bit" as sha256of1536
-import "./shaPad1024To1536" as shaPad1024To1536
+import "./hashes/sha256/padding/shaPad1024To1536" as shaPad1024To1536
 import "utils/pack/unpack128" as unpack128
 
 // Concatenate, then hash, eight inputs (each assumed to be at most 128 bits)

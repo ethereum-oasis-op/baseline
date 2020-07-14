@@ -2,7 +2,7 @@ import { assert } from 'console';
 import { readFileSync } from 'fs';
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '../src/index';
 
-const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument/baselineDocument.zok';
+const baselineDocumentCircuitPath = '../../lib/circuits/createAgreement.zok';
 
 let baselineDocumentCircuitSource;
 let zokrates;

@@ -1,0 +1,17 @@
+import "./sha256of3072" as sha256of3072
+import "./hashes/sha256/padding/shaPad2816To3072" as shaPad2816To3072
+import "utils/pack/nonStrictUnpack256" as unpack256
+
+// Concatenate, then hash, eleven inputs (assumed to be safely within the zokrates prime)
+
+def main(field[11] inputs) -> (field[256]):
+
+  field[11][256] inputsAsBits = [unpack256(inputs[0]), unpack256(inputs[1]), unpack256(inputs[2]), unpack256(inputs[3]), unpack256(inputs[4]), unpack256(inputs[5]), unpack256(inputs[6]), unpack256(inputs[7]), unpack256(inputs[8]), unpack256(inputs[9]), unpack256(inputs[10])]
+
+  field[2816] preimage2816 = [...inputsAsBits[0], ...inputsAsBits[1], ...inputsAsBits[2], ...inputsAsBits[3], ...inputsAsBits[4], ...inputsAsBits[5], ...inputsAsBits[6], ...inputsAsBits[7], ...inputsAsBits[8], ...inputsAsBits[9], ...inputsAsBits[10]]
+
+  field[3072] preimage3072 = shaPad2816To3072(preimage2816)
+
+  field[256] output = sha256of3072(preimage3072[0..256], preimage3072[256..512], preimage3072[512..768], preimage3072[768..1024], preimage3072[1024..1280], preimage3072[1280..1536], preimage3072[1536..1792], preimage3072[1792..2048], preimage3072[2048..2304], preimage3072[2304..2560], preimage3072[2560..2816], preimage3072[2816..3072])
+
+  return output
