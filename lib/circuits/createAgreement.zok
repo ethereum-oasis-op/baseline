@@ -57,9 +57,11 @@ def main(field publicInputHash, private Agreement agreementData) -> ():
 
   agreementCommitmentBits == agreementCommitmentBitsCheck
 
-
-  field isVerifiedBuyer = verifyEddsa(agreementData.constants.buyerSignature.R, agreementData.constants.buyerSignature.S, agreementData.constants.publicKeyOfBuyer, agreementCommitmentBits, babyjubjubParamSet)
-  field isVerifiedSupplier = verifyEddsa(agreementData.constants.supplierSignature.R,  agreementData.constants.supplierSignature.S, agreementData.constants.publicKeyOfSupplier, agreementCommitmentBits, babyjubjubParamSet)
+  // verifyEddsa requires the message to be 512 bit array; hence for this circuit only
+  // for development & testing, agreementCommitmentBits are repeated. For a more constructed circuit
+  // refer to baselineDocument.zok
+  field isVerifiedBuyer = verifyEddsa(agreementData.constants.buyerSignature.R, agreementData.constants.buyerSignature.S, agreementData.constants.publicKeyOfBuyer, agreementCommitmentBits, agreementCommitmentBits, babyjubjubParamSet)
+  field isVerifiedSupplier = verifyEddsa(agreementData.constants.supplierSignature.R,  agreementData.constants.supplierSignature.S, agreementData.constants.publicKeyOfSupplier, agreementCommitmentBits, agreementCommitmentBits, babyjubjubParamSet)
   isVerifiedBuyer == 1
   isVerifiedSupplier == 1
 
