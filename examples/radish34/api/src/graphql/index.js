@@ -28,14 +28,14 @@ import ProposalResolver from './resolvers/proposal';
 import MSAResolver from './resolvers/msa';
 
 // Server state schemas
-import ServerStatusSchema from './server/schemas/status';
-import ServerStateSchema from './server/schemas/state';
-import ServerSettingsSchema from './server/schemas/settings';
+import ServerStatusSchema from './schemas/serverStatus';
+import ServerStateSchema from './schemas/serverState';
+import ServerSettingsSchema from './schemas/serverSettings';
 
 // Server state resolvers
-import ServerStatusResolver from './server/resolvers/status';
-import ServerStateResolver from './server/resolvers/state';
-import ServerSettingsResolver from './server/resolvers/settings';
+import ServerStatusResolver from './resolvers/serverStatus';
+import ServerStateResolver from './resolvers/serverState';
+import ServerSettingsResolver from './resolvers/serverSettings';
 
 export const resolvers = [
   OrganizationResolver,
