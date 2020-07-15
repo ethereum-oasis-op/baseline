@@ -5,12 +5,15 @@ const RFPSchema = gql`
     rfp(uuid: String!): RFP
     rfps: [RFP]
   }
+
   extend type Mutation {
     createRFP(input: inputRFP!): RFP
   }
+
   extend type Subscription {
     newRFP: RFP
   }
+
   type RFP {
     _id: String!
     description: String!
@@ -25,6 +28,7 @@ const RFPSchema = gql`
     publishDate: Int!
     closedDate: Int!
   }
+
   input inputRFP {
     description: String!
     proposalDeadline: Int!
@@ -32,28 +36,34 @@ const RFPSchema = gql`
     skuDescription: String!
     recipients: [InputRecipient!]!
   }
+
   input InputRecipient {
     partner: AddPartnerInput!
   }
+
   type Recipient {
     partner: Partner!
     origination: Origination
     signature: RFPSignature
   }
+
   type Origination {
     messageId: String
     receiptDate: Int
   }
-  type RFPSignature {
+
+  type RFPSignature{
     sentDate: Int
     receivedDate: Int
     messageId: String
   }
+
   type OnChain {
     rfpAddress: String!
     txHash: String!
     rfpId: String!
   }
+
   type Zkp {
     proof: String!
     verificationKey: String!

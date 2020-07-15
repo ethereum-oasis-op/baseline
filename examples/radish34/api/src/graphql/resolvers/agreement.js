@@ -1,13 +1,13 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
-import { Agreement, getAgreementById, getAllAgreements, getAgreementsByName, saveAgreement, getAgreementsByPrevId } from '../services/agreement';
-import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessagingKey } from '../services/partner';
-import { saveNotice } from '../services/notice';
-import { getServerSettings } from '../utils/serverSettings';
+import { Agreement, getAgreementById, getAllAgreements, getAgreementsByName, saveAgreement, getAgreementsByPrevId } from '../../services/agreement';
+import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessagingKey } from '../../services/partner';
+import { saveNotice } from '../../services/notice';
+import { getServerSettings } from '../../utils/serverSettings';
 import { pubsub } from '../subscriptions';
-import msgDeliveryQueue from '../queues/message_delivery';
-import { strip0x } from '../utils/crypto/conversions';
-import { checkKeyPair } from '../utils/crypto/ecc/babyjubjub-ecc';
+import msgDeliveryQueue from '../../queues/message_delivery';
+import { strip0x } from '../../utils/crypto/conversions';
+import { checkKeyPair } from '../../utils/crypto/ecc/babyjubjub-ecc';
 
 const pycryptojs = require('zokrates-pycryptojs');
 

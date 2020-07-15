@@ -186,7 +186,7 @@ if [[ "$BASELINE_NPM_PACKAGE" == "local" ]]
 then
 
   # Build local @baseline-protocol/messaging node package
-  pushd ../../baseline/core/messaging
+  pushd ../../core/messaging
   # Install node_modules if the directory doesn't exist
   if [[ ! -d ./node_modules ]]
   then
@@ -223,7 +223,7 @@ then
     ports:
      - 4001:4001
     volumes:
-      - ../../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
+      - ../../core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
@@ -258,7 +258,7 @@ then
     ports:
      - 4002:4001
     volumes:
-      - ../../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
+      - ../../core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
@@ -293,7 +293,7 @@ then
     ports:
       - 4003:4001
     volumes:
-      - ../../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
+      - ../../core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s

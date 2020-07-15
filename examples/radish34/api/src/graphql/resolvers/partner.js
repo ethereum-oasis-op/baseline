@@ -1,28 +1,27 @@
 import {
-  // getPartnerByID,
-  getPartnerByIdentity,
+  getPartnerByAddress,
+  getPartnerByMessagingKey,
   getAllPartners,
-  // getMyPartners,
-  setPartner,
-} from '../../db/models/baseline/organizations';
+  getMyPartners,
+  savePartner,
+  deletePartner,
+} from '../../services/partner';
 
 const PARTNERS_UPDATE = 'PARTNERS_UPDATE';
 
 export default {
   Query: {
     partner(_parent, args) {
-      // TODO: Reconnect this
-      // return getPartnerByID(args.address).then(res => res);
+      return getPartnerByAddress(args.address).then(res => res);
     },
-    getPartnerByIdentity(_parent, args) {
-      return getPartnerByIdentity(args.identity).then(res => res);
+    getPartnerByMessagingKey(_parent, args) {
+      return getPartnerByMessagingKey(args.identity).then(res => res);
     },
     partners() {
       return getAllPartners();
     },
     myPartners() {
-      // TODO: Reconnect this
-      // return getMyPartners();
+      return getMyPartners();
     },
   },
   Partner: {
@@ -32,16 +31,14 @@ export default {
   },
   Mutation: {
     addPartner: async (_parent, args) => {
-      await setPartner(args.input, true);
-      // TODO: Reconnect this
-      // const partners = await getMyPartners();
-      // return partners;
+      await savePartner(args.input);
+      const partners = await getMyPartners();
+      return partners;
     },
     removePartner: async (_parent, args) => {
-      await setPartner(args.input, false);
-      // TODO: Reconnect this
-      // const partners = await getMyPartners();
-      // return partners;
+      await deletePartner(args.input);
+      const partners = await getMyPartners();
+      return partners;
     },
   },
   Subscription: {

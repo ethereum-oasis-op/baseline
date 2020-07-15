@@ -4,7 +4,7 @@ export default gql`
   extend type Query {
     organization(address: Address!): Organization
     organizations: [Organization]
-    organizationList(start: Int!, count: Int!): Organizations
+    organizationList: Organizations
     registeredOrganization(address: Address!): RegisteredOrganization
     organizationCount: Int!
     orgRegistryAddress(registrarAddress: Address!, managerAddress: Address!): Address!
@@ -23,20 +23,7 @@ export default gql`
     address: Address!
     role: Int!
     identity: String!
-  }
-
-  type Partner {
-    name: String!
-    address: Address!
-    role: Role!
-    identity: String!
-  }
-
-  input AddPartnerInput {
-    name: String!
-    address: Address!
-    role: Role!
-    identity: String!
+    zkpPublicKey: String!
   }
 
   input RegisterOrganization {
@@ -58,6 +45,7 @@ export default gql`
     name: String!
     role: Int!
     identity: String!
+    zkpPublicKey: String!
   }
 
   type Organizations {
@@ -65,5 +53,6 @@ export default gql`
     names: [String!]!
     roles: [Int!]!
     identities: [String!]!
+    zkpPublicKeys: [String!]!
   }
 `;

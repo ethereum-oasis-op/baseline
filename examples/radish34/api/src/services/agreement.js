@@ -3,7 +3,7 @@ import { getPartnerByMessagingKey } from './partner';
 import { formatProof, createAgreement as createAgreementTx } from './shield';
 import { generateProof } from './zkp';
 
-import AgreementModel from '../integrations/agreement';
+import AgreementModel from '../db/models/modules/agreement';
 
 import { getServerSettings } from '../utils/serverSettings';
 import { strip0x, flattenDeep } from '../utils/crypto/conversions';

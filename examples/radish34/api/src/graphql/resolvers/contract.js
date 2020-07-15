@@ -1,5 +1,4 @@
-import { getContractById, getAllContracts } from '../../db/models/baseline/contracts';
-import { getTxReceipt } from '../../db/models/baseline/blockchaintx';
+import { getContractById, getTxReceipt, getAllContracts } from '../../services/contract';
 
 export default {
   Query: {
@@ -10,8 +9,20 @@ export default {
       return getAllContracts();
     },
     transactionReceipt(parent, args) {
-      // TODO: Reconnect this
-      // return getTxReceipt(args.hash).then(res => res);
+      return getTxReceipt(args.hash).then(txReceipt => {
+        return {
+          transactionHash: txReceipt.transactionHash,
+          status: txReceipt.status,
+          from: txReceipt.from,
+          to: txReceipt.to,
+          blockNumber: txReceipt.blockNumber,
+          blockHash: txReceipt.blockHash,
+          confirmations: txReceipt.confirmations,
+          gasUsed: txReceipt.gasUsed.toNumber(),
+          cumulativeGasUsed: txReceipt.cumulativeGasUsed.toNumber(),
+          contractAddress: txReceipt.contractAddress,
+        };
+      });
     },
   },
 

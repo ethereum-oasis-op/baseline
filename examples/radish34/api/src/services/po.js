@@ -5,7 +5,7 @@ import { getPartnerByMessagingKey } from './partner';
 import { formatProof, createPO as createPOTransaction } from './shield';
 import { generateProof } from './zkp';
 
-import { POModel } from '../integrations/po';
+import { POModel } from '../db/models/modules/po';
 
 import { getServerSettings } from '../utils/serverSettings';
 import { flattenDeep } from '../utils/crypto/conversions';

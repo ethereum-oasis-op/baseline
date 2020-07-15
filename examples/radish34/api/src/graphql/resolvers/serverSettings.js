@@ -1,7 +1,7 @@
-import healthcheck from '../install/healthcheck';
+import healthcheck from '../../install/healthcheck';
 import { pubsub } from '../subscriptions';
-import { setRPCProvider, setContractAddress, getServerSettings } from '../utils/serverSettings';
-import { createWalletFromMnemonic } from '../utils/wallet';
+import { setRPCProvider, setContractAddress, getServerSettings } from '../../utils/serverSettings';
+import { createWalletFromMnemonic } from '../../utils/wallet';
 
 const SERVER_SETTINGS_UPDATE = 'SERVER_SETTINGS_UPDATE';
 

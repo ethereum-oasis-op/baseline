@@ -1,5 +1,5 @@
 import db from '../db';
-import { pubsub } from '../subscriptions';
+import { pubsub } from '../graphql/subscriptions';
 
 export const getNoticeById = async id => {
   const notice = await db.collection('notices').findOne({ _id: id });

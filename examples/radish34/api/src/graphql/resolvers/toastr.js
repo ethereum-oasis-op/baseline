@@ -1,5 +1,5 @@
 import { pubsub } from '../subscriptions';
-import { withFilter } from '../../node_modules/graphql-subscriptions';
+import { withFilter } from '../../../node_modules/graphql-subscriptions';
 const INCOMING_TOASTR_NOTIFICATION = 'INCOMING_TOASTR_NOTIFICATION';
 
 export default {

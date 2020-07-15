@@ -1,13 +1,15 @@
 import { uuid } from 'uuidv4';
 import {
   getProposalById,
-  getProposalByRFPId,
+  getProposalsByRFPId,
   getAllProposals,
   saveProposal,
-} from '../../db/models/modules/proposals';
+  getProposalByRFPAndSupplier
+} from '../../services/proposal';
 import { pubsub } from '../subscriptions';
-import { saveNotice } from '../../db/models/baseline/notices';
-import { getPartnerByIdentity } from '../../db/models/baseline/organizations';
+import { saveNotice } from '../../services/notice';
+import { getPartnerByMessagingKey } from '../../services/partner';
+import msgDeliveryQueue from '../../queues/message_delivery';
 
 const NEW_PROPOSAL = 'NEW_PROPOSAL';
 
@@ -17,17 +19,22 @@ export default {
       return getProposalById(args.id).then(res => res);
     },
     getProposalsByRFPId(_parent, args) {
-      return getProposalByRFPId(args.rfpId).then(res => res);
+      return getProposalsByRFPId(args.rfpId).then(res => res);
     },
     proposals() {
       return getAllProposals();
     },
+    getProposalByRFPAndSupplier(_parent, args) {
+      return getProposalByRFPAndSupplier({ sender: args.sender, rfpId: args.rfpId });
+    }
   },
   Mutation: {
     createProposal: async (_parent, args, context) => {
-      // TODO: Connect this to the new baseline function 'createProposal'
       const { recipient, ...input } = args.input;
-      const currentUser = await getPartnerByIdentity(context.identity);
+      console.log('---------- proposal args.input:', args.input)
+      console.log('---------- recipient:', recipient)
+      console.log('---------- context:', context.identity)
+      const currentUser = await getPartnerByMessagingKey(context.identity);
       input._id = uuid();
       input.sender = context.identity;
       const newProposal = await saveProposal(input);
@@ -44,6 +51,18 @@ export default {
       });
       pubsub.publish(NEW_PROPOSAL, { newProposal: proposal });
       proposal.type = 'proposal_create';
+      msgDeliveryQueue.add(
+        {
+          documentId: proposal._id,
+          senderId: context.identity,
+          recipientId: recipient,
+          payload: proposal,
+        },
+        {
+          // Mark job as failed after 20sec so subsequent jobs are not stalled
+          timeout: 20000,
+        },
+      );
       return { ...proposal };
     },
   },

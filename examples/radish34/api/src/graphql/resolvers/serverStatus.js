@@ -1,5 +1,5 @@
 import { pubsub } from '../subscriptions';
-import { getServerStatus } from '../utils/serverStatus';
+import { getServerStatus } from '../../utils/serverStatus';
 
 const SERVER_STATUS_UPDATE = 'SERVER_STATUS_UPDATE';
 

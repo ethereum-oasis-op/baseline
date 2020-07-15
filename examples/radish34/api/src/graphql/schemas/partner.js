@@ -5,7 +5,7 @@ export default gql`
     partner(address: Address!): Partner
     partners: [Partner]
     myPartners: [Partner]
-    getPartnerByIdentity(identity: String!): Partner
+    getPartnerByMessagingKey(identity: String!): Partner
   }
 
   extend type Mutation {
@@ -15,6 +15,22 @@ export default gql`
 
   extend type Subscription {
     getPartnerUpdate: PartnerPayload
+  }
+
+  type Partner {
+    address: Address!
+    zkpPublicKey: String!
+    identity: String!
+    name: String!
+    role: Role!
+  }
+
+  input AddPartnerInput {
+    name: String
+    address: Address
+    role: Role
+    identity: String!
+    zkpPublicKey: String
   }
 
   input RemovePartnerInput {

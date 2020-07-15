@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import messenger from '../utils/messengerWrapper';
-import { originationUpdate } from '../db/models/modules/rfps';
+import messenger from '../../utils/messengerWrapper';
+import { originationUpdate } from '../../db/models/modules/rfps';
 
 module.exports = async (job, done) => {
   const { data: doc } = job;

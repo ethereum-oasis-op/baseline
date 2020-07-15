@@ -1,52 +1,134 @@
 import mongoose from 'mongoose';
-import { uuid } from 'uuidv4';
+import EdDSASignaturesSchema from './signature';
 
-const MSASchema = new mongoose.Schema({
-  _id: String,
-  proposalId: String,
-  rfpId: String,
-  buyerSignature: {
-    name: String,
-    signature: String,
-    signatureDate: Number,
+const MSAMetadata = new mongoose.Schema({
+  // is the MSA 'open' or 'closed'?
+  open: {
+    type: Boolean,
+    default: true,
+    required: false,
   },
-  supplierSignature: {
-    name: String,
-    signature: String,
-    signatureDate: Number,
-  },
-  lastModified: Number,
-  createdDate: Number,
+  POs: [
+    {
+      poId: {
+        type: String,
+        required: false,
+      },
+    },
+  ],
+  deliveries: [
+    {
+      deliveryId: {
+        type: String,
+        required: false,
+      },
+    },
+  ],
+  invoices: [
+    {
+      invoiceId: {
+        type: String,
+        required: false,
+      },
+    },
+  ],
 });
 
-const MSA = mongoose.model('msa', MSASchema);
+const MSACommitmentSchema = new mongoose.Schema({
+  commitment: {
+    type: String,
+    required: true,
+  },
+  index: {
+    type: Number,
+    required: false,
+  },
+  salt: {
+    type: String,
+    required: true,
+  },
+  nullifier: {
+    type: String,
+    required: true,
+  },
+  variables: {
+    accumulatedVolumeOrdered: {
+      type: Number,
+      required: true,
+    },
+    accumulatedVolumeDelivered: {
+      type: Number,
+      required: true,
+    },
+  },
+});
 
-export const getMSAById = async id => {
-  const msa = await MSA.findOne({ _id: id });
-  return msa;
-};
+const MSASchema = new mongoose.Schema({
+  metadata: {
+    type: MSAMetadata,
+    required: false,
+  },
+  constants: {
+    zkpPublicKeyOfBuyer: {
+      type: String,
+      required: true,
+    },
+    zkpPublicKeyOfSupplier: {
+      type: String,
+      required: true,
+    },
+    tierBounds: [
+      {
+        type: Number,
+        required: true,
+      },
+    ],
+    pricesByTier: [
+      {
+        type: Number,
+        required: true,
+      },
+    ],
+    hashOfTieredPricing: {
+      type: String,
+      required: true,
+    },
+    minVolume: {
+      type: Number,
+      required: true,
+    },
+    maxVolume: {
+      type: Number,
+      required: true,
+    },
+    sku: {
+      type: String,
+      required: true,
+    },
+    erc20ContractAddress: {
+      type: String,
+      required: true,
+    },
+    EdDSASignatures: {
+      buyer: {
+        type: EdDSASignaturesSchema,
+        required: true,
+      },
+      supplier: {
+        type: EdDSASignaturesSchema,
+        required: false,
+      },
+    },
+  },
+  commitments: {
+    type: [MSACommitmentSchema],
+  },
+  rfpId: {
+    type: String,
+    required: true,
+  }
+});
 
-export const getMSAByProposalId = async id => {
-  const msa = await MSA.findOne({ proposalId: id });
-  return msa;
-};
+const MSAModel = mongoose.model('msa', MSASchema);
 
-export const getAllMSAs = async () => {
-  const msas = await MSA.find({}).toArray();
-  return msas;
-};
-
-export const saveMSA = async input => {
-  const exists = await getMSAByProposalId(input.proposalId);
-  if (exists) throw new Error(`MSA already exists for Proposal ${input.proposalId}`);
-  const msa = new MSA({ _id: uuid(), ...input });
-  await msa.save();
-  return msa;
-};
-
-export default {
-  getMSAById,
-  getMSAByProposalId,
-  getAllMSAs,
-  saveMSA,
-};
+export default MSAModel;

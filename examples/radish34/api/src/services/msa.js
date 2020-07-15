@@ -3,7 +3,7 @@ import { getPartnerByMessagingKey } from './partner';
 import { formatProof, createMSA as createMSATransaction } from './shield';
 import { generateProof } from './zkp';
 
-import MSAModel from '../integrations/msa';
+import MSAModel from '../db/models/modules/msa';
 
 import { getServerSettings } from '../utils/serverSettings';
 import { calculatePrice } from '../utils/business-logic';

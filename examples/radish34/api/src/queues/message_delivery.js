@@ -7,6 +7,6 @@ setQueues(msgDeliveryQueue);
 
 // In-line worker using sandboxed processor
 // Need to use absolute instead of relative filepath
-msgDeliveryQueue.process('/app/dist/workers/message_delivery.js');
+msgDeliveryQueue.process('/app/dist/queues/workers/message_delivery.js');
 
 module.exports = msgDeliveryQueue;

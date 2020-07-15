@@ -1,4 +1,4 @@
-import { getAddress, getBalance } from '../../services/wallet';
+import { getAddress, getBalance, getPublicKey, sign, verify } from '../../services/wallet';
 
 export default {
   Query: {

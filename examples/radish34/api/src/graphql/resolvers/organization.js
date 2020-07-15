@@ -1,15 +1,29 @@
 import { pubsub } from '../subscriptions';
-import { getInterfaceAddress } from '../../contracts/ERC1820Registry/methods';
-import { getServerSettings } from '../../db/models/baseline/server/settings';
-import { getOrganizationById, getAllOrganizations } from '../../db/models/baseline/organizations';
 import {
   registerToOrgRegistry,
   listOrganizations,
-  getOrganizationCount,
   getRegisteredOrganization,
-} from '../../contracts/OrgRegistry/methods';
+  getOrganizationCount,
+  getInterfaceAddress,
+  saveOrganization
+} from '../../services/organization';
+import { getServerSettings } from '../../utils/serverSettings';
+import db from '../../db';
 
 const NEW_ORG = 'NEW_ORG';
+
+const getOrganizationById = async address => {
+  const organization = await db.collection('organization').findOne({ _id: address });
+  return organization;
+};
+
+const getAllOrganizations = async () => {
+  const organizations = await db
+    .collection('organization')
+    .find({})
+    .toArray();
+  return organizations;
+};
 
 export default {
   Query: {
@@ -19,8 +33,8 @@ export default {
     organizations() {
       return getAllOrganizations();
     },
-    organizationList(_parent, args) {
-      return listOrganizations(args.start, args.count);
+    organizationList() {
+      return listOrganizations();
     },
     registeredOrganization(_parent, args) {
       return getRegisteredOrganization(args.address);
@@ -40,13 +54,15 @@ export default {
   Mutation: {
     registerOrganization: async (_root, args) => {
       const settings = await getServerSettings();
-      const { organizationWhisperKey, organizationAddress } = settings;
+      const { zkpPublicKey, messagingKey, messagingEndpoint, address } = settings.organization;
 
       const orgRegistryTxHash = await registerToOrgRegistry(
-        organizationAddress,
+        address,
         args.organizationName,
-        args.organizationRole,
-        organizationWhisperKey,
+        messagingEndpoint,
+        messagingKey,
+        zkpPublicKey,
+        args.metadata,
       );
 
       console.log('Registering Organization with tx:', orgRegistryTxHash);

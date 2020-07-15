@@ -1,4 +1,4 @@
-import { pubsub } from '../subscriptions';
+import { pubsub } from '../graphql/subscriptions';
 import db from '../db';
 
 export const getServerState = async () => {
