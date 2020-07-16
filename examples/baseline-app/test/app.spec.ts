@@ -79,7 +79,8 @@ describe('baseline', () => {
 
       it('should have compiled and setup the baseline circuit', async () => {
         assert(setupArtifacts, 'should not be null');
-        console.log(setupArtifacts);
+        assert(setupArtifacts.keypair, 'keypair should not be null');
+        assert(setupArtifacts.verifierSource, 'verifier source should not be null');
       });
     });
   });
