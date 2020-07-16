@@ -58,6 +58,7 @@ describe('baseline', () => {
 
   describe('baseline circuit', () => {
     let circuitArtifacts;
+    let setupArtifacts;
 
     describe('compiling a circuit', () => {
       beforeEach(async () => {
@@ -68,6 +69,17 @@ describe('baseline', () => {
         assert(circuitArtifacts, 'should not be null');
         assert(circuitArtifacts.program, 'artifacts should contain the compiled circuit');
         assert(circuitArtifacts.abi, 'artifacts should contain the abi');
+      });
+    });
+
+    describe('deploying a circuit', () => {
+      beforeEach(async () => {
+        setupArtifacts = await app.deployBaselineCircuit();
+      });
+
+      it('should have compiled and setup the baseline circuit', async () => {
+        assert(setupArtifacts, 'should not be null');
+        console.log(setupArtifacts);
       });
     });
   });
@@ -147,6 +159,12 @@ describe('baseline', () => {
       });
 
       it('should register the organization with the on-chain org registry contract', async () => {
+
+      });
+    });
+
+    describe('workflow', () => {
+      describe('workstep', () => {
 
       });
     });

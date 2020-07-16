@@ -4,11 +4,11 @@ import { IZKSnarkCircuitProvider, zkSnarkCircuitProviderServiceFactory, zkSnarkC
 import { Capabilities, Ident, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
 
-const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument/baselineDocument.zok';
+const baselineDocumentCircuitPath = '../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.*';
 
 const zokratesImportResolver = (location, path) => {
-  let zokpath = `../../lib/circuits/baselineDocument/${path}`;
+  let zokpath = `../../lib/circuits/${path}`;
   if (!zokpath.match(/\.zok$/i)) {
     zokpath = `${zokpath}.zok`;
   }
@@ -117,8 +117,13 @@ export class BaselineApp {
   }
 
   async deployBaselineCircuit(): Promise<any> {
+    // compile the circuit...
+    await this.compileBaselineCircuit();
+
     // perform trusted setup and deploy verifier/shield contract
     const setupArtifacts = await this.zk?.setup(this.baselineCircuitArtifacts.program);
+    console.log(setupArtifacts);
+
     // TODO: deploy verifier & shield
     return setupArtifacts;
   }
