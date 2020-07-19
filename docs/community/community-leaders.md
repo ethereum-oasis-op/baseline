@@ -74,6 +74,7 @@ _To be listed below, contact the_ [_TSC Chair_ ](community-leaders.md#your-provi
 | [**Zac Cole**](https://www.linkedin.com/in/zak-cole/)\*\*\*\* | Whiteblock |
 | [**Nate Blakely**](https://www.linkedin.com/in/nathaniel-blakely/)\*\*\*\* | Whiteblock |
 | [**David Goodman**](https://www.linkedin.com/in/dh6oodman/)\*\*\*\* | [Vitro](https://vitro.io/) |
+| \*\*\*\*[**Kevin Small**](https://uk.linkedin.com/in/kevinsmalldev)\*\*\*\* | Independent |
 
 ### Your Provisional Chair
 
