@@ -1,0 +1,75 @@
+<dashboard theme="dark">
+  <label>data flowing to splunk</label>
+  <row>
+    <panel>
+      <viz type="flow_map_viz.flow_map_viz">
+        <title>green = logs, blue = metrics</title>
+        <search>
+          <query>index=* 
+| eval to="Splunk"
+| stats count as good by sourcetype, to
+| rename sourcetype as from
+| append
+    [| mstats count WHERE metric_name="*" span=1m BY "metric_name"
+    | rex field=metric_name "(?&lt;mname&gt;\w+)\."
+    | stats count AS "warn" BY mname
+    | rename mname AS from
+    | eval to="Splunk"]</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="flow_map_viz.flow_map_viz.background_color">#31373e</option>
+        <option name="flow_map_viz.flow_map_viz.background_mode">custom</option>
+        <option name="flow_map_viz.flow_map_viz.coarse_positions">yes</option>
+        <option name="flow_map_viz.flow_map_viz.labels_as_html">no</option>
+        <option name="flow_map_viz.flow_map_viz.line_style">ants</option>
+        <option name="flow_map_viz.flow_map_viz.link_color">#cccccc</option>
+        <option name="flow_map_viz.flow_map_viz.link_distance">200</option>
+        <option name="flow_map_viz.flow_map_viz.link_label_color">#000000</option>
+        <option name="flow_map_viz.flow_map_viz.link_opacity">0.5</option>
+        <option name="flow_map_viz.flow_map_viz.link_speed">90</option>
+        <option name="flow_map_viz.flow_map_viz.link_text_size">10</option>
+        <option name="flow_map_viz.flow_map_viz.link_width">1</option>
+        <option name="flow_map_viz.flow_map_viz.maxnodes">100</option>
+        <option name="flow_map_viz.flow_map_viz.node_bg_color">#31373e</option>
+        <option name="flow_map_viz.flow_map_viz.node_border_color">#000000</option>
+        <option name="flow_map_viz.flow_map_viz.node_border_mode">darker1</option>
+        <option name="flow_map_viz.flow_map_viz.node_border_width">1</option>
+        <option name="flow_map_viz.flow_map_viz.node_center_force">0.1</option>
+        <option name="flow_map_viz.flow_map_viz.node_height">30</option>
+        <option name="flow_map_viz.flow_map_viz.node_radius">2</option>
+        <option name="flow_map_viz.flow_map_viz.node_repel_force">1000</option>
+        <option name="flow_map_viz.flow_map_viz.node_shadow_color">#000000</option>
+        <option name="flow_map_viz.flow_map_viz.node_shadow_mode">custom</option>
+        <option name="flow_map_viz.flow_map_viz.node_text_color">#C6C6C6</option>
+        <option name="flow_map_viz.flow_map_viz.node_text_size">12</option>
+        <option name="flow_map_viz.flow_map_viz.node_width">120</option>
+        <option name="flow_map_viz.flow_map_viz.particle_blur">0</option>
+        <option name="flow_map_viz.flow_map_viz.particle_error_color">#b22b32</option>
+        <option name="flow_map_viz.flow_map_viz.particle_good_color">#1a9035</option>
+        <option name="flow_map_viz.flow_map_viz.particle_limit">60</option>
+        <option name="flow_map_viz.flow_map_viz.particle_size">3</option>
+        <option name="flow_map_viz.flow_map_viz.particle_spread">5</option>
+        <option name="flow_map_viz.flow_map_viz.particle_warn_color">#d16f18</option>
+        <option name="flow_map_viz.flow_map_viz.renderer">webgl</option>
+        <option name="refresh.display">progressbar</option>
+      </viz>
+    </panel>
+    <panel>
+      <table>
+        <search>
+          <query>index=*
+| stats count AS "Event Count" values(sourcetype) as "Event Sourcetypes" sparkline(count) as "Event Sparkline" by host
+| appendcols
+    [| mstats count WHERE metric_name="*" AND "index"="metrics" span=1m BY host
+    | stats sum(count) as "Metrics Count" sparkline(sum(count)) as "Metrics Sparkline" BY host
+    | search (host=node* OR host=cadvisor*)]</query>
+          <earliest>-24h@h</earliest>
+          <latest>now</latest>
+        </search>
+        <option name="drilldown">none</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

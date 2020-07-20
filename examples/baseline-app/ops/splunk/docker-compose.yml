@@ -1,5 +1,18 @@
 version: '3.5'
 
+x-logging:
+  &splunk-logging
+  driver: splunk
+  options:
+    splunk-token: 11111111-1111-1111-1111-1111111111113
+    splunk-url: https://localhost:8088
+    splunk-index: logs
+    splunk-sourcetype: docker
+    splunk-insecureskipverify: "true"
+    splunk-verify-connection: "false"
+    splunk-format: "raw"
+    tag: "{{.Name}}-{{.ID}}"
+
 services:
 
   # alice
@@ -11,6 +24,7 @@ services:
       - POSTGRES_DB=prvd
       - POSTGRES_USER=prvd
       - POSTGRES_PASSWORD=prvdp455
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "prvd", "-d", "prvd"]
       interval: 1m
@@ -45,7 +59,7 @@ services:
   alice-nats:
     image: provide/nats-server
     container_name: alice-provide-nats
-    command: ["-auth", "testtoken", "-p", "4222", "-D", "-V"]
+    command: ["-auth", "testtoken", "-p", "4222", "--remote_syslog", "udp://splunk:8514", "-D", "-V"]
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----
@@ -84,6 +98,8 @@ services:
     container_name: alice-nats-streaming
     depends_on:
       - alice-nats
+    environment:
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
       interval: 1m
@@ -115,6 +131,7 @@ services:
       - REDIS_HOSTS=alice-redis:6379
       - LOG_LEVEL=DEBUG
       - PORT=8080
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://alice-ident:8080/status"]
       interval: 1m
@@ -148,6 +165,7 @@ services:
       - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
       - PORT=8080
       - REDIS_HOSTS=alice-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
       - VAULT_API_SCHEME=http
       - VAULT_API_HOST=alice-vault:8080
     healthcheck:
@@ -179,6 +197,7 @@ services:
       - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
       - PORT=8080
       - REDIS_HOSTS=alice-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://alice-nchain:8080/status"]
       interval: 1m
@@ -212,6 +231,7 @@ services:
       - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
       - NATS_TOKEN=testtoken
       - REDIS_HOSTS=alice-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://alice-nchain:8080/status"] # FIXME
       interval: 1m
@@ -241,6 +261,7 @@ services:
       - NATS_URL=nats://alice-nats:4222
       - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
       - REDIS_HOSTS=alice-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://alice-nchain:8080/status"] # FIXME
       interval: 1m
@@ -264,6 +285,7 @@ services:
       - DATABASE_PASSWORD=vault
       - LOG_LEVEL=DEBUG
       - PORT=8080
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://alice-vault:8080/status"]
       interval: 1m
@@ -316,6 +338,7 @@ services:
       - POSTGRES_DB=prvd
       - POSTGRES_USER=prvd
       - POSTGRES_PASSWORD=prvdp455
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "prvd", "-d", "prvd"]
       interval: 1m
@@ -348,7 +371,7 @@ services:
   bob-nats:
     image: provide/nats-server
     container_name: bob-provide-nats
-    command: ["-auth", "testtoken", "-p", "4222", "-D", "-V"]
+    command: ["-auth", "testtoken", "-p", "4222", "--remote_syslog", "udp://splunk:8514", "-D", "-V"]
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----
@@ -387,6 +410,8 @@ services:
     container_name: bob-nats-streaming
     depends_on:
       - bob-nats
+    environment:
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
       interval: 1m
@@ -418,6 +443,7 @@ services:
       - REDIS_HOSTS=bob-redis:6379
       - LOG_LEVEL=DEBUG
       - PORT=8080
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://bob-ident:8080/status"]
       interval: 1m
@@ -450,6 +476,7 @@ services:
       - NATS_URL=nats://bob-nats:4222
       - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
       - REDIS_HOSTS=bob-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
       - VAULT_API_SCHEME=http
       - VAULT_API_HOST=bob-vault:8080
     healthcheck:
@@ -481,6 +508,7 @@ services:
       - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
       - PORT=8080
       - REDIS_HOSTS=bob-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://bob-nchain:8080/status"]
       interval: 1m
@@ -515,6 +543,7 @@ services:
       - NATS_TOKEN=testtoken
       - PORT=8080
       - REDIS_HOSTS=bob-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://bob-nchain:8080/status"] # FIXME
       interval: 1m
@@ -544,6 +573,7 @@ services:
       - NATS_URL=nats://bob-nats:4222
       - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
       - REDIS_HOSTS=bob-redis:6379
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://bob-nchain:8080/status"] # FIXME
       interval: 1m
@@ -567,6 +597,7 @@ services:
       - DATABASE_PASSWORD=vault
       - LOG_LEVEL=DEBUG
       - PORT=8080
+      - SYSLOG_ENDPOINT=splunk:8514
     healthcheck:
       test: ["CMD", "curl", "-f", "http://bob-vault:8080/status"]
       interval: 1m
@@ -610,6 +641,116 @@ services:
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
+  # splunk stack
+
+  splunk:
+    image: splunk/splunk:latest
+    container_name: splunk
+    hostname: splunk
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_HEC_TOKEN=11111111-1111-1111-1111-1111111111113
+      - SPLUNK_PASSWORD=changeme
+      - SPLUNK_APPS_URL=https://github.com/splunk/ethereum-basics/releases/download/latest/ethereum-basics.tgz
+    expose:
+      - "8000"
+      - "8088"
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000']
+      interval: 5s
+      timeout: 5s
+      retries: 2
+    ports:
+      - "8000:8000"
+      - "8088:8088"
+      - "8514:8514"
+    volumes:
+      - splunk-var:/opt/splunk/var
+      - splunk-etc:/opt/splunk/etc
+      - ./ops/splunk/splunk-config.yml:/tmp/defaults/default.yml
+      - ./ops/splunk/dashboards:/opt/splunk/etc/apps/search/local/data/ui/views/
+    networks:
+      - alice
+      - bob
+
+  alice-ethlogger:
+    image: splunkdlt/ethlogger:latest
+    environment:
+      - ETH_RPC_URL=http://alice-nethermind:8522
+      - NETWORK_NAME=ropsten
+      - START_AT_BLOCK=latest
+      - SPLUNK_HEC_URL=https://splunk:8088
+      - SPLUNK_HEC_TOKEN=11111111-1111-1111-1111-1111111111113
+      - SPLUNK_EVENTS_INDEX=main
+      - SPLUNK_METRICS_INDEX=eth_metrics
+      - SPLUNK_INTERNAL_INDEX=eth_metrics
+      - SPLUNK_HEC_REJECT_INVALID_CERTS=false
+      - ABI_DIR=/app/abis
+      - COLLECT_PENDING_TX=true
+      - COLLECT_PEER_INFO=true
+      - DEBUG=ethlogger:abi:*
+    depends_on:
+      - splunk
+      - alice-nethermind
+    restart: unless-stopped
+    hostname: alice-ethlogger
+    volumes:
+      - ./ops/splunk/abis:/app/abis
+      - ./ops/splunk:/app
+    networks:
+      - alice
+      - bob
+    logging: *splunk-logging
+
+  bob-ethlogger:
+    image: splunkdlt/ethlogger:latest
+    environment:
+      - ETH_RPC_URL=http://bob-nethermind:8511
+      - NETWORK_NAME=ropsten
+      - START_AT_BLOCK=latest
+      - SPLUNK_HEC_URL=https://splunk:8088
+      - SPLUNK_HEC_TOKEN=11111111-1111-1111-1111-1111111111113
+      - SPLUNK_EVENTS_INDEX=main
+      - SPLUNK_METRICS_INDEX=eth_metrics
+      - SPLUNK_INTERNAL_INDEX=eth_metrics
+      - SPLUNK_HEC_REJECT_INVALID_CERTS=false
+      - ABI_DIR=/app/abis
+      - COLLECT_PENDING_TX=true
+      - COLLECT_PEER_INFO=true
+      - DEBUG=ethlogger:abi:*
+    depends_on:
+      - splunk
+      - bob-nethermind
+    restart: unless-stopped
+    hostname: bob-ethlogger
+    volumes:
+      - ./ops/splunk/abis:/app/abis
+      - ./ops/splunk:/app
+    networks:
+      - alice
+      - bob
+    logging: *splunk-logging
+
+  cadvisor:
+    image: google/cadvisor:latest
+    command:
+      - --storage_driver=statsd
+      - --storage_driver_host=splunk:8125
+      - --docker_only=true
+    depends_on:
+      - splunk
+    user: root
+    hostname: cadvisor
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - alice
+      - bob
+    logging: *splunk-logging
+
 networks:
   alice:
     driver: bridge
@@ -625,3 +766,5 @@ networks:
 volumes:
   alice-db:
   bob-db:
+  splunk-var:
+  splunk-etc:
