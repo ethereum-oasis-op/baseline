@@ -674,6 +674,7 @@ services:
       - bob
 
   alice-ethlogger:
+    container_name: alice-ethlogger
     image: splunkdlt/ethlogger:latest
     environment:
       - ETH_RPC_URL=http://alice-nethermind:8522
@@ -703,6 +704,7 @@ services:
     logging: *splunk-logging
 
   bob-ethlogger:
+    container_name: bob-ethlogger
     image: splunkdlt/ethlogger:latest
     environment:
       - ETH_RPC_URL=http://bob-nethermind:8511
@@ -766,5 +768,5 @@ networks:
 volumes:
   alice-db:
   bob-db:
-  splunk-var:
   splunk-etc:
+  splunk-var:
