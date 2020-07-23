@@ -22,6 +22,7 @@
     "@baseline-protocol/api": "0.0.4",
     "@baseline-protocol/messaging": "0.0.2",
     "@baseline-protocol/privacy": "0.0.4",
+    "@baseline-protocol/types": "0.0.1",
     "provide-js": "^1.2.1"
   },
   "devDependencies": {
