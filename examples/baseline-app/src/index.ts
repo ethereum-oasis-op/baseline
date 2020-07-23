@@ -207,4 +207,43 @@ export class BaselineApp {
     });
     return this.protocolSubscriptions;
   }
+
+  async protocolMessageFactory(
+    recipient: string,
+    shield: string,
+    identifier: string,
+    payload: Buffer,
+  ): Promise<ProtocolMessage> {
+    let signature = await this.baseline?.signMessage('', '', payload.toString('utf8'));
+
+    return {
+      opcode: Opcode.Baseline,
+      recipient: recipient,
+      shield: shield,
+      identifier: identifier,
+      signature: signature,
+      type: PayloadType.Text,
+      payload: payload,
+    };
+  }
+
+  serializeProtocolMessage(
+    msg: ProtocolMessage,
+  ): Buffer {
+    const reservedBits = Buffer.alloc(messageReservedBitsLength / 8);
+    const buffer = Buffer.alloc(5 + 42 + 42 + 36 + 64 + 1 + reservedBits.length + msg.payload.length);
+
+    buffer.write(msg.opcode);
+    buffer.write(msg.recipient, 5);
+    buffer.write(msg.shield, 5 + 42);
+    buffer.write(msg.identifier, 5 + 42 + 42);
+    buffer.write(reservedBits.toString(), 5 + 42 + 42 + 36);
+    buffer.write(msg.signature, 5 + 42 + 42 + 36 + reservedBits.length);
+    buffer.write(msg.type.toString(), 5 + 42 + 42 + 36 + reservedBits.length + 64);
+
+    const encoding = msg.type === PayloadType.Binary ? 'binary' : 'utf8';
+    buffer.write(msg.payload.toString(encoding), 5 + 42 + 42 + 36 + reservedBits.length + 64 + 1);
+
+    return buffer;
+  }
 }
