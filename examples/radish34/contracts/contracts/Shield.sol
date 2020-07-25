@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: CC0
 /**
 Contract to enable the management of private fungible token (ERC-20) transactions using zk-SNARKs.
 @Author Westlad, Chaitanya-Konda, iAmMichaelConnor
@@ -14,7 +15,7 @@ import "./Registrar.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
+contract Shield is Ownable, MerkleTree, ERC165Compatible, ERC1820ImplementerInterface, Registrar, IShield {
     // ENUMS:
     enum TransactionTypes { CreateMSA, CreatePO, CreateAgreement }
 
@@ -39,7 +40,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     mapping(bytes32 => bytes32) public commitments; // store commitments
     mapping(bytes32 => bytes32) public nullifiers; // store nullifiers of spent commitments
     mapping(bytes32 => bytes32) public roots; // holds each root we've calculated so that we can pull the one relevant to the prover
-    bytes32 public latestRoot; // holds the index for the latest root so that the prover can provide it later and this contract can look up the relevant root
+    bytes32 public latestRoot; // holds the index for the latest root so that the prover can provide it later
 
     // VERIFICATION KEY STORAGE:
     mapping(uint => uint256[]) public vks; // mapped to by an enum uint(TransactionTypes):
@@ -51,7 +52,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         setInterfaceImplementation("IShield", address(this));
     }
 
-    function setInterfaces() override public onlyOwner returns (bool) {
+    function setInterfaces() public override  onlyOwner returns (bool) {
         _registerInterface(this.changeVerifier.selector ^
                             this.getVerifier.selector ^
                             this.createMSA.selector ^
@@ -66,18 +67,18 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
                 this.createPO.selector;
     }
 
-    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+    function canImplementInterfaceForAddress(bytes32, address) external override view returns(bytes32) {
         return ERC1820_ACCEPT_MAGIC;
     }
 
-    function assignManager(address _newManager) onlyOwner external {
+    function assignManager(address _newManager) external onlyOwner {
         assignManagement(_newManager);
     }
 
     /**
     self destruct
     */
-    function close() override external onlyOwner returns (bool) {
+    function close() external override onlyOwner returns (bool) {
         selfdestruct(address(uint160(msg.sender)));
         return true;
     }
@@ -85,7 +86,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     /**
     function to change the address of the underlying Verifier contract
     */
-    function changeVerifier(address _verifier) override external onlyOwner returns (bool) {
+    function changeVerifier(address _verifier) external override onlyOwner returns (bool) {
         verifier = IVerifier(_verifier);
         emit VerifierChanged(_verifier);
         return true;
@@ -94,7 +95,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     /**
     returns the verifier-interface contract address that this shield contract is calling
     */
-    function getVerifier() override external view returns (address) {
+    function getVerifier() external override view returns (address) {
         return address(verifier);
     }
 
@@ -104,11 +105,12 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
     function registerVerificationKey(
         uint256[] calldata _vk,
         TransactionTypes _txType
-    ) external onlyOwner returns (bytes32) {
+    ) external onlyOwner returns (bool) {
         // CAUTION: we do not prevent overwrites of vk's. Users must listen for the emitted event to detect updates to a vk.
         vks[uint(_txType)] = _vk;
 
         emit VkChanged(_txType);
+        return true;
     }
 
     /**
@@ -118,7 +120,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         uint256[] calldata _proof,
         uint256[] calldata _inputs,
         bytes32 _newMSACommitment
-    ) override external returns (bool) {
+    ) external override returns (bool) {
 
         // gas measurement:
         uint256 gasCheckpoint = gasleft();
@@ -163,7 +165,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         uint256[] calldata _proof,
         uint256[] calldata _inputs,
         bytes32 _newAgreementCommitment
-    ) override external returns (bool) {
+    ) external override returns (bool) {
 
         // gas measurement:
         uint256 gasCheckpoint = gasleft();
@@ -212,7 +214,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
         bytes32 _nullifierOfOldMSACommitment,
         bytes32 _newMSACommitment,
         bytes32 _newPOCommitment
-    ) override external returns(bool) {
+    ) external override returns(bool) {
 
         // gas measurement:
         uint256[3] memory gasUsed; // array needed to stay below local stack limit
@@ -220,7 +222,12 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
 
         // Check that the publicInputHash equals the hash of the 'public inputs':
         bytes31 publicInputHash = bytes31(bytes32(_inputs[0]) << 8);
-        bytes31 publicInputHashCheck = bytes31(sha256(abi.encodePacked(_root, _nullifierOfOldMSACommitment, _newMSACommitment, _newPOCommitment)) << 8);
+        bytes31 publicInputHashCheck = bytes31(
+                        sha256(abi.encodePacked(
+                            _root,
+                            _nullifierOfOldMSACommitment,
+                            _newMSACommitment,
+                            _newPOCommitment)) << 8);
         require(publicInputHashCheck == publicInputHash, "publicInputHash cannot be reconciled");
 
         // gas measurement:
@@ -237,7 +244,7 @@ contract Shield is Ownable, MerkleTree, ERC165Compatible, Registrar, IShield {
 
         // check inputs vs on-chain states
         require(roots[_root] == _root, "The input root has never been the root of the Merkle Tree");
-        require(_newMSACommitment != _newPOCommitment, "The new commitments (_newMSACommitment and _newPOCommitment) must be different!"); // Is this check necessary?
+        require(_newMSACommitment != _newPOCommitment, "Commitments (_newMSACommitment and _newPOCommitment) must be different!");
         require(commitments[_newMSACommitment] == 0, "The MSA commitment already exists!");
         require(nullifiers[_nullifierOfOldMSACommitment] == 0, "The MSA commitment (which is being updated) has already been nullified!");
         require(commitments[_newPOCommitment] == 0, "The PO commitment already exists!");

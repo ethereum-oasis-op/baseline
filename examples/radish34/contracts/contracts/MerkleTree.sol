@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: CC0
 /**
 A base contract which handles Merkle Tree inserts (and consequent updates to the root and 'frontier' (see below)).
 The intention is for other 'derived' contracts to import this contract, and for those derived contracts to manage permissions to actually call the insertLeaf/insertleaves functions of this base contract.

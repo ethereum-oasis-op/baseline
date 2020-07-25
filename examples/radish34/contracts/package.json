@@ -24,7 +24,7 @@
     "@openzeppelin/contracts": "^3.1.0",
     "ethereum-doppelganger": "^0.0.7",
     "ethers": "^4.0.46",
-    "solc": "^0.6.10"
+    "solc": "^0.6.12"
   },
   "jest": {
     "testEnvironment": "node",

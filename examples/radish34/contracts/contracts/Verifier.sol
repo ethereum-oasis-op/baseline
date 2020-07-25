@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 /**
 CREDITS:
 
@@ -63,7 +64,7 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         setInterfaceImplementation("IVerifier", address(this));
     }
 
-    function setInterfaces() override public onlyOwner returns (bool) {
+    function setInterfaces() public override  onlyOwner returns (bool) {
         _registerInterface(this.verify.selector);
         return true;
     }
@@ -72,11 +73,11 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         return this.verify.selector;
     }
 
-    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+    function canImplementInterfaceForAddress(bytes32, address) external pure returns(bytes32) {
         return ERC1820_ACCEPT_MAGIC;
     }
 
-    function assignManager(address _newManager) onlyOwner external {
+    function assignManager(address _newManager) external onlyOwner  {
         assignManagement(_newManager);
     }
 
@@ -84,7 +85,7 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
         uint256[] memory _proof,
         uint256[] memory _inputs,
         uint256[] memory _vk
-    ) override public returns (bool result) {
+    ) public override returns (bool result) {
         if (verificationCalculation(_proof, _inputs, _vk) == 0) {
             result = true;
         } else {
@@ -148,7 +149,8 @@ contract Verifier is Ownable, ERC165Compatible, Registrar, IVerifier {
          *                              * e(C, H)
          * where psi = \sum_{i=0}^l input_i pvk.query[i]
          */
-        if (!Pairing.pairingProd4(vk.Galpha, vk.Hbeta, vk_dot_inputs, vk.Hgamma, proof.C, vk.H, Pairing.negate(Pairing.addition(proof.A, vk.Galpha)), Pairing.addition2(proof.B, vk.Hbeta))) {
+        if (!Pairing.pairingProd4(vk.Galpha, vk.Hbeta, vk_dot_inputs, vk.Hgamma, proof.C, vk.H,
+            Pairing.negate(Pairing.addition(proof.A, vk.Galpha)), Pairing.addition2(proof.B, vk.Hbeta))) {
             return 1;
         }
 

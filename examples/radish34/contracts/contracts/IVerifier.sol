@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: CC0
 pragma solidity ^0.6.9;
 
 /**
