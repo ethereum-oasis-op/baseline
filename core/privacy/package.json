@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/privacy",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Baseline core privacy",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
@@ -14,9 +14,10 @@
     "build:umd": "webpack",
     "build": "npm run clean && npm run build:cjs && npm run build:umd",
     "clean": "rm -rf ./dist",
-    "test": "./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.ts --timeout 30000 --max-old-space-size=8192"
+    "test": "./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.spec.ts --timeout 30000 --unhandled-rejections=strict --max-old-space-size=8192"
   },
   "dependencies": {
+    "@types/uuid": "^8.0.0",
     "zokrates-js": "^1.0.23"
   },
   "devDependencies": {
