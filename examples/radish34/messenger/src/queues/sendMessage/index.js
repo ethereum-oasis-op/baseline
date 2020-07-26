@@ -1,7 +1,7 @@
 const Queue = require('bull');
-const logger = require('winston');
 const { setQueues } = require('bull-board');
 const Config = require('../../../config');
+const { logger } = require('radish34-logger');
 
 const requestNamespace = `baseline:messenger:sendMessage:req`;
 const responseNamespace = `baseline:messenger:sendMessage:res`;

@@ -25,7 +25,7 @@ export async function getWeb3(clientUrl) {
   } else if (await isWeb3Connected()) {
     web3client = await new Web3(web3client.currentProvider);
   } else {
-    logger.debug('Web3 connection missing. Will open a new one');
+    logger.debug('Web3 connection missing. Will open a new one.', { service: 'MESSENGER' });
     const newClient = await new Web3.providers.WebsocketProvider(
       clientUrl,
       { headers: { Origin: 'mychat2' } },

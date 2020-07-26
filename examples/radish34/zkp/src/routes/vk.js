@@ -1,5 +1,6 @@
 import express from 'express';
 import { getVerificationKeyByID } from '../utils/fileToDB';
+import { logger } from 'radish34-logger';
 
 const router = express.Router();
 
@@ -9,13 +10,14 @@ const router = express.Router();
 router.get('/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    console.log(`\nReceived request ${id} to /vk`);
     const vk = await getVerificationKeyByID(id);
-    console.log('\nReturning vk:');
-    console.log(vk);
+
+    logger.info('Returning vk.\n%o', vk, { service: 'ZKP'});
+
     const response = { vk };
     return res.send(response);
   } catch (err) {
+    logger.error('\n%o', err, { service: 'ZKP' });
     return next(err);
   }
 });

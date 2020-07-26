@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const logger = require('winston');
 const Config = require('../../config');
+const { logger } = require('radish34-logger');
 
 const { firstConnectRetryDelaySecs } = Config.mongo;
 
@@ -10,28 +10,28 @@ let mongoUrl;
 
 // Registering db connection event listeners
 conn.once('open', () => {
-  logger.info(`SUCCESS: connected to mongo`);
+  logger.info('Successfully connected to mongo db.', { service: 'MESSENGER' });
 
   // When successfully connected
   conn.on('connected', () => {
-    logger.debug(`Mongoose default connection open ${mongoUrl}`);
+    logger.debug(`Mongoose default connection open ${mongoUrl}.`, { service: 'MESSENGER' });
   });
 
   // If the connection throws an error
   conn.on('error', (err) => {
-    logger.error(`Mongoose default connection error: ${err}`);
+    logger.error('\n%o', err, { service: 'MESSENGER' });
   });
 
   // When the connection is disconnected
   conn.on('disconnected', () => {
-    logger.error('Mongoose default connection disconnected');
+    logger.info('Mongoose default connection disconnected.', { service: 'MESSENGER' });
   });
 
   // If the Node process ends, close the Mongoose connection
   process.on('SIGINT', () => {
     conn.close(() => {
       logger.debug(
-        'Mongoose default connection disconnected through app termination',
+        'Mongoose default connection disconnected through app termination.', { service: 'MESSENGER' }
       );
       process.exit(0);
     });
@@ -46,7 +46,7 @@ async function connect(url) {
   mongoUrl = url;
   if (Config.mongo.debug == true) {
     mongoose.set('debug', function (collection, method, query, doc, options) {
-      logger.debug(`Mongoose ${method} on ${collection} query: ${JSON.stringify(query)}`, {
+      logger.debug(`Mongoose ${method} on ${collection} with query:\n%o`, query, { service: 'MESSENGER' }, {
         doc,
         options
       });
@@ -59,9 +59,9 @@ async function connect(url) {
       // eslint-disable-next-line no-await-in-loop
       await mongoose.connect(mongoUrl, Config.mongoose);
       connected = true;
-    } catch (error) {
-      logger.error(error.message);
-      logger.info(`Retrying connection in ${firstConnectRetryDelaySecs} secs`);
+    } catch (err) {
+      logger.error('\n%o', err, { service: 'MESSENGER' });
+      logger.info(`Retrying connection in ${firstConnectRetryDelaySecs}s.`, { service: 'MESSENGER' });
     }
 
     // eslint-disable-next-line no-await-in-loop
@@ -70,7 +70,7 @@ async function connect(url) {
 }
 
 function close() {
-  logger.info('Closing DB connection');
+  logger.info('Closing db connection.', { service: 'MESSENGER' });
   conn.close();
 }
 

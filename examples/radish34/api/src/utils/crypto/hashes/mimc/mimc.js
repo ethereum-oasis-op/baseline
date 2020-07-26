@@ -1,4 +1,5 @@
 import { strip0x } from '../../conversions';
+import { logger } from 'radish34-logger';
 
 /* eslint-disable no-bitwise */
 /* eslint-disable no-plusplus */
@@ -80,7 +81,7 @@ export const mimcHash = (...preimage) => {
     .toString(16)
     .padStart(64, '0')}`;
 
-  console.log(hash);
+  logger.debug(`mimcHash: ${hash}.`, { service: 'API' });
   return hash;
 };
 
@@ -88,20 +89,20 @@ export const mimcHash = (...preimage) => {
  @param {Array} leaves - an array of hex strings or integer values
 */
 export const merkleHash = leaves => {
-  console.log('input leaves:', leaves);
+  logger.debug('Input leaves: %o', leaves, { service: 'API' });
   const leafCount = leaves.length;
   // if (leafCount !== 2 ** treeHeight) throw new Error("Incorrect number of leaves for tree height!");
   let inputs = [];
   if (leafCount === 2) {
     inputs = leaves;
     const hash = mimcHash(...inputs);
-    console.log('bottom level:', inputs, hash);
+    logger.debug(`Bottom level: mimicHash ${hash} for inputs %o`, inputs, { service: 'API' });
     return hash;
   }
   inputs[0] = merkleHash(leaves.slice(0, leafCount / 2));
   inputs[1] = merkleHash(leaves.slice(leafCount / 2, leafCount));
   const hash = mimcHash(...inputs);
-  console.log('upper levels:', leafCount, inputs, hash);
+  logger.debug(`Upper levels: leafCount ${leafCount} and mimicHash ${hash} for inputs %o`, inputs, { service: 'API' });
   return hash;
 };
 

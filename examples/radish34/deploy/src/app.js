@@ -1,4 +1,5 @@
 const SettingsReader = require('./utils/SettingsReader');
+const { logger } = require('radish34-logger');
 
 const main = async () => {
   const settingsReader = new SettingsReader(process.env.ORGANISATION_CONFIG_PATH);
@@ -14,22 +15,22 @@ const main = async () => {
     !supplier2Settings.addresses.OrgRegistry ||
     !supplier2Settings.addresses.ERC1820Registry
   ) {
-    console.log(`
+    logger.warning(`
 
       ❌  Note: You have not run the deployment script yet!
-      ====================================================
-      enter 'npm run deploy' from the radish root directory
+      ======================================================
+      Enter 'npm run deploy' from the radish root directory.
 
-    `);
+    `, {service: 'DEPLOY'});
     process.exit(1);
   } else {
-    console.log(`
+    logger.info(`
 
       ✅  Bootstrap deployment already established!
-      ====================================================
-      only do 'npm run deploy' if you want to refresh the contracts
+      ==============================================================
+      Only do 'npm run deploy' if you want to refresh the contracts.
 
-    `);
+    `, {service: 'DEPLOY'});
     process.exit();
   }
 };

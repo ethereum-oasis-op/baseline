@@ -9,6 +9,7 @@ import onReceiveRFPTasks from './tasks/onReceiveRFP';
 import createMSADoc from './resolvers/createMSADoc';
 import signCommitment from './resolvers/signCommitment';
 import customFunc from './resolvers/customFunc';
+import { logger } from 'radish34-logger';
 
 export const createMSA = defineBaselineType('createMSA', createMSATasks);
 export const createProposal = defineBaselineType('createProposal', createProposalTasks);
@@ -18,7 +19,7 @@ export const onReceiveProposal = defineBaselineType('onReceiveProposal', onRecei
 export const onReceiveRFP = defineBaselineType('onReceiveRFP', onReceiveRFPTasks);
 
 const loadModule = () => {
-  console.log('Loading MSA Module ...');
+  logger.info('Loading MSA Module ...', { service: 'API' });
   registerCustomResolver('createMSAInDB', createMSADoc);
   registerCustomResolver('signCommitment', signCommitment);
   registerCustomResolver('customFunc', customFunc);

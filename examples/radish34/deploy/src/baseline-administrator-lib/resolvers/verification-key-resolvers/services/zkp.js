@@ -2,6 +2,7 @@ const request = require('request');
 const {
   poll
 } = require('./../utils/poll');
+const { logger } = require('radish34-logger');
 
 // TODO: create config for this value?
 const POLLING_FREQUENCY = 6000; // milliseconds
@@ -40,9 +41,7 @@ const getVkPollingFunction = async args => {
 
     return response;
   } catch (err) {
-    console.log(
-      `Got a polling error "${err}", but that might be because the external server missed our call - we'll poll again...`,
-    );
+    logger.error('Polling error, but that might be because the external server missed our call. We will poll again...\n%o', err, { service: 'DEPLOY' });
     return false;
   }
 };
@@ -57,7 +56,8 @@ async function pollVk(zkpUrl, circuitName) {
     });
     return vk;
   } catch (err) {
-    throw new Error(`Could not get the vk for ${circuitName}`);
+    logger.error(`Could not get the vk for ${circuitName}.\n%o`, err, { service: 'DEPLOY' });
+    throw new Error(`Could not get the vk for ${circuitName}.`);
   }
 }
 

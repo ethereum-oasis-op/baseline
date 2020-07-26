@@ -1,6 +1,7 @@
 import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import { getAuthorization } from '../auth';
+import { logger } from 'radish34-logger';
 
 // Placeholder schema to allow extensions
 import coreQuery from './schemas/core';
@@ -77,10 +78,8 @@ export const applyGraphQLMiddleware = app => {
   server.applyMiddleware({ app, path: '/graphql' });
   server.installSubscriptionHandlers(httpServer);
   httpServer.listen({ port: GRAPHQL_PORT }, () => {
-    console.log(`🚀 Server ready at http://localhost:${GRAPHQL_PORT}${server.graphqlPath}`);
-    console.log(
-      `🚀 Subscriptions ready at ws://localhost:${GRAPHQL_PORT}${server.subscriptionsPath}`,
-    );
+    logger.info(`Server ready at http://localhost:${GRAPHQL_PORT}${server.graphqlPath}.`, { service: 'API' });
+    logger.info(`Subscriptions ready at ws://localhost:${GRAPHQL_PORT}${server.subscriptionsPath}.`, { service: 'API' });
   });
 };
 

@@ -1,5 +1,6 @@
 const { ethers, utils } = require('ethers');
 const { BigNumber } = require('ethers/utils');
+const { logger } = require('radish34-logger');
 
 let instance = null;
 let networkId = null;
@@ -66,8 +67,8 @@ const getContract = (contractJson, uri, address) => {
   try {
     const provider = getProvider(uri);
     return new ethers.Contract(address, contractJson.abi, provider);
-  } catch (e) {
-    console.log('Failed to instantiate compiled contract', e);
+  } catch (error) {
+    logger.error('Failed to instantiate compiled contract.\n%o', error, { service: 'API' });
   }
   return null;
 };
@@ -80,8 +81,8 @@ const getContractWithWallet = (contractJson, contractAddress, uri, privateKey) =
     contract = new ethers.Contract(contractAddress, contractJson.abi, provider);
     const contractWithWallet = contract.connect(wallet);
     return contractWithWallet;
-  } catch (e) {
-    console.log('Failed to instantiate compiled contract', e);
+  } catch (error) {
+    logger.error('Failed to instantiate compiled contract.\n%o', error, { service: 'API' });
   }
   return contract;
 };
@@ -214,8 +215,7 @@ const getEventValuesFromTxReceipt = (eventName, contract, txReceipt) => {
       values = removeNumericKeys(values); // values contains duplicate numeric keys for each event parameter.
       values = parseBigNumbers(values); // convert uints (returned as BigNumber) to numbers.
 
-      // console.log(`\n\nExtracted these values relating to ${eventName}:`);
-      // console.log(values);
+      logger.debug(`Event '${eventName}' and extracted values:\n%o`, values, { service: 'API' });
       return values;
     }
   }

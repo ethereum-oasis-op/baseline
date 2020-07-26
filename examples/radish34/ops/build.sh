@@ -6,6 +6,7 @@ then
   npm ci
 fi
 
+./ops/build_logger.sh
 ./ops/build_api.sh
 ./ops/build_contracts.sh
 ./ops/build_deploy.sh

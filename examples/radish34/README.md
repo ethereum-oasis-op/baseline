@@ -50,9 +50,15 @@ Here are the targets currently exposed by the `Makefile`:
 The steps below illustrate the individual steps, that can be viewed as the breakdown of the `make` scripts.
 
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
+<<<<<<< HEAD:examples/radish34/README.md
 2. Run `make npm-install`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
 3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
 4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
+=======
+2. Run `make npm-install` at the root level of the repo. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
+3. Run `cd radish34/ && docker build ./logger -f ./logger/dev.Dockerfile -t radish34_logger && docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
+4. Run `cd radish34/ && npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
+>>>>>>> master:radish34/README.md
     <details> 
       <summary>Example logs</summary>
       <p> 
@@ -85,6 +91,7 @@ The steps below illustrate the individual steps, that can be viewed as the break
       <p> 
 
       ```
+<<<<<<< HEAD:examples/radish34/README.md
       Patiently waiting 10 seconds for ganache container to init ...
       Checking for ganache ...
       ✅  ERC1820Registry deployed: 0x8CFd85A850E7fB9B37Ba2849012d2689AB293522
@@ -141,6 +148,115 @@ The steps below illustrate the individual steps, that can be viewed as the break
       ✅  Saved information about supplier2: {"rpcProvider":"http://ganache:8545","organization":{"messagingKey":"0x04caa2fda8e260d1d1d6c482979c931414e9ecfd8c7d1b452bb0b5a7703571e81b21eb85809a842af0adcfbf5f2f951352109fcee7a243dbe418c17d63fb9c990d","name":"Supplier 2","role":2,"zkpPublicKey":"0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5","zkpPrivateKey":"0x111bc1d832ba0ea6804f031c6f0ec9550f4d2b55666c30d7b4cf532b22a45f25"},"addresses":{"ERC1820Registry":"0x8CFd85A850E7fB9B37Ba2849012d2689AB293522","OrgRegistry":"0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862","Verifier":"0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2","Shield":"0xE5a69331D7ba036cAAe587Ad610299e0e45F3309"}}
       ----------------- Completed  -----------------
       Please restart the radish-apis for the config to take effect
+=======
+      [2020-05-20 13:41:05] [INFO] [DEPLOY]: ERC1820Registry deployed: 0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397. 
+      [2020-05-20 13:41:06] [INFO] [DEPLOY]: OrgRegistry deployed: 0x31088fd0eede771d5bda1558e06a666Cd9BF110c. 
+      [2020-05-20 13:41:06] [INFO] [DEPLOY]: Verifier deployed: 0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3. 
+      [2020-05-20 13:41:06] [INFO] [DEPLOY]: Shield deployed: 0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB. 
+      [2020-05-20 13:41:06] [INFO] [DEPLOY]: Registering workgroup member: buyer.
+      [2020-05-20 13:41:06] [INFO] [DEPLOY]: Registered buyer in the OrgRegistry with transaction hash: 0x0b5a4f46254f38c577ae825a7d4ba99538ad7a02cb5d17a7728bae51c24a585b. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registered OrgRegistry as IOrgRegistry for buyer with transaction hash: 0x3ee64f6f3cac07525bb8679e36e77eea8302571ae535d9d715e495bed95b5501. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registered Verifier as IVerifier for buyer with transaction hash: 0x3557222c9f37d466a97cbf8c2c9c24cf347b50b3e980eca4f4984e580a8b8314. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registered Shield as IShield for buyer with transaction hash: 0xdd8da4e8de591e770e5f6b657298b4217726d44db10f5284436770cf03f30128. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Saving settings to config file for: buyer. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Updated settings in file /app/src/config/config-buyer.json. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Saved information about buyer:
+      {
+        rpcProvider: 'http://ganache:8545',
+        organization: {
+          name: 'Org 1',
+          role: 1,
+          zkpPublicKey: '0x15e365a0396f762f73d01cedffd525908093d0bfa5d1f6980670ce536b193f7e',
+          zkpPrivateKey: '0x1f548aa7d67395da82addda4096d986314fc83c598302193b090f45a9b8d4aec',
+          address: '0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41',
+          messengerKey: '0x04d5d2b119c8700f57497d707bf41cfd868a3c454520635e82082618377b479cccd4e663bf4966d85c18a688f35f57c644cd6947020756cf10b3d31cb15eb0a1cb'
+        },
+        addresses: {
+          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
+          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
+          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
+          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
+        }
+      }. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registering workgroup member: supplier1.
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registered supplier1 in the OrgRegistry with transaction hash: 0x8a5e8879f2a57878bdcbc75efc3b420ba19eac205373b66ff4d8de7359596ced. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registered OrgRegistry as IOrgRegistry for supplier1 with transaction hash: 0x24ccf076392d6cc4aa394a0d83ea27a3b11d01ae77c8ed39aa8d36d77c6bb40f. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registered Verifier as IVerifier for supplier1 with transaction hash: 0xc40de8e3491599fe31bb42f57c557d6a9e7dd0c4b277d712410dda1d6c55c715. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registered Shield as IShield for supplier1 with transaction hash: 0xeae3c7a0edf0f29f21ecf9d7dcc79ceffc691c9d24bb52363580676e2dca7df7. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Saving settings to config file for: supplier1. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Updated settings in file /app/src/config/config-supplier1.json. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Saved information about supplier1:
+      {
+        rpcProvider: 'http://ganache:8545',
+        organization: {
+          name: 'Supplier 1',
+          role: 2,
+          zkpPublicKey: '0x9ad6a84232565704ec7b3c89fdb4e983d7f3c107fd70e0eaa99682a581cf3bf2',
+          zkpPrivateKey: '0xb8ce0427c5ebe896787631dec285b3ada387a3597202cabe43b0cac20f4d3a6',
+          address: '0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f',
+          messengerKey: '0x040547e919361631b8a1a13d3f3797e9c30cc44fa4010c923a0be0d4eaa8a019c4584eb4d884aa7464b157ee5dfcc891a6f222d1fc83c82ba8d8bcd313dc7d5af1'
+        },
+        addresses: {
+          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
+          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
+          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
+          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
+        }
+      }. 
+      [2020-05-20 13:41:07] [INFO] [DEPLOY]: Registering workgroup member: supplier2.
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Registered supplier2 in the OrgRegistry with transaction hash: 0xb8e09bbfedfddc939d8d03898dfe45055b2684de70785f8b5679ab90b2c41d73. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Registered OrgRegistry as IOrgRegistry for supplier2 with transaction hash: 0xb19c3291ceb5cc4d6f5c501897881adfb9ab627f1ea28628a79520b84507b364. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Registered Verifier as IVerifier for supplier2 with transaction hash: 0x7ce3b1558d80501d2bbaa88aad481824d77ca18bb8467ba5139010cb08a85faa. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Registered Shield as IShield for supplier2 with transaction hash: 0x0feebf13e67015f3cb6f3216812272ae5cc70ddaff073ddd38b8afa157964602. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Saving settings to config file for: supplier2. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Updated settings in file /app/src/config/config-supplier2.json. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Saved information about supplier2:
+      {
+        rpcProvider: 'http://ganache:8545',
+        organization: {
+          name: 'Supplier 2',
+          role: 2,
+          zkpPublicKey: '0x9e7a93433acadb679c2d461ecb24d2d8ddb928f704e489a2d40dd55e9983399e',
+          zkpPrivateKey: '0x264aad417c103f31ecee06d7b5bbb8bc89af9976cfea2f10e3d6aa5dfc223c6b',
+          address: '0x3f7eB8a7d140366423e9551e9532F4bf1A304C65',
+          messengerKey: '0x04b9a6f22f722aa75d0884b7ff78a18516f22bbad9c4d6f26fcd10262a46d28ad5ad28cb0a0695afbaf235503c49d9ff220206eada89c5a1f6f8d7fc9b8f27e7f4'
+        },
+        addresses: {
+          ERC1820Registry: '0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397',
+          OrgRegistry: '0x31088fd0eede771d5bda1558e06a666Cd9BF110c',
+          Verifier: '0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3',
+          Shield: '0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB'
+        }
+      }. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Registered the Radish34 interface in the OrgRegistry with transaction hash: 0xe60f9406ae47c6eebc07bd874e122bebf7ffff238eab89de13aed1894ee1759c. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Registering zkp verification keys. 
+      [2020-05-20 13:41:08] [INFO] [DEPLOY]: Polling... 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Registered verification key for createMSA with transaction hash: 0xe7b37aaafcb57fd4c13d130f9a26145f7fec2771083ad26c50dcfed32d00241c. 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Polling... 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Registered verification key for createPO with transaction hash: 0xb05f19d6c34955913b6c1a99028cc34018040e2d5c39c086bc7405bbe2cb9dbe. 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Network information: 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Radish network of 3 organizations have successfully been set up! 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Information about buyer: 
+        Organisation Address: 0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41
+        Organisation Name: Org 1
+        Organisation Role: 1
+        Organisation MessagingKey: 0x04d5d2b119c8700f57497d707bf41cfd868a3c454520635e82082618377b479cccd4e663bf4966d85c18a688f35f57c644cd6947020756cf10b3d31cb15eb0a1cb
+        Organisation zkpPublicKey: 0x15e365a0396f762f73d01cedffd525908093d0bfa5d1f6980670ce536b193f7e 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Information about supplier1: 
+        Organisation Address: 0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f
+        Organisation Name: Supplier 1
+        Organisation Role: 2
+        Organisation MessagingKey: 0x040547e919361631b8a1a13d3f3797e9c30cc44fa4010c923a0be0d4eaa8a019c4584eb4d884aa7464b157ee5dfcc891a6f222d1fc83c82ba8d8bcd313dc7d5af1
+        Organisation zkpPublicKey: 0x9ad6a84232565704ec7b3c89fdb4e983d7f3c107fd70e0eaa99682a581cf3bf2       
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Information about supplier2: 
+        Organisation Address: 0x3f7eB8a7d140366423e9551e9532F4bf1A304C65
+        Organisation Name: Supplier 2
+        Organisation Role: 2
+        Organisation MessagingKey: 0x04b9a6f22f722aa75d0884b7ff78a18516f22bbad9c4d6f26fcd10262a46d28ad5ad28cb0a0695afbaf235503c49d9ff220206eada89c5a1f6f8d7fc9b8f27e7f4
+        Organisation zkpPublicKey: 0x9e7a93433acadb679c2d461ecb24d2d8ddb928f704e489a2d40dd55e9983399e      
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: ----------------- Deployment completed  ----------------- 
+      [2020-05-20 13:41:09] [INFO] [DEPLOY]: Please restart the radish-apis for the config to take effect.
+>>>>>>> master:radish34/README.md
       ```
       </p>
     </details> 
@@ -154,20 +270,28 @@ The steps below illustrate the individual steps, that can be viewed as the break
       <p> 
 
       ```
-      radish-api-buyer        | Connected to db
-      radish-api-buyer        | Mongoose connected to db
-      radish-api-buyer        | Loading config file ...
-      radish-api-buyer        | 🚀 Internal REST-Express server listening at http://localhost:8101
-      radish-api-buyer        | Loading network http://ganache:8545...
-      radish-api-buyer        | Connected to network: { chainId: 333, name: 'unknown' }
-      radish-api-buyer        | Whisper key: 0x0453f6d033725be702e7e00a0056a62caa5c3700796899dbc69d2001a1dae1717b65d30ed3e7e607f8f00bfc69f09c0e22ef69fcee7cd6980434de34863c21491d
-      radish-api-buyer        | Loading wallet with address 0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41
-      radish-api-buyer        | Wallet balance: 999.89182446
-      radish-api-buyer        | Your organization has already been registered with the registry
-      radish-api-buyer        | All systems go.
-      radish-api-buyer        | 🏥  Healthcheck Status: ready
-      radish-api-buyer        | 🚀 Server ready at http://localhost:8001/graphql
-      radish-api-buyer        | 🚀 Subscriptions ready at ws://localhost:8001/graphql`
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Conntected to mongo db. 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Mongoose connected to db. 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Loading config file ... 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Internal REST based express server listening at http://localhost:8101. 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Loading network http://ganache:8545... 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Whisper key: 0x04d5d2b119c8700f57497d707bf41cfd868a3c454520635e82082618377b479cccd4e663bf4966d85c18a688f35f57c644cd6947020756cf10b3d31cb15eb0a1cb. 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Loading wallet with address 0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41. 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Connected to network: { chainId: 333, name: 'unknown' } 
+      api-buyer              | [2020-05-20 13:45:18] [INFO] [API]: Wallet balance: 999.9970356. 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: Your organization has already been registered with the registry. 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: All systems go. 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: Healthcheck Status: ready. 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: Server ready at http://localhost:8001/graphql. 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: Subscriptions ready at ws://localhost:8001/graphql. 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: Starting the merkle-tree microservice's event filters ... 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: contractAddress: 0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB. 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: Polling... 
+      api-buyer              | [2020-05-20 13:45:19] [INFO] [API]: Calling /start(Shield). 
+      api-buyer              | [2020-05-20 13:45:19] [HTTP] [API]: 200 4ms HEAD /health
+      api-buyer              | [2020-05-20 13:45:31] [INFO] [API]: Response from merkle-tree microservice for Shield:
+      api-buyer              | { message: 'filter started' } 
+      api-buyer              | [2020-05-20 13:45:34] [HTTP] [API]: 200 1ms HEAD /health
       ```
       </p>
     </details> 
@@ -262,19 +386,22 @@ The steps below illustrate the individual steps, that can be viewed as the break
 ## Collection of Log Commands
 
 `docker-compose logs -f ui`  
+`docker-compose logs -f zkp`
 `docker-compose logs -f api-buyer`  
-`docker-compose logs -f messenger-buyer`   
-`docker-compose logs -f mongo-buyer`  
-`docker-compose logs -f api-supplier1`  
-`docker-compose logs -f messenger-supplier1`  
-`docker-compose logs -f mongo-supplier1`   
-`docker-compose logs -f api-supplier2`  
-`docker-compose logs -f messenger-supplier2`  
+`docker-compose logs -f api-supplier1`
+`docker-compose logs -f api-supplier2`
+`docker-compose logs -f messenger-buyer`
+`docker-compose logs -f messenger-supplier1`
+`docker-compose logs -f messenger-supplier2`       
+`docker-compose logs -f mongo-buyer`
+`docker-compose logs -f mongo-supplier1`
 `docker-compose logs -f mongo-supplier2`  
 `docker-compose logs -f geth-node`   
 `docker-compose logs -f geth-miner1`  
 `docker-compose logs -f geth-miner2`  
-`docker-compose logs -f geth-bootnode`  
+`docker-compose logs -f geth-bootnode`
+
+Access docker container via `docker exec -it <container_id> /bin/bash` and read logs in `/app/logs` via `cat <log_name>`.
 
 ## Troubleshooting
 
@@ -308,21 +435,16 @@ nvm use 11
       <p> 
 
       ```
-      ui_1           | > @ start /app
-      ui_1           | > react-scripts start
-      ui_1           |
-      ui_1           |
-      ui_1           | Starting the development server...
-      ui_1           |
-      ui_1           | Compiled successfully!
-      ui_1           |
-      ui_1           | You can now view undefined in the browser.
-      ui_1           |
-      ui_1           |   Local:            http://localhost:3000/
-      ui_1           |   On Your Network:  http://172.27.0.14:3000/
-      ui_1           |
-      ui_1           | Note that the development build is not optimized.
-      ui_1           | To create a production build, use npm run build.
+      Compiled successfully!
+      radish34-ui            | 
+      radish34-ui            | You can now view radish34-ui in the browser.
+      radish34-ui            | 
+      radish34-ui            |   Local:            http://localhost:3000
+      radish34-ui            |   On Your Network:  http://172.27.0.14:3000
+      radish34-ui            | 
+      radish34-ui            | Note that the development build is not optimized.
+      radish34-ui            | To create a production build, use npm run build.
+      radish34-ui            | 
       ```
       </p>
     </details> 

@@ -25,6 +25,7 @@
     "ethers": "^4.0.46",
     "hex-to-binary": "1.0.1",
     "keccak": "^2.1.0",
+    "radish34-logger": "file:../logger",
     "request": "^2.88.0",
     "safe-buffer": "^5.2.0"
   },

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { uuid } from 'uuidv4';
 import { createNotice } from '../baseline/notices';
+import { logger } from 'radish34-logger';
 
 const RFPSchema = new mongoose.Schema(
   {
@@ -84,7 +85,7 @@ export const getAllRFPs = async () => {
 export const saveRFP = async doc => {
   const newRFP = doc;
   newRFP._id = await uuid();
-  console.log(`Saving new RFP (uuid: ${newRFP._id})...`);
+  logger.info(`Saving new RFP with uuid ${newRFP._id} ...`, { service: 'API' });
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   return result[0];
 };
@@ -97,10 +98,10 @@ export const partnerCreateRFP = async doc => {
   // 2.) Save RFP to local db
   const newRFP = doc;
   newRFP._id = doc.uuid;
-  console.log(`Saving new RFP (uuid: ${doc.uuid}) from partner...`);
+  logger.info(`Saving new RFP with uuid ${doc.uuid} from partner ...`, { service: 'API' });
   const result = await RFP.create([newRFP], { upsert: true, new: true });
   await createNotice('rfp', result[0]);
-  console.log('Got RFP as supplier');
+  logger.info('Got RFP as supplier.', { service: 'API' });
 
   return result[0];
 };
@@ -110,8 +111,7 @@ export const partnerCreateRFP = async doc => {
  * Update the RFP to show that recipient has received the RFP.
  */
 export const deliveryReceiptUpdate = async doc => {
-  console.log(`Updating deliveryReceipt date for messageId ${doc.messageId}`);
-  console.log('deliveryReceipt doc:', doc);
+  logger.info(`Updating deliveryReceipt date for messageId ${doc.messageId}.\n%o`, doc, { service: 'API' });
   const result = await RFP.findOneAndUpdate(
     { 'recipients.origination.messageId': doc.messageId },
     { $set: { 'recipients.$.origination.receiptDate': doc.deliveredDate } },

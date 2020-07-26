@@ -4,6 +4,7 @@ import { loadServerSettingsFromFile } from './utils/serverSettings';
 import { subscribeRegisterOrgEvent } from './services/event';
 import { saveOrganizations } from './services/organization';
 import { startEventFilter } from './services/merkle-tree';
+import { logger } from 'radish34-logger';
 
 const main = async () => {
   try {
@@ -22,7 +23,7 @@ const main = async () => {
     // filter for NewLeaves in the shield contract:
     await startEventFilter();
   } catch (err) {
-    console.log(err);
+    logger.error('\n%o', err, { service: 'API' });
   }
 };
 

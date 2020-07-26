@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { Wallet, utils } from 'ethers';
 import { getProvider } from './ethers';
+import { logger } from 'radish34-logger';
 
 const walletPath = '/keystore/account.eth';
 
@@ -16,29 +17,29 @@ export const getWallet = async () => {
 export const createWallet = () => {
   const existingWallet = getWallet();
   if (existingWallet) {
-    console.log(`Existing wallet found with ${existingWallet.signingKey.address}!
+    logger.info(`Existing wallet found with ${existingWallet.signingKey.address}!
     Aborting creation of wallet for saftey reasons.
-    Remove the file yourself and try again.`);
+    Remove the file yourself and try again.`, { service: 'API'});
     return false;
   }
   const wallet = Wallet.createRandom();
   fs.writeFileSync(walletPath, JSON.stringify(wallet));
-  console.log(`Created a new wallet stored at ${walletPath}`);
+  logger.info(`Created a new wallet stored at ${walletPath}.`, { service: 'API'});
   return true;
 };
 
 export const createWalletFromMnemonic = async (mnemonic, path = 'm/1') => {
   const existingWallet = await getWallet();
   if (existingWallet) {
-    console.log(`Existing wallet found with ${existingWallet.signingKey.address}!
+    logger.info(`Existing wallet found with ${existingWallet.signingKey.address}!
     Aborting creation of wallet for saftey reasons.
-    Remove the file yourself and try again.`);
+    Remove the file yourself and try again.`, { service: 'API'});
     return false;
   }
   const wallet = Wallet.fromMnemonic(mnemonic, path);
 
   fs.writeFileSync(walletPath, JSON.stringify(wallet));
-  console.log(`New wallet created with mnemonic with address ${wallet.signingKey.address}...`);
+  logger.info(`New wallet created with mnemonic with address ${wallet.signingKey.address}.`, { service: 'API'});
   return true;
 };
 

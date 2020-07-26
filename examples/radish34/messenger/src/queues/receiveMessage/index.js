@@ -1,7 +1,7 @@
 const Queue = require('bull');
-const logger = require('winston');
 const { setQueues } = require('bull-board');
 const Config = require('../../../config');
+const { logger } = require('radish34-logger');
 
 const requestNamespace = `baseline:messenger:receiveMessage:req`;
 let receiveMessageQueue;
@@ -18,7 +18,7 @@ setQueues(receiveMessageQueue);
 
 // Queue listener
 receiveMessageQueue.on('global:completed', async (job, data) => {
-  logger.debug('MESSENGER: forwarded message processed by other service', data);
+  logger.debug('Forwarded message processed by other service.\n%o', data, { service: 'MESSENGER' });
 });
 
 module.exports = {

@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb';
+import { logger } from 'radish34-logger';
 
 let db = null;
 let client = null;
@@ -19,7 +20,7 @@ export default {
     for (let i = 0; i < (process.env.MONGO_CONNECTION_RETRIES || 5); i += 1) {
       try {
         client = await MongoClient.connect(process.env.MONGO_URL, options);
-        console.log('connected to db');
+        logger.info('Connected to mongo db.', { service: 'ZKP' });
         break;
       } catch (error) {
         await wait(500);
@@ -27,7 +28,8 @@ export default {
     }
 
     if (!client) {
-      throw new Error('Could not establish Mongo connection');
+      logger.error('Could not establish mongo db connection.', { service: 'ZKP' });
+      throw new Error('Could not establish mongo db connection.');
     }
 
     db = client.db(process.env.MONGO_DB_NAME);

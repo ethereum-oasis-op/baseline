@@ -1,4 +1,5 @@
 const express = require('express');
+const { logger } = require('radish34-logger');
 const router = express.Router();
 const Config = require('../../config');
 const { processWhisperMessage } = require('./callbacks.js');
