@@ -1,4 +1,3 @@
-import { assert } from 'chai';
 import { shouldBehaveLikeZKSnarkCircuit } from './shared';
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '../src/index';
 
