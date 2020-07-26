@@ -14,14 +14,14 @@
     "build:umd": "webpack",
     "build": "npm run clean && npm run build:cjs && npm run build:umd",
     "clean": "rm -rf ./dist",
-    "test": "npm run test:startup && sleep 5 && ./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.ts --timeout 90000 --max-old-space-size=8192 && npm run test:teardown",
+    "test": "npm run test:startup && sleep 5 && ./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.ts --timeout 90000 --unhandled-rejections=strict --max-old-space-size=8192 && npm run test:teardown",
     "test:startup": "make start",
     "test:teardown": "make stop"
   },
   "dependencies": {
     "@baseline-protocol/api": "0.0.4",
     "@baseline-protocol/messaging": "0.0.2",
-    "@baseline-protocol/privacy": "0.0.4",
+    "@baseline-protocol/privacy": "0.0.5",
     "@baseline-protocol/types": "0.0.1",
     "provide-js": "^1.2.1"
   },
