@@ -20,9 +20,9 @@ class BaselineWorkgroupManager {
     this.shieldContract = shieldContract;
   }
 
-  /**
+  /** # // TODO: Whisper depreciation
    * Registers an organisation with the given params into the workgroup organisation registry
-   *
+   * 
    * @param {address} organisationAddress - Address of the registered organisation
    * @param {string} organisationName - Name of the registered organisation
    * @param {string} organisationMessagingEndpoint - NATS endpoint of the registered organisation

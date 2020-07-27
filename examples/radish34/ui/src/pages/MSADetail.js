@@ -47,7 +47,7 @@ const MSADetail = () => {
     if (msa) {
       fetchRFP({ variables: { uuid: msa.rfpId } });
       fetchProposal({ variables: { sender: msa.whisperPublicKeySupplier, rfpId: msa.rfpId } });
-    };
+    };  // TODO: Whisper depreciation
   }, [fetchMSA, msa, id, fetchRFP, fetchProposal]);
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const MSADetail = () => {
     if (rfp) getPartnerByIdentity({ variables: { identity: rfp.sender } });
     if (msa) getSupplierByIdentity({ variables: { identity: msa.whisperPublicKeySupplier } });
   }, [getPartnerByIdentity, rfp, msa, getSupplierByIdentity]);
-
+ // TODO: Whisper depreciation
   if (!msaData) return 'Not Found';
 
   return (
@@ -83,7 +83,7 @@ const MSADetail = () => {
       </Grid>
       {buyer && supplier && <Signatures
         buyer={buyer}
-        supplier={supplier}
+        supplier={supplier} // NOTE: ::Supplier::
         supplierStatus={msa.supplierSignatureStatus}
         buyerStatus={msa.buyerSignatureStatus}
       />}

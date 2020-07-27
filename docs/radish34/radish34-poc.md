@@ -62,7 +62,7 @@ radish-34_radish-zkp_1 is up-to-date
       ✅  Shield deployed:  0x7370f1C710F3af6f28Be19ed99e0ed8f1B59b1CB
       ✅  Assigned the deployer as the manager for OrgRegistry. TxHash: 0x1689ac60fba5c25b5559e0fbca066c4063a433dec552adc9208977e161f05852
       ✅  Set OrgRegistry as Interface Implementer for deployer. TxHash: 0x52660020dad54f7177896e16ba9e6956aa4c046e59c2bf92b53db06d387802a2
-      ✅  Retrieved all Whisper Identity for each user
+      ✅  Retrieved all Whisper Identity for each user <!--Whisper is Being Depreciated -->
       ✅  Registered buyer in the OrgRegistry with tx hash: 0x77e39fc3398e405caaf895a2ea29966423dc8f01f0bffdc335579d0865837415
       ✅  Registered supplier1 in the OrgRegistry with tx hash: 0xefc1142c39f95766d245eab0d7dc4fe0860fded16c4531d529e6636136888123
       ✅  Registered supplier2 in the OrgRegistry with tx hash: 0x354c5a0745690f5c68a33f481e8c89cdbd103b24e549839374f589dc1b15c49c

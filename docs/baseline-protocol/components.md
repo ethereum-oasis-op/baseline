@@ -33,7 +33,7 @@ The Verifier Contract is the on-chain component of the ZK Service, which ensures
 The messenger service fulfills the requirement of decentralized private messaging between Parties. Each Party that runs a baselined system needs to send private data to Counter-parties. In the Radish34 supply chain use case, this private data is in the form of requests for proposals \(RFPs\), Service Contracts \(MSAs\), Purchase Orders, and secret keys/hashes used in the ZKP generation or verification processes. Also, this service adds message delivery receipts and durability to the messages by storing them locally.
 
 ### Radish34 Implementation
-
+<!--TODO: @dev Whisper depreciation  -->
 The messenger service used in the Radish34 demo was [Whisper](https://github.com/ethereum/go-ethereum/wiki/Whisper). This was convenient, as it is supported in Geth and provided a fast way to demonstrate the concept. 
 
 Here's the [**link**](https://github.com/ethereum-oasis/baseline/tree/master/radish34/messenger) to the component as implemented in the Radish34 demo.

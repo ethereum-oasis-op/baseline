@@ -1,6 +1,7 @@
 import { messagingProviderWhisper, messagingServiceFactory } from '../src/index';
 import { promisedTimeout } from './utils';
-
+// TODO: @dev Whisper depreciation
+// TODO: @dev removal of whisper from baseline
 let whisperService;
 const callback = () => { };
 

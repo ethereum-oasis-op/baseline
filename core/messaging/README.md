@@ -33,4 +33,4 @@ flush(): Promise<void>;
 The following messaging providers are available:
 
 - NATS
-- Whisper
+- Whisper (depreciated)

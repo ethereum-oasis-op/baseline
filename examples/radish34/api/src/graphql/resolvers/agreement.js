@@ -8,7 +8,7 @@ import { pubsub } from '../subscriptions';
 import msgDeliveryQueue from '../../queues/message_delivery';
 import { strip0x } from '../../utils/crypto/conversions';
 import { checkKeyPair } from '../../utils/crypto/ecc/babyjubjub-ecc';
-
+// TODO: @dev Whisper depreciation
 const pycryptojs = require('zokrates-pycryptojs');
 
 const NEW_AGREEMENT = 'NEW_AGREEMENT';
@@ -144,6 +144,7 @@ export default {
         ...agreementData,
         ...constants,
         recipient: { ..._recipient },
+        // // TODO: @dev Whisper depreciation
         whisperPublicKeyRecipient: _recipient.messagingKey,
         senderSignatureStatus: true,
         recipientSignatureStatus: false,

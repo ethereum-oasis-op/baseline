@@ -10,7 +10,7 @@ description: >-
 The Mainnet is a \[ insert copy from the upcoming Medium article \].
 
 ## Point to Point Messaging
-
+<!-- Whisper Depreciation   -->
 The Radish34 demo uses Whisper, which comes with standard Geth nodes, to
 
 ## Zokrates Support or Replacement

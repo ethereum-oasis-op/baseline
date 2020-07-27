@@ -16,7 +16,8 @@ export const ackQueue = new Queue(ackNamespace, process.env.REDIS_URL);
 export const responseQueue = new Queue(responseNamespace, process.env.REDIS_URL);
 export const sendMessageQueue = new Queue(sendMessageNamespace, process.env.REDIS_URL);
 export const recieveMessageQueue = new Queue(receiveMessageNamespace, process.env.REDIS_URL);
-// TODO: handle receipt of whisper message that comes back from counterparty
+
+// TODO: @dev Whisper depreciation
 // export const recieveMessageQueue = new Queue(sendMessageNamespace, process.env.REDIS_URL);
 
 setQueues([requestQueue, ackQueue, responseQueue, sendMessageQueue]);
