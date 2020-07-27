@@ -1,5 +1,5 @@
+// SPDX-License-Identifier: CC0
 pragma solidity ^0.6.9;
-
 
 abstract contract ERC1820ImplementerInterface {
     bytes32 constant ERC1820_ACCEPT_MAGIC = keccak256(abi.encodePacked("ERC1820_ACCEPT_MAGIC"));

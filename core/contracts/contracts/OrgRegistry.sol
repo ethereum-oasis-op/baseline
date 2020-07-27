@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: CC0
 pragma solidity ^0.6.9;
 pragma experimental ABIEncoderV2;
 
 import "./IOrgRegistry.sol";
 import "./Registrar.sol";
-import "./ERC165Compatible.sol";
+import "../../../lib/contracts/ERC165Compatible.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @dev Contract for maintaining organization registry
@@ -58,7 +59,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @dev the character '^' corresponds to bit wise xor of individual interface id's
     /// which are the parsed 4 bytes of the function signature of each of the functions
     /// in the org registry contract
-    function setInterfaces() override public onlyOwner returns (bool) {
+    function setInterfaces() public override onlyOwner returns (bool) {
         /// 0x54ebc817 is equivalent to the bytes4 of the function selectors in IOrgRegistry
         _registerInterface(this.registerOrg.selector ^
                             this.registerInterfaces.selector ^
@@ -87,7 +88,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     /// @dev Since this is an inherited method from Registrar, it allows for a new manager to be set
     /// for this contract instance
-    function assignManager(address _newManager) onlyOwner external {
+    function assignManager(address _newManager) external onlyOwner {
         assignManagement(_newManager);
     }
 
@@ -106,7 +107,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         bytes calldata _whisperKey,
         bytes calldata _zkpPublicKey,
         bytes calldata _metadata
-    ) onlyOwner override external returns (bool) {
+    ) external onlyOwner override returns (bool) {
         Org memory org = Org(_address, _name, _messagingEndpoint, _whisperKey, _zkpPublicKey, _metadata);
         orgMap[_address] = org;
         orgs.push(org);
@@ -148,12 +149,12 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     /// @dev Function to get the count of number of organizations to help with extraction
     /// @return length of the array containing organization addresses
-    function getOrgCount() override external view returns (uint) {
+    function getOrgCount() external override view returns (uint) {
         return orgs.length;
     }
 
     /// @notice Function to get a single organization's details
-    function getOrg(address _address) override external view returns (
+    function getOrg(address _address) external override view returns (
         address,
         bytes32,
         bytes memory,

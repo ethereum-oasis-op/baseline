@@ -1,5 +1,5 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.6.9;
-
 
 import "./BN256G2.sol";
 
