@@ -1,0 +1,56 @@
+{
+  "name": "@freight-trust/freightlayer",
+  "version": "0.1.5",
+  "description": "EDI Messange Exchange for EVM-based Blockchains",
+  "main": "freightlayer.js",
+  "scripts": {
+    "connect": "sh bin/besu.sh",
+    "format": "sh fmt.sh",
+    "start": "node ediserver.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Sam Bacha",
+    "email": "sam@freighttrust.com",
+    "url": "https://freighttrust.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ipfs-api": "^6.0.3",
+    "json-rpc2": "^1.0.2",
+    "node-forge": "^0.6.40",
+    "node-json-rpc": "0.0.1",
+    "node-rsa": "^0.4.0",
+    "web3": "^0.16.0",
+    "winston": "^2.2.0"
+  },
+  "devDependencies": {
+    "prettier": "2.0.5"
+  },
+  
+    "husky": {
+      "hooks": {
+        "pre-commit": "lint-staged"
+      }
+    },
+    "lint-staged": {
+      "**/*": ["eslint --fix", "prettier --write"]
+    },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freight-trust/freightlayer.git"
+  },
+  "keywords": [
+    "baseline protocol",
+    "EDI",
+    "X12",
+    "Supply Chain",
+    "Ethereum",
+    "Freight Trust",
+    "EDIFACT"
+  ],
+  "bugs": {
+    "url": "https://github.com/freight-trust/freightlayer/issues"
+  },
+  "homepage": "https://github.com/freight-trust/freightlayer#readme"
+}

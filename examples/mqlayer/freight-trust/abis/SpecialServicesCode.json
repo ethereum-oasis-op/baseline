@@ -1,0 +1,26 @@
+{
+    "type": "object",
+
+    "properties": {
+
+        "SpecialServicesCode":
+
+        {
+            "D1": "One - Day Service",
+            "D2": "Two day service",
+            "EX": "Expedited",
+            "RD": " Residential Delivery",
+            "SD": "Shrinkage Allowance",
+            "CC": "Carrier Unload",
+            "CD": "COD Request",
+            "DV": "Declared Value",
+            "ID": "Inside Delivery",
+            "ZZ": "Mutually Defined"
+        },
+        "required": ["SpecialServicesCode"],
+
+        "dependencies": {
+            "": [""]
+        }
+    }
+}
