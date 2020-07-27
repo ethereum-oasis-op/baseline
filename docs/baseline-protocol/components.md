@@ -59,8 +59,8 @@ generation or verification processes. Also, this service adds message delivery
 receipts and durability to the messages by storing them locally.
 
 ### Radish34 Implementation
-
 <!--TODO: @dev Whisper depreciation  -->
+The messenger service used in the Radish34 demo was [Whisper](https://github.com/ethereum/go-ethereum/wiki/Whisper). This was convenient, as it is supported in Geth and provided a fast way to demonstrate the concept. 
 
 The messenger service used in the Radish34 demo was
 [Whisper](https://github.com/ethereum/go-ethereum/wiki/Whisper). This was

@@ -55,7 +55,7 @@
         {
           "indexed": false,
           "internalType": "bytes",
-          "name": "_whisperKey",
+          "name": "_whisperKey", 
           "type": "bytes"
         },
         {

@@ -1,31 +1,19 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
-import msgDeliveryQueue from "../../queues/message_delivery";
-import {
-  Agreement,
-  getAgreementById,
-  getAgreementsByName,
-  getAgreementsByPrevId,
-  getAllAgreements,
-  saveAgreement,
-} from "../../services/agreement";
-import { saveNotice } from "../../services/notice";
-import {
-  getPartnerByAddress,
-  getPartnerByMessagingKey,
-  getPartnerByzkpPublicKey,
-} from "../../services/partner";
-import { strip0x } from "../../utils/crypto/conversions";
-import { checkKeyPair } from "../../utils/crypto/ecc/babyjubjub-ecc";
-import { getServerSettings } from "../../utils/serverSettings";
-import { pubsub } from "../subscriptions";
-
+import { Agreement, getAgreementById, getAllAgreements, getAgreementsByName, saveAgreement, getAgreementsByPrevId } from '../../services/agreement';
+import { getPartnerByAddress, getPartnerByzkpPublicKey, getPartnerByMessagingKey } from '../../services/partner';
+import { saveNotice } from '../../services/notice';
+import { getServerSettings } from '../../utils/serverSettings';
+import { pubsub } from '../subscriptions';
+import msgDeliveryQueue from '../../queues/message_delivery';
+import { strip0x } from '../../utils/crypto/conversions';
+import { checkKeyPair } from '../../utils/crypto/ecc/babyjubjub-ecc';
 // TODO: @dev Whisper depreciation
-const pycryptojs = require("zokrates-pycryptojs");
+const pycryptojs = require('zokrates-pycryptojs');
 
-const NEW_AGREEMENT = "NEW_AGREEMENT";
+const NEW_AGREEMENT = 'NEW_AGREEMENT';
 
-const getSignatureStatus = (agreement) => {
+const getSignatureStatus = agreement => {
   const { R: RSender, S: SSender } = agreement.constants.EdDSASignatures.sender;
   const {
     R: RRecipient,

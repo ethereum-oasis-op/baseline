@@ -5,7 +5,7 @@ export const messagePayloadTypeJson = 'json';
 export const messagePayloadTypeBinary = 'binary';
 
 export const messagingProviderNats = 'nats';
-export const messagingProviderWhisper = 'whisper'; // TODO: @dev Whisper depreciation
+export const messagingProviderWhisper = 'whisper'; // TODO: @dev Whisper depreciation 
 
 export interface IMessagingService {
   connect(): Promise<any>;

@@ -49,10 +49,8 @@ const MSADetail = () => {
     }
     if (msa) {
       fetchRFP({ variables: { uuid: msa.rfpId } });
-      fetchProposal({
-        variables: { sender: msa.whisperPublicKeySupplier, rfpId: msa.rfpId },
-      });
-    } // TODO: Whisper depreciation
+      fetchProposal({ variables: { sender: msa.whisperPublicKeySupplier, rfpId: msa.rfpId } });
+    };  // TODO: Whisper depreciation
   }, [fetchMSA, msa, id, fetchRFP, fetchProposal]);
 
   useEffect(() => {
@@ -68,8 +66,8 @@ const MSADetail = () => {
         variables: { identity: msa.whisperPublicKeySupplier },
       });
   }, [getPartnerByIdentity, rfp, msa, getSupplierByIdentity]);
-  // TODO: Whisper depreciation
-  if (!msaData) return "Not Found";
+ // TODO: Whisper depreciation
+  if (!msaData) return 'Not Found';
 
   return (
     <Container>
@@ -92,17 +90,13 @@ const MSADetail = () => {
           </>
         )}
       </Grid>
-      {buyer && supplier && (
-        <Signatures
-          buyer={buyer}
-          supplier={supplier} // NOTE: ::Supplier::
-          supplierStatus={msa.supplierSignatureStatus}
-          buyerStatus={msa.buyerSignatureStatus}
-        />
-      )}
-      {!isBuyer && !msa.supplierSignatureStatus && (
-        <ApproveFooter onClick={() => console.log("hello")} />
-      )}
+      {buyer && supplier && <Signatures
+        buyer={buyer}
+        supplier={supplier} // NOTE: ::Supplier::
+        supplierStatus={msa.supplierSignatureStatus}
+        buyerStatus={msa.buyerSignatureStatus}
+      />}
+      {!isBuyer && !msa.supplierSignatureStatus && <ApproveFooter onClick={() => console.log('hello')} />}
     </Container>
   );
 };

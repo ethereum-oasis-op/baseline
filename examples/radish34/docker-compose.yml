@@ -266,7 +266,7 @@ services:
     env_file:
       - ./messenger/config/docker.env
     environment:
-      LOG_LEVEL: debug
+      LOG_LEVEL: debug 
       MESSENGER_PROVIDER: whisper # // TODO: @dev Whisper depreciation
       DB_URL: mongodb://mongo-buyer:27017/radish34
       MESSENGER_API_PORT: 4001

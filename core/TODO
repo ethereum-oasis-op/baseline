@@ -1,4 +1,4 @@
-TODO
+TODO 
 
 # Whisper Depreciation
 
@@ -12,3 +12,4 @@ TODO
     -   messagingType: process.env.MESSENGER_PROVIDER || 'whisper',
 
 [Solidity contracts], `OrgRegistry.sol` contain `bytes_WhisperKey` , alt/generic interface replacement
+

@@ -1,6 +1,6 @@
-require("../logger");
-const { receiveMessageQueue } = require("../queues/receiveMessage/");
-// TODO: Whisper depreciation
+require('../logger');
+const { receiveMessageQueue } = require('../queues/receiveMessage/');
+ // TODO: Whisper depreciation
 
 // Useful constants
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || "0x11223344";

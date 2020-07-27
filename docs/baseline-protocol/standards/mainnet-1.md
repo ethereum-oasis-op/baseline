@@ -13,8 +13,8 @@ protocol, so that enterprises will use the approach and get used to employing
 the Mainnet in normal business activities.
 
 ## Point to Point Messaging
-
 <!-- Whisper Depreciation -->
+The Radish34 demo uses Whisper, which comes with standard Geth nodes. However, it is not ideal for _baselining_. The ideal messaging service, which the Baseline Protocol community will endeavor to specify and promote, would:
 
 The Radish34 demo uses Whisper, which comes with standard Geth nodes. However,
 it is not ideal for _baselining_. The ideal messaging service, which the
