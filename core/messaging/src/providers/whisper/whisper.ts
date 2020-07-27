@@ -6,9 +6,9 @@ const DEFAULT_CONNECTED_INTERVAL = 2000; // FIXME-- make configurable via env an
 const DEFAULT_TOPIC = process.env.WHISPER_TOPIC || '0x11223344';
 const POW_TIME = process.env.WHISPER_POW_TIME || 100;
 const TTL = process.env.WHISPER_TTL || 20;
-const POW_TARGET = process.env.WHISPER_POW_TARGET || 2;
+const POW_TARGET = process.env.WHISPER_POW_TARGET || 2; // TODO: @dev Whisper depreciation
 
-export class WhisperService {
+export class WhisperService {  // TODO: @dev Whisper depreciation
   public keyId: string;
   private clientUrl: string;
   private connectedInterval: any;
@@ -101,7 +101,7 @@ export class WhisperService {
         timestamp: time
       };
     } catch (err) {
-      logger.error('Whisper publish error:', err);
+      logger.error('Whisper publish error:', err); // TODO: @dev Whisper depreciation
     }
   }
 
@@ -120,8 +120,9 @@ export class WhisperService {
       })
       .on('data', async (data) => {
         try {
+          // TODO: @dev Whisper depreciation
           // Use .call() so that we can pass the Whisper class instance as "this",
-          // therefore we can call Whisper class methods. Otherwise "this" is 
+          // therefore we can call Whisper class methods. Otherwise "this" is
           // scoped by callback function.
           callback.call(this, data);
         } catch (error) {
@@ -132,7 +133,7 @@ export class WhisperService {
         logger.error(err);
       });
   }
-
+  // TODO: @dev Whisper depreication notice, see Geth's removal of whisper from geth/core
   // Load any previously created Whisper IDs from database into Whisper node
   // If no existing IDs provided, create a new one
   async loadIdentities(identities, topic = DEFAULT_TOPIC, callback) {
@@ -150,7 +151,7 @@ export class WhisperService {
           await this.subscribe(topic, callback, keyId);
         } catch (err) {
           logger.error(
-            `Error adding public key ${id.publicKey} to Whisper node: ${err}`,
+            `Error adding public key ${id.publicKey} to Whisper node: ${err}`, // TODO: @dev Whisper depreciation
           );
         }
       }));

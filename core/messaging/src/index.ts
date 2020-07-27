@@ -1,11 +1,11 @@
 import { natsServiceFactory } from './providers/nats';
-import { WhisperService } from './providers/whisper';
+import { WhisperService } from './providers/whisper'; // TODO: @dev Whisper depreciation
 
 export const messagePayloadTypeJson = 'json';
 export const messagePayloadTypeBinary = 'binary';
 
 export const messagingProviderNats = 'nats';
-export const messagingProviderWhisper = 'whisper';
+export const messagingProviderWhisper = 'whisper'; // TODO: @dev Whisper depreciation
 
 export interface IMessagingService {
   connect(): Promise<any>;
@@ -26,8 +26,8 @@ export async function messagingServiceFactory(
   let service;
 
   switch (provider) {
-    case messagingProviderWhisper:
-      service = await new WhisperService(config);
+    case messagingProviderWhisper: // TODO: @dev Whisper depreciation
+      service = await new WhisperService(config); // TODO: @dev Whisper depreciation
       break;
     case messagingProviderNats:
       service = await natsServiceFactory(config);

@@ -1,0 +1,14 @@
+TODO
+
+# Whisper Depreciation
+
+### Specific references of utilizing Whisper (non exhaustive)
+[baseline working group manager] organisationWhisperKey - Whisper messaging key to interact with the registered organisation
+
+[REST Based API microservice] sending and receiving structured JSON messages delivered via Whisper",
+
+[Radish34 demo] uses `Whisper` , see `config.toml`
+    - const messagingKey = await getWhisperIdentity(`${organisationMessengerURL}/api/v1/identities`);
+    -   messagingType: process.env.MESSENGER_PROVIDER || 'whisper',
+
+[Solidity contracts], `OrgRegistry.sol` contain `bytes_WhisperKey` , alt/generic interface replacement

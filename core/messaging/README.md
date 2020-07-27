@@ -2,7 +2,12 @@
 
 Baseline core messaging package.
 
-[NATS](https://nats.io) is currently the default point-to-point messaging provider and the recommended way for organizations to exchange secure protocol messages. NATS was chosen due to its high-performance capabilities, community/enterprise footprint, interoperability with other systems and protocols (i.e. [Kafka](https://github.com/nats-io/nats-kafka) and MQTT) and its decentralized architecture.
+[NATS](https://nats.io) is currently the default point-to-point messaging
+provider and the recommended way for organizations to exchange secure protocol
+messages. NATS was chosen due to its high-performance capabilities,
+community/enterprise footprint, interoperability with other systems and
+protocols (i.e. [Kafka](https://github.com/nats-io/nats-kafka) and MQTT) and its
+decentralized architecture.
 
 ## Installation
 
@@ -14,7 +19,7 @@ You can build the package locally with `npm run build`.
 
 ## Interfaces
 
-__IMessagingService__
+**IMessagingService**
 
 ```
 connect(): Promise<any>;
@@ -33,4 +38,4 @@ flush(): Promise<void>;
 The following messaging providers are available:
 
 - NATS
-- Whisper
+- Whisper (depreciated)
