@@ -1,10 +1,15 @@
 ---
-description: 'After migration to /baseline, point this file to /radish34 readme.md'
+description:
+  "After migration to /baseline, point this file to /radish34 readme.md"
 ---
 
 # Radish34 POC
 
-If you’ve read the [Radish34 Explained](radish34-explained.md) section or played with the [user experience demo](radish34-demo.md) and now want to build and run the POC yourself, you’re in the right place. Find the authoritative set-up documentation in the Github repo [here](https://github.com/ethereum-oasis/baseline/blob/master/radish34/README.md).
+If you’ve read the [Radish34 Explained](radish34-explained.md) section or played
+with the [user experience demo](radish34-demo.md) and now want to build and run
+the POC yourself, you’re in the right place. Find the authoritative set-up
+documentation in the Github repo
+[here](https://github.com/ethereum-oasis/baseline/blob/master/radish34/README.md).
 
 {% embed url="https://github.com/ethereum-oasis/baseline/blob/master/radish34/README.md" caption="Radish34 POC Official Build Readme" %}
 
@@ -12,9 +17,16 @@ Below is a copy we will keep updated for quick reference.
 
 ## Prerequisites
 
-1. Install [Docker for Mac](https://www.docker.com/docker-mac), or [Docker for Windows](https://www.docker.com/docker-windows)
-   * It's recommended that you allocate 12GB of RAM in Docker \(see 'Troubleshooting'\).
-2. In order to use [Timber](https://github.com/EYBlockchain/timber), you will need to be logged into the Github package registry. To do this, you will need to [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). Make sure that the token you generate has at minimum `read: packages` and `repo` permissions.
+1. Install [Docker for Mac](https://www.docker.com/docker-mac), or
+   [Docker for Windows](https://www.docker.com/docker-windows)
+   - It's recommended that you allocate 12GB of RAM in Docker \(see
+     'Troubleshooting'\).
+2. In order to use [Timber](https://github.com/EYBlockchain/timber), you will
+   need to be logged into the Github package registry. To do this, you will need
+   to
+   [generate a Github Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
+   Make sure that the token you generate has at minimum `read: packages` and
+   `repo` permissions.
 
 After you've done that, log in to the Github package registry by running
 
@@ -22,10 +34,16 @@ After you've done that, log in to the Github package registry by running
 
 ## Development/Test Environment
 
-1. As part of the development environment, we assume a procurement use-case with three users: \(1\) buyer and \(2\) supplier organizations.
-2. Run `npm i && npm run postinstall`. \*\* This takes about 6 minutes to clean install npm packages in root and all sub directories \*\*
-3. Run `docker-compose build` to create the latest versions of the docker containers. \*\* Only do this the first time or when service source code is changed \*\*. \*\* This takes about 40 minutes for a fresh build \*\*
-4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. \*\* This takes about 5-10 minutes to complete \*\* Example logs:
+1. As part of the development environment, we assume a procurement use-case with
+   three users: \(1\) buyer and \(2\) supplier organizations.
+2. Run `npm i && npm run postinstall`. \*\* This takes about 6 minutes to clean
+   install npm packages in root and all sub directories \*\*
+3. Run `docker-compose build` to create the latest versions of the docker
+   containers. \*\* Only do this the first time or when service source code is
+   changed \*\*. \*\* This takes about 40 minutes for a fresh build \*\*
+4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the
+   circuits that are contained in the `/zkp/circuits`. \*\* This takes about
+   5-10 minutes to complete \*\* Example logs:
 
 \[ Need to fix the code segments below...maybe....at least it scrolls. \]
 
@@ -42,16 +60,33 @@ radish-34_radish-zkp_1 is up-to-date
 *** Setups complete ***
 ```
 
-1. Run `npm run build` to compile the smart contracts in `contracts` to JSON files \(containing ABI and Bytecode key value pairs\) in the `artifacts` folder needed for deployment. \*\* This takes less than 15 seconds to run \*\*
-2. Make sure you download and have the following files stored in your `/config` directory: `config-buyer.json`, `config-supplier1.json`, `config-supplier2.json`.
-3. Run `npm run deploy` to deploy the smart contracts. \*\* This takes about 2 minutes \*\*
+1. Run `npm run build` to compile the smart contracts in `contracts` to JSON
+   files \(containing ABI and Bytecode key value pairs\) in the `artifacts`
+   folder needed for deployment. \*\* This takes less than 15 seconds to run
+   \*\*
+2. Make sure you download and have the following files stored in your `/config`
+   directory: `config-buyer.json`, `config-supplier1.json`,
+   `config-supplier2.json`.
+3. Run `npm run deploy` to deploy the smart contracts. \*\* This takes about 2
+   minutes \*\*
 
-   * This docker container first deploys both the Registry contract and the OrgRegistry contract.
-   * Then it registers \(1\) Buyer and \(2\) Supplier organizations. The corresponding `/config/config-${role}.json` files are updated with the newly deployed contract addresses.
-   * The goal of deployment is to initialize the Radish34 system by pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart contract, which holds the organization metadata to thus enable any ongoing procurement operations.
-   * Essentially the deployment is based on deploying an `ERC1820Registry` client called the `Registrar`, followed by registering an interface for `OrgRegistry` with the `ERC1820Registry`, then registering the roles of the buyer and supplier with the `OrgRegistry`
-   * In addition, the contracts that are necessary for privacy management, `Shield` and `Verifier` contract are deployed to the network
-   * Any changes to the config files are updated in the individual db instances `mongo-${role}` Example logs:
+   - This docker container first deploys both the Registry contract and the
+     OrgRegistry contract.
+   - Then it registers \(1\) Buyer and \(2\) Supplier organizations. The
+     corresponding `/config/config-${role}.json` files are updated with the
+     newly deployed contract addresses.
+   - The goal of deployment is to initialize the Radish34 system by
+     pre-registering a buyer and 2 suppliers with an `OrgRegistry` smart
+     contract, which holds the organization metadata to thus enable any ongoing
+     procurement operations.
+   - Essentially the deployment is based on deploying an `ERC1820Registry`
+     client called the `Registrar`, followed by registering an interface for
+     `OrgRegistry` with the `ERC1820Registry`, then registering the roles of the
+     buyer and supplier with the `OrgRegistry`
+   - In addition, the contracts that are necessary for privacy management,
+     `Shield` and `Verifier` contract are deployed to the network
+   - Any changes to the config files are updated in the individual db instances
+     `mongo-${role}` Example logs:
 
    ```text
       > docker-compose run --rm radish-deploy sh deploy.sh
@@ -150,9 +185,11 @@ radish-34_radish-zkp_1 is up-to-date
 
 4. run `docker-compose up -d`
 
-   * This will start all `radish` containers
-   * Wait about 10 seconds to give containers time to complete their initialization routines
-   * Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific containers. Key ones to watch are: `api-{role}` and `ui` Example Logs:
+   - This will start all `radish` containers
+   - Wait about 10 seconds to give containers time to complete their
+     initialization routines
+   - Run `docker-compose logs -f {SERVICE_NAME}` to check the logs of specific
+     containers. Key ones to watch are: `api-{role}` and `ui` Example Logs:
 
    ```text
       radish-api-buyer        | Connected to db
@@ -172,11 +209,14 @@ radish-34_radish-zkp_1 is up-to-date
    ```
 
 5. Run integration tests: `npm run test`
-6. Within about 5 minutes, UI is loaded on `http://localhost:3000` on your local browser
+6. Within about 5 minutes, UI is loaded on `http://localhost:3000` on your local
+   browser
 
 ## Troubleshooting
 
-1. If you get errors during the `npm i` step, please ensure that you are running node version `11`. The `nvm` \(node version manager\) tool allows you to easily switch between versions:
+1. If you get errors during the `npm i` step, please ensure that you are running
+   node version `11`. The `nvm` \(node version manager\) tool allows you to
+   easily switch between versions:
 
 ```text
 nvm install 11
@@ -184,19 +224,31 @@ nvm use 11
 ```
 
 1. Restart the test environment
-   * Run `docker-compose down` to stop containers
-   * Run this command to give the docker command a clean slate: `docker volume prune -f && echo volume pruned && docker system prune -f && echo system pruned && docker network prune -f && echo network pruned`
-   * In some cases, due to stale images application may have build issues owing to existing images and packages that were a part of those builds. To get around such issues, run `docker-compose build --no-cache` to run a clean re-build of the docker images
-   * run through the 'steps to start the application' in **Development/Test Environment**
+   - Run `docker-compose down` to stop containers
+   - Run this command to give the docker command a clean slate:
+     `docker volume prune -f && echo volume pruned && docker system prune -f && echo system pruned && docker network prune -f && echo network pruned`
+   - In some cases, due to stale images application may have build issues owing
+     to existing images and packages that were a part of those builds. To get
+     around such issues, run `docker-compose build --no-cache` to run a clean
+     re-build of the docker images
+   - run through the 'steps to start the application' in **Development/Test
+     Environment**
 2. Increase RAM allocated to Docker
-   * Consider these steps if you are running many of the `radish` containers and your PC is bogged down
-   * Check the memory usage by running `docker stats`
-   * If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` \(default is `2.0GiB`\).
+   - Consider these steps if you are running many of the `radish` containers and
+     your PC is bogged down
+   - Check the memory usage by running `docker stats`
+   - If the containers are using most of the RAM allocated to Docker, you can
+     increase RAM available to Docker by clicking the Docker Desktop icon in the
+     task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a
+     recommended `12.0GiB` \(default is `2.0GiB`\).
 
 ### Front-end Environment
 
-1. When the above setup is run successfully, the UI is ready at `http://localhost:3000`
-2. Typically, this process takes about a minute to two. Successful loading of UI at the url can be inspected based on the logs of the `ui` container. Example Logs:
+1. When the above setup is run successfully, the UI is ready at
+   `http://localhost:3000`
+2. Typically, this process takes about a minute to two. Successful loading of UI
+   at the url can be inspected based on the logs of the `ui` container. Example
+   Logs:
 
    ```text
       radish34-ui_1           | > @ start /app
@@ -215,4 +267,3 @@ nvm use 11
       radish34-ui_1           | Note that the development build is not optimized.
       radish34-ui_1           | To create a production build, use npm run build.
    ```
-

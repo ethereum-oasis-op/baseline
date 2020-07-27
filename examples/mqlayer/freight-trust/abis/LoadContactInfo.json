@@ -1,0 +1,18 @@
+{
+	"Loop_G61_204": "LoadContactInfo",
+
+	"class": {
+
+		"L11": "List",
+		"Item": "G61",
+
+		"G61": {
+			"Name": "G61.Name_02",
+			"CommunicationNumberQualifier": "G61.CommunicationNumberQualifier_03",
+			"ContactFunctionCode": "G61.ContactFunctionCode_01",
+			"CommunicationNumber": "G61.CommunicationNumber_04",
+			"ContactInquiryReference": "G61.ContactInquiryReference_05"
+		}
+
+	}
+}
