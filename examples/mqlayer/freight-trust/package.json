@@ -9,11 +9,7 @@
     "start": "node ediserver.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": {
-    "name": "Sam Bacha",
-    "email": "sam@freighttrust.com",
-    "url": "https://freighttrust.com"
-  },
+  "author": "Sam Bacha <sam@freighttrust.com> (https://freighttrust.com)",
   "license": "MIT",
   "dependencies": {
     "ipfs-api": "^6.0.3",
@@ -27,19 +23,18 @@
   "devDependencies": {
     "prettier": "2.0.5"
   },
-  
-    "husky": {
-      "hooks": {
-        "pre-commit": "lint-staged"
-      }
-    },
-    "lint-staged": {
-      "**/*": ["eslint --fix", "prettier --write"]
-    },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/freight-trust/freightlayer.git"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
+  "lint-staged": {
+    "**/*": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "repository": "git+https://github.com/freight-trust/freightlayer.git",
   "keywords": [
     "baseline protocol",
     "EDI",
