@@ -1,0 +1,24 @@
+CHANGELOG
+---
+
+
+
+
+2020/07/27
+- License
+	https://github.com/spdx/license-list-data/blob/master/json/details/CC0-1.0.json
+
+- small shield badges
+https://lists.oasis-open-projects.org/g/baseline
+https://img.shields.io/badge/baseline-mail%40list-blue
+
+- TOC on README
+
+```
+- [Baseline Protocol](#baseline-protocol)
+  * [Architecture](#architecture)
+  * [Modules & Packages](#modules---packages)
+  * [License](#license)
+  * [Contributing](#contributing)
+  ```
+---
