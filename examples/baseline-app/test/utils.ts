@@ -1,16 +1,51 @@
 import { Ident } from 'provide-js';
 import { execSync } from 'child_process';
+import { BaselineApp } from '../src/index';
 
 export const promisedTimeout = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-export const authenticateUser = async (email, password) => {
+export const authenticateUser = async (identHost, email, password) => {
   const auth = await Ident.authenticate({
     email: email,
     password: password,
-  }, 'http', 'localhost:8085');
+  }, 'http', identHost);
   return auth;
+};
+
+export const baselineAppFactory = async (
+  orgName,
+  bearerToken,
+  identHost,
+  natsHost,
+  nchainHost,
+  networkId,
+  vaultHost,
+  workgroup,
+  workgroupName,
+  workgroupToken,
+): Promise<BaselineApp> => {
+  return new BaselineApp(
+    {
+      identApiScheme: 'http',
+      identApiHost: identHost,
+      nchainApiScheme: 'http',
+      nchainApiHost: nchainHost,
+      networkId: networkId, // FIXME-- boostrap network genesis if no public testnet faucet is configured...
+      orgName: orgName,
+      token: bearerToken,
+      vaultApiScheme: 'http',
+      vaultApiHost: vaultHost,
+      workgroup: workgroup,
+      workgroupName: workgroupName,
+      workgroupToken: workgroupToken,
+    },
+    {
+      bearerToken: bearerToken,
+      natsServers: [natsHost],
+    },
+  );
 };
 
 // subsidize all transactions (value + gas) broadcast through the NChain gateway
@@ -22,23 +57,16 @@ export const configureRopstenFaucet = async (port, userId, address, encryptedPri
     execSync(`PGPASSWORD=nchain psql -h 0.0.0.0 -p ${port} -U nchain nchain_dev -c "INSERT INTO accounts (id, created_at, application_id, network_id, address, private_key) values ('1be0f75c-c05d-42d7-85fd-0c406466a95c', now(), '146ab73e-b2eb-4386-8c6f-93663792c741', '66d44f30-9092-4182-a3c4-bc02736d6ae5', '${address}', '${encryptedPrivateKey}');" 2&>/dev/null`);
   } finally {
     execSync(`PGPASSWORD=nchain psql -h 0.0.0.0 -p ${port} -U nchain nchain_dev -c "UPDATE networks SET enabled = true WHERE id = '66d44f30-9092-4182-a3c4-bc02736d6ae5'" 2&>/dev/null`);
-    console.log('Ropsten faucet configured');
     return true;
   }
 };
 
-export const createUser = async (firstName, lastName, email, password) => {
+export const createUser = async (identHost, firstName, lastName, email, password) => {
   const user = await Ident.createUser({
     first_name: firstName,
     last_name: lastName,
     email: email,
     password: password,
-  }, 'http', 'localhost:8085');
+  }, 'http', identHost);
   return user;
-};
-
-export const createOrgToken = async (token, organizationId) => {
-  return await Ident.clientFactory(token, 'http', 'localhost:8085').createToken({
-    organization_id: organizationId,
-  });
 };

@@ -1,173 +1,149 @@
-import { BaselineApp } from '../src/index';
-import { Vault } from 'provide-js';
-import { assert } from 'console';
-import { authenticateUser, configureRopstenFaucet, createUser, createOrgToken, promisedTimeout } from './utils';
+import { assert } from 'chai';
+import { shouldBehaveLikeAWorkgroupOrganization } from './shared';
+import { authenticateUser, baselineAppFactory, configureRopstenFaucet, createUser, promisedTimeout } from './utils';
+import { BaselineApp } from '../src';
 
 const faucetAddress = process.env['FAUCET_ADDRESS'];
 const faucetEncryptedPrivateKey = process.env['FAUCET_PRIVATE_KEY'];
-const ropstenNetworkId = '66d44f30-9092-4182-a3c4-bc02736d6ae5'; // ropsten
+const networkId = process.env['NCHAIN_NETWORK_ID'] || '66d44f30-9092-4182-a3c4-bc02736d6ae5'; // ropsten
 
-let app: BaselineApp;
-let bearerToken; // user's API credential
-let configuredFaucet = false;
-let user;
+const setupUser = async (identHost, firstname, lastname, email, password) => {
+  const user = (await createUser(identHost, firstname, lastname, email, password)).responseBody;
+  const auth = await authenticateUser(identHost, email, password);
+  const bearerToken = auth.responseBody['token'].token;
+  assert(bearerToken, `failed to authorize bearer token for user ${email}`);
+  return [user, bearerToken];
+};
 
-beforeEach(async () => {
-  if (!user) {
-    const email = `bob${new Date().getTime()}@baseline.local`;
-    user = await createUser('Baseline', 'Bob', email, 'bobp455');
-    const auth = await authenticateUser(email, 'bobp455');
-    bearerToken = auth.responseBody['token'].token;
-    assert(bearerToken, `failed to authorize bearer token for user ${email}`);
+describe('baseline', () => {
+  let app: BaselineApp; // app instance used for initial setup of the on-chain org registry
+  let bearerTokens; // user API credentials
 
-    if (!configuredFaucet && faucetAddress && faucetEncryptedPrivateKey) {
-      configuredFaucet = await configureRopstenFaucet(
-        5433,
-        auth.responseBody['user'].id,
+  let alice;
+  let aliceApp: BaselineApp;
+
+  let bob;
+  let bobApp: BaselineApp;
+
+  let workgroup;
+  let workgroupToken;
+
+  before(async () => {
+    const aliceUserToken = await setupUser(
+      'localhost:8081',
+      'Alice',
+      'Baseline',
+      `alice${new Date().getTime()}@baseline.local`,
+      'alicep455',
+    );
+    alice = aliceUserToken[0];
+
+    const bobUserToken = await setupUser(
+      'localhost:8085',
+      'Bob',
+      'Baseline',
+      `bob${new Date().getTime()}@baseline.local`,
+      'bobp455',
+    );
+    bob = bobUserToken[0];
+
+    bearerTokens = {};
+    bearerTokens[alice['id']] = aliceUserToken[1];
+    bearerTokens[bob['id']] = bobUserToken[1];
+
+    if (faucetAddress && faucetEncryptedPrivateKey) {
+      await configureRopstenFaucet(
+        5432,
+        alice['id'],
         faucetAddress,
         faucetEncryptedPrivateKey,
       );
-      assert(configuredFaucet, 'failed to configure faucet');
+
+      await configureRopstenFaucet(
+        5433,
+        bob['id'],
+        faucetAddress,
+        faucetEncryptedPrivateKey,
+      );
     }
-  }
 
-  if (!app) {
-    app = new BaselineApp(
-      {
-        identApiScheme: 'http',
-        identApiHost: 'localhost:8085',
-        nchainApiScheme: 'http',
-        nchainApiHost: 'localhost:8086',
-        networkId: ropstenNetworkId, // FIXME-- boostrap network genesis if no public testnet faucet is configured...
-        token: bearerToken,
-        vaultApiScheme: 'http',
-        vaultApiHost: 'localhost:8083',
-      },
-      {
-        bearerToken: bearerToken,
-        natsServers: ['nats://localhost:4224'],
-      },
+    bobApp = await baselineAppFactory(
+      'Bob Corp',
+      bearerTokens[bob['id']],
+      'localhost:8085',
+      'nats://localhost:4224',
+      'localhost:8086',
+      networkId,
+      'localhost:8083',
+      null,
+      'baseline workgroup',
+      null,
     );
-  }
-});
 
-describe('baseline', () => {
-  beforeEach(async () => {
-    assert(app, 'baseline app not initialized');
-  });
-
-  describe('baseline circuit', () => {
-    let circuitArtifacts;
-    let setupArtifacts;
-
-    describe('compiling a circuit', () => {
-      beforeEach(async () => {
-        circuitArtifacts = await app.compileBaselineCircuit();
-      });
-
-      it('should have compiled the baseline circuit', async () => {
-        assert(circuitArtifacts, 'should not be null');
-        assert(circuitArtifacts.program, 'artifacts should contain the compiled circuit');
-        assert(circuitArtifacts.abi, 'artifacts should contain the abi');
-      });
-    });
-
-    describe('deploying a circuit', () => {
-      beforeEach(async () => {
-        setupArtifacts = await app.deployBaselineCircuit();
-      });
-
-      it('should have compiled and setup the baseline circuit', async () => {
-        assert(setupArtifacts, 'should not be null');
-        assert(setupArtifacts.keypair, 'keypair should not be null');
-        assert(setupArtifacts.verifierSource, 'verifier source should not be null');
-      });
-    });
-  });
-
-  describe('baseline messaging', () => {
-    let natsService;
-
-    afterEach(async () => {
-      if (natsService && natsService.isConnected()) {
-        natsService.disconnect();
-      }
-    });
-
-    beforeEach(async () => {
-      natsService = app.getMessagingService();
-      natsService.connect();
-      await promisedTimeout(1000);
-    });
-
-    it('should have an established NATS connection', async () => {
-      assert(natsService, 'should not be null');
-      assert(natsService.isConnected() === true, 'should have established a connection');
-    });
-  });
-
-  describe('organization', () => {
-    let org;
-    let orgToken;
-
-    describe('registration', () => {
-      beforeEach(async () => {
-        if (!org) {
-          org = (await app.registerOrganization('Bob Corp', 'nats://bob-nats:4222'));
-          assert(org, 'org should not be null');
-
-          orgToken = (await createOrgToken(bearerToken, org.id)).responseBody['token'];
-          assert(orgToken, 'org token should not be null');
-        }
-      });
-
-      it('should register the organization in the local registry', async () => {
-        assert(org.id, 'org id should not be null');
-      });
-
-      it('should create a default vault for the organization', async () => {
-        const vaults = (await Vault.clientFactory(orgToken, 'http', 'localhost:8083').fetchVaults({})).responseBody;
-        assert(vaults.length === 1, 'default vault not created');
-      });
-    });
+    app = bobApp;
   });
 
   describe('workgroup', () => {
-    let workgroup;
-
     describe('creation', () => {
-      beforeEach(async () => {
-        if (!workgroup) {
-          await promisedTimeout(3000);
-          workgroup = (await app.createWorkgroup('baseline workgroup'));
-          assert(workgroup, 'workgroup should not be null');
-        }
+      before(async () => {
+        await promisedTimeout(10000);
+
+        workgroup = await app.createWorkgroup('baseline workgroup'); // Bob Corp is the founding member of the workgroup...
+        workgroupToken = app.getWorkgroupToken();
       });
 
       it('should create the workgroup in the local registry', async () => {
+        assert(workgroup, 'workgroup should not be null');
         assert(workgroup.id, 'workgroup id should not be null');
       });
 
-      it('should associate the organization with the local workgroup', async () => {
-        const orgs = await app.fetchWorkgroupOrganizations();
-        assert(orgs.length === 1, 'workgroup should have associated org');
+      it('should authorize a bearer token for the workgroup', async () => {
+        assert(workgroupToken, 'workgroup token should not be null');
       });
 
       it('should deploy the ERC1820 org registry contract for the workgroup', async () => {
-        await promisedTimeout(75000); // HACK!!! FIXME!!! -- make this cleaner so we dont hang the tests...
+        await promisedTimeout(85000);
         const orgRegistryContract = app.getWorkgroupContract('organization-registry');
         assert(orgRegistryContract, 'workgroup organization registry contract should not be null');
       });
-
-      it('should register the organization with the on-chain org registry contract', async () => {
-
-      });
     });
 
-    describe('workflow', () => {
-      describe('workstep', () => {
-
+    describe('organizations', async () => {
+      beforeEach(async () => {
+        // sanity check
+        assert(alice && bob, 'a administrative user should have been created for each workgroup counterparty');
+        assert(bearerTokens.length === 2, 'a bearer token should have been authorized for each administrative user');
+        assert(aliceApp, 'an app instance should have been initialized for Alice Corp');
+        assert(bobApp, 'an app instance should have been initialized for Bob Corp');
+        assert(workgroup, 'workgroup should not be null');
+        assert(workgroupToken, 'workgroup token should not be null');
       });
+
+      await promisedTimeout(5000); // ¯\_(ツ)_/¯
+      shouldBehaveLikeAWorkgroupOrganization(bobApp);
+
+      describe('inviting alice to the workgroup', async () => {
+        // aliceApp = baselineAppFactory(
+        //   'Alice Corp',
+        //   bearerTokens[alice['id']],
+        //   'localhost:8081',
+        //   'nats://localhost:4222',
+        //   'localhost:8080',
+        //   networkId,
+        //   'localhost:8082',
+        //   workgroup,
+        //   null,
+        //   workgroupToken,
+        // );
+
+        // shouldBehaveLikeAWorkgroupOrganization(aliceApp);
+      });
+    });
+  });
+
+  describe('workflow', () => {
+    describe('workstep', () => {
+
     });
   });
 });

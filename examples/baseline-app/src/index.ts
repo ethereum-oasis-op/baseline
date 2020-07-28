@@ -1,11 +1,12 @@
 import { IBaselineRPC, IBlockchainService, IRegistry, IVault, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
 import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
 import { IZKSnarkCircuitProvider, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '@baseline-protocol/privacy';
-import { Capabilities, Ident, capabilitiesFactory, nchainClientFactory } from 'provide-js';
+import { messageReservedBitsLength, Message as ProtocolMessage, Opcode, PayloadType } from '@baseline-protocol/types';
+import { Capabilities, Ident, Vault, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
 
 const baselineDocumentCircuitPath = '../../lib/circuits/noopAgreement.zok';
-const baselineProtocolMessageSubject = 'baseline.*';
+const baselineProtocolMessageSubject = 'baseline.inbound';
 
 const zokratesImportResolver = (location, path) => {
   let zokpath = `../../lib/circuits/${path}`;
@@ -33,6 +34,7 @@ export class BaselineApp {
   private org?: any;
   private workgroup?: any;
   private workgroupToken?: any; // workgroup bearer token; used for automated setup
+  private workflowIdentifier?: string; // workflow identifier; specific to the workgroup
 
   constructor(baselineConfig: any, natsConfig: any) {
     this.baselineConfig = baselineConfig;
@@ -50,22 +52,50 @@ export class BaselineApp {
 
     this.capabilities = capabilitiesFactory();
     this.contracts = {};
+
+    if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
+      await this.setWorkgroup(this.baselineConfig.workgroup, this.baselineConfig.workgroupToken);
+    } else if (this.baselineConfig.workgroupName) {
+      // await this.createWorkgroup(this.baselineConfig.workgroupName);
+    } else {
+      console.log(`WARNING... no workgroup configuration found in baseline config... ${this.baselineConfig}`)
+    }
   }
 
   getBaselineCircuitArtifacts(): any | undefined {
     return this.baselineCircuitArtifacts;
   }
 
+  getBaselineConfig(): any | undefined {
+    return this.baselineConfig;
+  }
+
   getBaselineService(): IBaselineRPC & IBlockchainService & IRegistry & IVault | undefined {
     return this.baseline;
+  }
+
+  getMessagingConfig(): any | undefined {
+    return this.natsConfig;
   }
 
   getMessagingService(): IMessagingService | undefined {
     return this.nats;
   }
 
+  getOrganization(): any | undefined {
+    return this.org;
+  }
+
   getProtocolSubscriptions(): any[] | undefined {
     return this.protocolSubscriptions;
+  }
+
+  getWorkgroup(): any {
+    return this.workgroup;
+  }
+
+  getWorkgroupToken(): any {
+    return this.workgroupToken;
   }
 
   getWorkgroupContract(type: string): any {
@@ -73,6 +103,10 @@ export class BaselineApp {
   }
 
   async createWorkgroup(name: string): Promise<any> {
+    if (this.workgroup) {
+      return Promise.reject(`workgroup not created; instance is associated with workgroup: ${this.workgroup.name}`);
+    }
+
     const resp = (await this.baseline?.createWorkgroup({
       config: {
         baselined: true,
@@ -84,30 +118,106 @@ export class BaselineApp {
     this.workgroup = resp.application;
     this.workgroupToken = resp.token.token;
 
-    if (this.workgroup && this.org) {
-      const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
-      const contractParams = registryContracts[2]; // "shuttle" launch contract
-      // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
-
-      await this.deployWorkgroupContract('Shuttle', 'registry', contractParams);
-      await this.resolveWorkgroupContract('organization-registry');
-      (await Ident.clientFactory(
-        this.workgroupToken,
-        this.baselineConfig?.identApiScheme,
-        this.baselineConfig?.identApiHost,
-      )).createApplicationOrganization(this.workgroup.id, {
-        organization_id: this.org.id,
-      });
-    }
+    await this.initWorkgroup();
     return this.workgroup;
   }
 
+  async initWorkgroup(): Promise<any> {
+    if (!this.workgroup) {
+      return Promise.reject('failed to init workgroup');
+    }
+
+    const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
+    const contractParams = registryContracts[2]; // "shuttle" launch contract
+    // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
+
+    await this.deployWorkgroupContract('Shuttle', 'registry', contractParams);
+    await this.resolveWorkgroupContract('organization-registry');
+  }
+
+  async registerWorkgroupOrganization(): Promise<any> {
+    if (!this.workgroup || !this.workgroupToken || !this.org) {
+      return Promise.reject('failed to register workgroup organization');
+    }
+
+    return (await Ident.clientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.identApiScheme,
+      this.baselineConfig?.identApiHost,
+    )).createApplicationOrganization(this.workgroup.id, {
+      organization_id: this.org.id,
+    });
+  }
+
+  async setWorkgroup(workgroup: any, workgroupToken: any): Promise<any> {
+    if (!workgroup || !workgroupToken || !this.workgroup || this.workgroupToken) {
+      return Promise.reject('failed to set workgroup');
+    }
+
+    this.workgroup = workgroup;
+    this.workgroupToken = workgroupToken;
+
+    return this.initWorkgroup();
+  }
+
   async fetchWorkgroupOrganizations(): Promise<any> {
+    if (!this.workgroup || !this.workgroupToken) {
+      return Promise.reject('failed to fetch workgroup organizations');
+    }
+
     return (await Ident.clientFactory(
       this.workgroupToken,
       this.baselineConfig?.identApiScheme,
       this.baselineConfig?.identApiHost,
     ).fetchApplicationOrganizations(this.workgroup.id, {})).responseBody;
+  }
+
+  async createOrgToken(): Promise<any> {
+    return await Ident.clientFactory(
+      this.baselineConfig?.token,
+      this.baselineConfig?.identApiScheme,
+      this.baselineConfig?.identApiHost,
+    ).createToken({
+      organization_id: this.org.id,
+    });
+  };
+
+  async fetchVaults(): Promise<any> {
+    const orgToken = (await this.createOrgToken()).responseBody['token'];
+    return (await Vault.clientFactory(
+      orgToken,
+      this.baselineConfig?.vaultApiScheme,
+      this.baselineConfig?.vaultApiHost,
+    ).fetchVaults({})).responseBody;
+  }
+
+  async createVaultKey(vaultId: string, spec: string): Promise<any> {
+    const orgToken = (await this.createOrgToken()).responseBody['token'];
+    const vault = Vault.clientFactory(
+      orgToken,
+      this.baselineConfig?.vaultApiScheme,
+      this.baselineConfig?.vaultApiHost,
+    );
+    return (await vault.createVaultKey(vaultId, {
+      'type': 'asymmetric',
+      'usage': 'sign/verify',
+      'spec': spec,
+      'name': `${this.org.name} ${spec} keypair`,
+      'description': `${this.org.name} ${spec} keypair`,
+    })).responseBody;
+  }
+
+  async signMessage(vaultId: string, keyId: string, message: string): Promise<any> {
+    const orgToken = (await this.createOrgToken()).responseBody['token'];
+    const vault = Vault.clientFactory(orgToken, this.baselineConfig?.vaultApiScheme, this.baselineConfig?.vaultApiHost);
+    return (await vault.signMessage(vaultId, keyId, message)).responseBody;
+  }
+
+  async fetchKeys(): Promise<any> {
+    const orgToken = (await this.createOrgToken()).responseBody['token'];
+    const vault = Vault.clientFactory(orgToken, this.baselineConfig?.vaultApiScheme, this.baselineConfig?.vaultApiHost);
+    const vaults = (await vault.fetchVaults({})).responseBody;
+    return (await vault.fetchVaultKeys(vaults[0]['id'], {})).responseBody;
   }
 
   async compileBaselineCircuit(): Promise<any> {
@@ -123,11 +233,25 @@ export class BaselineApp {
     // perform trusted setup and deploy verifier/shield contract
     const setupArtifacts = await this.zk?.setup(this.baselineCircuitArtifacts.program);
 
-    // TODO: deploy verifier & shield
+    // const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
+    // console.log(JSON.stringify(registryContracts, null, 2));
+
+    // const shieldContract = await this.resolveWorkgroupContract('shield');
+    // const trackedShield = await this.baseline?.track(shieldContract['address']);
+    // if (trackedShield) {
+    //   console.log('tracked baseline shield contract');
+    // } else {
+    //   console.log('WARNING: failed to track baseline shield contract');
+    // }
+
     return setupArtifacts;
   }
 
   async deployWorkgroupContract(name: string, type: string, params: any): Promise<any> {
+    if (!this.workgroupToken) {
+      return Promise.reject('failed to deploy workgroup contract');
+    }
+
     const nchain = nchainClientFactory(
       this.workgroupToken,
       this.baselineConfig?.nchainApiScheme,
@@ -164,6 +288,7 @@ export class BaselineApp {
   // }
 
   async resolveWorkgroupContract(type: string): Promise<void> {
+    // FIXME- use this.baseline interface...
     const nchain = nchainClientFactory(
       this.workgroupToken,
       this.baselineConfig?.nchainApiScheme,
@@ -175,14 +300,14 @@ export class BaselineApp {
       const contracts = (await nchain.fetchContracts({
         type: type,
       })).responseBody;
-      if (contracts && contracts.length === 1 && contracts[0]['address']) {
+      if (contracts && contracts.length === 1 && contracts[0]['address'] !== '0x') {
         this.contracts[type] = contracts[0];
         // this.orgRegistryContractAddr = contracts[0]['address'];
         clearInterval(interval);
         interval = null;
-        return;
+        return Promise.resolve();
       }
-    }, 5000);
+    }, 10000);
 
     return Promise.resolve();
   }
@@ -194,6 +319,15 @@ export class BaselineApp {
         messaging_endpoint: messagingEndpoint,
       },
     })).responseBody;
+
+    if (this.org) {
+      const vaults = await this.fetchVaults();
+      await this.createVaultKey(vaults[0].id, 'babyJubJub');
+      await this.createVaultKey(vaults[0].id, 'secp256k1');
+
+      await this.registerWorkgroupOrganization();
+    }
+
     return this.org;
   }
 
@@ -214,7 +348,9 @@ export class BaselineApp {
     identifier: string,
     payload: Buffer,
   ): Promise<ProtocolMessage> {
-    let signature = await this.baseline?.signMessage('', '', payload.toString('utf8'));
+    const vaults = await this.fetchVaults();
+    const key = await this.createVaultKey(vaults[0].id, 'secp256k1');
+    const signature = (await this.signMessage(vaults[0].id, key.id, payload.toString('utf8'))).signature;
 
     return {
       opcode: Opcode.Baseline,
