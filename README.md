@@ -13,9 +13,10 @@
 </div>
 
 # Baseline Protocol
-
+<!--
 <img src="https://img.shields.io/badge/baseline-mail%40list-blue" href="https://lists.oasis-open-projects.org/g/baseline">
 <img src="https://img.shields.io/badge/baseline-protocol-blueviolet" href="https://docs.baseline-protocol.org/">
+-->
 
 - [Baseline Protocol](#baseline-protocol)
   - [Architecture](#architecture)
