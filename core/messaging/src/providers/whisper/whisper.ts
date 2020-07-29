@@ -122,7 +122,7 @@ export class WhisperService {  // TODO: @dev Whisper depreciation
         try {
           // TODO: @dev Whisper depreciation
           // Use .call() so that we can pass the Whisper class instance as "this",
-          // therefore we can call Whisper class methods. Otherwise "this" is 
+          // therefore we can call Whisper class methods. Otherwise "this" is
           // scoped by callback function.
           callback.call(this, data);
         } catch (error) {

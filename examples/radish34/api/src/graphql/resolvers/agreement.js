@@ -15,7 +15,10 @@ const NEW_AGREEMENT = 'NEW_AGREEMENT';
 
 const getSignatureStatus = agreement => {
   const { R: RSender, S: SSender } = agreement.constants.EdDSASignatures.sender;
-  const { R: RRecipient, S: SRecipient } = agreement.constants.EdDSASignatures.recipient;
+  const {
+    R: RRecipient,
+    S: SRecipient,
+  } = agreement.constants.EdDSASignatures.recipient;
   let senderSignatureStatus;
   let recipientSignatureStatus;
   if (RSender && SSender) senderSignatureStatus = true;
@@ -28,30 +31,42 @@ const getSignatureStatus = agreement => {
   };
 };
 
-const mapAgreementsWithSignatureStatus = async agreements => {
-  const agreementsWithSignatureStatus = await Promise.all(agreements.map(async agreement => {
-    const { constants, ...agreementData } = agreement;
-    const { senderSignatureStatus, recipientSignatureStatus } = getSignatureStatus(agreement);
-    const recipient = await getPartnerByzkpPublicKey(constants.zkpPublicKeyOfRecipient);
-    return {
-      ...agreementData,
-      ...constants,
-      whisperPublicKeyRecipient: recipient.identity,
-      recipientDetails: recipient,
-      senderSignatureStatus,
-      recipientSignatureStatus,
-    };
-  }));
-  return agreementsWithSignatureStatus
-}
+const mapAgreementsWithSignatureStatus = async (agreements) => {
+  const agreementsWithSignatureStatus = await Promise.all(
+    agreements.map(async (agreement) => {
+      const { constants, ...agreementData } = agreement;
+      const {
+        senderSignatureStatus,
+        recipientSignatureStatus,
+      } = getSignatureStatus(agreement);
+      const recipient = await getPartnerByzkpPublicKey(
+        constants.zkpPublicKeyOfRecipient
+      );
+      return {
+        ...agreementData,
+        ...constants,
+        whisperPublicKeyRecipient: recipient.identity,
+        recipientDetails: recipient,
+        senderSignatureStatus,
+        recipientSignatureStatus,
+      };
+    })
+  );
+  return agreementsWithSignatureStatus;
+};
 
 export default {
   Query: {
     agreement: async (_parent, args) => {
-      const agreement = await getAgreementById(args.id).then(res => res);
+      const agreement = await getAgreementById(args.id).then((res) => res);
       const { constants, ...agreementData } = agreement;
-      const { senderSignatureStatus, recipientSignatureStatus } = getSignatureStatus(agreement);
-      const recipient = await getPartnerByzkpPublicKey(constants.zkpPublicKeyOfRecipient);
+      const {
+        senderSignatureStatus,
+        recipientSignatureStatus,
+      } = getSignatureStatus(agreement);
+      const recipient = await getPartnerByzkpPublicKey(
+        constants.zkpPublicKeyOfRecipient
+      );
 
       return {
         ...agreementData,
@@ -74,11 +89,11 @@ export default {
     agreementsByPrevId: async (_parent, args) => {
       const agreements = await getAgreementsByPrevId(args.prevId);
       return mapAgreementsWithSignatureStatus(agreements);
-    }
+    },
   },
   Mutation: {
     createAgreement: async (_parent, args, context) => {
-      console.log('\n\n\nRequest to create Agreement with inputs:');
+      console.log("\n\n\nRequest to create Agreement with inputs:");
       console.log(args.input);
       const _recipient = await getPartnerByAddress(args.input.recipientAddress);
       delete _recipient._id;
@@ -98,7 +113,7 @@ export default {
       });
       const signature = await pycryptojs.sign(
         strip0x(zkpPrivateKey),
-        strip0x(agreement.commitment.commitment.hex()),
+        strip0x(agreement.commitment.commitment.hex())
       );
       agreement.EdDSASignatures = {
         sender: {
@@ -118,22 +133,24 @@ export default {
 
       await saveNotice({
         resolved: false,
-        category: 'agreement',
+        category: "agreement",
         subject: `New Agreement: for name ${agreementObject.constants.name}`,
         from: name,
-        statusText: 'Pending',
-        status: 'outgoing',
+        statusText: "Pending",
+        status: "outgoing",
         categoryId: agreementDoc._id,
         lastModified: Math.floor(Date.now() / 1000),
       });
 
-      console.log(`\nSending Agreement (id: ${agreementDoc._id}) to Recipient for signing...`);
+      console.log(
+        `\nSending Agreement (id: ${agreementDoc._id}) to Recipient for signing...`
+      );
       msgDeliveryQueue.add({
         documentId: agreementDoc._id,
         senderId: context.identity,
         recipientId: _recipient.messagingKey,
         payload: {
-          type: 'agreement_create',
+          type: "agreement_create",
           ...agreementDoc,
         },
       });

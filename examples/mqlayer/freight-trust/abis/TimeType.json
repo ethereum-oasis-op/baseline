@@ -1,0 +1,16 @@
+{
+	"TimeType": [
+		"PickupAppointmentScheduledTime",
+		"DeliveryAppointmentScheduledTime",
+		"ScheduledPickUpTime",
+		"ScheduledDeliveryTime",
+		"RequestedPickUpTime",
+		"RequestedDeliveryTime",
+		"PickupRequestedScheduledTime",
+		"EarliestRequestedPickupTime",
+		"EarliestPickupTime",
+		"LatestRequestedPickupTime",
+		"LatestPickupTime"
+
+	]
+}

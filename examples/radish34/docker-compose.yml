@@ -1,7 +1,6 @@
-version: '3.5'
+version: "3.5"
 
 services:
-
   deploy:
     container_name: deployer-service
     build:
@@ -111,9 +110,9 @@ services:
       - ./zkp/dist:/app/dist:delegated
       - ./zkp/output:/app/output:delegated
     environment:
-      PROVING_SCHEME: 'gm17'
+      PROVING_SCHEME: "gm17"
       MONGO_URL: mongodb://mongo-buyer # TODO: radish-zkp's db of proving materials shouldn't depend on the Buyer's mongodb. Each user should probably read proving files from their local disk rather than from a shared mongodb?
-      MONGO_DB_NAME: 'radish34'
+      MONGO_DB_NAME: "radish34"
       MONGO_CONNECTION_RETRIES: 5
     depends_on:
       - mongo-buyer # TODO: remove dependency on mongo-buyer.
@@ -153,7 +152,7 @@ services:
       - merkle-tree
     environment:
       MONGO_URL: mongodb://mongo-buyer
-      MONGO_DB_NAME: 'radish34'
+      MONGO_DB_NAME: "radish34"
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: http://messenger-buyer:4001
       REDIS_URL: redis://redis-buyer:6379
@@ -195,7 +194,7 @@ services:
       - merkle-tree
     environment:
       MONGO_URL: mongodb://mongo-supplier1
-      MONGO_DB_NAME: 'radish34'
+      MONGO_DB_NAME: "radish34"
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: http://messenger-supplier1:4001
       REDIS_URL: redis://redis-supplier1:6379
@@ -236,7 +235,7 @@ services:
       - merkle-tree
     environment:
       MONGO_URL: mongodb://mongo-supplier2
-      MONGO_DB_NAME: 'radish34'
+      MONGO_DB_NAME: "radish34"
       MONGO_CONNECTION_RETRIES: 5
       MESSENGER_URI: http://messenger-supplier2:4001
       REDIS_URL: redis://redis-supplier2:6379
@@ -277,11 +276,12 @@ services:
     networks:
       - network-buyer
     ports:
-     - 4001:4001
+      - 4001:4001
     volumes:
       - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      test:
+        ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
       timeout: 10s
       retries: 3
@@ -310,11 +310,12 @@ services:
     networks:
       - network-supplier1
     ports:
-     - 4002:4001
+      - 4002:4001
     volumes:
       - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      test:
+        ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
       timeout: 10s
       retries: 3
@@ -345,7 +346,8 @@ services:
     ports:
       - 4003:4001
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
+      test:
+        ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
       timeout: 10s
       retries: 3
@@ -468,7 +470,7 @@ services:
     environment:
       BLOCKCHAIN_HOST: ws://ganache
       BLOCKCHAIN_PORT: 8545
-      CONTRACT_ORIGIN: 'default' # Where to find the contractInstances?
+      CONTRACT_ORIGIN: "default" # Where to find the contractInstances?
       # Specify one of:
       # - 'remote' (to GET a solc-compiled contract interface json from a remote microservice); or
       # - 'mongodb' (to get a solc-compiled contract interface json from mongodb); or
@@ -508,8 +510,8 @@ services:
     hostname: geth-node
     container_name: geth-node
     depends_on:
-       - geth-miner1
-       - geth-miner2
+      - geth-miner1
+      - geth-miner2
     env_file:
       - ./geth-env/node/docker.env
     build:
@@ -524,8 +526,8 @@ services:
       - network-supplier2
       - network-geth
     ports:
-       - 8547:8545
-       - 8548:8546
+      - 8547:8545
+      - 8548:8546
     healthcheck:
       test: ["CMD", "wget", "-q", "http://localhost:8545"]
       interval: 15s
@@ -607,7 +609,7 @@ networks:
     driver: bridge
     ipam:
       config:
-      - subnet: 172.25.0.0/24
+        - subnet: 172.25.0.0/24
   network-buyer:
   network-supplier1:
   network-supplier2:

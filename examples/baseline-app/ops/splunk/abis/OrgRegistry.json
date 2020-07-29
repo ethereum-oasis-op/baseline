@@ -445,9 +445,7 @@
   "ast": {
     "absolutePath": "/Users/kt/code/provide.network/baseline/core/contracts/contracts/OrgRegistry.sol",
     "exportedSymbols": {
-      "OrgRegistry": [
-        3177
-      ]
+      "OrgRegistry": [3177]
     },
     "id": 3178,
     "license": null,
@@ -455,21 +453,13 @@
     "nodes": [
       {
         "id": 2748,
-        "literals": [
-          "solidity",
-          "^",
-          "0.6",
-          ".9"
-        ],
+        "literals": ["solidity", "^", "0.6", ".9"],
         "nodeType": "PragmaDirective",
         "src": "0:23:8"
       },
       {
         "id": 2749,
-        "literals": [
-          "experimental",
-          "ABIEncoderV2"
-        ],
+        "literals": ["experimental", "ABIEncoderV2"],
         "nodeType": "PragmaDirective",
         "src": "24:33:8"
       },
@@ -593,15 +583,7 @@
             "src": "505:12:8"
           }
         ],
-        "contractDependencies": [
-          1574,
-          2099,
-          3956,
-          3998,
-          4107,
-          4164,
-          4176
-        ],
+        "contractDependencies": [1574, 2099, 3956, 3998, 4107, 4164, 4176],
         "contractKind": "contract",
         "documentation": {
           "id": 2754,
@@ -1350,9 +1332,7 @@
                       "id": 2826,
                       "name": "setInterfaces",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        2868
-                      ],
+                      "overloadedDeclarations": [2868],
                       "referencedDeclaration": 2868,
                       "src": "1653:13:8",
                       "typeDescriptions": {
@@ -1621,9 +1601,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              1573
-            ],
+            "baseFunctions": [1573],
             "body": {
               "id": 2867,
               "nodeType": "Block",
@@ -2624,18 +2602,14 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              2076
-            ],
+            "baseFunctions": [2076],
             "body": {
               "id": 2972,
               "nodeType": "Block",
               "src": "4586:376:8",
               "statements": [
                 {
-                  "assignments": [
-                    2939
-                  ],
+                  "assignments": [2939],
                   "declarations": [
                     {
                       "constant": false,
@@ -3798,9 +3772,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              2081
-            ],
+            "baseFunctions": [2081],
             "body": {
               "id": 3016,
               "nodeType": "Block",
@@ -3910,9 +3882,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              2098
-            ],
+            "baseFunctions": [2098],
             "body": {
               "id": 3062,
               "nodeType": "Block",
@@ -4523,9 +4493,7 @@
               "src": "7012:752:8",
               "statements": [
                 {
-                  "assignments": [
-                    3083
-                  ],
+                  "assignments": [3083],
                   "declarations": [
                     {
                       "constant": false,
@@ -4642,9 +4610,7 @@
                   "src": "7022:57:8"
                 },
                 {
-                  "assignments": [
-                    3094
-                  ],
+                  "assignments": [3094],
                   "declarations": [
                     {
                       "constant": false,
@@ -4762,9 +4728,7 @@
                   "src": "7089:61:8"
                 },
                 {
-                  "assignments": [
-                    3105
-                  ],
+                  "assignments": [3105],
                   "declarations": [
                     {
                       "constant": false,
@@ -4882,9 +4846,7 @@
                   "src": "7160:60:8"
                 },
                 {
-                  "assignments": [
-                    3116
-                  ],
+                  "assignments": [3116],
                   "declarations": [
                     {
                       "constant": false,
@@ -5008,9 +4970,7 @@
                     "src": "7347:297:8",
                     "statements": [
                       {
-                        "assignments": [
-                          3134
-                        ],
+                        "assignments": [3134],
                         "declarations": [
                           {
                             "constant": false,
@@ -5492,9 +5452,7 @@
                   },
                   "id": 3168,
                   "initializationExpression": {
-                    "assignments": [
-                      3124
-                    ],
+                    "assignments": [3124],
                     "declarations": [
                       {
                         "constant": false,
@@ -5859,9 +5817,7 @@
   "legacyAST": {
     "absolutePath": "/Users/kt/code/provide.network/baseline/core/contracts/contracts/OrgRegistry.sol",
     "exportedSymbols": {
-      "OrgRegistry": [
-        3177
-      ]
+      "OrgRegistry": [3177]
     },
     "id": 3178,
     "license": null,
@@ -5869,21 +5825,13 @@
     "nodes": [
       {
         "id": 2748,
-        "literals": [
-          "solidity",
-          "^",
-          "0.6",
-          ".9"
-        ],
+        "literals": ["solidity", "^", "0.6", ".9"],
         "nodeType": "PragmaDirective",
         "src": "0:23:8"
       },
       {
         "id": 2749,
-        "literals": [
-          "experimental",
-          "ABIEncoderV2"
-        ],
+        "literals": ["experimental", "ABIEncoderV2"],
         "nodeType": "PragmaDirective",
         "src": "24:33:8"
       },
@@ -6007,15 +5955,7 @@
             "src": "505:12:8"
           }
         ],
-        "contractDependencies": [
-          1574,
-          2099,
-          3956,
-          3998,
-          4107,
-          4164,
-          4176
-        ],
+        "contractDependencies": [1574, 2099, 3956, 3998, 4107, 4164, 4176],
         "contractKind": "contract",
         "documentation": {
           "id": 2754,
@@ -6764,9 +6704,7 @@
                       "id": 2826,
                       "name": "setInterfaces",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [
-                        2868
-                      ],
+                      "overloadedDeclarations": [2868],
                       "referencedDeclaration": 2868,
                       "src": "1653:13:8",
                       "typeDescriptions": {
@@ -7035,9 +6973,7 @@
             "visibility": "public"
           },
           {
-            "baseFunctions": [
-              1573
-            ],
+            "baseFunctions": [1573],
             "body": {
               "id": 2867,
               "nodeType": "Block",
@@ -8038,18 +7974,14 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              2076
-            ],
+            "baseFunctions": [2076],
             "body": {
               "id": 2972,
               "nodeType": "Block",
               "src": "4586:376:8",
               "statements": [
                 {
-                  "assignments": [
-                    2939
-                  ],
+                  "assignments": [2939],
                   "declarations": [
                     {
                       "constant": false,
@@ -9212,9 +9144,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              2081
-            ],
+            "baseFunctions": [2081],
             "body": {
               "id": 3016,
               "nodeType": "Block",
@@ -9324,9 +9254,7 @@
             "visibility": "external"
           },
           {
-            "baseFunctions": [
-              2098
-            ],
+            "baseFunctions": [2098],
             "body": {
               "id": 3062,
               "nodeType": "Block",
@@ -9937,9 +9865,7 @@
               "src": "7012:752:8",
               "statements": [
                 {
-                  "assignments": [
-                    3083
-                  ],
+                  "assignments": [3083],
                   "declarations": [
                     {
                       "constant": false,
@@ -10056,9 +9982,7 @@
                   "src": "7022:57:8"
                 },
                 {
-                  "assignments": [
-                    3094
-                  ],
+                  "assignments": [3094],
                   "declarations": [
                     {
                       "constant": false,
@@ -10176,9 +10100,7 @@
                   "src": "7089:61:8"
                 },
                 {
-                  "assignments": [
-                    3105
-                  ],
+                  "assignments": [3105],
                   "declarations": [
                     {
                       "constant": false,
@@ -10296,9 +10218,7 @@
                   "src": "7160:60:8"
                 },
                 {
-                  "assignments": [
-                    3116
-                  ],
+                  "assignments": [3116],
                   "declarations": [
                     {
                       "constant": false,
@@ -10422,9 +10342,7 @@
                     "src": "7347:297:8",
                     "statements": [
                       {
-                        "assignments": [
-                          3134
-                        ],
+                        "assignments": [3134],
                         "declarations": [
                           {
                             "constant": false,
@@ -10906,9 +10824,7 @@
                   },
                   "id": 3168,
                   "initializationExpression": {
-                    "assignments": [
-                      3124
-                    ],
+                    "assignments": [3124],
                     "declarations": [
                       {
                         "constant": false,
