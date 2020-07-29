@@ -1,0 +1,3 @@
+[submodule "examples/mqlayer/freight-trust/ediprocessor"]
+	path = examples/mqlayer/freight-trust/ediprocessor
+	url = https://gitlab.com/tradedocs/ediprocessor
