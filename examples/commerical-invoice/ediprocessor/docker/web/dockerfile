@@ -1,0 +1,13 @@
+FROM node:12-alpine
+
+RUN apk update
+
+WORKDIR /app
+
+COPY code /app
+
+RUN npm install --production
+
+CMD node ./server/server.js
+
+EXPOSE 80

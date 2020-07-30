@@ -1,0 +1,39 @@
+{
+  "name": "baseline",
+  "version": "0.1.0",
+  "description": "ethereum oasis baseline protocol",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ethereum-oasis/baseline.git"
+  },
+  "keywords": [
+    "baseline",
+    "blockchain",
+    "protocol",
+    "smart",
+    "contracts",
+    "enterprise",
+    "business",
+    "2",
+    "business",
+    "standards"
+  ],
+  "author": "SEE CONTRIBUTORS",
+  "license": "CC0-1.0",
+  "bugs": {
+    "url": "https://github.com/ethereum-oasis/baseline/issues"
+  },
+  "homepage": "https://github.com/ethereum-oasis/baseline#readme",
+  "devDependencies": {
+    "all-contributors-cli": "^6.17.0"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "plugins": ["react", "babel"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "rules": {
+    "react/no-find-dom-node": "off",
+    "react/prop-types": "off",
+    "react/display-name": "off"
+  },
+  "extends": ["standard", "plugin:react/recommended"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+FROM node:12-alpine
+
+RUN apk update
+
+WORKDIR /Users/sbacha/Desktop/INTERESTING/x12poc/src/app
+
+COPY code /Users/sbacha/Desktop/INTERESTING/x12poc/src/app
+
+RUN npm install --production
+
+CMD node ./server/server.js
+
+EXPOSE 80
