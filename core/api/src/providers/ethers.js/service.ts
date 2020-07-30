@@ -57,9 +57,6 @@ export class Ethers implements IBlockchainService {
   fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any> {
     throw new Error('not implemented');
   }
-  fetchWorkgroupTokens(workgroupId: string): Promise<any> {
-    throw new Error('not implemented');
-  }
   fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any> {
     throw new Error('not implemented');
   }

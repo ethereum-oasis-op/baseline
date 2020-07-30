@@ -57,7 +57,6 @@ export interface IRegistry {
   createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>;
   updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>;
   fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>;
-  fetchWorkgroupTokens(workgroupId: string): Promise<any>;
   fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>;
   createWorkgroupUser(workgroupId: string, params: object): Promise<any>;
   updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>;

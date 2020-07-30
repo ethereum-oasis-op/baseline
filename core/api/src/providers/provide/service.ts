@@ -129,10 +129,6 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return this.ident!.fetchApplicationInvitations(workgroupId, params);
   }
 
-  fetchWorkgroupTokens(workgroupId: string): Promise<any> {
-    return this.ident!.fetchApplicationTokens(workgroupId);
-  }
-
   fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any> {
     return this.ident!.fetchApplicationUsers(workgroupId, params);
   }
