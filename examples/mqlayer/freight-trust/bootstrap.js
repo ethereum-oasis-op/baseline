@@ -1,0 +1,1 @@
+require("./freighttrust.js");
