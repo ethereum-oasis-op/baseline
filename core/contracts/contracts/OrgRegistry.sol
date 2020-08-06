@@ -193,12 +193,12 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
     /// @dev Function to get the count of number of organizations to help with extraction
     /// @return length of the array containing organization addresses
-    function getOrgCount() external override  view returns (uint) {
+    function getOrgCount() external override view returns (uint) {
         return orgs.length;
     }
 
     /// @notice Function to get a single organization's details
-    function getOrg(address _address) external override  view returns (
+    function getOrg(address _address) external override view returns (
         address,
         bytes32,
         bytes memory,
