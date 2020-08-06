@@ -44,6 +44,14 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         bytes _zkpPublicKey,
         bytes _metadata
     );
+    event UpdateOrg(
+        bytes32 _name,
+        address _address,
+        bytes _messagingEndpoint,
+        bytes _whisperKey,
+        bytes _zkpPublicKey,
+        bytes _metadata
+    );
 
     /// @dev constructor function that takes the address of a pre-deployed ERC1820
     /// registry. Ideally, this contract is a publicly known address:
@@ -124,6 +132,40 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         return true;
     }
 
+    /// @notice Function to update an organization
+    /// @param _address require the ethereum address of the registered organization to update the org
+    /// @param _name name of the registered organization
+    /// @param _messagingEndpoint public messaging endpoint
+    /// @param _whisperKey public key required for message communication
+    /// @param _zkpPublicKey public key required for commitments & to verify EdDSA signatures with
+    /// @dev Function to update an organization
+    /// @return `true` upon successful registration of the organization
+    function updateOrg(
+        address _address,
+        bytes32 _name,
+        bytes calldata _messagingEndpoint,
+        bytes calldata _whisperKey,
+        bytes calldata _zkpPublicKey,
+        bytes calldata _metadata
+    ) external override  returns (bool) {
+        require(msg.sender == org[_address].address, "Must update Org from registered org address");
+        orgMap[_address].name = _name;
+        orgMap[_address].messagingEndpoint = _messagingEndpoint;
+        orgMap[_address].whisperKey = _whisperKey;
+        orgMap[_address].zkpPublicKey = _zkpPublicKey;
+        orgMap[_address].metadata = _metadata;
+
+        emit UpdateOrg(
+            _name,
+            _address,
+            _messagingEndpoint,
+            _whisperKey,
+            _zkpPublicKey,
+            _metadata
+        );
+        return true;
+    }
+
     /// @notice Function to register the names of the interfaces associated with the OrgRegistry
     /// @param _groupName name of the working group registered by an organization
     /// @param _tokenAddress name of the registered token interface
@@ -143,6 +185,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
             _shieldAddress,
             _verifierAddress
         );
+      
         orgInterfaceCount++;
         return true;
     }
@@ -172,7 +215,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         );
     }
 
-    /// @notice Function to get a single organization's interface details
+    /// @notice Function to get organization's interface details
     function getInterfaceAddresses() external view returns (
         bytes32[] memory,
         address[] memory,
@@ -199,3 +242,4 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         );
     }
 }
+
