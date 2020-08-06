@@ -185,8 +185,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
             _shieldAddress,
             _verifierAddress
         );
-        // Should this be updated using the SafeMath library?
-        // i.e. orgInterfaceCount.add(1);
+      
         orgInterfaceCount++;
         return true;
     }
