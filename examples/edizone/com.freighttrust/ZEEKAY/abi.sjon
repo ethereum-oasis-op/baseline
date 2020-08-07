@@ -1,0 +1,19 @@
+{
+  "inputs": [
+    {
+      "name": "loop",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "sgements",
+      "public": true,
+      "type": "field"
+    }
+  ],
+  "outputs": [
+    {
+      "type": "field"
+    }
+  ]
+}
