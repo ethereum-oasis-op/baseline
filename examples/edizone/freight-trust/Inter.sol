@@ -1,3 +1,11 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDXVersion: SPDX-2.2
+// SPDX-FileCopyrightText: Copyright 2020 FreightTrust and Clearing Corporation
+// This Source Code Form is subject to the terms of the Mozilla Public
+//  License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at https://mozilla.org/MPL/2.0/. 
+
+pragma solidity >=0.4.22 <0.6.0;
 
 contract owned {
     address public owner;
