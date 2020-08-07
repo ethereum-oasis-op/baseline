@@ -1,0 +1,55 @@
+                            {
+                                "UNH": {
+                                    "MessageReferenceNumber_01": "000000101",
+                                    "MessageIdentifier_02": {
+                                        "MessageType_01": "ORDERS",
+                                        "MessageVersionNumber_02": "D",
+                                        "MessageReleaseNumber_03": "96A",
+                                        "ControllingAgencyCoded_04": "UN"
+
+                                    },
+
+                                    "BGM": {
+                                        "DOCUMENTMESSAGENAME_01": {
+                                            "Documentmessagenamecoded_01": "220"
+                                        },
+"DTM": [{
+        "DATETIMEPERIOD_01": {
+            "Datetimeperiodqualifier_01": "137",
+            "Datetimeperiod_02": "20020830"
+        },
+        "PAI": {
+            "PAYMENTINSTRUCTIONDETAILS_01": {
+                "Paymentconditionscoded_01": null,
+                "Paymentguaranteecoded_02": null,
+                "Paymentmeanscoded_03": "42"
+            },
+            "NADLoop": [{
+                        "NAD": {
+                            "Partyqualifier_01": "BY",
+                            "PARTYIDENTIFICATIONDETAILS_02": {
+                                "Partyididentification_01": "5412345000013"
+                            },
+                            "TAXLoop": null,
+
+                            "CUXLoop": [{
+                                    "CUX": {
+                                        "CURRENCYDETAILS_01": {
+                                            "Currencydetailsqualifier_01": "2",
+                                            "Currencycoded_02": "GBP",
+                                            "Currencyqualifier_03": "9",
+                                            "Currencyratebase_04": null
+                                        },
+                                        "CURRENCYDETAILS_02": {
+                                            "Currencydetailsqualifier_01": "3",
+                                            "Currencycoded_02": "EUR",
+                                            "Currencyqualifier_03": "4",
+                                            "Currencyratebase_04": null
+                                        },
+                                        "Rateofexchange_03": "1.67",
+                                        "Currencymarketexchangecoded_04": null
+                                    }
+                                }
+                            
+            
+}
