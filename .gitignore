@@ -106,3 +106,4 @@ examples/google-sheets-connector/d365/BaselineConnectorDll/obj/Debug/.NETFramewo
 examples/google-sheets-connector/d365/BaselineAPI/Utilities/AuthenticationUtility/obj/Debug/.NETFramework,Version=v4.5.2.AssemblyAttributes.cs
 examples/google-sheets-connector/d365/BaselineConnectorDll/obj/Debug/BaselineDll.csprojAssemblyReference.cache
 examples/mqlayer/freight-trust/web/.netlify/state.json
+examples/edizone/freight-trust/ediprocessor/
