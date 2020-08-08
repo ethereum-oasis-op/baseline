@@ -1,8 +1,53 @@
+<!-- 
+Contributions to the open source repo shall be under creative commons public domain license [\(CC0 1.0 Universal\)](https://creativecommons.org/publicdomain/zero/1.0/).
+-->
 
-[**publication**](https://medium.com/baselineprotocol)
+# Baseline Community
 
-
-
+- [Baseline](#baseline)
+  * [Open Source Community](#open-source-community)
+  * [**Leadership**](#--leadership--)
+  * [Working Together](#working-together)
+    + [Meetings and Meetups](#meetings-and-meetups)
+      - [Onboarding: Help Getting Started](#onboarding--help-getting-started)
+      - [**Roadmapping**](#--roadmapping--)
+      - [Technical Steering Committee](#technical-steering-committee)
+      - [Specifications Steering Committee](#specifications-steering-committee)
+    + [Connecting with Each Other Directly](#connecting-with-each-other-directly)
+      - [Slack](#slack)
+      - [Members Directory](#members-directory)
+      - [Group Email](#group-email)
+      - [Forums](#forums)
+      - [Social Networking](#social-networking)
+      - [Medium](#medium)
+- [Contributors Guide](#contributors-guide)
+  * [Technical Contributors](#technical-contributors)
+    + [Issues Organization and Community "Sprints"](#issues-organization-and-community--sprints-)
+    + [Submitting a pull request](#submitting-a-pull-request)
+    + [eCLA and iCLA](#ecla-and-icla)
+    + [Maintainers and Commit Rules](#maintainers-and-commit-rules)
+  * [Specifications Contributors](#specifications-contributors)
+    + [Epics, Stories Organization](#epics--stories-organization)
+    + [A Good Story](#a-good-story)
+  * [Task Groups](#task-groups)
+- [Governance](#governance)
+  * [OASIS and Governance](#oasis-and-governance)
+  * [License and Patent Policies](#license-and-patent-policies)
+  * [**Charter: Baseline Open Source Project Governance**](#--charter--baseline-open-source-project-governance--)
+      - [TSC](#tsc)
+      - [Bootstrapping Period:](#bootstrapping-period-)
+      - [Steady State Periods:](#steady-state-periods-)
+      - [Maintainers:](#maintainers-)
+      - [Contributors:](#contributors-)
+      - [Contributions:](#contributions-)
+      - [Ratification](#ratification)
+      - [Details on OASIS and the Open Ethereum Project](#details-on-oasis-and-the-open-ethereum-project)
+  * [Community Members](#community-members)
+    + [Bootstrapping Phase and Ongoing Phase](#bootstrapping-phase-and-ongoing-phase)
+    + [Your Project Governance Board](#your-project-governance-board)
+    + [Your Technical Steering Committee](#your-technical-steering-committee)
+    + [Your Specifications Steering Committee](#your-specifications-steering-committee)
+    + [Your Provisional Chair](#your-provisional-chair)
 
 
 ## Open Source Community
@@ -12,6 +57,8 @@ The Baseline Protocol initiative was [announced](https://consensys.net/blog/pres
 > This work is active and open to contributors.
 
 All work in the [Baseline Protocol public repo](https://github.com/ethereum-oasis/baseline) is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [`license.md`](https://github.com/ethereum-oasis/baseline/blob/master/license.md).
+
+Read the [**publication**](https://medium.com/baselineprotocol)
 
 ## **Leadership**
 
