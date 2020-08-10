@@ -1,5 +1,5 @@
 import { Ident } from 'provide-js';
-import { execSync } from 'child_process';
+import { exec, execSync } from 'child_process';
 import { BaselineApp } from '../src/index';
 
 export const promisedTimeout = (ms) => {
@@ -17,11 +17,14 @@ export const authenticateUser = async (identHost, email, password) => {
 export const baselineAppFactory = async (
   orgName,
   bearerToken,
+  inviteToken,
   identHost,
   natsHost,
   nchainHost,
   networkId,
   vaultHost,
+  rcpEndpoint,
+  rpcScheme,
   workgroup,
   workgroupName,
   workgroupToken,
@@ -30,10 +33,13 @@ export const baselineAppFactory = async (
     {
       identApiScheme: 'http',
       identApiHost: identHost,
+      inviteToken: inviteToken,
       nchainApiScheme: 'http',
       nchainApiHost: nchainHost,
       networkId: networkId, // FIXME-- boostrap network genesis if no public testnet faucet is configured...
       orgName: orgName,
+      rpcEndpoint: rcpEndpoint,
+      rpcScheme: rpcScheme,
       token: bearerToken,
       vaultApiScheme: 'http',
       vaultApiHost: vaultHost,
@@ -69,4 +75,17 @@ export const createUser = async (identHost, firstName, lastName, email, password
     password: password,
   }, 'http', identHost);
   return user;
+};
+
+export const scrapeInvitationToken = async (container) => {
+  let logs;
+  exec(`docker logs ${container}`, (err, stdout, stderr) => {
+   logs = stderr.toString();
+  });
+  await promisedTimeout(500);
+  const matches = logs.match(/\"dispatch invitation\: (.*)\"/);
+  if (matches && matches.length > 0) {
+    return matches[matches.length - 1];
+  }
+  return null;
 };

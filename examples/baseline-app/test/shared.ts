@@ -129,6 +129,32 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
           it('should output the raw verifier source code', async () => {
             assert(setupArtifacts.verifierSource, 'verifier source should not be null');
           });
+
+          describe('on-chain artifacts', () => {
+            let shield;
+            let verifier;
+
+            before(async () => {
+              shield = app.getWorkgroupContract('shield');
+              verifier = app.getWorkgroupContract('verifier');
+            });
+
+            it('should deposit the workgroup shield contract on-chain', async () => {
+              assert(shield, 'workgroup shield contract should not be null');
+              assert(shield.address, 'workgroup shield contract should have been deployed');
+            });
+
+            it('should track the workgroup shield in an off-chain merkle tree database', async () => {
+              const trackedShieldContracts = await app.baseline.getTracked();
+              assert(trackedShieldContracts.length === 1, 'workgroup shield contract should have been tracked');
+              assert(trackedShieldContracts.indexOf(shield.address) === 0, 'workgroup shield contract should have been tracked');
+            });
+  
+            it('should deposit the circuit verifier on-chain', async () => {
+              assert(verifier, 'workflow circuit verifier contract should not be null');
+              assert(verifier.address, 'workflow circuit verifier contract should have been deployed');
+            });
+          });
         });
       });
     });

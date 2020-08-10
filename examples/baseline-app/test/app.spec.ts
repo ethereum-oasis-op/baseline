@@ -1,6 +1,6 @@
 import { assert } from 'chai';
 import { shouldBehaveLikeAWorkgroupOrganization } from './shared';
-import { authenticateUser, baselineAppFactory, configureRopstenFaucet, createUser, promisedTimeout } from './utils';
+import { authenticateUser, baselineAppFactory, configureRopstenFaucet, createUser, promisedTimeout, scrapeInvitationToken } from './utils';
 import { BaselineApp } from '../src';
 
 const faucetAddress = process.env['FAUCET_ADDRESS'];
@@ -8,9 +8,9 @@ const faucetEncryptedPrivateKey = process.env['FAUCET_PRIVATE_KEY'];
 const networkId = process.env['NCHAIN_NETWORK_ID'] || '66d44f30-9092-4182-a3c4-bc02736d6ae5'; // ropsten
 
 const setupUser = async (identHost, firstname, lastname, email, password) => {
-  const user = (await createUser(identHost, firstname, lastname, email, password)).responseBody;
+  const user = (await createUser(identHost, firstname, lastname, email, password));
   const auth = await authenticateUser(identHost, email, password);
-  const bearerToken = auth.responseBody['token'].token;
+  const bearerToken = auth.token.token;
   assert(bearerToken, `failed to authorize bearer token for user ${email}`);
   return [user, bearerToken];
 };
@@ -70,11 +70,14 @@ describe('baseline', () => {
     bobApp = await baselineAppFactory(
       'Bob Corp',
       bearerTokens[bob['id']],
+      null,
       'localhost:8085',
       'nats://localhost:4224',
       'localhost:8086',
       networkId,
       'localhost:8083',
+      'localhost:8511',
+      'http',
       null,
       'baseline workgroup',
       null,
@@ -102,8 +105,7 @@ describe('baseline', () => {
       });
 
       it('should deploy the ERC1820 org registry contract for the workgroup', async () => {
-        await promisedTimeout(85000);
-        const orgRegistryContract = app.getWorkgroupContract('organization-registry');
+        const orgRegistryContract = await app.requireWorkgroupContract('organization-registry');
         assert(orgRegistryContract, 'workgroup organization registry contract should not be null');
       });
     });
@@ -123,18 +125,36 @@ describe('baseline', () => {
       shouldBehaveLikeAWorkgroupOrganization(bobApp);
 
       describe('inviting alice to the workgroup', async () => {
-        // aliceApp = baselineAppFactory(
-        //   'Alice Corp',
-        //   bearerTokens[alice['id']],
-        //   'localhost:8081',
-        //   'nats://localhost:4222',
-        //   'localhost:8080',
-        //   networkId,
-        //   'localhost:8082',
-        //   workgroup,
-        //   null,
-        //   workgroupToken,
-        // );
+        let inviteToken;
+
+        before(async () => {
+          await bobApp.inviteWorkgroupParticipant(alice.email);
+          inviteToken = await scrapeInvitationToken('bob-ident-consumer'); // if configured, ident would have sent an email to Alice
+        });
+
+        it('should have created an invite for alice', async () => {
+          assert(inviteToken, 'invite token should not be null');
+        });
+
+        describe('alice accepting the invitation', async () => {
+          before(async () => {
+            aliceApp = await baselineAppFactory(
+              'Alice Corp',
+              bearerTokens[alice['id']],
+              inviteToken,
+              'localhost:8081',
+              'nats://localhost:4222',
+              'localhost:8080',
+              networkId,
+              'localhost:8082',
+              'localhost:8522',
+              'http',
+              workgroup,
+              'baseline workgroup',
+              workgroupToken,
+            );
+          });
+        });
 
         // shouldBehaveLikeAWorkgroupOrganization(aliceApp);
       });
@@ -143,7 +163,9 @@ describe('baseline', () => {
 
   describe('workflow', () => {
     describe('workstep', () => {
-
+      // sign and send a baseline message from bob to alice
+      // PING
+      // PONG
     });
   });
 });
