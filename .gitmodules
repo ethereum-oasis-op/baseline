@@ -1,3 +1,6 @@
 [submodule "examples/mqlayer/freight-trust/ediprocessor"]
 	path = examples/mqlayer/freight-trust/ediprocessor
 	url = https://gitlab.com/tradedocs/ediprocessor
+[submodule "examples/edi-x12-edifact/submodules/libedi"]
+	path = examples/edi-x12-edifact/submodules/libedi
+	url = https://github.com/freight-trust/libedi
