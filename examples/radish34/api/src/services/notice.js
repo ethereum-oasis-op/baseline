@@ -1,5 +1,5 @@
 import db from '../db';
-import { pubsub } from '../subscriptions';
+import { pubsub } from '../graphql/subscriptions';
 import { logger } from 'radish34-logger';
 
 export const getNoticeById = async id => {

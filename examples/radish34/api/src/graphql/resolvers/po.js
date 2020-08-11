@@ -5,7 +5,7 @@ import { saveNotice } from '../../services/notice';
 
 import { getServerSettings } from '../../utils/serverSettings';
 import { pubsub } from '../subscriptions';
-import msgDeliveryQueue from '../queues/message_delivery';
+import msgDeliveryQueue from '../../queues/message_delivery';
 import { logger } from 'radish34-logger';
 
 const NEW_PO = 'NEW_PO';
@@ -132,8 +132,8 @@ export default {
         });
 
         logger.info(`Sending PO with id ${poDoc._id} to supplier.`, { service: 'API' });
-        const senderId = currentUser.identity;
-        const recipientId = supplier.identity;
+        const senderId = currentUser.messagingKey;
+        const recipientId = supplier.messagingKey;
         // Add to BullJS queue
         msgDeliveryQueue.add(
           {
@@ -152,9 +152,9 @@ export default {
           },
         );
 
-        pubsub.publish(NEW_PO, { newPO: { ...poDoc, whisperPublicKeyOfSupplier: supplier.zkpPublicKey } });
+        pubsub.publish(NEW_PO, { newPO: { ...poDoc, whisperPublicKeyOfSupplier: supplier.messagingKey } });
 
-        return { ...poDoc, whisperPublicKeyOfSupplier: supplier.zkpPublicKey };
+        return { ...poDoc, whisperPublicKeyOfSupplier: supplier.messagingKey };
       } catch (err) {
         pubsub.publish('INCOMING_TOASTR_NOTIFICATION', {
           onNotification: {

@@ -1,9 +1,9 @@
 import { getRFPById, getAllRFPs } from '../../services/rfp';
 import { saveNotice } from '../../services/notice';
 import { pubsub } from '../subscriptions';
-import msgDeliveryQueue from '../queues/message_delivery';
-import { saveRFP } from '../db/models/modules/rfps';
-import { getPartnerByMessengerKey } from '../services/partner';
+import msgDeliveryQueue from '../../queues/message_delivery';
+import { saveRFP } from '../../db/models/modules/rfps';
+import { getPartnerByMessagingKey } from '../../services/partner';
 import { logger } from 'radish34-logger';
 
 const NEW_RFP = 'NEW_RFP';

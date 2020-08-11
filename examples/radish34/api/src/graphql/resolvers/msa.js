@@ -131,14 +131,16 @@ export default {
         lastModified: Math.floor(Date.now() / 1000),
       });
 
-      logger.info(`Sending MSA with id ${msaDoc._id} to supplier for signing.`, { service: 'API' });
-      msgDeliveryQueue.add({
-        documentId: msaDoc._id,
-        senderId: context.identity,
-        recipientId: _supplier.identity,
-        payload: {
-          type: 'msa_create',
-          ...msaDoc,
+      logger.info(`Sending MSA with id ${msaDoc._id} to ${_supplier.messagingKey} for signing.`, { service: 'API' });
+      msgDeliveryQueue.add(
+        {
+          documentId: msaDoc._id,
+          senderId: context.identity,
+          recipientId: _supplier.messagingKey,
+          payload: {
+            type: 'msa_create',
+            ...msaDoc,
+          },
         },
         {
           // Mark job as failed after 20sec so subsequent jobs are not stalled

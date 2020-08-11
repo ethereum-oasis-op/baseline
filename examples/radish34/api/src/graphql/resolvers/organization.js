@@ -5,9 +5,9 @@ import {
   getRegisteredOrganization,
   getOrganizationCount,
   getInterfaceAddress,
-} from '../services/organization';
-import { getServerSettings } from '../utils/serverSettings';
-import db from '../db';
+} from '../../services/organization';
+import { getServerSettings } from '../../utils/serverSettings';
+import db from '../../db';
 import { logger } from 'radish34-logger';
 
 const NEW_ORG = 'NEW_ORG';

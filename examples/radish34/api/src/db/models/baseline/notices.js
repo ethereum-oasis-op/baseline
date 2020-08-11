@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { getPartnerByMessengerKey } from '../../../services/partner';
+import { getPartnerByMessagingKey } from '../../../services/partner';
 import { logger } from 'radish34-logger';
 // import { pubsub } from '../subscriptions';
 
