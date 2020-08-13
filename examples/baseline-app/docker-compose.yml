@@ -146,6 +146,8 @@ services:
       - NATS_CLIENT_PREFIX=alice-ident-consumer
       - NATS_URL=nats://alice-nats:4222
       - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NCHAIN_API_HOST=alice-nchain:8080
+      - NCHAIN_API_SCHEME=http
       - PORT=8080
       - REDIS_HOSTS=alice-redis:6379
       - VAULT_API_SCHEME=http
@@ -449,6 +451,8 @@ services:
       - NATS_CLIENT_PREFIX=bob-ident-consumer
       - NATS_URL=nats://bob-nats:4222
       - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NCHAIN_API_HOST=bob-nchain:8080
+      - NCHAIN_API_SCHEME=http
       - REDIS_HOSTS=bob-redis:6379
       - VAULT_API_SCHEME=http
       - VAULT_API_HOST=bob-vault:8080
