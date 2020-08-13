@@ -224,7 +224,7 @@ of the various smart contracts
   - Description: Leverage other standards like the ERC1155 Multi-token standard to extend abilities
     to deploy multiple fungible and non-fungible tokens
   - Potential Capabilities:
-     - Ability to extend the funactionality of batch execution in ActionsController by 
+     - Ability to extend the functionality of batch execution in ActionsController by 
        maintaining a link to the ActionsController
      - Further capabilities include abilities to relaease tokens for integration with existing main net
        wallets and DeFi provisions, within the constraints of privacy

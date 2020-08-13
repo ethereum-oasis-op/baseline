@@ -11,7 +11,7 @@ This component is a RESTful service built using GraphQL and serves as an orchest
 ## How does this fit in to Radish?
 
 The Radish34 API component is spun up along with rest of the services that enable the baseline protocol by integrating with the following types of services:
-- Privacy Management: Compoenents that use Zero Knowledge Proof techniques to prove business logic execution in a verifiable manner
+- Privacy Management: Components that use Zero Knowledge Proof techniques to prove business logic execution in a verifiable manner
 - Secure Messaging: Component that use Whisper for secure decentralized message communication on the Ethereum platform
 - Blockchain: Component that uses the public mainnet for deploying and interacting with the smart contracts
 
