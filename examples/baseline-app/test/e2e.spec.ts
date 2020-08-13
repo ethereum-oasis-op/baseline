@@ -163,9 +163,23 @@ describe('baseline', () => {
 
   describe('workflow', () => {
     describe('workstep', () => {
-      // sign and send a baseline message from bob to alice
-      // PING
-      // PONG
+      describe('initial proof generation', () => {
+        before(async () => {
+          const recipient = '0x'; // FIXME-- resolve alice's org address...
+
+          await bobApp.sendProtocolMessage(recipient, {
+            hello: 'world',
+            rfp_id: null,
+          });
+        });
+
+        describe('verification, pushing the proof to a new leaf in the merkle tree', () => { // PING!
+
+          describe('subsequent state transition', () => { // PONG!
+
+          });
+        });
+      });
     });
   });
 });

@@ -3,7 +3,7 @@ import { IMessagingService, messagingProviderNats, messagingServiceFactory } fro
 import { IZKSnarkCircuitProvider, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '@baseline-protocol/privacy';
 import { messageReservedBitsLength, Message as ProtocolMessage, Opcode, PayloadType } from '@baseline-protocol/types';
 import { Application as Workgroup, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
-import { Capabilities, Ident, Vault, capabilitiesFactory, nchainClientFactory } from 'provide-js';
+import { Capabilities, Ident, NChain, Vault, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
 import { compile as solidityCompile } from 'solc';
 
@@ -104,6 +104,36 @@ export class BaselineApp {
     return this.contracts[type];
   }
 
+  // this will accept recipients (string[]) for multi-party use-cases
+  async sendProtocolMessage(recipient: string, document: any): Promise<any> {
+    const recipientOrg = await this.fetchOrganization(recipient);
+    if (!recipientOrg) {
+      return Promise.reject(`protocol message not sent; organization not resolved: ${recipient}`);
+    }
+
+    const messagingEndpoint = recipientOrg['config'].messaging_endpoint;
+    if (!messagingEndpoint) {
+      return Promise.reject(`protocol message not sent; organization messaging endpoint not resolved for recipient: ${recipient}`);
+    }
+
+    const recipientNatsConn = await messagingServiceFactory(messagingProviderNats, {
+      bearerToken: null, // FIXME
+      natsServers: [messagingEndpoint],
+    })
+
+    // this will use protocol buffers or similar
+    const wiremsg = this.serializeProtocolMessage(
+      await this.protocolMessageFactory(
+        recipient,
+        this.contracts['shield'].address,
+        this.workflowIdentifier!,
+        Buffer.from(JSON.stringify(document)),
+      ),
+    );
+
+    return recipientNatsConn.publish(baselineProtocolMessageSubject, wiremsg);
+  }
+
   async createWorkgroup(name: string): Promise<Workgroup> {
     if (this.workgroup) {
       return Promise.reject(`workgroup not created; instance is associated with workgroup: ${this.workgroup.name}`);
@@ -183,6 +213,42 @@ export class BaselineApp {
       organization_id: this.org.id,
     });
   };
+
+  async fetchOrganization(address: string): Promise<Organization> {
+    const orgRegistryContract = await this.requireWorkgroupContract('organization-registry');
+
+    const nchain = nchainClientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.nchainApiScheme,
+      this.baselineConfig?.nchainApiHost,
+    );
+
+    const signerResp = (await nchain.createAccount({
+      network_id: this.baselineConfig?.networkId,
+    }));
+
+    const resp = await NChain.clientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.nchainApiScheme,
+      this.baselineConfig?.nchainApiHost,
+    ).executeContract(orgRegistryContract.id, {
+      method: 'getOrg',
+      params: [address],
+      value: 0,
+      account_id: signerResp['id'],
+    });
+
+    if (resp && resp['response'] && resp['response'][0] !== '0x0000000000000000000000000000000000000000') {
+      const org = {} as Organization;
+      org.name = resp['response'][1].toString();
+      org['address'] = resp['response'][0];
+      org['config'] = JSON.parse(atob(resp['response'][6]));
+      org['config']['messaging_endpoint'] = atob(resp['response'][2]);
+      return org;
+    }
+
+    return Promise.reject(`failed to fetch organization ${address}`);
+  }
 
   async fetchVaults(): Promise<ProvideVault[]> {
     const orgToken = (await this.createOrgToken()).token;
@@ -311,10 +377,6 @@ export class BaselineApp {
     throw new Error('not implemented');
   }
 
-  // async publishBaselineProtocolMessage(): Promise<any> {
-  //   this.nats?.publish(counterparty)
-  // }
-
   async inviteWorkgroupParticipant(email: string): Promise<Invite> {
     return await Ident.clientFactory(
       this.baselineConfig?.token,
@@ -325,6 +387,29 @@ export class BaselineApp {
       email: email,
       permissions: 0,
     });
+  }
+
+  async requireOrganization(address: string): Promise<Organization> {
+    let organization;
+    let interval;
+
+    const promises = [] as any;
+    promises.push(new Promise((resolve, reject) => {
+      interval = setInterval(async () => {
+        this.fetchOrganization(address).then((org) => {
+          if (org && org['address'] === address) {
+            organization = org;
+            resolve();
+          }
+        }).catch((err) => {});
+      }, 5000);
+    }));
+
+    await Promise.all(promises);
+    clearInterval(interval);
+    interval = null;
+
+    return organization;
   }
 
   async requireWorkgroupContract(type: string): Promise<any> {

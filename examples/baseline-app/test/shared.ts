@@ -19,37 +19,53 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
       assert(org, 'org should not be null');
     });
 
+    describe('default vault', () => {
+      let keys;
+
+      before(async () => {
+        keys = await app.fetchKeys();
+        assert(keys.length === 3, 'default keypairs not created');
+      });
+
+      it('should create a default vault for the organization', async () => {
+        const vaults = await app.fetchVaults();
+        assert(vaults.length === 1, 'default vault not created');
+      });
+
+      it('should have a babyJubJub keypair for the organization', async () => {
+        assert(keys[1].spec === 'babyJubJub', 'default babyJubJub keypair not created');
+      });
+
+      it('should have a secp256k1 keypair for the organization', async () => {
+        assert(keys[2].spec === 'secp256k1', 'default secp256k1 keypair not created');
+        assert(keys[2].address, 'default secp256k1 keypair should return the address for the organization');
+      });
+    });
+
     describe('registration', () => {
+      let address;
+
+      before(async () => {
+        const keys = await app.fetchKeys();
+        assert(keys.length === 3, 'default keypairs not created');
+
+        address = keys[2].address;
+        assert(address, 'default secp256k1 keypair should return the address for the organization');
+      });
+
       it('should register the organization in the local registry', async () => {
         assert(org.id, 'org id should not be null');
+      });
+
+      it('should register the organization in the on-chain registry using the default secp256k1 address', async () => {
+        const org = await app.requireOrganization(address);
+        assert(org, 'org should be present in on-chain registry');
       });
 
       it('should associate the organization with the local workgroup', async () => {
         const orgs = await app.fetchWorkgroupOrganizations();
         assert(orgs.length === 1, 'workgroup should have associated org');
       });
-
-      describe('default vault', () => {
-        let keys;
-
-        before(async () => {
-          keys = await app.fetchKeys();
-          assert(keys.length === 3, 'default keypairs not created');
-        });
-
-        it('should create a default vault for the organization', async () => {
-          const vaults = await app.fetchVaults();
-          assert(vaults.length === 1, 'default vault not created');
-        });
-
-        it('should have a babyJubJub keypair for the organization', async () => {
-          assert(keys[1].spec === 'babyJubJub', 'default babyJubJub keypair not created');
-        });
-
-        it('should have a secp256k1 keypair for the organization', async () => {
-          assert(keys[2].spec === 'secp256k1', 'default secp256k1 keypair not created');
-        });
-      })
     });
 
     describe('messaging', () => {
