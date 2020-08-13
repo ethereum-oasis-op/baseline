@@ -1,4 +1,4 @@
-FROM zokrates/zokrates:0.5.2 as builder
+FROM zokrates/zokrates:0.5.3 as builder
 
 FROM radish34_logger
 
