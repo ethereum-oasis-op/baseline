@@ -242,9 +242,10 @@ export class BaselineApp {
       const org = {} as Organization;
       org.name = resp['response'][1].toString();
       org['address'] = resp['response'][0];
-      org['config'] = JSON.parse(atob(resp['response'][6]));
+      org['config'] = JSON.parse(atob(resp['response'][5]));
       org['config']['messaging_endpoint'] = atob(resp['response'][2]);
-      return org;
+      org['config']['zk_public_key'] = atob(resp['response'][4]);
+      return Promise.resolve(org);
     }
 
     return Promise.reject(`failed to fetch organization ${address}`);
@@ -397,7 +398,7 @@ export class BaselineApp {
     promises.push(new Promise((resolve, reject) => {
       interval = setInterval(async () => {
         this.fetchOrganization(address).then((org) => {
-          if (org && org['address'] === address) {
+          if (org && org['address'].toLowerCase() === address.toLowerCase()) {
             organization = org;
             resolve();
           }
@@ -423,7 +424,7 @@ export class BaselineApp {
           contract = cntrct;
           resolve();
         }).catch((err) => {});
-      }, 2500);
+      }, 5000);
     }));
 
     await Promise.all(promises);
