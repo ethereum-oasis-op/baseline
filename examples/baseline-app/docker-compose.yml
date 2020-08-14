@@ -368,7 +368,7 @@ services:
         PUl1cxrvY7BHh4obNa6Bf8ECAwEAAQ==
         -----END PUBLIC KEY-----
     healthcheck:
-      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4224"]
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
       interval: 1m
       timeout: 1s
       retries: 2
