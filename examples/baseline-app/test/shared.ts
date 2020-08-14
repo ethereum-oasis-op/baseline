@@ -3,19 +3,11 @@ import { promisedTimeout } from './utils';
 
 export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
   describe(`workgroup organization: "${app.getBaselineConfig().orgName}"`, () => {
-    let baselineConfig;
-    let messagingConfig;
     let org;
 
     before(async () => {
-      baselineConfig = app.getBaselineConfig();
-      messagingConfig = app.getMessagingConfig();
-
-      if (baselineConfig.workgroup && baselineConfig.workgroupToken) {
-        await app.setWorkgroup(baselineConfig.workgroup, baselineConfig.workgroupToken); // no-op if a workgroup is already present on the instance
-      }
-
-      org = (await app.registerOrganization(baselineConfig.orgName, messagingConfig.natsServers[0]));
+      await promisedTimeout(3000);
+      org = app.getOrganization();
       assert(org, 'org should not be null');
     });
 
@@ -57,7 +49,7 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
         assert(org.id, 'org id should not be null');
       });
 
-      it('should register the organization in the on-chain registry using the default secp256k1 address', async () => {
+      it('should register the organization in the on-chain registry using its default secp256k1 address', async () => {
         const org = await app.requireOrganization(address);
         assert(org, 'org should be present in on-chain registry');
       });
@@ -107,8 +99,12 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
         });
       });
     });
+  });
+};
 
-    describe('privacy', () => {
+export const shouldBehaveLikeAnInitialWorkgroupOrganization = (app) => {
+  describe(`initial workgroup organization: "${app.getBaselineConfig().orgName}"`, () => {
+    describe('workflow privacy', () => {
       let circuitArtifacts;
       let setupArtifacts;
 
@@ -174,5 +170,11 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
         });
       });
     });
+  });
+};
+
+export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (app) => {
+  describe(`invited workgroup organization: "${app.getBaselineConfig().orgName}"`, () => {
+
   });
 };

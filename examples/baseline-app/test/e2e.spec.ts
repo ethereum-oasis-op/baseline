@@ -1,5 +1,5 @@
 import { assert } from 'chai';
-import { shouldBehaveLikeAWorkgroupOrganization } from './shared';
+import { shouldBehaveLikeAWorkgroupOrganization, shouldBehaveLikeAnInitialWorkgroupOrganization, shouldBehaveLikeAnInvitedWorkgroupOrganization } from './shared';
 import { authenticateUser, baselineAppFactory, configureRopstenFaucet, createUser, promisedTimeout, scrapeInvitationToken } from './utils';
 import { BaselineApp } from '../src';
 
@@ -91,7 +91,7 @@ describe('baseline', () => {
       before(async () => {
         await promisedTimeout(10000);
 
-        workgroup = await app.createWorkgroup('baseline workgroup'); // Bob Corp is the founding member of the workgroup...
+        workgroup = app.getWorkgroup();
         workgroupToken = app.getWorkgroupToken();
       });
 
@@ -121,7 +121,9 @@ describe('baseline', () => {
         assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      await promisedTimeout(5000); // ¯\_(ツ)_/¯
+      await promisedTimeout(10000); // ¯\_(ツ)_/¯
+
+      shouldBehaveLikeAnInitialWorkgroupOrganization(bobApp);
       shouldBehaveLikeAWorkgroupOrganization(bobApp);
 
       describe('inviting alice to the workgroup', async () => {
@@ -136,8 +138,10 @@ describe('baseline', () => {
           assert(inviteToken, 'invite token should not be null');
         });
 
-        describe('alice accepting the invitation', async () => {
+        describe('alice', async () => {
           before(async () => {
+            await app.requireWorkgroupContract('organization-registry');
+
             aliceApp = await baselineAppFactory(
               'Alice Corp',
               bearerTokens[alice['id']],
@@ -153,10 +157,15 @@ describe('baseline', () => {
               'baseline workgroup',
               workgroupToken,
             );
-          });
-        });
 
-        // shouldBehaveLikeAWorkgroupOrganization(aliceApp);
+            await promisedTimeout(10000);
+          });
+
+          // await promisedTimeout(10000); // ¯\_(ツ)_/¯
+
+          // shouldBehaveLikeAnInvitedWorkgroupOrganization(aliceApp);
+          // shouldBehaveLikeAWorkgroupOrganization(aliceApp);
+        });
       });
     });
   });

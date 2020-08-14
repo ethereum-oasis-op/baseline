@@ -6,6 +6,8 @@ import { Application as Workgroup, Invite, Vault as ProvideVault, Organization, 
 import { Capabilities, Ident, NChain, Vault, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
 import { compile as solidityCompile } from 'solc';
+import { keccak256 } from 'js-sha3';
+import { IZKSnarkTrustedSetupArtifacts, IZKSnarkCompilationArtifacts } from '@baseline-protocol/privacy/dist/cjs/zkp';
 
 const baselineDocumentCircuitPath = '../../lib/circuits/noopAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.inbound';
@@ -24,7 +26,8 @@ const zokratesImportResolver = (location, path) => {
 export class BaselineApp {
 
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
-  private baselineCircuitArtifacts?: any;
+  private baselineCircuitArtifacts?: IZKSnarkCompilationArtifacts;
+  private baselineCircuitSetupArtifacts?: IZKSnarkTrustedSetupArtifacts;
   private baselineConfig?: any;
   private nats?: IMessagingService;
   private natsConfig?: any;
@@ -58,10 +61,12 @@ export class BaselineApp {
     if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
       await this.setWorkgroup(this.baselineConfig.workgroup, this.baselineConfig.workgroupToken);
     } else if (this.baselineConfig.workgroupName) {
-      // await this.createWorkgroup(this.baselineConfig.workgroupName);
+      await this.createWorkgroup(this.baselineConfig.workgroupName);
     } else {
       console.log(`WARNING... no workgroup configuration found in baseline config... ${this.baselineConfig}`)
     }
+
+    await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
   }
 
   getBaselineCircuitArtifacts(): any | undefined {
@@ -104,8 +109,13 @@ export class BaselineApp {
     return this.contracts[type];
   }
 
+  private async ingestProtocolMessage(msg: ProtocolMessage): Promise<any> {
+    // TODO: dispatch the protocol message...
+    throw new Error('not implemented');
+  }
+
   // this will accept recipients (string[]) for multi-party use-cases
-  async sendProtocolMessage(recipient: string, document: any): Promise<any> {
+  async sendProtocolMessage(recipient: string, msg: any): Promise<any> {
     const recipientOrg = await this.fetchOrganization(recipient);
     if (!recipientOrg) {
       return Promise.reject(`protocol message not sent; organization not resolved: ${recipient}`);
@@ -119,7 +129,14 @@ export class BaselineApp {
     const recipientNatsConn = await messagingServiceFactory(messagingProviderNats, {
       bearerToken: null, // FIXME
       natsServers: [messagingEndpoint],
-    })
+    });
+
+    const rawRecord = JSON.stringify(msg);
+    const privateInput = keccak256(rawRecord);
+    const witness = this.zk?.computeWitness(this.baselineCircuitArtifacts!, [privateInput]);
+    const proof = this.zk?.generateProof(this.baselineCircuitArtifacts?.program, witness, this.baselineCircuitSetupArtifacts?.keypair?.pk);
+
+    console.log(proof);
 
     // this will use protocol buffers or similar
     const wiremsg = this.serializeProtocolMessage(
@@ -127,7 +144,7 @@ export class BaselineApp {
         recipient,
         this.contracts['shield'].address,
         this.workflowIdentifier!,
-        Buffer.from(JSON.stringify(document)),
+        Buffer.from(rawRecord),
       ),
     );
 
@@ -139,13 +156,13 @@ export class BaselineApp {
       return Promise.reject(`workgroup not created; instance is associated with workgroup: ${this.workgroup.name}`);
     }
 
-    const resp = (await this.baseline?.createWorkgroup({
+    const resp = await this.baseline?.createWorkgroup({
       config: {
         baselined: true,
       },
       name: name,
       network_id: this.baselineConfig?.networkId,
-    }));
+    });
 
     this.workgroup = resp.application;
     this.workgroupToken = resp.token.token;
@@ -157,6 +174,14 @@ export class BaselineApp {
   async initWorkgroup(): Promise<void> {
     if (!this.workgroup) {
       return Promise.reject('failed to init workgroup');
+    }
+
+    if (!this.capabilities?.getBaselineRegistryContracts()) {
+      // HACK
+      const promisedTimeout = (ms) => {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      };
+      await promisedTimeout(10000);
     }
 
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
@@ -213,6 +238,14 @@ export class BaselineApp {
       organization_id: this.org.id,
     });
   };
+
+  async resolveOrganizationAddress(): Promise<string> {
+    const keys = await this.fetchKeys();
+    if (keys && keys.length >= 3) {
+      return keys[2].address; // HACK!
+    }
+    return Promise.reject('failed to resolve organization address');
+  }
 
   async fetchOrganization(address: string): Promise<Organization> {
     const orgRegistryContract = await this.requireWorkgroupContract('organization-registry');
@@ -300,7 +333,7 @@ export class BaselineApp {
     await this.compileBaselineCircuit();
 
     // perform trusted setup and deploy verifier/shield contract
-    const setupArtifacts = await this.zk?.setup(this.baselineCircuitArtifacts.program);
+    const setupArtifacts = await this.zk?.setup(this.baselineCircuitArtifacts!.program);
     const compilerOutput = JSON.parse(solidityCompile(JSON.stringify({
       language: 'Solidity',
       sources: {
@@ -330,6 +363,7 @@ export class BaselineApp {
       console.log('WARNING: failed to track baseline shield contract');
     }
 
+    this.baselineCircuitSetupArtifacts = setupArtifacts;
     return setupArtifacts;
   }
 
@@ -373,11 +407,6 @@ export class BaselineApp {
     return receipt.contractAddress;
   }
 
-  async ingestBaselineProtocolMessage(): Promise<any> {
-    // TODO: dispatch the protocol message...
-    throw new Error('not implemented');
-  }
-
   async inviteWorkgroupParticipant(email: string): Promise<Invite> {
     return await Ident.clientFactory(
       this.baselineConfig?.token,
@@ -387,6 +416,10 @@ export class BaselineApp {
       application_id: this.workgroup.id,
       email: email,
       permissions: 0,
+      params: {
+        invitor_organization_address: await this.resolveOrganizationAddress(),
+        registry_contract_address: this.contracts['organization-registry'].address,
+      },
     });
   }
 
@@ -447,19 +480,18 @@ export class BaselineApp {
 
     if (contracts && contracts.length === 1 && contracts[0]['address'] !== '0x') {
       this.contracts[type] = contracts[0];
-      // this.orgRegistryContractAddr = contracts[0]['address'];
       return Promise.resolve(contracts[0]);
     }
     return Promise.reject();
   }
 
   async registerOrganization(name: string, messagingEndpoint: string): Promise<any> {
-    this.org = (await this.baseline?.createOrganization({
+    this.org = await this.baseline?.createOrganization({
       name: name,
       metadata: {
         messaging_endpoint: messagingEndpoint,
       },
-    }));
+    });
 
     if (this.org) {
       const vaults = await this.fetchVaults();
@@ -478,7 +510,8 @@ export class BaselineApp {
     }
 
     this.protocolSubscriptions = await this.nats?.subscribe(baselineProtocolMessageSubject, (msg, err) => {
-      console.log(`received ${msg.length}-byte baseline protocol message: \n\t${msg}`);
+      console.log(`received ${msg.length}-byte protocol message: \n\t${msg}`);
+      this.ingestProtocolMessage(msg);
     });
     return this.protocolSubscriptions;
   }
