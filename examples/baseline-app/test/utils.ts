@@ -17,7 +17,7 @@ export const authenticateUser = async (identHost, email, password) => {
 export const baselineAppFactory = async (
   orgName,
   bearerToken,
-  inviteToken,
+  initiator,
   identHost,
   natsHost,
   nchainHost,
@@ -33,7 +33,7 @@ export const baselineAppFactory = async (
     {
       identApiScheme: 'http',
       identApiHost: identHost,
-      inviteToken: inviteToken,
+      initiator: initiator,
       nchainApiScheme: 'http',
       nchainApiHost: nchainHost,
       networkId: networkId, // FIXME-- boostrap network genesis if no public testnet faucet is configured...

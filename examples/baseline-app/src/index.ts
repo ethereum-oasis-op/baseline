@@ -1,13 +1,13 @@
 import { IBaselineRPC, IBlockchainService, IRegistry, IVault, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
 import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
-import { IZKSnarkCircuitProvider, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '@baseline-protocol/privacy';
+import { IZKSnarkCircuitProvider, IZKSnarkCompilationArtifacts, IZKSnarkTrustedSetupArtifacts, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '@baseline-protocol/privacy';
 import { messageReservedBitsLength, Message as ProtocolMessage, Opcode, PayloadType } from '@baseline-protocol/types';
 import { Application as Workgroup, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
 import { Capabilities, Ident, NChain, Vault, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
 import { compile as solidityCompile } from 'solc';
+import * as jwt from 'jsonwebtoken';
 import { keccak256 } from 'js-sha3';
-import { IZKSnarkTrustedSetupArtifacts, IZKSnarkCompilationArtifacts } from '@baseline-protocol/privacy/dist/cjs/zkp';
 
 const baselineDocumentCircuitPath = '../../lib/circuits/noopAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.inbound';
@@ -58,15 +58,15 @@ export class BaselineApp {
     this.capabilities = capabilitiesFactory();
     this.contracts = {};
 
-    if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
-      await this.setWorkgroup(this.baselineConfig.workgroup, this.baselineConfig.workgroupToken);
-    } else if (this.baselineConfig.workgroupName) {
-      await this.createWorkgroup(this.baselineConfig.workgroupName);
-    } else {
-      console.log(`WARNING... no workgroup configuration found in baseline config... ${this.baselineConfig}`)
-    }
+    if (this.baselineConfig.initiator) {
+      if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
+        await this.setWorkgroup(this.baselineConfig.workgroup, this.baselineConfig.workgroupToken);
+      } else if (this.baselineConfig.workgroupName) {
+        await this.createWorkgroup(this.baselineConfig.workgroupName);
+      }
 
-    await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+      await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+    }
   }
 
   getBaselineCircuitArtifacts(): any | undefined {
@@ -97,6 +97,10 @@ export class BaselineApp {
     return this.protocolSubscriptions;
   }
 
+  getWorkflowIdentifier(): any {
+    return this.workflowIdentifier;
+  }
+
   getWorkgroup(): any {
     return this.workgroup;
   }
@@ -109,9 +113,79 @@ export class BaselineApp {
     return this.contracts[type];
   }
 
+  getWorkgroupContracts(): any[] {
+    return this.contracts;
+  }
+
   private async ingestProtocolMessage(msg: ProtocolMessage): Promise<any> {
     // TODO: dispatch the protocol message...
     throw new Error('not implemented');
+  }
+
+  // HACK!! workgroup/contracts should be synced via protocol
+  async acceptWorkgroupInvite(inviteToken: string, contracts: any): Promise<void> {
+    if (this.workgroup || this.workgroupToken || this.org || this.baselineConfig.initiator) {
+      return Promise.reject('failed to accept workgroup invite');
+    }
+
+    const invite = jwt.decode(inviteToken) as { [key: string]: any };
+
+    await this.createWorkgroup(this.baselineConfig.workgroupName);
+
+    this.contracts = {
+      'erc1820-registry': {
+        address: invite.prvd.data.params.erc1820_registry_contract_address,
+        name: 'ERC1820Registry',
+        network_id: this.baselineConfig?.networkId,
+        params: {
+          compiled_artifact: contracts['erc1820-registry'].params?.compiled_artifact
+        },
+        type: 'erc1820-registry',
+      },
+      'organization-registry': {
+        address: invite.prvd.data.params.organization_registry_contract_address,
+        name: 'OrgRegistry',
+        network_id: this.baselineConfig?.networkId,
+        params: {
+          compiled_artifact: contracts['organization-registry'].params?.compiled_artifact
+        },
+        type: 'organization-registry',
+      },
+      'shield': {
+        address: invite.prvd.data.params.shield_contract_address,
+        name: 'Shield',
+        network_id: this.baselineConfig?.networkId,
+        params: {
+          compiled_artifact: contracts['shield'].params?.compiled_artifact
+        },
+        type: 'shield',
+      },
+      'verifier': {
+        address: invite.prvd.data.params.verifier_contract_address,
+        name: 'Verifier',
+        network_id: this.baselineConfig?.networkId,
+        params: {
+          compiled_artifact: contracts['verifier'].params?.compiled_artifact
+        },
+        type: 'verifier',
+      },
+    };
+
+    this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
+
+    const nchain = nchainClientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.nchainApiScheme,
+      this.baselineConfig?.nchainApiHost,
+    );
+
+    this.contracts['erc1820-registry'] = await nchain.createContract(this.contracts['erc1820-registry']);
+    this.contracts['organization-registry'] = await nchain.createContract(this.contracts['organization-registry']);
+    this.contracts['shield'] = await nchain.createContract(this.contracts['shield']);
+    this.contracts['verifier'] = await nchain.createContract(this.contracts['verifier']);
+
+    await this.baseline?.track(invite.prvd.data.params.shield_contract_address);
+    await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
   }
 
   // this will accept recipients (string[]) for multi-party use-cases
@@ -167,11 +241,14 @@ export class BaselineApp {
     this.workgroup = resp.application;
     this.workgroupToken = resp.token.token;
 
-    await this.initWorkgroup();
+    if (this.baselineConfig.initiator) {
+      await this.initWorkgroup();
+    }
+
     return this.workgroup;
   }
 
-  async initWorkgroup(): Promise<void> {
+  private async initWorkgroup(): Promise<void> {
     if (!this.workgroup) {
       return Promise.reject('failed to init workgroup');
     }
@@ -364,6 +441,8 @@ export class BaselineApp {
     }
 
     this.baselineCircuitSetupArtifacts = setupArtifacts;
+    this.workflowIdentifier = this.baselineCircuitSetupArtifacts?.identifier;
+
     return setupArtifacts;
   }
 
@@ -394,6 +473,9 @@ export class BaselineApp {
     });
     if (resp && resp) {
       this.contracts[type] = resp;
+      this.contracts[type].params = {
+        compiled_artifact: params,
+      }
     }
     return resp;
   }
@@ -417,8 +499,12 @@ export class BaselineApp {
       email: email,
       permissions: 0,
       params: {
+        erc1820_registry_contract_address: this.contracts['erc1820-registry'].address,
         invitor_organization_address: await this.resolveOrganizationAddress(),
-        registry_contract_address: this.contracts['organization-registry'].address,
+        organization_registry_contract_address: this.contracts['organization-registry'].address,
+        shield_contract_address: this.contracts['shield'].address,
+        verifier_contract_address: this.contracts['verifier'].address,
+        workflow_identifier: this.workflowIdentifier,
       },
     });
   }
@@ -479,8 +565,9 @@ export class BaselineApp {
     });
 
     if (contracts && contracts.length === 1 && contracts[0]['address'] !== '0x') {
-      this.contracts[type] = contracts[0];
-      return Promise.resolve(contracts[0]);
+      const contract = await nchain.fetchContractDetails(contracts[0].id!);
+      this.contracts[type] = contract;
+      return Promise.resolve(contract);
     }
     return Promise.reject();
   }

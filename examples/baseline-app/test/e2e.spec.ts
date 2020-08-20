@@ -67,10 +67,26 @@ describe('baseline', () => {
       );
     }
 
+    aliceApp = await baselineAppFactory(
+      'Alice Corp',
+      bearerTokens[alice['id']],
+      false,
+      'localhost:8081',
+      'nats://localhost:4222',
+      'localhost:8080',
+      networkId,
+      'localhost:8082',
+      'localhost:8522',
+      'http',
+      null,
+      'baseline workgroup',
+      null,
+    );
+
     bobApp = await baselineAppFactory(
       'Bob Corp',
       bearerTokens[bob['id']],
-      null,
+      true,
       'localhost:8085',
       'nats://localhost:4224',
       'localhost:8086',
@@ -104,7 +120,12 @@ describe('baseline', () => {
         assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      it('should deploy the ERC1820 org registry contract for the workgroup', async () => {
+      it('should deploy the ERC1820 registry contract for the workgroup', async () => {
+        const erc1820RegistryContract = await app.requireWorkgroupContract('erc1820-registry');
+        assert(erc1820RegistryContract, 'workgroup ERC1820 registry contract should not be null');
+      });
+
+      it('should deploy the ERC1820 organization registry contract for the workgroup', async () => {
         const orgRegistryContract = await app.requireWorkgroupContract('organization-registry');
         assert(orgRegistryContract, 'workgroup organization registry contract should not be null');
       });
@@ -140,31 +161,13 @@ describe('baseline', () => {
 
         describe('alice', async () => {
           before(async () => {
+            await app.requireWorkgroupContract('erc1820-registry');
             await app.requireWorkgroupContract('organization-registry');
-
-            aliceApp = await baselineAppFactory(
-              'Alice Corp',
-              bearerTokens[alice['id']],
-              inviteToken,
-              'localhost:8081',
-              'nats://localhost:4222',
-              'localhost:8080',
-              networkId,
-              'localhost:8082',
-              'localhost:8522',
-              'http',
-              workgroup,
-              'baseline workgroup',
-              workgroupToken,
-            );
-
-            await promisedTimeout(10000);
+            await aliceApp.acceptWorkgroupInvite(inviteToken, app.getWorkgroupContracts());
           });
 
-          // await promisedTimeout(10000); // ¯\_(ツ)_/¯
-
-          // shouldBehaveLikeAnInvitedWorkgroupOrganization(aliceApp);
-          // shouldBehaveLikeAWorkgroupOrganization(aliceApp);
+          shouldBehaveLikeAnInvitedWorkgroupOrganization(aliceApp);
+          shouldBehaveLikeAWorkgroupOrganization(aliceApp);
         });
       });
     });
