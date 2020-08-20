@@ -4,21 +4,35 @@ import { v4 as uuid } from 'uuid';
 
 const defaultCircuitEntrypoint = 'main';
 
+const readBuffer = (buffer) => {
+  const uint8arr = new Uint8Array(buffer.length);
+  let i = 0;
+  while (i < buffer.length) {
+    uint8arr[i] = buffer.readUInt8(i);
+    i++;
+  }
+  return uint8arr;
+}
+
 const trustedSetupArtifacts = (circuitName) => {
+  const pkBuffer = readFileSync(`./test/artifacts/${circuitName}_Pk.key`);
+  const pkArray = readBuffer(pkBuffer);
   return {
     identifier: uuid(),
     keypair: {
-    vk: readFileSync(`./artifacts/${circuitName}Pk.key`).toString(),
-    pk: readFileSync(`./artifacts/${circuitName}Vk.key`).toString(), // FIXME-- make sure to marshal Buffer to uint8 array!
+    vk: readFileSync(`./test/artifacts/${circuitName}_Vk.key`).toString(),
+    pk: pkArray, // FIXME-- make sure to marshal Buffer to uint8 array!
     },
-    verifierSource: readFileSync('path/to/verifier.sol').toString()
+    verifierSource: readFileSync(`./test/artifacts/${circuitName}_Verifier.sol`).toString()
   };
 };
 
 const circuitArtifacts = (circuitName) => {
+  const compiledOutBuffer = readFileSync(`./test/artifacts/${circuitName}_out`);
+  const compiledOutArray = readBuffer(compiledOutBuffer);
   return {
-    program: readFileSync(`./artifacts/${circuitName}out`).toString(),
-    abi: readFileSync(`./artifacts/${circuitName}Abi.json`).toString(),
+    program: compiledOutArray,
+    abi: readFileSync(`./test/artifacts/${circuitName}_Abi.json`).toString(),
   };
 };
 
@@ -52,8 +66,7 @@ export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs
         let setupArtifacts;
   
         before(async () => {
-          setupArtifacts = await provider.setup(artifacts.program);
-          // console.log(setupArtifacts, 'these are the setup artifacts');
+          setupArtifacts = await provider.setup(artifacts);
           assert(setupArtifacts, 'setup artifacts not returned');
         });
   
@@ -135,7 +148,7 @@ export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs
   });
 };
 
-export const shouldBehaveLikePresetZKSnarkCircuit = (provider, circuitName) => {
+export const shouldOperateOnPresetZkSnarkCircuit = (provider, circuitName, witnessArgs) => {
   describe(`circuit: ${circuitName}`, () => {
 
     describe('trusted setup', () => {
@@ -145,7 +158,6 @@ export const shouldBehaveLikePresetZKSnarkCircuit = (provider, circuitName) => {
       before(async () => {
         setupArtifacts = trustedSetupArtifacts(circuitName);
         artifacts = circuitArtifacts(circuitName);
-        // console.log(setupArtifacts, 'these are the setup artifacts');
         assert(setupArtifacts, 'setup artifacts not returned');
       });
 
@@ -165,7 +177,7 @@ export const shouldBehaveLikePresetZKSnarkCircuit = (provider, circuitName) => {
         let witness;
 
         before(async () => {
-          witness = await provider.computeWitness(artifacts, ['2']);
+          witness = await provider.computeWitness(artifacts, witnessArgs);
           assert(witness, 'computed witness result should not be null');
         });
 

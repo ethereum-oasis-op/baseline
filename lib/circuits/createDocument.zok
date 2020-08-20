@@ -1,0 +1,16 @@
+import "utils/pack/bool/pack128" as pack128
+import "utils/pack/bool/nonStrictUnpack256" as unpack256
+import "utils/pack/bool/unpack128" as unpack128
+import "hashes/sha256/512bitPacked" as packed512Sha
+
+def main(field publicInputHash, private field[4] documentInputs) -> bool:
+  // Check the publicInputHash:
+  bool[256] publicInputHashBits = unpack256(publicInputHash)
+  field[2] packCommitment = packed512Sha(documentInputs)
+  bool[128] lsbBits = unpack128(packCommitment[0])
+  bool[128] msbBits = unpack128(packCommitment[1])
+  bool[256] publicInputHashBitsCheck = [...msbBits, ...lsbBits]
+
+  bool out = publicInputHashBits == publicInputHashBitsCheck
+
+  return out
