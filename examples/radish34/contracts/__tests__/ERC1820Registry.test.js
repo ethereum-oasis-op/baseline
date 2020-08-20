@@ -1,7 +1,6 @@
 import { ethers, utils } from 'ethers';
 import { getWallet, getAccounts, getSigner } from '../src/utils';
 import ERC1820RegistryArtifact from '../artifacts/ERC1820Registry.json';
-import SampleERC1820ImplementerArtifact from '../artifacts/SampleERC1820Implementer.json';
 
 const wallet = getWallet();
 const NULL_ADDRESS = "0x0000000000000000000000000000000000000000";
@@ -15,8 +14,6 @@ describe('ERC1820 Registry tests', () => {
   beforeAll(async () => {
     accounts = await getAccounts();
     signer = await getSigner(accounts[0]);
-    SampleERC1820Implementer = new ethers.ContractFactory(SampleERC1820ImplementerArtifact.abi,
-      SampleERC1820ImplementerArtifact.bytecode, signer);
     ERC1820Registry = new ethers.ContractFactory(ERC1820RegistryArtifact.abi,
       ERC1820RegistryArtifact.bytecode, signer);
     erc1820Registry = await ERC1820Registry.deploy();
