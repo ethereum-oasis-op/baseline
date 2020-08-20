@@ -21,9 +21,10 @@
   "dependencies": {
     "@baseline-protocol/api": "0.0.4",
     "@baseline-protocol/messaging": "0.0.2",
-    "@baseline-protocol/privacy": "0.0.5",
+    "@baseline-protocol/privacy": "0.0.6",
     "@baseline-protocol/types": "0.0.1",
     "js-sha3": "^0.8.0",
+    "jsonwebtoken": "8.5.1",
     "provide-js": "^1.3.3",
     "solc": "^0.6.1"
   },
