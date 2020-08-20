@@ -22,7 +22,7 @@ const circuitArtifacts = (circuitName) => {
   };
 };
 
-export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath) => {
+export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs) => {
   describe(`circuit: ${sourcePath}`, () => {
     let source;
     before(() => {
@@ -73,7 +73,7 @@ export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath) => {
           let witness;
   
           before(async () => {
-            witness = await provider.computeWitness(artifacts, ['2']);
+            witness = await provider.computeWitness(artifacts, witnessArgs);
             assert(witness, 'computed witness result should not be null');
           });
   
