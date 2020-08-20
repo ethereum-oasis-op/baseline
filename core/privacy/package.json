@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/privacy",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Baseline core privacy",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
