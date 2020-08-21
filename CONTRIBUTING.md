@@ -4,7 +4,7 @@ __Baseline__ is an open-source project that is actively seeking contributions fr
 
 ## Submitting an issue
 
-To help us get a better understanding of the issue you've identified, follow the guidelines in one of our *Issue Templates*.
+To help us get a better understanding of the issue you've identified, follow the guidelines in one of our [Issue Templates](https://github.com/ethereum-oasis/baseline/tree/master/.github/ISSUE_TEMPLATE).
 
 ## Submitting a pull request
 
