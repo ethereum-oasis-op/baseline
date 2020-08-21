@@ -135,7 +135,7 @@ export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs
   });
 };
 
-export const shouldOperateOnPresetZkSnarkCircuit = (provider, circuitName) => {
+export const shouldBehaveLikePresetZKSnarkCircuit = (provider, circuitName) => {
   describe(`circuit: ${circuitName}`, () => {
 
     describe('trusted setup', () => {

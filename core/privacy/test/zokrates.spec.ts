@@ -1,4 +1,4 @@
-import { shouldBehaveLikeZKSnarkCircuit, shouldOperateOnPresetZkSnarkCircuit } from './shared';
+import { shouldBehaveLikeZKSnarkCircuit, shouldBehaveLikePresetZKSnarkCircuit } from './shared';
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '../src/index';
 
 // const baselineDocumentCircuitPath = '../../lib/circuits/baselineDocument.zok';
@@ -13,10 +13,9 @@ describe('when the underlying zokrates provider is available', () => {
 
   it('runs the noopAgreement circuit lifecycle successfully', () => {
     shouldBehaveLikeZKSnarkCircuit(provider, noopAgreementCircuitPath, ['2']); // this is here for sanity...
-    // shouldBehaveLikeZKSnarkCircuit(provider, noopAgreementCircuitPath); // this takes a while...
   });
 
-  it('runs the createAgreement circuit lifecycle successfully', () => {
-    shouldOperateOnPresetZkSnarkCircuit(provider, 'createAgreement');
-  });
+  // it('runs the createAgreement circuit lifecycle successfully with preset circuit artifacts', () => {
+  //   shouldBehaveLikePresetZKSnarkCircuit(provider, 'createAgreement');
+  // });
 });
