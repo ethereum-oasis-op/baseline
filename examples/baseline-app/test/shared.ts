@@ -62,22 +62,21 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
 
     describe('messaging', () => {
       let natsService;
+      let natsSubscriptions;
 
-      afterEach(async () => {
-        if (natsService && natsService.isConnected()) {
-          natsService.disconnect();
-        }
-      });
-
-      beforeEach(async () => {
+      before(async () => {
         natsService = app.getMessagingService();
-        natsService.connect();
-        await promisedTimeout(1000);
+        natsSubscriptions = app.getProtocolSubscriptions();
       });
 
       it('should have an established NATS connection', async () => {
         assert(natsService, 'should not be null');
         assert(natsService.isConnected() === true, 'should have established a connection');
+      });
+
+      it('should have an established a subscription on the baseline.inbound subject', async () => {
+        assert(natsSubscriptions, 'should not be null');
+        assert(natsSubscriptions.length === 1, 'should have established a subscription');
       });
 
       describe('serialization', () => {
@@ -95,7 +94,7 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
         });
 
         it('should serialize the msg', async () => {
-          assert(msg, 'message should be serialized');
+          assert(msg, 'serialized message should not be null');
         });
       });
     });
@@ -245,14 +244,19 @@ export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (app) => {
         workflowIdentifier = app.getWorkflowIdentifier();
       });
 
+      it('should have a local reference to the on-chain ERC1820 registry contract', async () => {
+        assert(erc1820Registry, 'ERC1820 registry contract should not be null');
+        assert(erc1820Registry.address, 'should have a reference to the on-chain ERC1820 registry contract address');
+      });
+
       it('should have a local reference to the on-chain organization registry contract', async () => {
         assert(orgRegistry, 'organization registry contract should not be null');
-        assert(orgRegistry.address, 'organization registry contract should have a reference to its on-chain address');
+        assert(orgRegistry.address, 'should have a reference to the on-chain organization registry contract address');
       });
 
       it('should have a local reference to the on-chain workgroup shield contract', async () => {
         assert(shield, 'workgroup shield contract should not be null');
-        assert(shield.address, 'workgroup shield contract should have a reference to its on-chain address');
+        assert(shield.address, 'should have a reference to the on-chain workgroup shield contract address');
       });
 
       it('should track the workgroup shield in an off-chain merkle tree database', async () => {
@@ -263,7 +267,7 @@ export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (app) => {
 
       it('should have a local reference to the on-chain workflow circuit verifier contract', async () => {
         assert(verifier, 'workflow circuit verifier contract should not be null');
-        assert(verifier.address, 'workflow circuit verifier contract should have a reference to its on-chain address');
+        assert(verifier.address, 'should have a reference to the on-chain workflow circuit verifier contract address');
       });
 
       it('should have a local reference to the workflow circuit identifier', async () => {

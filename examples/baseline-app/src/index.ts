@@ -31,7 +31,9 @@ export class BaselineApp {
   private baselineConfig?: any;
   private nats?: IMessagingService;
   private natsConfig?: any;
-  private protocolSubscriptions?: any[];
+  private protocolMessagesRx = 0;
+  private protocolMessagesTx = 0;
+  private protocolSubscriptions: any[] = [];
   private capabilities?: Capabilities;
   private contracts: any;
   private zk?: IZKSnarkCircuitProvider;
@@ -54,6 +56,8 @@ export class BaselineApp {
     this.zk = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceZokrates, {
       importResolver: zokratesImportResolver,
     });
+
+    this.startProtocolSubscriptions();
 
     this.capabilities = capabilitiesFactory();
     this.contracts = {};
@@ -93,7 +97,15 @@ export class BaselineApp {
     return this.org;
   }
 
-  getProtocolSubscriptions(): any[] | undefined {
+  getProtocolMessagesRx(): number {
+    return this.protocolMessagesRx;
+  }
+
+  getProtocolMessagesTx(): number {
+    return this.protocolMessagesTx;
+  }
+
+  getProtocolSubscriptions(): any[] {
     return this.protocolSubscriptions;
   }
 
@@ -188,6 +200,14 @@ export class BaselineApp {
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
   }
 
+  async generateProof(msg: any): Promise<any> {
+    const raw = JSON.stringify(msg);
+    const privateInput = keccak256(raw);
+    const witness = this.zk?.computeWitness(this.baselineCircuitArtifacts!, [privateInput]);
+    const proof = this.zk?.generateProof(this.baselineCircuitArtifacts?.program, witness, this.baselineCircuitSetupArtifacts?.keypair?.pk);
+    return proof;
+  }
+
   // this will accept recipients (string[]) for multi-party use-cases
   async sendProtocolMessage(recipient: string, msg: any): Promise<any> {
     const recipientOrg = await this.fetchOrganization(recipient);
@@ -201,16 +221,13 @@ export class BaselineApp {
     }
 
     const recipientNatsConn = await messagingServiceFactory(messagingProviderNats, {
-      bearerToken: null, // FIXME
+      bearerToken: this.workgroupToken, // FIXME
       natsServers: [messagingEndpoint],
     });
+    await recipientNatsConn.connect();
 
-    const rawRecord = JSON.stringify(msg);
-    const privateInput = keccak256(rawRecord);
-    const witness = this.zk?.computeWitness(this.baselineCircuitArtifacts!, [privateInput]);
-    const proof = this.zk?.generateProof(this.baselineCircuitArtifacts?.program, witness, this.baselineCircuitSetupArtifacts?.keypair?.pk);
-
-    console.log(proof);
+    // const proof = await this.generateProof(msg);
+    // console.log(proof);
 
     // this will use protocol buffers or similar
     const wiremsg = this.serializeProtocolMessage(
@@ -218,11 +235,13 @@ export class BaselineApp {
         recipient,
         this.contracts['shield'].address,
         this.workflowIdentifier!,
-        Buffer.from(rawRecord),
+        Buffer.from(JSON.stringify(msg)),
       ),
     );
 
-    return recipientNatsConn.publish(baselineProtocolMessageSubject, wiremsg);
+    const result = recipientNatsConn.publish(baselineProtocolMessageSubject, wiremsg);
+    this.protocolMessagesTx++;
+    return result;
   }
 
   async createWorkgroup(name: string): Promise<Workgroup> {
@@ -596,10 +615,13 @@ export class BaselineApp {
       await this.nats?.connect();
     }
 
-    this.protocolSubscriptions = await this.nats?.subscribe(baselineProtocolMessageSubject, (msg, err) => {
+    const subscription = await this.nats?.subscribe(baselineProtocolMessageSubject, (msg, err) => {
       console.log(`received ${msg.length}-byte protocol message: \n\t${msg}`);
+      this.protocolMessagesRx++;
       this.ingestProtocolMessage(msg);
     });
+
+    this.protocolSubscriptions.push(subscription);
     return this.protocolSubscriptions;
   }
 

@@ -136,8 +136,8 @@ describe('baseline', () => {
         // sanity check
         assert(alice && bob, 'a administrative user should have been created for each workgroup counterparty');
         assert(bearerTokens.length === 2, 'a bearer token should have been authorized for each administrative user');
-        assert(aliceApp, 'an app instance should have been initialized for Alice Corp');
-        assert(bobApp, 'an app instance should have been initialized for Bob Corp');
+        assert(aliceApp, 'an instance should have been initialized for Alice Corp');
+        assert(bobApp, 'an instance should have been initialized for Bob Corp');
         assert(workgroup, 'workgroup should not be null');
         assert(workgroupToken, 'workgroup token should not be null');
       });
@@ -170,25 +170,33 @@ describe('baseline', () => {
           shouldBehaveLikeAWorkgroupOrganization(aliceApp);
         });
       });
-    });
-  });
 
-  describe('workflow', () => {
-    describe('workstep', () => {
-      describe('initial proof generation', () => {
-        before(async () => {
-          const recipient = '0x'; // FIXME-- resolve alice's org address...
+      describe('workflow', () => {
+        describe('workstep', () => {
+          describe('initial proof generation', () => {
+            before(async () => {
+              const recipient = await aliceApp.resolveOrganizationAddress();
+              await bobApp.sendProtocolMessage(recipient, {
+                hello: 'world',
+                rfp_id: null,
+              });
+            });
 
-          await bobApp.sendProtocolMessage(recipient, {
-            hello: 'world',
-            rfp_id: null,
-          });
-        });
+            it('should increment protocol message tx count for the sender', async () => {
+              assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 1');
+            });
 
-        describe('verification, pushing the proof to a new leaf in the merkle tree', () => { // PING!
-
-          describe('subsequent state transition', () => { // PONG!
-
+            it('should increment protocol message rx count for the recipient', async () => {
+              // FIXME
+              // assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
+            });
+    
+            describe('verification, pushing the proof to a new leaf in the merkle tree', () => { // PING!
+    
+              describe('subsequent state transition', () => { // PONG!
+    
+              });
+            });
           });
         });
       });
