@@ -1,3 +1,5 @@
+**⚠️ The "Baseline-SAP-Dynamics" demo is being integrated with [this new reference implementation](https://github.com/ethereum-oasis/baseline/tree/master/examples/shuttle-app) as a result of the `v0.1` release.**
+
 # Baselining Business Process Automation across SAP and Microsoft Dynamics
 
 ##### Stefan Schmidt ([Unibright](https://unibright.io)), Kyle Thomas ([Provide](https://provide.services)), Daniel Norkin ([Envision Blockchain](http://envisionblockchain.com))
