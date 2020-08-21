@@ -14,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist', 'umd'),
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: 'baseline-app',
+    library: 'shuttle-app',
     globalObject: 'this'
   },
   resolve: {
