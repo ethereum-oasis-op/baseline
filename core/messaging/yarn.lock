@@ -4020,9 +4020,9 @@ lodash.sortby@^4.7.0:
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
 lodash@^4.17.13, lodash@^4.17.15:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
 logform@^2.2.0:
   version "2.2.0"
@@ -5970,17 +5970,16 @@ ts-nats@1.2.14-2:
     nuid "^1.1.2"
     ts-nkeys "^1.0.16"
 
-ts-natsutil@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/ts-natsutil/-/ts-natsutil-1.0.7.tgz#8fb25030a7bceee46da3a06ad3b0b0cd6609921d"
-  integrity sha512-3YkISBh/FpmKSUieViVCpQc66cnqak5YSRAYT8KJuU4zyYQBNInYzEPWdBVFoAbCZOKO9337ALb9DQRBzpaqLg==
+ts-natsutil@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/ts-natsutil/-/ts-natsutil-1.1.1.tgz#5d25c184610a0901f955f93e9e4ebf88e73ae7eb"
+  integrity sha512-HWwOGCwdLl1qqpGDiGaNHaezZ0Ae36MJ0VrRa1Vr7KsnDj73SjL3o6bNbZT5cojW7Qzq9Zd+OAVuMaxVHTDNmQ==
   dependencies:
     "@provide/nats.ws" "^1.0.6"
     jsonwebtoken "8.5.1"
     node-nats-streaming "0.2.6"
     ts-nats "1.2.14-2"
     uuid "3.4.0"
-    winston "^3.3.3"
 
 ts-nkeys@^1.0.16:
   version "1.0.16"
@@ -6739,7 +6738,7 @@ winston-transport@^4.4.0:
     readable-stream "^2.3.7"
     triple-beam "^1.2.0"
 
-winston@^3.2.1, winston@^3.3.3:
+winston@^3.2.1:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/winston/-/winston-3.3.3.tgz#ae6172042cafb29786afa3d09c8ff833ab7c9170"
   integrity sha512-oEXTISQnC8VlSAKf1KYSSd7J6IWuRPQqDdo8eoRNaYKLvwSb5+79Z3Yi1lrl6KDpU6/VWaxpakDAtb1oQ4n9aw==
