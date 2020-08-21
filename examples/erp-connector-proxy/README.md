@@ -1,6 +1,4 @@
-**⚠️ The "Baseline SAP and Microsoft Dynamics" initiative is based on [this branch](https://github.com/ethereum-oasis/baseline/tree/init-core) which includes numerous fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment that is currently on `master`) and enhancements (i.e., point-to-point messaging between parties, use of a more generalized circuit for baselining agreements, inclusion of a commercial Ethereum client, etc.). The `init-core` branch represents a significant milestone in the abstraction of the Radish34 use-case into a generalized protocol. The maintainers will merge `init-core` into `master` in the coming weeks when it has fully absorbed all workstreams related to the initiative described below.**
-
-**🚀 The "Baseline SAP and Microsoft Dynamics" source code can be found [here](https://github.com/ethereum-oasis/baseline/tree/init-core/examples/erp-connector-proxy) on the `init-core` branch, as discussed above.**
+**⚠️ The "Baseline-SAP-Dynamics" demo is being integrated with [this new reference implementation](https://github.com/ethereum-oasis/baseline/tree/master/examples/shuttle-app) as a result of the `v0.1` release.**
 
 # Baselining Business Process Automation across SAP and Microsoft Dynamics
 

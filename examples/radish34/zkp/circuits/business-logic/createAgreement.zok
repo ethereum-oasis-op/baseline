@@ -1,0 +1,71 @@
+import "utils/pack/pack128" as pack128
+import "utils/pack/nonStrictUnpack256.zok" as unpack256
+import "../common/packing/unpack2x128To256x1" as unpack2x128To256x1
+
+import "../common/hashes/sha256/sha256of2x128.zok" as sha256of2x128
+import "../common/hashes/sha256/sha256of10x128.zok" as sha256of10x128
+
+import "../common/ecc/edwards-compress.zok" as edwardsCompress
+import "../common/ecc/verify-eddsa.zok" as verifyEddsa
+import "ecc/babyjubjubParams.code" as context
+
+struct EdDSASignature {
+  field[2] R
+  field S
+}
+
+struct AgreementConstants {
+  field[2] publicKeyOfBuyer
+  field[2] publicKeyOfSupplier
+  field agreementName
+  field agreementDescription
+  field[2] erc20ContractAddress
+  EdDSASignature buyerSignature
+  EdDSASignature supplierSignature
+}
+
+struct AgreementCommitments {
+  field[2] value
+  field[2] salt
+}
+
+struct Agreement {
+  AgreementConstants constants
+  AgreementCommitments commitments
+}
+
+def main(field publicInputHash, private Agreement agreementData) -> ():
+
+  // compressing public keys of type point (X,Y)
+  field[256] publicKeyOfBuyerCompressed = edwardsCompress(agreementData.constants.publicKeyOfBuyer)
+  field[256] publicKeyOfSupplierCompressed = edwardsCompress(agreementData.constants.publicKeyOfSupplier)
+
+  // formatting public keys to pass as 128 bit field elements to sha256
+  // TODO: find a way of not using the constraint-heavy 'pack' function.
+  field publicKeyOfBuyerCompressed1 = pack128(publicKeyOfBuyerCompressed[0..128])
+  field publicKeyOfBuyerCompressed2 = pack128(publicKeyOfBuyerCompressed[128..256])
+  field publicKeyOfSupplierCompressed1 = pack128(publicKeyOfSupplierCompressed[0..128])
+  field publicKeyOfSupplierCompressed2 = pack128(publicKeyOfSupplierCompressed[128..256])
+
+
+  // Proof that the Buyer is indeed the Buyer for this Agreement (by recalculating the Agreement commitment):
+  agreementCommitmentBits = unpack2x128To256x1(agreementData.commitments.value)
+  agreementCommitmentBitsCheck = sha256of10x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, agreementData.constants.agreementName, agreementData.constants.agreementDescription, ...agreementData.constants.erc20ContractAddress, ...agreementData.commitments.salt])
+
+  agreementCommitmentBits == agreementCommitmentBitsCheck
+
+  // VERIFY SIGNATURES
+  context = context()
+
+  field isVerifiedBuyer = verifyEddsa(agreementData.constants.buyerSignature.R, agreementData.constants.buyerSignature.S, agreementData.constants.publicKeyOfBuyer, agreementCommitmentBits, context)
+  field isVerifiedSupplier = verifyEddsa(agreementData.constants.supplierSignature.R,  agreementData.constants.supplierSignature.S, agreementData.constants.publicKeyOfSupplier, agreementCommitmentBits, context)
+  isVerifiedBuyer == 1
+  isVerifiedSupplier == 1
+
+
+  // Check the publicInputHash:
+  publicInputHashBits = unpack256(publicInputHash)
+  publicInputHashBitsCheck = sha256of2x128(agreementData.commitments.value)
+  publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256]
+
+  return

@@ -1,7 +1,7 @@
-# Welcome to Baseline
+# Baseline Protocol
 
 <div align="center">
-  <img src="docs/assets/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png" />
+  <img alt="Baseline" src="docs/assets/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png" />
   <p>
     Combining advances in cryptography, messaging, and blockchain to execute
     <br/>
@@ -14,86 +14,29 @@
   <br/>
 </div>
 
-__Baseline__ is an open source initiative with a large and growing team of supporting companies. The first code was donated by Ernst & Young and ConsenSys, with support from Microsoft, and is now receiving contributions from many other companies. The purpose of the project is to bring enterprises and complex business processes to the Ethereum Mainnet, while guarding the privacy constraints and needs of a typical group of enterprises. 
+## Architecture
 
-The __Baseline Protocol__ defines a series of steps to privately and securely synchronize data and business logic between multiple independent systems of record, using the Ethereum Mainnet as an auditable common frame of reference. This protocol implements best practices around data consistency and compartmentalization, and leverages public Ethereum for verifying execution of private transactions, contracts and tokens on the Mainnet using ZKP (zkSnarks). The __Baseline Protocol__ is designed such that it can be extended and applied to any database/workflow.
+![baseline-protocol-architecture](https://user-images.githubusercontent.com/161261/86484557-79504f00-bd24-11ea-8edb-d665cb55db20.png)
 
-# Radish34 Demo
+## Modules & Packages
 
-In order to demonstrate the __Baseline Protocol__, we needed a use-case. The use-case chosen was product procurement within a supply-chain, and the custom application built for this workflow is called __Radish34__. This application was built as a proof of concept for the Baseline Protocol. 
+The following "core" modules comprise the initial release of the Baseline protocol:
 
-The __Baseline Protocol__ code is currently embedded inside the `/radish-api` directory, but we are in the process of moving that code into the `/baseline` directory to clearly distinguish the protocol from the use-case. Once this move is complete, `radish-api` will import `baseline` as a module, which will be the same process that other projects will need to follow to implement __Baseline__.
+| Package | Source Path | Description |
+| -------- | ----- | ----------- |
+| `@baseline-protocol/api` | `core/api` | Core *baseline* API package providing unified access to the `baseline` JSON-RPC module and blockchain, registry and key management interfaces |
+| `@baseline-protocol/contracts` | `core/contracts` | Solidity contracts packaged as a Truffle project; includes ERC1820/organization registry |
+| `@baseline-protocol/messaging` | `core/messaging` | Core messaging package with protocol-agnostic p2p interface with NATS and Whisper implementations |
+| `@baseline-protocol/persistence` | `core/persistence` | Persistence package; this is a placeholder for system of record integration standards (see ERP connector projects under `examples/`) |
+| `@baseline-protocol/privacy` | `core/privacy` | Core privacy package initially exposing a zkSnark circuit provider factory; designed to support future privacy implementations |
+| `@baseline-protocol/types` | `core/types` | Core reuseable type definitions; also provides a convenience wrapper around interacting with `lib/` assets (i.e. circuits) |
 
-## Quickstart
+Implementing a minimum set of these `core` packages will help you maintain *baseline-compliance* as the protocol evolves and standards emerge. As of the initial `core` release, depending on the `api`, `messaging` and `privacy` packages should be considered the most minimalistic approach to implementing the protocol, provided that your organization is participating in a workgroup that has deployed the `contracts` artifacts. A reference implementation and end-to-end test suite featuring Alice and Bob is being maintained under [`examples/baseline-app`](examples/baseline-app).
 
-A `Makefile` has been included for convenience; most of its targets wrap `npm`, `docker` and `solc` invocations.
-
-Just want to get the __Baseline Protocol__ running locally? The following sequence will build the monorepo, start the __Baseline Protocol__ stack locally, deploy contracts and run the full test suite. *Note: this typically takes at least 20 minutes to complete.
-
-```
-make && make start && make test
-```
-
-> Note: to speed up testing you can use "dummy" ZKP circuits (`createDummyMSA` and `createDummyPO`) instead of the `createMSA` and `createPO`. This shortens the integration test time significantly because the proof generation for the "dummy" circuits is trivial. To use the dummy circuits, add a `mode` argument to the `make start` command as shown here:
-```
-make && make start mode=1 && make test
-```
-
-### The demo UI
-
-After running the above (`make test` optional) you can view the Radish34 demo by opening [http://localhost:3000](http://localhost:3000) in your browser.
-
-Here are the targets currently exposed by the `Makefile`:
-
-| Target | Description |
-|:-------------|:------------------------------------------------------------|
-| `make` | Alias for `make build`. |
-| `make build` | Build all modules within the monorepo. |
-| `make build-containers` | Dockerize all modules within the monorepo. |
-| `make clean` | Reclaim disk used by all modules (i.e. `node_modules/`) and the local docker environment. This effectively uninstalls your local __Baseline__ environment and will require building from scratch. |
-| `make contracts` | Compile the Solidity contracts. |
-| `make deploy-contracts` | Deploy the Solidity contracts. Requires the stack to be running. |
-| `make npm-install` | `npm i` wrapper for all modules in the monorepo. |
-| `make start` | Start the full __Baseline__ stack. Requires `docker` service to be running with at least 12 GB RAM allocation. |
-| `make stop` | Stop the running __Baseline__ stack. |
-| `make system-check` | Verify that `docker` is configured properly. |
-| `make restart` | Stop and start the `docker` stack. |
-| `make reset` | Clean the docker environment by pruning the docker networks and volumes. |
-| `make test` | Run the full test suite. Requires the stack to be running. |
-| `make zk-circuits` | Perform zk-SNARK trusted setups for circuits contained within `zkp/circuits` |
-
-## Running Radish34
-
-To get more insight into the individual steps taken to run the __Radish34__ application, follow the instructions in [radish34/README.md](radish34/README.md).
-
-`cd radish34` and go from there 🚀
-
-# What is here?
-
-The root directory of this repo (where this Readme currently lives) contains the following folders:
-
-```
-.
-├── baseline  <-- Future home to the Baseline Protocol libraries
-├── bin <-- Scripts to run across the entire project
-├── docs <-- auto-generated and artisanal hand crafted documentation 
-└── radish34 <-- The demonstration POC (you probably are looking for this)
-```
-
-## Running scripts across the project
-
-To use the top level scripts (currently just documentation auto-generation and collection) do the following: 
-
-Required: NodeJS 11.15 (nvm is recommended)
-
- - run `make npm-install` to install the top level packages
-
-optionally `make clean` to clean out any `node_modules` folders installed by the `make npm-install` command.
-
-# How to contribute?
-
-See [our contributing guidelines](CONTRIBUTING.md)
-
-# License
+## License
 
 All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [license.md](license.md).
+
+## Contributing
+
+See [our contributing guidelines](CONTRIBUTING.md)

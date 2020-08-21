@@ -1,0 +1,17 @@
+import "hashes/sha256/512bit" as sha256of512
+import "./hashes/sha256/padding/shaPad384To512" as shaPad384To512
+import "utils/pack/unpack128" as unpack128
+
+// Concatenate, then hash, three inputs (each assumed to be at most 128 bits)
+
+def main(field[3] inputs) -> (field[256]):
+
+  field[3][128] inputsAsBits = [unpack128(inputs[0]), unpack128(inputs[1]), unpack128(inputs[2])]
+
+  field[384] preimage384 = [...inputsAsBits[0], ...inputsAsBits[1], ...inputsAsBits[2]]
+
+  field[512] preimage512 = shaPad384To512(preimage384)
+
+  field[256] output = sha256of512(preimage512[0..256], preimage512[256..512])
+
+  return output

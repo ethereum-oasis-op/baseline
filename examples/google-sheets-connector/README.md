@@ -1,4 +1,4 @@
-**⚠️ The "Baseline Mycrosoft Dynamics and Google Sheets" initiative is based on [this branch](https://github.com/ethereum-oasis/baseline/tree/init-core) which includes numerous fixes outlined in the epr-connector-proxy example.**
+**⚠️ The "Baseline Mycrosoft Dynamics and Google Sheets" initiative is being integrated with [this new reference implementation](https://github.com/ethereum-oasis/baseline/tree/master/examples/shuttle-app) as a result of the `v0.1` release.**
 
 **🚀 The "Baseline Mycrosoft Dynamics and Google Sheets" source code can be found [here](https://github.com/ethereum-oasis/baseline/tree/init-core/examples/google-sheets-connector) on the `init-core` branch, as discussed above.**
 

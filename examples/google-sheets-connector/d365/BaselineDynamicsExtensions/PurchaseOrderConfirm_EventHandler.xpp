@@ -1,0 +1,23 @@
+class PurchaseOrderConfirm_EventHandler
+{
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [FormControlEventHandler(formControlStr(PurchTable, buttonConfirm), FormControlEventType::Clicked)]
+    public static void buttonConfirm_OnClicked(FormControl sender, FormControlEventArgs e)
+    {
+        FormRun form = sender.formRun() as FormRun;
+        FormDataSource purchTable_ds = sender.formRun().dataSource(1);
+
+        PurchTable purchTable = purchTable_ds.cursor();
+
+        str purchaseOrderJson;
+
+        purchaseOrderJson = Baseline_JsonBuilder::generatePOJson(purchTable.PurchId);
+
+        BaselineDll.Integration::PostDocument(purchaseOrderJson, "po");
+    }
+
+}
