@@ -14,7 +14,7 @@
     "build:umd": "webpack",
     "build": "yarn clean && yarn build:cjs && yarn build:umd",
     "clean": "rm -rf ./dist",
-    "nethermind:start": "npm run nethermind:stop 2&>/dev/null && docker run -td -p 8545:8545 provide/nethermind --config baseline --JsonRpc.Enabled true --JsonRpc.Host 0.0.0.0 --JsonRpc.Port 8545 --KeyStore.TestNodeKey 120102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f && sleep 2",
+    "nethermind:start": "npm run nethermind:stop 2&>/dev/null && docker run -td -p 8545:8545 provide/nethermind:stable --config baseline --JsonRpc.Enabled true --JsonRpc.Host 0.0.0.0 --JsonRpc.Port 8545 --KeyStore.TestNodeKey 120102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f && sleep 2",
     "nethermind:stop": "docker stop $(docker ps | grep provide/nethermind | sed 's/ .*//') || true",
     "test": "npm run test:startup && ./node_modules/.bin/jest --verbose --color --passWithNoTests --testTimeout 10000 && npm run test:teardown",
     "test:startup": "npm run nethermind:start",
