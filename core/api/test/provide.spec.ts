@@ -7,7 +7,6 @@ let bearerToken;
 let provide;
 
 beforeEach(async () => {
-  // FIXME bearerToken = ;
   provide = await baselineServiceFactory(baselineProviderProvide);
 });
 
