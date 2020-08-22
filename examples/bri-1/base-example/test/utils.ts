@@ -1,6 +1,6 @@
 import { Ident } from 'provide-js';
 import { exec, execSync } from 'child_process';
-import { BaselineApp } from '../src/index';
+import { ParticipantStack } from '../src/index';
 
 export const promisedTimeout = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -20,6 +20,8 @@ export const baselineAppFactory = async (
   initiator,
   identHost,
   natsHost,
+  natsPrivateKey,
+  natsPublicKey,
   nchainHost,
   networkId,
   vaultHost,
@@ -28,8 +30,8 @@ export const baselineAppFactory = async (
   workgroup,
   workgroupName,
   workgroupToken,
-): Promise<BaselineApp> => {
-  return new BaselineApp(
+): Promise<ParticipantStack> => {
+  return new ParticipantStack(
     {
       identApiScheme: 'http',
       identApiHost: identHost,
@@ -50,6 +52,8 @@ export const baselineAppFactory = async (
     {
       bearerToken: bearerToken,
       natsServers: [natsHost],
+      privateKey: natsPrivateKey,
+      publicKey: natsPublicKey,
     },
   );
 };

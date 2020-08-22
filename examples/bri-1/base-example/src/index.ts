@@ -7,10 +7,12 @@ import { Capabilities, Ident, NChain, Vault, capabilitiesFactory, nchainClientFa
 import { readFileSync } from 'fs';
 import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
+import * as log from 'loglevel';
 import { keccak256 } from 'js-sha3';
+import { AuthService } from 'ts-natsutil';
 
 const baselineDocumentCircuitPath = '../../../lib/circuits/noopAgreement.zok';
-const baselineProtocolMessageSubject = 'platform.baseline.inbound'; //'baseline.inbound';
+const baselineProtocolMessageSubject = 'baseline.inbound';
 
 const zokratesImportResolver = (location, path) => {
   let zokpath = `../../../lib/circuits/${path}`;
@@ -23,7 +25,7 @@ const zokratesImportResolver = (location, path) => {
   };
 };
 
-export class BaselineApp {
+export class ParticipantStack {
 
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
   private baselineCircuitArtifacts?: IZKSnarkCompilationArtifacts;
@@ -221,7 +223,7 @@ export class BaselineApp {
     }
 
     const recipientNatsConn = await messagingServiceFactory(messagingProviderNats, {
-      bearerToken: this.workgroupToken, // FIXME
+      bearerToken: await this.vendNatsAuthorization(), // FIXE?
       natsServers: [messagingEndpoint],
     });
     await recipientNatsConn.connect();
@@ -664,5 +666,29 @@ export class BaselineApp {
     buffer.write(msg.payload.toString(encoding), 5 + 42 + 42 + 36 + reservedBits.length + 64 + 1);
 
     return buffer;
+  }
+
+  async vendNatsAuthorization(): Promise<string> {
+    const authService = new AuthService(
+      log,
+      this.natsConfig?.audience || this.natsConfig.natsServers[0],
+      this.natsConfig?.privateKey,
+      this.natsConfig?.publicKey,
+    );
+
+    const permissions = {
+      publish: {
+        allow: ['baseline.inbound'],
+      },
+      subscribe: {
+        allow: [`baseline.inbound`],
+      },
+    };
+
+    return await authService.vendBearerJWT(
+      baselineProtocolMessageSubject,
+      5000,
+      permissions,
+    );
   }
 }
