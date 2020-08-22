@@ -9,11 +9,11 @@ import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
 import { keccak256 } from 'js-sha3';
 
-const baselineDocumentCircuitPath = '../../lib/circuits/noopAgreement.zok';
-const baselineProtocolMessageSubject = 'baseline.inbound';
+const baselineDocumentCircuitPath = '../../../lib/circuits/noopAgreement.zok';
+const baselineProtocolMessageSubject = 'platform.baseline.inbound'; //'baseline.inbound';
 
 const zokratesImportResolver = (location, path) => {
-  let zokpath = `../../lib/circuits/${path}`;
+  let zokpath = `../../../lib/circuits/${path}`;
   if (!zokpath.match(/\.zok$/i)) {
     zokpath = `${zokpath}.zok`;
   }
