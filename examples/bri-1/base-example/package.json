@@ -1,6 +1,6 @@
 {
-  "name": "shuttle-app",
-  "version": "0.0.1",
+  "name": "base-example",
+  "version": "0.0.0",
   "description": "A minimalistic reference implementation of the baseline protocol",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
@@ -25,6 +25,7 @@
     "@baseline-protocol/types": "0.0.1",
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "8.5.1",
+    "loglevel": "^1.6.8",
     "provide-js": "^1.3.3",
     "solc": "^0.6.1",
     "zokrates-js": "1.0.23"
@@ -39,6 +40,7 @@
     "jsdom": "^16.3.0",
     "mocha": "^8.0.1",
     "ts-loader": "^6.0.4",
+    "ts-natsutil": "^1.1.1",
     "ts-node": "^8.10.2",
     "tslint": "5.20.1",
     "tslint-config-airbnb": "5.11.2",
