@@ -187,8 +187,7 @@ describe('baseline', () => {
             });
 
             it('should increment protocol message rx count for the recipient', async () => {
-              // FIXME
-              // assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
+              assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
             });
     
             describe('verification, pushing the proof to a new leaf in the merkle tree', () => { // PING!
