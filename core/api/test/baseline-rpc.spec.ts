@@ -11,7 +11,8 @@ const deployShield = async () => {
   const txhash = await rpc.exec('baseline_deploy', [sender, 'MerkleTreeSHA']);
   expect(txhash).not.toBe(null);
   expect(txhash.length).toBe(66);
-
+  // wait for the block to be processed
+  await promisedTimeout(50);
   const receipt = await rpc.fetchTxReceipt(txhash);
   expect(receipt).not.toBe(null);
   expect(receipt.contractAddress).not.toBe(null);
@@ -57,6 +58,8 @@ describe('off-chain merkle tree tracking', () => {
         leaf = ethers.utils.keccak256(ethers.utils.hexlify(ethers.utils.toUtf8Bytes(`${new Date().getTime()}`)));
         const insertResult = await rpc.insertLeaf(sender, shield, leaf);
         expect(insertResult).not.toBe(null);
+	// wait for the block to be processed
+        await promisedTimeout(50);
       });
 
       it('should create a valid root in the tree', async () => {
