@@ -22,7 +22,7 @@
     "@baseline-protocol/api": "0.0.4",
     "@baseline-protocol/messaging": "0.0.2",
     "@baseline-protocol/privacy": "0.0.6",
-    "@baseline-protocol/types": "0.0.2",
+    "@baseline-protocol/types": "0.0.3",
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "8.5.1",
     "loglevel": "^1.6.8",
