@@ -2,6 +2,9 @@ export const messageReservedBitsLength = 512; // reserved bits for future use
 
 export enum Opcode {
   Baseline = 'BLINE',
+  Join = 'JOIN',
+  Ping = 'PING',
+  Pong = 'PONG',
 }
 
 export enum PayloadType {
