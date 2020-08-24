@@ -1,7 +1,7 @@
 import { IBaselineRPC, IBlockchainService, IRegistry, IVault, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
 import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
 import { IZKSnarkCircuitProvider, IZKSnarkCompilationArtifacts, IZKSnarkTrustedSetupArtifacts, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '@baseline-protocol/privacy';
-import { messageReservedBitsLength, Message as ProtocolMessage, Opcode, PayloadType } from '@baseline-protocol/types';
+import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
 import { Application as Workgroup, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
 import { Capabilities, Ident, NChain, Vault, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { readFileSync } from 'fs';
@@ -32,6 +32,7 @@ export class ParticipantStack {
   private baselineCircuitSetupArtifacts?: IZKSnarkTrustedSetupArtifacts;
   private baselineConfig?: any;
   private nats?: IMessagingService;
+  private natsBearerTokens: { [key: string]: any } = {}; // mapping of third-party participant messaging endpoint => bearer token
   private natsConfig?: any;
   private protocolMessagesRx = 0;
   private protocolMessagesTx = 0;
@@ -42,8 +43,10 @@ export class ParticipantStack {
 
   private org?: any;
   private workgroup?: any;
+  private workgroupCounterparties: string[] = [];
   private workgroupToken?: any; // workgroup bearer token; used for automated setup
   private workflowIdentifier?: string; // workflow identifier; specific to the workgroup
+  private workflowRecords: { [key: string]: any } = {}; // in-memory system of record
 
   constructor(baselineConfig: any, natsConfig: any) {
     this.baselineConfig = baselineConfig;
@@ -58,6 +61,10 @@ export class ParticipantStack {
     this.zk = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceZokrates, {
       importResolver: zokratesImportResolver,
     });
+
+    if (this.natsConfig?.natsBearerTokens) {
+      this.natsBearerTokens = this.natsConfig.natsBearerTokens;
+    }
 
     this.startProtocolSubscriptions();
 
@@ -93,6 +100,10 @@ export class ParticipantStack {
 
   getMessagingService(): IMessagingService | undefined {
     return this.nats;
+  }
+
+  getNatsBearerTokens(): { [key: string]: any } {
+    return this.natsBearerTokens;
   }
 
   getOrganization(): any | undefined {
@@ -131,9 +142,22 @@ export class ParticipantStack {
     return this.contracts;
   }
 
-  private async ingestProtocolMessage(msg: ProtocolMessage): Promise<any> {
-    // TODO: dispatch the protocol message...
-    throw new Error('not implemented');
+  getWorkgroupCounterparties(): string[] {
+    return this.workgroupCounterparties;
+  }
+
+  private async dispatchProtocolMessage(msg: ProtocolMessage): Promise<any> {
+    if (msg.opcode === Opcode.Baseline) {
+      console.log(`received BLINE protocol message...`);
+    } else if (msg.opcode === Opcode.Join) {
+      const payload = JSON.parse(msg.payload.toString());
+      const messagingEndpoint = await this.resolveMessagingEndpoint(payload.address);
+      if (!messagingEndpoint || !payload.address || !payload.authorized_bearer_token) {
+        return Promise.reject('failed to handle baseline JOIN protocol message');
+      }
+      this.workgroupCounterparties.push(payload.address);
+      this.natsBearerTokens[messagingEndpoint] = payload.authorized_bearer_token;
+    }
   }
 
   // HACK!! workgroup/contracts should be synced via protocol
@@ -185,8 +209,6 @@ export class ParticipantStack {
       },
     };
 
-    this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
-
     const nchain = nchainClientFactory(
       this.workgroupToken,
       this.baselineConfig?.nchainApiScheme,
@@ -198,8 +220,21 @@ export class ParticipantStack {
     this.contracts['shield'] = await nchain.createContract(this.contracts['shield']);
     this.contracts['verifier'] = await nchain.createContract(this.contracts['verifier']);
 
+    const counterpartyAddr = invite.prvd.data.params.invitor_organization_address;
+    this.workgroupCounterparties.push(counterpartyAddr);
+
+    const messagingEndpoint = await this.resolveMessagingEndpoint(counterpartyAddr);
+    this.natsBearerTokens[messagingEndpoint] = invite.prvd.data.params.authorized_bearer_token;
+    this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
+
     await this.baseline?.track(invite.prvd.data.params.shield_contract_address);
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+    await this.requireOrganization(await this.resolveOrganizationAddress());
+    await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
+      address: await this.resolveOrganizationAddress(),
+      authorized_bearer_token: await this.vendNatsAuthorization(),
+      workflow_identifier: this.workflowIdentifier,
+    })
   }
 
   async generateProof(msg: any): Promise<any> {
@@ -210,30 +245,62 @@ export class ParticipantStack {
     return proof;
   }
 
-  // this will accept recipients (string[]) for multi-party use-cases
-  async sendProtocolMessage(recipient: string, msg: any): Promise<any> {
-    const recipientOrg = await this.fetchOrganization(recipient);
-    if (!recipientOrg) {
-      return Promise.reject(`protocol message not sent; organization not resolved: ${recipient}`);
+  async resolveMessagingEndpoint(addr: string): Promise<string> {
+    const org = await this.fetchOrganization(addr);
+    if (!org) {
+      return Promise.reject(`organization not resolved: ${addr}`);
     }
 
-    const messagingEndpoint = recipientOrg['config'].messaging_endpoint;
+    const messagingEndpoint = org['config'].messaging_endpoint;
+    if (!messagingEndpoint) {
+      return Promise.reject(`organization messaging endpoint not resolved for recipient: ${addr}`);
+    }
+
+    return messagingEndpoint;
+  }
+
+  // bearer auth tokens authorized by third parties are keyed on the messaging endpoint to which access is authorized
+  async resolveNatsBearerToken(addr: string): Promise<string> {
+    const endpoint = await this.resolveMessagingEndpoint(addr);
+    if (!endpoint) {
+      return Promise.reject(`failed to resolve messaging endpoint for participant: ${addr}`);
+    }
+    return this.natsBearerTokens[endpoint];
+  }
+
+  // this will accept recipients (string[]) for multi-party use-cases
+  async sendProtocolMessage(
+    recipient: string,
+    opcode: Opcode,
+    msg: any,
+  ): Promise<any> {
+    const messagingEndpoint = await this.resolveMessagingEndpoint(recipient);
     if (!messagingEndpoint) {
       return Promise.reject(`protocol message not sent; organization messaging endpoint not resolved for recipient: ${recipient}`);
     }
 
+    const bearerToken = this.natsBearerTokens[messagingEndpoint];
+    if (!bearerToken) {
+      return Promise.reject(`protocol message not sent; no bearer authorization cached for endpoint of recipient: ${recipient}`);
+    }
+
     const recipientNatsConn = await messagingServiceFactory(messagingProviderNats, {
-      bearerToken: await this.vendNatsAuthorization(), // FIXE?
+      bearerToken: bearerToken,
       natsServers: [messagingEndpoint],
     });
     await recipientNatsConn.connect();
+
+    if (msg.id && !this.workflowRecords[msg.id]) {
+      this.workflowRecords[msg.id] = msg;
+    }
 
     // const proof = await this.generateProof(msg);
     // console.log(proof);
 
     // this will use protocol buffers or similar
-    const wiremsg = this.serializeProtocolMessage(
+    const wiremsg = marshalProtocolMessage(
       await this.protocolMessageFactory(
+        opcode,
         recipient,
         this.contracts['shield'].address,
         this.workflowIdentifier!,
@@ -522,6 +589,7 @@ export class ParticipantStack {
       params: {
         erc1820_registry_contract_address: this.contracts['erc1820-registry'].address,
         invitor_organization_address: await this.resolveOrganizationAddress(),
+        authorized_bearer_token: await this.vendNatsAuthorization(),
         organization_registry_contract_address: this.contracts['organization-registry'].address,
         shield_contract_address: this.contracts['shield'].address,
         verifier_contract_address: this.contracts['verifier'].address,
@@ -618,9 +686,8 @@ export class ParticipantStack {
     }
 
     const subscription = await this.nats?.subscribe(baselineProtocolMessageSubject, (msg, err) => {
-      console.log(`received ${msg.length}-byte protocol message: \n\t${msg}`);
       this.protocolMessagesRx++;
-      this.ingestProtocolMessage(msg);
+      this.dispatchProtocolMessage(unmarshalProtocolMessage(Buffer.from(msg.data)));
     });
 
     this.protocolSubscriptions.push(subscription);
@@ -628,6 +695,7 @@ export class ParticipantStack {
   }
 
   async protocolMessageFactory(
+    opcode: Opcode,
     recipient: string,
     shield: string,
     identifier: string,
@@ -638,7 +706,7 @@ export class ParticipantStack {
     const signature = (await this.signMessage(vaults[0].id!, key.id!, payload.toString('utf8'))).signature;
 
     return {
-      opcode: Opcode.Baseline,
+      opcode: opcode,
       recipient: recipient,
       shield: shield,
       identifier: identifier,
@@ -646,26 +714,6 @@ export class ParticipantStack {
       type: PayloadType.Text,
       payload: payload,
     };
-  }
-
-  serializeProtocolMessage(
-    msg: ProtocolMessage,
-  ): Buffer {
-    const reservedBits = Buffer.alloc(messageReservedBitsLength / 8);
-    const buffer = Buffer.alloc(5 + 42 + 42 + 36 + 64 + 1 + reservedBits.length + msg.payload.length);
-
-    buffer.write(msg.opcode);
-    buffer.write(msg.recipient, 5);
-    buffer.write(msg.shield, 5 + 42);
-    buffer.write(msg.identifier, 5 + 42 + 42);
-    buffer.write(reservedBits.toString(), 5 + 42 + 42 + 36);
-    buffer.write(msg.signature, 5 + 42 + 42 + 36 + reservedBits.length);
-    buffer.write(msg.type.toString(), 5 + 42 + 42 + 36 + reservedBits.length + 64);
-
-    const encoding = msg.type === PayloadType.Binary ? 'binary' : 'utf8';
-    buffer.write(msg.payload.toString(encoding), 5 + 42 + 42 + 36 + reservedBits.length + 64 + 1);
-
-    return buffer;
   }
 
   async vendNatsAuthorization(): Promise<string> {
@@ -678,7 +726,7 @@ export class ParticipantStack {
 
     const permissions = {
       publish: {
-        allow: ['baseline.inbound'],
+        allow: ['baseline.>'],
       },
       subscribe: {
         allow: [`baseline.inbound`],

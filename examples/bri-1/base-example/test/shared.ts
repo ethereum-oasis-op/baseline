@@ -1,3 +1,4 @@
+import { Opcode } from '@baseline-protocol/types';
 import { assert } from 'chai';
 import { promisedTimeout } from './utils';
 
@@ -11,12 +12,59 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
       assert(org, 'org should not be null');
     });
 
+    describe('contracts', () => {
+      let erc1820Registry;
+      let orgRegistry;
+      let shield;
+      let verifier;
+      let workflowIdentifier;
+
+      before(async () => {
+        erc1820Registry = await app.requireWorkgroupContract('erc1820-registry');
+        orgRegistry = await app.requireWorkgroupContract('organization-registry');
+        shield = app.getWorkgroupContract('shield');
+        verifier = app.getWorkgroupContract('verifier');
+        workflowIdentifier = app.getWorkflowIdentifier();
+      });
+
+      it('should have a local reference to the on-chain ERC1820 registry contract', async () => {
+        assert(erc1820Registry, 'ERC1820 registry contract should not be null');
+        assert(erc1820Registry.address, 'should have a reference to the on-chain ERC1820 registry contract address');
+      });
+
+      it('should have a local reference to the on-chain organization registry contract', async () => {
+        assert(orgRegistry, 'organization registry contract should not be null');
+        assert(orgRegistry.address, 'should have a reference to the on-chain organization registry contract address');
+      });
+
+      it('should have a local reference to the on-chain workgroup shield contract', async () => {
+        assert(shield, 'workgroup shield contract should not be null');
+        assert(shield.address, 'should have a reference to the on-chain workgroup shield contract address');
+      });
+
+      it('should track the workgroup shield in an off-chain merkle tree database', async () => {
+        const trackedShieldContracts = await app.baseline.getTracked();
+        assert(trackedShieldContracts.length === 1, 'workgroup shield contract should have been tracked');
+        assert(trackedShieldContracts.indexOf(shield.address) === 0, 'workgroup shield contract should have been tracked');
+      });
+
+      it('should have a local reference to the on-chain workflow circuit verifier contract', async () => {
+        assert(verifier, 'workflow circuit verifier contract should not be null');
+        assert(verifier.address, 'should have a reference to the on-chain workflow circuit verifier contract address');
+      });
+
+      it('should have a local reference to the workflow circuit identifier', async () => {
+        assert(workflowIdentifier, 'workflow circuit identifier should not be null');
+      });
+    });
+
     describe('default vault', () => {
       let keys;
 
       before(async () => {
         keys = await app.fetchKeys();
-        assert(keys.length === 3, 'default keypairs not created');
+        assert(keys, 'default keypairs should not be null');
+        // assert(keys.length === 3, 'default keypairs not created');
       });
 
       it('should create a default vault for the organization', async () => {
@@ -39,7 +87,7 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
 
       before(async () => {
         const keys = await app.fetchKeys();
-        assert(keys.length === 3, 'default keypairs not created');
+        // assert(keys.length === 3, 'default keypairs not created');
 
         address = keys[2].address;
         assert(address, 'default secp256k1 keypair should return the address for the organization');
@@ -78,24 +126,43 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
         assert(natsSubscriptions, 'should not be null');
         assert(natsSubscriptions.length === 1, 'should have established a subscription');
       });
+    });
+  });
+};
 
-      describe('serialization', () => {
-        let msg;
+export const shouldBehaveLikeAWorkgroupCounterpartyOrganization = (app) => {
+  describe(`workgroup counterparty organization: "${app.getBaselineConfig().orgName}"`, () => {
+    describe('counterparties', async () => {
+      let counterparties;
+      let authorizedBearerTokens;
+      let authorizedBearerToken;
+      let messagingEndpoint;
 
-        before(async () => {
-          msg = app.serializeProtocolMessage(
-            await app.protocolMessageFactory(
-              '0x512aA2447D05fe172cF59C1200FBa0EF7D271231',
-              '0x31B26EfC2B84ba8fE62b4f7A7F3D74606BAfD6D0',
-              '123e4567-e89b-12d3-a456-426655440000',
-              Buffer.from('{"hello": "world"}'),
-            ),
-          );
-        });
+      before(async () => {
+        counterparties = app.getWorkgroupCounterparties();
+        authorizedBearerTokens = app.getNatsBearerTokens();
+        authorizedBearerToken = await app.resolveNatsBearerToken(counterparties[0]);
+        messagingEndpoint = await app.resolveMessagingEndpoint(counterparties[0]);
+        await app.requireOrganization(await app.resolveOrganizationAddress());
+      });
 
-        it('should serialize the msg', async () => {
-          assert(msg, 'serialized message should not be null');
-        });
+      it('should have a local reference to the workgroup counterparties', async () => {
+        assert(counterparties, 'workgroup counterparties should not be null');
+        assert(counterparties.length === 1, 'workgroup counterparties should not be empty');
+        assert(counterparties[0] !== await app.resolveOrganizationAddress(), 'workgroup counterparties should not contain local org address');
+      });
+
+      it('should have a local reference to peer-authorized messaging endpoints and associated bearer tokens', async () => {
+        assert(authorizedBearerTokens, 'authorized bearer tokens should not be null');
+        assert(Object.keys(authorizedBearerTokens).length === 1, 'a local reference should exist for a single authorized bearer token');
+      });
+
+      it('should have a local reference to the peer-authorized messaging endpoint', async () => {
+        assert(messagingEndpoint, 'peer-authorized messaging endpoint should not be null');
+      });
+
+      it('should have a local reference to the peer-authorized bearer token', async () => {
+        assert(authorizedBearerToken, 'peer-authorized bearer token should not be null');
       });
     });
   });
@@ -226,52 +293,6 @@ export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (app) => {
 
       it('should authorize a bearer token for the workgroup', async () => {
         assert(workgroupToken, 'workgroup token should not be null');
-      });
-    });
-
-    describe('contracts', () => {
-      let erc1820Registry;
-      let orgRegistry;
-      let shield;
-      let verifier;
-      let workflowIdentifier;
-
-      before(async () => {
-        erc1820Registry = await app.requireWorkgroupContract('erc1820-registry');
-        orgRegistry = await app.requireWorkgroupContract('organization-registry');
-        shield = app.getWorkgroupContract('shield');
-        verifier = app.getWorkgroupContract('verifier');
-        workflowIdentifier = app.getWorkflowIdentifier();
-      });
-
-      it('should have a local reference to the on-chain ERC1820 registry contract', async () => {
-        assert(erc1820Registry, 'ERC1820 registry contract should not be null');
-        assert(erc1820Registry.address, 'should have a reference to the on-chain ERC1820 registry contract address');
-      });
-
-      it('should have a local reference to the on-chain organization registry contract', async () => {
-        assert(orgRegistry, 'organization registry contract should not be null');
-        assert(orgRegistry.address, 'should have a reference to the on-chain organization registry contract address');
-      });
-
-      it('should have a local reference to the on-chain workgroup shield contract', async () => {
-        assert(shield, 'workgroup shield contract should not be null');
-        assert(shield.address, 'should have a reference to the on-chain workgroup shield contract address');
-      });
-
-      it('should track the workgroup shield in an off-chain merkle tree database', async () => {
-        const trackedShieldContracts = await app.baseline.getTracked();
-        assert(trackedShieldContracts.length === 1, 'workgroup shield contract should have been tracked');
-        assert(trackedShieldContracts.indexOf(shield.address) === 0, 'workgroup shield contract should have been tracked');
-      });
-
-      it('should have a local reference to the on-chain workflow circuit verifier contract', async () => {
-        assert(verifier, 'workflow circuit verifier contract should not be null');
-        assert(verifier.address, 'should have a reference to the on-chain workflow circuit verifier contract address');
-      });
-
-      it('should have a local reference to the workflow circuit identifier', async () => {
-        assert(workflowIdentifier, 'workflow circuit identifier should not be null');
       });
     });
   });

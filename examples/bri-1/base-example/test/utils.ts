@@ -1,5 +1,7 @@
 import { Ident } from 'provide-js';
 import { exec, execSync } from 'child_process';
+import * as log from 'loglevel';
+import { AuthService } from 'ts-natsutil';
 import { ParticipantStack } from '../src/index';
 
 export const promisedTimeout = (ms) => {
@@ -31,6 +33,14 @@ export const baselineAppFactory = async (
   workgroupName,
   workgroupToken,
 ): Promise<ParticipantStack> => {
+  const natsConfig = {
+    bearerToken: '',
+    natsServers: [natsHost],
+    privateKey: natsPrivateKey,
+    publicKey: natsPublicKey,
+  };
+  natsConfig.bearerToken = await vendNatsAuthorization(natsConfig, 'baseline.inbound');
+
   return new ParticipantStack(
     {
       identApiScheme: 'http',
@@ -49,12 +59,7 @@ export const baselineAppFactory = async (
       workgroupName: workgroupName,
       workgroupToken: workgroupToken,
     },
-    {
-      bearerToken: bearerToken,
-      natsServers: [natsHost],
-      privateKey: natsPrivateKey,
-      publicKey: natsPublicKey,
-    },
+    natsConfig,
   );
 };
 
@@ -92,4 +97,28 @@ export const scrapeInvitationToken = async (container) => {
     return matches[matches.length - 1];
   }
   return null;
+};
+
+export const vendNatsAuthorization = async (natsConfig, subject): Promise<string> => {
+  const authService = new AuthService(
+    log,
+    natsConfig?.audience || natsConfig.natsServers[0],
+    natsConfig?.privateKey,
+    natsConfig?.publicKey,
+  );
+
+  const permissions = {
+    publish: {
+      allow: ['baseline.>'],
+    },
+    subscribe: {
+      allow: [`baseline.inbound`],
+    },
+  };
+
+  return await authService.vendBearerJWT(
+    subject,
+    5000,
+    permissions,
+  );
 };
