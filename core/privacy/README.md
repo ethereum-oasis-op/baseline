@@ -30,4 +30,4 @@ The following zkSNARK toolboxes are supported:
 
 ## Architecture/Flow
 
-![baseline-zok-flow](https://user-images.githubusercontent.com/35908605/86961126-b35b8f80-c12e-11ea-9902-7367bb75dd34.png)
+!![baseline-zok-flow-2](https://user-images.githubusercontent.com/35908605/91189371-61f86700-e6c0-11ea-86f4-e6b3690bcd8e.png)
