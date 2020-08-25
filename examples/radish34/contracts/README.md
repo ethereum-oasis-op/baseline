@@ -158,7 +158,7 @@ npm run test
 
 ## What is the architecture? 
 
-![Architecture of smart contracts](../../docs/assets/SmartContractArch.png)
+![Architecture of smart contracts](../../../docs/assets/radish34/SmartContractArch.png)
 The system of smart contracts in Radish34 can be explained in the form of the following higher level patterns or groupings
 of the various smart contracts
 
