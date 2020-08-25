@@ -117,21 +117,25 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
 
       it('should create a set of keypairs for the organization', async () => {
         assert(keys, 'default keypairs should not be null');
-        assert(keys.length >= 3, 'minimum default keypairs not created');
-        // assert(keys.length === 3, 'default keypairs not created');
+        assert(keys.length >= 4, 'minimum default keypairs not created');
+        // assert(keys.length === 4, 'default keypairs not created');
       });
 
-      it('should create a default secp256k1 keypair for the organization', async () => {
-        assert(address, 'default secp256k1 keypair should not be null');
-      });
-
-      it('should have a babyJubJub keypair for the organization', async () => {
+      it('should create a babyJubJub keypair for the organization', async () => {
         assert(keys[1].spec === 'babyJubJub', 'default babyJubJub keypair not created');
       });
 
-      it('should have a secp256k1 keypair for the organization', async () => {
+      it('should create a secp256k1 keypair for the organization', async () => {
         assert(keys[2].spec === 'secp256k1', 'default secp256k1 keypair not created');
-        assert(keys[2].address, 'default secp256k1 keypair should return the address for the organization');
+      });
+
+      it('should resolve the created secp256k1 keypair as the organization address', async () => {
+        const addr = await app.resolveOrganizationAddress();
+        assert(keys[2].address === addr, 'default secp256k1 keypair should resolve as the organization address');
+      });
+
+      it('should create a BIP39 HD wallet for the organization', async () => {
+        assert(keys[3].spec === 'BIP39', 'default BIP39 HD wallet not created');
       });
     });
   });

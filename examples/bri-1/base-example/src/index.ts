@@ -31,6 +31,7 @@ export class ParticipantStack {
   private baselineCircuitArtifacts?: IZKSnarkCompilationArtifacts;
   private baselineCircuitSetupArtifacts?: IZKSnarkTrustedSetupArtifacts;
   private baselineConfig?: any;
+  private hdwallet?: VaultKey;
   private nats?: IMessagingService;
   private natsBearerTokens: { [key: string]: any } = {}; // mapping of third-party participant messaging endpoint => bearer token
   private natsConfig?: any;
@@ -459,7 +460,7 @@ export class ParticipantStack {
     ).fetchVaults({}));
   }
 
-  async createVaultKey(vaultId: string, spec: string): Promise<VaultKey> {
+  async createVaultKey(vaultId: string, spec: string, type?: string, usage?: string): Promise<VaultKey> {
     const orgToken = (await this.createOrgToken()).token;
     const vault = Vault.clientFactory(
       orgToken!,
@@ -467,8 +468,8 @@ export class ParticipantStack {
       this.baselineConfig?.vaultApiHost,
     );
     return (await vault.createVaultKey(vaultId, {
-      'type': 'asymmetric',
-      'usage': 'sign/verify',
+      'type': type || 'asymmetric',
+      'usage': usage || 'sign/verify',
       'spec': spec,
       'name': `${this.org.name} ${spec} keypair`,
       'description': `${this.org.name} ${spec} keypair`,
@@ -674,6 +675,7 @@ export class ParticipantStack {
       const vaults = await this.fetchVaults();
       await this.createVaultKey(vaults[0].id!, 'babyJubJub');
       await this.createVaultKey(vaults[0].id!, 'secp256k1');
+      this.hdwallet = await this.createVaultKey(vaults[0].id!, 'BIP39', 'hdwallet', 'EthHdWallet'); // FIXME-- this should take a hardened `hd_derivation_path` param...
 
       await this.registerWorkgroupOrganization();
     }
@@ -703,8 +705,8 @@ export class ParticipantStack {
     payload: Buffer,
   ): Promise<ProtocolMessage> {
     const vaults = await this.fetchVaults();
-    const key = await this.createVaultKey(vaults[0].id!, 'secp256k1');
-    const signature = (await this.signMessage(vaults[0].id!, key.id!, payload.toString('utf8'))).signature;
+    // const key = await this.createVaultKey(vaults[0].id!, 'secp256k1');
+    const signature = (await this.signMessage(vaults[0].id!, this.hdwallet!.id!, payload.toString('utf8'))).signature;
 
     return {
       opcode: opcode,
