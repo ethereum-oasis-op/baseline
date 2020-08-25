@@ -1,5 +1,5 @@
-import { assert } from 'chai';
 import { Opcode } from '@baseline-protocol/types';
+import { assert } from 'chai';
 import { shouldBehaveLikeAWorkgroupOrganization, shouldBehaveLikeAnInitialWorkgroupOrganization, shouldBehaveLikeAnInvitedWorkgroupOrganization, shouldBehaveLikeAWorkgroupCounterpartyOrganization } from './shared';
 import { authenticateUser, baselineAppFactory, configureRopstenFaucet, createUser, promisedTimeout, scrapeInvitationToken } from './utils';
 import { ParticipantStack } from '../src';
@@ -199,6 +199,7 @@ describe('baseline', () => {
             });
 
             it('should increment protocol message rx count for the recipient', async () => {
+              await promisedTimeout(50);
               assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
             });
     

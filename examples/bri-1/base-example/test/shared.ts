@@ -1,4 +1,3 @@
-import { Opcode } from '@baseline-protocol/types';
 import { assert } from 'chai';
 import { promisedTimeout } from './utils';
 
@@ -58,56 +57,6 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
       });
     });
 
-    describe('default vault', () => {
-      let keys;
-
-      before(async () => {
-        keys = await app.fetchKeys();
-        assert(keys, 'default keypairs should not be null');
-        // assert(keys.length === 3, 'default keypairs not created');
-      });
-
-      it('should create a default vault for the organization', async () => {
-        const vaults = await app.fetchVaults();
-        assert(vaults.length === 1, 'default vault not created');
-      });
-
-      it('should have a babyJubJub keypair for the organization', async () => {
-        assert(keys[1].spec === 'babyJubJub', 'default babyJubJub keypair not created');
-      });
-
-      it('should have a secp256k1 keypair for the organization', async () => {
-        assert(keys[2].spec === 'secp256k1', 'default secp256k1 keypair not created');
-        assert(keys[2].address, 'default secp256k1 keypair should return the address for the organization');
-      });
-    });
-
-    describe('registration', () => {
-      let address;
-
-      before(async () => {
-        const keys = await app.fetchKeys();
-        // assert(keys.length === 3, 'default keypairs not created');
-
-        address = keys[2].address;
-        assert(address, 'default secp256k1 keypair should return the address for the organization');
-      });
-
-      it('should register the organization in the local registry', async () => {
-        assert(org.id, 'org id should not be null');
-      });
-
-      it('should register the organization in the on-chain registry using its default secp256k1 address', async () => {
-        const org = await app.requireOrganization(address);
-        assert(org, 'org should be present in on-chain registry');
-      });
-
-      it('should associate the organization with the local workgroup', async () => {
-        const orgs = await app.fetchWorkgroupOrganizations();
-        assert(orgs.length === 1, 'workgroup should have associated org');
-      });
-    });
-
     describe('messaging', () => {
       let natsService;
       let natsSubscriptions;
@@ -125,6 +74,64 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
       it('should have an established a subscription on the baseline.inbound subject', async () => {
         assert(natsSubscriptions, 'should not be null');
         assert(natsSubscriptions.length === 1, 'should have established a subscription');
+      });
+    });
+
+    describe('registration', () => {
+      let address;
+
+      before(async () => {
+        const keys = await app.fetchKeys();
+        address = keys && keys.length >= 3 ? keys[2].address : null;
+        assert(address, 'default secp256k1 keypair should not be null');
+      });
+
+      it('should register the organization in the local registry', async () => {
+        assert(org.id, 'org id should not be null');
+      });
+
+      it('should register the organization in the on-chain registry using its default secp256k1 address', async () => {
+        const org = await app.requireOrganization(address);
+        assert(org, 'org should be present in on-chain registry');
+      });
+
+      it('should associate the organization with the local workgroup', async () => {
+        const orgs = await app.fetchWorkgroupOrganizations();
+        assert(orgs.length === 1, 'workgroup should have associated org');
+      });
+    });
+
+    describe('vault', () => {
+      let address;
+      let keys;
+
+      before(async () => {
+        keys = await app.fetchKeys();
+        address = keys && keys.length >= 3 ? keys[2].address : null;
+      });
+
+      it('should create a default vault for the organization', async () => {
+        const vaults = await app.fetchVaults();
+        assert(vaults.length === 1, 'default vault not created');
+      });
+
+      it('should create a set of keypairs for the organization', async () => {
+        assert(keys, 'default keypairs should not be null');
+        assert(keys.length >= 3, 'minimum default keypairs not created');
+        // assert(keys.length === 3, 'default keypairs not created');
+      });
+
+      it('should create a default secp256k1 keypair for the organization', async () => {
+        assert(address, 'default secp256k1 keypair should not be null');
+      });
+
+      it('should have a babyJubJub keypair for the organization', async () => {
+        assert(keys[1].spec === 'babyJubJub', 'default babyJubJub keypair not created');
+      });
+
+      it('should have a secp256k1 keypair for the organization', async () => {
+        assert(keys[2].spec === 'secp256k1', 'default secp256k1 keypair not created');
+        assert(keys[2].address, 'default secp256k1 keypair should return the address for the organization');
       });
     });
   });
