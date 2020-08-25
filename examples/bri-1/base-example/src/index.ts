@@ -241,8 +241,12 @@ export class ParticipantStack {
   async generateProof(msg: any): Promise<any> {
     const raw = JSON.stringify(msg);
     const privateInput = keccak256(raw);
-    const witness = this.zk?.computeWitness(this.baselineCircuitArtifacts!, [privateInput]);
-    const proof = this.zk?.generateProof(this.baselineCircuitArtifacts?.program, witness, this.baselineCircuitSetupArtifacts?.keypair?.pk);
+    const witness = await this.zk?.computeWitness(this.baselineCircuitArtifacts!, [privateInput]);
+    const proof = await this.zk?.generateProof(
+      this.baselineCircuitArtifacts?.program,
+      witness,
+      this.baselineCircuitSetupArtifacts?.keypair?.pk,
+    );
     return proof;
   }
 
@@ -295,8 +299,10 @@ export class ParticipantStack {
       this.workflowRecords[msg.id] = msg;
     }
 
-    // const proof = await this.generateProof(msg);
-    // console.log(proof);
+    if (opcode === Opcode.Baseline) {
+      const proof = await this.generateProof(msg);
+      console.log(proof);
+    }
 
     // this will use protocol buffers or similar
     const wiremsg = marshalProtocolMessage(
