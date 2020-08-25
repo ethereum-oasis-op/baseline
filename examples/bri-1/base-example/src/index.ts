@@ -310,6 +310,7 @@ export class ParticipantStack {
 
     const result = recipientNatsConn.publish(baselineProtocolMessageSubject, wiremsg);
     this.protocolMessagesTx++;
+    recipientNatsConn.disconnect();
     return result;
   }
 
