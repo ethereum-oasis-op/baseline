@@ -21,13 +21,8 @@ Code and Systems maintainers
   - [Kartheek Solipuram](https://github.com/skarred14)
   - [Brian Chamberlain](https://github.com/breakpointer)
   - [Kyle Thomas](https://github.com/kthomas)
-  - [Hudson Jameson](https://github.com/souptacular)
   - [George Spasov](https://github.com/Perseverance)
-
-Documentation maintainer/Technical Product Director
-
-  - [John](https://github.com/humbitious)
-
+  - [Tomasz Stanczak](https://github.com/tkstanczak)
 
 # How to become a maintainer?
 

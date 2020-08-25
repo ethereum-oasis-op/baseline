@@ -50,15 +50,9 @@ Here are the targets currently exposed by the `Makefile`:
 The steps below illustrate the individual steps, that can be viewed as the breakdown of the `make` scripts.
 
 1. As part of the development environment, we assume a procurement use-case with three users: (1) buyer and (2) supplier organizations.
-<<<<<<< HEAD:examples/radish34/README.md
 2. Run `make npm-install`. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
 3. Run `docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
 4. Run `npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
-=======
-2. Run `make npm-install` at the root level of the repo. ** This takes about 6 minutes to clean install npm packages in root and all sub directories **
-3. Run `cd radish34/ && docker build ./logger -f ./logger/dev.Dockerfile -t radish34_logger && docker-compose build` to create the latest versions of the docker containers. ** Only do this the first time or when service source code is changed **. ** This takes about 40 minutes for a fresh build **
-4. Run `cd radish34/ && npm run setup-circuits` to perform zk-SNARK trusted setups for the circuits that are contained in the `/zkp/circuits`. ** This takes about 5-10 minutes to complete ** 
->>>>>>> master:radish34/README.md
     <details> 
       <summary>Example logs</summary>
       <p> 
@@ -91,64 +85,6 @@ The steps below illustrate the individual steps, that can be viewed as the break
       <p> 
 
       ```
-<<<<<<< HEAD:examples/radish34/README.md
-      Patiently waiting 10 seconds for ganache container to init ...
-      Checking for ganache ...
-      ✅  ERC1820Registry deployed: 0x8CFd85A850E7fB9B37Ba2849012d2689AB293522
-      ✅  OrgRegistry deployed: 0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862
-      ✅  Verifier deployed: 0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2
-      ✅  Shield deployed: 0xE5a69331D7ba036cAAe587Ad610299e0e45F3309
-      ℹ️   Registering workgroup member: buyer
-      ✅  Registered buyer in the OrgRegistry with transaction hash: 0x6af81492ef5228f6e166b84e22697c667be15f94a001683ec6d61608c47bf6c5
-      ✅  Registered OrgRegistry as IOrgRegistry for buyer with transaction hash: 0x3cd5c5c0e9a1346ac21de4f702b1fb6f87eb4ecdc0da0a5491baa4d6bc8e5f6a
-      ✅  Registered Verifier as IVerifier for buyer with transaction hash: 0x1009e3ee6b081ee080e64c8ea08e2cae71ad9359b28314918152a678d91715a1
-      ✅  Registered Shield as IShield for buyer with transaction hash: 0x8b672ca878482791275a2180a0c679ae984bdfa2ef84fcd9282023f7f79eb66d
-      ℹ️   Registering workgroup member: supplier1
-      ✅  Registered supplier1 in the OrgRegistry with transaction hash: 0x562ed3fe5c8822d4525c6fd6aa866b81b965953781064d3fe946add78b3061aa
-      ✅  Registered OrgRegistry as IOrgRegistry for supplier1 with transaction hash: 0x08b97a912d4011392cf00f1a4adde4f4b56395290a9d2e33c0e22c639cbc2108
-      ✅  Registered Verifier as IVerifier for supplier1 with transaction hash: 0x844aee6e13e0ec128f6c408a41e49c7f6d141945cc20cb2bcf54e021c38b0282
-      ✅  Registered Shield as IShield for supplier1 with transaction hash: 0x7bdcb116d10ed41dd143cb065f780ee1fc154b08bdb46897403e4b4a2e371173
-      ℹ️   Registering workgroup member: supplier2
-      ✅  Registered supplier2 in the OrgRegistry with transaction hash: 0xec3a6cbe4f8f42cc6d5a6bb89a1413d5784bfbda9818b7dda67b778d86a449ae
-      ✅  Registered OrgRegistry as IOrgRegistry for supplier2 with transaction hash: 0xf2231be5abc5f39e4dc254a8ece5e9bc6866d9ca4dedef187da5c046e29f487e
-      ✅  Registered Verifier as IVerifier for supplier2 with transaction hash: 0xf9a836ad9e5c5c0e1134812812c735cef73fbe7b694010b7ebc95847abd1d247
-      ✅  Registered Shield as IShield for supplier2 with transaction hash: 0x855ccb81c39698ef453ec10419182323b308fc364bdf49f18f28bf1d01ce7836
-      ✅  Registered the Radish34 interface in the OrgRegistry with transaction hash: 0x29c7c0e8b145fb63fdfc1d8a3dc76cead21ab65ae6f1cf69aa5bdc8420614716
-      ℹ️   Registering zkp verification keys
-      ✅  Registered verification key for createMSA with transaction hash: 0xa391e86ebd7d3767755e5dfc605f9977e38b556261b519816c971c0fccee0b57
-      ✅  Registered verification key for createPO with transaction hash: 0x8ed5166cedf673ced7fa16d75fa05911e2d1947ca99ee170301a223211b8d267
-      ℹ️   Network information:
-      ✅  Radish network of 3 organizations have successfully been set up!
-      ✅  Information about buyer: 
-      Organisation Address: 0xB5630a5a119b0EAb4471F5f2d3632e996bf95d41
-      Organisation Name: Org1
-      Organisation Role: 1
-      Organisation MessagingKey: 0x04b6e809d37d1e8544e1ff4b26cdb4476b36a59a412e7870fccae994880245401f38fd971cee0c1c1c7eb6a02a5fbe976b7a7fde6088bd1b35129f17a805e256d9
-      Organisation zkpPublicKey: 0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965
-      ✅  Information about supplier1: 
-      Organisation Address: 0x5ACcdCCE3E60BD98Af2dc48aaf9D1E35E7EC8B5f
-      Organisation Name: Supplier 1
-      Organisation Role: 2
-      Organisation MessagingKey: 0x04fdd6b03524fe9116f274d25bc85c523e138281a2156bdbdfeab34dd214c09d9496ef7b4ed3d4a160124dc89f48df4b174cf8ac7de5de778f933a0afb65f0b213
-      Organisation zkpPublicKey: 0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387
-      ✅  Information about supplier2: 
-      Organisation Address: 0x3f7eB8a7d140366423e9551e9532F4bf1A304C65
-      Organisation Name: Supplier 2
-      Organisation Role: 2
-      Organisation MessagingKey: 0x04caa2fda8e260d1d1d6c482979c931414e9ecfd8c7d1b452bb0b5a7703571e81b21eb85809a842af0adcfbf5f2f951352109fcee7a243dbe418c17d63fb9c990d
-      Organisation zkpPublicKey: 0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5
-      ℹ️   Saving settings to config file for: buyer
-      Updated settings in file /app/src/config/config-buyer.json
-      ✅  Saved information about buyer: {"rpcProvider":"http://ganache:8545","organization":{"messagingKey":"0x04b6e809d37d1e8544e1ff4b26cdb4476b36a59a412e7870fccae994880245401f38fd971cee0c1c1c7eb6a02a5fbe976b7a7fde6088bd1b35129f17a805e256d9","name":"Org1","role":1,"zkpPublicKey":"0x21864a8a3f24dad163d716f77823dd849043481c7ae683a592a02080e20c1965","zkpPrivateKey":"0x29ae268c4e58726d63fb5b0dae75e8d70f77519d12063f1a8fa9ebec085e533d"},"addresses":{"ERC1820Registry":"0x8CFd85A850E7fB9B37Ba2849012d2689AB293522","OrgRegistry":"0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862","Verifier":"0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2","Shield":"0xE5a69331D7ba036cAAe587Ad610299e0e45F3309"}}
-      ℹ️   Saving settings to config file for: supplier1
-      Updated settings in file /app/src/config/config-supplier1.json
-      ✅  Saved information about supplier1: {"rpcProvider":"http://ganache:8545","organization":{"messagingKey":"0x04fdd6b03524fe9116f274d25bc85c523e138281a2156bdbdfeab34dd214c09d9496ef7b4ed3d4a160124dc89f48df4b174cf8ac7de5de778f933a0afb65f0b213","name":"Supplier 1","role":2,"zkpPublicKey":"0x1513500b81d1cc3ecb32c0a3af17756b99e23f6edff51fcd5b4b4793ea2d0387","zkpPrivateKey":"0xb084bd09eea9612b5790a73d9f88bdf644d56194a410b08f6d2ae09d5fccbfe"},"addresses":{"ERC1820Registry":"0x8CFd85A850E7fB9B37Ba2849012d2689AB293522","OrgRegistry":"0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862","Verifier":"0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2","Shield":"0xE5a69331D7ba036cAAe587Ad610299e0e45F3309"}}
-      ℹ️   Saving settings to config file for: supplier2
-      Updated settings in file /app/src/config/config-supplier2.json
-      ✅  Saved information about supplier2: {"rpcProvider":"http://ganache:8545","organization":{"messagingKey":"0x04caa2fda8e260d1d1d6c482979c931414e9ecfd8c7d1b452bb0b5a7703571e81b21eb85809a842af0adcfbf5f2f951352109fcee7a243dbe418c17d63fb9c990d","name":"Supplier 2","role":2,"zkpPublicKey":"0x03366face983056ea73ff840eee1d8786cf72b0e14a8e44bac13e178ac3cebd5","zkpPrivateKey":"0x111bc1d832ba0ea6804f031c6f0ec9550f4d2b55666c30d7b4cf532b22a45f25"},"addresses":{"ERC1820Registry":"0x8CFd85A850E7fB9B37Ba2849012d2689AB293522","OrgRegistry":"0xe5806E14ac6a9411cb655cA91AC5a7d5ECc95862","Verifier":"0x39C3bACe46E6c7Be09d99A153eF43eC847D206c2","Shield":"0xE5a69331D7ba036cAAe587Ad610299e0e45F3309"}}
-      ----------------- Completed  -----------------
-      Please restart the radish-apis for the config to take effect
-=======
       [2020-05-20 13:41:05] [INFO] [DEPLOY]: ERC1820Registry deployed: 0x448de9B34ac4DD0901DCc3f2fF1a31822B51a397. 
       [2020-05-20 13:41:06] [INFO] [DEPLOY]: OrgRegistry deployed: 0x31088fd0eede771d5bda1558e06a666Cd9BF110c. 
       [2020-05-20 13:41:06] [INFO] [DEPLOY]: Verifier deployed: 0xDf3C747B74CeFe4ffEa5baa2D0eAFE2B0F86A8F3. 
@@ -256,7 +192,6 @@ The steps below illustrate the individual steps, that can be viewed as the break
         Organisation zkpPublicKey: 0x9e7a93433acadb679c2d461ecb24d2d8ddb928f704e489a2d40dd55e9983399e      
       [2020-05-20 13:41:09] [INFO] [DEPLOY]: ----------------- Deployment completed  ----------------- 
       [2020-05-20 13:41:09] [INFO] [DEPLOY]: Please restart the radish-apis for the config to take effect.
->>>>>>> master:radish34/README.md
       ```
       </p>
     </details> 
