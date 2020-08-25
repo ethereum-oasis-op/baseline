@@ -1,2 +1,0 @@
-# Supply Chain Management
-
