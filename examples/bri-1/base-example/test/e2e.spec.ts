@@ -185,30 +185,22 @@ describe('baseline', () => {
 
       describe('workflow', () => {
         describe('workstep', () => {
-          describe('initial proof generation', () => {
-            before(async () => {
-              const recipient = await aliceApp.resolveOrganizationAddress();
-              await bobApp.sendProtocolMessage(recipient, Opcode.Baseline, {
-                hello: 'world',
-                rfp_id: null,
-              });
+          before(async () => {
+            const recipient = await aliceApp.resolveOrganizationAddress();
+            await bobApp.sendProtocolMessage(recipient, Opcode.Baseline, {
+              id: 'uuidv4()',
+              hello: 'world',
+              rfp_id: null,
             });
+          });
 
-            it('should increment protocol message tx count for the sender', async () => {
-              assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 1');
-            });
+          it('should increment protocol message tx count for the sender', async () => {
+            assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 1');
+          });
 
-            it('should increment protocol message rx count for the recipient', async () => {
-              await promisedTimeout(50);
-              assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
-            });
-    
-            describe('verification, pushing the proof to a new leaf in the merkle tree', () => { // PING!
-    
-              describe('subsequent state transition', () => { // PONG!
-    
-              });
-            });
+          it('should increment protocol message rx count for the recipient', async () => {
+            await promisedTimeout(50);
+            assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
           });
         });
       });
