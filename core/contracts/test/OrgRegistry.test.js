@@ -1,7 +1,5 @@
-import { getWallet, getAccounts, getSigner } from '../src/utils';
-// import Doppelganger from 'ethereum-doppelganger';
+import { getWallet, getAccounts, getSigner } from './utils';
 import { ethers, utils } from 'ethers';
-
 
 import OrgRegistryArtifact from '../artifacts/OrgRegistry.json';
 import RegistrarArtifact from '../artifacts/Registrar.json';
@@ -21,15 +19,6 @@ test('Deploy Org Registration', async () => {
   let ERC1820Registry = new ethers.ContractFactory(ERC1820RegistryArtifact.abi,
     ERC1820RegistryArtifact.bytecode, signer);
   erc1820Registry = await ERC1820Registry.deploy();
-  /* 
-  // The below lines also show use of doppelganger to be able to mock
-  // all inherited contracts, such as ERC1820Registry and Registrar.
-  let doppelganger1820 = new Doppelganger(ERC1820RegistryArtifact.abi);
-  await doppelganger1820.deploy(signer); 
-  let doppelgangerReg = new Doppelganger(RegistrarArtifact.abi);
-  await doppelgangerReg.deploy(doppelganger1820.address, signer);
-  registrar = await Registrar.deploy(erc1820Registry.address);
-  orgRegistry = await OrgRegistry.deploy(erc1820Registry.address); */
   registrar = await Registrar.deploy(erc1820Registry.address);
   orgRegistry = await OrgRegistry.deploy(erc1820Registry.address);
   expect(orgRegistry.address).toMatch(new RegExp('^0x[a-fA-F0-9]{40}$'));

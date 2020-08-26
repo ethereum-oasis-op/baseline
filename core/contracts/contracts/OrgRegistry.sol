@@ -44,6 +44,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         bytes _zkpPublicKey,
         bytes _metadata
     );
+
     event UpdateOrg(
         bytes32 _name,
         address _address,
@@ -148,7 +149,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         bytes calldata _zkpPublicKey,
         bytes calldata _metadata
     ) external override  returns (bool) {
-        require(msg.sender == org[_address].address, "Must update Org from registered org address");
+        require(msg.sender == orgMap[_address].orgAddress, "Must update Org from registered org address");
         orgMap[_address].name = _name;
         orgMap[_address].messagingEndpoint = _messagingEndpoint;
         orgMap[_address].whisperKey = _whisperKey;
