@@ -8,7 +8,8 @@ import { readFileSync } from 'fs';
 import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
-import { keccak256 } from 'js-sha3';
+// import { keccak256 } from 'js-sha3';
+import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
 
 const baselineDocumentCircuitPath = '../../../lib/circuits/noopAgreement.zok';
@@ -31,6 +32,7 @@ export class ParticipantStack {
   private baselineCircuitArtifacts?: IZKSnarkCompilationArtifacts;
   private baselineCircuitSetupArtifacts?: IZKSnarkTrustedSetupArtifacts;
   private baselineConfig?: any;
+  private babyJubJub?: VaultKey;
   private hdwallet?: VaultKey;
   private nats?: IMessagingService;
   private natsBearerTokens: { [key: string]: any } = {}; // mapping of third-party participant messaging endpoint => bearer token
@@ -149,7 +151,73 @@ export class ParticipantStack {
 
   private async dispatchProtocolMessage(msg: ProtocolMessage): Promise<any> {
     if (msg.opcode === Opcode.Baseline) {
-      console.log(`received BLINE protocol message...`);
+      // TODO: acquire distributed lock; i.e. refer to redis + dislock from Provide
+      // { "doc":  {}, "__hash": <sha256> } <-- our naive protocol checks for the presence of `__hash`; if it exists, we know to process verification part of the workstep.
+      // { "rfp_id": "adsf" } <-- this is the doc; since no `__hash` exists, hash/sign/send
+      // FIXME! the above example needs a proper schema... put it in the persistence package...
+
+      const payload = JSON.parse(msg.payload.toString());
+      if (!payload.__hash) {
+        const vault = await this.fetchVaults();
+        const hash = sha256(msg.payload.toString()); // make a hash of the record...
+        const sig = (await this.signMessage(vault[0].id!, this.babyJubJub?.id!, hash)).signature; // use this in a real business case...
+
+        this.sendProtocolMessage(msg.sender, Opcode.Baseline, {
+          doc: JSON.parse(msg.payload.toString()),
+          __hash: hash,
+          signature: sig,
+        });
+      } else if (payload.doc && payload.__hash) {
+        if (payload.root && payload.sibling_path) {
+          const verified = this.baseline?.verify(this.contracts['shield'].address, payload.leaf, payload.root, payload.sibling_path);
+          if (!verified) {
+            await this.sendProtocolMessage(msg.sender, Opcode.Baseline, { err: 'verification failed' });
+            return Promise.reject('failed to verify');
+          }
+  
+          this.workflowRecords[payload.doc.id] = payload.doc;
+          console.log('record is baselined...', payload.doc);
+        } else {
+          // baseline this record
+          const proof = await this.generateProof(msg);
+
+          // FIXME? call the verifier here w/ hash, proof, verification key
+          const nchain = nchainClientFactory(
+            this.workgroupToken,
+            this.baselineConfig?.nchainApiScheme,
+            this.baselineConfig?.nchainApiHost,
+          );
+
+          const signerResp = (await nchain.createAccount({
+            network_id: this.baselineConfig?.networkId,
+          }));
+
+          const resp = await NChain.clientFactory(
+            this.workgroupToken,
+            this.baselineConfig?.nchainApiScheme,
+            this.baselineConfig?.nchainApiHost,
+          ).executeContract(this.contracts['verifier'].id, {
+            method: 'verify',
+            params: [[proof], ['2'], [this.baselineCircuitSetupArtifacts?.keypair!.vk]], // FIXME...
+            value: 0,
+            account_id: signerResp['id'],
+          });
+
+          console.log(resp);
+          if (!resp) {
+            return Promise.reject(`failed to verify proof: ${proof}`);
+          }
+
+          const leaf = await this.baseline?.insertLeaf(msg.sender, this.contracts['shield'].address, payload.hash);
+          if (leaf) {
+            console.log(`inserted leaf... ${leaf}`);
+          } else {
+            return Promise.reject('failed to insert leaf');
+          }
+        }
+      } else if (payload.signature) {
+        console.log(`NOOP!!! received signature in BLINE protocol message: ${payload.signature}`);
+      }
     } else if (msg.opcode === Opcode.Join) {
       const payload = JSON.parse(msg.payload.toString());
       const messagingEndpoint = await this.resolveMessagingEndpoint(payload.address);
@@ -298,13 +366,7 @@ export class ParticipantStack {
     if (msg.id && !this.workflowRecords[msg.id]) {
       this.workflowRecords[msg.id] = msg;
     }
-
-    let proof;
-    if (opcode === Opcode.Baseline) {
-      proof = await this.generateProof(msg);
-      console.log(proof);
-    }
-
+  
     // this will use protocol buffers or similar
     const wiremsg = marshalProtocolMessage(
       await this.protocolMessageFactory(
@@ -680,7 +742,7 @@ export class ParticipantStack {
 
     if (this.org) {
       const vaults = await this.fetchVaults();
-      await this.createVaultKey(vaults[0].id!, 'babyJubJub');
+      this.babyJubJub = await this.createVaultKey(vaults[0].id!, 'babyJubJub');
       await this.createVaultKey(vaults[0].id!, 'secp256k1');
       this.hdwallet = await this.createVaultKey(vaults[0].id!, 'BIP39', 'hdwallet', 'EthHdWallet'); // FIXME-- this should take a hardened `hd_derivation_path` param...
 
@@ -717,6 +779,7 @@ export class ParticipantStack {
 
     return {
       opcode: opcode,
+      sender: await this.resolveOrganizationAddress(),
       recipient: recipient,
       shield: shield,
       identifier: identifier,
