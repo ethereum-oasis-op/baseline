@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/messaging",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Baseline core messaging",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
