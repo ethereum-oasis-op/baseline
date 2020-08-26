@@ -239,12 +239,12 @@ export class ParticipantStack {
   }
 
   async generateProof(msg: any): Promise<any> {
-    const raw = JSON.stringify(msg);
-    const privateInput = keccak256(raw);
-    const witness = await this.zk?.computeWitness(this.baselineCircuitArtifacts!, [privateInput]);
+    // const raw = JSON.stringify(msg);
+    const privateInput = '2'; //keccak256(raw);
+    const computed = await this.zk?.computeWitness(this.baselineCircuitArtifacts!, [privateInput]);
     const proof = await this.zk?.generateProof(
       this.baselineCircuitArtifacts?.program,
-      witness,
+      computed?.witness,
       this.baselineCircuitSetupArtifacts?.keypair?.pk,
     );
     return proof;
@@ -299,8 +299,9 @@ export class ParticipantStack {
       this.workflowRecords[msg.id] = msg;
     }
 
+    let proof;
     if (opcode === Opcode.Baseline) {
-      const proof = await this.generateProof(msg);
+      proof = await this.generateProof(msg);
       console.log(proof);
     }
 
