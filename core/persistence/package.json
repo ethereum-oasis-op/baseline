@@ -1,6 +1,6 @@
 {
   "name": "@baseline/persistence",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "Baseline core persistence",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
