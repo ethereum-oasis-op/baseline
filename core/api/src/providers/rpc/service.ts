@@ -28,7 +28,7 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
       id: this.id++,
       method: method,
       params: params,
-      version: this.version,
+      jsonrpc: this.version,
     });
 
     const data = resp ? resp.data : null;
