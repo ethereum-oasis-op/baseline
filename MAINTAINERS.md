@@ -17,12 +17,12 @@ Maintainers are people who take an active role in writing code that advances the
 
 Code and Systems maintainers
   - [Sam Stokes](https://github.com/bitwiseguy) 
-  - [Patrick Macom](https://github.com/pmacom)
   - [Kartheek Solipuram](https://github.com/skarred14)
   - [Brian Chamberlain](https://github.com/breakpointer)
   - [Kyle Thomas](https://github.com/kthomas)
   - [George Spasov](https://github.com/Perseverance)
   - [Tomasz Stanczak](https://github.com/tkstanczak)
+  - [Lucas Rodriguez Benitez](https://github.com/LucasRodriguez)
 
 # How to become a maintainer?
 
