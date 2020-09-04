@@ -18,8 +18,8 @@
 
 Version 0.1 of the baseline protocol packages has been released! For some background information, check out [this section](https://docs.baseline-protocol.org/baseline-protocol/the-baseline-protocol) of our docs. There are two entrypoints where you can get involved in the codebase:
 - [`core/`](https://github.com/ethereum-oasis/baseline/tree/master/core) -- the "core" Baseline Protocol packages
-- [`examples/bri-1`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example) -- the BRI-1 reference implementation
-One or more "core" baseline protocol packages are needed to baseline-enabled applications and systems of record.
+- [`examples/bri-1`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example) -- the BRI-1 reference implementation.
+One or more "core" baseline protocol packages are needed to baseline-enable applications and systems of record.
 
 ## Core Modules & Packages
 | Package | Source Path | Description |

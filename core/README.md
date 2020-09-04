@@ -2,7 +2,7 @@
 
 ![baseline-protocol-architecture](https://user-images.githubusercontent.com/161261/86484557-79504f00-bd24-11ea-8edb-d665cb55db20.png)
 
-One or more "core" baseline protocol packages are needed to baseline-enabled applications and systems of record.
+One or more "core" baseline protocol packages are needed to baseline-enable applications and systems of record.
 
 ## Modules & Packages
 
