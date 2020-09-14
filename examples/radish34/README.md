@@ -13,6 +13,7 @@ Windows 10 users [should follow some initial setup instructions](windows_setup.m
     - It's recommended that you allocate 12GB of RAM in Docker (see 'Troubleshooting').
 1. MacOS development environment (Catalina or later - 10.15.X). Note: It is possible it works in other environments/versions of MacOS
 1. NodeJS version 11.15 installed (or use of NVM is recommended)
+1. Use npm to install yarn `npm install -g yarn`
 
 ## Quickstart
 
