@@ -29,6 +29,7 @@
     "global-jsdom": "^6.1.0",
     "jsdom": "^16.2.2",
     "mocha": "^8.0.1",
+    "serialize-javascript": "^5.0.1",
     "ts-loader": "^6.0.4",
     "ts-node": "^8.10.2",
     "tslint": "5.20.1",

@@ -31,6 +31,7 @@
     "@types/jest": "^24.0.18",
     "@types/jsonwebtoken": "^8.3.4",
     "@types/node": "^12.12.37",
+    "elliptic": "^6.5.3",
     "jest": "^24.9.0",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.0.4",
