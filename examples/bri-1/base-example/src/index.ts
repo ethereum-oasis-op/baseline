@@ -34,6 +34,7 @@ export class ParticipantStack {
   private baselineConfig?: any;
   private babyJubJub?: VaultKey;
   private hdwallet?: VaultKey;
+  private initialized = false;
   private nats?: IMessagingService;
   private natsBearerTokens: { [key: string]: any } = {}; // mapping of third-party participant messaging endpoint => bearer token
   private natsConfig?: any;
@@ -54,11 +55,13 @@ export class ParticipantStack {
   constructor(baselineConfig: any, natsConfig: any) {
     this.baselineConfig = baselineConfig;
     this.natsConfig = natsConfig;
-
-    this.init();
   }
 
-  private async init() {
+  async init() {
+    if (this.initialized) {
+      throw new Error(`already initialized participant stack: ${this.org.name}`);
+    }
+
     this.baseline = await baselineServiceFactory(baselineProviderProvide, this.baselineConfig);
     this.nats = await messagingServiceFactory(messagingProviderNats, this.natsConfig);
     this.zk = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceZokrates, {
@@ -69,11 +72,8 @@ export class ParticipantStack {
       this.natsBearerTokens = this.natsConfig.natsBearerTokens;
     }
 
-    this.startProtocolSubscriptions();
-
-    this.capabilities = capabilitiesFactory();
-    await this.requireCapabilities();
     this.contracts = {};
+    this.startProtocolSubscriptions();
 
     if (this.baselineConfig.initiator) {
       if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
@@ -84,6 +84,8 @@ export class ParticipantStack {
 
       await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
     }
+
+    this.initialized = true;
   }
 
   getBaselineCircuitArtifacts(): any | undefined {
@@ -176,7 +178,7 @@ export class ParticipantStack {
             await this.sendProtocolMessage(msg.sender, Opcode.Baseline, { err: 'verification failed' });
             return Promise.reject('failed to verify');
           }
-  
+
           this.workflowRecords[payload.doc.id] = payload.doc;
           console.log('record is baselined...', payload.doc);
         } else {
@@ -205,7 +207,7 @@ export class ParticipantStack {
             account_id: signerResp['id'],
           });
 
-          console.log(resp);
+          console.log('verify method response:', resp);
           if (!resp) {
             return Promise.reject(`failed to verify proof: ${proof}`);
           }
@@ -414,13 +416,8 @@ export class ParticipantStack {
       return Promise.reject('failed to init workgroup');
     }
 
-    if (!this.capabilities?.getBaselineRegistryContracts()) {
-      // HACK
-      const promisedTimeout = (ms) => {
-        return new Promise(resolve => setTimeout(resolve, ms));
-      };
-      await promisedTimeout(10000);
-    }
+    this.capabilities = capabilitiesFactory();
+    await this.requireCapabilities();
 
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
     const contractParams = registryContracts[2]; // "shuttle" launch contract
@@ -699,7 +696,7 @@ export class ParticipantStack {
             organization = org;
             resolve();
           }
-        }).catch((err) => {});
+        }).catch((err) => { });
       }, 5000);
     }));
 
@@ -708,6 +705,22 @@ export class ParticipantStack {
     interval = null;
 
     return organization;
+  }
+
+  async requireWorkgroup(): Promise<void> {
+    let interval;
+    const promises = [] as any;
+    promises.push(new Promise((resolve, reject) => {
+      interval = setInterval(async () => {
+        if (this.workgroup) {
+          resolve();
+        }
+      }, 2500);
+    }));
+
+    await Promise.all(promises);
+    clearInterval(interval);
+    interval = null;
   }
 
   async requireWorkgroupContract(type: string): Promise<any> {
@@ -720,7 +733,7 @@ export class ParticipantStack {
         this.resolveWorkgroupContract(type).then((cntrct) => {
           contract = cntrct;
           resolve();
-        }).catch((err) => {});
+        }).catch((err) => { });
       }, 5000);
     }));
 

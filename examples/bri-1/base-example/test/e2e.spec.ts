@@ -1,8 +1,21 @@
 import { Opcode } from '@baseline-protocol/types';
 import { assert } from 'chai';
-import { shouldBehaveLikeAWorkgroupOrganization, shouldBehaveLikeAnInitialWorkgroupOrganization, shouldBehaveLikeAnInvitedWorkgroupOrganization, shouldBehaveLikeAWorkgroupCounterpartyOrganization } from './shared';
-import { authenticateUser, baselineAppFactory, configureRopstenFaucet, createUser, promisedTimeout, scrapeInvitationToken } from './utils';
 import { ParticipantStack } from '../src';
+import {
+  shouldBehaveLikeAWorkgroupOrganization,
+  shouldBehaveLikeAnInitialWorkgroupOrganization,
+  shouldBehaveLikeAnInvitedWorkgroupOrganization,
+  shouldBehaveLikeAWorkgroupCounterpartyOrganization,
+} from './shared';
+
+import {
+  authenticateUser,
+  baselineAppFactory,
+  configureRopstenFaucet,
+  createUser,
+  promisedTimeout,
+  scrapeInvitationToken
+} from './utils';
 
 const aliceCorpName = 'Alice Corp';
 const bobCorpName = 'Bob Corp';
@@ -20,7 +33,6 @@ const setupUser = async (identHost, firstname, lastname, email, password) => {
 };
 
 describe('baseline', () => {
-  let app: ParticipantStack; // app instance used for initial setup of the on-chain org registry
   let bearerTokens; // user API credentials
 
   let alice;
@@ -111,16 +123,17 @@ describe('baseline', () => {
       null,
     );
 
-    app = bobApp;
+    await bobApp.init()
+    await aliceApp.init()
   });
 
   describe('workgroup', () => {
     describe('creation', () => {
       before(async () => {
-        await promisedTimeout(10000);
+        await bobApp.requireWorkgroup();
 
-        workgroup = app.getWorkgroup();
-        workgroupToken = app.getWorkgroupToken();
+        workgroup = bobApp.getWorkgroup();
+        workgroupToken = bobApp.getWorkgroupToken();
       });
 
       it('should create the workgroup in the local registry', async () => {
@@ -133,34 +146,41 @@ describe('baseline', () => {
       });
 
       it('should deploy the ERC1820 registry contract for the workgroup', async () => {
-        const erc1820RegistryContract = await app.requireWorkgroupContract('erc1820-registry');
+        const erc1820RegistryContract = await bobApp.requireWorkgroupContract('erc1820-registry');
         assert(erc1820RegistryContract, 'workgroup ERC1820 registry contract should not be null');
       });
 
       it('should deploy the ERC1820 organization registry contract for the workgroup', async () => {
-        const orgRegistryContract = await app.requireWorkgroupContract('organization-registry');
+        const orgRegistryContract = await bobApp.requireWorkgroupContract('organization-registry');
         assert(orgRegistryContract, 'workgroup organization registry contract should not be null');
       });
     });
 
-    describe('participants', async () => {
-      beforeEach(async () => {
+    describe('participants', () => {
+      before(async () => {
         // sanity check
-        assert(alice && bob, 'a administrative user should have been created for each workgroup counterparty');
-        assert(bearerTokens.length === 2, 'a bearer token should have been authorized for each administrative user');
+        assert(alice && bob, 'an administrative user should have been created for each workgroup counterparty');
+        assert(Object.keys(bearerTokens).length === 2, 'a bearer token should have been authorized for each administrative user');
         assert(aliceApp, 'an instance should have been initialized for Alice Corp');
         assert(bobApp, 'an instance should have been initialized for Bob Corp');
         assert(workgroup, 'workgroup should not be null');
         assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      shouldBehaveLikeAnInitialWorkgroupOrganization(bobApp, bobCorpName);
-      shouldBehaveLikeAWorkgroupOrganization(bobApp, bobCorpName);
+      describe("Bob's organization as initiator", function () {
+        before(async () => {
+          this.ctx.app = bobApp;
+        });
 
-      describe('inviting participants to the workgroup', async () => {
+        describe(`initial workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAnInitialWorkgroupOrganization.bind(this));
+        describe(`workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupOrganization.bind(this));
+      });
+
+      describe('inviting participants to the workgroup', function () {
         let inviteToken;
 
         before(async () => {
+          this.ctx.app = aliceApp;
           await bobApp.inviteWorkgroupParticipant(alice.email);
           inviteToken = await scrapeInvitationToken('bob-ident-consumer'); // if configured, ident would have sent an email to Alice
         });
@@ -169,18 +189,22 @@ describe('baseline', () => {
           assert(inviteToken, 'invite token should not be null');
         });
 
-        describe('alice', async () => {
+        describe('alice', function () {
           before(async () => {
-            await app.requireWorkgroupContract('erc1820-registry');
-            await app.requireWorkgroupContract('organization-registry');
-            await aliceApp.acceptWorkgroupInvite(inviteToken, app.getWorkgroupContracts());
+            await bobApp.requireWorkgroupContract('erc1820-registry');
+            await bobApp.requireWorkgroupContract('organization-registry');
+            await aliceApp.acceptWorkgroupInvite(inviteToken, bobApp.getWorkgroupContracts());
           });
 
-          shouldBehaveLikeAnInvitedWorkgroupOrganization(aliceApp, aliceCorpName);
-          shouldBehaveLikeAWorkgroupOrganization(aliceApp, aliceCorpName);
+          describe(`invited workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAnInvitedWorkgroupOrganization.bind(this));
+          describe(`workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupOrganization.bind(this));
+          describe(`workgroup counterparty: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
+        });
 
-          shouldBehaveLikeAWorkgroupCounterpartyOrganization(aliceApp, aliceCorpName);
-          shouldBehaveLikeAWorkgroupCounterpartyOrganization(bobApp, bobCorpName);
+        describe("Bob's organization after Alice has joined", function () {
+          before(async () => { this.ctx.app = bobApp; });
+
+          describe(`workgroup counterparty: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
         });
       });
 
