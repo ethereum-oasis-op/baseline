@@ -4,6 +4,9 @@ import { shouldBehaveLikeAWorkgroupOrganization, shouldBehaveLikeAnInitialWorkgr
 import { authenticateUser, baselineAppFactory, configureRopstenFaucet, createUser, promisedTimeout, scrapeInvitationToken } from './utils';
 import { ParticipantStack } from '../src';
 
+const aliceCorpName = 'Alice Corp';
+const bobCorpName = 'Bob Corp';
+
 const faucetAddress = process.env['FAUCET_ADDRESS'];
 const faucetEncryptedPrivateKey = process.env['FAUCET_PRIVATE_KEY'];
 const networkId = process.env['NCHAIN_NETWORK_ID'] || '66d44f30-9092-4182-a3c4-bc02736d6ae5'; // ropsten
@@ -73,7 +76,7 @@ describe('baseline', () => {
     const natsPublicKey = '-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAullT/WoZnxecxKwQFlwE\n9lpQrekSD+txCgtb9T3JvvX/YkZTYkerf0rssQtrwkBlDQtm2cB5mHlRt4lRDKQy\nEA2qNJGM1Yu379abVObQ9ZXI2q7jTBZzL/Yl9AgUKlDIAXYFVfJ8XWVTi0l32Vsx\ntJSd97hiRXO+RqQu5UEr3jJ5tL73iNLp5BitRBwa4KbDCbicWKfSH5hK5DM75EyM\nR/SzR3oCLPFNLs+fyc7zH98S1atglbelkZsMk/mSIKJJl1fZFVCUxA+8CaPiKbpD\nQLpzydqyrk/y275aSU/tFHidoewvtWorNyFWRnefoWOsJFlfq1crgMu2YHTMBVtU\nSJ+4MS5D9fuk0queOqsVUgT7BVRSFHgDH7IpBZ8s9WRrpE6XOE+feTUyyWMjkVgn\ngLm5RSbHpB8Wt/Wssy3VMPV3T5uojPvX+ITmf1utz0y41gU+iZ/YFKeNN8WysLxX\nAP3Bbgo+zNLfpcrH1Y27WGBWPtHtzqiafhdfX6LQ3/zXXlNuruagjUohXaMltH+S\nK8zK4j7n+BYl+7y1dzOQw4CadsDi5whgNcg2QUxuTlW+TQ5VBvdUl9wpTSygD88H\nxH2b0OBcVjYsgRnQ9OZpQ+kIPaFhaWChnfEArCmhrOEgOnhfkr6YGDHFenfT3/RA\nPUl1cxrvY7BHh4obNa6Bf8ECAwEAAQ==\n-----END PUBLIC KEY-----';
 
     aliceApp = await baselineAppFactory(
-      'Alice Corp',
+      aliceCorpName,
       bearerTokens[alice['id']],
       false,
       'localhost:8081',
@@ -91,7 +94,7 @@ describe('baseline', () => {
     );
 
     bobApp = await baselineAppFactory(
-      'Bob Corp',
+      bobCorpName,
       bearerTokens[bob['id']],
       true,
       'localhost:8085',
@@ -151,10 +154,8 @@ describe('baseline', () => {
         assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      await promisedTimeout(10000); // ¯\_(ツ)_/¯
-
-      shouldBehaveLikeAnInitialWorkgroupOrganization(bobApp);
-      shouldBehaveLikeAWorkgroupOrganization(bobApp);
+      shouldBehaveLikeAnInitialWorkgroupOrganization(bobApp, bobCorpName);
+      shouldBehaveLikeAWorkgroupOrganization(bobApp, bobCorpName);
 
       describe('inviting participants to the workgroup', async () => {
         let inviteToken;
@@ -175,11 +176,11 @@ describe('baseline', () => {
             await aliceApp.acceptWorkgroupInvite(inviteToken, app.getWorkgroupContracts());
           });
 
-          shouldBehaveLikeAnInvitedWorkgroupOrganization(aliceApp);
-          shouldBehaveLikeAWorkgroupOrganization(aliceApp);
+          shouldBehaveLikeAnInvitedWorkgroupOrganization(aliceApp, aliceCorpName);
+          shouldBehaveLikeAWorkgroupOrganization(aliceApp, aliceCorpName);
 
-          shouldBehaveLikeAWorkgroupCounterpartyOrganization(bobApp);
-          shouldBehaveLikeAWorkgroupCounterpartyOrganization(aliceApp);
+          shouldBehaveLikeAWorkgroupCounterpartyOrganization(aliceApp, aliceCorpName);
+          shouldBehaveLikeAWorkgroupCounterpartyOrganization(bobApp, bobCorpName);
         });
       });
 

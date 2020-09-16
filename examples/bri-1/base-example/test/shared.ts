@@ -1,8 +1,8 @@
 import { assert } from 'chai';
 import { promisedTimeout } from './utils';
 
-export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
-  describe(`workgroup organization: "${app.getBaselineConfig().orgName}"`, () => {
+export const shouldBehaveLikeAWorkgroupOrganization = (app, orgName) => {
+  describe(`workgroup organization: "${orgName}"`, () => {
     let org;
 
     before(async () => {
@@ -141,8 +141,8 @@ export const shouldBehaveLikeAWorkgroupOrganization = (app) => {
   });
 };
 
-export const shouldBehaveLikeAWorkgroupCounterpartyOrganization = (app) => {
-  describe(`workgroup counterparty organization: "${app.getBaselineConfig().orgName}"`, () => {
+export const shouldBehaveLikeAWorkgroupCounterpartyOrganization = (app, orgName) => {
+  describe(`workgroup counterparty organization: "${orgName}"`, () => {
     describe('counterparties', async () => {
       let counterparties;
       let authorizedBearerTokens;
@@ -179,8 +179,8 @@ export const shouldBehaveLikeAWorkgroupCounterpartyOrganization = (app) => {
   });
 };
 
-export const shouldBehaveLikeAnInitialWorkgroupOrganization = (app) => {
-  describe(`initial workgroup organization: "${app.getBaselineConfig().orgName}"`, () => {
+export const shouldBehaveLikeAnInitialWorkgroupOrganization = (app, orgName) => {
+  describe(`initial workgroup organization: "${orgName}"`, () => {
     describe('baseline config', () => {
       let cfg;
 
@@ -270,8 +270,8 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = (app) => {
   });
 };
 
-export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (app) => {
-  describe(`invited workgroup organization: "${app.getBaselineConfig().orgName}"`, () => {
+export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (app, orgName) => {
+  describe(`invited workgroup organization: "${orgName}"`, () => {
     describe('baseline config', () => {
       let cfg;
 

@@ -72,6 +72,7 @@ export class ParticipantStack {
     this.startProtocolSubscriptions();
 
     this.capabilities = capabilitiesFactory();
+    await this.requireCapabilities();
     this.contracts = {};
 
     if (this.baselineConfig.initiator) {
@@ -667,6 +668,22 @@ export class ParticipantStack {
         workflow_identifier: this.workflowIdentifier,
       },
     });
+  }
+
+  private async requireCapabilities(): Promise<void> {
+    let interval;
+    const promises = [] as any;
+    promises.push(new Promise((resolve, reject) => {
+      interval = setInterval(async () => {
+        if (this.capabilities?.getBaselineRegistryContracts()) {
+          resolve();
+        }
+      }, 2500);
+    }));
+
+    await Promise.all(promises);
+    clearInterval(interval);
+    interval = null;
   }
 
   async requireOrganization(address: string): Promise<Organization> {
