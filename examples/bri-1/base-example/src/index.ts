@@ -153,7 +153,8 @@ export class ParticipantStack {
   private async dispatchProtocolMessage(msg: ProtocolMessage): Promise<any> {
     if (msg.opcode === Opcode.Baseline) {
       // TODO: acquire distributed lock; i.e. refer to redis + dislock from Provide
-      // { "doc":  {}, "__hash": <sha256> } <-- our naive protocol checks for the presence of `__hash`; if it exists, we know to process verification part of the workstep.
+      // { "doc":  {}, "__hash": <sha256> } <-- our naive protocol checks for the presence of
+      // `__hash`; if it exists, we know to process verification part of the workstep.
       // { "rfp_id": "adsf" } <-- this is the doc; since no `__hash` exists, hash/sign/send
       // FIXME! the above example needs a proper schema... put it in the persistence package...
 
@@ -367,7 +368,7 @@ export class ParticipantStack {
     if (msg.id && !this.workflowRecords[msg.id]) {
       this.workflowRecords[msg.id] = msg;
     }
-  
+
     // this will use protocol buffers or similar
     const wiremsg = marshalProtocolMessage(
       await this.protocolMessageFactory(
