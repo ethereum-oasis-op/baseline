@@ -1,5 +1,7 @@
+import { snarkjsServiceFactory } from './snarkjs';
 import { zokratesServiceFactory } from './zokrates';
 
+export const zkSnarkCircuitProviderServiceSnarkJS = 'snarkjs';
 export const zkSnarkCircuitProviderServiceZokrates = 'zokrates';
 
 export interface IZKSnarkCircuitProvider {
@@ -11,8 +13,8 @@ export interface IZKSnarkCircuitProvider {
 }
 
 export interface IZKSnarkCompilationArtifacts {
-  program: Uint8Array,
-  abi: string,
+  program: Uint8Array;
+  abi: string;
 }
 
 export type IZKSnarkTrustedSetupArtifacts = {
@@ -38,6 +40,9 @@ export async function zkSnarkCircuitProviderServiceFactory(
   let service;
 
   switch (provider) {
+    case zkSnarkCircuitProviderServiceSnarkJS:
+      service = await snarkjsServiceFactory(config);
+      break;
     case zkSnarkCircuitProviderServiceZokrates:
       service = await zokratesServiceFactory(config);
       break;
