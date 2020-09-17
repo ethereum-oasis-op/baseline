@@ -80,6 +80,7 @@ const main = async (
   if (zkpMode == 0) {
     await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createMSA', 0);
     await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createPO', 0);
+    await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createAgreement', 0);
   } else if (zkpMode == 1) {
     await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createDummyMSA', 1);
     await registerVerificationKey(workgroupManager, zkpVerificationKeyResolver, 'createDummyPO', 1);
