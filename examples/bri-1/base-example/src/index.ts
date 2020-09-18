@@ -770,7 +770,9 @@ export class ParticipantStack {
 
     const subscription = await this.nats?.subscribe(baselineProtocolMessageSubject, (msg, err) => {
       this.protocolMessagesRx++;
-      this.dispatchProtocolMessage(unmarshalProtocolMessage(Buffer.from(msg.data)));
+      this.dispatchProtocolMessage(unmarshalProtocolMessage(Buffer.from(msg.data))).catch((err) => {
+        console.log('protocol message handler encountered rejected promise', err);
+      });
     });
 
     this.protocolSubscriptions.push(subscription);

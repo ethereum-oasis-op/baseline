@@ -198,14 +198,14 @@ describe('baseline', () => {
 
           describe(`invited workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAnInvitedWorkgroupOrganization.bind(this));
           describe(`workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupOrganization.bind(this));
+          describe(`workgroup counterparty: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
         });
 
-        describe('counterparties', function () {
+        describe('counterparties post-onboarding', function () {
           before(async () => {
             this.ctx.app = bobApp;
           });
 
-          describe(aliceCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
           describe(bobCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
         });
       });
