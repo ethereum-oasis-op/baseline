@@ -167,7 +167,7 @@ describe('baseline', () => {
         assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      describe("Bob's organization as initiator", function () {
+      describe('workgroup initiator', function () {
         before(async () => {
           this.ctx.app = bobApp;
         });
@@ -198,13 +198,15 @@ describe('baseline', () => {
 
           describe(`invited workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAnInvitedWorkgroupOrganization.bind(this));
           describe(`workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupOrganization.bind(this));
-          describe(`workgroup counterparty: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
         });
 
-        describe("Bob's organization after Alice has joined", function () {
-          before(async () => { this.ctx.app = bobApp; });
+        describe('counterparties', function () {
+          before(async () => {
+            this.ctx.app = bobApp;
+          });
 
-          describe(`workgroup counterparty: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
+          describe(aliceCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
+          describe(bobCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
         });
       });
 

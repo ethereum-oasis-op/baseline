@@ -192,26 +192,6 @@ export class ParticipantStack {
             this.baselineConfig?.nchainApiHost,
           );
 
-          const signerResp = (await nchain.createAccount({
-            network_id: this.baselineConfig?.networkId,
-          }));
-
-          const resp = await NChain.clientFactory(
-            this.workgroupToken,
-            this.baselineConfig?.nchainApiScheme,
-            this.baselineConfig?.nchainApiHost,
-          ).executeContract(this.contracts['verifier'].id, {
-            method: 'verify',
-            params: [[proof], ['2'], [this.baselineCircuitSetupArtifacts?.keypair!.vk]], // FIXME...
-            value: 0,
-            account_id: signerResp['id'],
-          });
-
-          console.log('verify method response:', resp);
-          if (!resp) {
-            return Promise.reject(`failed to verify proof: ${proof}`);
-          }
-
           const leaf = await this.baseline?.insertLeaf(msg.sender, this.contracts['shield'].address, payload.hash);
           if (leaf) {
             console.log(`inserted leaf... ${leaf}`);
@@ -472,7 +452,7 @@ export class ParticipantStack {
     ).createToken({
       organization_id: this.org.id,
     });
-  };
+  }
 
   async resolveOrganizationAddress(): Promise<string> {
     const keys = await this.fetchKeys();
