@@ -192,7 +192,7 @@ export class ParticipantStack {
             this.baselineConfig?.nchainApiHost,
           );
 
-          const leaf = await this.baseline?.insertLeaf(msg.sender, this.contracts['shield'].address, payload.hash);
+          const leaf = await this.baseline?.insertLeaf(msg.sender, this.contracts['shield'].address, payload.__hash);
           if (leaf) {
             console.log(`inserted leaf... ${leaf}`);
           } else {
