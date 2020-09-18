@@ -10,7 +10,7 @@ Windows 10 users [should follow some initial setup instructions](windows_setup.m
 
 1. Install [Docker for Mac](https://www.docker.com/docker-mac), or
     [Docker for Windows](https://www.docker.com/docker-windows) (Windows users [using WSL](windows_setup.md) can skip this step).
-    - It's recommended that you allocate 12GB of RAM in Docker (see 'Troubleshooting').
+    - It's recommended that you allocate 12.5GB of RAM in Docker (see 'Troubleshooting').
 1. MacOS development environment (Catalina or later - 10.15.X). Note: It is possible it works in other environments/versions of MacOS
 1. NodeJS version 11.15 installed (or use of NVM is recommended)
 1. Use npm to install yarn `npm install -g yarn`
@@ -356,7 +356,7 @@ nvm use 11
    - During set up, `npm run setup-circuits`, there are cases where the setup instruction might fail, and the logs of the `zkp` container (`docker-compose logs -f zkp`) throws babel compilation errors. This is due to the memory consumption needed for running the compute intensive set up process. In these cases, it is recommended to toggle memory and CPU cores consumption
    - Consider these steps if you are running many of the `radish` containers and your PC is bogged down
    - Check the memory usage by running `docker stats`
-   - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.0GiB` (default is `2.0GiB`). Although not required in all cases, it is recommended to increase the swap memory to 4GB and CPU cores to 8 on Docker Preferences/Settings.
+   - If the containers are using most of the RAM allocated to Docker, you can increase RAM available to Docker by clicking the Docker Desktop icon in the task bar. Choose `Preferences --> Advanced`, then increase `Memory` to a recommended `12.5GiB` (default is `2.0GiB`). Although not required in all cases, it is recommended to increase the swap memory to 4GB and CPU cores to 8 on Docker Preferences/Settings. It is also worth noting that due to Docker overhead (<0.5GB), you will not get to use 100% of the RAM allocated to Docker to run Baseline.
 4. Running tests
    - In some cases, while running the test suite `npm run test` there could be a socket hang up error. This is potentially due to race conditions across the different containers for the API services. To resolve this issue run `docker-compose restart api-buyer api-supplier1 api-supplier2` to get rid of errors while running the test suite.
 
