@@ -123,8 +123,8 @@ describe('baseline', () => {
       null,
     );
 
-    await bobApp.init()
-    await aliceApp.init()
+    bobApp.init();
+    aliceApp.init();
   });
 
   describe('workgroup', () => {
