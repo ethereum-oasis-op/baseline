@@ -48,6 +48,8 @@ track(address: string): Promise<boolean>;
 verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
 ```
 
+![IBaselineRPC](https://user-images.githubusercontent.com/35908605/93899621-7d0bc600-fcc2-11ea-9dae-46497acf204a.png)
+
 __IRegistry__
 
 ```
