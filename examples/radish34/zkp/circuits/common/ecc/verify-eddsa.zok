@@ -1,7 +1,7 @@
 import "../hashes/sha256/sha256of3x256bits" as sha256
 import "ecc/edwardsScalarMult" as scalarMult
 import "ecc/edwardsAdd" as add
-import "utils/pack/bool/nonStrictUnpack256" as unpack256
+import "utils/pack/nonStrictUnpack256" as unpack256
 import "ecc/edwardsOnCurve" as onCurve
 import "ecc/edwardsOrderCheck" as orderCheck
 
@@ -29,14 +29,14 @@ Verifies an EdDSA Signature.
     Return 1 for S being a valid EdDSA Signature, 0 otherwise.
 */
 
-def main(private field[2] R, private field S, field[2] A, field[256] M0, field[10] context) -> field:
+def main(private field[2] R, private field S, field[2] A, field[256] M0, field[10] context) -> (field):
 
     field[2] G = [context[4], context[5]]
 
     // Check if R is on curve and if it is not in a small subgroup. A is public input and can be checked offline
     field isOnCurve = onCurve(R, context) // throws if R is not on curve
     field isPrimeOrder = orderCheck(R, context)
-    assert(1 == isPrimeOrder)
+    1 == isPrimeOrder
 
     field[256] Rx = unpack256(R[0])
     field[256] Ax = unpack256(A[0])

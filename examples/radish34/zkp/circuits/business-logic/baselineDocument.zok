@@ -1,6 +1,6 @@
-import "utils/pack/bool/pack128" as pack128
-import "utils/pack/bool/pack256" as pack256
-import "utils/pack/bool/nonStrictUnpack256" as unpack256
+import "utils/pack/pack128" as pack128
+import "utils/pack/pack256" as pack256
+import "utils/pack/nonStrictUnpack256" as unpack256
 import "./unpack2x128To256x1" as unpack2x128To256x1
 
 import "./sha256of2x256" as sha256of2x256
@@ -50,7 +50,7 @@ struct Document {
 // TODO: explore how rust manages dynamic expansion of 
 // field to other data types: structs, arrays, etc.
 
-def main(field publicInputHash, private Document documentData):
+def main(field publicInputHash, private Document documentData) -> ():
   // 
   // compressing public keys of type point (X,Y)
   field[256] publicKeyOfBuyerCompressed = edwardsCompress(documentData.inputs.publicKeyOfBuyer, context())
@@ -79,10 +79,10 @@ def main(field publicInputHash, private Document documentData):
   
   calculatedRoot = calculateRoot(documentData.newCommitment.siblingPath, documentData.newCommitment.value, documentData.newCommitment.index)
   inputDocumentCommitment = unpack2x128To256x1(documentData.newCommitment.value)
-  assert(documentCommitmentBits == inputDocumentCommitment)
+  documentCommitmentBits == inputDocumentCommitment
 
   // Verify root consistency
-  assert(calculatedRoot == documentData.calldata[0..256])
+  calculatedRoot == documentData.calldata[0..256]
 
   // VERIFY SIGNATURES
   babyjubjubParamSet = context()
@@ -97,8 +97,8 @@ def main(field publicInputHash, private Document documentData):
 
   field isVerifiedBuyer = verifyEddsa(documentData.inputs.buyerSignature.R, documentData.inputs.buyerSignature.S, documentData.inputs.publicKeyOfBuyer, calculatedRoot, documentCommitmentBits, babyjubjubParamSet)
   field isVerifiedSupplier = verifyEddsa(documentData.inputs.supplierSignature.R,  documentData.inputs.supplierSignature.S, documentData.inputs.publicKeyOfSupplier, calculatedRoot, documentCommitmentBits, babyjubjubParamSet)
-  assert(isVerifiedBuyer == 1)
-  assert(isVerifiedSupplier == 1)
+  isVerifiedBuyer == 1
+  isVerifiedSupplier == 1
 
   packedRoot256 = pack256(calculatedRoot)
   packedNullifier256 = pack256(documentNullifierBits)
@@ -106,6 +106,6 @@ def main(field publicInputHash, private Document documentData):
   // Check the publicInputHash:
   publicInputHashBits = unpack256(publicInputHash)
   publicInputHashBitsCheck = sha256of2x256([packedRoot256, packedNullifier256])
-  assert(publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256])
+  publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256]
 
   return

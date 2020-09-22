@@ -28,14 +28,14 @@ import "../common/hashes/sha256/sha256of7x128.zok" as sha256of7x128
 
 
 // TODO: are we doing enough to avoid any 'negative number', 'underflow' attacks?
-def main(private field[4] volumeTierBounds, private field[3] pricesByTier, private field[2] hashOfTieredPricing, private field minVolume, private field maxVolume) -> field:
+def main(private field[4] volumeTierBounds, private field[3] pricesByTier, private field[2] hashOfTieredPricing, private field minVolume, private field maxVolume) -> (field):
 
     // Ensure the hashOfTieredPricing is actually the hash of the purported tier pricing structure:
     hashOfTieredPricingBits = unpack2x128To256x1(hashOfTieredPricing)
-    assert(hashOfTieredPricingBits == sha256of7x128([...volumeTierBounds, ...pricesByTier]))
+    hashOfTieredPricingBits == sha256of7x128([...volumeTierBounds, ...pricesByTier])
 
     // Check the minVolume is correct:
-    assert(minVolume == volumeTierBounds[0])
+    minVolume == volumeTierBounds[0]
 
     // VALID volumeTierBounds array formatting:
     // [0, 5, 0, 0]
@@ -55,7 +55,7 @@ def main(private field[4] volumeTierBounds, private field[3] pricesByTier, priva
     // [5, 10, 15, 10] X   (because not strictly ascending)
 
     // Important edge case to ensure at least 1 interval exists:
-    assert((volumeTierBounds[1] == 0) == false)
+    (volumeTierBounds[1] == 0) == false
 
     field maxVolumeIndex = 0
     bool wasZero = false
@@ -68,7 +68,7 @@ def main(private field[4] volumeTierBounds, private field[3] pricesByTier, priva
 
         // If we find a nonzero value, after having already found a zero, then the tier bounds are badly formatted:
         bool unexpectedNonZero = if wasZero && !isZero then true else false fi
-        assert(unexpectedNonZero == false)
+        unexpectedNonZero == false
 
         // Find the maxVolume (it might not be the last element of the volumeTierBounds array) - it's the left-most nonzero element of the array.
         // When we find a '0' element of volumeTierBounds, then the prior element must be the maxVolume:
@@ -77,12 +77,12 @@ def main(private field[4] volumeTierBounds, private field[3] pricesByTier, priva
 
         // Ensure nonzero tier bounds are strictly ascending:
         bool strictlyAscending = if !isZero && volumeTierBounds[i] <= volumeTierBounds[i - 1] then false else true fi
-       assert(strictlyAscending == true)
+        strictlyAscending == true
     endfor
 
     // Prevent ALL tier bounds from being zero:
-    assert((zeroCount == 4) == false)
+    (zeroCount == 4) == false
     // Check the maxVolume is correct:
-    assert(maxVolume == volumeTierBounds[maxVolumeIndex])
+    maxVolume == volumeTierBounds[maxVolumeIndex]
 
     return 1

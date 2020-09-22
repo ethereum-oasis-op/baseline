@@ -1,7 +1,7 @@
-import "utils/pack/bool/pack256" as pack256
-import "utils/pack/bool/nonStrictUnpack256" as unpack256
+import "utils/pack/pack256" as pack256
+import "utils/pack/nonStrictUnpack256" as unpack256
 
-def main(field[2] point)->field[256]:
+def main(field[2] point)->(field[256]):
   field[256] xBits = unpack256(point[0])
   field[256] yBits = unpack256(point[1])
   field sign = if xBits[255] == 1 then 1 else 0 fi

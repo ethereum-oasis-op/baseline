@@ -17,7 +17,7 @@
 import "hashes/sha256/512bit.zok" as sha256of512
 import "../hashes/sha256/padding/shaPad432To512.zok" as shaPad432To512
 
-import "utils/pack/bool/unpack128.zok" as unpack128
+import "utils/pack/unpack128.zok" as unpack128
 import "../packing/unpack1x216To216x1.zok" as unpack1x216To216x1
 import "../packing/unpack2x128To256x1.zok" as unpack2x128To256x1
 
@@ -31,7 +31,7 @@ import "../concatenate/orderedConcatenate216x216.zok" as orderedConcatenate216x2
 // @param {field} leafIndex - the index of the leaf within the leaves (indexing starts from zero). Note: the binary decomposition of a leaf's index gives us the 'left-rightness' of that leaf's path up the Merkle Tree.
 // @returns {field} root - the root of the merkle tree
 
-def main(private field[4] siblingPath, private field[2] leafValue, private field leafIndex) -> field[256]:
+def main(private field[4] siblingPath, private field[2] leafValue, private field leafIndex) -> (field[256]):
 
   // Hash up the Merkle Tree to the root:
 

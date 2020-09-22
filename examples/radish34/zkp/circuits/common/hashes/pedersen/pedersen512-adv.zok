@@ -4,7 +4,7 @@ import "ecc/babyjubjubParams" as context
 import "ecc/edwardsAdd" as add
 import "ecc/edwardsCompress" as edwardsCompress
 
-def main(field[512] e) -> field[256]:
+def main(field[512] e) -> (field[256]):
 	context = context()
 	field[2] a = [context[2], context[3]] //Infinity
 	//Round 0

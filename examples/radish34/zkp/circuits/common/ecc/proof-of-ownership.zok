@@ -18,7 +18,7 @@ import "ecc/edwardsScalarMult" as multiply
 ///
 /// Returns:
 ///     Return 1 for pk/sk being a valid keypair, 0 otherwise.
-def main(field[2] pk, field[256] skBits, field[10] context) -> field:
+def main(field[2] pk, field[256] skBits, field[10] context) -> (field):
 
     field[2] G = [context[4], context[5]]
 

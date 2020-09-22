@@ -3,7 +3,7 @@
 
 import "./mimc-constants.zok" as constants
 
-def main(field x, field k)->field:
+def main(field x, field k)->(field):
   field[91] c = constants()
   for field i in 0..91 do
     field t = x + c[i] + k

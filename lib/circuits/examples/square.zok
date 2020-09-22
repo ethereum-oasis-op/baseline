@@ -1,4 +1,0 @@
-// square
-def main(private field a, field b):
-    assert(a*a == b)
-    return

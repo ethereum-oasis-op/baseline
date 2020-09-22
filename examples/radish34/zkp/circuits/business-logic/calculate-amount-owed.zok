@@ -29,12 +29,12 @@
 
 // @return {field} amountOwed
 
-def main(private field[4] volumeTierBounds, private field[3] pricesByTier, private field oldCumulativeVolume, private field thisVolume, private field newCumulativeVolume) -> field:
+def main(private field[4] volumeTierBounds, private field[3] pricesByTier, private field oldCumulativeVolume, private field thisVolume, private field newCumulativeVolume) -> (field):
 
   field[3] lowerBoundForTier = [0, 0, 0]
   field[3] upperBoundForTier = [0, 0, 0]
 
-  assert(newCumulativeVolume == oldCumulativeVolume + thisVolume)
+  newCumulativeVolume == oldCumulativeVolume + thisVolume
 
   for field i in 0..3 do
     // Create the upper and lower bounds for each tier:

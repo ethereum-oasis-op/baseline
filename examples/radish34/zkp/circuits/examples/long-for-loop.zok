@@ -1,4 +1,4 @@
-def main(private field A, field B):
+def main( private field A, field B) -> ():
 
     field C = A
 
@@ -9,6 +9,6 @@ def main(private field A, field B):
     C=0
 
     // CHECK THE INPUT B EQUALS THE CALCULATED thing
-    assert(B == C)
+    B == C
 
     return
