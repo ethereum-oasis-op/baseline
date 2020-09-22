@@ -4,13 +4,6 @@ import "hashes/sha256/512bitPacked" as packed512Sha
 import "ecc/edwardsCompress" as edwardsCompress
 import "hashes/sha256/1024bit" as shaOf1024Bits
 import "utils/casts/bool_256_to_u32_8" as bool_256_to_u32_8
-import "signatures/verifyEddsa" as verifyEddsa
-import "ecc/babyjubjubParams" as context
-
-struct Signature {
-  field[2] R
-  field S
-}
 
 struct Commitment {
   field[2] value
@@ -24,7 +17,8 @@ struct Metadata {
 }
 
 struct Agreement {
-  Commitment agreementCommitment
+  u32[8] hash
+  field[2] senderPublicKey
 }
 
 def convert(field[2] input) -> u32[8]:
@@ -32,7 +26,7 @@ def convert(field[2] input) -> u32[8]:
   u32[4] msbBits = unpack128(input[1])
   return [...msbBits, ...lsbBits]
 
-def main(field publicInputHash, private Commitment inputCommitment, private Metadata inputMetadata, private Signature inputSignature) -> bool:
+def main(field publicInputHash, private Commitment inputCommitment, private Metadata inputMetadata) -> Agreement:
   u32[8] publicInputHashBits = unpack256(publicInputHash)
 
   // hash of the below private inputs must be equal to public input
@@ -47,14 +41,13 @@ def main(field publicInputHash, private Commitment inputCommitment, private Meta
   // compute hash
   u32[8] agreementHash = shaOf1024Bits(saltBits, pubKeyBits, nameBits, urlBits)
 
-  // verify signature
-  // u32[2][8] message = [agreementHash; 2]
-  bool verified = verifyEddsa(inputSignature.R, inputSignature.S, inputMetadata.senderPublicKey, agreementHash, agreementHash, context())
+  // Check: Compare final hash to public input hash; and Compare input
+  bool out = publicInputHashBits == agreementHash && valueBits == agreementHash
 
-  // Check: Compare final hash to public input hash; Compare input; and verify signature
-  bool out = publicInputHashBits == agreementHash && valueBits == agreementHash && verified == true
+  // Prepare output object
+  Agreement outputAgreement = Agreement { hash: agreementHash, senderPublicKey: inputMetadata.senderPublicKey }
   // To consider:
   // - Formalize agreement struct based on baselineagreement.zok
   // - Pending issue to be resolved: struct within struct unwrapping
   // - Merkle root check
-  return out
+  return outputAgreement
