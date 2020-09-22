@@ -2,7 +2,7 @@ import { shouldBehaveLikeZKSnarkCircuit } from './shared';
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '../src/index';
 
 const noopAgreementCircuitPath = '../../lib/circuits/noopAgreement.zok';
-const createDocumentPath = '../../lib/circuits/createDocument.zok';
+const createAgreementPath = '../../lib/circuits/createAgreement.zok';
           
 let provider;
 

@@ -1,5 +1,5 @@
 import "ecc/edwardsScalarMult" as multiply
-import "utils/pack/bool/nonStrictUnpack256" as unpack256
+import "utils/pack/nonStrictUnpack256" as unpack256
 import "ecc/babyjubjubParams" as context
 
 /*
@@ -19,7 +19,7 @@ Returns:
     Return 1 for pk/sk being a valid keypair, 0 otherwise.
 */
 
-def main(field[2] pk, private field sk) -> field:
+def main(field[2] pk, private field sk) -> (field):
     context = context()
 
     field[2] G = [context[4], context[5]]

@@ -1,7 +1,0 @@
-import "utils/pack/bool/nonStrictUnpack256" as unpack256
-
-// Unpacks a field (assumed to be one 216-bit value) into 216 bits:
-// unpack1x216To216x1
-def main(field input)->bool[216]:
-	bool[256] inputBits = unpack256(input)
-	return inputBits[40..256]

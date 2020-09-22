@@ -1,9 +1,0 @@
-import "utils/pack/bool/unpack128" as unpack128
-
-// Unpack a field[2] (assumed to be two 128-bit values) into 256 bits:
-// unpack2x128To256x1
-def main(field[2] input)->bool[256]:
-	bool[128] left = unpack128(input[0])
-	bool[128] right = unpack128(input[1])
-  bool[256] output = [...left, ...right]
-  return output

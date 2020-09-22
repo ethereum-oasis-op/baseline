@@ -1,13 +1,13 @@
 import "hashes/sha256/1024bit.zok" as sha256of1024
-import "utils/pack/bool/unpack128.zok" as unpack128
+import "utils/pack/unpack128.zok" as unpack128
 
-def concatenate256x256x256(field[256] a, field[256] b, field[256] c)->field[768]:
+def concatenate256x256x256(field[256] a, field[256] b, field[256] c)->(field[768]):
 	return [...a, ...b, ...c]
 
-def shaPad768To1024()->field[256]:
+def shaPad768To1024()->(field[256]):
 	return [1,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0,	0]
 
-def main(field commitmentHigh, field commitmentLow, private field valueHigh, private field  valueLow, private field publicKeyHigh, private field publicKeyLow, private field saltHigh, private field saltLow)->field:
+def main(field commitmentHigh, field commitmentLow, private field valueHigh, private field  valueLow, private field publicKeyHigh, private field publicKeyLow, private field saltHigh, private field saltLow)->(field):
 
 	/* Unpack inputs */
 	field[128] commitmentHighBits = unpack128(commitmentHigh)
@@ -34,6 +34,6 @@ def main(field commitmentHigh, field commitmentLow, private field valueHigh, pri
 	/* Check equality */
 	field[256] commitmentBitsCheck = sha256of1024(preimage768[0..256], preimage768[256..512], preimage768[512..768], padding768To1024)
 
-  assert(commitmentBitsCheck == commitmentBits)
+  commitmentBitsCheck == commitmentBits
 
 	return 1

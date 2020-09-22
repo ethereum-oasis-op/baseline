@@ -1,6 +1,6 @@
-import "utils/pack/bool/pack128" as pack128
-import "utils/pack/bool/unpack128.zok" as unpack128
-import "utils/pack/bool/nonStrictUnpack256.zok" as unpack256
+import "utils/pack/pack128" as pack128
+import "utils/pack/unpack128.zok" as unpack128
+import "utils/pack/nonStrictUnpack256.zok" as unpack256
 import "../common/packing/unpack2x128To256x1.zok" as unpack2x128To256x1
 
 import "../common/hashes/sha256/sha256of4x128.zok" as sha256of4x128
@@ -88,26 +88,26 @@ struct NewPO {
   NewCommitment commitment
 }
 
-def main(field publicInputHash, private field[2] secretKeyOfBuyer, private field[2] root, private OldMSA oldMSA, private NewMSA newMSA, private NewPO newPO):
+def main(field publicInputHash, private field[2] secretKeyOfBuyer, private field[2] root, private OldMSA oldMSA, private NewMSA newMSA, private NewPO newPO) -> ():
 
   // Ensure constants are preserved between commitments:
-  assert(oldMSA.constants.publicKeyOfBuyer == newMSA.constants.publicKeyOfBuyer)
-  assert(oldMSA.constants.publicKeyOfSupplier == newMSA.constants.publicKeyOfSupplier)
-  assert(oldMSA.constants.hashOfTieredPricing == newMSA.constants.hashOfTieredPricing)
-  assert(oldMSA.constants.minVolume == newMSA.constants.minVolume)
-  assert(oldMSA.constants.maxVolume == newMSA.constants.maxVolume)
-  assert(oldMSA.constants.sku == newMSA.constants.sku)
-  assert(oldMSA.constants.erc20ContractAddress == newMSA.constants.erc20ContractAddress)
+  oldMSA.constants.publicKeyOfBuyer == newMSA.constants.publicKeyOfBuyer
+  oldMSA.constants.publicKeyOfSupplier == newMSA.constants.publicKeyOfSupplier
+  oldMSA.constants.hashOfTieredPricing == newMSA.constants.hashOfTieredPricing
+  oldMSA.constants.minVolume == newMSA.constants.minVolume
+  oldMSA.constants.maxVolume == newMSA.constants.maxVolume
+  oldMSA.constants.sku == newMSA.constants.sku
+  oldMSA.constants.erc20ContractAddress == newMSA.constants.erc20ContractAddress
 
-  assert(newPO.constants.publicKeyOfBuyer == oldMSA.constants.publicKeyOfBuyer)
-  assert(newPO.constants.publicKeyOfSupplier == oldMSA.constants.publicKeyOfSupplier)
-  assert(newPO.constants.sku == oldMSA.constants.sku)
-  assert(newPO.constants.erc20ContractAddress == oldMSA.constants.erc20ContractAddress)
+  newPO.constants.publicKeyOfBuyer == oldMSA.constants.publicKeyOfBuyer
+  newPO.constants.publicKeyOfSupplier == oldMSA.constants.publicKeyOfSupplier
+  newPO.constants.sku == oldMSA.constants.sku
+  newPO.constants.erc20ContractAddress == oldMSA.constants.erc20ContractAddress
 
 
   // Permission:
   secretKeyOfBuyerBits = unpack2x128To256x1(secretKeyOfBuyer)
-  assert(1 == proofOfOwnership(oldMSA.constants.publicKeyOfBuyer, secretKeyOfBuyerBits, context()))
+  1 == proofOfOwnership(oldMSA.constants.publicKeyOfBuyer, secretKeyOfBuyerBits, context())
 
 
   // compressing public keys of type point (X,Y)
@@ -124,53 +124,55 @@ def main(field publicInputHash, private field[2] secretKeyOfBuyer, private field
 
   // Proof that the Buyer is indeed the Buyer for this MSA (by recalculating the MSA commitment):
   oldMSACommitmentBits = unpack2x128To256x1(oldMSA.commitment.value)
-  assert(oldMSACommitmentBits == sha256of15x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, ...oldMSA.constants.hashOfTieredPricing, oldMSA.constants.minVolume, oldMSA.constants.maxVolume, oldMSA.constants.sku, ...oldMSA.constants.erc20ContractAddress, oldMSA.variables.accumulatedVolumeOrdered, oldMSA.variables.accumulatedVolumeDelivered, ...oldMSA.commitment.salt]))
+  oldMSACommitmentBits == sha256of15x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, ...oldMSA.constants.hashOfTieredPricing, oldMSA.constants.minVolume, oldMSA.constants.maxVolume, oldMSA.constants.sku, ...oldMSA.constants.erc20ContractAddress, oldMSA.variables.accumulatedVolumeOrdered, oldMSA.variables.accumulatedVolumeDelivered, ...oldMSA.commitment.salt])
 
 
   // Proof that the oldMSACommitment exists on-chain:
   rootBits = unpack2x128To256x1(root)
-  assert(rootBits == calculateRoot(oldMSA.commitment.siblingPath, oldMSA.commitment.value, oldMSA.commitment.index))
+  rootBits == calculateRoot(oldMSA.commitment.siblingPath, oldMSA.commitment.value, oldMSA.commitment.index)
 
 
   // Nullify the oldMSACommitment:
   oldMSANullifierBits = unpack2x128To256x1(oldMSA.commitment.nullifier)
-  assert(oldMSANullifierBits == sha256of4x128([...oldMSA.commitment.value, ...oldMSA.commitment.salt]))
+  oldMSANullifierBits == sha256of4x128([...oldMSA.commitment.value, ...oldMSA.commitment.salt])
 
 
   // Instantiate new PO variables as 0
-  assert(newPO.variables.accumulatedVolumeDelivered == 0)
+  newPO.variables.accumulatedVolumeDelivered == 0
 
 
   // Check the volume being ordered is valid:
-  assert((newPO.constants.volume + oldMSA.variables.accumulatedVolumeOrdered > oldMSA.constants.minVolume) == true)
-  assert((newPO.constants.volume < oldMSA.constants.maxVolume - oldMSA.variables.accumulatedVolumeOrdered) == true)
+  (newPO.constants.volume + oldMSA.variables.accumulatedVolumeOrdered > oldMSA.constants.minVolume) == true
+
+  (newPO.constants.volume < oldMSA.constants.maxVolume - oldMSA.variables.accumulatedVolumeOrdered) == true
 
 
   // Check the updates to private variables:
-  assert(newMSA.variables.accumulatedVolumeOrdered == oldMSA.variables.accumulatedVolumeOrdered + newPO.constants.volume)
-  assert(newMSA.variables.accumulatedVolumeDelivered == oldMSA.variables.accumulatedVolumeDelivered) // ensure value is preserved
+  newMSA.variables.accumulatedVolumeOrdered == oldMSA.variables.accumulatedVolumeOrdered + newPO.constants.volume
+
+  newMSA.variables.accumulatedVolumeDelivered == oldMSA.variables.accumulatedVolumeDelivered // ensure value is preserved
 
 
   // Check that the price has been calculated correctly:
-  assert(newPO.constants.price == calculateAmountOwed(oldMSA.constants.tierBounds, oldMSA.constants.pricesByTier, oldMSA.variables.accumulatedVolumeOrdered, newPO.constants.volume, newMSA.variables.accumulatedVolumeOrdered))
+  newPO.constants.price == calculateAmountOwed(oldMSA.constants.tierBounds, oldMSA.constants.pricesByTier, oldMSA.variables.accumulatedVolumeOrdered, newPO.constants.volume, newMSA.variables.accumulatedVolumeOrdered)
 
 
   // Check that the tiers for the price calculation actually adhere to the MSA:
   hashOfTieredPricingBits = unpack2x128To256x1(oldMSA.constants.hashOfTieredPricing)
-  assert(hashOfTieredPricingBits == sha256of7x128([...oldMSA.constants.tierBounds, ...oldMSA.constants.pricesByTier]))
+  hashOfTieredPricingBits == sha256of7x128([...oldMSA.constants.tierBounds, ...oldMSA.constants.pricesByTier])
 
 
   // Check the new commitments:
   newMSACommitmentBits = unpack2x128To256x1(newMSA.commitment.value)
-  assert(newMSACommitmentBits == sha256of15x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, ...newMSA.constants.hashOfTieredPricing, newMSA.constants.minVolume, newMSA.constants.maxVolume, newMSA.constants.sku, ...newMSA.constants.erc20ContractAddress, newMSA.variables.accumulatedVolumeOrdered, newMSA.variables.accumulatedVolumeDelivered, ...newMSA.commitment.salt]))
+  newMSACommitmentBits == sha256of15x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, ...newMSA.constants.hashOfTieredPricing, newMSA.constants.minVolume, newMSA.constants.maxVolume, newMSA.constants.sku, ...newMSA.constants.erc20ContractAddress, newMSA.variables.accumulatedVolumeOrdered, newMSA.variables.accumulatedVolumeDelivered, ...newMSA.commitment.salt])
 
   newPOCommitmentBits = unpack2x128To256x1(newPO.commitment.value)
-  assert(newPOCommitmentBits == sha256of12x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, newPO.constants.volume, newPO.constants.price, newPO.constants.sku, ...newPO.constants.erc20ContractAddress, newPO.variables.accumulatedVolumeDelivered, ...newPO.commitment.salt]))
+  newPOCommitmentBits == sha256of12x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, newPO.constants.volume, newPO.constants.price, newPO.constants.sku, ...newPO.constants.erc20ContractAddress, newPO.variables.accumulatedVolumeDelivered, ...newPO.commitment.salt])
 
 
   // Check the publicInputHash:
   publicInputHashBits = unpack256(publicInputHash)
   publicInputHashBitsCheck = sha256of8x128([...root, ...oldMSA.commitment.nullifier, ...newMSA.commitment.value, ...newPO.commitment.value])
-  assert(publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256])
+  publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256]
 
   return

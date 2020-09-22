@@ -1,5 +1,5 @@
-import "utils/pack/bool/pack128" as pack128
-import "utils/pack/bool/nonStrictUnpack256.zok" as unpack256
+import "utils/pack/pack128" as pack128
+import "utils/pack/nonStrictUnpack256.zok" as unpack256
 import "../common/packing/unpack2x128To256x1" as unpack2x128To256x1
 
 import "../common/hashes/sha256/sha256of2x128.zok" as sha256of2x128
@@ -46,7 +46,7 @@ struct NewMSA {
   NewCommitment commitment
 }
 
-def main(field publicInputHash, private NewMSA newMSA):
+def main(field publicInputHash, private NewMSA newMSA) -> ():
 
 
   // compressing public keys of type point (X,Y)
@@ -63,32 +63,32 @@ def main(field publicInputHash, private NewMSA newMSA):
 
 
   // Instantiate new MSA variables as 0
-  assert(newMSA.variables.accumulatedVolumeDelivered == 0)
-  assert(newMSA.variables.accumulatedVolumeOrdered == 0)
+  newMSA.variables.accumulatedVolumeDelivered == 0
+  newMSA.variables.accumulatedVolumeOrdered == 0
 
 
   // Proof that the Buyer is indeed the Buyer for this MSA (by recalculating the MSA commitment):
   newMSACommitmentBits = unpack2x128To256x1(newMSA.commitment.value)
   newMSACommitmentBitsCheck = sha256of15x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, ...newMSA.constants.hashOfTieredPricing, newMSA.constants.minVolume, newMSA.constants.maxVolume, newMSA.constants.sku, ...newMSA.constants.erc20ContractAddress, newMSA.variables.accumulatedVolumeOrdered, newMSA.variables.accumulatedVolumeDelivered, ...newMSA.commitment.salt])
 
-  assert(newMSACommitmentBits == newMSACommitmentBitsCheck)
+  newMSACommitmentBits == newMSACommitmentBitsCheck
 
   // VERIFY SIGNATURES
   context = context()
 
   field isVerifiedBuyer = verifyEddsa(newMSA.constants.buyerSignature.R, newMSA.constants.buyerSignature.S, newMSA.constants.publicKeyOfBuyer, newMSACommitmentBits, context)
   field isVerifiedSupplier = verifyEddsa(newMSA.constants.supplierSignature.R,  newMSA.constants.supplierSignature.S, newMSA.constants.publicKeyOfSupplier, newMSACommitmentBits, context)
-  assert(isVerifiedBuyer == 1)
-  assert(isVerifiedSupplier == 1)
+  isVerifiedBuyer == 1
+  isVerifiedSupplier == 1
 
 
   // CHECK TIERING STRUCTURE:
-  assert(1 == checkTieringStructure(newMSA.constants.tierBounds, newMSA.constants.pricesByTier, newMSA.constants.hashOfTieredPricing, newMSA.constants.minVolume, newMSA.constants.maxVolume))
+  1 == checkTieringStructure(newMSA.constants.tierBounds, newMSA.constants.pricesByTier, newMSA.constants.hashOfTieredPricing, newMSA.constants.minVolume, newMSA.constants.maxVolume)
 
 
   // Check the publicInputHash:
   publicInputHashBits = unpack256(publicInputHash)
   publicInputHashBitsCheck = sha256of2x128(newMSA.commitment.value)
-  assert(publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256])
+  publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256]
 
   return

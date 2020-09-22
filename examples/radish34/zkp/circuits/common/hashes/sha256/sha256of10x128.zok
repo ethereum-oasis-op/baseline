@@ -1,10 +1,10 @@
 import "hashes/sha256/1536bit.zok" as sha256of1536
 import "./padding/shaPad1280To1536.zok" as shaPad1280To1536
-import "utils/pack/bool/unpack128.zok" as unpack128
+import "utils/pack/unpack128.zok" as unpack128
 
 // Concatenate, then hash, ten inputs (each assumed to be at most 128 bits)
 
-def main(field[10] inputs) -> field[256]:
+def main(field[10] inputs) -> (field[256]):
 
   field[10][128] inputsAsBits = [unpack128(inputs[0]), unpack128(inputs[1]), unpack128(inputs[2]), unpack128(inputs[3]), unpack128(inputs[4]), unpack128(inputs[5]), unpack128(inputs[6]), unpack128(inputs[7]), unpack128(inputs[8]), unpack128(inputs[9])]
 

@@ -1,10 +1,10 @@
 import "hashes/sha256/1536bit.zok" as sha256of1536
 import "./padding/shaPad1024To1536.zok" as shaPad1024To1536
-import "utils/pack/bool/nonStrictUnpack256.zok" as unpack256
+import "utils/pack/nonStrictUnpack256.zok" as unpack256
 
 // Concatenate, then hash, four inputs (assumed to be safely within the zokrates prime)
 
-def main(field[4] inputs) -> field[256]:
+def main(field[4] inputs) -> (field[256]):
 
   field[4][256] inputsAsBits = [unpack256(inputs[0]), unpack256(inputs[1]), unpack256(inputs[2]), unpack256(inputs[3])]
 

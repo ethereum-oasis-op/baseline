@@ -3,7 +3,7 @@ import "utils/multiplexer/lookup3bitSigned.zok" as sel3s
 import "utils/multiplexer/lookup2bit.zok" as sel2
 import "ecc/babyjubjubParams.zok" as context
 import "ecc/edwardsAdd.zok" as add
-def main(field[297] e) -> field[2]:
+def main(field[297] e) -> (field[2]):
 	context = context()
 	field[2] a = [context[2], context[3]] //Infinity
 	//Round 0
