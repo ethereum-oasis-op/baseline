@@ -35,7 +35,7 @@ An initial set of JSON-RPC methods have been defined for inclusion in the specif
 
 __IBaselineRPC__
 
-```
+```javascript
 deploy(sender: string, bytecode: string, abi: any): Promise<any>;
 getLeaf(address: string, index: number): Promise<MerkleTreeNode>;
 getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>;
@@ -50,7 +50,7 @@ verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[
 
 __IRegistry__
 
-```
+```javascript
 // workgroups
 createWorkgroup(params: object): Promise<any>;
 updateWorkgroup(workgroupId: string, params: object): Promise<any>;
@@ -79,7 +79,7 @@ inviteOrganizationUser(organizationId: string, params: object): Promise<any>;
 
 __IVault__
 
-```
+```javascript
 createVault(params: object): Promise<any>;
 fetchVaults(params: object): Promise<any>;
 fetchVaultKeys(vaultId: string, params: object): Promise<any>;
@@ -99,5 +99,5 @@ deleteVaultSecret(vaultId: string, secretId: string): Promise<any>;
 The following providers of the Baseline API are available:
 
 - Ethers.js - *example provider; not yet implemented*
-- [Provide](https://provide.services) - enterprise-grade reference implementation (see `examples/baseline-app`)
+- [Provide](https://provide.services) - enterprise-grade reference implementation (see [examples/bri-1/base-example](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example))
 - RPC - generic JSON-RPC provider
