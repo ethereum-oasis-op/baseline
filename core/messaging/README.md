@@ -16,7 +16,7 @@ You can build the package locally with `npm run build`.
 
 __IMessagingService__
 
-```
+```javascript
 connect(): Promise<any>;
 disconnect(): Promise<void>;
 getSubscribedSubjects(): string[];
