@@ -55,7 +55,7 @@ In general, a maintainer needs to:
 # How maintainers organize?
 
 ## Slack 
-Maintainers meet and discuss issues virtually via the private #maintainers slack room in the [baseline slack](ethereum-baseline.slack.com). 
+Maintainers meet and discuss issues virtually via the private #maintainers slack room in the [baseline slack](https://ethereum-baseline.slack.com/). 
 
 ## Weekly Meetings
 There are weekly *Maintainers meetings* where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are not public but special exceptions can be granted for members of the baseline community, experts, or other key participants. The summaries of the meetings will be posted to the public #maintainer-meeting slack room.
