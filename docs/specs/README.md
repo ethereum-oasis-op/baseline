@@ -2,8 +2,8 @@
 
 ![Baseline Logo](https://raw.githubusercontent.com/ethereum-oasis/baseline/master/docs/assets/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png)
 
-*Read the full documentation [here at docs.baseline-protocol.org] (https://docs.baseline-protocol.org/).*
-*Join our [Slack workspace] (https://communityinviter.com/apps/ethereum-baseline/join-us), [Discord channel] (https://discord.com/invite/NE8AYD7), [Telegram channel] (https://t.me/baselineprotocol) and follow us on [Twitter] (https://twitter.com/baselineproto) for Baseline news and updates!* 
+*Read the full documentation [here at docs.baseline-protocol.org](https://docs.baseline-protocol.org/).*
+*Join our [Slack workspace](https://communityinviter.com/apps/ethereum-baseline/join-us), [Discord channel](https://discord.com/invite/NE8AYD7), [Telegram channel](https://t.me/baselineprotocol) and follow us on [Twitter](https://twitter.com/baselineproto) for Baseline news and updates!* 
 
 ## Overview
 
