@@ -1,0 +1,17 @@
+import "hashes/sha256/1536bit" as sha256of1536
+import "./hashes/sha256/padding/shaPad1152To1536" as shaPad1152To1536
+import "utils/pack/unpack128" as unpack128
+
+// Concatenate, then hash, nine inputs (each assumed to be at most 128 bits)
+
+def main(field[9] inputs) -> (field[256]):
+
+  field[9][128] inputsAsBits = [unpack128(inputs[0]), unpack128(inputs[1]), unpack128(inputs[2]), unpack128(inputs[3]), unpack128(inputs[4]), unpack128(inputs[5]), unpack128(inputs[6]), unpack128(inputs[7]), unpack128(inputs[8])]
+
+  field[1152] preimage1152 = [...inputsAsBits[0], ...inputsAsBits[1], ...inputsAsBits[2], ...inputsAsBits[3], ...inputsAsBits[4], ...inputsAsBits[5], ...inputsAsBits[6], ...inputsAsBits[7], ...inputsAsBits[8]]
+
+  field[1536] preimage1536 = shaPad1152To1536(preimage1152)
+
+  field[256] output = sha256of1536(preimage1536[0..256], preimage1536[256..512], preimage1536[512..768], preimage1536[768..1024], preimage1536[1024..1280], preimage1536[1280..1536])
+
+  return output

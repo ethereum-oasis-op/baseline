@@ -1,0 +1,15 @@
+import "hashes/sha256/IVconstants.code" as IVconstants
+import "hashes/sha256/shaRoundNoBoolCheck.code" as sha256
+
+// sha256of3072 - required because zokrates' standard lib only gives sha256 for up to 1536 bits.
+
+def main(field[256] a0, field[256] a1, field[256] a2, field[256] a3, field[256] a4, field[256] a5, field[256] a6, field[256] a7, field[256] a8, field[256] a9, field[256] a10, field[256] a11) -> (field[256]):
+    IV =  IVconstants()
+    digest1 =  sha256(a0, a1, IV)
+    digest2 =  sha256(a2, a3, digest1)
+    digest3 =  sha256(a4, a5, digest2)
+    digest4 =  sha256(a6, a7, digest3)
+    digest5 =  sha256(a8, a9, digest4)
+    digest6 =  sha256(a9, a10, digest5)
+
+  	return digest6

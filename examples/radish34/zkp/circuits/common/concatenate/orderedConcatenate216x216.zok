@@ -1,0 +1,9 @@
+// orderedConcatenate216x216
+// Reorder two inputs: placing one on the left and the other on the right.
+// If order = 0: input1 is on the left.
+// If order = 1: input1 is on the right.
+
+def main(field order, field[216] input1, field[216] input2)->(field[432]):
+	field[216] left = if order == 0 then input1 else input2 fi
+	field[216] right = if order == 0 then input2 else input1 fi
+	return [...left, ...right]

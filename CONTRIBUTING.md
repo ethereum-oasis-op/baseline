@@ -2,11 +2,15 @@
 
 __Baseline__ is an open-source project that is actively seeking contributions from any willing participants. Here are some guidelines for people that would like to contribute to the project.
 
-## Submitting an issue
+## First-time contributors
 
-To help us get a better understanding of the issue you've identified, follow the guidelines in one of our *Issue Templates*.
+If you are new to the baseline project and are looking for an entry-point to make your first contribution, look [here](https://github.com/ethereum-oasis/baseline/issues?q=is%3Aopen+is%3Aissue+label%3A%22%3Astar_struck%3A+good+first+issue%22). That link shows all of the tagged `good first issues`, which are meant to be small pieces of work that a first-time contributor can pick-up and complete. If you find one that you'd like to work on, please assign yourself or comment on the issue and one of the maintainers can assign it for you.
 
-## Submitting a pull request
+## Submitting a new issue
+
+If you want to create a new issue that doesn't exist already, follow the guidelines in one of our [Issue Templates](https://github.com/ethereum-oasis/baseline/tree/master/.github/ISSUE_TEMPLATE).
+
+## Submitting a new pull request
 
 Follow these steps when submitting a pull request:
 

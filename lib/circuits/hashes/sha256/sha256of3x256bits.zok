@@ -1,0 +1,14 @@
+import "hashes/sha256/1024bit" as sha256of1024
+import "./hashes/sha256/padding/shaPad768To1024" as shaPad768To1024
+
+// Concatenate, then hash, three inputs (assumed to be safely within the zokrates prime)
+
+def main(field[3][256] inputs) -> (field[256]):
+
+  field[768] preimage768 = [...inputs[0], ...inputs[1], ...inputs[2]]
+
+  field[1024] preimage1024 = shaPad768To1024(preimage768)
+
+  field[256] output = sha256of1024(preimage1024[0..256], preimage1024[256..512], preimage1024[512..768], preimage1024[768..1024])
+
+  return output

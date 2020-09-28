@@ -1,0 +1,39 @@
+{
+  "name": "@baseline-protocol/contracts",
+  "version": "0.1.0",
+  "description": "solidity contracts",
+  "scripts": {
+    "build": "./node_modules/.bin/truffle compile",
+    "ganache:start": "npm run ganache:stop 2&>/dev/null && docker run -td -p 8545:8545 trufflesuite/ganache-cli --gasLimit 10000000",
+    "ganache:stop": "docker stop $(docker ps | grep trufflesuite/ganache-cli | sed 's/ .*//') || true",
+    "test": "npm run test:startup && npm run build && ./node_modules/.bin/jest --runInBand --color --forceExit --detectOpenHandles && npm run test:teardown",
+    "test:startup": "npm run ganache:start",
+    "test:teardown": "npm run ganache:stop"
+  },
+  "license": "CC0 1.0 Universal",
+  "devDependencies": {
+    "@0x/sol-coverage": "^4.0.8",
+    "@0x/sol-profiler": "^4.0.8",
+    "@0x/sol-trace": "^3.0.8",
+    "@0x/subproviders": "^6.0.8",
+    "@0x/utils": "^5.4.1",
+    "ganache-cli": "^6.9.1",
+    "jest": "^25.1.0",
+    "truffle": "^5.1.21",
+    "truffle-flattener": "^1.4.4"
+  },
+  "dependencies": {
+    "@babel/preset-env": "^7.9.0",
+    "@openzeppelin/contracts": "^3.1.0",
+    "ethereum-doppelganger": "^0.0.7",
+    "ethers": "^4.0.46",
+    "solc": "^0.6.10"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "./test/mockVerifierData.js"
+    ]
+  }
+}

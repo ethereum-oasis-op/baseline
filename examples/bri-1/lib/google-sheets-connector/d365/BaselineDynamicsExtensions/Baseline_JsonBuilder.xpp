@@ -1,0 +1,193 @@
+class Baseline_JsonBuilder
+{
+    public static str generateRFQJson(str rfqCaseId)
+    {
+        System.IO.StringWriter          stringWriter;
+        Newtonsoft.Json.JsonTextWriter  jsonWriter;
+        PurchRFQCaseTable               rfqTable;
+        PurchRFQCaseLine                rfqLine;
+        
+        stringWriter       = new System.IO.StringWriter();
+        jsonWriter         = new Newtonsoft.Json.JsonTextWriter(stringWriter);
+
+        select * from rfqTable
+            where rfqTable.RFQCaseId == rfqCaseId;
+ 
+        str sJSON = "";
+        jsonWriter.WriteStartObject();
+        jsonWriter.WritePropertyName("RequestForProposalId");
+        jsonWriter.WriteValue(rfqTable.RFQCaseId);
+        jsonWriter.WritePropertyName("SupplierId");
+        jsonWriter.WriteValue("ACME GSheet");
+        jsonWriter.WritePropertyName("BuyerId");
+        jsonWriter.WriteValue("USMF - Contoso Entertainment System USA");
+        jsonWriter.WritePropertyName("Items");
+        jsonWriter.WriteStartArray();
+
+        while select * from rfqLine
+            where rfqLine.RFQCaseId == rfqCaseId
+        {
+            jsonWriter.WriteStartObject();
+
+            jsonWriter.WritePropertyName("OrderItemId");
+            jsonWriter.WriteValue(rfqLine.LineNum);
+            jsonWriter.WritePropertyName("SKUBuyer");
+            jsonWriter.WriteValue(rfqLine.ItemId);
+            jsonWriter.WritePropertyName("SKUSupplier");
+            jsonWriter.WriteValue(rfqLine.ItemId);
+            jsonWriter.WritePropertyName("Quantity");
+            jsonWriter.WriteValue(rfqLine.PurchQty);
+            jsonWriter.WritePropertyName("Unit");
+            jsonWriter.WriteValue(rfqLine.PurchUnit);
+            jsonWriter.WritePropertyName("SinglePrice");
+            jsonWriter.WriteValue(rfqLine.PurchPrice);
+            jsonWriter.WritePropertyName("TotalValue");
+            jsonWriter.WriteValue(rfqLine.LineAmount);
+            jsonWriter.WritePropertyName("Currency");
+            jsonWriter.WriteValue(rfqTable.CurrencyCode);
+            jsonWriter.WritePropertyName("EstimatedDeliveryDate");
+
+            utcdatetime lineDeliveryDate = DateTimeUtil::newDateTime(rfqLine.DeliveryDate, 0);
+            jsonWriter.WriteValue(DateTimeUtil::toStr(lineDeliveryDate));
+
+            jsonWriter.WriteEndObject();
+        }
+
+        jsonWriter.WriteEndArray();
+        
+        jsonWriter.WritePropertyName("LatestDeliveryDate");
+        
+        utcdatetime tableDeliveryDate = DateTimeUtil::newDateTime(rfqTable.DeliveryDate, 0);
+        jsonWriter.WriteValue(DateTimeUtil::toStr(tableDeliveryDate));
+
+        jsonWriter.WriteEndObject();
+
+        return stringWriter.ToString();
+    }
+
+    public static str generateMSAJson(str journalNum)
+    {
+        System.IO.StringWriter          stringWriter;
+        Newtonsoft.Json.JsonTextWriter  jsonWriter;
+        PriceDiscAdmTrans               priceDiscTrans;
+        InventTable                     inventTable;
+        EcoResProduct                   ecoResProduct;
+        EcoResProductName               productName;
+ 
+        stringWriter       = new System.IO.StringWriter();
+        jsonWriter         = new Newtonsoft.Json.JsonTextWriter(stringWriter);
+ 
+        str sJSON = "";
+        jsonWriter.WriteStartObject();
+        jsonWriter.WritePropertyName("MasterServiceAgreementID");
+        jsonWriter.WriteValue(journalNum);
+        jsonWriter.WritePropertyName("SupplierId");
+        jsonWriter.WriteValue("ACME GSheet");
+        jsonWriter.WritePropertyName("BuyerId");
+        jsonWriter.WriteValue("USMF - Contoso Entertainment System USA");
+        jsonWriter.WritePropertyName("SupplierBaselineIdentifier");
+        jsonWriter.WriteValue("GoogleSheets");
+        jsonWriter.WritePropertyName("BuyerBaselineIdentifier");
+        jsonWriter.WriteValue("Dynamics365");
+        jsonWriter.WritePropertyName("Skus");
+        jsonWriter.WriteStartArray();
+
+        while select * from priceDiscTrans
+            where priceDiscTrans.JournalNum == journalNum
+        {
+            inventTable = InventTable::find(priceDiscTrans.itemId());
+            productName = inventTable.productName(SystemParameters::getSystemLanguageId());
+
+            jsonWriter.WriteStartObject();
+
+            jsonWriter.WritePropertyName("ProductName");
+            jsonWriter.WriteValue(productName);
+            jsonWriter.WritePropertyName("BuyerProductId");
+            jsonWriter.WriteValue(priceDiscTrans.itemId());
+            jsonWriter.WritePropertyName("SupplierProductId");
+            jsonWriter.WriteValue(priceDiscTrans.itemId());
+
+            jsonWriter.WriteEndObject();
+        }
+
+        jsonWriter.WriteEndArray();
+
+        jsonWriter.WriteEndObject();
+
+        return stringWriter.ToString();
+    }
+
+    public static str generatePOJson(str purchId)
+    {
+        System.IO.StringWriter          stringWriter;
+        Newtonsoft.Json.JsonTextWriter  jsonWriter;
+        
+        stringWriter       = new System.IO.StringWriter();
+        jsonWriter         = new Newtonsoft.Json.JsonTextWriter(stringWriter);
+
+        PurchLine purchLine;
+        PriceDiscAdmTrans priceDiscTrans;
+        str referenceMsaId;
+ 
+        str sJSON = "";
+        jsonWriter.WriteStartObject();
+        jsonWriter.WritePropertyName("PurchaseOrderId");
+        jsonWriter.WriteValue(purchId);
+        jsonWriter.WritePropertyName("SupplierId");
+        jsonWriter.WriteValue("ACME GSheet");
+        jsonWriter.WritePropertyName("BuyerId");
+        jsonWriter.WriteValue("USMF - Contoso Entertainment System USA");
+        jsonWriter.WritePropertyName("ReferencedProposalId");
+        jsonWriter.WriteValue("");
+        jsonWriter.WritePropertyName("OrderItems");
+        jsonWriter.WriteStartArray();
+
+        while select * from purchLine
+            where purchLine.PurchId == purchId
+        {
+            select firstonly JournalNum from priceDiscTrans
+                order by JournalNum desc
+                where priceDiscTrans.AccountRelation == purchLine.VendAccount
+                && priceDiscTrans.ItemRelation == purchLine.ItemId;
+
+            referenceMsaId = priceDiscTrans.JournalNum;
+                 
+
+            jsonWriter.WriteStartObject();
+
+            jsonWriter.WritePropertyName("OrderItemId");
+            jsonWriter.WriteValue(purchLine.LineNumber);
+            jsonWriter.WritePropertyName("SKUBuyer");
+            jsonWriter.WriteValue(purchLine.ItemId);
+            jsonWriter.WritePropertyName("SKUSupplier");
+            jsonWriter.WriteValue(purchLine.ItemId);
+            jsonWriter.WritePropertyName("Quantity");
+            jsonWriter.WriteValue(purchLine.PurchQty);
+            jsonWriter.WritePropertyName("Unit");
+            jsonWriter.WriteValue(purchLine.PurchUnit);
+            jsonWriter.WritePropertyName("SinglePrice");
+            jsonWriter.WriteValue(purchLine.PurchPrice);
+            jsonWriter.WritePropertyName("TotalValue");
+            jsonWriter.WriteValue(purchLine.LineAmount);
+            jsonWriter.WritePropertyName("Currency");
+            jsonWriter.WriteValue(purchLine.CurrencyCode);
+            jsonWriter.WritePropertyName("EstimatedDeliveryDate");
+
+            utcdatetime lineDeliveryDate = DateTimeUtil::newDateTime(purchLine.DeliveryDate, 0);
+            jsonWriter.WriteValue(DateTimeUtil::toStr(lineDeliveryDate));
+
+            jsonWriter.WriteEndObject();
+        }
+
+        jsonWriter.WriteEndArray();
+
+        
+        jsonWriter.WritePropertyName("ReferencedMsaId");
+        jsonWriter.WriteValue(referenceMsaId);
+
+        jsonWriter.WriteEndObject();
+
+        return stringWriter.ToString();
+    }
+
+}
