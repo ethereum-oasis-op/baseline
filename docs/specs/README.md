@@ -7,7 +7,7 @@
 
 ## Overview
 
-This folder contrains the specifications for the Baseline protocol, a technique which combines advances in cryptography, messaging, and blockchain to coordinate complex business processes at low cost via the public Mainnet while leaving private data on traditional systems of record.
+This folder contains the specifications for the Baseline protocol, a technique which combines advances in cryptography, messaging, and blockchain to coordinate complex business processes at low cost via the public Mainnet while leaving private data on traditional systems of record.
 
 The main goal of this folder is to provide accurate reference documentation for the aspects of the protocol that are independent of language or implementation. 
 
