@@ -35,6 +35,8 @@ An initial set of JSON-RPC methods have been defined for inclusion in the specif
 
 __IBaselineRPC__
 
+This interface provides methods to deploy Shield contracts on the blockchain, and execute read/write operations on them. Writes are necessary when adding new hashes (commitments) to the on-chain merkle tree. Reads are necessary to verify consistency of off-chain records with on-chain state.
+
 ```javascript
 deploy(sender: string, bytecode: string, abi: any): Promise<any>;
 getLeaf(address: string, index: number): Promise<MerkleTreeNode>;
@@ -51,6 +53,8 @@ verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[
 ![IBaselineRPC](https://user-images.githubusercontent.com/35908605/93899621-7d0bc600-fcc2-11ea-9dae-46497acf204a.png)
 
 __IRegistry__
+
+This interface provides methods to establish an on-chain OrgRegistry, which is used to identify the parties involved in a particular workgroup.
 
 ```javascript
 // workgroups
@@ -80,6 +84,8 @@ inviteOrganizationUser(organizationId: string, params: object): Promise<any>;
 ```
 
 __IVault__
+
+This interface provides methods to securely sign and encrypt/decrypt data. Private/public key pairs are stored in a Vault service, then requests are sent to the service to use those keys. This is more secure because it limits the attack vector compared to alternatives such as allowing signing keys to reside within a blockchain client.
 
 ```javascript
 createVault(params: object): Promise<any>;
