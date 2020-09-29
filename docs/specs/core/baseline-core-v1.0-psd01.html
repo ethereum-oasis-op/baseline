@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Baseline Core Version 1.0</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="styles/markdown-styles-v1.7.3.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<nav id="TOC">
+<ul>
+<li><a href="#table-of-contents">Table of Contents</a></li>
+<li><a href="#1-introduction">1 Introduction</a><ul>
+<li><a href="#11-changes-from-earlier-versions">1.1 Changes from earlier Versions</a></li>
+<li><a href="#12-glossary">1.2 Glossary</a><ul>
+<li><a href="#121-definitions-of-terms">1.2.1 Definitions of terms</a></li>
+<li><a href="#122-acronyms-and-abbreviations">1.2.2 Acronyms and abbreviations</a></li>
+<li><a href="#123-document-conventions">1.2.3 Document conventions</a></li>
+</ul></li>
+<li><a href="#13-some-markdown-usage-examples">1.3 Some markdown usage examples</a><ul>
+<li><a href="#131-figures-and-captions">1.3.1 Figures and Captions</a></li>
+<li><a href="#132-tables">1.3.2 Tables</a><ul>
+<li><a href="#1321-basic-table">1.3.2.1 Basic Table</a></li>
+<li><a href="#1322-table-with-three-columns-and-some-bold-text">1.3.2.2 Table with Three Columns and Some Bold Text</a></li>
+<li><a href="#1323-table-with-a-caption-which-can-be-referenced">1.3.2.3 Table with a caption which can be referenced</a></li>
+</ul></li>
+<li><a href="#133-lists">1.3.3 Lists</a></li>
+<li><a href="#134-reference-label-construction">1.3.4 Reference Label Construction</a></li>
+<li><a href="#135-code-blocks">1.3.5 Code Blocks</a></li>
+</ul></li>
+<li><a href="#14-page-breaks">1.4 Page Breaks</a></li>
+</ul></li>
+<li><a href="#2-section-heading">2 Section Heading</a><ul>
+<li><a href="#21-level-2-heading">2.1 Level 2 Heading</a><ul>
+<li><a href="#211-level-3-heading">2.1.1 Level 3 Heading</a><ul>
+<li><a href="#2111-level-4-heading">2.1.1.1 Level 4 Heading</a><ul>
+<li><a href="#21111-level-5-heading">2.1.1.1.1 Level 5 Heading</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#22-next-heading">2.2 Next Heading</a></li>
+</ul></li>
+<li><a href="#3-conformance">3 Conformance</a></li>
+<li><a href="#appendix-a-references">Appendix A. References</a><ul>
+<li><a href="#a1-normative-references">A.1 Normative References</a></li>
+<li><a href="#a2-informative-references">A.2 Informative References</a></li>
+</ul></li>
+<li><a href="#appendix-b-safety-security-and-privacy-considerations">Appendix B. Safety, Security and Privacy Considerations</a></li>
+<li><a href="#appendix-c-acknowledgments">Appendix C. Acknowledgments</a><ul>
+<li><a href="#c1-special-thanks">C.1 Special Thanks</a></li>
+<li><a href="#c2-participants">C.2 Participants</a></li>
+</ul></li>
+<li><a href="#appendix-d-revision-history">Appendix D. Revision History</a></li>
+<li><a href="#appendix-e-example-appendix-with-subsections">Appendix E. Example Appendix with subsections</a><ul>
+<li><a href="#e1-subsection-title">E.1 Subsection title</a><ul>
+<li><a href="#e11-sub-subsection">E.1.1 Sub-subsection</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#appendix-f-notices">Appendix F. Notices</a></li>
+</ul>
+</nav>
+<h2 id="oasis-logo"><img src="http://docs.oasis-open.org/templates/OASISLogo-v2.0.jpg" alt="OASIS Logo" /></h2>
+<h1 id="baseline-core-version-10">Baseline Core Version 1.0</h1>
+<h2 id="project-specification-draft-01">Project Specification Draft 01</h2>
+<h2 id="23-september-2020">23 September 2020</h2>
+<!-- URI list start (commented out except during publication by OASIS TC Admin)
+
+#### This stage:
+https://docs.oasis-open.org/baseline/baseline-core/v1.0/psd01/baseline-core-v1.0-psd01.md (Authoritative) \
+https://docs.oasis-open.org/baseline/baseline-core/v1.0/psd01/baseline-core-v1.0-psd01.html \
+https://docs.oasis-open.org/baseline/baseline-core/v1.0/psd01/baseline-core-v1.0-psd01.pdf
+
+#### Previous stage:
+N/A
+
+#### Latest stage:
+https://docs.oasis-open.org/baseline/baseline-core/v1.0/baseline-core-v1.0.md (Authoritative) \
+https://docs.oasis-open.org/baseline/baseline-core/v1.0/baseline-core-v1.0.html \
+https://docs.oasis-open.org/baseline/baseline-core/v1.0/baseline-core-v1.0.pdf
+
+URI list end (commented out except during publication by OASIS TC Admin) -->
+
+<h4 id="open-project">Open Project:</h4>
+<p><a href="https://www.baseline-protocol.org/">Baseline, part of the Ethereum OASIS Open Project</a></p>
+<h4 id="project-chairs">Project Chairs:</h4>
+<p>Daniel Burnett (<a href="mailto:daniel.burnett@entethalliance.org">daniel.burnett@entethalliance.org</a>), <a href="https://consensys.net/">ConsenSys</a> <br />
+Tas Dienes (email), <a href="https://ethereum.org/en/foundation/">Ethereum Foundation</a> <br />
+Charles ‘Chaals’ Neville (email), <a href="https://entethalliance.org/">Enterprise Ethereum Alliance</a></p>
+<h4 id="editors">Editors:</h4>
+<p>name (email), <a href="https://org.com/">org</a> <br />
+name (email), <a href="https://org.com/">org</a></p>
+<h4 id="additional-artifacts">Additional artifacts:</h4>
+<p>This prose specification is one component of a Work Product that also includes:</p>
+<ul>
+<li>XML schemas: (list file names or directory name)</li>
+<li>Other parts (list titles and/or file names)</li>
+<li><code>(Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)</code></li>
+</ul>
+<h4 id="related-work">Related work:</h4>
+<p>This specification replaces or supersedes:</p>
+<ul>
+<li><em>Baseline Protocol v0.1</em> - <a href="https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1">https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1</a></li>
+<li>Specifications replaced by this specification (include hyperlink, preferably to HTML format)</li>
+</ul>
+<p>This specification is related to:</p>
+<ul>
+<li>Related specifications (include hyperlink, preferably to HTML format) <br />
+<code>(remove "Related work" section or the "replaces" or "related" subsections if no entries)</code></li>
+</ul>
+<h4 id="abstract">Abstract:</h4>
+<p>This document describes the minimal set of business and technical prerequisites, functional and non-functional requirements, together with a reference architecture that when implemented ensures that two or more systems of record can synchronize their system state over a permissionless public Distributed Ledger Technology (DLT) network.</p>
+<h4 id="status">Status:</h4>
+<p>This document was last revised or approved by Baseline, part of the Ethereum OASIS Open Project, on the above date. The level of approval is also listed above. Check the "Latest stage" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Open Project (OP) are listed at [TBD].</p>
+<p>Comments on this work can be provided by opening issues in the project repository or by sending email to the project’s public comment list baseline@lists.oasis-open-projects.org.</p>
+<p>Note that any machine-readable content (<a href="https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsCompLang">Computer Language Definitions</a>) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.</p>
+<h4 id="key-words">Key words:</h4>
+<p>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [<a href="#rfc2119">RFC2119</a>] and [<a href="#rfc8174">RFC8174</a>] when, and only when, they appear in all capitals, as shown here.</p>
+<h4 id="citation-format">Citation format:</h4>
+<p>When referencing this specification the following citation format should be used:</p>
+<p><strong>[baseline-core-v1.0]</strong></p>
+<p><em>Baseline Core Version 1.0</em>. Edited by X, Y, and Z. 23 September 2020. OASIS Project Specification Draft 01. <a href="https://docs.oasis-open.org/baseline/baseline-core/v1.0/psd01/baseline-core-v1.0-psd01.html">https://docs.oasis-open.org/baseline/baseline-core/v1.0/psd01/baseline-core-v1.0-psd01.html</a>. Latest stage: <a href="https://docs.oasis-open.org/baseline/baseline-core/v1.0/baseline-core-v1.0.html">https://docs.oasis-open.org/baseline/baseline-core/v1.0/baseline-core-v1.0.html</a>.</p>
+<hr />
+<h2 id="notices">Notices</h2>
+<p>Copyright © OASIS Open 2020. All Rights Reserved.</p>
+<p>Distributed under the terms of the OASIS <a href="https://www.oasis-open.org/policies-guidelines/ipr">IPR Policy</a>.</p>
+<p>For complete copyright information please see the Notices section in the Appendix.</p>
+<hr />
+<h1 id="table-of-contents">Table of Contents</h1>
+<p>[[TOC will be inserted here]]</p>
+<hr />
+<h1 id="1-introduction">1 Introduction</h1>
+<!-- All text is normative unless otherwise labeled -->
+
+<p>Here is a customized command line which will generate HTML from this markdown file (named op-file.md):</p>
+<p>pandoc -f gfm -t html baseline-core-v1.0-psd01.md -c styles/markdown-styles-v1.7.3.css --toc --toc-depth=5 -s -o baseline-core-v1.0-psd01.html --metadata title="Baseline Core Version 1.0"</p>
+<p>OASIS staff are currently using pandoc 2.6 from <a href="https://github.com/jgm/pandoc/releases/tag/2.6">https://github.com/jgm/pandoc/releases/tag/2.6</a>.</p>
+<p>This also requires the presence of a .css file containing the HTML styles (like styles/markdown-styles-v1.7.3.css).</p>
+<p>Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication. A TC may use other ways to generate HTML from markdown, and may generate a TOC in a different way.</p>
+<p>Below: Sections 1.1 and 1.2 are expected to be a part of OASIS specifications. Sections 1.3 and 1.4 are examples in Markdown.</p>
+<h2 id="11-changes-from-earlier-versions">1.1 Changes from earlier Versions</h2>
+<p>This section provides a description of significant differences from previously published, differently numbered Versions of this specification, if any. (Detailed revision history of this numbered Version should be tracked in an Appendix.)</p>
+<h2 id="12-glossary">1.2 Glossary</h2>
+<h3 id="121-definitions-of-terms">1.2.1 Definitions of terms</h3>
+<h3 id="122-acronyms-and-abbreviations">1.2.2 Acronyms and abbreviations</h3>
+<h3 id="123-document-conventions">1.2.3 Document conventions</h3>
+<ul>
+<li>Naming conventions</li>
+<li>Font colors and styles</li>
+<li>Typographic conventions</li>
+</ul>
+<h2 id="13-some-markdown-usage-examples">1.3 Some markdown usage examples</h2>
+<p><strong>Text.</strong></p>
+<p>Note that text paragraphs in markdown should be separated by a blank line between them -</p>
+<p>Otherwise the separate paragraphs will be joined together when the HTML is generated. Even if the text appears to be separate lines in the markdown source.</p>
+<p>To avoid having the usual vertical space between paragraphs,<br />
+append two or more space characters (or space-backslash) to the end of the lines<br />
+which will generate an HTML break tag instead of a new paragraph tag <br />
+(as demonstrated here).</p>
+<h3 id="131-figures-and-captions">1.3.1 Figures and Captions</h3>
+<p>FIGURE EXAMPLE: &lt;note caption is best placed ABOVE figure, so a hyperlink to it will actually display the figure, instead of rendering the figure off the screen above the caption. The same placement should be used for table captions&gt;</p>
+<h6 id="figure-1----title-of-figure">Figure 1 -- Title of Figure</h6>
+<p><img src="images/image_0.png" alt="image-label should be meaningful" /> (this image is missing)</p>
+<h6 id="figure-2----openc2-message-exchange">Figure 2 -- OpenC2 Message Exchange</h6>
+<p><img src="images/image_1.png" alt="message exchange" /></p>
+<h3 id="132-tables">1.3.2 Tables</h3>
+<h4 id="1321-basic-table">1.3.2.1 Basic Table</h4>
+<p><strong>Table 1-1. Table Label</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Item</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Item 1</td>
+<td style="text-align: left;">Something<br>(second line)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Item 2</td>
+<td style="text-align: left;">Something</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Item 3</td>
+<td style="text-align: left;">Something<br>(second line)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Item 4</td>
+<td style="text-align: left;">text</td>
+</tr>
+</tbody>
+</table>
+<h4 id="1322-table-with-three-columns-and-some-bold-text">1.3.2.2 Table with Three Columns and Some Bold Text</h4>
+<p>text.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Title 1</th>
+<th style="text-align: left;">Title 2</th>
+<th style="text-align: left;">title 3</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">something</td>
+<td style="text-align: left;">something</td>
+<td style="text-align: left;">something else that is a long string of text that <strong>might</strong> need to wrap around inside the table box and will just continue until the column divider is reached</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">something</td>
+<td style="text-align: left;">something</td>
+<td style="text-align: left;">something</td>
+</tr>
+</tbody>
+</table>
+<h4 id="1323-table-with-a-caption-which-can-be-referenced">1.3.2.3 Table with a caption which can be referenced</h4>
+<h6 id="table-1-5-see-reference-label-construction">Table 1-5. See reference label construction</h6>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>content</strong></td>
+<td style="text-align: left;">Message body as specified by content_type and msg_type.</td>
+</tr>
+</tbody>
+</table>
+<p>Here is a reference to the table caption: Please see <a href="#table-1-5-see-reference-label-construction">Table 1-5 or other meaningful label</a></p>
+<h3 id="133-lists">1.3.3 Lists</h3>
+<p>Bulleted list:</p>
+<ul>
+<li>bullet item 1.</li>
+<li><strong>Bold</strong> bullet item 2.</li>
+<li>bullet item 3.</li>
+<li>bullet item 4.</li>
+</ul>
+<p>Indented or multi-level bullet list - add two spaces per level before bullet character (* or -):</p>
+<ul>
+<li>main bullet type
+<ul>
+<li>Example second bullet
+<ul>
+<li>See third level
+<ul>
+<li>fourth level</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>Numbered list:</p>
+<ol>
+<li>item 1</li>
+<li>item 2</li>
+<li>item 3</li>
+</ol>
+<p>Left-justified list without bullets or numbers: To list multiple items without full paragraph breaks between items, add space-backslash after each item except the last.</p>
+<h3 id="134-reference-label-construction">1.3.4 Reference Label Construction</h3>
+<p>REFERENCES and ANCHORS</p>
+<ul>
+<li>in markdown source, format the Reference tags as level 6 headings like: <code>###### [RFC2119]</code></li>
+</ul>
+<h6 id="rfc2119">[RFC2119]</h6>
+<p>Bradner, S., "Key words ..."</p>
+<ul>
+<li><p>reference text has to be on a separate line below the tag</p></li>
+<li><p>format cross-references (citations of the references) like: <code>see [[RFC2119](#rfc2119)]</code><br />
+"see [<a href="#rfc2119">RFC2119</a>]"<br />
+(note the outer square brackets in markdown will appear in the visible HTML text)</p></li>
+<li><p>The text in the Reference tag (following ###### ) will become an HTML anchor using the following conversion rules:</p>
+<ul>
+<li>punctuation marks will be dropped (including "[" )</li>
+<li>leading white spaces will be dropped</li>
+<li>upper case will be converted to lower</li>
+<li>spaces between letters will be converted to a single hyphen</li>
+</ul></li>
+<li><p>The same HTML anchor construction rules apply to cross-references and to section headings.</p>
+<ul>
+<li>Thus, a section heading like "## 1.2 Glossary"</li>
+<li>becomes an anchor in HTML like <code>&lt;a href="#12-glossary"&gt;</code></li>
+<li>referenced in the markdown like: see <a href="#12-glossary">Section 1.2</a></li>
+<li>in markdown: <code>"see [Section 1.2](#12-glossary)"</code></li>
+<li>similar HTML anchors are also used in constructing the TOC</li>
+</ul></li>
+</ul>
+<h3 id="135-code-blocks">1.3.5 Code Blocks</h3>
+<p>Text to appear as an indented code block with grey background and monospace font - use three back-ticks before and after the code block).</p>
+<p>Note the actual backticks will not appear in the HTML format. If it's necessary to display visible backticks, place a back-slash before them like: ``` .</p>
+<pre><code>{   
+    &quot;target&quot;: {
+        &quot;x_kmip_2.0&quot;: {
+            {&quot;kmip_type&quot;: &quot;json&quot;},
+            {&quot;operation&quot;: &quot;RekeyKeyPair&quot;},
+            {&quot;name&quot;: &quot;publicWebKey11DEC2017&quot;}
+        }
+    }
+}
+</code></pre>
+<p>Text to be highlighted as code can also be surrounded by a single "backtick" character: <code>code text</code></p>
+<h2 id="14-page-breaks">1.4 Page Breaks</h2>
+<p>Add horizontal rule lines where page breaks are desired in the PDF - in particular, before each major section</p>
+<ul>
+<li>insert the line rules in markdown by inserting 3 or more hyphens on a line by themselves: ---</li>
+<li>place these before each main section in markdown (usually "#" - which generates the HTML <code>&lt;h1&gt;</code> tag)</li>
+</ul>
+<hr />
+<h1 id="2-section-heading">2 Section Heading</h1>
+<p>text.</p>
+<h2 id="21-level-2-heading">2.1 Level 2 Heading</h2>
+<p>text.</p>
+<h3 id="211-level-3-heading">2.1.1 Level 3 Heading</h3>
+<p>text.</p>
+<h4 id="2111-level-4-heading">2.1.1.1 Level 4 Heading</h4>
+<p>text.</p>
+<h5 id="21111-level-5-heading">2.1.1.1.1 Level 5 Heading</h5>
+<p><code>This is the deepest level, because six # gets transformed into a Reference tag.</code></p>
+<h2 id="22-next-heading">2.2 Next Heading</h2>
+<p>text.</p>
+<hr />
+<h1 id="3-conformance">3 Conformance</h1>
+<p>(Note: The <a href="https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsConfClause">OASIS TC Process</a> requires that a specification approved by the OP for public review, or for publication at the Project Specification or OASIS Standard level must include a separate section, listing a set of numbered conformance clauses, to which any implementation of the specification must adhere in order to claim conformance to the specification (or any optional portion thereof). This is done by listing the conformance clauses here.</p>
+<p>For the definition of "conformance clause," see <a href="https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2017-05-26#dConformanceClause">OASIS Defined Terms</a>.</p>
+<p>See "Guidelines to Writing Conformance Clauses":<br />
+<a href="http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html">http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html</a>.</p>
+<p>Remove this note before submitting for publication.)</p>
+<hr />
+<h1 id="appendix-a-references">Appendix A. References</h1>
+<p>This appendix contains the normative and informative references that are used in this document. Any normative work cited in the body of the text as needed to implement the work product must be listed in the Normative References section below. Each reference to a separate document or artifact in this work must be listed here and must be identified as either a Normative or an Informative Reference. Normative references are specific (identified by date of publication and/or edition number or version number) and Informative references are either specific or non-specific.</p>
+<p>While any hyperlinks included in this appendix were valid at the time of publication, OASIS cannot guarantee their long-term validity.</p>
+<p>(Note - Reference sources:</p>
+<p>For references to IETF RFCs, use the approved citation formats at:<br />
+<a href="http://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html">http://docs.oasis-open.org/templates/ietf-rfc-list/ietf-rfc-list.html</a>.</p>
+<p>For references to W3C Recommendations, use the approved citation formats at:<br />
+<a href="http://docs.oasis-open.org/templates/w3c-recommendations-list/w3c-recommendations-list.html">http://docs.oasis-open.org/templates/w3c-recommendations-list/w3c-recommendations-list.html</a>.</p>
+<p>Remove this note before submitting for publication.)</p>
+<h2 id="a1-normative-references">A.1 Normative References</h2>
+<p>The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.</p>
+<h6 id="openc2-https-v10">[OpenC2-HTTPS-v1.0]</h6>
+<p><em>Specification for Transfer of OpenC2 Messages via HTTPS Version 1.0</em>. Edited by David Lemire. Latest stage: <a href="http://docs.oasis-open.org/openc2/open-impl-https/v1.0/open-impl-https-v1.0.html">http://docs.oasis-open.org/openc2/open-impl-https/v1.0/open-impl-https-v1.0.html</a></p>
+<h6 id="openc2-slpf-v10">[OpenC2-SLPF-v1.0]</h6>
+<p><em>Open Command and Control (OpenC2) Profile for Stateless Packet Filtering Version 1.0</em>. Edited by Joe Brule, Duncan Sparrell, and Alex Everett. Latest stage: <a href="http://docs.oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0.html">http://docs.oasis-open.org/openc2/oc2slpf/v1.0/oc2slpf-v1.0.html</a></p>
+<h6 id="rfc2119-1">[RFC2119]</h6>
+<p>Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, <a href="http://www.rfc-editor.org/info/rfc2119">http://www.rfc-editor.org/info/rfc2119</a>.</p>
+<h6 id="rfc8174">[RFC8174]</h6>
+<p>Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, <a href="http://www.rfc-editor.org/info/rfc8174">http://www.rfc-editor.org/info/rfc8174</a>.</p>
+<h2 id="a2-informative-references">A.2 Informative References</h2>
+<h6 id="rfc3552">[RFC3552]</h6>
+<p>Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, <a href="https://www.rfc-editor.org/info/rfc3552">https://www.rfc-editor.org/info/rfc3552</a>.</p>
+<hr />
+<h1 id="appendix-b-safety-security-and-privacy-considerations">Appendix B. Safety, Security and Privacy Considerations</h1>
+<p>(Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.</p>
+<p>While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [<a href="#rfc3552">RFC3552</a>] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.</p>
+<p>In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks.</p>
+<p>We encourage editors and OP members concerned with this subject to read <em>Guidelines for Writing RFC Text on Security Considerations</em>, IETF [<a href="#rfc3552">RFC3552</a>], for more information.</p>
+<p>Remove this note before submitting for publication.)</p>
+<hr />
+<h1 id="appendix-c-acknowledgments">Appendix C. Acknowledgments</h1>
+<p><code>(Note: A Work Product approved by the OP should include a list of people who participated in the development of the Work Product. This is generally done by collecting the list of names in this appendix. This list should be initially compiled by the Chair, and any Member of the OP may add or remove their names from the list by request. Remove this note before submitting for publication.)</code></p>
+<h2 id="c1-special-thanks">C.1 Special Thanks</h2>
+<!-- This is an optional subsection to call out contributions from OP members. If a OP wants to thank non-OP members then they should avoid using the term "contribution" and instead thank them for their "expertise" or "assistance". -->
+
+<p>Substantial contributions to this document from the following individuals are gratefully acknowledged:</p>
+<p>Participant Name, Affiliation or "Individual Member"</p>
+<h2 id="c2-participants">C.2 Participants</h2>
+<!-- An OP can determine who they list here. It is common practice for OPs to list everyone that was part of the OP during the creation of the document, but this is ultimately an OP decision on who they want to list and not list. -->
+
+<p>The following individuals have participated in the creation of this specification and are gratefully acknowledged:</p>
+<p><strong>Project-name OP Members:</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">First Name</th>
+<th style="text-align: left;">Last Name</th>
+<th style="text-align: left;">Company</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Philippe</td>
+<td style="text-align: left;">Alman</td>
+<td style="text-align: left;">Something Networks</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Alex</td>
+<td style="text-align: left;">Amirnovman</td>
+<td style="text-align: left;">Company B</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Kris</td>
+<td style="text-align: left;">Anderman</td>
+<td style="text-align: left;">Mini Micro</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Darren</td>
+<td style="text-align: left;">Anstman</td>
+<td style="text-align: left;">Big Networks</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="appendix-d-revision-history">Appendix D. Revision History</h1>
+<p>Revisions made since the initial stage of this numbered Version of this document may be tracked here.</p>
+<p>If revision tracking is handled in another system like github, provide a link to it instead of using this table, if desired.</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Revision</th>
+<th style="text-align: left;">Date</th>
+<th style="text-align: left;">Editor</th>
+<th style="text-align: left;">Changes Made</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">baseline-core-v1.0-psd01</td>
+<td style="text-align: left;">yyyy-mm-dd</td>
+<td style="text-align: left;">Editor Name</td>
+<td style="text-align: left;">Initial working draft</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="appendix-e-example-appendix-with-subsections">Appendix E. Example Appendix with subsections</h1>
+<h2 id="e1-subsection-title">E.1 Subsection title</h2>
+<h3 id="e11-sub-subsection">E.1.1 Sub-subsection</h3>
+<hr />
+<h1 id="appendix-f-notices">Appendix F. Notices</h1>
+<!-- This required section should not be altered, except to modify the license information in the second paragraph -->
+
+<p>Copyright © OASIS Open 2020. All Rights Reserved.</p>
+<p>All capitalized terms in the following text have the meanings assigned to them in the OASIS Intellectual Property Rights Policy (the "OASIS IPR Policy"). The full <a href="https://www.oasis-open.org/policies-guidelines/ipr">Policy</a> may be found at the OASIS website.</p>
+<p>This specification is published under the <a href="http://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0 Universal (CC0 1.0)</a> license. Portions of this specification are also provided under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0</a>.</p>
+<p>All contributions made to this project have been made under the <a href="https://www.oasis-open.org/policies-guidelines/open-projects-process#individual-cla-exhibit">OASIS Contributor License Agreement (CLA)</a>.</p>
+<p>For information on whether any patents have been disclosed that may be essential to implementing this specification, and any offers of patent licensing terms, please refer to the <a href="https://github.com/oasis-open-projects/administration/blob/master/IPR_STATEMENTS.md">Open Projects IPR Statements</a> page.</p>
+<p>This document and translations of it may be copied and furnished to others, and derivative works that comment on or otherwise explain it or assist in its implementation may be prepared, copied, published, and distributed, in whole or in part, without restriction of any kind, provided that the above copyright notice and this section are included on all such copies and derivative works. However, this document itself may not be modified in any way, including by removing the copyright notice or references to OASIS, except as needed for the purpose of developing any document or deliverable produced by an OASIS Open Project (in which case the rules applicable to copyrights, as set forth in the OASIS IPR Policy, must be followed) or as required to translate it into languages other than English.</p>
+<p>The limited permissions granted above are perpetual and will not be revoked by OASIS or its successors or assigns.</p>
+<p>This document and the information contained herein is provided on an "AS IS" basis and OASIS DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION HEREIN WILL NOT INFRINGE ANY OWNERSHIP RIGHTS OR ANY IMPLIED WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE. OASIS AND ITS MEMBERS WILL NOT BE LIABLE FOR ANY DIRECT, INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF ANY USE OF THIS DOCUMENT OR ANY PART THEREOF.</p>
+<p>As stated in the OASIS IPR Policy, the following three paragraphs in brackets apply to OASIS Standards Final Deliverable documents (Project Specifications, OASIS Standards, or Approved Errata).</p>
+<p>[OASIS requests that any OASIS Party or any other party that believes it has patent claims that would necessarily be infringed by implementations of this OASIS Standards Final Deliverable, to notify OASIS TC Administrator and provide an indication of its willingness to grant patent licenses to such patent claims in a manner consistent with the IPR Mode of the OASIS Open Project that produced this deliverable.]</p>
+<p>[OASIS invites any party to contact the OASIS TC Administrator if it is aware of a claim of ownership of any patent claims that would necessarily be infringed by implementations of this OASIS Standards Final Deliverable by a patent holder that is not willing to provide a license to such patent claims in a manner consistent with the IPR Mode of the OASIS Open Project that produced this OASIS Standards Final Deliverable. OASIS may include such claims on its website, but disclaims any obligation to do so.]</p>
+<p>[OASIS takes no position regarding the validity or scope of any intellectual property or other rights that might be claimed to pertain to the implementation or use of the technology described in this OASIS Standards Final Deliverable or the extent to which any license under such rights might or might not be available; neither does it represent that it has made any effort to identify any such rights. Information on OASIS' procedures with respect to rights in any document or deliverable produced by an OASIS Open Project can be found on the OASIS website. Copies of claims of rights made available for publication and any assurances of licenses to be made available, or the result of an attempt made to obtain a general license or permission for the use of such proprietary rights by implementers or users of this OASIS Standards Final Deliverable, can be obtained from the OASIS TC Administrator. OASIS makes no representation that any information or list of intellectual property rights will at any time be complete, or that any claims in such list are, in fact, Essential Claims.]</p>
+<p>The name "OASIS" is a trademark of <a href="https://www.oasis-open.org/">OASIS</a>, the owner and developer of this specification, and should be used only to refer to the organization and its official outputs. OASIS welcomes reference to, and implementation and use of, specifications, while reserving the right to enforce its marks against misleading uses. Please see <a href="https://www.oasis-open.org/policies-guidelines/trademark">https://www.oasis-open.org/policies-guidelines/trademark</a> for above guidance.</p>
+</body>
+</html>
