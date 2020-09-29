@@ -1,6 +1,7 @@
 import "ecc/edwardsScalarMult" as multiply
 import "utils/pack/bool/nonStrictUnpack256" as unpack256
 import "ecc/babyjubjubParams" as context
+from "ecc/babyjubjubParams" import BabyJubJubParams
 
 /*
 Verifies match of a given public/private keypair on the baby Jubjub Edwards curve.
@@ -19,14 +20,13 @@ Returns:
     Return 1 for pk/sk being a valid keypair, 0 otherwise.
 */
 
-def main(field[2] pk, private field sk) -> field:
-    context = context()
+def main(field[2] pk, private field sk) -> bool:
+    BabyJubJubParams ctx = context()
+    field[2] G = [ctx.Gu, ctx.Gv]
 
-    field[2] G = [context[4], context[5]]
+    bool[256] skBits = unpack256(sk)
 
-    field[256] skBits = unpack256(sk)
-    field[2] ptExp = multiply(skBits, G, context)
+    field[2] ptExp = multiply(skBits, G, ctx)
 
-    field out =	if ptExp[0] == pk[0] && ptExp[1] == pk[1] then 1 else 0 fi
-
+    bool out = ptExp[0] == pk[0] && ptExp[1] == pk[1]
     return out
