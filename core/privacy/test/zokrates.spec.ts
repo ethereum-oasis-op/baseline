@@ -13,7 +13,7 @@ describe('when the underlying zokrates provider is available', () => {
   });
 
   it('runs the noopAgreement circuit lifecycle successfully', () => {
-    shouldBehaveLikeZKSnarkCircuit(provider, noopAgreementCircuitPath, ['2']); // Todo: Update witness arguments
+    shouldBehaveLikeZKSnarkCircuit(provider, noopAgreementCircuitPath, ['2']);
   });
 
   it('runs the createAgreement circuit lifecycle successfully', () => {
@@ -32,7 +32,17 @@ describe('when the underlying zokrates provider is available', () => {
     shouldBehaveLikeZKSnarkCircuit(provider, createAgreementPath, args);
   });
 
-  it('runs the signAgreement circuit lifecycle successfully', () => {
-    // shouldBehaveLikeZKSnarkCircuit(provider, signAgreementPath, ['2']); // Todo: Update witness arguments
-  });
+  // it('runs the signAgreement circuit lifecycle successfully', () => {
+  //   const args = [
+  //     {
+  //       hash: ['1', '2', '3', '4', '5', '6', '7', '8'],
+  //       senderPublicKey: ['9', '10'],
+  //     },
+  //     {
+  //       R: ['11', '12'],
+  //       S: '13',
+  //     }
+  //   ];
+  //   shouldBehaveLikeZKSnarkCircuit(provider, signAgreementPath, args);
+  // });
 });
