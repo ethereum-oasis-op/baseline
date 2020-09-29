@@ -91,21 +91,20 @@ For complete copyright information please see the Notices section in the Appendi
 
 # Table of Contents
 [1 Introduction](#1-introduction) \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.1 Overview]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.1 Overview](#11-overview) \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary](#12-glossary) \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions](#13-typographical-conventions) \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.4 Normative References]() \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.5 Non-Normative References]() \
 [2 Design and Architecture](#2-design-and-architecture) \
 [3 API and Data Model](#3-api-and-data-model) \
 [4 Communication](#4-communication) \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.1 Authentication & Authorization]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.2 Message Delivery]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.3 Performance]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.1 Authentication and Authorization](#41-authentication-and-authorization) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.2 Message Delivery](#42-message-delivery) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.3 Performance](#43-performance) \
 [5  Privacy and Confidentiality](#5-privacy-and-confidentiality) \
-&nbsp;&nbsp;&nbsp;&nbsp;[5.1 Privacy]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[5.2 Confidentiality]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[5.3 Deniability]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.1 Privacy](#51-privacy) \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.2 Confidentiality](#52-confidentiality) \
 [6 Agreement Execution](#6-agreement-execution)  \
 [7 Governance](#7-governance) \
 [8 Security Considerations](#8-security-considerations) \
@@ -122,9 +121,8 @@ For complete copyright information please see the Notices section in the Appendi
 # 1 Introduction
 
 
-## 1.1 IPR policy
+## 1.1 Overview
 
-https://www.oasis-open.org/policies-guidelines/ipr
 
 ## 1.2 Glossary
 
@@ -183,65 +181,38 @@ text.
 -------
 
 # 4 Communication
-text.
 
-## 4.1 Authentication & Authorization
-text.
+This section describes the logical architecture (presented as two abstract services - Authentication & Authorization and Message Delivery) that allows parties to send and receive messages securely.
 
-### 4.1.1 Level 3 Heading
-text.
+## 4.1 Authentication and Authorization
 
-#### 4.1.1.1 Level 4 Heading
-text.
+Describes the requirements for the Authentication service responsible for establishing and maintaining the connection between verified parties.
 
-##### 4.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
 
 
 ## 4.2 Message Delivery
-text.
 
-### 4.2.1 Level 3 Heading
-text.
+Describes the requirements for the Delivery service responsible for exchanging messages between verified parties.
 
-#### 4.2.1.1 Level 4 Heading
-text.
-
-##### 5.2.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
 
 ## 4.3 Performance
-text.
 
-### 4.3.1 Level 3 Heading
-text.
+Describes the performance requirements for the Communication component.
 
-#### 4.3.1.1 Level 4 Heading
-text.
 
-##### 4.3.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
 
 -------
 
 # 5 Privacy and Confidentiality
-text.
+
+This section describes mechanisms to ensure counterparties confidentiality and shielded private transactions.
 
 ## 5.1 Privacy
-text.
-
-### 5.1.1 Level 3 Heading
-text.
-
-#### 5.1.1.1 Level 4 Heading
-text.
-
-##### 5.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
-
+Describes mechanisms ensuring that only information relevant to the transaction and pre-agreed by verified parties is used to its purpose.
 
 ## 5.2 Confidentiality
-text.
+
+Describes the mechanisms ensuring that other parties (i.e parties outside of transaction) are prevented from accessing data that they are not authorized to access.
 
 -------
 
