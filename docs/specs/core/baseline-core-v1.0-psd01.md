@@ -50,12 +50,12 @@ This prose specification is one component of a Work Product that also includes:
 
 <!--
 This specification replaces or supersedes:
-* _Baseline Protocol Version 1.0_ - https://github.com/Consianimis/baseline/tree/master/docs/specs/api
+* _Baseline Protocol Version 1.0_ - 
 * Specifications replaced by this specification (include hyperlink, preferably to HTML format)
  -->
 
 This specification is related to: \
-_Baseline API and Data Model version 1.0_ - https://github.com/Consianimis/baseline/tree/master/docs/specs/api
+_Baseline API and Data Model version 1.0_ - https://github.com/ethereum-oasis/baseline/tree/master/docs/specs/api
 
 
 #### Abstract:
@@ -188,17 +188,28 @@ This section describes the logical architecture (presented as two abstract servi
 
 Describes the requirements for the Authentication service responsible for establishing and maintaining the connection between verified parties.
 
-
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| COM1 | something MUST something |
+| COM2 | something SHOULD something |
 
 ## 4.2 Message Delivery
 
 Describes the requirements for the Delivery service responsible for exchanging messages between verified parties.
 
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| COM3 | something MUST something  |
+| COM4 | something SHOULD something |
 
 ## 4.3 Performance
 
 Describes the performance requirements for the Communication component.
 
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| COM5 | something MUST something  |
+| COM6 | something SHOULD something |
 
 
 -------
@@ -210,9 +221,20 @@ This section describes mechanisms to ensure counterparties confidentiality and s
 ## 5.1 Privacy
 Describes mechanisms ensuring that only information relevant to the transaction and pre-agreed by verified parties is used to its purpose.
 
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| PRICON1 | something MUST something  |
+| PRICON2 | something SHOULD something |
+
+
 ## 5.2 Confidentiality
 
 Describes the mechanisms ensuring that other parties (i.e parties outside of transaction) are prevented from accessing data that they are not authorized to access.
+
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| PRICON3 | something MUST something  |
+| PRICON4 | something SHOULD something |
 
 -------
 
