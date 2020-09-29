@@ -91,29 +91,27 @@ For complete copyright information please see the Notices section in the Appendi
 
 # Table of Contents
 [1 Introduction](#1-introduction) \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.1 IPR Policy]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.1 Overview]() \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary]() \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions]() \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.4 Normative References]() \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.5 Non-Normative References]() \
-[2 Overview](#2-overview) \
-[3 Design and Architecture](#3-design-and-architecture) \
-[4 API and Data Model](#4-api-and-data-model) \
-[5 Communication](#5-communication) \
-&nbsp;&nbsp;&nbsp;&nbsp;[5.1 Authentication & Authorization]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[5.2 Message Delivery]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[5.3 Performance]() \
-[6  Privacy and Confidentiality](#6-privacy-and-confidentiality) \
-&nbsp;&nbsp;&nbsp;&nbsp;[6.1 Privacy]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[6.2 Confidentiality]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[6.3 Deniability]() \
-[7 Agreement Execution](#7-agreement-execution)  \
-[7.3 Validation]() \
-[8 Governance]() \
-[9 Security Considerations](#9-security-considerations) \
-[10 Conformance](#10-conformance) \
-&nbsp;&nbsp;&nbsp;&nbsp;[10.1 Baseline Core Minimal Conformance Level]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[10.2 Baseline Core Advanced Conformance Level]()\
+[2 Design and Architecture](#2-design-and-architecture) \
+[3 API and Data Model](#3-api-and-data-model) \
+[4 Communication](#4-communication) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.1 Authentication & Authorization]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.2 Message Delivery]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.3 Performance]() \
+[5  Privacy and Confidentiality](#5-privacy-and-confidentiality) \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.1 Privacy]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.2 Confidentiality]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.3 Deniability]() \
+[6 Agreement Execution](#6-agreement-execution)  \
+[7 Governance](#7-governance) \
+[8 Security Considerations](#8-security-considerations) \
+[9 Conformance](#9-conformance) \
+&nbsp;&nbsp;&nbsp;&nbsp;[9.1 Baseline Core Minimal Conformance Level]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[9.2 Baseline Core Advanced Conformance Level]()\
 [Appendix A.        Acknowledgments]()\
 [Appendix B.        Revision History]()
 
@@ -142,7 +140,7 @@ https://www.oasis-open.org/policies-guidelines/ipr
 
 -------
 
-# 2 Overview
+# 2 Design and Architecture
 text.
 
 ## 2.1 Level 2 Heading
@@ -163,7 +161,7 @@ text.
 
 -------
 
-# 3 Design and Architecture
+# 3 API and Data Model
 text.
 
 ## 3.1 Level 2 Heading
@@ -184,10 +182,10 @@ text.
 
 -------
 
-# 4 API and Data Model
+# 4 Communication
 text.
 
-## 4.1 Level 2 Heading
+## 4.1 Authentication & Authorization
 text.
 
 ### 4.1.1 Level 3 Heading
@@ -200,15 +198,36 @@ text.
 `This is the deepest level, because six # gets transformed into a Reference tag.`
 
 
-## 4.2 Next Heading
+## 4.2 Message Delivery
 text.
+
+### 4.2.1 Level 3 Heading
+text.
+
+#### 4.2.1.1 Level 4 Heading
+text.
+
+##### 5.2.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+## 4.3 Performance
+text.
+
+### 4.3.1 Level 3 Heading
+text.
+
+#### 4.3.1.1 Level 4 Heading
+text.
+
+##### 4.3.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
 
 -------
 
-# 5 Communication
+# 5 Privacy and Confidentiality
 text.
 
-## 5.1 Authentication & Authorization
+## 5.1 Privacy
 text.
 
 ### 5.1.1 Level 3 Heading
@@ -221,36 +240,15 @@ text.
 `This is the deepest level, because six # gets transformed into a Reference tag.`
 
 
-## 5.2 Message Delivery
+## 5.2 Confidentiality
 text.
-
-### 5.2.1 Level 3 Heading
-text.
-
-#### 5.2.1.1 Level 4 Heading
-text.
-
-##### 5.2.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
-
-## 5.3 Performance
-text.
-
-### 5.3.1 Level 3 Heading
-text.
-
-#### 5.3.1.1 Level 4 Heading
-text.
-
-##### 5.3.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
 
 -------
 
-# 6 Privacy and Confidentiality
+# 6 Agreement Execution
 text.
 
-## 6.1 Privacy
+## 6.1 Level 2 Heading
 text.
 
 ### 6.1.1 Level 3 Heading
@@ -263,12 +261,12 @@ text.
 `This is the deepest level, because six # gets transformed into a Reference tag.`
 
 
-## 6.2 Confidentiality
+## 6.2 Next Heading
 text.
 
 -------
 
-# 7 Agreement Execution
+# 7 Governance
 text.
 
 ## 7.1 Level 2 Heading
@@ -289,9 +287,16 @@ text.
 
 -------
 
-# 8 Governance
-text.
+# 8 Security Considerations
+(Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
 
+While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [[RFC3552](#rfc3552)] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
+
+In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks.
+
+We encourage editors and OP members concerned with this subject to read _Guidelines for Writing RFC Text on Security Considerations_, IETF [[RFC3552](#rfc3552)], for more information.
+
+Remove this note before submitting for publication.)
 ## 8.1 Level 2 Heading
 text.
 
@@ -305,40 +310,12 @@ text.
 `This is the deepest level, because six # gets transformed into a Reference tag.`
 
 
-## 2.2 Next Heading
+## 8.2 Next Heading
 text.
 
 -------
 
-# 9 Security Considerations
-(Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
-
-While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [[RFC3552](#rfc3552)] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
-
-In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks.
-
-We encourage editors and OP members concerned with this subject to read _Guidelines for Writing RFC Text on Security Considerations_, IETF [[RFC3552](#rfc3552)], for more information.
-
-Remove this note before submitting for publication.)
-## 9.1 Level 2 Heading
-text.
-
-### 9.1.1 Level 3 Heading
-text.
-
-#### 9.1.1.1 Level 4 Heading
-text.
-
-##### 9.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
-
-
-## 9.2 Next Heading
-text.
-
--------
-
-# 10 Conformance
+# 9 Conformance
 (Note: The [OASIS TC Process](https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsConfClause) requires that a specification approved by the OP for public review, or for publication at the Project Specification or OASIS Standard level must include a separate section, listing a set of numbered conformance clauses, to which any implementation of the specification must adhere in order to claim conformance to the specification (or any optional portion thereof). This is done by listing the conformance clauses here.
 
 For the definition of "conformance clause," see [OASIS Defined Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2017-05-26#dConformanceClause).
