@@ -3,7 +3,7 @@ import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokr
 
 const noopAgreementCircuitPath = '../../lib/circuits/noopAgreement.zok';
 const createAgreementPath = '../../lib/circuits/createAgreement.zok';
-const signAgreementPath = '../../lib/circuits/signAgreement.zok';
+// const signAgreementPath = '../../lib/circuits/signAgreement.zok';
           
 let provider;
 
@@ -14,7 +14,12 @@ describe('when the underlying zokrates provider is available', () => {
 
   it('runs the noopAgreement circuit lifecycle successfully', () => {
     shouldBehaveLikeZKSnarkCircuit(provider, noopAgreementCircuitPath, ['2']); // Todo: Update witness arguments
-    shouldBehaveLikeZKSnarkCircuit(provider, createAgreementPath, ['2']); // Todo: Update witness arguments
-    shouldBehaveLikeZKSnarkCircuit(provider, signAgreementPath, ['2']); // Todo: Update witness arguments
+    // shouldBehaveLikeZKSnarkCircuit(provider, createAgreementPath, ['2']); // Todo: Update witness arguments
+    shouldBehaveLikeZKSnarkCircuit(provider, createAgreementPath, 
+                                    [1, 
+                                     [[2, 3], [4, 5]],
+                                     [[6, 7], 8, 9]]
+                                  ); // Todo: Update witness arguments
+    // shouldBehaveLikeZKSnarkCircuit(provider, signAgreementPath, ['2']); // Todo: Update witness arguments
   });
 });
