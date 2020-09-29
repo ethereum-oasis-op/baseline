@@ -1,5 +1,6 @@
 import "signatures/verifyEddsa" as verifyEddsa
-import "ecc/babyjubjubParams" as contextfrom "./createAgreement" import Agreement
+import "ecc/babyjubjubParams" as context
+from "./createAgreement" import Agreement
 
 struct Signature {
   field[2] R
