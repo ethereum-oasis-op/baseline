@@ -3,6 +3,7 @@ import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokr
 
 const noopAgreementCircuitPath = '../../lib/circuits/noopAgreement.zok';
 const createAgreementPath = '../../lib/circuits/createAgreement.zok';
+const createAgreementOwnedPath = '../../lib/circuits/createAgreementOwned.zok';
 const signAgreementPath = '../../lib/circuits/signAgreement.zok';
 const proofOfOwnershipPath = '../../lib/circuits/prove-ownership-of-sk.zok';
 
@@ -19,7 +20,7 @@ describe('when the underlying zokrates provider is available', () => {
 
   it('runs the createAgreement circuit lifecycle successfully', () => {
     const args = [
-      '1', 
+      '1',
       {
         value: ['3', '1'],
         salt: ['3', '5'],
@@ -38,7 +39,25 @@ describe('when the underlying zokrates provider is available', () => {
     shouldBehaveLikeZKSnarkCircuit(provider, proofOfOwnershipPath, args);
   });
 
-  // To be fixed: The below test when run fails with JS heap out of memory
+  it('runs the createAgreementOwned circuit lifecycle successfully', () => {
+    const args = [
+      '1',
+      ['2', '3'],
+      {
+        value: ['4', '5'],
+        salt: ['6', '7'],
+      },
+      {
+        senderPublicKey: ['8', '9'],
+        agreementName: '10',
+        agreementUrl: '11',
+      },
+      '12'
+    ];
+    shouldBehaveLikeZKSnarkCircuit(provider, createAgreementOwnedPath, args);
+  });
+
+  // To be: The below test when run fails with JS heap out of memory
   /* it('runs the signAgreement circuit lifecycle successfully', () => {
     const args = [
       {
