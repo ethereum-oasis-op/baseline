@@ -28,29 +28,35 @@ URI list end (commented out except during publication by OASIS TC Admin) -->
 #### Open Project:
 [Baseline, part of the Ethereum OASIS Open Project](https://www.baseline-protocol.org/)
 
-#### Project Chairs:
-Daniel Burnett (daniel.burnett@entethalliance.org), [ConsenSys](https://consensys.net/) \
-Tas Dienes (email), [Ethereum Foundation](https://ethereum.org/en/foundation/) \
-Charles ‘Chaals’ Neville (email), [Enterprise Ethereum Alliance](https://entethalliance.org/)
+#### Project Chair:
+John Wolpert (john.wolpert@mesh.xyz), [ConsenSys](https://consensys.net/) 
 
 #### Editors:
-name (email), [org](https://org.com/) \
-name (email), [org](https://org.com/)
+Anais Ofranc (aofranc@consianimis.com), [Consianimis](https://www.consianimis.com/) \
+Andreas Freund (a.freundhaskel@gmail.com) \
+Brian Chamberlain (brian.chamberlain@consensys.net), [ConsenSys](https://consensys.net/) \
+Charles ‘Chaals’ Neville (charles.nevile@consensys.net), [ConsenSys](https://entethalliance.org/) \
+Daniel Norkin (daniel.norkin@envisionblockchain.com), [Envision Blockchain](https://envisionblockchain.com/)
 
+<!--
 #### Additional artifacts:
 This prose specification is one component of a Work Product that also includes:
 * XML schemas: (list file names or directory name)
 * Other parts (list titles and/or file names)
 * `(Note: Any normative computer language definitions that are part of the Work Product, such as XML instances, schemas and Java(TM) code, including fragments of such, must be (a) well formed and valid, (b) provided in separate plain text files, (c) referenced from the Work Product; and (d) where any definition in these separate files disagrees with the definition found in the specification, the definition in the separate file prevails. Remove this note before submitting for publication.)`
+ -->
 
 #### Related work:
-This specification replaces or supersedes:
-* _Baseline Protocol v0.1_ - https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1
-* Specifications replaced by this specification (include hyperlink, preferably to HTML format)
 
-This specification is related to:
-* Related specifications (include hyperlink, preferably to HTML format) \
-`(remove "Related work" section or the "replaces" or "related" subsections if no entries)`
+<!--
+This specification replaces or supersedes:
+* _Baseline Protocol Version 1.0_ - https://github.com/Consianimis/baseline/tree/master/docs/specs/api
+* Specifications replaced by this specification (include hyperlink, preferably to HTML format)
+ -->
+
+This specification is related to: \
+_Baseline API and Data Model version 1.0_ - https://github.com/Consianimis/baseline/tree/master/docs/specs/api
+
 
 #### Abstract:
 This document describes the minimal set of business and technical prerequisites, functional and non-functional requirements, together with a reference architecture that when implemented ensures that two or more systems of record can synchronize their system state over a permissionless public Distributed Ledger Technology (DLT) network.
@@ -70,7 +76,7 @@ When referencing this specification the following citation format should be used
 
 **[baseline-core-v1.0]**
 
-_Baseline Core Version 1.0_. Edited by X, Y, and Z. 23 September 2020. OASIS Project Specification Draft 01. https://docs.oasis-open.org/baseline/baseline-core/v1.0/psd01/baseline-core-v1.0-psd01.html. Latest stage: https://docs.oasis-open.org/baseline/baseline-core/v1.0/baseline-core-v1.0.html.
+_Baseline Core Version 1.0_. Edited by Anais Ofranc. 29 September 2020. OASIS Project Specification Draft 01. https://docs.oasis-open.org/baseline/baseline-core/v1.0/psd01/baseline-core-v1.0-psd01.html. Latest stage: https://docs.oasis-open.org/baseline/baseline-core/v1.0/baseline-core-v1.0.html.
 
 -------
 
@@ -84,179 +90,59 @@ For complete copyright information please see the Notices section in the Appendi
 -------
 
 # Table of Contents
-[[TOC will be inserted here]]
+[1 Introduction](#1-introduction) \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.1 IPR Policy]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.4 Normative References]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[1.5 Non-Normative References]() \
+[2 Overview](#2-overview) \
+[3 Design and Architecture](#3-design-and-architecture) \
+[4 API and Data Model](#4-api-and-data-model) \
+[5 Communication](#5-communication) \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.1 Authentication & Authorization]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.2 Message Delivery]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[5.3 Performance]() \
+[6  Privacy and Confidentiality](#6-privacy-and-confidentiality) \
+&nbsp;&nbsp;&nbsp;&nbsp;[6.1 Privacy]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[6.2 Confidentiality]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[6.3 Deniability]() \
+[7 Agreement Execution](#7-agreement-execution)  \
+[7.3 Validation]() \
+[8 Governance]() \
+[9 Security Considerations](#9-security-considerations) \
+[10 Conformance](#10-conformance) \
+&nbsp;&nbsp;&nbsp;&nbsp;[10.1 Baseline Core Minimal Conformance Level]() \
+&nbsp;&nbsp;&nbsp;&nbsp;[10.2 Baseline Core Advanced Conformance Level]()\
+[Appendix A.        Acknowledgments]()\
+[Appendix B.        Revision History]()
+
+ 
 
 -------
 
 # 1 Introduction
 
-<!-- All text is normative unless otherwise labeled -->
 
+## 1.1 IPR policy
 
-Here is a customized command line which will generate HTML from this markdown file (named op-file.md):
-
-pandoc -f gfm -t html baseline-core-v1.0-psd01.md -c styles/markdown-styles-v1.7.3.css --toc --toc-depth=5 -s -o baseline-core-v1.0-psd01.html --metadata title="Baseline Core Version 1.0"
-
-OASIS staff are currently using pandoc 2.6 from https://github.com/jgm/pandoc/releases/tag/2.6.
-
-This also requires the presence of a .css file containing the HTML styles (like styles/markdown-styles-v1.7.3.css).
-
-Note this command generates a Table of Contents (TOC) in HTML which is located at the top of the HTML document, and which requires additional editing in order to be published in the expected OASIS style. This editing will be handled by OASIS staff during publication.
-A TC may use other ways to generate HTML from markdown, and may generate a TOC in a different way.
-
-Below: Sections 1.1 and 1.2 are expected to be a part of OASIS specifications. Sections 1.3 and 1.4 are examples in Markdown.
-
-## 1.1 Changes from earlier Versions
-
-This section provides a description of significant differences from previously published, differently numbered Versions of this specification, if any. (Detailed revision history of this numbered Version should be tracked in an Appendix.)
+https://www.oasis-open.org/policies-guidelines/ipr
 
 ## 1.2 Glossary
 
-### 1.2.1 Definitions of terms
+- Definitions of terms
+- Acronyms and abbreviations
 
-### 1.2.2 Acronyms and abbreviations
-
-### 1.2.3 Document conventions
+## 1.3 Typographical Conventions
 
 - Naming conventions
 - Font colors and styles
 - Typographic conventions
 
-## 1.3 Some markdown usage examples
-
-**Text.**
-
-Note that text paragraphs in markdown should be separated by a blank line between them -
-
-Otherwise the separate paragraphs will be joined together when the HTML is generated.
-Even if the text appears to be separate lines in the markdown source.
-
-To avoid having the usual vertical space between paragraphs,  
-append two or more space characters (or space-backslash) to the end of the lines  
-which will generate an HTML break tag instead of a new paragraph tag \
-(as demonstrated here).
-
-### 1.3.1 Figures and Captions
-
-FIGURE EXAMPLE:
-<note caption is best placed ABOVE figure, so a hyperlink to it will actually display the figure, instead of rendering the figure off the screen above the caption. The same placement should be used for table captions>
-
-###### Figure 1 -- Title of Figure
-![image-label should be meaningful](images/image_0.png) (this image is missing)
-
-###### Figure 2 -- OpenC2 Message Exchange
-![message exchange](images/image_1.png)
-
-
-### 1.3.2 Tables
-
-#### 1.3.2.1 Basic Table
-**Table 1-1. Table Label**
-
-| Item | Description |
-| :--- | :--- |
-| Item 1 | Something<br>(second line) |
-| Item 2 | Something |
-| Item 3 | Something<br>(second line) |
-| Item 4 | text |
-
-#### 1.3.2.2 Table with Three Columns and Some Bold Text
-text.
-
-| Title 1 | Title 2 | title 3 |
-| :--- | :--- | :--- |
-| something | something | something else that is a long string of text that **might** need to wrap around inside the table box and will just continue until the column divider is reached |
-| something | something | something |
-
-#### 1.3.2.3 Table with a caption which can be referenced
-
-###### Table 1-5. See reference label construction
-
-| Name | Description |
-| :--- | :--- |
-| **content** | Message body as specified by content_type and msg_type. |
-
-Here is a reference to the table caption:
-Please see [Table 1-5 or other meaningful label](#table-1-5-see-reference-label-construction) 
-
-
-### 1.3.3 Lists
-
-Bulleted list:
-* bullet item 1.
-* **Bold** bullet item 2.
-* bullet item 3.
-* bullet item 4.
-
-Indented or multi-level bullet list - add two spaces per level before bullet character (* or -):
-* main bullet type
-  * Example second bullet
-    * See third level
-      * fourth level
-
-Numbered list:
-1. item 1
-2. item 2
-3. item 3
-
-Left-justified list without bullets or numbers:
-To list multiple items without full paragraph breaks between items, add space-backslash after each item except the last.
-
-### 1.3.4 Reference Label Construction
-
-REFERENCES and ANCHORS
-- in markdown source, format the Reference tags as level 6 headings like: `###### [RFC2119]`
-###### [RFC2119]
-Bradner, S., "Key words ..."
-
-- reference text has to be on a separate line below the tag
-
-- format cross-references (citations of the references) like: `see [[RFC2119](#rfc2119)]`  
-"see [[RFC2119](#rfc2119)]"  
-(note the outer square brackets in markdown will appear in the visible HTML text)
-
-- The text in the Reference tag (following ###### ) will become an HTML anchor using the following conversion rules:  
-  - punctuation marks will be dropped (including "[" )  
-  - leading white spaces will be dropped  
-  - upper case will be converted to lower  
-  - spaces between letters will be converted to a single hyphen
-
-- The same HTML anchor construction rules apply to cross-references and to section headings.  
-  - Thus, a section heading like "## 1.2 Glossary"  
-  - becomes an anchor in HTML like `<a href="#12-glossary">`  
-  - referenced in the markdown like: see [Section 1.2](#12-glossary)  
-  - in markdown: `"see [Section 1.2](#12-glossary)"`  
-  - similar HTML anchors are also used in constructing the TOC
-
-### 1.3.5 Code Blocks
-
-Text to appear as an indented code block with grey background and monospace font - use three back-ticks before and after the code block).
-
-Note the actual backticks will not appear in the HTML format. If it's necessary to display visible backticks, place a back-slash before them like: \``` .
-
-```
-{   
-    "target": {
-        "x_kmip_2.0": {
-            {"kmip_type": "json"},
-            {"operation": "RekeyKeyPair"},
-            {"name": "publicWebKey11DEC2017"}
-        }
-    }
-}
-```
-
-Text to be highlighted as code can also be surrounded by a single "backtick" character: 
-`code text`
-
-## 1.4 Page Breaks
-Add horizontal rule lines where page breaks are desired in the PDF - in particular, before each major section
-- insert the line rules in markdown by inserting 3 or more hyphens on a line by themselves:  ---
-- place these before each main section in markdown (usually "#" - which generates the HTML `<h1>` tag)
 
 -------
 
-# 2 Section Heading
+# 2 Overview
 text.
 
 ## 2.1 Level 2 Heading
@@ -277,7 +163,182 @@ text.
 
 -------
 
-# 3 Conformance
+# 3 Design and Architecture
+text.
+
+## 3.1 Level 2 Heading
+text.
+
+### 3.1.1 Level 3 Heading
+text.
+
+#### 3.1.1.1 Level 4 Heading
+text.
+
+##### 3.1.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+
+## 3.2 Next Heading
+text.
+
+-------
+
+# 4 API and Data Model
+text.
+
+## 4.1 Level 2 Heading
+text.
+
+### 4.1.1 Level 3 Heading
+text.
+
+#### 4.1.1.1 Level 4 Heading
+text.
+
+##### 4.1.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+
+## 4.2 Next Heading
+text.
+
+-------
+
+# 5 Communication
+text.
+
+## 5.1 Authentication & Authorization
+text.
+
+### 5.1.1 Level 3 Heading
+text.
+
+#### 5.1.1.1 Level 4 Heading
+text.
+
+##### 5.1.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+
+## 5.2 Message Delivery
+text.
+
+### 5.2.1 Level 3 Heading
+text.
+
+#### 5.2.1.1 Level 4 Heading
+text.
+
+##### 5.2.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+## 5.3 Performance
+text.
+
+### 5.3.1 Level 3 Heading
+text.
+
+#### 5.3.1.1 Level 4 Heading
+text.
+
+##### 5.3.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+-------
+
+# 6 Privacy and Confidentiality
+text.
+
+## 6.1 Privacy
+text.
+
+### 6.1.1 Level 3 Heading
+text.
+
+#### 6.1.1.1 Level 4 Heading
+text.
+
+##### 6.1.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+
+## 6.2 Confidentiality
+text.
+
+-------
+
+# 7 Agreement Execution
+text.
+
+## 7.1 Level 2 Heading
+text.
+
+### 7.1.1 Level 3 Heading
+text.
+
+#### 7.1.1.1 Level 4 Heading
+text.
+
+##### 7.1.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+
+## 7.2 Next Heading
+text.
+
+-------
+
+# 8 Governance
+text.
+
+## 8.1 Level 2 Heading
+text.
+
+### 8.1.1 Level 3 Heading
+text.
+
+#### 8.1.1.1 Level 4 Heading
+text.
+
+##### 8.1.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+
+## 2.2 Next Heading
+text.
+
+-------
+
+# 9 Security Considerations
+(Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
+
+While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [[RFC3552](#rfc3552)] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
+
+In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks.
+
+We encourage editors and OP members concerned with this subject to read _Guidelines for Writing RFC Text on Security Considerations_, IETF [[RFC3552](#rfc3552)], for more information.
+
+Remove this note before submitting for publication.)
+## 9.1 Level 2 Heading
+text.
+
+### 9.1.1 Level 3 Heading
+text.
+
+#### 9.1.1.1 Level 4 Heading
+text.
+
+##### 9.1.1.1.1 Level 5 Heading
+`This is the deepest level, because six # gets transformed into a Reference tag.`
+
+
+## 9.2 Next Heading
+text.
+
+-------
+
+# 10 Conformance
 (Note: The [OASIS TC Process](https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsConfClause) requires that a specification approved by the OP for public review, or for publication at the Project Specification or OASIS Standard level must include a separate section, listing a set of numbered conformance clauses, to which any implementation of the specification must adhere in order to claim conformance to the specification (or any optional portion thereof). This is done by listing the conformance clauses here.
 
 For the definition of "conformance clause," see [OASIS Defined Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2017-05-26#dConformanceClause).
@@ -310,7 +371,7 @@ Remove this note before submitting for publication.)
 ## A.1 Normative References
 
 The following documents are referenced in such a way that some or all of their content constitutes requirements of this document.
-
+<!-- 
 ###### [OpenC2-HTTPS-v1.0]
 _Specification for Transfer of OpenC2 Messages via HTTPS Version 1.0_. Edited by David Lemire. Latest stage: http://docs.oasis-open.org/openc2/open-impl-https/v1.0/open-impl-https-v1.0.html
 ###### [OpenC2-SLPF-v1.0]
@@ -318,33 +379,25 @@ _Open Command and Control (OpenC2) Profile for Stateless Packet Filtering Versio
 ###### [RFC2119]
 Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/RFC2119, March 1997, http://www.rfc-editor.org/info/rfc2119.
 ###### [RFC8174]
-Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174.
+Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174, May 2017, http://www.rfc-editor.org/info/rfc8174. 
+-->
 
 ## A.2 Informative References
-
+<!-- 
 ###### [RFC3552]
 Rescorla, E. and B. Korver, "Guidelines for Writing RFC Text on Security Considerations", BCP 72, RFC 3552, DOI 10.17487/RFC3552, July 2003, https://www.rfc-editor.org/info/rfc3552.
-
+-->
 -------
 
-# Appendix B. Safety, Security and Privacy Considerations
+# Appendix B. ABC
 
-(Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
-
-While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [[RFC3552](#rfc3552)] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
-
-In addition to considering and describing foreseeable risks, this section should include guidance on how implementers and adopters can protect against these risks.
-
-We encourage editors and OP members concerned with this subject to read _Guidelines for Writing RFC Text on Security Considerations_, IETF [[RFC3552](#rfc3552)], for more information.
-
-Remove this note before submitting for publication.)
 
 -------
 
 # Appendix C. Acknowledgments
-
+<!--
 `(Note: A Work Product approved by the OP should include a list of people who participated in the development of the Work Product. This is generally done by collecting the list of names in this appendix. This list should be initially compiled by the Chair, and any Member of the OP may add or remove their names from the list by request. Remove this note before submitting for publication.)`
-
+-->
 ## C.1 Special Thanks
 
 <!-- This is an optional subsection to call out contributions from OP members. If a OP wants to thank non-OP members then they should avoid using the term "contribution" and instead thank them for their "expertise" or "assistance". -->
@@ -363,10 +416,10 @@ The following individuals have participated in the creation of this specificatio
 
 | First Name | Last Name | Company |
 | :--- | :--- | :--- |
-Philippe | Alman | Something Networks
-Alex | Amirnovman | Company B
-Kris | Anderman | Mini Micro
-Darren | Anstman | Big Networks
+x | x | Something Networks
+x | x | Company B
+x | x | Mini Micro
+x | x | Big Networks
 
 -------
 
@@ -378,7 +431,7 @@ If revision tracking is handled in another system like github, provide a link to
 
 | Revision | Date | Editor | Changes Made |
 | :--- | :--- | :--- | :--- |
-| baseline-core-v1.0-psd01 | yyyy-mm-dd | Editor Name | Initial working draft |
+| baseline-core-v1.0-psd01 | 2020-09-29 | Anais Ofranc | Initial working draft |
 
 -------
 
