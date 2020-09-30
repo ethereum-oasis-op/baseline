@@ -35,7 +35,7 @@ John Wolpert (john.wolpert@mesh.xyz), [ConsenSys](https://consensys.net/)
 Anais Ofranc (aofranc@consianimis.com), [Consianimis](https://www.consianimis.com/) \
 Andreas Freund (a.freundhaskel@gmail.com) \
 Brian Chamberlain (brian.chamberlain@consensys.net), [ConsenSys](https://consensys.net/) \
-Charles ‘Chaals’ Neville (charles.nevile@consensys.net), [ConsenSys](https://entethalliance.org/) \
+Charles ‘Chaals’ Nevile (charles.nevile@consensys.net), [ConsenSys](https://entethalliance.org/) \
 Daniel Norkin (daniel.norkin@envisionblockchain.com), [Envision Blockchain](https://envisionblockchain.com/)
 
 <!--
