@@ -62,7 +62,7 @@ _Baseline API and Data Model version 1.0_ - https://github.com/ethereum-oasis/ba
 This document describes the minimal set of business and technical prerequisites, functional and non-functional requirements, together with a reference architecture that when implemented ensures that two or more systems of record can synchronize their system state over a permissionless public Distributed Ledger Technology (DLT) network.
 
 #### Status:
-This document is under active development and implementers are advised against implementing the specification. 
+This document is under active development and implementers are advised against implementing the specification unless they are directly involved with the Baseline TC team.
 
 <!--
 was last revised or approved by Baseline, part of the Ethereum OASIS Open Project, on the above date. The level of approval is also listed above. Check the "Latest stage" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Open Project (OP) are listed at [TBD].
@@ -97,8 +97,6 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;[1.1 Overview](#11-overview) \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary](#12-glossary) \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions](#13-typographical-conventions) \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.4 Normative References]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.5 Non-Normative References]() \
 [2 Design and Architecture](#2-design-and-architecture) \
 [3 API and Data Model](#3-api-and-data-model) \
 [4 Communication](#4-communication) \
