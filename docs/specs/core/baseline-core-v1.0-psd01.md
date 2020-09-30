@@ -142,44 +142,12 @@ For complete copyright information please see the Notices section in the Appendi
 -------
 
 # 2 Design and Architecture
-text.
 
-## 2.1 Level 2 Heading
-text.
-
-### 2.1.1 Level 3 Heading
-text.
-
-#### 2.1.1.1 Level 4 Heading
-text.
-
-##### 2.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
-
-
-## 2.2 Next Heading
-text.
 
 -------
 
 # 3 API and Data Model
-text.
 
-## 3.1 Level 2 Heading
-text.
-
-### 3.1.1 Level 3 Heading
-text.
-
-#### 3.1.1.1 Level 4 Heading
-text.
-
-##### 3.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
-
-
-## 3.2 Next Heading
-text.
 
 -------
 
