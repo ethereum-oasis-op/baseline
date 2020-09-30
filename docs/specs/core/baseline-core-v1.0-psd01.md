@@ -106,6 +106,9 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;[5.1 Privacy](#51-privacy) \
 &nbsp;&nbsp;&nbsp;&nbsp;[5.2 Confidentiality](#52-confidentiality) \
 [6 Agreement Execution](#6-agreement-execution)  \
+&nbsp;&nbsp;&nbsp;&nbsp;[6.1 Business Logic Development](#61-business-logic-development) \
+&nbsp;&nbsp;&nbsp;&nbsp;[6.2 Business Logic Execution](#62-business-logic-execution) \
+&nbsp;&nbsp;&nbsp;&nbsp;[6.3 Performance](#63-performance) \
 [7 Governance](#7-governance) \
 [8 Security Considerations](#8-security-considerations) \
 [9 Conformance](#9-conformance) \
@@ -199,8 +202,11 @@ Describes the requirements for the Delivery service responsible for exchanging m
 
 | Requirement ID|Requirement  |
 | :--- | :--- |
-| COM3 | something MUST something  |
-| COM4 | something SHOULD something |
+| COM3 | MUST implement IMessagingService interface to interact with verified parties. |
+| COM4 | MUST implement pub-sub pattern. |
+| COM5 | MUST implement XYZ Protocol Messages (types, formats, queues, inbound, outbound). |
+| COM6 | Automated message validation |
+| COM7 | Messaging Endpoints - SHOULD be distinct from system of record. |
 
 ## 4.3 Performance
 
@@ -208,8 +214,11 @@ Describes the performance requirements for the Communication component.
 
 | Requirement ID|Requirement  |
 | :--- | :--- |
-| COM5 | something MUST something  |
-| COM6 | something SHOULD something |
+| COM8 | Durable messaging  |
+| COM9 | Persistent messaging|
+| COM10 | Latency  |
+| COM11 | Fault-tolerance |
+| COM12 | Scalability |
 
 
 -------
@@ -241,42 +250,70 @@ Describes the mechanisms ensuring that other parties (i.e parties outside of tra
 # 6 Agreement Execution
 text.
 
-## 6.1 Level 2 Heading
-text.
+## 6.1 Business Logic Development
 
-### 6.1.1 Level 3 Heading
-text.
+Describes the requirements for the development of business rules that define what and how workflows are executed.
 
-#### 6.1.1.1 Level 4 Heading
-text.
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| AGEXEC1 | IBaselineRPC  |
+| AGEXEC2| Shared agreement: up to each workgroup to agree on business logic  |
+| AGEXEC3| Shielding: up up to each workgroup to determine a suitable shielding mechanism. |
 
-##### 6.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
+## 6.2 Business Logic Execution
+
+Describes the mechanisms supporting the execution of the agreed business logic.
 
 
-## 6.2 Next Heading
-text.
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| AGEXEC4 | Workflows, worksteps - business rules chaining and sequenced execution |
+| AGEXEC5| Deterministic result - given a set of arguments and a state of the ledger, execution of business logic must produce the same result. |
+| AGEXEC6| Event-driven |
+| AGEXEC7| On-chain/ DTL execution mode|
+
+## 6.3 Performance
+
+Describes the performance requirements for the Agreement Execution component.
+
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| AGEXEC8 | Processing/Finality time  |
+| AGEXEC9| Execution/Process monitoring |
 
 -------
 
 # 7 Governance
-text.
-
-## 7.1 Level 2 Heading
-text.
-
-### 7.1.1 Level 3 Heading
-text.
-
-#### 7.1.1.1 Level 4 Heading
-text.
-
-##### 7.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
+Describes the required functionalities to implement governance processes at every functional layer of the Baseline specification.
 
 
-## 7.2 Next Heading
-text.
+## 7.1 Governance Model
+
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| GOV1 | Change Control - requirements for introducing change in a controlled and coordinated manner for each functional layer. |
+| GOV2| Execution/Process monitoring |
+
+
+## 7.2 Audit
+
+Describes the requirements for audit activities. 
+
+
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| GOV3 |Internal audit |
+| GOV4| External audit  |
+
+
+## 7.3 Monitoring & Reporting
+
+Describes the requirements for monitoring and reporting on operations for each functional layer.
+
+| Requirement ID|Requirement  |
+| :--- | :--- |
+| GOV5 | something MUST something  |
+| GOV6| something SHOULD something |
 
 -------
 
