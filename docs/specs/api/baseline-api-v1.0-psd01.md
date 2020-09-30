@@ -58,14 +58,12 @@ This specification is related to: \
 _Baseline Core Version 1.0_ - https://github.com/ethereum-oasis/baseline/tree/master/docs/specs/core
 
 #### Abstract:
+
 This document describes the Baseline programming interface and expected behaviors of all instances of this interface together with the required programming interface data model.
 
 #### Status:
-This document was last revised or approved by Baseline, part of the Ethereum OASIS Open Project, on the above date. The level of approval is also listed above. Check the "Latest stage" location noted above for possible later revisions of this document. Any other numbered Versions and other technical work produced by the Open Project (OP) are listed at [TBD].
-
+This document is under active development and implementers are advised against implementing the specification unless they are directly involved with the Baseline TC team.
 Comments on this work can be provided by opening issues in the project repository or by sending email to the project’s public comment list baseline@lists.oasis-open-projects.org.
-
-Note that any machine-readable content ([Computer Language Definitions](https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsCompLang)) declared Normative for this Work Product is provided in separate plain text files. In the event of a discrepancy between any such plain text file and display content in the Work Product's prose narrative document(s), the content in the separate plain text file prevails.
 
 #### Key words:
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 [[RFC2119](#rfc2119)] and [[RFC8174](#rfc8174)] when, and only when, they appear in all capitals, as shown here.
@@ -93,12 +91,12 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;[1.1 Overview](#11-overview) \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary](#12-glossary) \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions](#13-typographical-conventions) \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.4 Normative References]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[1.5 Non-Normative References]() \
 [2 Design and Architecture](#2-design-and-architecture) \
-[3 Interfaces](#3-interfaces) \
-[4 Security Considerations](#4-security-considerations) \
-[5 Conformance](#5-conformance) \
+[3 IBaselineRPC](#3-ibaselinerpc) \
+[4 IRegistry](#4-iregistry) \
+[5 IVault](#5-ivault) \
+[6 Security Considerations](#6-security-considerations) \
+[7 Conformance](#6-conformance) \
 &nbsp;&nbsp;&nbsp;&nbsp;[9.1 API and Data Model Minimal Conformance Level]() \
 &nbsp;&nbsp;&nbsp;&nbsp;[9.2 API and Data Model Conformance Level]()\
 [Appendix A.        Acknowledgments]()\
@@ -130,19 +128,131 @@ For complete copyright information please see the Notices section in the Appendi
 
 -------
 
-# 3 Interfaces
+# 3 IBaselineRPC
+
+The following section contains RPC methods that are Remote Calls available by default. The solution MUST implement all those methods.
+
+
+#deploy(sender: string, bytecode: string, abi: any): Promise<any>; \
+description:  Deploys a shield contract given the compiled artifact bytecode and ABI. \
+interface: api.IBaselineRPC.deploy is this correct ? \
+jsonrpc: baseline_deploy \
+caveats: \
+
+#getLeaf(address: string, index: number): Promise<MerkleTreeNode>; \
+description:  Retrieves a single leaf from a tree at the given shield contract address. \
+interface: api.IBaselineRPC \
+jsonrpc: baseline_getLeaf \
+caveats: \
+
+#getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>; \
+description:  Retrieves multiple leaves from a tree at the given shield contract address. \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_getLeaves \
+caveats: \
+
+#getRoot(address: string): Promise<string>; \
+description:  Retrieves the root of a tree at the given shield contract address \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_getRoot \
+caveats: \
+
+#getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>; \
+description:  Retrieves sibling paths/proof of the given leaf index. \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_getSiblings \
+caveats: \
+
+#getTracked(): Promise<string[]>; \
+description:  Retrieves a list of the shield contract addresses being tracked and persisted. \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_getTracked \
+caveats: \
+
+#insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>; \
+description:  Inserts a single leaf in a tree at the given shield contract address. \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_insertLeaf \
+caveats: \
+
+#insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>; \
+description:  Inserts multiple leaves in a tree at the given shield contract address. \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_insertLeaves \
+caveats: \
+
+#track(address: string): Promise<boolean>; \
+description:  Initializes a merkle tree database for the given shield contract address. \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_track \
+caveats: \
+
+#verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>; \
+description:  Verifies a sibling path for a given root and leaf at the given shield contract address. \
+interface: api.IBaselineRPC. \
+jsonrpc: baseline_verify \
+caveats: \
+
+-------
+
+# 4 IRegistry
+
+This interface provides functions to manage workgroups, organizations and users. 
+
+// workgroups\
+createWorkgroup(params: object): Promise<any>;\
+updateWorkgroup(workgroupId: string, params: object): Promise<any>;\
+fetchWorkgroups(params: object): Promise<any>;\
+fetchWorkgroupDetails(workgroupId: string): Promise<any>;\
+fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;\
+createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>;\
+updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>;\
+fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>;\
+fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>;\
+createWorkgroupUser(workgroupId: string, params: object): Promise<any>;\
+updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>;\
+deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>;
+
+// organizations\
+createOrganization(params: object): Promise<any>;\
+fetchOrganizations(params: object): Promise<any>;\
+fetchOrganizationDetails(organizationId: string): Promise<any>;\
+updateOrganization(organizationId: string, params: object): Promise<any>;
+
+// organization users\
+fetchOrganizationInvitations(organizationId: string, params: object): Promise<any>;\
+fetchOrganizationUsers(organizationId: string, params: object): Promise<any>;\
+inviteOrganizationUser(organizationId: string, params: object): Promise<any>;
+
+-------
+
+# 5 IVault
+
+This interface provides functions to manage vaults and keys.
+
+createVault(params: object): Promise<any>;\
+fetchVaults(params: object): Promise<any>;\
+fetchVaultKeys(vaultId: string, params: object): Promise<any>;\
+createVaultKey(vaultId: string, params: object): Promise<any>;\
+deleteVaultKey(vaultId: string, keyId: string): Promise<any>;\
+encrypt(vaultId: string, keyId: string, payload: string): Promise<any>;\
+decrypt(vaultId: string, keyId: string, payload: string): Promise<any>;\
+signMessage(vaultId: string, keyId: string, msg: string): Promise<any>;\
+verifySignature(vaultId: string, keyId: string, msg: string, sig: string): Promise<any>;\
+fetchVaultSecrets(vaultId: string, params: object): Promise<any>;\
+createVaultSecret(vaultId: string, params: object): Promise<any>;\
+deleteVaultSecret(vaultId: string, secretId: string): Promise<any>;
+
+
+-------
+
+# 6 Security Considerations
 
 
 
 -------
 
-# 4 Security Considerations
-
-
-
--------
-
-# 5 Conformance
+# 7 Conformance
 
 
 
