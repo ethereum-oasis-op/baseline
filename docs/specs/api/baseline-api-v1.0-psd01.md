@@ -182,18 +182,21 @@ inviteOrganizationUser(organizationId: string, params: object): Promise<any>;
 
 This interface provides functions to manage vaults and keys.
 
-createVault(params: object): Promise<any>;\
-fetchVaults(params: object): Promise<any>;\
-fetchVaultKeys(vaultId: string, params: object): Promise<any>;\
-createVaultKey(vaultId: string, params: object): Promise<any>;\
-deleteVaultKey(vaultId: string, keyId: string): Promise<any>;\
-encrypt(vaultId: string, keyId: string, payload: string): Promise<any>;\
-decrypt(vaultId: string, keyId: string, payload: string): Promise<any>;\
-signMessage(vaultId: string, keyId: string, msg: string): Promise<any>;\
-verifySignature(vaultId: string, keyId: string, msg: string, sig: string): Promise<any>;\
-fetchVaultSecrets(vaultId: string, params: object): Promise<any>;\
-createVaultSecret(vaultId: string, params: object): Promise<any>;\
-deleteVaultSecret(vaultId: string, secretId: string): Promise<any>;
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| VAULT1 | createVault(params: object): Promise<any>;  |
+| VAULT2| fetchVaults(params: object): Promise<any>;  |
+| VAULT3| fetchVaultKeys(vaultId: string, params: object): Promise<any>;|
+| VAULT4| createVaultKey(vaultId: string, params: object): Promise<any>; |
+| VAULT5| deleteVaultKey(vaultId: string, keyId: string): Promise<any>;|
+| VAULT6| encrypt(vaultId: string, keyId: string, payload: string): Promise<any>; |
+| VAULT7| decrypt(vaultId: string, keyId: string, payload: string): Promise<any>; |
+| VAULT8| signMessage(vaultId: string, keyId: string, msg: string): Promise<any>; |
+| VAULT9| verifySignature(vaultId: string, keyId: string, msg: string, sig: string): Promise<any>; |
+| VAULT10| fetchVaultSecrets(vaultId: string, params: object): Promise<any>; |
+| VAULT11| createVaultSecret(vaultId: string, params: object): Promise<any>; |
+| VAULT12| deleteVaultSecret(vaultId: string, secretId: string): Promise<any>; |
+
 
 
 -------
