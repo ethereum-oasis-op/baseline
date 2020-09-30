@@ -217,7 +217,6 @@ Describes the mechanisms ensuring that other parties (i.e parties outside of tra
 -------
 
 # 6 Agreement Execution
-text.
 
 ## 6.1 Business Logic Development
 
@@ -287,6 +286,8 @@ Describes the requirements for monitoring and reporting on operations for each f
 -------
 
 # 8 Security Considerations
+<!--
+
 (Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
 
 While it may not be immediately obvious how your specification might make systems vulnerable to attack, most specifications, because they involve communications between systems, message formats, or system settings, open potential channels for exploit. For example, IETF [[RFC3552](#rfc3552)] lists “eavesdropping, replay, message insertion, deletion, modification, and man-in-the-middle” as well as potential denial of service attacks as threats that must be considered and, if appropriate, addressed in IETF RFCs.
@@ -295,26 +296,13 @@ In addition to considering and describing foreseeable risks, this section should
 
 We encourage editors and OP members concerned with this subject to read _Guidelines for Writing RFC Text on Security Considerations_, IETF [[RFC3552](#rfc3552)], for more information.
 
-Remove this note before submitting for publication.)
-## 8.1 Level 2 Heading
-text.
-
-### 8.1.1 Level 3 Heading
-text.
-
-#### 8.1.1.1 Level 4 Heading
-text.
-
-##### 8.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
-
-
-## 8.2 Next Heading
-text.
+-->
 
 -------
 
 # 9 Conformance
+<!--
+
 (Note: The [OASIS TC Process](https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsConfClause) requires that a specification approved by the OP for public review, or for publication at the Project Specification or OASIS Standard level must include a separate section, listing a set of numbered conformance clauses, to which any implementation of the specification must adhere in order to claim conformance to the specification (or any optional portion thereof). This is done by listing the conformance clauses here.
 
 For the definition of "conformance clause," see [OASIS Defined Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2017-05-26#dConformanceClause).
@@ -324,6 +312,7 @@ http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.
 
 Remove this note before submitting for publication.)
 
+-->
 
 -------
 
@@ -410,13 +399,13 @@ If revision tracking is handled in another system like github, provide a link to
 | baseline-core-v1.0-psd01 | 2020-09-29 | Anais Ofranc | Initial working draft |
 
 -------
-
+<!--
 # Appendix E. Example Appendix with subsections
 
 ## E.1 Subsection title
 
 ### E.1.1 Sub-subsection
-
+-->
 -------
 
 # Appendix F. Notices
