@@ -126,49 +126,24 @@ For complete copyright information please see the Notices section in the Appendi
 -------
 
 # 2 Design and Architecture
-text.
 
-## 2.1 Level 2 Heading
-text.
-
-### 2.1.1 Level 3 Heading
-text.
-
-#### 2.1.1.1 Level 4 Heading
-text.
-
-##### 2.1.1.1.1 Level 5 Heading
-`This is the deepest level, because six # gets transformed into a Reference tag.`
-
-
-## 2.2 Next Heading
-text.
 
 -------
 
 # 3 Interfaces
-text.
 
 
 
 -------
 
 # 4 Security Considerations
-text.
 
 
 
 -------
 
 # 5 Conformance
-(Note: The [OASIS TC Process](https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsConfClause) requires that a specification approved by the OP for public review, or for publication at the Project Specification or OASIS Standard level must include a separate section, listing a set of numbered conformance clauses, to which any implementation of the specification must adhere in order to claim conformance to the specification (or any optional portion thereof). This is done by listing the conformance clauses here.
 
-For the definition of "conformance clause," see [OASIS Defined Terms](https://www.oasis-open.org/policies-guidelines/oasis-defined-terms-2017-05-26#dConformanceClause).
-
-See "Guidelines to Writing Conformance Clauses":  
-http://docs.oasis-open.org/templates/TCHandbook/ConformanceGuidelines.html.
-
-Remove this note before submitting for publication.)
 
 
 -------
@@ -204,7 +179,6 @@ The following documents are referenced in such a way that some or all of their c
 
 # Appendix C. Acknowledgments
 
-`(Note: A Work Product approved by the OP should include a list of people who participated in the development of the Work Product. This is generally done by collecting the list of names in this appendix. This list should be initially compiled by the Chair, and any Member of the OP may add or remove their names from the list by request. Remove this note before submitting for publication.)`
 
 ## C.1 Special Thanks
 
@@ -241,13 +215,6 @@ If revision tracking is handled in another system like github, provide a link to
 | :--- | :--- | :--- | :--- |
 | baseline-api-v1.0-psd01 | yyyy-mm-dd | Editor Name | Initial working draft |
 
--------
-
-# Appendix E. Example Appendix with subsections
-
-## E.1 Subsection title
-
-### E.1.1 Sub-subsection
 
 -------
 
