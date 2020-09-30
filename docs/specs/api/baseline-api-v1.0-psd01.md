@@ -151,30 +151,41 @@ The following section contains RPC methods that are Remote Calls available by de
 
 This interface provides functions to manage workgroups, organizations and users. 
 
-// workgroups\
-createWorkgroup(params: object): Promise<any>;\
-updateWorkgroup(workgroupId: string, params: object): Promise<any>;\
-fetchWorkgroups(params: object): Promise<any>;\
-fetchWorkgroupDetails(workgroupId: string): Promise<any>;\
-fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;\
-createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>;\
-updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>;\
-fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>;\
-fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>;\
-createWorkgroupUser(workgroupId: string, params: object): Promise<any>;\
-updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>;\
-deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>;
+// workgroups
 
-// organizations\
-createOrganization(params: object): Promise<any>;\
-fetchOrganizations(params: object): Promise<any>;\
-fetchOrganizationDetails(organizationId: string): Promise<any>;\
-updateOrganization(organizationId: string, params: object): Promise<any>;
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| REG1 | createWorkgroup(params: object): Promise<any>; |
+| REG2| updateWorkgroup(workgroupId: string, params: object): Promise<any>; |
+| REG3| fetchWorkgroups(params: object): Promise<any>;|
+| REG4| fetchWorkgroupDetails(workgroupId: string): Promise<any>; |
+| REG5| fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;|
+| REG6| createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>; |
+| REG7| updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>; |
+| REG8| fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>; |
+| REG9| fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>; |
+| REG10| createWorkgroupUser(workgroupId: string, params: object): Promise<any>; |
+| REG11| updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>; |
+| REG12| deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>; |
 
-// organization users\
-fetchOrganizationInvitations(organizationId: string, params: object): Promise<any>;\
-fetchOrganizationUsers(organizationId: string, params: object): Promise<any>;\
-inviteOrganizationUser(organizationId: string, params: object): Promise<any>;
+
+// organizations
+
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| REG13| createOrganization(params: object): Promise<any>; |
+| REG14| fetchOrganizations(params: object): Promise<any>; |
+| REG15| fetchOrganizationDetails(organizationId: string): Promise<any>;|
+| REG16| updateOrganization(organizationId: string, params: object): Promise<any>;|
+
+
+// organization users
+
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| REG17| fetchOrganizationInvitations(organizationId: string, params: object): Promise<any>; |
+| REG18| fetchOrganizationUsers(organizationId: string, params: object): Promise<any>; |
+| REG19| inviteOrganizationUser(organizationId: string, params: object): Promise<any>;|
 
 -------
 
