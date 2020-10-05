@@ -450,7 +450,7 @@ export const onReceiptAgreementRecipient = async (agreementObject, senderWhisper
       msgDeliveryQueue.add({
         documentId: agreement._id,
         senderId: organization.messagingKey,
-        recipientId: partner.identity,
+        recipientId: partner.messagingKey,
         payload: {
           type: 'signed_agreement',
           ...agreementDoc,
@@ -510,8 +510,8 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
 
       msgDeliveryQueue.add({
         documentId: agreement._id,
-        senderId: organization.messengerKey,
-        recipientId: partner.identity,
+        senderId: organization.messagingKey,
+        recipientId: partner.messagingKey,
         payload: {
           type: 'send_proof',
           ...docToBeSent,
