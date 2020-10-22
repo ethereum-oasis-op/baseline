@@ -6,7 +6,7 @@ pragma solidity ^0.6.9;
 @dev Example Verifier Implementation
 @notice Do not use this example in any production code!
 */
-contract Verifier_noOp {
+contract Verifier_noop {
 
     function verify(
         uint256[] calldata _proof,
