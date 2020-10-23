@@ -1,11 +1,8 @@
 // SPDX-License-Identifier: CC0
 pragma solidity ^0.6.9;
 
-/**
-@title IVerifier
-@dev Example Verifier Implementation
-@notice Do not use this example in any production code!
-*/
+// Verifies all calls containing proper parameters
+// Do not use this example in any production code!
 contract Verifier_noop {
 
     function verify(

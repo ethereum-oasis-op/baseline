@@ -4,7 +4,6 @@ pragma solidity ^0.6.9;
 /**
 @title IVerifier
 @dev Example Verifier Implementation
-@notice Do not use this example in any production code!
 */
 interface IVerifier {
 
