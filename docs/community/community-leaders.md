@@ -108,6 +108,7 @@ Details on how to become a [Maintainer here](members.md).
 | \*\*\*\*[**Kyle Thomas**](https://github.com/kthomas)\*\*\*\* | Provide |
 | \*\*\*\*[**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/)\*\*\*\* | Nethermind |
 | [**George Spasov**](https://www.linkedin.com/in/george-spasov/)\*\*\*\* | LimeChain |
+| [**Anais Ofranc**](https://github.com/Consianimis)\*\*\*\* | Consianimis |
 
 ## Founding Group on March 4, 2020 <a id="founding-group-on-march-4-2020"></a>
 
