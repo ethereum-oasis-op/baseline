@@ -5,9 +5,9 @@ interface IShield {
 
     function getVerifier() external view returns (address);
     function verifyAndPush(
-        uint256[] calldata,
-        uint256[] calldata,
-        bytes32
+        uint256[] calldata proof,
+        uint256[] calldata publicInputs,
+        bytes32 commitment
     ) external returns (bool);
 
 }
