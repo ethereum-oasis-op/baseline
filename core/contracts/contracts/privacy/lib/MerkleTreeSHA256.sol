@@ -11,7 +11,7 @@
 pragma solidity ^0.6.9;
 
 
-contract MerkleTree_sha256 {
+contract MerkleTreeSHA256 {
 
     /**
       @notice Explanation of the Merkle Tree in this contract:
