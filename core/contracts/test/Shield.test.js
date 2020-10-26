@@ -2,7 +2,7 @@ import { getAccounts, getSigner, getProvider } from './utils';
 import { ethers, utils } from 'ethers';
 
 import ShieldArtifact from '../artifacts/Shield.json';
-import VerifierArtifact from '../artifacts/Verifier_noop.json';
+import VerifierArtifact from '../artifacts/VerifierNoop.json';
 
 const treeHeight = 4;
 let verifier, shield;
