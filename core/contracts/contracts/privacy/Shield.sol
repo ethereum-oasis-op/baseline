@@ -6,16 +6,8 @@ import "./IShield.sol";
 import "./IVerifier.sol";
 
 contract Shield is IShield, MerkleTreeSHA256 {
-    // EVENTS
-    event NewCommitment(bytes32 newCommitment);
-
     // CONTRACT INSTANCES:
     IVerifier private verifier; // the verification smart contract
-
-    // PRIVATE TRANSACTIONS' PUBLIC STATES:
-    mapping(bytes32 => bytes32) public commitments; // store commitments
-    mapping(bytes32 => bytes32) public roots; // holds each root we've calculated so that we can pull the one relevant to the prover
-    bytes32 public latestRoot; // holds the index for the latest root so that the prover can provide it later
 
     // FUNCTIONS:
     constructor(address _verifier, uint _treeHeight) public MerkleTreeSHA256(_treeHeight) {
@@ -38,12 +30,7 @@ contract Shield is IShield, MerkleTreeSHA256 {
         require(result, "The proof failed verification in the verifier contract");
 
         // update contract states
-        commitments[_newCommitment] = _newCommitment;
-        latestRoot = insertLeaf(_newCommitment); // recalculate the root of the merkleTree as it's now different
-        roots[latestRoot] = latestRoot; // and save the new root to the list of roots
-
-        emit NewCommitment(_newCommitment);
-
+        insertLeaf(_newCommitment); // recalculate the root of the merkleTree as it's now different
         return true;
     }
 
