@@ -52,12 +52,9 @@ test('1st verifyAndPush() transaction', async () => {
   expect(tx.hash).toMatch(new RegExp('^0x[a-fA-F0-9]{64}$'));
   expect(txLogs_0.name).toEqual('NewLeaf');
   expect(txLogs_0.topic).toEqual(newLeafEvent);
-}, 20000);
-
-test('latestRoot() from Shield contract', async () => {
-  root = await shield.latestRoot();
+  root = txLogs_0.values.root;
   expect(root).toMatch(new RegExp('^0x[a-fA-F0-9]{64}$'));
-});
+}, 20000);
 
 test('2nd verifyAndPush() transaction', async () => {
   const newLeafEvent = utils.id("NewLeaf(uint256,bytes32,bytes32)");
@@ -73,10 +70,7 @@ test('2nd verifyAndPush() transaction', async () => {
   expect(tx.hash).toMatch(new RegExp('^0x[a-fA-F0-9]{64}$'));
   expect(txLogs_0.name).toEqual('NewLeaf');
   expect(txLogs_0.topic).toEqual(newLeafEvent);
-}, 20000);
-
-test('Confirm that on-chain root changed', async () => {
-  const newRoot = await shield.latestRoot();
+  const newRoot = txLogs_0.values.root;
   expect(newRoot).toMatch(new RegExp('^0x[a-fA-F0-9]{64}$'));
   expect(newRoot).not.toEqual(root);
 });
