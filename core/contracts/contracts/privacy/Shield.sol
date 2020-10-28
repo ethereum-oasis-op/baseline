@@ -22,7 +22,7 @@ contract Shield is IShield, MerkleTreeSHA256 {
         verifier = IVerifier(_verifier);
     }
 
-    // returns the verifier-interface contract address that this shield contract is calling
+    // returns the verifier contract address that this shield contract uses for proof verification
     function getVerifier() external override view returns (address) {
         return address(verifier);
     }
@@ -32,11 +32,6 @@ contract Shield is IShield, MerkleTreeSHA256 {
         uint256[] calldata _publicInputs,
         bytes32 _newCommitment
     ) external override returns (bool) {
-
-        // Check that the publicInputHash equals the hash of the 'public inputs':
-        bytes31 publicInputHash = bytes31(bytes32(_publicInputs[0]) << 8);
-        bytes31 publicInputHashCheck = bytes31(sha256(abi.encodePacked(_newCommitment)) << 8);
-        require(publicInputHashCheck == publicInputHash, "publicInputHash cannot be reconciled");
 
         // verify the proof
         bool result = verifier.verify(_proof, _publicInputs);
