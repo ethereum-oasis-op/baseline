@@ -4,7 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "./IOrgRegistry.sol";
 import "./Registrar.sol";
-import "../../../lib/contracts/ERC165Compatible.sol";
+import "./lib/ERC165Compatible.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /// @dev Contract for maintaining organization registry
