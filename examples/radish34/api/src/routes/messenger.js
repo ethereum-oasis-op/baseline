@@ -5,7 +5,7 @@ import {
 } from '../db/models/modules/rfps';
 import { saveProposal } from '../db/models/modules/proposals';
 import { onReceiptMSABuyer, onReceiptMSASupplier } from '../services/msa';
-import { onReceiptAgreementSender, onReceiptAgreementRecipient } from '../services/agreement';
+import { onReceiptAgreementSender, onReceiptAgreementRecipient, onReceiptProofRecipient } from '../services/agreement';
 import { onReceiptPOSupplier } from '../services/po';
 import { logger } from 'radish34-logger';
 
@@ -64,6 +64,17 @@ router.post('/documents', async (req, res) => {
       } catch (error) {
         res.status(400);
         res.send({ message: error });
+      }
+      break;
+    case 'send_proof':
+      try {
+        console.log('\n\n\nReceived Agreement Proof\n');
+        console.dir(messageObj, { depth: null});
+        onReceiptProofRecipient(messageObj);
+        docId = _id;
+      } catch (error) {
+        res.status(400);
+        res.send({ message: error});
       }
       break;
     case 'msa_create':

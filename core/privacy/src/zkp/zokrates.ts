@@ -1,4 +1,4 @@
-import { initialize, ResolveCallback, ZoKratesProvider } from 'zokrates-js';
+import { initialize, ResolveCallback, ZoKratesProvider, VerificationKey } from 'zokrates-js';
 import { IZKSnarkCircuitProvider, IZKSnarkCompilationArtifacts, IZKSnarkWitnessComputation, IZKSnarkTrustedSetupArtifacts } from '.';
 import { readFileSync } from 'fs';
 import { v4 as uuid } from 'uuid';
@@ -28,23 +28,23 @@ export class ZoKratesService implements IZKSnarkCircuitProvider {
   }
 
   async compile(source: string, location: string): Promise<IZKSnarkCompilationArtifacts> {
-    return this.zokrates.compile(source, location, this.importResolver);
+    return this.zokrates.compile(source, {location: location, resolveCallback: this.importResolver});
   }
 
   async computeWitness(artifacts: IZKSnarkCompilationArtifacts, args: any[]): Promise<IZKSnarkWitnessComputation> {
     return this.zokrates.computeWitness(artifacts, args);
   }
 
-  async exportVerifier(verifyingKey: any): Promise<string> {
-    return this.zokrates.exportSolidityVerifier(verifyingKey, true);
+  async exportVerifier(verifyingKey: VerificationKey): Promise<string> {
+    return this.zokrates.exportSolidityVerifier(verifyingKey, "v2");
   }
 
   async generateProof(circuit: any, witness: string, provingKey: any): Promise<any> {
-    return JSON.parse(this.zokrates.generateProof(circuit, witness, provingKey));
+    return this.zokrates.generateProof(circuit, witness, provingKey);
   }
 
-  async setup(circuit: any): Promise<IZKSnarkTrustedSetupArtifacts> {
-    const keypair = this.zokrates.setup(circuit);
+  async setup(artifacts: IZKSnarkCompilationArtifacts): Promise<IZKSnarkTrustedSetupArtifacts> {
+    const keypair = this.zokrates.setup(artifacts.program);
     if (!keypair || !keypair.pk || !keypair.vk) {
       return Promise.reject('failed to perform trusted setup');
     }

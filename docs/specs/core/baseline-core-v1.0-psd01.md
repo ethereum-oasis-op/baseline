@@ -291,6 +291,7 @@ Describes the requirements for monitoring and reporting on operations for each f
 
 # 8 Security Considerations
 
+
 Describes security topics that should be important in Baseline implementations but that are NOT requirements. 
 
 ## 8.1 Data Privacy
@@ -308,6 +309,7 @@ Examples included in standard to be non-normative.
 The implementer should perform due diligence when selecting tools, libraries etc.
 
 
+
 <!--
 
 (Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
@@ -323,6 +325,7 @@ We encourage editors and OP members concerned with this subject to read _Guideli
 -------
 
 # 9 Conformance
+
 
 Describes the conformance clauses and tests required to achieve baseline compliant implementations.
 

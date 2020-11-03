@@ -1,11 +1,12 @@
 import { zokratesServiceFactory } from './zokrates';
+import { VerificationKey } from 'zokrates-js';
 
 export const zkSnarkCircuitProviderServiceZokrates = 'zokrates';
 
 export interface IZKSnarkCircuitProvider {
   compile(source: string, location: string): Promise<IZKSnarkCompilationArtifacts>;
   computeWitness(artifacts: IZKSnarkCompilationArtifacts, args: any[]): Promise<IZKSnarkWitnessComputation>;
-  exportVerifier(verifyingKey: any): Promise<any>;
+  exportVerifier(verifyingKey: VerificationKey): Promise<any>;
   generateProof(circuit: any, witness: any, provingKey: any): Promise<any>;
   setup(circuit: any): Promise<IZKSnarkTrustedSetupArtifacts>;
 }
@@ -22,7 +23,7 @@ export type IZKSnarkTrustedSetupArtifacts = {
 }
 
 export type IZKSnarkTrustedSetupKeypair = {
-  vk: string;
+  vk: VerificationKey;
   pk: Uint8Array;
 }
 

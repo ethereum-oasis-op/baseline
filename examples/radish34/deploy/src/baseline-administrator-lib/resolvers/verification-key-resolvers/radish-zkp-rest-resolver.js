@@ -9,6 +9,9 @@ const DEFAULT_CIRCUITS = {
   createPO: {
     txTypeEnumUint: 1,
   },
+	createAgreement: {
+		txTypeEnumUint: 2,
+	},
 };
 
 const DUMMY_CIRCUITS = {

@@ -12,5 +12,7 @@ COPY . .
 RUN npm ci
 RUN curl https://sh.rustup.rs -sSf -y | sh
 
+ENV ZOKRATES_HOME=/app/stdlib
+
 EXPOSE 80
 CMD npm run dev

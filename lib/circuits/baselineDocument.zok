@@ -1,18 +1,18 @@
-import "utils/pack/pack128" as pack128
-import "utils/pack/pack256" as pack256
-import "utils/pack/nonStrictUnpack256" as unpack256
+import "utils/pack/bool/pack128" as pack128
+import "utils/pack/bool/pack256" as pack256
+import "utils/pack/bool/nonStrictUnpack256" as unpack256
+import "./unpack2x128To256x1" as unpack2x128To256x1
+
+import "./sha256of2x256" as sha256of2x256
+import "./sha256of5x128" as sha256of5x128
+import "./sha256of7x128" as sha256of7x128
+import "./sha256of8x128" as sha256of8x128
+
 import "ecc/edwardsCompress" as edwardsCompress
-import "./verifyEddsa256" as verifyEddsa
+import "signatures/verifyEddsa" as verifyEddsa
 import "ecc/babyjubjubParams" as context
 
-import "./hashes/sha256/sha256of2x256" as sha256of2x256
-import "./hashes/sha256/sha256of5x128" as sha256of5x128
-import "./hashes/sha256/sha256of7x128" as sha256of7x128
-import "./hashes/sha256/sha256of8x128" as sha256of8x128
-import "./hashes/sha256/sha256of10x128" as sha256of10x128
-import "./packing/unpack2x128To256x1.zok" as unpack2x128To256x1
-
-import "./merkle-tree/calc-root-from-siblingPath-sha256-height4" as calculateRoot
+import "./calc-root-from-siblingPath-sha256-height4" as calculateRoot
 
 struct EdDSASignature {
   field[2] R
@@ -50,20 +50,11 @@ struct Document {
 // TODO: explore how rust manages dynamic expansion of 
 // field to other data types: structs, arrays, etc.
 
-def main(field publicInputHash, private Document documentData) -> ():
-  
-  // VERIFY SIGNATURES
-  babyjubjubParamSet = context()
-
+def main(field publicInputHash, private Document documentData):
+  // 
   // compressing public keys of type point (X,Y)
-  field[256] publicKeyOfBuyerCompressed = edwardsCompress( \
-    documentData.inputs.publicKeyOfBuyer, \
-    babyjubjubParamSet \
-  )
-  field[256] publicKeyOfSupplierCompressed = edwardsCompress( \
-    documentData.inputs.publicKeyOfSupplier, \
-    babyjubjubParamSet \
-  )
+  field[256] publicKeyOfBuyerCompressed = edwardsCompress(documentData.inputs.publicKeyOfBuyer, context())
+  field[256] publicKeyOfSupplierCompressed = edwardsCompress(documentData.inputs.publicKeyOfSupplier, context())
 
   // formatting public keys to pass as 128 bit field elements to sha256
   // TODO: find a way of not using the constraint-heavy 'pack' function.
@@ -74,85 +65,47 @@ def main(field publicInputHash, private Document documentData) -> ():
 
   field rawCalldataCompressed1 = pack128(documentData.calldata[256..384])
   field rawCalldataCompressed2 = pack128(documentData.calldata[384..512])
-  // TODO: Proof that the Buyer is indeed the Buyer for this Agreement 
-  // (by recalculating the Agreement commitment):
+  // TODO: Proof that the Buyer is indeed the Buyer for this Agreement (by recalculating the Agreement commitment):
   // one could choose sha or pedersen or poseidon, etc.
 
   // first step: hash all inputs, raw data and salt
   // second step: hash from first step, nullifier, oldCommitmentValue
   // third step: calculate root
-  // TODO: move root calc to another circuit
-  // fourth step: return commitment and nullifier
-  // fifth step: separate circuit, which takes in new commitment (struct)
-  // and the nullifier, other root inputs; calculates root and returns true
-  documentCommitmentBits = sha256of10x128( \
-    [ \
-      publicKeyOfBuyerCompressed1, \
-      publicKeyOfBuyerCompressed2, \
-      publicKeyOfSupplierCompressed1, \
-      publicKeyOfSupplierCompressed2, \
-      rawCalldataCompressed1, \
-      rawCalldataCompressed2, \
-      ...documentData.newCommitment.value, \
-      ...documentData.newCommitment.salt \
-    ] \
-  )
+  // fourth step: hash (root, hash from second step)
+  // final hash is the publicInputHash
+  documentCommitmentBits = sha256of8x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, rawCalldataCompressed1, rawCalldataCompressed2, ...documentData.newCommitment.salt])
 
-  field[256] documentNullifierBits = sha256of5x128( \
-    [ \
-      ...documentData.newCommitment.value, \
-      ...documentData.newCommitment.nullifier, \
-      documentData.oldCommitmentValue \
-    ] \
-  )
+  field[256] documentNullifierBits = sha256of5x128([...documentData.newCommitment.value, ...documentData.newCommitment.nullifier, documentData.oldCommitmentValue])
   
-  /* calculatedRoot = calculateRoot( \
-    documentData.newCommitment.siblingPath, \
-    documentData.newCommitment.value, \
-    documentData.newCommitment.index \
-  ) */
+  calculatedRoot = calculateRoot(documentData.newCommitment.siblingPath, documentData.newCommitment.value, documentData.newCommitment.index)
   inputDocumentCommitment = unpack2x128To256x1(documentData.newCommitment.value)
-  documentCommitmentBits == inputDocumentCommitment
+  assert(documentCommitmentBits == inputDocumentCommitment)
 
   // Verify root consistency
-  // calculatedRoot == documentData.calldata[0..256]
+  assert(calculatedRoot == documentData.calldata[0..256])
 
+  // VERIFY SIGNATURES
+  babyjubjubParamSet = context()
 
   //1. embed root bits as input in calldata; extract root bits; and match with calculatedRoot in circuit
-  // Why? protocol is aiming to verify the signature of calldata: 
-  // (rootBits, dynamic variables that are to be tracked)
+  // Why? protocol is aiming to verify the signature of calldata: (rootBits, dynamic variables that are to be tracked)
   // calldata schema: {root bits packed to 256 bits, raw data packed to 256 bits}
-  // Documnet commitment method above computes the commitment based on raw data,
-  // embedded in the calldata (upper 256 bits)
-  // Root bits (lower 256 bits) of calldata are used to verify that root in circuit == 
-  // root sent in calldata
+  // Documnet commitment method above computes the commitment based on raw data embedded in the calldata (upper 256 bits)
+  // Root bits (lower 256 bits) of calldata are used to verify that root in circuit == root sent in calldata
   // Rationale: Document signatures are dependent on the calldata which changes every time a business process
   // changes underlying data state, and therefore there is a new commitment (+ nullifer)
 
-  field isVerifiedBuyer = verifyEddsa( \
-    documentData.inputs.buyerSignature.R, \
-    documentData.inputs.buyerSignature.S, \
-    documentData.inputs.publicKeyOfBuyer, \
-    documentCommitmentBits, \
-    babyjubjubParamSet \
-  )
-  field isVerifiedSupplier = verifyEddsa( \
-    documentData.inputs.supplierSignature.R, \
-    documentData.inputs.supplierSignature.S, \
-    documentData.inputs.publicKeyOfSupplier, \
-    documentCommitmentBits, \
-    babyjubjubParamSet \
-  )
-  isVerifiedBuyer == 1
-  isVerifiedSupplier == 1
+  field isVerifiedBuyer = verifyEddsa(documentData.inputs.buyerSignature.R, documentData.inputs.buyerSignature.S, documentData.inputs.publicKeyOfBuyer, calculatedRoot, documentCommitmentBits, babyjubjubParamSet)
+  field isVerifiedSupplier = verifyEddsa(documentData.inputs.supplierSignature.R,  documentData.inputs.supplierSignature.S, documentData.inputs.publicKeyOfSupplier, calculatedRoot, documentCommitmentBits, babyjubjubParamSet)
+  assert(isVerifiedBuyer == 1)
+  assert(isVerifiedSupplier == 1)
 
-  // packedRoot256 = pack256(calculatedRoot)
-  // packedNullifier256 = pack256(documentNullifierBits)
+  packedRoot256 = pack256(calculatedRoot)
+  packedNullifier256 = pack256(documentNullifierBits)
 
   // Check the publicInputHash:
-  // alternate method: return nullifier
-  // publicInputHashBits = unpack256(publicInputHash)
-  // publicInputHashBitsCheck = sha256of2x256([packedRoot256, packedNullifier256])
-  // publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256]
+  publicInputHashBits = unpack256(publicInputHash)
+  publicInputHashBitsCheck = sha256of2x256([packedRoot256, packedNullifier256])
+  assert(publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256])
 
   return

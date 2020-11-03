@@ -1,0 +1,47 @@
+// ABOUT
+
+// Function for proving membership of a leaf in a Merkle Tree of height h = 4.
+//
+//            level h:             root
+//                              /       \
+//                                 ...
+//              ...
+//                       /    \    ...   /   \
+//            level 1:
+//                     /  \  /  \  ... /  \  /  \
+//  leaves at level 0:
+
+
+// IMPORTS
+
+import "utils/pack/bool/unpack128.zok" as unpack128
+
+import "../hashes/mimc/mimc-hash-2.zok" as mimc2 // can swap with other hash function
+import "../concatenate/orderedConcatenate1x1.zok" as orderedConcatenate1x1
+
+
+// MAIN
+
+// @param {field[4]} siblingPath - the values of the sibling nodes of the path from the leaf to the root
+// @param {field} leafValue - the value of the leaf. We aim to prove this leaf is in the tree.
+// @param {field} leafIndex - the index of the leaf within the leaves (indexing starts from zero). Note: the binary decomposition of a leaf's index gives us the 'left-rightness' of that leaf's path up the Merkle Tree.
+// @returns {field} root - the root of the merkle tree
+
+def main(private field[4] siblingPath, private field leafValue, private field leafIndex) -> field:
+
+  // Hash up the Merkle Tree to the root:
+
+  field[128] leafIndexBits = unpack128(leafIndex)
+  field nodeValue = leafValue
+  field[2] preimage = [0, 0]
+
+  for field i in 0..4 do
+    field j = 3 - i // iterator for the siblingPath
+    field k = 127 - i // iterator for the leafIndexBits
+    preimage = orderedConcatenate1x1(leafIndexBits[k], nodeValue, siblingPath[j])
+    nodeValue = mimc2(preimage)
+  endfor
+
+  field root = nodeValue
+
+  return root

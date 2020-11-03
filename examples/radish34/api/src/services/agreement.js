@@ -1,6 +1,9 @@
 import { Commitment } from './commitment';
+import { getTxReceipt, getContractWithWalletByName } from './contract';
+import { getEventValuesFromTxReceipt } from '../utils/ethers';
 import { getPartnerByMessagingKey } from './partner';
-import { formatProof, createAgreement as createAgreementTx } from './shield';
+import { formatProof, getRoot, createAgreement as createAgreementTx } from './shield';
+import { getSiblingPath, getSiblingPathByLeafIndex, checkRoot } from './merkle-tree';
 import { generateProof } from './zkp';
 
 import AgreementModel from '../db/models/modules/agreement';
@@ -16,9 +19,9 @@ import { saveNotice } from './notice';
 
 const pycryptojs = require('zokrates-pycryptojs');
 /**
-An msaDoc object (from the mongodb) contains an array of commitments.
+An agreementDoc object (from the mongodb) contains an array of commitments.
 But we only want to 'pop' the latest commitment from the array, to add it to our Commitment class.
-This function extracts that 1 commitment from the msaDoc.
+This function extracts that 1 commitment from the agreementDoc.
 */
 export const extractAgreementFromDoc = (agreementDoc, index = 'latest') => {
   const agreementObject = agreementDoc;
@@ -80,7 +83,7 @@ export class Agreement {
   constructor(agreementObject) {
     const { _id, constants, commitment = {} } = agreementObject;
 
-    this._id = _id; // will be undefined if this MSA is not yet in the db
+    this._id = _id; // will be undefined if this Agreement is not yet in the db
 
     validate(constants, 'constants');
 
@@ -218,7 +221,7 @@ export const saveAgreement = async agreementObject => {
   );
   if (exists)
     throw new Error(
-      `MSA already exists for this SKU ${agreementObject.constants.name} with this Recipient`,
+      `Agreement already exists for this SKU ${agreementObject.constants.name} with this Recipient`,
     );
   try {
     const doc = await AgreementModel.create([agreementObject], { upsert: true, new: true });
@@ -411,7 +414,7 @@ export const onReceiptAgreementRecipient = async (agreementObject, senderWhisper
 
   const { sender } = EdDSASignatures;
 
-  // Sender of the Agreement message should be the same as the party that signed the MSA
+  // Sender of the Agreement message should be the same as the party that signed the Agreement
   if (agreement.constants.zkpPublicKeyOfSender === partner.zkpPublicKey) {
     const isSignVerified = await pycryptojs.verify(
       strip0x(agreement.constants.zkpPublicKeyOfSender),
@@ -447,7 +450,7 @@ export const onReceiptAgreementRecipient = async (agreementObject, senderWhisper
       msgDeliveryQueue.add({
         documentId: agreement._id,
         senderId: organization.messagingKey,
-        recipientId: partner.identity,
+        recipientId: partner.messagingKey,
         payload: {
           type: 'signed_agreement',
           ...agreementDoc,
@@ -464,7 +467,7 @@ export const onReceiptAgreementRecipient = async (agreementObject, senderWhisper
 
 export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey) => {
   const partner = await getPartnerByMessagingKey(senderWhisperKey);
-
+  const { organization } = await getServerSettings();
   const {
     constants: { EdDSASignatures },
     commitments: commitment,
@@ -472,7 +475,7 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
 
   const { recipient } = EdDSASignatures;
 
-  // Sender of the MSA message should be the same as the party that signed the MSA
+  // Sender of the Agreement message should be the same as the party that signed the Agreement
   if (agreementObject.constants.zkpPublicKeyOfRecipient === partner.zkpPublicKey) {
     const isSignVerified = await pycryptojs.verify(
       strip0x(agreementObject.constants.zkpPublicKeyOfRecipient),
@@ -494,16 +497,74 @@ export const onReceiptAgreementSender = async (agreementObject, senderWhisperKey
 
       await updateAgreementWithCommitmentIndex(agreement.object);
 
-      // TODO: send the index in a message to the Recipient!!!
+      const commitmentSiblingPath = await getSiblingPathByLeafIndex('Shield', leafIndex);
+
+      const commitSiblingPathTrimmed = commitmentSiblingPath.map(leaf => leaf.value);
+
+      let docToBeSent = {};
+      docToBeSent.siblingPath = commitSiblingPathTrimmed;
+      docToBeSent.agreementCommitment = agreement.commitment;
+      docToBeSent.txHash = transactionHash;
+      docToBeSent.leafValue = leafValue;
+      docToBeSent.agreementObject = agreement.object;
+
+      msgDeliveryQueue.add({
+        documentId: agreement._id,
+        senderId: organization.messagingKey,
+        recipientId: partner.messagingKey,
+        payload: {
+          type: 'send_proof',
+          ...docToBeSent,
+        },
+      });
+
+      console.log('\nSent proof to Recipient');
 
       return agreementObject;
     }
     throw new Error(`Recipient's signature verification failed`);
   } else {
     throw new Error(
-      `The public key for signature ${recipient.A} doesn't match with the sender of the MSA creation message ${partner.zkpPublicKey}`,
+      `The public key for signature ${recipient.A} doesn't match with the sender of the Agreement creation message ${partner.zkpPublicKey}`,
     );
   }
+};
+
+export const onReceiptProofRecipient = async (proofObject) => {
+  const rootOnChain = await getRoot();
+  const rootOffChain = proofObject.siblingPath[0];
+  if (rootOnChain == rootOffChain) {
+    console.log('\nLatest root on chain, ', rootOnChain, 'matches with offchain value', rootOffChain);
+  } else {
+    throw new Error(
+      `Latest root ${rootOnChain} doesnt match with offchain value ${rootOffChain}`
+    );
+  }
+
+  const rootCheck = await checkRoot(proofObject.agreementCommitment._commitment, proofObject.agreementCommitment._index, proofObject.siblingPath, rootOnChain);
+  if (rootCheck == true) {
+    console.log('\nRoot verification successful');
+  } else {
+    throw new Error(
+      `Root doesnt match after recalculating based on updated commitment index`
+    );
+  }
+  const shieldContract = await getContractWithWalletByName('Shield');
+  const txReceipt = await getTxReceipt(proofObject.txHash);
+  const { newCommitment } = await getEventValuesFromTxReceipt(
+    'NewCommitment',
+    shieldContract,
+    txReceipt,
+  );
+
+  if (newCommitment == proofObject.leafValue) {
+    console.log('\nCommitment value matches with leaf value');
+  } else {
+    throw new Error(
+      `Commitment value from event doesnt match with leaf value on chain`
+    );
+  }
+  await updateAgreementWithCommitmentIndex(proofObject.agreementObject);
 };
 
 export { Agreement as default };
