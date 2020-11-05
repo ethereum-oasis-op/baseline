@@ -74,3 +74,17 @@ test('2nd verifyAndPush() transaction', async () => {
   expect(newRoot).toMatch(new RegExp('^0x[a-fA-F0-9]{64}$'));
   expect(newRoot).not.toEqual(root);
 });
+
+test('verifyAndPush() fails with invalid proof', async () => {
+  let error = false;
+  const proof = [0];
+  const publicInputs = ["0x9f72ea0cf49536e3c66c787f705186df9a4378083753ae9536d65b3ad7fcddc4"]; // Sha256 hash of new commitment
+  const newCommitment = "0x3333333333333333333333333333333333333333333333333333333333333333";
+  try {
+    const tx = await shield.verifyAndPush(proof, publicInputs, newCommitment);
+    await tx.wait();
+  } catch (err) {
+    error = true;
+  }
+  expect(error).toEqual(true);
+});
