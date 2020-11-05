@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/contracts",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "solidity contracts",
   "scripts": {
     "build": "./node_modules/.bin/truffle compile",

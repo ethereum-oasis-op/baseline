@@ -52,6 +52,7 @@ contract MerkleTreeSHA256 {
 
     uint public treeHeight;
     uint public treeWidth;
+    bytes32 public latestRoot;
     uint256 public leafCount; // the number of leaves currently in the tree
 
     /**
@@ -101,7 +102,7 @@ contract MerkleTreeSHA256 {
     @param leafValue - the value of the leaf being inserted.
     @return root bytes32 - the root of the merkle tree, after the insert.
     */
-    function insertLeaf(bytes32 leafValue) internal returns (bytes32 root) {
+    function insertLeaf(bytes32 leafValue) internal returns (bytes32) {
 
         // check that space exists in the tree:
         require(treeWidth > leafCount, "There is no space left in the tree.");
@@ -179,13 +180,13 @@ contract MerkleTreeSHA256 {
             }
         }
 
-        root = output[0];
+        latestRoot = output[0];
 
-        emit NewLeaf(leafCount, leafValue, root); // this event is what the merkle-tree microservice's filter will listen for.
+        emit NewLeaf(leafCount, leafValue, latestRoot); // this event is what the merkle-tree microservice's filter will listen for.
 
-        leafCount++; // the incrememnting of leafCount costs us 20k for the first leaf, and 5k thereafter
+        leafCount++; // the incrementing of leafCount costs us 20k for the first leaf, and 5k thereafter
 
-        return root; //the root of the tree
+        return latestRoot; //the root of the tree
     }
 
     /**
@@ -193,7 +194,7 @@ contract MerkleTreeSHA256 {
     @param leafValues - the values of the leaves being inserted.
     @return root - the root of the merkle tree, after all the inserts.
     */
-    function insertLeaves(bytes32[] memory leafValues) internal returns (bytes32 root) {
+    function insertLeaves(bytes32[] memory leafValues) internal returns (bytes32) {
         uint numberOfLeaves = leafValues.length;
 
         // check that space exists in the tree:
@@ -324,12 +325,12 @@ contract MerkleTreeSHA256 {
             }
         }
 
-        root = output[0];
+        latestRoot = output[0];
 
-        emit NewLeaves(leafCount, leafValues, root); // this event is what the merkle-tree microservice's filter will listen for.
+        emit NewLeaves(leafCount, leafValues, latestRoot); // this event is what the merkle-tree microservice's filter will listen for.
 
-        leafCount += numberOfLeaves; // the incrememnting of leafCount costs us 20k for the first leaf, and 5k thereafter
+        leafCount += numberOfLeaves; // the incrementing of leafCount costs us 20k for the first leaf, and 5k thereafter
 
-        return root; //the root of the tree
+        return latestRoot; //the root of the tree
     }
 }
