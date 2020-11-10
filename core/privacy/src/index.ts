@@ -1,3 +1,5 @@
+export * from './utils';
+
 export {
   IZKSnarkCircuitProvider,
   IZKSnarkCompilationArtifacts,
@@ -6,4 +8,4 @@ export {
   IZKSnarkWitnessComputation,
   zkSnarkCircuitProviderServiceFactory,
   zkSnarkCircuitProviderServiceZokrates,
- } from './zkp';
+} from './zkp';
