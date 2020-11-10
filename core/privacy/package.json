@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/privacy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Baseline core privacy",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
@@ -18,6 +18,9 @@
   },
   "dependencies": {
     "@types/uuid": "^8.0.0",
+    "big-integer": "^1.6.48",
+    "hex-to-binary": "^1.0.1",
+    "keccak": "^3.0.1",
     "zokrates-js": "^1.0.25"
   },
   "devDependencies": {
