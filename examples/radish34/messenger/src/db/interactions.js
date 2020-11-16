@@ -1,6 +1,7 @@
 const Identity = require('./models/Identity');
 const Message = require('./models/Message');
 const { DEFAULT_TOPIC } = require('../utils/generalUtils');
+const { logger } = require('radish34-logger');
 
 // Fetch all of the Whisper Identities stored in database
 async function getIdentities() {
@@ -76,7 +77,7 @@ async function storeNewMessage(messageData, content) {
   if (typeof content === 'object') {
     payload = JSON.stringify(content);
   }
-  console.log('storing new message')
+  logger.info('storing new message')
   return Message.findOneAndUpdate(
     { _id: hash },
     {

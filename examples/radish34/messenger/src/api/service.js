@@ -1,5 +1,5 @@
 const { messagingServiceFactory } = require('@baseline-protocol/messaging');
-const logger = require('winston');
+const { logger } = require('radish34-logger');
 const Config = require('../../config');
 const { getIdentities, addIdentity } = require('../db/interactions');
 const { DEFAULT_TOPIC } = require('../utils/generalUtils');

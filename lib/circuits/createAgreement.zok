@@ -1,74 +1,53 @@
-import "utils/pack/pack128" as pack128
-import "utils/pack/nonStrictUnpack256" as unpack256
-import "./packing/unpack2x128To256x1" as unpack2x128To256x1
-
-import "./hashes/sha256/sha256of2x128" as sha256of2x128
-import "./hashes/sha256/sha256of10x128" as sha256of10x128
-
+import "utils/pack/u32/nonStrictUnpack256" as unpack256
+import "utils/pack/u32/unpack128" as unpack128
+import "hashes/sha256/512bitPacked" as packed512Sha
 import "ecc/edwardsCompress" as edwardsCompress
-import "./verifyEddsa" as verifyEddsa
-import "ecc/babyjubjubParams" as context
+import "hashes/sha256/1024bit" as shaOf1024Bits
+import "utils/casts/bool_256_to_u32_8" as bool_256_to_u32_8
 
-struct EdDSASignature {
-  field[2] R
-  field S
-}
-
-struct AgreementConstants {
-  field[2] publicKeyOfBuyer
-  field[2] publicKeyOfSupplier
-  field agreementName
-  field agreementDescription
-  field[2] erc20ContractAddress
-  EdDSASignature buyerSignature
-  EdDSASignature supplierSignature
-}
-
-struct AgreementCommitments {
+struct Commitment {
   field[2] value
   field[2] salt
 }
 
-struct Agreement {
-  AgreementConstants constants
-  AgreementCommitments commitments
+struct Metadata {
+  field[2] senderPublicKey
+  field agreementName
+  field agreementUrl
 }
 
-def main(field publicInputHash, private Agreement agreementData) -> ():
+struct Agreement {
+  u32[8] hash
+  field[2] senderPublicKey
+}
 
-  // VERIFY SIGNATURES
-  babyjubjubParamSet = context()
+def convert(field[2] input) -> u32[8]:
+  u32[4] lsbBits = unpack128(input[0])
+  u32[4] msbBits = unpack128(input[1])
+  return [...msbBits, ...lsbBits]
 
-  // compressing public keys of type point (X,Y)
-  field[256] publicKeyOfBuyerCompressed = edwardsCompress(agreementData.constants.publicKeyOfBuyer, babyjubjubParamSet)
-  field[256] publicKeyOfSupplierCompressed = edwardsCompress(agreementData.constants.publicKeyOfSupplier, babyjubjubParamSet)
+def main(field publicInputHash, private Commitment inputCommitment, private Metadata inputMetadata) -> Agreement:
+  u32[8] publicInputHashBits = unpack256(publicInputHash)
 
-  // formatting public keys to pass as 128 bit field elements to sha256
-  // TODO: find a way of not using the constraint-heavy 'pack' function.
-  field publicKeyOfBuyerCompressed1 = pack128(publicKeyOfBuyerCompressed[0..128])
-  field publicKeyOfBuyerCompressed2 = pack128(publicKeyOfBuyerCompressed[128..256])
-  field publicKeyOfSupplierCompressed1 = pack128(publicKeyOfSupplierCompressed[0..128])
-  field publicKeyOfSupplierCompressed2 = pack128(publicKeyOfSupplierCompressed[128..256])
+  // hash of the below private inputs must be equal to public input
+  // Convert inputs to u32
+  u32[8] saltBits = convert(inputCommitment.salt)
+  u32[8] valueBits = convert(inputCommitment.value)
+  bool[256] compressedSenderPubKey = edwardsCompress(inputMetadata.senderPublicKey)
+  u32[8] pubKeyBits = bool_256_to_u32_8(compressedSenderPubKey)
+  u32[8] nameBits = unpack256(inputMetadata.agreementName)
+  u32[8] urlBits = unpack256(inputMetadata.agreementUrl)
 
+  // compute hash
+  u32[8] agreementHash = shaOf1024Bits(saltBits, pubKeyBits, nameBits, urlBits)
 
-  // Proof that the Buyer is indeed the Buyer for this Agreement (by recalculating the Agreement commitment):
-  agreementCommitmentBits = unpack2x128To256x1(agreementData.commitments.value)
-  agreementCommitmentBitsCheck = sha256of10x128([publicKeyOfBuyerCompressed1, publicKeyOfBuyerCompressed2, publicKeyOfSupplierCompressed1, publicKeyOfSupplierCompressed2, agreementData.constants.agreementName, agreementData.constants.agreementDescription, ...agreementData.constants.erc20ContractAddress, ...agreementData.commitments.salt])
+  // Check: Compare final hash to public input hash; and Compare input
+  bool out = publicInputHashBits == agreementHash && valueBits == agreementHash
 
-  agreementCommitmentBits == agreementCommitmentBitsCheck
-
-  // verifyEddsa requires the message to be 512 bit array; hence for this circuit only
-  // for development & testing, agreementCommitmentBits are repeated. For a more constructed circuit
-  // refer to baselineDocument.zok
-  field isVerifiedBuyer = verifyEddsa(agreementData.constants.buyerSignature.R, agreementData.constants.buyerSignature.S, agreementData.constants.publicKeyOfBuyer, agreementCommitmentBits, agreementCommitmentBits, babyjubjubParamSet)
-  field isVerifiedSupplier = verifyEddsa(agreementData.constants.supplierSignature.R,  agreementData.constants.supplierSignature.S, agreementData.constants.publicKeyOfSupplier, agreementCommitmentBits, agreementCommitmentBits, babyjubjubParamSet)
-  isVerifiedBuyer == 1
-  isVerifiedSupplier == 1
-
-
-  // Check the publicInputHash:
-  publicInputHashBits = unpack256(publicInputHash)
-  publicInputHashBitsCheck = sha256of2x128(agreementData.commitments.value)
-  publicInputHashBits[8..256] == publicInputHashBitsCheck[8..256]
-
-  return
+  // Prepare output object
+  Agreement outputAgreement = Agreement { hash: agreementHash, senderPublicKey: inputMetadata.senderPublicKey }
+  // To consider:
+  // - Formalize agreement struct based on baselineagreement.zok
+  // - Pending issue to be resolved: struct within struct unwrapping
+  // - Merkle root check
+  return outputAgreement

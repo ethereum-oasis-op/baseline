@@ -1,6 +1,6 @@
 const { hasJsonStructure } = require('../utils/generalUtils');
 const { storeNewMessage } = require('../db/interactions');
-const logger = require('winston');
+const { logger } = require('radish34-logger');
 const Web3 = require('web3');
 const axios = require('axios');
 const { DEFAULT_TOPIC } = require('../utils/generalUtils');

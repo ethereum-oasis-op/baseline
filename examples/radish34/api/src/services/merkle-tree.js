@@ -106,7 +106,7 @@ Get the nodes on the sibling path from the given leafIndex to the root.
 @param {string} contractName
 @param {integer} leafIndex
 */
-async function getSiblingPathByLeafIndex(contractName, leafIndex) {
+export const getSiblingPathByLeafIndex = async (contractName, leafIndex) => {
   logger.info(`Calling getSiblingPathByLeafIndex(${contractName}, ${leafIndex}).`, { service: 'API' });
   return new Promise((resolve, reject) => {
     const options = {
@@ -237,4 +237,5 @@ export const checkRoot = (commitment, commitmentIndex, siblingPath, root) => {
   } else {
     logger.info(`Root ${root} successfully reconciled from first principles using the commitment and its sister-path.`, { service: 'API' });
   }
+  return true;
 };

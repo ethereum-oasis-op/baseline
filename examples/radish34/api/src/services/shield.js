@@ -44,6 +44,13 @@ const gasUsedStats = (functionName, shieldContract, txReceipt) => {
   `, { service: 'API'});
 };
 
+export const getRoot = async () => {
+  console.log('\nRetrieving latest root');
+  const shieldContract = await getContractWithWalletByName('Shield');
+  const output = await shieldContract.latestRoot();
+  return output.toString();
+};
+
 /**
  * @param {string[]} proof - Array of private fields for the proof
  * @param {string} publicInputHash - The public side of the hash

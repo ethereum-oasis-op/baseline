@@ -13,7 +13,7 @@ docker-compose -f docker-compose.yml -f config/docker-compose.tmp.yml up --no-re
 
 if [ "$1" = "" ]; then
   printf "\nNo circuit selector provided. Defaulting to createMSA/createPO circuits.\n"
-  circuit_selector=0
+  circuit_selector="0"
 else
   circuit_selector=$1
 fi
@@ -29,6 +29,11 @@ case "$circuit_selector" in
         printf "\n${GREEN}*** Running setup for createPO ***${NC}\n"
         curl -d '{"filepath": "business-logic/createPO.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
         printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
+    fi
+    if [ ! -d ./zkp/output/createAgreement ]; then
+        printf "\n${GREEN}*** Running setup for createAgreement ***${NC}\n"
+        curl -d '{"filepath": "business-logic/createAgreement.zok", "jwt": "ZKP"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
+        printf "\n${GREEN}*** createAgreement setup complete ***${NC}\n"
     fi
     ;;
   "1")
@@ -47,7 +52,7 @@ case "$circuit_selector" in
     if [ ! -d ./zkp/output/createAgreement ]; then
         printf "\n${GREEN}*** Running setup for createAgreement ***${NC}\n"
         curl -d '{"filepath": "business-logic/createAgreement.zok"}' -H "Content-Type: application/json" -X POST http://localhost:8080/generate-keys
-        printf "\n${GREEN}*** createPO setup complete ***${NC}\n"
+        printf "\n${GREEN}*** createAgreement setup complete ***${NC}\n"
     fi
     ;;
   *)
