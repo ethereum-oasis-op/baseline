@@ -92,9 +92,21 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary](#12-glossary) \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions](#13-typographical-conventions) \
 [2 Design and Architecture](#2-design-and-architecture) \
-[3 IBaselineRPC](#3-ibaselinerpc) \
-[4 IRegistry](#4-iregistry) \
-[5 IVault](#5-ivault) \
+[3 Interfaces](#3-interfaces) \
+&nbsp;&nbsp;&nbsp;&nbsp;[3.1 Org Management](#31-org-management) \
+&nbsp;&nbsp;&nbsp;&nbsp;[3.2 Messaging](#32-messaging) \
+&nbsp;&nbsp;&nbsp;&nbsp;[3.3 Security](#33-security) \
+&nbsp;&nbsp;&nbsp;&nbsp;[3.4 Agreement Execution](#34-agreement-execution) \
+&nbsp;&nbsp;&nbsp;&nbsp;[3.5 Privacy](#35-privacy) \
+&nbsp;&nbsp;&nbsp;&nbsp;[3.6 Persistence](#36-persistence) \
+[4 Data Model](#4-data-model) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.1 Org Management](#31-org-management) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.2 Messaging](#32-messaging) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.3 Security](#33-security) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.4 Agreement Execution](#34-agreement-execution) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.5 Privacy](#35-privacy) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.6 Persistence](#36-persistence) \
+[5 API Metadata](#5-api-metadata) \
 [6 Security Considerations](#6-security-considerations) \
 [7 Conformance](#6-conformance) \
 &nbsp;&nbsp;&nbsp;&nbsp;[9.1 API and Data Model Minimal Conformance Level]() \
@@ -125,31 +137,18 @@ For complete copyright information please see the Notices section in the Appendi
 
 # 2 Design and Architecture
 
+This section defines the key concepts and architectural principles of the API and Data model(s).
+
 
 -------
 
-# 3 IBaselineRPC
+# 3 Interfaces 
 
-The following section contains RPC methods that are Remote Calls available by default. The solution MUST implement all those methods.
+## 3.1 Org Management
 
+Describes interface(s) providing functions to manage workgroups, organizations and users.
 
-| Requirement ID | Requirement  | 
-| :--- | :--- |
-| BRPC1 | #deploy(sender: string, bytecode: string, abi: any): Promise<any>; <br>description:  Deploys a shield contract given the compiled artifact bytecode and ABI.<br>interface: api.IBaselineRPC.deploy is this correct ? <br>jsonrpc: baseline_deploy <br>caveats:  |
-| BRPC2| #getLeaf(address: string, index: number): Promise<MerkleTreeNode>; <br>description:  Retrieves a single leaf from a tree at the given shield contract address. <br>interface: api.IBaselineRPC <br>jsonrpc: baseline_getLeaf <br>caveats:  |
-| BRPC3| #getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>; <br>description:  Retrieves multiple leaves from a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getLeaves <br>caveats: |
-| BRPC4| #getRoot(address: string): Promise<string>; <br>description:  Retrieves the root of a tree at the given shield contract address <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_getRoot <br>caveats: |
-| BRPC5|#getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>; <br>description:  Retrieves sibling paths/proof of the given leaf index. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getSiblings <br>caveats:|
-| BRPC6|#getTracked(): Promise<string[]>; <br>description:  Retrieves a list of the shield contract addresses being tracked and persisted. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getTracked <br>caveats: |
-| BRPC7|#insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts a single leaf in a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_insertLeaf <br>caveats: |
-| BRPC8|#insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts multiple leaves in a tree at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_insertLeaves <br>caveats: |
-| BRPC9|#track(address: string): Promise<boolean>; <br>description:  Initializes a merkle tree database for the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_track <br>caveats: |
-| BRPC10|#verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>; <br>description:  Verifies a sibling path for a given root and leaf at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_verify <br>caveats:| 
--------
-
-# 4 IRegistry
-
-This interface provides functions to manage workgroups, organizations and users. 
+IRegistry : This interface provides functions to manage workgroups, organizations and users. 
 
 // workgroups
 
@@ -187,11 +186,20 @@ This interface provides functions to manage workgroups, organizations and users.
 | REG18| fetchOrganizationUsers(organizationId: string, params: object): Promise<any>; |
 | REG19| inviteOrganizationUser(organizationId: string, params: object): Promise<any>;|
 
--------
 
-# 5 IVault
 
-This interface provides functions to manage vaults and keys.
+## 3.2 Messaging
+
+Describes interface(s) providing functions to communicate with counterparties.
+
+IMessagingService
+
+
+## 3.3 Security
+
+Describes interface(s) providing functions to manage vaults and keys and to handle digital signatures.
+
+IVault: This interface provides functions to manage vaults and keys.
 
 | Requirement ID | Requirement  | 
 | :--- | :--- |
@@ -207,6 +215,81 @@ This interface provides functions to manage vaults and keys.
 | VAULT10| fetchVaultSecrets(vaultId: string, params: object): Promise<any>; |
 | VAULT11| createVaultSecret(vaultId: string, params: object): Promise<any>; |
 | VAULT12| deleteVaultSecret(vaultId: string, secretId: string): Promise<any>; |
+
+## 3.4 Agreement Execution
+
+
+IBlockchainService 
+
+IBaselineRPC: contains RPC methods that are Remote Calls available by default. The solution MUST implement all those methods.
+
+
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| BRPC1 | #deploy(sender: string, bytecode: string, abi: any): Promise<any>; <br>description:  Deploys a shield contract given the compiled artifact bytecode and ABI.<br>interface: api.IBaselineRPC.deploy is this correct ? <br>jsonrpc: baseline_deploy <br>caveats:  |
+| BRPC2| #getLeaf(address: string, index: number): Promise<MerkleTreeNode>; <br>description:  Retrieves a single leaf from a tree at the given shield contract address. <br>interface: api.IBaselineRPC <br>jsonrpc: baseline_getLeaf <br>caveats:  |
+| BRPC3| #getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>; <br>description:  Retrieves multiple leaves from a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getLeaves <br>caveats: |
+| BRPC4| #getRoot(address: string): Promise<string>; <br>description:  Retrieves the root of a tree at the given shield contract address <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_getRoot <br>caveats: |
+| BRPC5|#getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>; <br>description:  Retrieves sibling paths/proof of the given leaf index. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getSiblings <br>caveats:|
+| BRPC6|#getTracked(): Promise<string[]>; <br>description:  Retrieves a list of the shield contract addresses being tracked and persisted. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getTracked <br>caveats: |
+| BRPC7|#insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts a single leaf in a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_insertLeaf <br>caveats: |
+| BRPC8|#insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts multiple leaves in a tree at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_insertLeaves <br>caveats: |
+| BRPC9|#track(address: string): Promise<boolean>; <br>description:  Initializes a merkle tree database for the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_track <br>caveats: |
+| BRPC10|#verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>; <br>description:  Verifies a sibling path for a given root and leaf at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_verify <br>caveats:| 
+
+## 3.5 Privacy
+
+Describes interfaces(s) providing functions to implement and manage private transactions.\
+IZKSnarkCircuitProvider\
+IZKSnarkCompilationArtifacts
+
+## 3.6 Persistence
+
+Describes interface(s) providing functions to store, query and update data.(sub and unsub ?)\
+IPersistenceService
+
+
+-------
+
+# 4 Data Model
+
+## 4.1 Org Management
+
+Workgroup {id, createdAt, networkId, userId, name, description,type, config, hidden}\
+Organization {id, createdAt, name, userId, description, metadata}\
+User {id, createdAt, name, firstName, lastName, email, permissions}\
+orgRegistry {}
+
+
+## 4.2 Messaging
+
+
+
+## 5.3 Security
+
+
+Vault {id, createAt, name, description}\
+Key {id, createAt, vaultId, type, usage, spec, name, description, publicKey}\
+Identity/authentication/authorization\
+Cryptography - curves, hash functions\
+audit
+
+
+## 4.4 Agreement Execution
+
+Workflow {}\
+Worstep {}
+
+
+## 4.5 Privacy
+
+## 4.6 Persistence
+
+
+
+-------
+
+# 5 API Metadata
 
 
 
