@@ -132,20 +132,39 @@ For complete copyright information please see the Notices section in the Appendi
 
 The following section contains RPC methods that are Remote Calls available by default. The solution MUST implement all those methods.
 
-
 | Requirement ID | Requirement  | 
 | :--- | :--- |
-| BRPC1 | #deploy(sender: string, bytecode: string, abi: any): Promise<any>; <br>description:  Deploys a shield contract given the compiled artifact bytecode and ABI.<br>interface: api.IBaselineRPC.deploy is this correct ? <br>jsonrpc: baseline_deploy <br>caveats:  |
-| BRPC2| #getLeaf(address: string, index: number): Promise<MerkleTreeNode>; <br>description:  Retrieves a single leaf from a tree at the given shield contract address. <br>interface: api.IBaselineRPC <br>jsonrpc: baseline_getLeaf <br>caveats:  |
-| BRPC3| #getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>; <br>description:  Retrieves multiple leaves from a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getLeaves <br>caveats: |
-| BRPC4| #getRoot(address: string): Promise<string>; <br>description:  Retrieves the root of a tree at the given shield contract address <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_getRoot <br>caveats: |
-| BRPC5|#getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>; <br>description:  Retrieves sibling paths/proof of the given leaf index. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getSiblings <br>caveats:|
-| BRPC6|#getTracked(): Promise<string[]>; <br>description:  Retrieves a list of the shield contract addresses being tracked and persisted. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getTracked <br>caveats: |
-| BRPC7|#insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts a single leaf in a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_insertLeaf <br>caveats: |
-| BRPC8|#insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts multiple leaves in a tree at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_insertLeaves <br>caveats: |
-| BRPC9|#track(address: string): Promise<boolean>; <br>description:  Initializes a merkle tree database for the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_track <br>caveats: |
-| BRPC10|#verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>; <br>description:  Verifies a sibling path for a given root and leaf at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_verify <br>caveats:| 
+| BRPC1|#track(address: string): Promise<boolean>; <br>description:  Initializes tracking a merkle tree database for the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_track(DATA) <br>caveats: |
+| BRPC2|#getTracked(): Promise<string[]>; <br>description:  Retrieves a list of the shield contract addresses being tracked and persisted. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getTracked <br>caveats: |
+| BRPC3| #getLeaf(address: string, index: number): Promise<MerkleTreeNode>; <br>description:  Retrieves a single leaf from a tree at the given shield contract address. <br>interface: api.IBaselineRPC <br>jsonrpc: baseline_getLeaf <br>caveats:  |
+| BRPC4| #getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>; <br>description:  Retrieves multiple leaves from a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getLeaves <br>caveats: |
+| BRPC5| #getRoot(address: string): Promise<string>; <br>description:  Retrieves the root of a tree at the given shield contract address <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_getRoot <br>caveats: |
+| BRPC6|#getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>; <br>description:  Retrieves sibling paths/proof of the given leaf index. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getSiblings <br>caveats:|
+| BRPC7|#verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>; <br>description:  Verifies a sibling path for a given root and leaf at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_verify <br>caveats:| 
+| BRPC7|#verifyAndPush(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>; <br>description:  Verifies a sibling path for a given root and leaf at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_verify <br>caveats: creates a transaction so the change only takeseffect when the transaction is included in the block| 
+| BRPC9 | #deploy(sender: string, contractType: string, abi: any): Promise<any>; <br>description:  Deploys a test shield contract of a given type.<br>interface: api.IBaselineRPC.deploy is this correct ? <br>jsonrpc: baseline_deploy <br>caveats:  Optional - only used in the development mode|
 -------
+ 
+ Tracking a Baseline trie means maintaining a full off-chain representation of the trie that is being updated whenever the blockchain progresses.
+ 
+ ```
+ MERKLE_TRIE_NODE contains two properties
+  * DATA commitment
+  * QUANTITY node index
+ ```
+ 
+ ```
+ NodeIndex is counted starting from root, where the root is assigned 0 index and then each row of the trie starts with index 2^row_number - 1.
+ LeafIndex is counted starting from the first leaf, where the first leaf is assigned index 0.
+ 
+ In a trie with three layers we would see:
+row0_nodeIndex        0
+row0_leafIndex        -
+row1_nodeIndex    1       2
+row1_leafIndex    -       -
+row2_nodeIndex  3   4   5   6   
+row2_leafIndex  0   1   2   3
+```
 
 # 4 IRegistry
 
