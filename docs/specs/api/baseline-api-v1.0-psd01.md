@@ -92,13 +92,14 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;[1.2 Glossary](#12-glossary) \
 &nbsp;&nbsp;&nbsp;&nbsp;[1.3 Typographical Conventions](#13-typographical-conventions) \
 [2 Design and Architecture](#2-design-and-architecture) \
-[3 Interfaces](#3-interfaces) \
+[3 API](#3-api) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.1 Org Management](#31-org-management) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.2 Messaging](#32-messaging) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.3 Security](#33-security) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.4 Agreement Execution](#34-agreement-execution) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.5 Privacy](#35-privacy) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.6 Persistence](#36-persistence) \
+&nbsp;&nbsp;&nbsp;&nbsp;[3.7 API Metadata](#37-api-metadata) \
 [4 Data Model](#4-data-model) \
 &nbsp;&nbsp;&nbsp;&nbsp;[4.1 Org Management](#31-org-management) \
 &nbsp;&nbsp;&nbsp;&nbsp;[4.2 Messaging](#32-messaging) \
@@ -106,9 +107,8 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;[4.4 Agreement Execution](#34-agreement-execution) \
 &nbsp;&nbsp;&nbsp;&nbsp;[4.5 Privacy](#35-privacy) \
 &nbsp;&nbsp;&nbsp;&nbsp;[4.6 Persistence](#36-persistence) \
-[5 API Metadata](#5-api-metadata) \
-[6 Security Considerations](#6-security-considerations) \
-[7 Conformance](#6-conformance) \
+[5 Security Considerations](#6-security-considerations) \
+[6 Conformance](#6-conformance) \
 &nbsp;&nbsp;&nbsp;&nbsp;[9.1 API and Data Model Minimal Conformance Level]() \
 &nbsp;&nbsp;&nbsp;&nbsp;[9.2 API and Data Model Conformance Level]()\
 [Appendix A.        Acknowledgments]()\
@@ -142,7 +142,7 @@ This section defines the key concepts and architectural principles of the API an
 
 -------
 
-# 3 Interfaces 
+# 3 API
 
 ## 3.1 Org Management
 
@@ -154,18 +154,18 @@ IRegistry : This interface provides functions to manage workgroups, organization
 
 | Requirement ID | Requirement  | 
 | :--- | :--- |
-| REG1 | createWorkgroup(params: object): Promise<any>; |
-| REG2| updateWorkgroup(workgroupId: string, params: object): Promise<any>; |
-| REG3| fetchWorkgroups(params: object): Promise<any>;|
-| REG4| fetchWorkgroupDetails(workgroupId: string): Promise<any>; |
-| REG5| fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;|
-| REG6| createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>; |
-| REG7| updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>; |
-| REG8| fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>; |
-| REG9| fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>; |
-| REG10| createWorkgroupUser(workgroupId: string, params: object): Promise<any>; |
-| REG11| updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>; |
-| REG12| deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>; |
+| REG1 | #createWorkgroup(params: object): Promise<any>;  <br>description:  <br>interface: <br>caveats:  |
+| REG2| #updateWorkgroup(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG3| #fetchWorkgroups(params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG4| #fetchWorkgroupDetails(workgroupId: string): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG5| #fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;<br>description:  <br>interface: <br>caveats: |
+| REG6| #createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG7| #updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>;<br>description:  <br>interface: <br>caveats:  |
+| REG8| #fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG9| #fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG10| #createWorkgroupUser(workgroupId: string, params: object): Promise<any>; |
+| REG11| #updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG12| #deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>; <br>description:  <br>interface: <br>caveats: |
 
 
 // organizations
@@ -248,6 +248,7 @@ IZKSnarkCompilationArtifacts
 Describes interface(s) providing functions to store, query and update data.(sub and unsub ?)\
 IPersistenceService
 
+## 3.7 API Metadata
 
 -------
 
@@ -255,8 +256,54 @@ IPersistenceService
 
 ## 4.1 Org Management
 
-Workgroup {id, createdAt, networkId, userId, name, description,type, config, hidden}\
-Organization {id, createdAt, name, userId, description, metadata}\
+Workgroup {id, createdAt, networkId, userId, name, description,type, config, hidden}
+
+```
+Workgroup {
+  id: '5bb63fd0-27f8-43f5-8275-14fe2891f14e',
+  createdAt: '2020-11-05T14:34:04.3478365Z',
+  networkId: '66d44f30-9092-4182-a3c4-bc02736d6ae5',
+  userId: 'e021eca9-17cc-4598-a513-c84b05c15270',
+  name: 'baseline workgroup',
+  description: null,
+  type: null,
+  config: {
+    webhook_secret: 'd6bf3a9f92344ea9b5ee29bd164060a9'
+  },
+  hidden: false
+}
+```
+
+
+
+Organization {id, createdAt, name, userId, description, metadata}
+
+
+```
+
+Organization {
+  id: '440988f7-8f24-4dd8-bea0-8f103caa2fd5',
+  createdAt: '2020-11-05T14:35:26.4838047Z',
+  name: 'Bob Corp',
+  userId: 'e021eca9-17cc-4598-a513-c84b05c15270',
+  description: null,
+  metadata: { messaging_endpoint: 'nats://localhost:4224' }
+}
+
+Model {
+  id: 'd055b7d7-adc8-48ce-8df4-d5446ad19667',
+  createdAt: '2020-11-05T14:49:15.8650886Z',
+  name: 'Bob Smith',
+  firstName: 'Bob',
+  lastName: 'Smith',
+  email: 'bob1604587755731@baseline.local',
+  permissions: 7553
+}
+
+```
+
+
+
 User {id, createdAt, name, firstName, lastName, email, permissions}\
 orgRegistry {}
 
@@ -274,6 +321,29 @@ Identity/authentication/authorization\
 Cryptography - curves, hash functions\
 audit
 
+```
+Vault {
+  id: 'f04e7222-bc86-47a4-a960-3be7e0a06995',
+  createdAt: '2020-11-05T14:39:35.088114Z',
+  name: 'Alice Corp vault',
+  description: 'default organizational keystore'
+}
+
+Key {
+  id: '89c32eea-d522-4780-84bc-7c29de9f5cf1',
+  createdAt: '2020-11-05T14:39:37.7093941Z',
+  vaultId: 'f04e7222-bc86-47a4-a960-3be7e0a06995',
+  type: 'asymmetric',
+  usage: 'sign/verify',
+  spec: 'secp256k1',
+  name: 'Alice Corp secp256k1 keypair',
+  description: 'Alice Corp secp256k1 keypair',
+  address: '0x5AE7032d4E3eC2215474988e9831D45C793b2A0f',
+  publicKey: '0x049bd97593e08d40d77426d73a1f5ce2dbd184f58e48bee417577dcefcb6eab736dd06128a1eba69695af700bb1fcc5f0baa5e00ef597ebf2a0e2aaf2f8099c73c'
+}
+
+```
+
 
 ## 4.4 Agreement Execution
 
@@ -289,19 +359,13 @@ Worstep {}
 
 -------
 
-# 5 API Metadata
+# 5 Security Considerations
 
 
 
 -------
 
-# 6 Security Considerations
-
-
-
--------
-
-# 7 Conformance
+# 6 Conformance
 
 
 
