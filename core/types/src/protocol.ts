@@ -16,7 +16,7 @@ export enum PayloadType {
 
 export type Message = {
   opcode: Opcode; // up to 40 bits
-  sender: string, // up to 336 bits
+  sender: string; // up to 336 bits
   recipient: string; // up to 336 bits
   shield: string; // up to 336 bits
   identifier: string; // up to 288 bits (i.e., UUIDv4 circuit/workflow identifier)
