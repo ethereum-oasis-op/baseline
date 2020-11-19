@@ -232,7 +232,7 @@ This interface provides functions to manage vaults and keys.
 
 ### 3.4.1 IBaselineRPC
 
-Contains RPC methods that are Remote Calls available by default. The solution MUST implement all those methods.
+Contains RPC methods that are Remote Calls available by default. The solution ??MUST?? implement all those methods.
 
 
 | Requirement ID | Requirement  | 
