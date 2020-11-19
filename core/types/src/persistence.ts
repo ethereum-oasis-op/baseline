@@ -5,8 +5,14 @@ export type BaselineCommitment = {
   value: string;
   proof: number[];
   publicInputs: string[];
-  signatures: object;
+  signatures: object; // Allows mapping from participant address -> signature
+  sender: string; // Address of participant who created the commitment
 };
+
+export type Participant = {
+  address: string; // Can use this to lookup messagingEndpoint, etc.
+  metadata: object;
+}
 
 export type BaselineState = {
 
@@ -19,13 +25,11 @@ export type BaselineState = {
     model: string; // i.e. collection, table
     id: string; // identifier, i.e. document name, UUID, primary key
     fields: string[] | string; // fields within document to hash and baseline
+    metadata: object;
   };
 
   // Counter-parties plus self
-  parties: [{
-    address: string; // Can use this to lookup messagingEndpoint, etc.
-    metadata: object;
-  }];
+  parties: Participant[];
 
   // commitments[0] is latest commitment (new commitments are prepended to array)
   commitments: BaselineCommitment[];
