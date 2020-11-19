@@ -13,6 +13,18 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 /// ERC165Compatible contains interface compatibility checks
 contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
 
+    struct Attestation {
+        address attestee; // i.e., the organization address;
+        address attestor;
+        string attesteeSignature;
+        string attestorSignature;
+        string attestationType;
+        string dataHash;
+        string trackingId;
+        string uuid;
+        bytes metadata; // i.e., arbitrary JSON containing any public note(s) etc. related to the attestation
+    }
+
     struct Org {
         address orgAddress;
         bytes32 name;
@@ -29,12 +41,23 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
         address verifierAddress;
     }
 
+    Org[] public orgs;
     mapping (address => Org) orgMap;
     mapping (uint => OrgInterfaces) orgInterfaceMap;
     uint orgInterfaceCount;
 
-    Org[] public orgs;
+    Attestation[] public attestations;
+    mapping (address => Attestation[]) attestationsByAttestee;
+    mapping (address => mapping (string => Attestation)) attestationsMap;
+
     mapping(address => address) managerMap;
+
+    event Attest(
+        string attestationType,
+        address attestee,
+        address attestor,
+        string uuid
+    );
 
     event RegisterOrg(
         bytes32 _name,
@@ -91,7 +114,7 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// @param interfaceHash keccak256 hash of the name of the interface
     /// @param addr Address for which the contract will implement the interface
     /// @return ERC1820_ACCEPT_MAGIC only if the contract implements 'interfaceHash' for the address 'addr'.
-    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external view returns(bytes32) {
+    function canImplementInterfaceForAddress(bytes32 interfaceHash, address addr) external pure returns(bytes32) {
         return ERC1820_ACCEPT_MAGIC;
     }
 
@@ -99,6 +122,55 @@ contract OrgRegistry is Ownable, ERC165Compatible, Registrar, IOrgRegistry {
     /// for this contract instance
     function assignManager(address _newManager) external onlyOwner {
         assignManagement(_newManager);
+    }
+
+    /// @notice Function to attach an arbitrary attestation
+    /// @param _attestee address of the attestee
+    /// @param _attestor address of the attestor
+    /// @param _attesteeSignature attestee signature
+    /// @param _attestorSignature attestor signature
+    /// @param _trackingId identifier of the attestation request record
+    /// @param _type attestation type
+    /// @param _uuid unique identifier of the attestation
+    /// @param _dataHash hash used to validate a PII value
+    /// @param _metadata arbitrary public metadata
+    /// @dev Function to attach an attestation to an organization
+    /// @return `true` upon successful validation and attachment of the attestation
+    function attachAttestation(
+        address _attestee,
+        address _attestor,
+        string memory _attesteeSignature,
+        string memory _attestorSignature,
+        string memory _trackingId,
+        string memory _type,
+        string memory _uuid,
+        string memory _dataHash,
+        bytes memory _metadata
+    ) external returns (bool) {
+        Attestation memory attestation = Attestation(
+            _attestee,
+            _attestor,
+            _attesteeSignature,
+            _attestorSignature,
+            _trackingId,
+            _type,
+            _uuid,
+            _dataHash,
+            _metadata
+        );
+
+        attestations.push(attestation);
+        attestationsByAttestee[_attestee].push(attestation);
+        attestationsMap[_attestee][_uuid] = attestation;
+
+        emit Attest(
+            _type,
+            _attestee,
+            _attestor,
+            _uuid
+        );
+
+        return true;
     }
 
     /// @notice Function to register an organization
