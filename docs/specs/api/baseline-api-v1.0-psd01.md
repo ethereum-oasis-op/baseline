@@ -277,13 +277,13 @@ Describes interface(s) providing functions to store, query and update data.(sub 
 | Requirement ID | Requirement  | 
 | :--- | :--- |
 | ORGM1|**#Workgroup**<br>**id:**  <br>**createdAt:**  <br>**networkId:** <br>**userId:** <br> **name**: <br>**description:**<br>**type:**<br>**config:**<br>**hidden:**|
-| ORGM2|**#Organization**<br>|
-| ORGM3|**#User**<br>|
+| ORGM2|**#Organization**<br> {id, createdAt, name, userId, description, metadata}|
+| ORGM3|**#User**<br>{id, createdAt, name, firstName, lastName, email, permissions}\|
 | ORGM4|**#orgRegistry**<br>|
 
-## 4.2 Examples
+## 4.1.1 Examples
 
-### 4.2.1 Workgroup 
+### 4.1.1.1 Workgroup 
 
 
 
@@ -305,9 +305,8 @@ Workgroup {
 
 
 
-### 4.2.2  Organization {id, createdAt, name, userId, description, metadata}
+### 4.1.1.2  Organization
 
-Organization {id, createdAt, name, userId, description, metadata}
 
 
 ```
@@ -327,24 +326,61 @@ Organization {
 
 ## 4.2.3 User
 
-User {id, createdAt, name, firstName, lastName, email, permissions}\
+
+```
+User {
+  id: '',
+
+}
+```
+
+
+
 
 ## 4.2.4 orgRegistry
 
 
 ## 4.2 Messaging
 
+## 4.2.1 Examples
+
+```
+export enum Opcode {
+  Baseline = 'BLINE', // workflow-specific
+  Join = 'JOIN', // join workgroup
+  Ping = 'PING',
+  Pong = 'PONG',
+  Proof = 'PROOF', // generate proof
+  Verify = 'VRFY', // idempotent proof verification
+}export enum PayloadType {
+  Binary = 0x0,
+  Text = 0x1,
+}export type Message = {
+  opcode: Opcode; // up to 40 bits
+  sender: string, // up to 336 bits
+  recipient: string; // up to 336 bits
+  shield: string; // up to 336 bits
+  identifier: string; // up to 288 bits (i.e., UUIDv4 circuit/workflow identifier)
+  signature: string; // 512 bits
+  type: PayloadType; // 1 bit
+  payload: Buffer; // arbitrary length
+}
+
+```
+
+## 4.3 Security
+
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| SEC1|**#Vault**<br>{id, createAt, name, description}|
+| SEC2|**#Key**<br> {id, createAt, vaultId, type, usage, spec, name, description, publicKey}|
 
 
-## 5.3 Security
-
-
-Vault {id, createAt, name, description}\
-Key {id, createAt, vaultId, type, usage, spec, name, description, publicKey}\
 Identity/authentication/authorization\
 Cryptography - curves, hash functions\
 audit
 
+## 4.3.1 Examples
 ```
 Vault {
   id: 'f04e7222-bc86-47a4-a960-3be7e0a06995',
