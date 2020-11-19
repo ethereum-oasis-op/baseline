@@ -268,6 +268,8 @@ Describes interface(s) providing functions to store, query and update data.(sub 
 
 ## 3.7 API Metadata
 
+Describes the object providing metadata information about the API (example: title, description, terms of service, contact, license,version)
+
 -------
 
 # 4 Data Model
