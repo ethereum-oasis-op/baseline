@@ -33,16 +33,12 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
 
   // BaselineRPC impl
 
-  async deploy(sender: string, bytecode: string, abi: any): Promise<any> {
-    return await this.rpc.call('baseline_deploy', [sender, bytecode, abi]);
-  }
-
   async getLeaf(address: string, index: number): Promise<MerkleTreeNode> {
     return await this.rpc.call('baseline_getLeaf', [address, index]);
   }
 
-  async getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]> {
-    return await this.rpc.call('baseline_getLeaves', [address, indexes]);
+  async getLeaves(address: string, startLeafIndex: number, count: number): Promise<MerkleTreeNode[]> {
+    return await this.rpc.call('baseline_getLeaves', [address, startLeafIndex, count]);
   }
 
   async getRoot(address: string): Promise<string> {
@@ -57,16 +53,16 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return await this.rpc.call('baseline_getTracked', []);
   }
 
-  async insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode> {
-    return await this.rpc.call('baseline_insertLeaf', [sender, address, value]);
-  }
-
-  async insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode> {
-    return await this.rpc.call('baseline_insertLeaves', [sender, address, value]);
+  async insertLeaf(sender: string, address: string, proof: number[], publicInputs: number[], value: string): Promise<string> {
+    return await this.rpc.call('baseline_insertLeaf', [sender, address, proof, publicInputs, value]);
   }
 
   async track(address: string): Promise<boolean> {
     return await this.rpc.call('baseline_track', [address]);
+  }
+
+  async untrack(address: string): Promise<boolean> {
+    return await this.rpc.call('baseline_untrack', [address]);
   }
 
   async verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean> {
