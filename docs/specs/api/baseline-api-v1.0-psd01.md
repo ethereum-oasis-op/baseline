@@ -107,12 +107,12 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1 IPersistenceService](#361-ipersistenceservice) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.7 API Metadata](#37-api-metadata) \
 [4 Data Model](#4-data-model) \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.1 Org Management](#31-org-management) \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.2 Messaging](#32-messaging) \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.3 Security](#33-security) \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.4 Agreement Execution](#34-agreement-execution) \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.5 Privacy](#35-privacy) \
-&nbsp;&nbsp;&nbsp;&nbsp;[4.6 Persistence](#36-persistence) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.1 Org Management](#41-org-management) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.2 Messaging](#42-messaging) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.3 Security](#43-security) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.4 Agreement Execution](#44-agreement-execution) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.5 Privacy](#45-privacy) \
+&nbsp;&nbsp;&nbsp;&nbsp;[4.6 Persistence](#46-persistence) \
 [5 Security Considerations](#6-security-considerations) \
 [6 Conformance](#6-conformance) \
 &nbsp;&nbsp;&nbsp;&nbsp;[9.1 API and Data Model Minimal Conformance Level]() \
