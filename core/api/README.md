@@ -12,19 +12,18 @@ You can build the package locally with `npm run build`.
 
 ## Baseline JSON-RPC Module
 
-An initial set of JSON-RPC methods have been defined for inclusion in the specification:
+An initial set of JSON-RPC methods have been defined for inclusion in the specification. These methods allow easy interaction with on-chain shield contracts (which contain merkle-tree fragments) and maintain full merkle-trees (along with metadata) in local off-chain storage.
 
 | Method | Params | Description |
 | -------- | ----- | ----------- |
-| `baseline_deploy` | | Deploy a shield contract given the compiled artifact bytecode and ABI |
 | `baseline_getLeaf` | | Retrieve a single leaf from a tree at the given shield contract address |
 | `baseline_getLeaves` | | Retrieve multiple leaves from a tree at the given shield contract address |
 | `baseline_getRoot` | | Retrieve the root of a tree at the given shield contract address |
 | `baseline_getSiblings` | | Retrieve sibling paths/proof of the given leaf index |
 | `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
 | `baseline_insertLeaf` | | Inserts a single leaf in a tree at the given shield contract address |
-| `baseline_insertLeaves` | | Inserts multiple leaves in a tree at the given shield contract address |
 | `baseline_track` | | Initialize a merkle tree database for the given shield contract address |
+| `baseline_untrack` | | Remove event listeners for the given shield contract address |
 | `baseline_verify` | | Verify a sibling path for a given root and leaf at the given shield contract address |
 
 ### Ethereum Clients
@@ -38,15 +37,14 @@ __IBaselineRPC__
 This interface provides methods to deploy Shield contracts on the blockchain, and execute read/write operations on them. Writes are necessary when adding new hashes (commitments) to the on-chain merkle tree. Reads are necessary to verify consistency of off-chain records with on-chain state.
 
 ```javascript
-deploy(sender: string, bytecode: string, abi: any): Promise<any>;
 getLeaf(address: string, index: number): Promise<MerkleTreeNode>;
-getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>;
+getLeaves(address: string, startLeafIndex: number, count: number): Promise<MerkleTreeNode[]>;
 getRoot(address: string): Promise<string>;
 getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>;
 getTracked(): Promise<string[]>;
-insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>;
-insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>;
+insertLeaf(sender: string, address: string, value: string): Promise<string>;
 track(address: string): Promise<boolean>;
+untrack(address: string): Promise<boolean>;
 verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
 ```
 

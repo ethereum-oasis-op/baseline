@@ -8,14 +8,11 @@ export const baselineProviderProvide = 'provide';
 export const baselineProviderRpc = 'rpc';
 
 export interface IBaselineRPC {
-  // Deploy a shield contract given the compiled artifact bytecode and ABI
-  deploy(sender: string, bytecode: string, abi: any): Promise<any>;
-
   // Retrieve a single leaf from a tree at the given shield contract address
   getLeaf(address: string, index: number): Promise<MerkleTreeNode>;
 
   // Retrieve multiple leaves from a tree at the given shield contract address
-  getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>;
+  getLeaves(address: string, startLeafIndex: number, count: number): Promise<MerkleTreeNode[]>;
 
   // Retrieve the root of a tree at the given shield contract address
   getRoot(address: string): Promise<string>;
@@ -26,14 +23,14 @@ export interface IBaselineRPC {
   // Retrieve a list of the shield contract addresses being tracked and persisted
   getTracked(): Promise<string[]>;
 
-  // Inserts a single leaf in a tree at the given shield contract address
-  insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>;
-
-  // Inserts multiple leaves in a tree at the given shield contract address
-  insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>;
+  // Inserts a single leaf in a tree at the given shield contract address. Returns tx hash
+  insertLeaf(sender: string, address: string, proof: number[], publicInputs: number[], value: string): Promise<string>;
 
   // Initialize a merkle tree database and track changes at the given shield contract address
   track(address: string): Promise<boolean>;
+
+  // Remove event listeners for a given shield contract address
+  untrack(address: string): Promise<boolean>;
 
   // Verify a sibling path for a given root and leaf at the given shield contract address
   verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
