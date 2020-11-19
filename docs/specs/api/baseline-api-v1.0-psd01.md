@@ -50,7 +50,7 @@ This prose specification is one component of a Work Product that also includes:
 
 <!--
 This specification replaces or supersedes:
-* _Baseline Protocol v0.1_ - https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1
+* _Baseline Protocol v0.1_ - https://github.com/ethereum-oasis/baseline/tree/master/**Example:**s/bri-1
 * Specifications replaced by this specification (include hyperlink, preferably to HTML format)
  -->
 
@@ -94,11 +94,17 @@ For complete copyright information please see the Notices section in the Appendi
 [2 Design and Architecture](#2-design-and-architecture) \
 [3 API](#3-api) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.1 Org Management](#31-org-management) \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.1.1 IRegistry](#311-iregistry) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.2 Messaging](#32-messaging) \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.2.1 IMessagingService](#321-imessagingservice) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.3 Security](#33-security) \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.3.1 IVault](#331-ivault) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.4 Agreement Execution](#34-agreement-execution) \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.4.1 IBaselineRPC](#341-ibaselinerpc) \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.4.2 IBlockchainService](#342-iblockchainservice) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.5 Privacy](#35-privacy) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.6 Persistence](#36-persistence) \
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3.6.1 IPersistenceService](#361-ipersistenceservice) \
 &nbsp;&nbsp;&nbsp;&nbsp;[3.7 API Metadata](#37-api-metadata) \
 [4 Data Model](#4-data-model) \
 &nbsp;&nbsp;&nbsp;&nbsp;[4.1 Org Management](#31-org-management) \
@@ -148,24 +154,26 @@ This section defines the key concepts and architectural principles of the API an
 
 Describes interface(s) providing functions to manage workgroups, organizations and users.
 
-IRegistry : This interface provides functions to manage workgroups, organizations and users. 
+### 3.1.1 IRegistry
+
+This interface provides functions to manage workgroups, organizations and users. 
 
 // workgroups
 
 | Requirement ID | Requirement  | 
 | :--- | :--- |
-| REG1 | #createWorkgroup(params: object): Promise<any>;  <br>description:  <br>interface: <br>caveats:  |
-| REG2| #updateWorkgroup(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
-| REG3| #fetchWorkgroups(params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
-| REG4| #fetchWorkgroupDetails(workgroupId: string): Promise<any>; <br>description:  <br>interface: <br>caveats: |
-| REG5| #fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;<br>description:  <br>interface: <br>caveats: |
-| REG6| #createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
-| REG7| #updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>;<br>description:  <br>interface: <br>caveats:  |
-| REG8| #fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
-| REG9| #fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG1 | #createWorkgroup(params: object): Promise<any>;  <br>description:  <br>interface: <br>**Caveats:**  |
+| REG2| #updateWorkgroup(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
+| REG3| #fetchWorkgroups(params: object): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
+| REG4| #fetchWorkgroupDetails(workgroupId: string): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
+| REG5| #fetchWorkgroupOrganizations(workgroupId: string, params: object): Promise<any>;<br>description:  <br>interface: <br>**Caveats:** |
+| REG6| #createWorkgroupOrganization(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
+| REG7| #updateWorkgroupOrganization(workgroupId: string, organizationId: string, params: object): Promise<any>;<br>description:  <br>interface: <br>**Caveats:**  |
+| REG8| #fetchWorkgroupInvitations(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
+| REG9| #fetchWorkgroupUsers(workgroupId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
 | REG10| #createWorkgroupUser(workgroupId: string, params: object): Promise<any>; |
-| REG11| #updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>caveats: |
-| REG12| #deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>; <br>description:  <br>interface: <br>caveats: |
+| REG11| #updateWorkgroupUser(workgroupId: string, userId: string, params: object): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
+| REG12| #deleteWorkgroupUser(workgroupId: string, userId: string): Promise<any>; <br>description:  <br>interface: <br>**Caveats:** |
 
 
 // organizations
@@ -192,14 +200,16 @@ IRegistry : This interface provides functions to manage workgroups, organization
 
 Describes interface(s) providing functions to communicate with counterparties.
 
-IMessagingService
+### 3.2.1 IMessagingService
 
 
 ## 3.3 Security
 
 Describes interface(s) providing functions to manage vaults and keys and to handle digital signatures.
 
-IVault: This interface provides functions to manage vaults and keys.
+### 3.3.1 IVault
+
+This interface provides functions to manage vaults and keys.
 
 | Requirement ID | Requirement  | 
 | :--- | :--- |
@@ -219,23 +229,31 @@ IVault: This interface provides functions to manage vaults and keys.
 ## 3.4 Agreement Execution
 
 
-IBlockchainService 
 
-IBaselineRPC: contains RPC methods that are Remote Calls available by default. The solution MUST implement all those methods.
+### 3.4.1 IBaselineRPC
+
+Contains RPC methods that are Remote Calls available by default. The solution MUST implement all those methods.
 
 
 | Requirement ID | Requirement  | 
 | :--- | :--- |
-| BRPC1 | #deploy(sender: string, bytecode: string, abi: any): Promise<any>; <br>description:  Deploys a shield contract given the compiled artifact bytecode and ABI.<br>interface: api.IBaselineRPC.deploy is this correct ? <br>jsonrpc: baseline_deploy <br>caveats:  |
-| BRPC2| #getLeaf(address: string, index: number): Promise<MerkleTreeNode>; <br>description:  Retrieves a single leaf from a tree at the given shield contract address. <br>interface: api.IBaselineRPC <br>jsonrpc: baseline_getLeaf <br>caveats:  |
-| BRPC3| #getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>; <br>description:  Retrieves multiple leaves from a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getLeaves <br>caveats: |
-| BRPC4| #getRoot(address: string): Promise<string>; <br>description:  Retrieves the root of a tree at the given shield contract address <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_getRoot <br>caveats: |
-| BRPC5|#getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>; <br>description:  Retrieves sibling paths/proof of the given leaf index. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getSiblings <br>caveats:|
-| BRPC6|#getTracked(): Promise<string[]>; <br>description:  Retrieves a list of the shield contract addresses being tracked and persisted. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_getTracked <br>caveats: |
-| BRPC7|#insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts a single leaf in a tree at the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_insertLeaf <br>caveats: |
-| BRPC8|#insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>; <br>description:  Inserts multiple leaves in a tree at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_insertLeaves <br>caveats: |
-| BRPC9|#track(address: string): Promise<boolean>; <br>description:  Initializes a merkle tree database for the given shield contract address. <br>interface: api.IBaselineRPC. <br>jsonrpc: baseline_track <br>caveats: |
-| BRPC10|#verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>; <br>description:  Verifies a sibling path for a given root and leaf at the given shield contract address. <br>interface: api.IBaselineRPC.<br>jsonrpc: baseline_verify <br>caveats:| 
+| BRPC1|**# track**<br>**Description:**  Initializes a merkle tree database for the given Shield contract address and starts tracking new tree events.<br>**jsonrpc:** baseline_track <br>**Caveats:** <br>**Parameters:** <br> - DATA - address of the Shield contract<br>**Returns:**: -<br>**Example:**:|
+| BRPC2|**# getTracked**<br>**Description:**  Retrieves a list of the shield contract addresses being tracked and persisted. <br>**jsonrpc:** baseline_getTracked <br>**Caveats:** <br>**Parameters:** -<br>**Returns:**: <br> - Array&lt;DATA&gt; - list of all tracked Shield contracts<br>**Example:**:|
+| BRPC3| **# getLeaf** <br>**Description:** Retrieves a single leaf from a tree at the given shield contract address.  <br>**jsonrpc:** baseline_getLeaf <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - QUANTITY - leaf index<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
+| BRPC4| **# insertLeaf** <br>**Description:** Inserts a single leaf to atree at the given shield contract address.  <br>**jsonrpc:** baseline_insertLeaf <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - QUANTITY - leaf index<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
+| BRPC5| **# getLeaves** <br>**Description:**  Retrieves multiple leaves from a tree at the given shield contract address. <br>**jsonrpc:** baseline_getLeaves <br>**Caveats:** only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - Array&lt;QUANTITY&gt; - leaf indexes<br>**Returns:**:<br> - Array&lt;MERKLE_TRIE_NODE&gt;<br>**Example:**:|
+| BRPC6| **# insertLeaves** <br>**Description:**  Inserts multiple leaves to a tree at the given shield contract address. <br>**jsonrpc:** baseline_insertLeaves <br>**Caveats:** only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - Array&lt;QUANTITY&gt; - leaf indexes<br>**Returns:**:<br> - Array&lt;MERKLE_TRIE_NODE&gt;<br>**Example:**:|
+| BRPC7| **# getRoot** <br>**Description:**  Retrieves the root of a tree at the given shield contract address .<br>**jsonrpc:** baseline_getRoot <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:**<br> - DATA - Shield contract address<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
+| BRPC8| **# getCount** <br>**Description:**  Gets count of a tree at the given 'address'.<br>**jsonrpc:** baseline_getRoot <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:**<br> - DATA - Shield contract address<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
+| BRPC9|**# getSiblings** <br>**Description:**  Retrieves siblings path/proof of the given leaf index. <br>**jsonrpc:** baseline_getSiblings <br>**Caveats:**  only works if the contract is tracked, otherwise<br> **Returns:** an error<br>**Parameters:**<br> - DATA - address of the Shield contract<br> - QUANTITY - leaf index to prove<br>**Returns:**:<br> - Array&lt;MERKLE_TRIE_NODE&gt; - siblings path<br>**Example:**:|
+| BRPC10|**# verify** <br>**Description:**  Verifies a sibling path for a given root and leaf at the given shield contract address. .<br>**jsonrpc:** baseline_verify <br>**Caveats:** only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:**<br> - DATA - address of the Shield contract<br> - DATA - root node hash<br> - DATA - hash of the leaf node to be verified<br> - Array&lt;DATA&gt; - siblings path/proof<br>**Returns:**:<br> - bool - verification result<br>**Example:**:| 
+| BRPC11|**# verifyAndPush**<br>**Description:** .<br>**jsonrpc:** baseline_verify <br>**Caveats:** generates and sends a transaction which only affects the state after being included in a block<br>**Parameters:**<br>- DATA - address of the transaction sender<br>- DATA - address of the Shield contract<br>- Array&lt;DATA&gt; - proof data<br> - Array&lt;DATA&gt; - public inputs<br> - DATA - commitment<br>**Returns:**:<br> - DATA - transaction hash<br>**Example:**:| 
+| BRPC12 | **# deploy** <br>**Description:** Deploys a contract with the given 'contract type'. Requires the account to be unlocked. <br>**jsonrpc:** baseline_deploy <br>**Caveats:** Optional and only used for dev/testing<br>**Parameters:**<br> - DATA - address of the deploying transaction sender<br> - string - type of the contract to be deployed<br>**Returns:**: -<br>**Example:**:|
+| BRPC13 | **# deployBytecode** <br>**Description:**  Deploys a contract with the given bytecode. Requires the account to be unlocked. <br>**jsonrpc:** baseline_deployBytecode <br>**Caveats:** Optional and only used for dev/testing<br>**Parameters:**<br> - DATA - address of the deploying transaction sender<br> - string - type of the contract to be deployed<br>**Returns:**: -<br>**Example:**:|
+
+### 3.4.2 IBlockchainService 
+
+
 
 ## 3.5 Privacy
 
@@ -246,7 +264,7 @@ IZKSnarkCompilationArtifacts
 ## 3.6 Persistence
 
 Describes interface(s) providing functions to store, query and update data.(sub and unsub ?)\
-IPersistenceService
+### 3.6.1 IPersistenceService
 
 ## 3.7 API Metadata
 
