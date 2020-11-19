@@ -12,4 +12,4 @@ You can build the package locally with `npm run build`.
 
 ## Baseline State Tracking
 
-To help track the status of baselined documents and data fields: `import { BaselineState } from @baseline-protocol/types`
+To help track the status of baselined documents and data fields: `import { State } from @baseline-protocol/types`

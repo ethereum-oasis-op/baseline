@@ -1,4 +1,4 @@
-export type BaselineCommitment = {
+export type Commitment = {
   // currentHash = H(Underlying data/doc + salt)
   salt: string;
   // Values needed for verification (Shield.verifyAndPush inputs)
@@ -6,6 +6,7 @@ export type BaselineCommitment = {
   proof: number[];
   publicInputs: string[];
   signatures: object; // Allows mapping from participant address -> signature
+  metadata: object;
   sender: string; // Address of participant who created the commitment
 };
 
@@ -14,7 +15,7 @@ export type Participant = {
   metadata: object;
 }
 
-export type BaselineState = {
+export type State = {
 
   identifier: string; // workflow identifier
   shield: string; // Shield contract address
@@ -32,6 +33,6 @@ export type BaselineState = {
   parties: Participant[];
 
   // commitments[0] is latest commitment (new commitments are prepended to array)
-  commitments: BaselineCommitment[];
+  commitments: Commitment[];
 
 };
