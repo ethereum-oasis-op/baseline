@@ -274,7 +274,18 @@ Describes interface(s) providing functions to store, query and update data.(sub 
 
 ## 4.1 Org Management
 
-Workgroup {id, createdAt, networkId, userId, name, description,type, config, hidden}
+| Requirement ID | Requirement  | 
+| :--- | :--- |
+| ORGM1|**#Workgroup**<br>**id:**  <br>**createdAt:**  <br>**networkId:** <br>**userId:** <br> **name**: <br>**description:**<br>**type:**<br>**config:**<br>**hidden:**|
+| ORGM2|**#Organization**<br>|
+| ORGM3|**#User**<br>|
+| ORGM4|**#orgRegistry**<br>|
+
+## 4.2 Examples
+
+### 4.2.1 Workgroup 
+
+
 
 ```
 Workgroup {
@@ -294,11 +305,11 @@ Workgroup {
 
 
 
+### 4.2.2  Organization {id, createdAt, name, userId, description, metadata}
+
 Organization {id, createdAt, name, userId, description, metadata}
 
-
 ```
-
 Organization {
   id: '440988f7-8f24-4dd8-bea0-8f103caa2fd5',
   createdAt: '2020-11-05T14:35:26.4838047Z',
@@ -322,8 +333,11 @@ Model {
 
 
 
+## 4.2.3 User
+
 User {id, createdAt, name, firstName, lastName, email, permissions}\
-orgRegistry {}
+
+## 4.2.4 orgRegistry
 
 
 ## 4.2 Messaging
