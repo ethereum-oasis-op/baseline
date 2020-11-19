@@ -75,7 +75,7 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
   }
 
   async untrack(address: string): Promise<boolean> {
-    return await this.call('baseline_track', [address]);
+    return await this.call('baseline_untrack', [address]);
   }
 
   async verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean> {
