@@ -309,6 +309,7 @@ Workgroup {
 
 Organization {id, createdAt, name, userId, description, metadata}
 
+
 ```
 Organization {
   id: '440988f7-8f24-4dd8-bea0-8f103caa2fd5',
@@ -319,15 +320,6 @@ Organization {
   metadata: { messaging_endpoint: 'nats://localhost:4224' }
 }
 
-Model {
-  id: 'd055b7d7-adc8-48ce-8df4-d5446ad19667',
-  createdAt: '2020-11-05T14:49:15.8650886Z',
-  name: 'Bob Smith',
-  firstName: 'Bob',
-  lastName: 'Smith',
-  email: 'bob1604587755731@baseline.local',
-  permissions: 7553
-}
 
 ```
 
