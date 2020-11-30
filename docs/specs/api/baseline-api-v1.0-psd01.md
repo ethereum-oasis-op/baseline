@@ -129,8 +129,50 @@ For complete copyright information please see the Notices section in the Appendi
 
 ## 1.2 Glossary
 
-- Definitions of terms
-- Acronyms and abbreviations
+
+**Party:** \
+Existing: None \
+Proposed: A business entity ? What about IoT devices, can they ever be a party ?
+
+**Workgroup:** \
+Existing: A set of Parties (defined in the orgRegistry) when a Registrar factory smart contract is called to start a Workflow.\
+Proposed: A set of Parties involved/participating in the execution of one or more given Workflows. A Workgroup is set up and managed by one Party that invites other Parties to join as counter-parties/members.
+
+
+**Workflow:**\
+Existing: A series of Steps that constitutes a coherent business process between a set of counter-parties in a Workflow.\
+Proposed: A series of Steps that constitutes a coherent business (does it have to be 'business') process between all or a sub-set of counter-parties/members of a Workgroup participating in a given Workflow.
+
+**Workstep:** \
+Existing: A discrete baselined Record/Function/BusinessEvent/Document (e.g,. RFP, MSA, PO) within a Workflow that implements a set of baseline Tasks. \
+Proposed: A series of Tasks which execution results in the baselining of a given entity between two or more counter-parties/members of a Workgroup.
+
+**Baselining:** \
+Existing: \
+Proposed: Baselining is a method for delivering interorganizational? process execution via a Public Mainnet.
+When two or more machines store data and run business logic in a verified state of consistency, enabled by using a Public Mainnet as a common frame of reference, then the machines, data and code are said to be baselined.
+
+
+**Task:** \
+Existing: Different Workflow Steps implement either all or a subset of Tasks, such as selecting a set of counter-parties, serializing a record, sending messages, sometimes executing off-chain functions (not in Radish34, but definitely in protocol-compliant stack), executing and sending/receiving EdDSA sigs, invoking ZK service, sometimes ensuring that the ZK circuit (or a code package/container in a non-Radish34 implementation) of a previous Step is executed correctly (only for Steps that follow previous steps that enforce 'entanglement')...etc. 
+The set of Tasks that a Step implements is called its LifeCycle. Most of these Tasks invoke on or more Components.\
+Proposed: A discrete piece of work/job.\
+Example of tasks are selecting a set of counter-parties, serializing a record, sending a message, executing a off-chain function, invoking the ZK service.
+
+
+**Lifecycle:** \
+Existing:\
+Proposed: A set of Tasks implemented in a Workstep.
+
+**Circuit Breaker:**\
+The ability of a Baseline user to immediately cease all their active business processes within a Baseline implementation, and, if required, exit/leave a Baseline implementation with all their data without any 3rd party being able to prevent the exit.
+
+**Portability:**\
+The ability of a Baseline user to migrate and re-baseline their existing business processes and data from one Baseline implementation to another Baseline implementation without any 3rd party being able to prevent the migration.
+
+**Interoperability:**\
+The ability of a baseline user operating business processes on Baseline implementation A to instantiate and operate one or more business processes with one or more baseline user on Baseline Implementation B without the Baseline user on either Baseline Implementation A or B having to know anything of the other Baseline implementation.
+
 
 ## 1.3 Typographical Conventions
 
