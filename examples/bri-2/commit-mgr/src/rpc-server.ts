@@ -3,7 +3,7 @@ import jayson from "jayson";
 import url from "url";
 import * as promiseJayson from "jayson/promise";
 
-import { subscribeMerkleEvents, jsonrpc, unsubscribeMerkleEvents } from "./blockchain";
+import { checkChainLogs, subscribeMerkleEvents, jsonrpc, unsubscribeMerkleEvents } from "./blockchain";
 import { merkleTrees } from "./db/models/MerkleTree";
 import { logger } from "./logger";
 import { updateTree, getSiblingPathByLeafIndex } from "./merkle-tree";
@@ -264,7 +264,6 @@ const baseline_track = new jayson.Method(
     }
     logger.info(`[baseline_track] found treeHeight of ${treeHeight} for contract ${contractAddress}`)
 
-    error = subscribeMerkleEvents(contractAddress);
     await merkleTrees.findOneAndUpdate(
       { _id: `${contractAddress}_0` },
       {
@@ -274,6 +273,9 @@ const baseline_track = new jayson.Method(
       },
       { upsert: true, new: true, setDefaultsOnInsert: true },
     );
+
+    await checkChainLogs(contractAddress, 0)
+    error = subscribeMerkleEvents(contractAddress);
 
     done(error, true);
   },

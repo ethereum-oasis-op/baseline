@@ -30,7 +30,7 @@ Before running, decide which blockchain environment you would like to use: `besu
 
 ## Baseline JSON-RPC Module
 
-JSON-RPC methods processed by the `baseline-relay` service:
+The `commit-mgr` service implements and processes the baseline JSON-RPC methods:
 
 | Method | Params | Description |
 | -------- | ----- | ----------- |
@@ -43,4 +43,8 @@ JSON-RPC methods processed by the `baseline-relay` service:
 | `baseline_track` | | Initialize a merkle tree database for the given shield contract address |
 | `baseline_untrack` | | Remove event listeners for a given shield contract address |
 | `baseline_verify` | | Verify a sibling path for a given root and leaf at the given shield contract address |
+
+## TODO
+
+- Reduce `commit-mgr` docker image size
 

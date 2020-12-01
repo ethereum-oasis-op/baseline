@@ -5,13 +5,12 @@ services:
   ganache:
     container_name: ganache
     image: trufflesuite/ganache-cli:v6.6.0
-    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --db='/chaindata' --defaultBalanceEther 10000 --account="0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63, 1000000000000000000000" --account="0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3, 1000000000000000000000" --account="0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f, 1000000000000000000000" --networkId '101010' --gasLimit 10000000 --allowUnlimitedContractSize --noVMErrorsOnRPCResponse
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --account="0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63, 1000000000000000000000" --account="0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3, 1000000000000000000000" --account="0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f, 1000000000000000000000" --networkId '101010' --gasLimit 10000000 --allowUnlimitedContractSize --noVMErrorsOnRPCResponse
     ports:
       - 8545:8545
     networks:
       - alice
     volumes:
-      - chaindata:/chaindata
       - ./ops/ganache_health.sh:/app/health-check.sh:delegated
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
@@ -98,4 +97,3 @@ networks:
 
 volumes:
   alice-mongo:
-  chaindata:
