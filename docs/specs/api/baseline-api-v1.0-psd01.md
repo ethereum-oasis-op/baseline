@@ -130,48 +130,28 @@ For complete copyright information please see the Notices section in the Appendi
 ## 1.2 Glossary
 
 
-**Party:** \
-Existing: None \
-Proposed: A business entity ? What about IoT devices, can they ever be a party ?
+**Party:** 
 
-**Workgroup:** \
-Existing: A set of Parties (defined in the orgRegistry) when a Registrar factory smart contract is called to start a Workflow.\
-Proposed: A set of Parties involved/participating in the execution of one or more given Workflows. A Workgroup is set up and managed by one Party that invites other Parties to join as counter-parties/members.
+**Workgroup:** 
 
 
-**Workflow:**\
-Existing: A series of Steps that constitutes a coherent business process between a set of counter-parties in a Workflow.\
-Proposed: A series of Steps that constitutes a coherent business (does it have to be 'business') process between all or a sub-set of counter-parties/members of a Workgroup participating in a given Workflow.
+**Workflow:**
 
-**Workstep:** \
-Existing: A discrete baselined Record/Function/BusinessEvent/Document (e.g,. RFP, MSA, PO) within a Workflow that implements a set of baseline Tasks. \
-Proposed: A series of Tasks which execution results in the baselining of a given entity between two or more counter-parties/members of a Workgroup.
+**Workstep:** 
 
-**Baselining:** \
-Existing: \
-Proposed: Baselining is a method for delivering interorganizational? process execution via a Public Mainnet.
-When two or more machines store data and run business logic in a verified state of consistency, enabled by using a Public Mainnet as a common frame of reference, then the machines, data and code are said to be baselined.
+**Baselining:** 
 
 
-**Task:** \
-Existing: Different Workflow Steps implement either all or a subset of Tasks, such as selecting a set of counter-parties, serializing a record, sending messages, sometimes executing off-chain functions (not in Radish34, but definitely in protocol-compliant stack), executing and sending/receiving EdDSA sigs, invoking ZK service, sometimes ensuring that the ZK circuit (or a code package/container in a non-Radish34 implementation) of a previous Step is executed correctly (only for Steps that follow previous steps that enforce 'entanglement')...etc. 
-The set of Tasks that a Step implements is called its LifeCycle. Most of these Tasks invoke on or more Components.\
-Proposed: A discrete piece of work/job.\
-Example of tasks are selecting a set of counter-parties, serializing a record, sending a message, executing a off-chain function, invoking the ZK service.
+**Task:** 
 
 
-**Lifecycle:** \
-Existing:\
-Proposed: A set of Tasks implemented in a Workstep.
+**Lifecycle:** 
 
-**Circuit Breaker:**\
-The ability of a Baseline user to immediately cease all their active business processes within a Baseline implementation, and, if required, exit/leave a Baseline implementation with all their data without any 3rd party being able to prevent the exit.
+**Circuit Breaker:**
 
-**Portability:**\
-The ability of a Baseline user to migrate and re-baseline their existing business processes and data from one Baseline implementation to another Baseline implementation without any 3rd party being able to prevent the migration.
+**Portability:**
 
-**Interoperability:**\
-The ability of a baseline user operating business processes on Baseline implementation A to instantiate and operate one or more business processes with one or more baseline user on Baseline Implementation B without the Baseline user on either Baseline Implementation A or B having to know anything of the other Baseline implementation.
+**Interoperability:**
 
 
 ## 1.3 Typographical Conventions
@@ -280,11 +260,11 @@ Contains RPC methods that are Remote Calls available by default. The solution ??
 | Requirement ID | Requirement  | 
 | :--- | :--- |
 | BRPC1|**# track**<br>**Description:**  Initializes a merkle tree database for the given Shield contract address and starts tracking new tree events.<br>**jsonrpc:** baseline_track <br>**Caveats:** <br>**Parameters:** <br> - DATA - address of the Shield contract<br>**Returns:**: -<br>**Example:**:|
-| BRPC2|**# getTracked**<br>**Description:**  Retrieves a list of the shield contract addresses being tracked and persisted. <br>**jsonrpc:** baseline_getTracked <br>**Caveats:** <br>**Parameters:** -<br>**Returns:**: <br> - Array&lt;DATA&gt; - list of all tracked Shield contracts<br>**Example:**:|
-| BRPC3| **# getLeaf** <br>**Description:** Retrieves a single leaf from a tree at the given shield contract address.  <br>**jsonrpc:** baseline_getLeaf <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - QUANTITY - leaf index<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
-| BRPC4| **# insertLeaf** <br>**Description:** Inserts a single leaf to atree at the given shield contract address.  <br>**jsonrpc:** baseline_insertLeaf <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - QUANTITY - leaf index<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
-| BRPC5| **# getLeaves** <br>**Description:**  Retrieves multiple leaves from a tree at the given shield contract address. <br>**jsonrpc:** baseline_getLeaves <br>**Caveats:** only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - Array&lt;QUANTITY&gt; - leaf indexes<br>**Returns:**:<br> - Array&lt;MERKLE_TRIE_NODE&gt;<br>**Example:**:|
-| BRPC6| **# insertLeaves** <br>**Description:**  Inserts multiple leaves to a tree at the given shield contract address. <br>**jsonrpc:** baseline_insertLeaves <br>**Caveats:** only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - Array&lt;QUANTITY&gt; - leaf indexes<br>**Returns:**:<br> - Array&lt;MERKLE_TRIE_NODE&gt;<br>**Example:**:|
+| BRPC2|**# untrack**<br>**Description:** Removes event listeners for a single Shield contract. <br>**jsonrpc:** baseline_untrack <br>**Caveats:** <br>**Parameters:** <br> - DATA - address of the Shield contract<br>**Returns:**: -<br>**Example:**:|
+| BRPC3|**# getTracked**<br>**Description:**  Retrieves a list of the shield contract addresses being tracked and persisted. <br>**jsonrpc:** baseline_getTracked <br>**Caveats:** <br>**Parameters:** -<br>**Returns:**: <br> - Array&lt;DATA&gt; - list of all tracked Shield contracts<br>**Example:**:|
+| BRPC4| **# getLeaf** <br>**Description:** Retrieves a single leaf from a tree at the given shield contract address.  <br>**jsonrpc:** baseline_getLeaf <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - QUANTITY - leaf index<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
+| BRPC5| **# insertLeaf** <br>**Description:** Inserts a single leaf to atree at the given shield contract address.  <br>**jsonrpc:** baseline_insertLeaf <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - QUANTITY - leaf index<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
+| BRPC6| **# getLeaves** <br>**Description:**  Retrieves multiple leaves from a tree at the given shield contract address. <br>**jsonrpc:** baseline_getLeaves <br>**Caveats:** only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:** <br> - DATA - Shield contract address<br> - Array&lt;QUANTITY&gt; - leaf indexes<br>**Returns:**:<br> - Array&lt;MERKLE_TRIE_NODE&gt;<br>**Example:**:|
 | BRPC7| **# getRoot** <br>**Description:**  Retrieves the root of a tree at the given shield contract address .<br>**jsonrpc:** baseline_getRoot <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:**<br> - DATA - Shield contract address<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
 | BRPC8| **# getCount** <br>**Description:**  Gets count of a tree at the given 'address'.<br>**jsonrpc:** baseline_getRoot <br>**Caveats:**  only works if the contract is tracked, otherwise <br>**Returns:** an error<br>**Parameters:**<br> - DATA - Shield contract address<br>**Returns:**:<br> - MERKLE_TRIE_NODE<br>**Example:**:|
 | BRPC9|**# getSiblings** <br>**Description:**  Retrieves siblings path/proof of the given leaf index. <br>**jsonrpc:** baseline_getSiblings <br>**Caveats:**  only works if the contract is tracked, otherwise<br> **Returns:** an error<br>**Parameters:**<br> - DATA - address of the Shield contract<br> - QUANTITY - leaf index to prove<br>**Returns:**:<br> - Array&lt;MERKLE_TRIE_NODE&gt; - siblings path<br>**Example:**:|
