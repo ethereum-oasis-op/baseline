@@ -82,7 +82,6 @@ export const unsubscribeMerkleEvents = (contractAddress) => {
   provider.off(singleLeafFilter);
 }
 
-// Re-subscribe to events for all 'active' MerkleTrees
 // Meant to be called everytime this commit-mgr service is restarted
 export const restartSubscriptions = async () => {
   const activeTrees = await merkleTrees.find({
@@ -90,9 +89,47 @@ export const restartSubscriptions = async () => {
     active: true
   });
 
+  // For all 'active' MerkleTrees, search through old logs for any 
+  // newLeaf events we missed while service was offline. Then resubscribe
+  // to the events.
   for (let i = 0; i < activeTrees.length; i++) {
     const contractAddress = activeTrees[i]._id.slice(0, -2);
+    const fromBlock = activeTrees[i].latestLeaf ? activeTrees[i].latestLeaf.blockNumber : 0;
+    await checkChainLogs(contractAddress, fromBlock);
     subscribeMerkleEvents(contractAddress);
+  }
+}
+
+export const checkChainLogs = async (contractAddress, fromBlock) => {
+  // If fromBlock is provided, check next block so we don't add a leaf that was already captured
+  const blockNum = fromBlock ? fromBlock + 1 : 0;
+  logger.info(`Checking chain logs for missed newLeaf events starting at block ${fromBlock} for contract: ${contractAddress}`);
+  // besu has a bug where 'eth_getLogs' expects 'fromBlock' to be a string instead of integer
+  const convertedBlockNum = process.env.ETH_CLIENT_TYPE === "besu" ? `${blockNum}` : blockNum;
+  const params = {
+    fromBlock: convertedBlockNum,
+    toBlock: "latest",
+    address: contractAddress,
+    topics: [newLeafEvent]
+  };
+  const res = await jsonrpc('eth_getLogs', [params]);
+  const logs = res.result;
+
+  const contractInterface = new ethers.utils.Interface(shieldContract.abi);
+
+  for (let i = 0; i < logs.length; i++) {
+    const txLogs = contractInterface.parseLog(logs[i]);
+    const leafIndex = txLogs.args[0].toNumber();
+    const leafValue = txLogs.args[1];
+    logger.info(`Found previously missed leaf index ${leafIndex} of value ${leafValue}`);
+
+    const leaf = {
+      value: leafValue,
+      leafIndex: leafIndex,
+      transactionHash: logs[i].transactionHash,
+      blockNumber: logs[i].blockNumber
+    }
+    await insertLeaf(contractAddress, leaf);
   }
 }
 

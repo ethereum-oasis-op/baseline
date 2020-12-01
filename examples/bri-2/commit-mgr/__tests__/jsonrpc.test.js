@@ -25,6 +25,7 @@ const promisedTimeout = (ms) => {
 
 let accounts;
 let shieldAddress;
+let verifierAddress;
 
 jest.setTimeout(30000);
 
@@ -108,7 +109,6 @@ describe("Check eth_ jsonrpc methods relayed to web3 provider", () => {
 
 describe("Deploy contracts", () => {
   let txHash;
-  let verifierAddress;
 
   test("Deploy VerifierNoop.sol contract: eth_sendRawTransaction", async () => {
     const sender = accounts[0];
@@ -195,6 +195,136 @@ describe("Deploy contracts", () => {
   });
 
 });
+
+
+describe("Check that old logs are scanned when baseline_track is called", () => {
+  let counterpartyShieldAddress;
+
+  test("Deploy Shield.sol contract: eth_sendRawTransaction", async () => {
+    const sender = accounts[0];
+    const nonce = await wallet.getTransactionCount();
+    const abiCoder = new ethers.utils.AbiCoder();
+    // Encode the constructor parameters, then append to bytecode
+    const encodedParams = abiCoder.encode(["address", "uint"], [verifierAddress, treeHeight]);
+    const bytecodeWithParams = shieldContract.bytecode + encodedParams.slice(2).toString();
+    const unsignedTx = {
+      from: sender,
+      data: bytecodeWithParams,
+      chainId: parseInt(process.env.CHAIN_ID, 10),
+      nonce
+    };
+
+    const gasEstimate = await wallet.estimateGas(unsignedTx);
+    unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
+    const signedTx = await wallet.signTransaction(unsignedTx);
+
+    const res = await apiRequest.post("/jsonrpc").send({
+      jsonrpc: "2.0",
+      method: "eth_sendRawTransaction",
+      params: [signedTx],
+      id: 1,
+    });
+    expect(res.statusCode).toEqual(200);
+    txHash = res.body.result;
+    expect(txHash).not.toBeUndefined();
+    expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
+  });
+
+  test("Retrieve Shield.sol tx receipt", async () => {
+    await promisedTimeout(txDelay); // Wait for previous tx verification
+    const res = await apiRequest.post("/jsonrpc").send({
+      jsonrpc: "2.0",
+      method: "eth_getTransactionReceipt",
+      params: [txHash],
+      id: 1,
+    });
+    const txDetails = res.body.result;
+    counterpartyShieldAddress = txDetails.contractAddress;
+    expect(counterpartyShieldAddress).not.toBeUndefined();
+    expect(counterpartyShieldAddress).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
+  });
+
+  test("Counterparty sends 1st leaf into untracked Shield contract", async () => {
+    const sender = accounts[0];
+    const nonce = await wallet.getTransactionCount();
+    const proof = [5];
+    const publicInputs = ["0xc2f480d4dda9f4522b9f6d590011636d904accfe59f12f9d66a0221c2558e3a2"]; // Sha256 hash of new commitment
+    const newCommitment = "0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc";
+
+    const shieldInterface = new ethers.utils.Interface(shieldContract.abi);
+    const txData = shieldInterface.encodeFunctionData(
+      "verifyAndPush(uint256[],uint256[],bytes32)",
+      [proof, publicInputs, newCommitment]
+    );
+
+    const unsignedTx = {
+      to: counterpartyShieldAddress,
+      from: sender,
+      data: txData,
+      chainId: parseInt(process.env.CHAIN_ID, 10),
+      gasLimit: 0,
+      nonce
+    };
+
+    const gasEstimate = await wallet.estimateGas(unsignedTx);
+    unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
+    const signedTx = await wallet.signTransaction(unsignedTx);
+
+    const res = await apiRequest.post("/jsonrpc").send({
+      jsonrpc: "2.0",
+      method: "eth_sendRawTransaction",
+      params: [signedTx],
+      id: 1,
+    });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.result).not.toBeUndefined();
+    const txHash = res.body.result;
+    expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
+
+    // Check the transaction receipt to verify tx was successful
+    await promisedTimeout(txDelay); // Wait for previous tx verification
+    const res_2 = await apiRequest.post("/jsonrpc").send({
+      jsonrpc: "2.0",
+      method: "eth_getTransactionReceipt",
+      params: [txHash],
+      id: 1,
+    });
+    expect(res_2.statusCode).toEqual(200);
+    expect(res_2.body.error).toBeUndefined();
+    expect(res_2.body.result).not.toBeUndefined();
+    expect(res_2.body.result.status).toEqual("0x1");
+  });
+
+  test("baseline_track should initiate merkle tree in db", async () => {
+    const res = await apiRequest.post("/jsonrpc").send({
+      jsonrpc: "2.0",
+      method: "baseline_track",
+      params: [counterpartyShieldAddress],
+      id: 1,
+    });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.result).not.toBeUndefined();
+    expect(res.body.result).toBe(true);
+  });
+
+  test("baseline_getLeaf should detect 1st leaf already in tree", async () => {
+    const leafIndex = 0;
+    const res = await apiRequest.post("/jsonrpc").send({
+      jsonrpc: "2.0",
+      method: "baseline_getLeaf",
+      params: [counterpartyShieldAddress, leafIndex],
+      id: 1,
+    });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.result).not.toBeUndefined();
+    const merkleNode = res.body.result;
+    leafValue = merkleNode.value;
+    expect(merkleNode.value).toEqual('0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc');
+    expect(merkleNode.leafIndex).toEqual(leafIndex);
+  });
+
+});
+
 
 describe("Interact with Shield.sol contract", () => {
   let rootHash;
