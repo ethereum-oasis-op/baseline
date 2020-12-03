@@ -30,7 +30,8 @@ export interface IBaselineRPC {
   track(address: string): Promise<boolean>;
 
   // Remove event listeners for a given shield contract address
-  untrack(address: string): Promise<boolean>;
+  // If prune === true, wipe tree from storage
+  untrack(address: string, prune?: boolean): Promise<boolean>;
 
   // Verify a sibling path for a given root and leaf at the given shield contract address
   verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;

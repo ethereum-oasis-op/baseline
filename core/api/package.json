@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/api",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Baseline core registry, key management and RPC APIs",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
