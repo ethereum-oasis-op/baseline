@@ -16,15 +16,15 @@ An initial set of JSON-RPC methods have been defined for inclusion in the specif
 
 | Method | Params | Description |
 | -------- | ----- | ----------- |
-| `baseline_getLeaf` | | Retrieve a single leaf from a tree at the given shield contract address |
-| `baseline_getLeaves` | | Retrieve multiple leaves from a tree at the given shield contract address |
-| `baseline_getRoot` | | Retrieve the root of a tree at the given shield contract address |
-| `baseline_getSiblings` | | Retrieve sibling paths/proof of the given leaf index |
+| `baseline_getCommit` | address, commitIndex | Retrieve a single commit from a tree at the given shield contract address |
+| `baseline_getCommits` | address, startIndex, count | Retrieve multiple commits from a tree at the given shield contract address |
+| `baseline_getRoot` | address | Retrieve the root of a tree at the given shield contract address |
+| `baseline_getSiblings` | address, commitIndex | Retrieve sibling paths (proof) of the given commit index |
 | `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
-| `baseline_insertLeaf` | | Inserts a single leaf in a tree at the given shield contract address |
-| `baseline_track` | | Initialize a merkle tree database for the given shield contract address |
-| `baseline_untrack` | | Remove event listeners for the given shield contract address |
-| `baseline_verify` | | Verify a sibling path for a given root and leaf at the given shield contract address |
+| `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address |
+| `baseline_track` | address | Initialize a merkle tree database for the given shield contract address |
+| `baseline_untrack` | address | Remove event listeners for a given shield contract address |
+| `baseline_verify` | address, value, siblings | Verify a sibling path for a given root and commit value |
 
 ### Ethereum Clients
 
@@ -37,15 +37,15 @@ __IBaselineRPC__
 This interface provides methods to deploy Shield contracts on the blockchain, and execute read/write operations on them. Writes are necessary when adding new hashes (commitments) to the on-chain merkle tree. Reads are necessary to verify consistency of off-chain records with on-chain state.
 
 ```javascript
-getLeaf(address: string, index: number): Promise<MerkleTreeNode>;
-getLeaves(address: string, startLeafIndex: number, count: number): Promise<MerkleTreeNode[]>;
+getCommit(address: string, index: number): Promise<MerkleTreeNode>;
+getCommits(address: string, startIndex: number, count: number): Promise<MerkleTreeNode[]>;
 getRoot(address: string): Promise<string>;
-getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>;
+getSiblings(address: string, commitIndex: number): Promise<MerkleTreeNode[]>;
 getTracked(): Promise<string[]>;
-insertLeaf(sender: string, address: string, value: string): Promise<string>;
+verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], commit: string): Promise<string>;
 track(address: string): Promise<boolean>;
 untrack(address: string): Promise<boolean>;
-verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
+verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
 ```
 
 ![IBaselineRPC](https://user-images.githubusercontent.com/35908605/93899621-7d0bc600-fcc2-11ea-9dae-46497acf204a.png)
