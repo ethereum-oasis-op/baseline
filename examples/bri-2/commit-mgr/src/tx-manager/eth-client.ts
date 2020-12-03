@@ -1,7 +1,7 @@
 import { ethers, Wallet } from 'ethers';
-import { ITxManager, shieldContract } from '.';
+import { ITxManager } from '.';
 import { logger } from '../logger';
-import { http_provider, jsonrpc } from "../blockchain";
+import { http_provider, jsonrpc, shieldContract } from "../blockchain";
 
 export class EthClient implements ITxManager {
 
