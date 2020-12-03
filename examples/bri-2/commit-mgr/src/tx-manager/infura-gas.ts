@@ -54,8 +54,7 @@ export class InfuraGas implements ITxManager {
       // gas: gas
     }
 
-    const res = await jsonrpc('eth_sendTransaction', [transaction]); // Private-alpha
-    // const res = await jsonrpc('relay_sendTransaction', [transaction, signedMessage]); // Private-beta
+    const res = await jsonrpc('relay_sendTransaction', [transaction, signedMessage]); // Private-beta
     return res;
   }
 

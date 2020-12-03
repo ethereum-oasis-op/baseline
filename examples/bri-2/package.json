@@ -17,7 +17,7 @@
     "build": "npm run clean && npm run build:cjs && npm run build:umd",
     "clean": "rm -rf ./dist",
     "contracts:clean": "rm -rf ./contracts/artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",
-    "contracts:compile": "pushd node_modules/@baseline-protocol/contracts && npm install && make && popd && mkdir -p ./contracts/artifacts && cp -R node_modules/@baseline-protocol/contracts/artifacts/ ./contracts/artifacts",
+    "contracts:compile": "pushd node_modules/@baseline-protocol/contracts && npm install && make && popd && mkdir -p ./contracts/artifacts && cp -R node_modules/@baseline-protocol/contracts/artifacts/ ./contracts/artifacts"
   },
   "dependencies": {
     "@baseline-protocol/api": "0.1.0",

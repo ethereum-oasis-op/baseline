@@ -34,17 +34,16 @@ The `commit-mgr` service implements and processes the baseline JSON-RPC methods:
 
 | Method | Params | Description |
 | -------- | ----- | ----------- |
-| `baseline_getLeaf` | | Retrieve a single leaf from a tree at the given shield contract address |
-| `baseline_getLeaves` | | Retrieve multiple leaves from a tree at the given shield contract address |
-| `baseline_getRoot` | | Retrieve the root of a tree at the given shield contract address |
-| `baseline_getSiblings` | | Retrieve sibling paths (merkle proof) of the given leaf index |
+| `baseline_getCommit` | address, commitIndex | Retrieve a single commit from a tree at the given shield contract address |
+| `baseline_getCommits` | address, startIndex, count | Retrieve multiple commits from a tree at the given shield contract address |
+| `baseline_getRoot` | address | Retrieve the root of a tree at the given shield contract address |
+| `baseline_getSiblings` | address, commitIndex | Retrieve sibling paths (proof) of the given commit index |
 | `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
-| `baseline_insertLeaf` | | Inserts a single leaf in a tree at the given shield contract address |
-| `baseline_track` | | Initialize a merkle tree database for the given shield contract address |
-| `baseline_untrack` | | Remove event listeners for a given shield contract address |
-| `baseline_verify` | | Verify a sibling path for a given root and leaf at the given shield contract address |
+| `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address |
+| `baseline_track` | address | Initialize a merkle tree database for the given shield contract address |
+| `baseline_untrack` | address | Remove event listeners for a given shield contract address |
+| `baseline_verify` | address, value, siblings | Verify a sibling path for a given root and commit value |
 
 ## TODO
 
 - Reduce `commit-mgr` docker image size
-
