@@ -47,3 +47,4 @@ The `commit-mgr` service implements and processes the baseline JSON-RPC methods:
 ## TODO
 
 - Reduce `commit-mgr` docker image size
+- Convert all javascript files to typescript
