@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
 import { Wallet, ethers } from "ethers";
-import { ITxManager, shieldContract } from '.';
+import { ITxManager } from '.';
 import { logger } from '../logger';
-import { jsonrpc } from "../blockchain";
+import { jsonrpc, shieldContract } from "../blockchain";
 
 dotenv.config();
 
