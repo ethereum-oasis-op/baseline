@@ -38,7 +38,7 @@ const relayRequest = (methodName: any) => {
   );
 };
 
-const baseline_getLeaf = new jayson.Method(
+const baseline_getCommit = new jayson.Method(
   async (args: any, context: any, done: any) => {
     const error = validateParams(args, 2);
     if (error) {
@@ -56,7 +56,7 @@ const baseline_getLeaf = new jayson.Method(
   },
 );
 
-const baseline_getLeaves = new jayson.Method(
+const baseline_getCommits = new jayson.Method(
   async (args: any, context: any, done: any) => {
     let error = validateParams(args, 3);
     if (error) {
@@ -172,7 +172,7 @@ const baseline_getTracked = new jayson.Method(
   },
 );
 
-const baseline_insertLeaf = new jayson.Method(
+const baseline_verifyAndPush = new jayson.Method(
   async (args: any, context: any, done: any) => {
     let error = validateParams(args, 5);
     if (error) {
@@ -187,7 +187,7 @@ const baseline_insertLeaf = new jayson.Method(
     const newCommitment = args[4];
     const record = await merkleTrees.findOne({ _id: `${contractAddress}_0` }).select('shieldContract').lean();
     if (!record) {
-      logger.error(`[baseline_insertLeaf] Merkle Tree not found in db: ${contractAddress}`);
+      logger.error(`[baseline_verifyAndPush] Merkle Tree not found in db: ${contractAddress}`);
       error = {
         code: -32603,
         message: `Internal server error`,
@@ -196,7 +196,7 @@ const baseline_insertLeaf = new jayson.Method(
       done(error, null);
       return;
     }
-    logger.info(`[baseline_insertLeaf] Found Shield/MerkleTree for contract address: ${contractAddress}`);
+    logger.info(`[baseline_verifyAndPush] Found Shield/MerkleTree for contract address: ${contractAddress}`);
 
     const txManager = await txManagerServiceFactory(process.env.ETH_CLIENT_TYPE);
 
@@ -204,7 +204,7 @@ const baseline_insertLeaf = new jayson.Method(
     try {
       result = await txManager.insertLeaf(contractAddress, senderAddress, proof, publicInputs, newCommitment);
     } catch (err) {
-      logger.error(`[baseline_insertLeaf] ${err}`);
+      logger.error(`[baseline_verifyAndPush] ${err}`);
       error = {
         code: -32603,
         message: `Internal server error`
@@ -212,7 +212,7 @@ const baseline_insertLeaf = new jayson.Method(
       done(error, null);
       return;
     }
-    logger.info(`[baseline_insertLeaf] txHash: ${result.txHash}`);
+    logger.info(`[baseline_verifyAndPush] txHash: ${result.txHash}`);
     done(result.error, result.txHash);
   },
   {
@@ -364,12 +364,12 @@ function validateParams(inputs: any[], numInputs: number) {
 
 // Defines valid JSON-RPC methods in this format: <method_name>: <method_action>
 const methods = {
-  baseline_getLeaf,
-  baseline_getLeaves,
+  baseline_getCommit,
+  baseline_getCommits,
   baseline_getRoot,
   baseline_getSiblings,
   baseline_getTracked,
-  baseline_insertLeaf,
+  baseline_verifyAndPush,
   baseline_track,
   baseline_untrack,
   baseline_verify

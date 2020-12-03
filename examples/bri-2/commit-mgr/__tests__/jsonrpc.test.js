@@ -307,11 +307,11 @@ describe("Check that old logs are scanned when baseline_track is called", () => 
     expect(res.body.result).toBe(true);
   });
 
-  test("baseline_getLeaf should detect 1st leaf already in tree", async () => {
+  test("baseline_getCommit should detect 1st leaf already in tree", async () => {
     const leafIndex = 0;
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_getLeaf",
+      method: "baseline_getCommit",
       params: [counterpartyShieldAddress, leafIndex],
       id: 1,
     });
@@ -361,13 +361,13 @@ describe("Interact with Shield.sol contract", () => {
     expect(foundContract).toBe(true);
   });
 
-  test("baseline_insertLeaf creates 1st leaf", async () => {
+  test("baseline_verifyAndPush creates 1st leaf", async () => {
     const proof = [5];
     const publicInputs = ["0x02d449a31fbb267c8f352e9968a79e3e5fc95c1bbeaa502fd6454ebde5a4bedc"]; // Sha256 hash of new commitment
     const newCommitment = "0x1111111111111111111111111111111111111111111111111111111111111111";
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_insertLeaf",
+      method: "baseline_verifyAndPush",
       params: [sender, shieldAddress, proof, publicInputs, newCommitment],
       id: 1,
     });
@@ -403,13 +403,13 @@ describe("Interact with Shield.sol contract", () => {
     expect(rootHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
   });
 
-  test("baseline_insertLeaf creates 2nd leaf", async () => {
+  test("baseline_verifyAndPush creates 2nd leaf", async () => {
     const proof = [5];
     const publicInputs = ["0x9f72ea0cf49536e3c66c787f705186df9a4378083753ae9536d65b3ad7fcddc4"]; // Sha256 hash of new commitment
     const newCommitment = "0x2222222222222222222222222222222222222222222222222222222222222222";
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_insertLeaf",
+      method: "baseline_verifyAndPush",
       params: [sender, shieldAddress, proof, publicInputs, newCommitment],
       id: 1,
     });
@@ -432,13 +432,13 @@ describe("Interact with Shield.sol contract", () => {
     expect(res_2.body.result.status).toEqual("0x1");
   });
 
-  test("baseline_insertLeaf creates 3rd leaf", async () => {
+  test("baseline_verifyAndPush creates 3rd leaf", async () => {
     const proof = [5];
     const publicInputs = ["0xdeb0e38ced1e41de6f92e70e80c418d2d356afaaa99e26f5939dbc7d3ef4772a"]; // Sha256 hash of new commitment
     const newCommitment = "0x3333333333333333333333333333333333333333333333333333333333333333";
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_insertLeaf",
+      method: "baseline_verifyAndPush",
       params: [sender, shieldAddress, proof, publicInputs, newCommitment],
       id: 1,
     });
@@ -476,11 +476,11 @@ describe("Interact with Shield.sol contract", () => {
     rootHash = rootHash_2;
   });
 
-  test("baseline_getLeaf retrieves 3rd leaf", async () => {
+  test("baseline_getCommit retrieves 3rd leaf", async () => {
     const leafIndex = 2;
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_getLeaf",
+      method: "baseline_getCommit",
       params: [shieldAddress, leafIndex],
       id: 1,
     });
@@ -492,11 +492,11 @@ describe("Interact with Shield.sol contract", () => {
     expect(merkleNode.leafIndex).toEqual(leafIndex);
   });
 
-  test("baseline_getLeaf fails to retrieve non-existent 5th leaf", async () => {
+  test("baseline_getCommit fails to retrieve non-existent 5th leaf", async () => {
     const leafIndex = 4;
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_getLeaf",
+      method: "baseline_getCommit",
       params: [shieldAddress, leafIndex],
       id: 1,
     });
@@ -535,13 +535,13 @@ describe("Interact with Shield.sol contract", () => {
     expect(res.body.result).toBe(true);
   });
 
-  test("baseline_insertLeaf creates 4th leaf", async () => {
+  test("baseline_verifyAndPush creates 4th leaf", async () => {
     const proof = [5];
     const publicInputs = ["0xbb391415c05e39d77ca17381d3be3f7d0cd5e5332e5a579311adaa0aa62106e9"]; // Sha256 hash of new commitment
     const newCommitment = "0x4444444444444444444444444444444444444444444444444444444444444444";
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_insertLeaf",
+      method: "baseline_verifyAndPush",
       params: [sender, shieldAddress, proof, publicInputs, newCommitment],
       id: 1,
     });
@@ -640,7 +640,7 @@ describe("Interact with Shield.sol contract", () => {
 
 describe("Batched requests", () => {
 
-  test("[ eth_accounts, baseline_getLeaf, eth_accounts ]", async () => {
+  test("[ eth_accounts, baseline_getCommit, eth_accounts ]", async () => {
     const res = await apiRequest.post("/jsonrpc").send([
       {
         jsonrpc: "2.0",
@@ -650,7 +650,7 @@ describe("Batched requests", () => {
       },
       {
         jsonrpc: "2.0",
-        method: "baseline_getLeaf",
+        method: "baseline_getCommit",
         params: [shieldAddress, 1],
         id: 1,
       },
@@ -670,17 +670,17 @@ describe("Batched requests", () => {
     expect(res.body[2].result).not.toBeUndefined();
   });
 
-  test("[ baseline_getLeaf, baseline_getLeaf ]", async () => {
+  test("[ baseline_getCommit, baseline_getCommit ]", async () => {
     const res = await apiRequest.post("/jsonrpc").send([
       {
         jsonrpc: "2.0",
-        method: "baseline_getLeaf",
+        method: "baseline_getCommit",
         params: [shieldAddress, 2],
         id: 1,
       },
       {
         jsonrpc: "2.0",
-        method: "baseline_getLeaf",
+        method: "baseline_getCommit",
         params: [shieldAddress, 1],
         id: 1,
       },
@@ -726,13 +726,13 @@ describe("Error checks", () => {
     expect(res.body.error).not.toBeUndefined();
   });
 
-  test("baseline_insertLeaf fails when tree is full", async () => {
+  test("baseline_verifyAndPush fails when tree is full", async () => {
     const proof = [5];
     const publicInputs = ["0xbb391415c05e39d77ca17381d3be3f7d0cd5e5332e5a579311adaa0aa62106e9"]; // Sha256 hash of new commitment
     const newCommitment = "0x4444444444444444444444444444444444444444444444444444444444444444";
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_insertLeaf",
+      method: "baseline_verifyAndPush",
       params: [sender, shieldAddress, proof, publicInputs, newCommitment],
       id: 1,
     });
@@ -759,10 +759,10 @@ describe("Error checks", () => {
 
   describe("Invalid number of params", () => {
 
-    test("baseline_getLeaf fails with less than 2 args", async () => {
+    test("baseline_getCommit fails with less than 2 args", async () => {
       const res = await apiRequest.post("/jsonrpc").send({
         jsonrpc: "2.0",
-        method: "baseline_getLeaf",
+        method: "baseline_getCommit",
         params: [shieldAddress],
         id: 1,
       });
@@ -773,10 +773,10 @@ describe("Error checks", () => {
       expect(res.body.error.data.includes('Expected number of inputs to be')).toBe(true);
     });
 
-    test("baseline_getLeaf fails with greater than 2 args", async () => {
+    test("baseline_getCommit fails with greater than 2 args", async () => {
       const res = await apiRequest.post("/jsonrpc").send({
         jsonrpc: "2.0",
-        method: "baseline_getLeaf",
+        method: "baseline_getCommit",
         params: [shieldAddress, 2, 3],
         id: 1,
       });
@@ -787,10 +787,10 @@ describe("Error checks", () => {
       expect(res.body.error.data.includes('Expected number of inputs to be')).toBe(true);
     });
 
-    test("baseline_getLeaf fails if any args are passed as 'undefined'", async () => {
+    test("baseline_getCommit fails if any args are passed as 'undefined'", async () => {
       const res = await apiRequest.post("/jsonrpc").send({
         jsonrpc: "2.0",
-        method: "baseline_getLeaf",
+        method: "baseline_getCommit",
         params: [shieldAddress, undefined],
         id: 1,
       });
@@ -805,14 +805,14 @@ describe("Error checks", () => {
 
   describe("Invalid param values", () => {
 
-    test("baseline_insertLeaf fails for invalid contract address", async () => {
+    test("baseline_verifyAndPush fails for invalid contract address", async () => {
       const fakeContractAddress = "0xBADBADBADBADBADBADBADBADBADBADBADBADBAD0";
       const proof = [5];
       const publicInputs = ["0xdeb0e38ced1e41de6f92e70e80c418d2d356afaaa99e26f5939dbc7d3ef4772a"]; // Sha256 hash of new commitment
       const newCommitment = "0x3333333333333333333333333333333333333333333333333333333333333333";
       const res = await apiRequest.post("/jsonrpc").send({
         jsonrpc: "2.0",
-        method: "baseline_insertLeaf",
+        method: "baseline_verifyAndPush",
         params: [sender, fakeContractAddress, proof, publicInputs, newCommitment],
         id: 1,
       });
