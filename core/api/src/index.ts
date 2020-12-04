@@ -23,9 +23,6 @@ export interface IBaselineRPC {
   // Retrieve a list of the shield contract addresses being tracked and persisted
   getTracked(): Promise<string[]>;
 
-  // Inserts a single commit in a tree at the given shield contract address. Returns tx hash
-  verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string>;
-
   // Initialize a merkle tree database and track changes at the given shield contract address
   track(address: string): Promise<boolean>;
 
@@ -35,6 +32,9 @@ export interface IBaselineRPC {
 
   // Verify a sibling path for a given root and leaf at the given shield contract address
   verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
+
+  // Inserts a single leaf in a tree at the given shield contract address. Returns tx hash
+  verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string>;
 }
 
 export interface IBlockchainService {

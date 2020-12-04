@@ -65,7 +65,7 @@ describe('baseline rpc', () => {
 
         beforeEach(async () => {
           leaf = ethers.utils.keccak256(ethers.utils.hexlify(ethers.utils.toUtf8Bytes(`${new Date().getTime()}`)));
-          const insertResult = await provide.insertLeaf(sender, shield, leaf);
+          const insertResult = await provide.verifyAndPush(sender, shield, leaf);
           expect(insertResult).not.toBe(null);
         });
 
@@ -76,14 +76,14 @@ describe('baseline rpc', () => {
         });
 
         it('should expose the leaf in the tree', async () => {
-          const leafResp = await provide.getLeaf(shield, 0);
+          const leafResp = await provide.getCommit(shield, 0);
           expect(leafResp).not.toBe(null);
           expect(leafResp.hash).toBe(leaf);
           expect(leafResp.nodeIndex).not.toBe(null);
         });
 
         it('should expose the leaves in the tree', async () => {
-          const leavesResp = await provide.getLeaves(shield, [0]);
+          const leavesResp = await provide.getCommits(shield, [0]);
           expect(leavesResp).not.toBe(null);
           expect(leavesResp.length).toBe(1);
           expect(leavesResp[0].hash).toBe(leaf);
@@ -122,6 +122,31 @@ describe('baseline rpc', () => {
               expect(verified).toBe(true);
             });
           });
+        });
+      });
+    });
+
+    describe('untrack', () => {
+      let shield;
+      let result;
+
+      beforeEach(async () => {
+        shield = await deployShield();
+        result = await provide.track(shield);
+        expect(result).toBe(true);
+      });
+
+      it('should stop tracking the merkle tree', async () => {
+        const resp = await provide.untrack(shield.address, false);
+        await expect(resp).toBe(true);
+        // TODO: assert the tree is no longer receiving events;
+        // the above only asserts the baseline API response was valid
+      });
+
+      describe('when no shield contract has been deployed to the given address', () => {
+        it('should return false to indicate no new merkle tree was being tracked or persisted', async () => {
+          const call = provide.untrack('0xD16EEdE029C5c062255F1A37fa33b9D77BFC3282', false); // no shield contract here...
+          await expect(call).rejects.toBeTruthy();
         });
       });
     });

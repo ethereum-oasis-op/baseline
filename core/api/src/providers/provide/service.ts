@@ -53,10 +53,6 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return await this.rpc.call('baseline_getTracked', []);
   }
 
-  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string> {
-    return await this.rpc.call('baseline_verifyAndPush', [sender, address, proof, publicInputs, value]);
-  }
-
   async track(address: string): Promise<boolean> {
     return await this.rpc.call('baseline_track', [address]);
   }
@@ -67,6 +63,10 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
 
   async verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean> {
     return await this.rpc.call('baseline_verify', [address, root, commit, siblingPath]);
+  }
+
+  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string> {
+    return await this.rpc.call('baseline_verifyAndPush', [sender, address, proof, publicInputs, value]);
   }
 
   // IBlockchainService impl
