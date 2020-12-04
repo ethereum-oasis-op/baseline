@@ -760,6 +760,8 @@ export class ParticipantStack {
 
     const argv = ['MerkleTreeSHA Shield', verifierContract.address, 32];
 
+    console.log(contractParams);
+
     // deploy EYBlockchain's MerkleTreeSHA contract (see https://github.com/EYBlockchain/timber)
     await this.deployWorkgroupContract('ShuttleCircuit', 'circuit', contractParams, argv);
     const shieldContract = await this.requireWorkgroupContract('shield');
