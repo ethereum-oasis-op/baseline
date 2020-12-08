@@ -45,8 +45,8 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return await this.rpc.call('baseline_getRoot', [address]);
   }
 
-  async getSiblings(address: string, commitIndex: number): Promise<MerkleTreeNode[]> {
-    return await this.rpc.call('baseline_getSiblings', [address, commitIndex]);
+  async getProof(address: string, commitIndex: number): Promise<MerkleTreeNode[]> {
+    return await this.rpc.call('baseline_getProof', [address, commitIndex]);
   }
 
   async getTracked(): Promise<string[]> {
