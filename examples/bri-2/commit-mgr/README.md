@@ -46,12 +46,12 @@ The `commit-mgr` service implements and processes the baseline JSON-RPC methods:
 | `baseline_getCommit` | address, commitIndex | Retrieve a single commit from a tree at the given shield contract address |
 | `baseline_getCommits` | address, startIndex, count | Retrieve multiple commits from a tree at the given shield contract address |
 | `baseline_getRoot` | address | Retrieve the root of a tree at the given shield contract address |
-| `baseline_getSiblings` | address, commitIndex | Retrieve sibling paths (proof) of the given commit index |
+| `baseline_getProof` | address, commitIndex | Retrieve the membership proof for the given commit index |
 | `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
 | `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address |
 | `baseline_track` | address | Initialize a merkle tree database for the given shield contract address |
 | `baseline_untrack` | address | Remove event listeners for a given shield contract address |
-| `baseline_verify` | address, value, siblings | Verify a sibling path for a given root and commit value |
+| `baseline_verify` | address, value, proof | Verify a proof for a given root and commit value |
 
 ## TODO
 

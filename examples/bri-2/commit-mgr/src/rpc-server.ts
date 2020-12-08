@@ -116,7 +116,7 @@ const baseline_getRoot = new jayson.Method(
   },
 );
 
-const baseline_getSiblings = new jayson.Method(
+const baseline_getProof = new jayson.Method(
   async (args: any, context: any, done: any) => {
     let error = validateParams(args, 2);
     if (error) {
@@ -130,7 +130,7 @@ const baseline_getSiblings = new jayson.Method(
     try {
       pathNodes = await getSiblingPathByLeafIndex(contractAddress, leafIndex);
     } catch (err) {
-      logger.error(`[baseline_getSiblings] ${err}`);
+      logger.error(`[baseline_getProof] ${err}`);
       error = {
         code: -32603,
         message: `Internal server error`
@@ -367,7 +367,7 @@ const methods = {
   baseline_getCommit,
   baseline_getCommits,
   baseline_getRoot,
-  baseline_getSiblings,
+  baseline_getProof,
   baseline_getTracked,
   baseline_verifyAndPush,
   baseline_track,
