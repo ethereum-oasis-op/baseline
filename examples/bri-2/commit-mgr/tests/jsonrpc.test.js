@@ -429,11 +429,11 @@ describe("Interact with Shield.sol contract", () => {
     expect(merkleNode).toEqual({});
   });
 
-  test("baseline_getSiblings for 3rd leaf", async () => {
+  test("baseline_getProof for 3rd leaf", async () => {
     const leafIndex = 2;
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_getSiblings",
+      method: "baseline_getProof",
       params: [shieldAddress, leafIndex],
       id: 1,
     });
