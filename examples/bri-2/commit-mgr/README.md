@@ -17,14 +17,23 @@ The commitment manager service acts as an extension to an existing web3 provider
 - `cd .. && npm install` - install root-level node.js modules
 - `npm run contracts:compile` - compile Solidity contracts and copy results into `contracts/artifacts/`
 
-Before running, decide which blockchain environment you would like to use: `besu` or `ganache`. Then, set the following environment variables in `commit-mgr/.env` file to correctly configure the `commit-mgr` service: 
+Before running, decide which blockchain environment you would like to use. Supported options are:
+- `ganache`
+- `besu`
+- `infura`
+- `infura-gas`
+
+Then, set the following environment variables in `commit-mgr/.env` file to correctly configure the `commit-mgr` service: 
 - `ETH_CLIENT_TYPE`
 - `ETH_CLIENT_HTTP`
 - `ETH_CLIENT_WS`
+- `WALLET_PRIVATE_KEY` (redefine if not using ganache/besu private networks)
+- `WALLET_PUBLIC_KEY` (redefine if not using ganache/besu private networks)
+- `CHAIN_ID` (redefine if not using ganache/besu private networks)
 
 ## Run
 
-- `npm run up:besu` OR `npm run up:ganache` - spin up complementary containers/services
+- `npm run up:besu` OR `npm run up:ganache` OR `npm run up:infura` - spin up complementary containers/services
 - `npm run dev` - run the baseline-relay as a local node process
 - `npm test` - run jest test suite against baseline-relay
 
