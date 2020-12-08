@@ -8,7 +8,7 @@ Over 500 people and companies signed up to be notified about the opening of the 
 
 ### Bootstrapping Phase and Ongoing Phase <a id="bootstrapping-phase-and-ongoing-phase"></a>
 
-The technical steering committee and the chair listed below were seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period ends when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceeding period\) vote on the new TSC and chair. The specifications steering committee \(SSC\) has a variable number, and membership is based on whether one is named as an accountable party for an Epic in the [Baseline Roadmap repo](https://github.com/ethereum-oasis/baseline-roadmap).
+The technical steering committee and the chair listed below were seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period ends when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceding period\) vote on the new TSC and chair. The specifications steering committee \(SSC\) has a variable number, and membership is based on whether one is named as an accountable party for an Epic in the [Baseline Roadmap repo](https://github.com/ethereum-oasis/baseline-roadmap).
 
 The people and companies listed below have stepped-up to identify themselves as supporters, stakeholders, and accountable parties to advance the Baseline Protocol work.
 
