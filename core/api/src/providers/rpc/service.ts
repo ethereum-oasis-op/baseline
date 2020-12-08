@@ -58,8 +58,8 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
     return await this.call('baseline_getRoot', [address]);
   }
 
-  async getSiblings(address: string, commitIndex: number): Promise<MerkleTreeNode[]> {
-    return await this.call('baseline_getSiblings', [address, commitIndex]);
+  async getProof(address: string, commitIndex: number): Promise<MerkleTreeNode[]> {
+    return await this.call('baseline_getProof', [address, commitIndex]);
   }
 
   async getTracked(): Promise<string[]> {

@@ -8,22 +8,22 @@ export const baselineProviderProvide = 'provide';
 export const baselineProviderRpc = 'rpc';
 
 export interface IBaselineRPC {
-  // Retrieve a single leaf from a tree at the given shield contract address
+  // Retrieve a single commit from a tree at the given shield contract address
   getCommit(address: string, index: number): Promise<MerkleTreeNode>;
 
-  // Retrieve multiple leaves from a tree at the given shield contract address
+  // Retrieve multiple commits from a tree at the given shield contract address
   getCommits(address: string, startIndex: number, count: number): Promise<MerkleTreeNode[]>;
 
   // Retrieve the root of a tree at the given shield contract address
   getRoot(address: string): Promise<string>;
 
-  // Retrieve sibling paths/proof of the given leaf index at the given shield contract address
-  getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>;
+  // Retrieve membership proof for the given commit index at the given shield contract address
+  getProof(address: string, leafIndex: number): Promise<MerkleTreeNode[]>;
 
   // Retrieve a list of the shield contract addresses being tracked and persisted
   getTracked(): Promise<string[]>;
 
-  // Inserts a single leaf in a tree at the given shield contract address. Returns tx hash
+  // Inserts a single commit in a tree at the given shield contract address. Returns tx hash
   verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string>;
 
   // Initialize a merkle tree database and track changes at the given shield contract address
