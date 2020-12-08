@@ -40,6 +40,11 @@ export const restartSubscriptions = async () => {
     active: true
   });
 
+  const provider = get_ws_provider();
+  provider.on('block', async (result) => {
+    logger.debug(`NEW BLOCK: %o`, result)
+  });
+
   // For all 'active' MerkleTrees, search through old logs for any 
   // newLeaf events we missed while service was offline. Then resubscribe
   // to the events.
@@ -56,7 +61,19 @@ export const checkChainLogs = async (contractAddress, fromBlock) => {
   const blockNum = fromBlock ? fromBlock + 1 : 0;
   logger.info(`Checking chain logs for missed newLeaf events starting at block ${fromBlock} for contract: ${contractAddress}`);
   // besu has a bug where 'eth_getLogs' expects 'fromBlock' to be a string instead of integer
-  const convertedBlockNum = process.env.ETH_CLIENT_TYPE === "besu" ? `${blockNum}` : blockNum;
+  let convertedBlockNum = blockNum;
+  switch (process.env.ETH_CLIENT_TYPE) {
+    case "besu":
+      convertedBlockNum = `${blockNum}`;
+      break;
+    case "infura-gas":
+      convertedBlockNum = "0x" + blockNum.toString(16);
+      break;
+    case "infura":
+      convertedBlockNum = "0x" + blockNum.toString(16);
+      break;
+  };
+
   const params = {
     fromBlock: convertedBlockNum,
     toBlock: "latest",
