@@ -111,10 +111,14 @@ For complete copyright information please see the Notices section in the Appendi
 &nbsp;&nbsp;&nbsp;&nbsp;[6.2 Business Logic Execution](#62-business-logic-execution) \
 &nbsp;&nbsp;&nbsp;&nbsp;[6.3 Performance](#63-performance) \
 [7 Governance](#7-governance) \
+&nbsp;&nbsp;&nbsp;&nbsp;[7.1 Governance Model](#71-governance-model) \
 [8 Security Considerations](#8-security-considerations) \
+&nbsp;&nbsp;&nbsp;&nbsp;[8.1 Data Privacy](#81-data-privacy) \
+&nbsp;&nbsp;&nbsp;&nbsp;[8.2 Production readiness](#82-production-readiness) \
 [9 Conformance](#9-conformance) \
-&nbsp;&nbsp;&nbsp;&nbsp;[9.1 Baseline Core Minimal Conformance Level]() \
-&nbsp;&nbsp;&nbsp;&nbsp;[9.2 Baseline Core Advanced Conformance Level]()\
+&nbsp;&nbsp;&nbsp;&nbsp;[9.1 Conformance Targets](#91-conformance-targets) \
+&nbsp;&nbsp;&nbsp;&nbsp;[9.2 Conformance Levels](#92-conformances-levels)\
+&nbsp;&nbsp;&nbsp;&nbsp;[9.3 Interoperability](#93-interoperability)\
 [Appendix A.        Acknowledgments]()\
 [Appendix B.        Revision History]()
 
@@ -286,6 +290,26 @@ Describes the requirements for monitoring and reporting on operations for each f
 -------
 
 # 8 Security Considerations
+
+
+Describes security topics that should be important in Baseline implementations but that are NOT requirements. 
+
+## 8.1 Data Privacy
+
+Provides a list of considerations related to data privacy.
+
+The standard does not set any requirements for compliance to jurisdiction legislation/regulations, responsibility of the implementer to comply to applicable data privacy laws.
+
+## 8.2 Production Readiness
+
+Provides a list of considerations related to the use of underlying protocols/applications/tools etc. 
+
+The standard does not set any requirements for the use of specific applications/tools/libraries etc.
+Examples included in standard to be non-normative.
+The implementer should perform due diligence when selecting tools, libraries etc.
+
+
+
 <!--
 
 (Note: OASIS strongly recommends that Open Projects consider issues that might affect safety, security, privacy, and/or data protection in implementations of their specification and document them for implementers and adopters. For some purposes, you may find it required, e.g. if you apply for IANA registration.
@@ -301,6 +325,21 @@ We encourage editors and OP members concerned with this subject to read _Guideli
 -------
 
 # 9 Conformance
+
+
+Describes the conformance clauses and tests required to achieve baseline compliant implementations.
+
+## 9.1 Conformance Targets
+
+Defines entities and implementations subject to conformance.
+
+
+## 9.2 Conformance Levels
+
+Defines conformance levels and their conformance clauses.
+
+## 9.3 Interoperability
+
 <!--
 
 (Note: The [OASIS TC Process](https://www.oasis-open.org/policies-guidelines/tc-process#wpComponentsConfClause) requires that a specification approved by the OP for public review, or for publication at the Project Specification or OASIS Standard level must include a separate section, listing a set of numbered conformance clauses, to which any implementation of the specification must adhere in order to claim conformance to the specification (or any optional portion thereof). This is done by listing the conformance clauses here.
