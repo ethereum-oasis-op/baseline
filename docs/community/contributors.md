@@ -72,7 +72,7 @@ A Zenhub "Epic" used as a Story should almost always follow the form: "As X, I n
 
 * A Party's System Administrator can look up Counterparties in an OrgRegistry \(a public phone book\) and add them to a Workgroup, so that they can start Baselining Records and Workflows.
 * A Party's System Administrator can quickly and easily verify a Counterparty's identity found in the OrgRegistry, so that they can be confident in adding the Counterparty to a Workgroup.
-* A Party's System Administrator can use some or all of the Counterparities and Workflow Steps defined in one Workgroup in Workflow Steps created within another Workgroup, so that Workgroups don't become yet another kind of silo.
+* A Party's System Administrator can use some or all of the Counterparties and Workflow Steps defined in one Workgroup in Workflow Steps created within another Workgroup, so that Workgroups don't become yet another kind of silo.
 
 ​
 
