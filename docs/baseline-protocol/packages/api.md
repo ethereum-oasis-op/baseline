@@ -18,40 +18,44 @@ Run the local test suite with `npm test`.
 
 ### Baseline JSON-RPC Module
 
-An initial set of JSON-RPC methods have been defined for inclusion in the specification:
+An initial set of JSON-RPC methods have been defined for inclusion in the specification. These methods allow easy interaction with on-chain shield contracts (which contain merkle-tree fragments) and maintain full merkle-trees (along with metadata) in local off-chain storage.
 
-| Method | Description |
-| :--- | :--- |
-| `baseline_deploy` | Deploy a shield contract given the compiled artifact bytecode and ABI |
-| `baseline_getLeaf` | Retrieve a single leaf from a tree at the given shield contract address |
-| `baseline_getLeaves` | Retrieve multiple leaves from a tree at the given shield contract address |
-| `baseline_getRoot` | Retrieve the root of a tree at the given shield contract address |
-| `baseline_getSiblings` | Retrieve sibling paths/proof of the given leaf index |
-| `baseline_getTracked` | Retrieve a list of the shield contract addresses being tracked and persisted |
-| `baseline_insertLeaf` | Inserts a single leaf in a tree at the given shield contract address |
-| `baseline_insertLeaves` | Inserts multiple leaves in a tree at the given shield contract address |
-| `baseline_track` | Initialize a merkle tree database for the given shield contract address |
-| `baseline_verify` | Verify a sibling path for a root and leaf at the given shield contract address |
+| Method | Params | Description |
+| -------- | ----- | ----------- |
+| `baseline_getCommit` | address, commitIndex | Retrieve a single commit from a tree at the given shield contract address |
+| `baseline_getCommits` | address, startIndex, count | Retrieve multiple commits from a tree at the given shield contract address |
+| `baseline_getRoot` | address | Retrieve the root of a tree at the given shield contract address |
+| `baseline_getProof` | address, commitIndex | Retrieve the membership proof for the given commit index |
+| `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
+| `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address |
+| `baseline_track` | address | Initialize a merkle tree database for the given shield contract address |
+| `baseline_untrack` | address | Remove event listeners for a given shield contract address |
+| `baseline_verify` | address, value, siblings | Verify a proof for a given root and commit value |
+
 
 #### Ethereum clients that support baseline JSON-RPC
 
 * [Nethermind](https://github.com/NethermindEth/nethermind) .NET client
+* Any client supported by the [commit-mgr](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/commit-mgr) service. These include:
+  * [ganache](https://github.com/trufflesuite/ganache)
+  * [besu](https://github.com/hyperledger/besu)
+  * [Infura](https://infura.io/docs/ethereum)
+  * [Infura Transactions (ITX)](https://infura.io/docs/transactions)
 
 ### Interfaces
 
 **IBaselineRPC**
 
 ```text
-deploy(sender: string, bytecode: string, abi: any): Promise<any>;
-getLeaf(address: string, index: number): Promise<MerkleTreeNode>;
-getLeaves(address: string, indexes: number[]): Promise<MerkleTreeNode[]>;
+getCommit(address: string, index: number): Promise<MerkleTreeNode>;
+getCommits(address: string, startIndex: number, count: number): Promise<MerkleTreeNode[]>;
 getRoot(address: string): Promise<string>;
-getSiblings(address: string, leafIndex: number): Promise<MerkleTreeNode[]>;
+getProof(address: string, commitIndex: number): Promise<MerkleTreeNode[]>;
 getTracked(): Promise<string[]>;
-insertLeaf(sender: string, address: string, value: string): Promise<MerkleTreeNode>;
-insertLeaves(sender: string, address: string, value: string): Promise<MerkleTreeNode>;
+verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], commit: string): Promise<string>;
 track(address: string): Promise<boolean>;
-verify(address: string, root: string, leaf: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
+untrack(address: string): Promise<boolean>;
+verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;;
 ```
 
 **IRegistry**
