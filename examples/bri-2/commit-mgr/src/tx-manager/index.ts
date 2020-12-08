@@ -21,6 +21,9 @@ export async function txManagerServiceFactory(
     case "infura-gas":
       service = new InfuraGas(config);
       break;
+    case "infura":
+      service = new EthClient(config);
+      break;
     case "besu":
       service = new EthClient(config);
       break;
