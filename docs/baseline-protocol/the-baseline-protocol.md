@@ -16,7 +16,7 @@ The high level description and specification for a global public Mainnet are [he
 
 The Baseline Protocol can perform its core tasks on the current public Ethereum network at a rate that is reasonably expected to be sufficient for work in supply chain, B2B contracting, CRM, and other domains that involve coordinating records between legally separate entities.
 
-Eth2 will further extend the range of applications that baselining can serve at acceptable levels of performance and reliability. The Baseline Protocol community will align closely with Eth2 and work through the EEA Mainnet Working Group to supply the Etherem core developer community with ideas, user stories and requirements to help see Eth2 evolve into a platform well-suited to baselining.
+Eth2 will further extend the range of applications that baselining can serve at acceptable levels of performance and reliability. The Baseline Protocol community will align closely with Eth2 and work through the EEA Mainnet Working Group to supply the Ethereum core developer community with ideas, user stories and requirements to help see Eth2 evolve into a platform well-suited to baselining.
 
 ## Which Systems of Record Can We _Baseline?_ <a id="which-systems-of-record-can-we-baseline"></a>
 
