@@ -51,7 +51,7 @@ On September 30, 2020, the following people were voted in as the TSC for October
 
 ### Specifications Steering Committee <a id="your-specifications-steering-committee"></a>
 
-The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products. These are industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://www.zenhub.com/signup).\)
+The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products. These are industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://www.zenhub.com/sign-up).\)
 
 SSC members are seated by loose consensus of the sitting members. There is no specific maximum number of seats, and it is expected that the members will form sub-committees for topics like industry verticals.
 

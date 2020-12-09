@@ -24,7 +24,7 @@ The Provide stack is a containerized microservices architecture written in Golan
 
 \*\*\*\*[**Vault**](https://docs.provide.services/vault) ****provides key management for traditional symmetric and asymmetric encrypt/decrypt and sign/verify operations in addition to support for elliptic curves required for advanced messaging and privacy applications.
 
-**NChain** provides [various APIs](https://docs.provide.services/api/container-runtime/orchestration) for building decentralized applications and deploying and managing peer-to-peer infrastructure. The service also provides daemons for \(i\) monitoring reachability of network infrastructure and \(ii\) creating durable, real-time event and analytics streams by subscribing to various networks \(i.e., EVM-based block headers and log events\).
+**NChain** provides [various APIs](https://docs.provide.services/api/c2/container-runtime) for building decentralized applications and deploying and managing peer-to-peer infrastructure. The service also provides daemons for \(i\) monitoring reachability of network infrastructure and \(ii\) creating durable, real-time event and analytics streams by subscribing to various networks \(i.e., EVM-based block headers and log events\).
 
 ### Dependencies
 
