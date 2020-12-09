@@ -41,7 +41,7 @@ To set up this business logic, use the Baseline Protocol Privacy Package [here](
 
 Once the business logic is rendered into circuits, deploy the Workflow as follows: 
 
-First deploy a Node that has the baseline protocol RPC interface implemented. The Nethermind Ethereum Client is the first to implement this code. 
+First deploy a Node that has the baseline protocol RPC interface implemented. The Nethermind Ethereum Client is the first to implement this code. Alternatively, you can deploy the [commit-mgr](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/commit-mgr) Ethereum client extension plus a client type of your choice (i.e. Besu, Infura, etc.)
 
 Next, use the `IBaselineRPC` call in the Client to deploy the Shield and Verifier contracts on-chain. This can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/core/api). 
 

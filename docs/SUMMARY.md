@@ -35,6 +35,7 @@
   * [Libraries](bri/bri-1/bri-1-libraries/README.md)
     * [SAP/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-sap-microsoft-dynamics.md)
     * [Google Sheets/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-google-sheets-microsoft-dynamics.md)
+* [BRI-2](bri/bri-2/README.md)
 * [Radish34](bri/radish34/README.md)
   * [Radish34 Explained](bri/radish34/radish34-explained.md)
   * [Interactive Demo](bri/radish34/radish34-interactive-demo.md)

@@ -1,36 +1,24 @@
 const request = require("supertest");
-const dotenv = require("dotenv");
-const { ethers, Wallet } = require("ethers");
+const { ethers } = require("ethers");
 const mongoose = require('mongoose');
+const dotenv = require("dotenv");
+dotenv.config();
 
-const apiRequest = request("localhost:4001");
+const { web3provider, wallet, txManager, waitRelayTx, deposit, getBalance } = require("./utils.js");
 const shieldContract = require("../../contracts/artifacts/Shield.json");
 const verifierContract = require("../../contracts/artifacts/VerifierNoop.json");
 
-dotenv.config();
+const apiRequest = request("localhost:4001");
 const treeHeight = 2;
-const http_provider = new ethers.providers.JsonRpcProvider(process.env.ETH_CLIENT_HTTP);
-const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY, http_provider);
-const txManager = process.env.ETH_CLIENT_TYPE;
-let txDelay = 3000;
-if (txManager === 'ganache') {
-  txDelay = 100;
-} else if (txManager === 'besu') {
-  txDelay = 6000; // clique network block time set to 5sec
-}
-
-const promisedTimeout = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
 
 let accounts;
 let shieldAddress;
 let verifierAddress;
 
-jest.setTimeout(30000);
+jest.setTimeout(35000);
 
-// Clear out mongo before tests to ensure no overlap with contract addresses
 beforeAll(async () => {
+  // Clear out mongo before tests to ensure no overlap with contract addresses
   const config = {
     mongo: {
       debug: 'true',
@@ -56,6 +44,16 @@ beforeAll(async () => {
 
   await mongoose.connect(dbUrl, config.mongoose);
   await mongoose.connection.db.dropCollection('merkle-trees');
+
+  //const waitTx = web3provider.bind(this, waitRelayTx);
+  if (txManager === 'infura-gas') {
+    const balance = await getBalance();
+    console.log('balance:', balance);
+    if (balance < 1) {
+      const res = await deposit();
+      console.log('deposit res:', res);
+    }
+  }
 });
 
 afterAll(async () => {
@@ -116,28 +114,21 @@ describe("Deploy contracts", () => {
     const unsignedTx = {
       from: sender,
       data: verifierContract.bytecode,
-      chainId: parseInt(process.env.CHAIN_ID, 10),
       nonce
     };
 
     const gasEstimate = await wallet.estimateGas(unsignedTx);
     unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
 
-    const signedTx = await wallet.signTransaction(unsignedTx);
-    const res = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_sendRawTransaction",
-      params: [signedTx],
-      id: 1,
-    });
-    expect(res.statusCode).toEqual(200);
-    txHash = res.body.result;
+    const tx = await wallet.sendTransaction(unsignedTx);
+    await tx.wait();
+    txHash = tx.hash;
+
     expect(txHash).not.toBeUndefined();
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
   });
 
   test("Retrieve VerifierNoop.sol tx receipt", async () => {
-    await promisedTimeout(txDelay); // Wait for previous tx verification
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
       method: "eth_getTransactionReceipt",
@@ -160,28 +151,21 @@ describe("Deploy contracts", () => {
     const unsignedTx = {
       from: sender,
       data: bytecodeWithParams,
-      chainId: parseInt(process.env.CHAIN_ID, 10),
       nonce
     };
 
     const gasEstimate = await wallet.estimateGas(unsignedTx);
     unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
-    const signedTx = await wallet.signTransaction(unsignedTx);
 
-    const res = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_sendRawTransaction",
-      params: [signedTx],
-      id: 1,
-    });
-    expect(res.statusCode).toEqual(200);
-    txHash = res.body.result;
+    const tx = await wallet.sendTransaction(unsignedTx);
+    await tx.wait();
+    txHash = tx.hash;
+
     expect(txHash).not.toBeUndefined();
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
   });
 
   test("Retrieve Shield.sol tx receipt", async () => {
-    await promisedTimeout(txDelay); // Wait for previous tx verification
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
       method: "eth_getTransactionReceipt",
@@ -196,7 +180,6 @@ describe("Deploy contracts", () => {
 
 });
 
-
 describe("Check that old logs are scanned when baseline_track is called", () => {
   let counterpartyShieldAddress;
 
@@ -210,28 +193,21 @@ describe("Check that old logs are scanned when baseline_track is called", () => 
     const unsignedTx = {
       from: sender,
       data: bytecodeWithParams,
-      chainId: parseInt(process.env.CHAIN_ID, 10),
       nonce
     };
 
     const gasEstimate = await wallet.estimateGas(unsignedTx);
     unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
-    const signedTx = await wallet.signTransaction(unsignedTx);
 
-    const res = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_sendRawTransaction",
-      params: [signedTx],
-      id: 1,
-    });
-    expect(res.statusCode).toEqual(200);
-    txHash = res.body.result;
+    const tx = await wallet.sendTransaction(unsignedTx);
+    await tx.wait();
+    txHash = tx.hash;
+
     expect(txHash).not.toBeUndefined();
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
   });
 
   test("Retrieve Shield.sol tx receipt", async () => {
-    await promisedTimeout(txDelay); // Wait for previous tx verification
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
       method: "eth_getTransactionReceipt",
@@ -261,38 +237,18 @@ describe("Check that old logs are scanned when baseline_track is called", () => 
       to: counterpartyShieldAddress,
       from: sender,
       data: txData,
-      chainId: parseInt(process.env.CHAIN_ID, 10),
-      gasLimit: 0,
       nonce
     };
 
     const gasEstimate = await wallet.estimateGas(unsignedTx);
     unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
-    const signedTx = await wallet.signTransaction(unsignedTx);
 
-    const res = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_sendRawTransaction",
-      params: [signedTx],
-      id: 1,
-    });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.result).not.toBeUndefined();
-    const txHash = res.body.result;
-    expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
+    const tx = await wallet.sendTransaction(unsignedTx);
+    await tx.wait();
+    expect(tx.hash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
-    // Check the transaction receipt to verify tx was successful
-    await promisedTimeout(txDelay); // Wait for previous tx verification
-    const res_2 = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_getTransactionReceipt",
-      params: [txHash],
-      id: 1,
-    });
-    expect(res_2.statusCode).toEqual(200);
-    expect(res_2.body.error).toBeUndefined();
-    expect(res_2.body.result).not.toBeUndefined();
-    expect(res_2.body.result.status).toEqual("0x1");
+    const txReceipt = await web3provider.getTransactionReceipt(tx.hash);
+    expect(txReceipt.status).toEqual(1);
   });
 
   test("baseline_track should initiate merkle tree in db", async () => {
@@ -324,7 +280,6 @@ describe("Check that old logs are scanned when baseline_track is called", () => 
   });
 
 });
-
 
 describe("Interact with Shield.sol contract", () => {
   let rootHash;
@@ -376,19 +331,15 @@ describe("Interact with Shield.sol contract", () => {
     const txHash = res.body.result;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
-    // Check the transaction receipt to verify tx was successful
-    await promisedTimeout(txDelay); // Wait for previous tx verification
-    const res_2 = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_getTransactionReceipt",
-      params: [txHash],
-      id: 1,
-    });
-    expect(res_2.statusCode).toEqual(200);
-    expect(res_2.body.error).toBeUndefined();
-    expect(res_2.body.result).not.toBeUndefined();
-    expect(res_2.body.result.status).toEqual("0x1");
-  }, 10000);
+    // ITX txs return relayHash, so need to be managed differently
+    let txReceipt;
+    if (txManager === 'infura-gas') {
+      txReceipt = await waitRelayTx(txHash);
+    } else {
+      txReceipt = await web3provider.waitForTransaction(txHash);
+    }
+    expect(txReceipt.status).toEqual(1);
+  });
 
   test("baseline_getRoot returns root hash", async () => {
     const res = await apiRequest.post("/jsonrpc").send({
@@ -418,18 +369,14 @@ describe("Interact with Shield.sol contract", () => {
     const txHash = res.body.result;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
-    // Check the transaction receipt to verify tx was successful
-    await promisedTimeout(txDelay); // Wait for previous tx verification
-    const res_2 = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_getTransactionReceipt",
-      params: [txHash],
-      id: 1,
-    });
-    expect(res_2.statusCode).toEqual(200);
-    expect(res_2.body.error).toBeUndefined();
-    expect(res_2.body.result).not.toBeUndefined();
-    expect(res_2.body.result.status).toEqual("0x1");
+    // ITX txs return relayHash, so need to be managed differently
+    let txReceipt;
+    if (txManager === 'infura-gas') {
+      txReceipt = await waitRelayTx(txHash);
+    } else {
+      txReceipt = await web3provider.waitForTransaction(txHash);
+    }
+    expect(txReceipt.status).toEqual(1);
   });
 
   test("baseline_verifyAndPush creates 3rd leaf", async () => {
@@ -447,30 +394,18 @@ describe("Interact with Shield.sol contract", () => {
     const txHash = res.body.result;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
-    // Check the transaction receipt to verify tx was successful
-    await promisedTimeout(txDelay); // Wait for previous tx verification
-    const res_2 = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_getTransactionReceipt",
-      params: [txHash],
-      id: 1,
-    });
-    expect(res_2.statusCode).toEqual(200);
-    expect(res_2.body.error).toBeUndefined();
-    expect(res_2.body.result).not.toBeUndefined();
-    expect(res_2.body.result.status).toEqual("0x1");
+    // ITX txs return relayHash, so need to be managed differently
+    let txReceipt;
+    if (txManager === 'infura-gas') {
+      txReceipt = await waitRelayTx(txHash);
+    } else {
+      txReceipt = await web3provider.waitForTransaction(txHash);
+    }
+    expect(txReceipt.status).toEqual(1);
   });
 
   test("baseline_getRoot returns updated root hash", async () => {
-    const res = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "baseline_getRoot",
-      params: [shieldAddress],
-      id: 1,
-    });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.result).not.toBeUndefined();
-    const rootHash_2 = res.body.result;
+    const rootHash_2 = await web3provider.send('baseline_getRoot', [shieldAddress]);
     expect(rootHash_2).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
     expect(rootHash_2).not.toEqual(rootHash);
     rootHash = rootHash_2;
@@ -478,15 +413,9 @@ describe("Interact with Shield.sol contract", () => {
 
   test("baseline_getCommit retrieves 3rd leaf", async () => {
     const leafIndex = 2;
-    const res = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "baseline_getCommit",
-      params: [shieldAddress, leafIndex],
-      id: 1,
-    });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.result).not.toBeUndefined();
-    const merkleNode = res.body.result;
+    const merkleNode = await web3provider.send('baseline_getCommit', [
+      shieldAddress, leafIndex
+    ]);
     leafValue = merkleNode.value;
     expect(merkleNode.value).toEqual('0x3333333333333333333333333333333333333333333333333333333333333333');
     expect(merkleNode.leafIndex).toEqual(leafIndex);
@@ -494,21 +423,17 @@ describe("Interact with Shield.sol contract", () => {
 
   test("baseline_getCommit fails to retrieve non-existent 5th leaf", async () => {
     const leafIndex = 4;
-    const res = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "baseline_getCommit",
-      params: [shieldAddress, leafIndex],
-      id: 1,
-    });
-    expect(res.statusCode).toEqual(200);
-    expect(res.body.result).toEqual({});
+    const merkleNode = await web3provider.send('baseline_getCommit', [
+      shieldAddress, leafIndex
+    ]);
+    expect(merkleNode).toEqual({});
   });
 
-  test("baseline_getSiblings for 3rd leaf", async () => {
+  test("baseline_getProof for 3rd leaf", async () => {
     const leafIndex = 2;
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
-      method: "baseline_getSiblings",
+      method: "baseline_getProof",
       params: [shieldAddress, leafIndex],
       id: 1,
     });
@@ -550,22 +475,17 @@ describe("Interact with Shield.sol contract", () => {
     const txHash = res.body.result;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
-    // Check the transaction receipt to verify tx was successful
-    await promisedTimeout(txDelay); // Wait for previous tx verification
-    const res_2 = await apiRequest.post("/jsonrpc").send({
-      jsonrpc: "2.0",
-      method: "eth_getTransactionReceipt",
-      params: [txHash],
-      id: 1,
-    });
-    expect(res_2.statusCode).toEqual(200);
-    expect(res_2.body.error).toBeUndefined();
-    expect(res_2.body.result).not.toBeUndefined();
-    expect(res_2.body.result.status).toEqual("0x1");
+    // ITX txs return relayHash, so need to be managed differently
+    let txReceipt;
+    if (txManager === 'infura-gas') {
+      txReceipt = await waitRelayTx(txHash);
+    } else {
+      txReceipt = await web3provider.waitForTransaction(txHash);
+    }
+    expect(txReceipt.status).toEqual(1);
   });
 
   test("Off-chain root matches On-chain root", async () => {
-    await promisedTimeout(1000); // Ensure previous on-chain event triggered
     const res = await apiRequest.post("/jsonrpc").send({
       jsonrpc: "2.0",
       method: "baseline_getRoot",

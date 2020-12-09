@@ -8,9 +8,10 @@ Here's a list of [current Maintainers](community-leaders.md#maintainer-team).
 
 ### What do maintainers do? <a id="what-do-maintainers-do"></a>
 
-Maintainers are people who take an active role in writing code that advances the Baseline Protocol and/or related projects. They are primarily responsible for:
 
-* Contributing code to the project in the form of PRs that are linked to open and prioritized issues
+Maintainers are people who take an active role in advancing the Baseline Protocol and/or related projects. They are primarily responsible for:
+
+* Contributing code or contributing to specification work in the form of PRs that are linked to open and prioritized issues
 * Reviewing and merging PRs into the master branch
 * Cutting, testing, and releasing new versions of the related Baseline projects
 * Working with the TSC and SSC to advance the Baseline Protocol
@@ -26,7 +27,7 @@ They can/should also contribute in the following ways:
 
 There are two ways to become a maintainer: You are asked by a current maintainer, or you make request to an existing maintainer to become one.
 
-With either path you become a "provisional maintainer". As such you will need to show consistent contributions of code and/or specifications to the project. This can be in the form of pull requests that get merged into master. Or it can be in the form of system architecture and related artifacts that guide the development activities of others.
+With either path you become a "provisional maintainer". As such you will need to show consistent contributions of code and/or specifications to the project. This can be in the form of pull requests that get merged into master. Or it can be in the form of technical specification, system architecture and related artifacts that guide the development activities of others.
 
 All provisional maintainers that focus on code development \(over standards\) must meet with the existing maintainers and demonstrate they are capable of the following:
 
@@ -46,7 +47,7 @@ In general, a maintainer needs to:
 * show commitment over time with multiple PRs merged
 * be reliable in completing issues to which they have been assigned
 * attend the weekly maintainer meetings \(with occasional absences allowed\)
-* demonstrate competency in software development
+* demonstrate competency in software development or specification writing
 * follow the project style and testing guidelines
 * have a high degree of understanding of the project architecture
 * be welcoming to others in the community who are using the project
