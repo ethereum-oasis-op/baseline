@@ -10,32 +10,31 @@ export const baselineProviderProvide = 'provide';
 export const baselineProviderRpc = 'rpc';
 
 export interface IBaselineRPC {
-  // Retrieve a single commit from a tree at the given shield contract address
-  getCommit(address: string, index: number): Promise<MerkleTreeNode>;
+  // Retrieve a single commit at the given shield contract address
+  getCommit(address: string, index: number): Promise<Commitment>;
 
-  // Retrieve multiple commits from a tree at the given shield contract address
-  getCommits(address: string, startIndex: number, count: number): Promise<MerkleTreeNode[]>;
+  // Retrieve multiple commits at the given shield contract address
+  getCommits(address: string, startIndex: number, count: number): Promise<Commitment[]>;
 
-  // Retrieve the root of a tree at the given shield contract address
+  // Retrieve the root at the given shield contract address
   getRoot(address: string): Promise<string>;
 
   // Retrieve membership proof for the given commit index at the given shield contract address
-  getProof(address: string, leafIndex: number): Promise<MerkleTreeNode[]>;
+  getProof(address: string, leafIndex: number): Promise<Commitment[]>;
 
   // Retrieve a list of the shield contract addresses being tracked and persisted
   getTracked(): Promise<string[]>;
 
-  // Initialize a merkle tree database and track changes at the given shield contract address
+  // Initialize and track changes at the given shield contract address
   track(address: string): Promise<boolean>;
 
-  // Remove event listeners for a given shield contract address
-  // If prune === true, wipe tree from storage
+  // Remove event listeners for a given shield contract address; if prune === true, wipe it from storage
   untrack(address: string, prune?: boolean): Promise<boolean>;
 
-  // Verify a sibling path for a given root and leaf at the given shield contract address
-  verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
+  // Verify a sibling path for a given root and commit at the given shield contract address
+  verify(address: string, root: string, commit: string, siblingPath: Commitment[]): Promise<boolean>;
 
-  // Inserts a single commit in a tree at the given shield contract address
+  // Atomically verify and insert a single commit at the given shield contract address
   verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<PushCommitmentResponse>;
 }
 

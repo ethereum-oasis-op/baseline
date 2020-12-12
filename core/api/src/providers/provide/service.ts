@@ -2,7 +2,7 @@
 
 import { Ident, RpcClient, Vault } from 'provide-js';
 import { ProvideConfig } from './config';
-import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault, PushCommitmentResponse } from '../..';
+import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault, PushCommitmentResponse, Commitment } from '../..';
 
 /**
  * This class provides unified access to various microservices
@@ -33,11 +33,11 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
 
   // BaselineRPC impl
 
-  async getCommit(address: string, index: number): Promise<MerkleTreeNode> {
+  async getCommit(address: string, index: number): Promise<Commitment> {
     return await this.rpc.call('baseline_getCommit', [address, index]);
   }
 
-  async getCommits(address: string, startIndex: number, count: number): Promise<MerkleTreeNode[]> {
+  async getCommits(address: string, startIndex: number, count: number): Promise<Commitment[]> {
     return await this.rpc.call('baseline_getCommits', [address, startIndex, count]);
   }
 
@@ -45,7 +45,7 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return await this.rpc.call('baseline_getRoot', [address]);
   }
 
-  async getProof(address: string, commitIndex: number): Promise<MerkleTreeNode[]> {
+  async getProof(address: string, commitIndex: number): Promise<Commitment[]> {
     return await this.rpc.call('baseline_getProof', [address, commitIndex]);
   }
 
@@ -61,7 +61,7 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return await this.rpc.call('baseline_untrack', [address, prune]);
   }
 
-  async verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean> {
+  async verify(address: string, root: string, commit: string, siblingPath: Commitment[]): Promise<boolean> {
     return await this.rpc.call('baseline_verify', [address, root, commit, siblingPath]);
   }
 
