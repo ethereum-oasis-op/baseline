@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { RpcConfig } from './config';
-import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault, PushCommitmentResponse } from '../..';
+import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault, PushCommitmentResponse, Commitment } from '../..';
 
 const defaultJsonRpcUrl = 'http://localhost:8545';
 const defaultJsonRpcVersion = '2.0';
@@ -46,11 +46,11 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
 
   // BaselineRPC impl
 
-  async getCommit(address: string, index: number): Promise<MerkleTreeNode> {
+  async getCommit(address: string, index: number): Promise<Commitment> {
     return await this.call('baseline_getCommit', [address, index]);
   }
 
-  async getCommits(address: string, startIndex: number, count: number): Promise<MerkleTreeNode[]> {
+  async getCommits(address: string, startIndex: number, count: number): Promise<Commitment[]> {
     return await this.call('baseline_getCommits', [address, startIndex, count]);
   }
 
@@ -58,16 +58,12 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
     return await this.call('baseline_getRoot', [address]);
   }
 
-  async getProof(address: string, commitIndex: number): Promise<MerkleTreeNode[]> {
+  async getProof(address: string, commitIndex: number): Promise<Commitment[]> {
     return await this.call('baseline_getProof', [address, commitIndex]);
   }
 
   async getTracked(): Promise<string[]> {
     return await this.call('baseline_getTracked', []);
-  }
-
-  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<PushCommitmentResponse> {
-    return await this.call('baseline_verifyAndPush', [sender, address, proof, publicInputs, value]);
   }
 
   async track(address: string): Promise<boolean> {
@@ -78,8 +74,12 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
     return await this.call('baseline_untrack', [address, prune]);
   }
 
-  async verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean> {
+  async verify(address: string, root: string, commit: string, siblingPath: Commitment[]): Promise<boolean> {
     return await this.call('baseline_verify', [address, root, commit, siblingPath]);
+  }
+
+  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<PushCommitmentResponse> {
+    return await this.call('baseline_verifyAndPush', [sender, address, proof, publicInputs, value]);
   }
 
   // IBlockchainService impl
