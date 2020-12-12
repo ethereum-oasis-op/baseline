@@ -16,6 +16,10 @@ const publishArtifacts = (artifacts, bearerJWT) => {
 router.post('/', async (req, res, next) => {
   req.setTimeout(900000);
   const { name, source, scheme, jwt } = req.body;
+  const zk = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceZokrates, {
+    importResolver: zokratesImportResolver,
+  });
+
   try {
     const circuitId = path.basename(`${name}-${new Date().getTime()}`, '.zok'); // filename without '.zok'
     fs.mkdirSync(`/app/output/${circuitId}`, { recursive: true });
