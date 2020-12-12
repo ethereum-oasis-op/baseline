@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { RpcConfig } from './config';
-import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault } from '../..';
+import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault, PushCommitmentResponse } from '../..';
 
 const defaultJsonRpcUrl = 'http://localhost:8545';
 const defaultJsonRpcVersion = '2.0';
@@ -66,7 +66,7 @@ export class Rpc implements IBaselineRPC, IBlockchainService, IRegistry, IVault 
     return await this.call('baseline_getTracked', []);
   }
 
-  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string> {
+  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<PushCommitmentResponse> {
     return await this.call('baseline_verifyAndPush', [sender, address, proof, publicInputs, value]);
   }
 

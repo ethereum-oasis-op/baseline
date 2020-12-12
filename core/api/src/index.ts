@@ -1,7 +1,9 @@
 import { Ethers } from './providers/ethers.js';
 import { Provide } from './providers/provide';
 import { Rpc } from './providers/rpc';
+import { Commitment } from './utils/commitment';
 import { MerkleTreeNode } from './utils/merkle-tree';
+import { PushCommitmentResponse } from './utils/push-commitment-response';
 
 export const baselineProviderEthers = 'ethers';
 export const baselineProviderProvide = 'provide';
@@ -33,8 +35,8 @@ export interface IBaselineRPC {
   // Verify a sibling path for a given root and leaf at the given shield contract address
   verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNode[]): Promise<boolean>;
 
-  // Inserts a single leaf in a tree at the given shield contract address. Returns tx hash
-  verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string>;
+  // Inserts a single commit in a tree at the given shield contract address
+  verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<PushCommitmentResponse>;
 }
 
 export interface IBlockchainService {
@@ -88,7 +90,9 @@ export interface IVault {
 }
 
 export {
-  MerkleTreeNode
+  Commitment,
+  PushCommitmentResponse,
+  MerkleTreeNode,
 };
 
 export async function baselineServiceFactory(
