@@ -2,7 +2,7 @@
 
 import { Ident, RpcClient, Vault } from 'provide-js';
 import { ProvideConfig } from './config';
-import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault } from '../..';
+import { IBaselineRPC, IBlockchainService, MerkleTreeNode, IRegistry, IVault, PushCommitmentResponse } from '../..';
 
 /**
  * This class provides unified access to various microservices
@@ -65,7 +65,7 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
     return await this.rpc.call('baseline_verify', [address, root, commit, siblingPath]);
   }
 
-  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<string> {
+  async verifyAndPush(sender: string, address: string, proof: number[], publicInputs: string[], value: string): Promise<PushCommitmentResponse> {
     return await this.rpc.call('baseline_verifyAndPush', [sender, address, proof, publicInputs, value]);
   }
 
