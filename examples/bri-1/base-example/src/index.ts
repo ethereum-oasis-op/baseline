@@ -1,4 +1,4 @@
-import { IBaselineRPC, IBlockchainService, IRegistry, IVault, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
+import { IBaselineRPC, IBlockchainService, IRegistry, IVault, MerkleTreeNode, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
 import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
 import { IZKSnarkCircuitProvider, IZKSnarkCompilationArtifacts, IZKSnarkTrustedSetupArtifacts, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
 import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
@@ -200,12 +200,23 @@ export class ParticipantStack {
         } else {
           // create state transition commitment
           payload.result = await this.generateProof('modify_state', JSON.parse(msg.payload.toString()));
+          const publicInputs = []; // FIXME
+          const value = ''; // FIXME
           console.log(payload);
 
-          const leaf = await this.baseline?.insertLeaf(msg.sender, this.contracts['shield'].address, payload.result.proof.proof);
+          const resp = await this.baseline?.verifyAndPush(
+            msg.sender,
+            this.contracts['shield'].address,
+            payload.result.proof.proof,
+            publicInputs,
+            value,
+          );
+
+          const leaf = resp!.commitment as MerkleTreeNode;
+
           if (leaf) {
             console.log(`inserted leaf... ${leaf}`);
-            payload.sibling_path = (await this.baseline!.getSiblings(msg.shield, leaf.index)).map(node => node.index);
+            payload.sibling_path = (await this.baseline!.getProof(msg.shield, leaf.location())).map(node => node.location());
             payload.sibling_path?.push(leaf.index);
             this.workgroupCounterparties.forEach(async recipient => {
               await this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
