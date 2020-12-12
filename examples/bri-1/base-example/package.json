@@ -21,7 +21,7 @@
     "test:teardown": "make stop"
   },
   "dependencies": {
-    "@baseline-protocol/api": "0.1.0",
+    "@baseline-protocol/api": "0.2.0",
     "@baseline-protocol/messaging": "0.1.0",
     "@baseline-protocol/privacy": "0.2.0",
     "@baseline-protocol/types": "0.1.0",

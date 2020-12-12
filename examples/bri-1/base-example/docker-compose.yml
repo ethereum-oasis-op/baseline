@@ -98,7 +98,7 @@ services:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
   alice-ident:
-    image: provide/ident:bri-1
+    image: provide/ident
     container_name: alice-ident
     depends_on:
       - alice-nats-streaming
@@ -134,7 +134,7 @@ services:
     restart: always
 
   alice-ident-consumer:
-    image: provide/ident:bri-1
+    image: provide/ident
     entrypoint: ./ops/run_consumer.sh
     container_name: alice-ident-consumer
     depends_on:
@@ -286,7 +286,7 @@ services:
     restart: always
 
   alice-vault:
-    image: provide/vault:bri-1
+    image: provide/vault
     container_name: alice-vault
     depends_on:
       - alice-postgres
@@ -435,7 +435,7 @@ services:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
   bob-ident:
-    image: provide/ident:bri-1
+    image: provide/ident
     container_name: bob-ident
     depends_on:
       - bob-nats-streaming
@@ -471,7 +471,7 @@ services:
     restart: always
 
   bob-ident-consumer:
-    image: provide/ident:bri-1
+    image: provide/ident
     entrypoint: ./ops/run_consumer.sh
     container_name: bob-ident-consumer
     depends_on:
@@ -623,7 +623,7 @@ services:
     restart: always
 
   bob-vault:
-    image: provide/vault:bri-1
+    image: provide/vault
     container_name: bob-vault
     depends_on:
       - bob-postgres
