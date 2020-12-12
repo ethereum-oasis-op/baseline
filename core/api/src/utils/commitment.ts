@@ -1,4 +1,4 @@
 export interface Commitment {
-  location(): any;
-  value(): any;
+  location(): number;
+  value(): string;
 }

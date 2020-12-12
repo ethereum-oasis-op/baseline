@@ -10,11 +10,11 @@ export class MerkleTreeNode implements Commitment {
     this.index = index;
   }
 
-  location(): any {
+  location(): number {
     return this.index;
   }
 
-  value(): any {
+  value(): string {
     return this.hash;
   }
 }
