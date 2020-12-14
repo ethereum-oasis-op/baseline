@@ -3,15 +3,15 @@ import { Commitment } from './commitment';
 export class MerkleTreeNode implements Commitment {
 
   readonly hash: string;
-  readonly index: number;
+  readonly leafIndex: number;
 
-  constructor(hash: string, index: number) {
+  constructor(hash: string, leafIndex: number) {
     this.hash = hash;
-    this.index = index;
+    this.leafIndex = leafIndex;
   }
 
   location(): number {
-    return this.index;
+    return this.leafIndex;
   }
 
   value(): string {
