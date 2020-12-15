@@ -1,6 +1,6 @@
 {
   "name": "@baseline-protocol/privacy",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Baseline core privacy",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
@@ -17,10 +17,12 @@
     "test": "./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.spec.ts --timeout 30000000000 --unhandled-rejections=strict --max-old-space-size=8192"
   },
   "dependencies": {
+    "@baseline-protocol/types": "1.1.0",
     "@types/uuid": "^8.0.0",
     "big-integer": "^1.6.48",
     "hex-to-binary": "^1.0.1",
     "keccak": "^3.0.1",
+    "provide-js": "^1.5.1",
     "zokrates-js": "^1.0.25"
   },
   "devDependencies": {

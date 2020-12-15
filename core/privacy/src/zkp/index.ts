@@ -1,13 +1,30 @@
+import { Circuit } from '@baseline-protocol/types';
+import { provideServiceFactory } from './provide';
 import { zokratesServiceFactory } from './zokrates';
 import { VerificationKey } from 'zokrates-js';
 
+export const zkSnarkCircuitProviderServiceProvide = 'provide';
 export const zkSnarkCircuitProviderServiceZokrates = 'zokrates';
+
+export interface ICircuitProver {
+  prove(circuitId: any, params: any): Promise<any>;
+}
+
+export interface ICircuitRegistry {
+  deploy(params: any): Promise<Circuit>; // deploy a circuit to the registry
+  fetchCircuit(circuitId: string): Promise<Circuit>;
+  fetchCircuits(params: any): Promise<Circuit[]>;
+}
+
+export interface ICircuitVerifier {
+  verify(circuitId: any, params: any): Promise<any>;
+}
 
 export interface IZKSnarkCircuitProvider {
   compile(source: string, location: string): Promise<IZKSnarkCompilationArtifacts>;
-  computeWitness(artifacts: IZKSnarkCompilationArtifacts, args: any[]): Promise<IZKSnarkWitnessComputation>;
+  computeWitness(artifacts: IZKSnarkCompilationArtifacts, argv: any[]): Promise<IZKSnarkWitnessComputation>;
   exportVerifier(verifyingKey: VerificationKey): Promise<any>;
-  generateProof(circuit: any, witness: any, provingKey: any): Promise<any>;
+  generateProof(circuit: any, params: any, provingKey?: any): Promise<any>;
   setup(circuit: any): Promise<IZKSnarkTrustedSetupArtifacts>;
 }
 
@@ -39,6 +56,9 @@ export async function zkSnarkCircuitProviderServiceFactory(
   let service;
 
   switch (provider) {
+    case zkSnarkCircuitProviderServiceProvide:
+      service = await provideServiceFactory(config);
+      break;
     case zkSnarkCircuitProviderServiceZokrates:
       service = await zokratesServiceFactory(config);
       break;
