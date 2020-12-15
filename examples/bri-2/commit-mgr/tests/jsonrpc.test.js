@@ -49,7 +49,7 @@ beforeAll(async () => {
   //const waitTx = web3provider.bind(this, waitRelayTx);
   if (txManager === 'infura-gas') {
     const balance = await getBalance();
-    console.log('balance:', balance);
+    console.log('ITX balance:', balance);
     if (balance < 1) {
       const res = await deposit();
       console.log('deposit res:', res);
@@ -674,7 +674,7 @@ describe("Error checks", () => {
       id: 1,
     });
     expect(res.statusCode).toEqual(200);
-    const txHash = res.body.result.txHash;
+    const txHash = res.body.result ? res.body.result.txHash : undefined;
 
     if (txManager === 'besu') {
       // error occurs on internal "eth_estimateGas"
