@@ -92,9 +92,9 @@ export const checkChainLogs = async (contractAddress, fromBlock) => {
     logger.info(`Found previously missed leaf index ${leafIndex} of value ${leafValue}`);
 
     const leaf = {
-      value: leafValue,
+      hash: leafValue,
       leafIndex: leafIndex,
-      transactionHash: logs[i].transactionHash,
+      txHash: logs[i].transactionHash,
       blockNumber: logs[i].blockNumber
     }
     await insertLeaf(contractAddress, leaf);

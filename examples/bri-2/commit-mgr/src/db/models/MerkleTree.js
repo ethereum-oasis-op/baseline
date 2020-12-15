@@ -31,8 +31,8 @@ const merkleTreeSchema = new Schema(
       _id: false,
       leafIndex: Number, // Only used for leaves
       blockNumber: Number, // Only used for leaves
-      transactionHash: String, // Only used for leaves
-      value: String // hash
+      txHash: String, // Only used for leaves
+      hash: String // commitment value
     }],
   },
   { versionKey: false }

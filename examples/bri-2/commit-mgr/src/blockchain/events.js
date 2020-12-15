@@ -39,9 +39,9 @@ export const subscribeMerkleEvents = (contractAddress) => {
     logger.info(`New on-chain root: ${onchainRoot}`);
 
     const leaf = {
-      value: leafValue,
+      hash: leafValue,
       leafIndex: leafIndex,
-      transactionHash: result.transactionHash,
+      txHash: result.transactionHash,
       blockNumber: result.blockNumber
     }
     await insertLeaf(contractAddress, leaf);
