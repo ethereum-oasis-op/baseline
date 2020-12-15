@@ -1,23 +1,25 @@
-FROM node:12.16
+FROM node:12.16-alpine AS build
 
-ENV FORCE_COLOR=1
-
-RUN mkdir /app
 WORKDIR /app
-
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
-COPY ts*.json ./
-
 # Install packages
-RUN npm install
+RUN npm ci
 
 # Bundle app source
 # See ignore for exclusions
 COPY . .
+RUN npm run tsc
+RUN npm ci --production
 
+FROM alpine:3
+RUN apk add nodejs --no-cache
+WORKDIR /app
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
+
+# Start
+CMD [ "node", "./dist/index.js" ]
 EXPOSE 4001
-
-CMD [ "npm", "start" ]
