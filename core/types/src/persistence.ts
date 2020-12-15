@@ -1,38 +1,39 @@
-export type Commitment = {
-  // currentHash = H(Underlying data/doc + salt)
-  salt: string;
-  // Values needed for verification (Shield.verifyAndPush inputs)
-  value: string;
-  proof: number[];
-  publicInputs: string[];
-  signatures: object; // Allows mapping from participant address -> signature
-  metadata: object;
-  sender: string; // Address of participant who created the commitment
-};
+import { Circuit, Commitment } from './privacy';
 
 export type Participant = {
-  address: string; // Can use this to lookup messagingEndpoint, etc.
-  metadata: object;
+  address: string; // public address of the participant
+  metadata: object; // arbitrary metadata
+  url?: string; // optional url
 }
 
-export type State = {
+export type Store = {
+  identifier?: string; // optional system of record identifier, i.e. document name, UUID or primary key of relational record
+  metadata?: object; // arbitrary metadata
+  provider: string; // i.e., the system of record persistence provider; see implementations within `core/persistence/providers`
+  url?: string; // url referencing the local system of record; i.e. DSN in the case of relational SQL database...
+}
 
-  identifier: string; // workflow identifier
-  shield: string; // Shield contract address
+export type Model = {
+  store: Store;
+  name: string; // i.e. collection, table; name of the application-specific record type type
+  fields: string | string[] | RegExp; // list of fields and/or selectors (regex) within documents/stream to be baselined
+}
 
-  // Underlying document identification and location information
-  persistence: {
-    url: string;
-    model: string; // i.e. collection, table
-    id: string; // identifier, i.e. document name, UUID, primary key
-    fields: string[] | string; // fields within document to hash and baseline
-    metadata: object;
-  };
+export type Workgroup = {
+  identifier?: string; // optional workgroup identifier
+  metadata?: object; // arbitrary workgroup metadata
+  participants: Participant[]; // parties to a workgroup
+  workflows: { [key: string]: Workflow };
+}
 
-  // Counter-parties plus self
-  parties: Participant[];
+export type Workflow = {
+  circuit: Circuit; // reference to the underlying circuit
+  commitments: Commitment[]; // commitments[0] is latest commitment (new commitments are prepended to array)
+  participants: Participant[]; // subset of parties in a workgroup
 
-  // commitments[0] is latest commitment (new commitments are prepended to array)
-  commitments: Commitment[];
+  identifier: string; // workflow identifier; should match circuit.id
+  shield: string; // shield contract address
 
-};
+  persistence: { [key: string]: Model }; // map of model name to model representing the underlying domain model and its local persistent store (i.e. system of record)
+  metadata?: object; // arbitrary workflow metadata
+}
