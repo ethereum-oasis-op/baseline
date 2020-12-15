@@ -75,8 +75,6 @@ services:
       - ./commit-mgr/.env
     environment:
       - DATABASE_HOST=alice-mongo:27017
-      - ETH_CLIENT_HTTP=http://alice-besu:8545
-      - ETH_CLIENT_WS=ws://alice-besu:8545
     networks:
       - alice
     ports:
