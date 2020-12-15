@@ -7,5 +7,6 @@ export {
   IZKSnarkTrustedSetupKeypair,
   IZKSnarkWitnessComputation,
   zkSnarkCircuitProviderServiceFactory,
+  zkSnarkCircuitProviderServiceProvide,
   zkSnarkCircuitProviderServiceZokrates,
 } from './zkp';
