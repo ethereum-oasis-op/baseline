@@ -13,6 +13,7 @@ const treeHeight = 2;
 
 let accounts;
 let shieldAddress;
+let counterpartyShieldAddress;
 let verifierAddress;
 
 jest.setTimeout(35000);
@@ -181,7 +182,6 @@ describe("Deploy contracts", () => {
 });
 
 describe("Check that old logs are scanned when baseline_track is called", () => {
-  let counterpartyShieldAddress;
 
   test("Deploy Shield.sol contract: eth_sendRawTransaction", async () => {
     const sender = accounts[0];
@@ -274,8 +274,8 @@ describe("Check that old logs are scanned when baseline_track is called", () => 
     expect(res.statusCode).toEqual(200);
     expect(res.body.result).not.toBeUndefined();
     const merkleNode = res.body.result;
-    leafValue = merkleNode.value;
-    expect(merkleNode.value).toEqual('0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc');
+    leafValue = merkleNode.hash;
+    expect(merkleNode.hash).toEqual('0xcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc');
     expect(merkleNode.leafIndex).toEqual(leafIndex);
   });
 
@@ -328,7 +328,7 @@ describe("Interact with Shield.sol contract", () => {
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body.result).not.toBeUndefined();
-    const txHash = res.body.result;
+    const txHash = res.body.result.txHash;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
     // ITX txs return relayHash, so need to be managed differently
@@ -366,7 +366,7 @@ describe("Interact with Shield.sol contract", () => {
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body.result).not.toBeUndefined();
-    const txHash = res.body.result;
+    const txHash = res.body.result.txHash;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
     // ITX txs return relayHash, so need to be managed differently
@@ -391,7 +391,7 @@ describe("Interact with Shield.sol contract", () => {
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body.result).not.toBeUndefined();
-    const txHash = res.body.result;
+    const txHash = res.body.result.txHash;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
     // ITX txs return relayHash, so need to be managed differently
@@ -416,8 +416,8 @@ describe("Interact with Shield.sol contract", () => {
     const merkleNode = await web3provider.send('baseline_getCommit', [
       shieldAddress, leafIndex
     ]);
-    leafValue = merkleNode.value;
-    expect(merkleNode.value).toEqual('0x3333333333333333333333333333333333333333333333333333333333333333');
+    leafValue = merkleNode.hash;
+    expect(merkleNode.hash).toEqual('0x3333333333333333333333333333333333333333333333333333333333333333');
     expect(merkleNode.leafIndex).toEqual(leafIndex);
   });
 
@@ -442,7 +442,7 @@ describe("Interact with Shield.sol contract", () => {
     siblingNodes = res.body.result;
     const numNodes = siblingNodes.length;
     expect(numNodes).toEqual(treeHeight + 1);
-    expect(siblingNodes[numNodes - 1].value).toEqual(rootHash);
+    expect(siblingNodes[numNodes - 1].hash).toEqual(rootHash);
   });
 
   test("baseline_verify for 3rd leaf", async () => {
@@ -472,7 +472,7 @@ describe("Interact with Shield.sol contract", () => {
     });
     expect(res.statusCode).toEqual(200);
     expect(res.body.result).not.toBeUndefined();
-    const txHash = res.body.result;
+    const txHash = res.body.result.txHash;
     expect(txHash).toMatch(new RegExp("^0x[a-fA-F0-9]*"));
 
     // ITX txs return relayHash, so need to be managed differently
@@ -541,6 +541,23 @@ describe("Interact with Shield.sol contract", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body.result).not.toBeUndefined();
     expect(res.body.result).toBe(true);
+  });
+
+  test("baseline_untrack with prune should delete tree from storage", async () => {
+    const treesBefore = await mongoose.connection.collection('merkle-trees').countDocuments({});
+    const prune = true;
+    const res = await apiRequest.post("/jsonrpc").send({
+      jsonrpc: "2.0",
+      method: "baseline_untrack",
+      params: [counterpartyShieldAddress, prune],
+      id: 1,
+    });
+    expect(res.statusCode).toEqual(200);
+    expect(res.body.result).not.toBeUndefined();
+    expect(res.body.result).toBe(true);
+
+    const treesAfter = await mongoose.connection.collection('merkle-trees').countDocuments({});
+    expect(treesBefore).toEqual(treesAfter + 1);
   });
 
   test("baseline_getTracked no longer includes untracked address", async () => {
@@ -657,7 +674,7 @@ describe("Error checks", () => {
       id: 1,
     });
     expect(res.statusCode).toEqual(200);
-    const txHash = res.body.result;
+    const txHash = res.body.result.txHash;
 
     if (txManager === 'besu') {
       // error occurs on internal "eth_estimateGas"

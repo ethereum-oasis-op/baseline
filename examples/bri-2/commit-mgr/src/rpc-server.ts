@@ -213,7 +213,7 @@ const baseline_verifyAndPush = new jayson.Method(
       return;
     }
     logger.info(`[baseline_verifyAndPush] txHash: ${result.txHash}`);
-    done(result.error, result.txHash);
+    done(result.error, { txHash: result.txHash });
   },
   {
     useContext: true,
@@ -286,20 +286,43 @@ const baseline_track = new jayson.Method(
 
 const baseline_untrack = new jayson.Method(
   async (args: any, context: any, done: any) => {
-    const error = validateParams(args, 1);
+    args[1] = args[1] || false;
+    let error = validateParams(args, 2);
     if (error) {
       done(error, null);
       return;
     };
 
     const contractAddress = args[0];
+    const prune = args[1];
+
+    const foundTree = await merkleTrees.find({
+      _id: { $regex: new RegExp(contractAddress) }
+    }).select('_id').lean();
+
+    if (foundTree.length === 0) {
+      logger.error(`[baseline_untrack] Merkle Tree not found in db: ${contractAddress}`);
+      error = {
+        code: -32603,
+        message: `Internal server error`,
+        data: `Merkle Tree not found in db: ${contractAddress}`,
+      };
+      done(error, null);
+      return;
+    };
+
     unsubscribeMerkleEvents(contractAddress);
 
-    await merkleTrees.updateOne(
-      { _id: `${contractAddress}_0` },
-      { active: false },
-      { upsert: true, new: true }
-    );
+    // If prune === true, wipe tree from storage
+    if (prune === true) {
+      await merkleTrees.deleteMany({ _id: { $regex: new RegExp(contractAddress) } });
+    } else {
+      await merkleTrees.updateOne(
+        { _id: `${contractAddress}_0` },
+        { active: false },
+        { upsert: true, new: true }
+      );
+    };
     done(null, true);
   },
   {
@@ -319,17 +342,17 @@ const baseline_verify = new jayson.Method(
     const contractAddress = args[0];
     const leafValue = args[1];
     const siblingNodes = args[2];
-    const root = siblingNodes[siblingNodes.length - 1].value;
+    const root = siblingNodes[siblingNodes.length - 1].hash;
     const updatedRoot = await updateTree(contractAddress);
     let currentHash = leafValue;
 
     for (let index = 0; index < siblingNodes.length - 1; index++) {
       if (siblingNodes[index].nodeIndex % 2 === 0) {
         // even nodeIndex
-        currentHash = concatenateThenHash(currentHash, siblingNodes[index].value);
+        currentHash = concatenateThenHash(currentHash, siblingNodes[index].hash);
       } else {
         // odd nodeIndex
-        currentHash = concatenateThenHash(siblingNodes[index].value, currentHash);
+        currentHash = concatenateThenHash(siblingNodes[index].hash, currentHash);
       }
     }
     const result = (root === currentHash) && (root === updatedRoot);

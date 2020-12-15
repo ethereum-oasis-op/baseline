@@ -36,10 +36,10 @@ async function getPathByLeafIndex(merkleId, leafIndex) {
     const localIndex = nodeIndex % config.BUCKET_SIZE;
     let node = {
       nodeIndex,
-      value: config.ZERO
+      hash: config.ZERO
     }
     if (nodes[localIndex]) {
-      node.value = nodes[localIndex].value
+      node.hash = nodes[localIndex].hash
     }
     // insert the node into the nodes array:
     pathNodes.push(node);
@@ -76,12 +76,12 @@ async function getSiblingPathByLeafIndex(merkleId, leafIndex) {
     const localIndex = nodeIndex % config.BUCKET_SIZE;
     let node = {
       nodeIndex,
-      value: config.ZERO
+      hash: config.ZERO
     }
     // Check whether some nodeIndices don't yet exist in the db. 
     // If they don't, we'll presume their values are zero, and add these to the 'nodes' before returning them.
     if (nodes[localIndex]) {
-      node.value = nodes[localIndex].value
+      node.hash = nodes[localIndex].hash
     }
     // insert the node into the nodes array:
     siblingNodes.push(node);
@@ -126,7 +126,7 @@ async function updateTree(merkleId) {
     let { frontier } = latestRecalculation;
     frontier = frontier === undefined ? [] : frontier;
     const leaves = await getLeavesByLeafIndexRange(merkleId, fromLeafIndex, toLeafIndex);
-    const leafValues = leaves.map(leaf => leaf.value);
+    const leafValues = leaves.map(leaf => leaf.hash);
 
     logger.debug(`found leaves: %o`, leaves);
     logger.debug(`leafValues: %o`, leafValues);

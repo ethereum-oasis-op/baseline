@@ -161,7 +161,7 @@ async function updateNodes(merkleId, frontier, leafValues, currentLeafCount) {
 
       // update the newNodes array
       const node = {
-        value: nodeValue,
+        hash: nodeValue,
         nodeIndex,
       };
       logger.debug(`Updated node: %o`, node);
@@ -193,7 +193,7 @@ async function updateNodes(merkleId, frontier, leafValues, currentLeafCount) {
 
     // update the newNodes array
     const node = {
-      value: nodeIndex === 0 ? nodeValueFull : nodeValue, // we can add the full 32-byte root (nodeIndex=0) to the db, because it doesn't need to fit into another hash round.
+      hash: nodeIndex === 0 ? nodeValueFull : nodeValue, // we can add the full 32-byte root (nodeIndex=0) to the db, because it doesn't need to fit into another hash round.
       nodeIndex,
     };
     logger.debug(`Updated node: %o`, node);

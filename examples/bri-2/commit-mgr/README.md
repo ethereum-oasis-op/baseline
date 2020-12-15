@@ -50,10 +50,9 @@ The `commit-mgr` service implements and processes the baseline JSON-RPC methods:
 | `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
 | `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address |
 | `baseline_track` | address | Initialize a merkle tree database for the given shield contract address |
-| `baseline_untrack` | address | Remove event listeners for a given shield contract address |
+| `baseline_untrack` | address, prune? | Remove event listeners for a given shield contract address |
 | `baseline_verify` | address, value, proof | Verify a proof for a given root and commit value |
 
 ## TODO
 
-- Reduce `commit-mgr` docker image size
 - Convert all javascript files to typescript
