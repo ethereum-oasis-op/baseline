@@ -24,7 +24,6 @@
     "validate": "npm run lint && npm run lint:md"
   },
   "dependencies": {
-    "@baseline-protocol/privacy": "^0.2.0",
     "@eyblockchain/zokrates.js": "^1.2.0",
     "body-parser": "1.19.0",
     "config": "^3.3.0",

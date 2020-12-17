@@ -51,7 +51,7 @@
     "@babel/preset-env": "^7.9.0",
     "apidoc": "^0.20.1",
     "husky": "^4.2.3",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
     "jsdoc": "^3.6.3",
     "minimist": ">=0.2.1",
     "mongodb": "^3.5.5",

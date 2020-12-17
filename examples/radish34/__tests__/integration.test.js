@@ -484,7 +484,7 @@ describe('Buyer creates MSA, signs it, sends to Supplier2, Supplier2 responds wi
                             }
                           }`
       // Wait for db to update
-      console.log('Waiting for new MSA commitment in Shield contract. This can take up to 5 minutes...');
+      console.log('Waiting for new MSA commitment in Shield contract for MSA id ' + msaId + '. This can take up to 5 minutes...');
       let res;
       for (let retry = 0; retry < 15; retry++) {
         console.log('Checking for non-null MSA index, attempt:', retry);
@@ -524,7 +524,7 @@ describe('Buyer creates PO for Supplier2 based on MSA', () => {
     });
 
     test('Buyer graphql mutation createPO() returns 200', async () => {
-      console.log('Buyer creating new PO for Supplier2. This test takes a few minutes...');
+      console.log('Buyer creating new PO for Supplier2 for MSA id ' + msaId + '. This test takes a few minutes...');
       const postBody = ` mutation {
         createPO( input: {
           msaId: "${msaId}",
