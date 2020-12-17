@@ -1,3 +1,4 @@
 export * from './logger';
-export * from './protocol';
 export * from './persistence';
+export * from './privacy';
+export * from './protocol';
