@@ -1,7 +1,7 @@
 import { Circuit } from '@baseline-protocol/types';
 import { provideServiceFactory } from './provide';
 import { zokratesServiceFactory } from './zokrates';
-import { VerificationKey } from 'zokrates-js';
+import { VerificationKey } from 'zokrates-js/node';
 
 export const zkSnarkCircuitProviderServiceProvide = 'provide';
 export const zkSnarkCircuitProviderServiceZokrates = 'zokrates';
