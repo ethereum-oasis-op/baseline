@@ -1,4 +1,4 @@
-import { initialize, ResolveCallback, ZoKratesProvider, VerificationKey } from 'zokrates-js';
+import { initialize, ResolveCallback, ZoKratesProvider, VerificationKey } from 'zokrates-js/node';
 import { IZKSnarkCircuitProvider, IZKSnarkCompilationArtifacts, IZKSnarkWitnessComputation, IZKSnarkTrustedSetupArtifacts } from '.';
 import { readFileSync } from 'fs';
 import { v4 as uuid } from 'uuid';
