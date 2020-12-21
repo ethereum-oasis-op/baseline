@@ -16,17 +16,17 @@ def pack256(field[256] bits) -> (field):
 
 
 // Verifies if a timestamp
-def verifyOracleProperties(field[2] R, field S, field[2] A, field[256] M0, field[256] M1, private field timestamp, private field eid, private field[256] nonce) -> (field):
+def verifyDocumentProperty(field[2] R, field S, field[2] A, field[256] M0, field[256] M1, private field timestamp, private field eid, private field[256] nonce) -> (field):
 
     // Unpack packed fields
     field[256] timestampUnpacked = unpack256(timestamp)
     field[256] eidUnpacked = unpack256(eid)
 
     // Hash concatenation of employee id and nonce
-    field[256] sourceHash = sha256(eidUnpacked,nonce)
+    field[256] MetadataHash = sha256(eidUnpacked,nonce)
 
     // Hash concatenation of employee hash and timestamp
-    field[256] routeHash = sha256(empolyeeHash,timestampUnpacked)
+    field[256] AuthorHash = sha256(MetadataHash,timestampUnpacked)
 
     // Check if hash is equal to signed message
     // We only use the first 256 bit of the message
@@ -40,14 +40,14 @@ def verifyOracleProperties(field[2] R, field S, field[2] A, field[256] M0, field
 
 
 // Takes two signatures with their respective messages and encoded data:
-// timestamp, nonce, employee id
+// timestamp, nonce, Author and Metadata
 // Verifies that:
 // * public keys of both signatures match
 // * preimage hashes to signed msg
 // * signatures correspond to public key
 // Returns:
 // * Hash of public key used to sign timestamp
-// * Hash of (nonce||nonce1) used by employee
+// * Hash of (nonce||nonce1) used by Authro
 // * Worktime = (timestamp1 - timestamp) in seconds
 
 def main( \
@@ -71,7 +71,7 @@ def main( \
     // Check if terminal public keys match
     A == A1
 
-    // Split Oracle Source Pubkey in coordinates, unpack and hash
+    // Split Document Property Pubkey in coordinates, unpack and hash
     field a = A[0]
     field b = A[1]
 
@@ -80,10 +80,10 @@ def main( \
     // Create hash of nonces
     field nonceHash = pack256(sha256(nonce,nonce1))
 
-    field isVerified = verifyOracleProperties(R, S, A, M0, M1, timestamp, eid, nonce)
+    field isVerified = verifyDocumentProperty(R, S, A, M0, M1, timestamp, eid, nonce)
     isVerified == 1
 
-    field isVerified1 = verifyOracleProperties(R1, S1, A1, M01, M11, timestamp1, eid1, nonce1)
+    field isVerified1 = verifyDocumentProperty(R1, S1, A1, M01, M11, timestamp1, eid1, nonce1)
     isVerified1 == 1
 
     return pubKeyHash, nonceHash, timestamp1 - timestamp
