@@ -6,11 +6,16 @@ RUN apt-get update \
 
 WORKDIR "/root"
 
-RUN add-apt-repository -y ppa:ethereum/ethereum
-
-ARG binary
 RUN apt-get update \
-  && apt-get install -y ethereum
+  && apt-get install -y wget
+
+# Pinning geth to version 1.9.20 as all successive geth versions dont support whisper anymore
+# Refer to the release notes for 1.9.21 - https://github.com/ethereum/go-ethereum/releases/tag/v1.9.21
+RUN wget https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.9.20-979fc968.tar.gz
+RUN tar -xzvf geth-linux-amd64-1.9.20-979fc968.tar.gz
+RUN chmod +x ./geth-linux-amd64-1.9.20-979fc968/geth
+RUN mv ./geth-linux-amd64-1.9.20-979fc968/geth /usr/local/bin/
+RUN rm -rf ./geth-linux-amd64-1.9.20-979fc968
 
 ARG password
 ARG privatekey
