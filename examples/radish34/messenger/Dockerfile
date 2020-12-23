@@ -1,6 +1,11 @@
 FROM radish34_logger as logger
 FROM node:12.16
 
+RUN apk add --no-cache --virtual .gyp \
+  python \
+  make \
+  g++
+
 ENV FORCE_COLOR=1
 
 RUN mkdir /logger
