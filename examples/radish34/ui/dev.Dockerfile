@@ -1,10 +1,5 @@
 FROM node:11.15
 
-RUN apk add --no-cache --virtual .gyp \
-  python \
-  make \
-  g++
-
 RUN mkdir /app
 WORKDIR /app
 
