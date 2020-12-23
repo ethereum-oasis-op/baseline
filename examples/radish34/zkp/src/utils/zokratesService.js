@@ -2,7 +2,7 @@ import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokr
 import { readFileSync } from 'fs';
 
 const zokratesImportResolver = (location, path) => {
-  let zokpath = `./circuits/${path}`;
+  let zokpath = `./${path}`;
   if (!zokpath.match(/\.zok$/i)) {
     zokpath = `${zokpath}.zok`;
   }
