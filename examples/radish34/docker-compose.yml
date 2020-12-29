@@ -289,8 +289,6 @@ services:
       - network-buyer
     ports:
      - 4001:4001
-    volumes:
-      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
@@ -322,8 +320,6 @@ services:
       - network-supplier1
     ports:
      - 4002:4001
-    volumes:
-      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
