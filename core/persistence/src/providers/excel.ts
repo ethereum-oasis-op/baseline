@@ -20,24 +20,8 @@ export class Excel implements IPersistenceService {
     throw new Error('not implemented');
   }
 
-  query(q: string): Promise<any> {
-    throw new Error('not implemented');
-  }
-
-  read(id: string): Promise<any> {
-    throw new Error('not implemented');
-  }
-
-  create(params: any): Promise<any> {
-    throw new Error('not implemented');
-  }
-
-  update(id: string, params: any): Promise<any> {
-    throw new Error('not implemented');
-  }
-
-  delete(id: string): Promise<any> {
-    throw new Error('not implemented');
+  publish(params: any): Promise<any> {
+    throw new Error("not implemented");
   }
 }
 
