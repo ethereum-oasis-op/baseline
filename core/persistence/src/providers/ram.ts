@@ -13,42 +13,46 @@ export class RAM implements IPersistenceService {
   private config: any;
   // in-memory system of record
   private records: { [identifier: string]: any } = {};
-  // track subscribed fields of in-memory record
+  // track subscribed fields
   private subscribedIdentifiers: string[] = [];
   private subscribedExpressions: RegExp[] = [];
-  // track CRUD operations, i.e. changes to record, until next alert call
-  private alerts: string[] = [];
 
   constructor(config: any) {
     this.config = config;
   }
 
-  // only alert when subscribed to identifier and existend in alerts
-  // check for commitments?
+  // log alerts for subscribed fields
+  // params.alerts is array of objects with identifier and an optional message
   alert(params: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      // check which records got altered since last alert call?
-      let recordsToBeBaselined: any[] = []
-      const expression = new RegExp(this.subscribedExpressions.join('|'), 'i');
+      let expression;
+      if (this.subscribedExpressions.length > 0) {
+        expression = new RegExp(this.subscribedExpressions.join('|'), 'i');
+      }
 
-      this.alerts.forEach((identifier, index) => {
-        if (this.subscribedIdentifiers.includes(identifier) || expression.test(identifier)) {
-          // only alert for subscribed fields
-          const record = this.records[identifier];
-          console.log(`Record with identifier ${identifier} needs to be baselined: ${JSON.stringify(record)}.`);
-          recordsToBeBaselined.push(record);
-          this.alerts.splice(index, 1);
+      params.alerts.forEach(a => {
+        if (!a.identifier) {
+          reject('alert has no identifier');
+        }
+        if ((this.subscribedIdentifiers.includes(a.identifier) || (expression && expression.test(a.identifier))) && this.records[a.identifier]) {
+          // alert for subscribed fields?
+          const record = this.records[a.identifier];
+          console.log(`Alert for record with ${a.identifier}: ${JSON.stringify(record)}`);
+          if (a.message && (typeof a.message == 'string' || a.message instanceof String)) {
+            // optional message
+            console.log(a.message);
+          }
         }
       })
-      resolve(recordsToBeBaselined);
+      resolve(params.alerts);
     });
   }
 
-  // subscribe to specific fields (identifiers)
+  // subscribe to specific fields via identifiers and RegExp
+  // params.fields refers to the set or subset of core/types/persistence Model.fields with type string | string[] | RegExp
+  // maybe pass Model per params?
   subscribe(params: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      // params.fields refers to the set or subset of core/types/persistence Model.fields with type string | string[] | RegExp
-      // maybe pass Model per params?
       if (params.fields instanceof RegExp) {
         let skip = false;
         for(let i = 0; i < this.subscribedExpressions.length; i++) {
@@ -71,9 +75,8 @@ export class RAM implements IPersistenceService {
           }
         });
       } else {
-        reject('params.fields is not of type string | string[] | RegExp')
+        reject('params.fields is not of type string | string[] | RegExp');
       }
-      // Return all subscribed fields?
       resolve({
         identifiers: this.subscribedIdentifiers,
         expressions: this.subscribedExpressions
@@ -81,11 +84,11 @@ export class RAM implements IPersistenceService {
     });
   }
 
-  // unsubscribe to specific fields
+  // unsubscribe to specific fields via identifiers and RegExp
+  // params.fields refers to the set or subset of core/types/persistence Model.fields with type string | string[] | RegExp
+  // maybe pass Model.fields per params?
   unsubscribe(params: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      // params.fields refers to the set or subset of core/types/persistence Model.fields with type string | string[] | RegExp
-      // maybe pass Model.fields per params?
       if (params.fields instanceof RegExp) {
         for(let i = 0; i < this.subscribedExpressions.length; i++) {
           if (regexpEqual(this.subscribedExpressions[i], params.fields)) {
@@ -105,9 +108,8 @@ export class RAM implements IPersistenceService {
           }
         });
       } else {
-        reject('params.fields is not of type string | string[] | RegExp')
+        reject('params.fields is not of type string | string[] | RegExp');
       }
-      // Return all subscribed fields?
       resolve({
         identifiers: this.subscribedIdentifiers,
         expressions: this.subscribedExpressions
@@ -116,24 +118,18 @@ export class RAM implements IPersistenceService {
   }
 
   // records to be published to ram
-  // check for hashes and track alerts?
+  // assume params.records is an array of records to be persisted
+  // assume a record of params.records includes at least an identifier
   publish(params: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      // assume params.records is an array of records to be persisted
-      // a record of params.records includes at least an identifier and the record hash -> refer to bri-1?
-      let publishedRecords: any[] = [];
       params.records.forEach(record => {
-        if (record.identifier && record.hash) {
-          if (this.records[record.identifier] && record.hash !== this.records[record.identifier]) {
-            // a record is identified as altered if its hash changed?
-            this.alerts.push(record.identifier);
-          }
+        if (record.identifier) {
           this.records[record.identifier] = record;
-          publishedRecords.push(record);
+        } else {
+          reject('record has no identifier');
         }
       });
-      // return published records or all currently persisted records?
-      resolve(publishedRecords);
+      resolve(params.records);
     });
   }
 }
