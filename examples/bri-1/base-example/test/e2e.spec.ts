@@ -86,6 +86,7 @@ describe('baseline', () => {
       'localhost:8080',
       networkId,
       'localhost:8082',
+      'localhost:8084',
       'nethermind-ropsten.provide.services:8888',
       'http',
       null,
@@ -105,6 +106,7 @@ describe('baseline', () => {
       'localhost:8086',
       networkId,
       'localhost:8083',
+      'localhost:8087',
       'nethermind-ropsten.provide.services:8888',
       'http',
       null,
@@ -213,12 +215,12 @@ describe('baseline', () => {
           });
 
           it('should increment protocol message tx count for the sender', async () => {
-            assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 1');
+            assert(bobApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
           });
 
           it('should increment protocol message rx count for the recipient', async () => {
             await promisedTimeout(50);
-            assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
+            assert(aliceApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
           });
         });
       });
