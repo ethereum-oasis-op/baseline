@@ -171,7 +171,7 @@ services:
     restart: always
 
   alice-nchain:
-    image: provide/nchain:bri-1
+    image: provide/nchain
     container_name: alice-nchain
     depends_on:
       - alice-ident
@@ -210,7 +210,7 @@ services:
     restart: always
 
   alice-nchain-consumer:
-    image: provide/nchain:bri-1
+    image: provide/nchain
     entrypoint: ./ops/run_consumer.sh
     container_name: alice-nchain-consumer
     depends_on:
@@ -327,7 +327,7 @@ services:
     restart: always
 
   alice-statsdaemon:
-    image: provide/nchain:bri-1
+    image: provide/nchain
     entrypoint: ./ops/run_statsdaemon.sh
     container_name: alice-statsdaemon
     depends_on:
@@ -586,7 +586,7 @@ services:
     restart: always
 
   bob-nchain:
-    image: provide/nchain:bri-1
+    image: provide/nchain
     container_name: bob-nchain
     depends_on:
       - bob-ident
@@ -625,7 +625,7 @@ services:
     restart: always
 
   bob-nchain-consumer:
-    image: provide/nchain:bri-1
+    image: provide/nchain
     entrypoint: ./ops/run_consumer.sh
     container_name: bob-nchain-consumer
     depends_on:
@@ -742,7 +742,7 @@ services:
     restart: always
 
   bob-statsdaemon:
-    image: provide/nchain:bri-1
+    image: provide/nchain
     entrypoint: ./ops/run_statsdaemon.sh
     container_name: bob-statsdaemon
     depends_on:
