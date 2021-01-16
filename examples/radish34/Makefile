@@ -19,8 +19,10 @@ build-containers: build
 	npm run dockerize && \
 	popd
 
-clean: stop
-	@$(radish34)/ops/clean_npm.sh
+clean:
+	@pushd ${radish34} && \
+	npm run clean && \
+	popd
 
 contracts:
 	@pushd ${radish34} && \
@@ -39,7 +41,7 @@ install-config:
 
 npm-install:
 	@pushd ${radish34} && \
-	npm run build && \
+	npm run build:install && \
 	popd
 
 dev-env:
@@ -76,20 +78,20 @@ system-check:
 
 reset:
 	@pushd ${radish34} && \
+	npm run destroy && \
+	popd
+
+restart:
+	@pushd ${radish34} && \
 	npm run restart && \
 	popd
 
-restart: stop start
-
 test:
 	@pushd ${radish34} && \
-	npm run await-stack && \
 	npm run test && \
 	popd
 
 zk-circuits:
 	@pushd ${radish34} && \
-	rm -rf ./zkp/output && \
-	mkdir -p ./zkp/output && \
-	npm run setup-circuits ${mode} && \
+	npm run zk-circuits ${mode} && \
 	popd
