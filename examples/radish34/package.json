@@ -27,7 +27,7 @@
   },
   "scripts": {
     "await-stack": "./ops/await_stack.sh",
-    "build": "npm run build:install && build:contracts",
+    "build": "npm run build:install && npm run build:contracts",
     "build:install": "./ops/build.sh",
     "build:contracts": "npm run build --prefix contracts",
     "build:docs": "./ops/build_docs.sh",
