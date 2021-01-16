@@ -54,27 +54,19 @@ prod-env:
 
 start: start-dev
 
-start-dev: system-check install-config build-containers dev-env
+start-dev:
 	@pushd ${radish34} && \
-	npm run deploy && \
-	npm run compose:up -- -d api-buyer api-supplier1 api-supplier2 ui && \
+	npm run start:dev && \
 	popd
 
-start-prod: system-check install-config build-containers prod-env
+start-prod:
 	@pushd ${radish34} && \
-	npm run deploy && \
-	npm run compose:up -- -d api-buyer api-supplier1 api-supplier2 ui && \
+	npm run start:prod && \
 	popd
 
 stop:
 	@pushd ${radish34} && \
-	docker-compose down --remove-orphans && \
-	docker network rm \
-		radish34_network-buyer \
-		radish34_network-supplier1 \
-		radish34_network-supplier2 \
-		radish34_geth || true && \
-	docker volume rm radish34_mongo-merkle-tree-volume || true && \
+	npm run stop && \
 	popd
 
 system-check:
@@ -82,26 +74,9 @@ system-check:
 	npm run --silent system-check && \
 	popd
 
-reset: stop
+reset:
 	@pushd ${radish34} && \
-	docker container prune -f && \
-	docker volume rm \
-		radish34_mongo-buyer \
-		radish34_mongo-supplier1 \
-		radish34_mongo-supplier2 \
-		radish34_mongo-merkle-tree-volume \
-		radish34_chaindata || true && \
-	docker image rm \
-		radish34_logger \
-		radish34_api-buyer \
-		radish34_api-supplier1 \
-		radish34_api-supplier2 \
-		radish34_deploy \
-		radish34_messenger-buyer \
-		radish34_messenger-supplier1 \
-		radish34_messenger-supplier2 || true && \
-	rm -rf ./config && \
-	rm -rf ./zkp/output && \
+	npm run restart && \
 	popd
 
 restart: stop start
