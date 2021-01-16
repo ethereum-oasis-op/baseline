@@ -57,13 +57,13 @@ start: start-dev
 start-dev: system-check install-config build-containers dev-env
 	@pushd ${radish34} && \
 	npm run deploy && \
-	docker-compose -f docker-compose.yml -f config/docker-compose.tmp.yml up -d api-buyer api-supplier1 api-supplier2 ui && \
+	npm run compose:up -- -d api-buyer api-supplier1 api-supplier2 ui && \
 	popd
 
 start-prod: system-check install-config build-containers prod-env
 	@pushd ${radish34} && \
 	npm run deploy && \
-	docker-compose -f docker-compose.yml -f config/docker-compose.tmp.yml up -d api-buyer api-supplier1 api-supplier2 ui && \
+	npm run compose:up -- -d api-buyer api-supplier1 api-supplier2 ui && \
 	popd
 
 stop:
