@@ -1,6 +1,7 @@
 # Radish34
 __WARNING - RADISH34 IS DEPRECATED. IT IS HERE ONLY FOR HISTORICAL PURPOSES.__
 Please refer to [BRI-1](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example) or check out the [reference implementations](https://docs.baseline-protocol.org/bri/overview-of-reference-implementations) to get an idea of how to implement the baseline protocol.
+
 __Radish34__ is a product procurement application that utilizes the __Baseline Protocol__ to gain unprecedented data integrity while maintaining privacy and security for its users.
 
 Disclaimer: This implementation is a demo, and production aspects of key management, wallet management, cloud hosting, integration to other third party tools and performance optimization are left out of scope to drive adoption and present a base set of tools for the community to provide inputs and take this further.
