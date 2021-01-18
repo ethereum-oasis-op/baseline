@@ -9,7 +9,7 @@ May 21, 2020
 
 ## Introduction
 
-The "Baseline-SAP-Dynamics Demo" shows a setup of different Enterprise Resource Planning Systems \("ERPs"\) using the Baseline Protocol to establish a common frame of reference on the public Ethereum Mainnet. The demo extends the [Radish34 POC](https://docs.baseline-protocol.org/radish34/radish34-explained), showing a procurement process in a supply chain POC.
+The "Baseline-SAP-Dynamics Demo" shows a setup of different Enterprise Resource Planning Systems \("ERPs"\) using the Baseline Protocol to establish a common frame of reference on the public Ethereum Mainnet. The demo extends the [Radish34 POC](https://docs.baseline-protocol.org/bri/radish34/radish34-explained), showing a procurement process in a supply chain POC.
 
 The open-source-available code of the development work on this demo evolved out of a Hackathon of the EEA Eminent Integration Taskforce members Unibright and Provide and is being made available alongside the Radish34 example.
 
@@ -23,7 +23,7 @@ You can find all the details on the Baseline Protocol [here](https://docs.baseli
 
 ## Challenges and Scope of Work
 
-The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](https://docs.baseline-protocol.org/baseline-protocol/roadmap) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
+The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](https://docs.baseline-protocol.org/baseline-protocol/the-baseline-protocol) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
 
 The Use-case shown in the demo follows this path:
 

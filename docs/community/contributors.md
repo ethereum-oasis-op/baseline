@@ -60,7 +60,7 @@ The specifications work of the community can be done by anyone, both technical a
 
 ### Epics and Stories Organization <a id="epics-and-stories-organization"></a>
 
-The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. \(Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).\)
+The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/examples/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. \(Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).\)
 
 Zenhub enables Epics to nest, while Issues don't nest...not really. Therefore, the community will employ the practice of using Issues for engineering Tasks and Epics to contain high level topics, which may have nested within them a set of agile Epics, and in them a set of Stories, and even Stories may have other Stories nested in them. Engineering meets planning where a Story \(in the form of a Zenhub Epic\) is referenced by an Issue/Task. \(This can work very well, but Zenhub's choice in calling Epics, _Epics_ can cause confusion.
 
@@ -72,7 +72,7 @@ A Zenhub "Epic" used as a Story should almost always follow the form: "As X, I n
 
 * A Party's System Administrator can look up Counterparties in an OrgRegistry \(a public phone book\) and add them to a Workgroup, so that they can start Baselining Records and Workflows.
 * A Party's System Administrator can quickly and easily verify a Counterparty's identity found in the OrgRegistry, so that they can be confident in adding the Counterparty to a Workgroup.
-* A Party's System Administrator can use some or all of the Counterparities and Workflow Steps defined in one Workgroup in Workflow Steps created within another Workgroup, so that Workgroups don't become yet another kind of silo.
+* A Party's System Administrator can use some or all of the Counterparties and Workflow Steps defined in one Workgroup in Workflow Steps created within another Workgroup, so that Workgroups don't become yet another kind of silo.
 
 ​
 

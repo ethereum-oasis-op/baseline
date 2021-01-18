@@ -58,7 +58,7 @@ In general, a maintainer needs to:
 
 ### Slack <a id="slack"></a>
 
-Maintainers meet and discuss issues virtually via the \#maintainers slack room in the [baseline slack](https://github.com/ethereum-oasis/baseline/blob/master/ethereum-baseline.slack.com).
+Maintainers meet and discuss issues virtually via the \#maintainers slack room in the [baseline slack](https://ethereum-baseline.slack.com).
 
 ### Weekly Meetings <a id="weekly-meetings"></a>
 

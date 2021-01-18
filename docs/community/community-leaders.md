@@ -8,7 +8,7 @@ Over 500 people and companies signed up to be notified about the opening of the 
 
 ### Bootstrapping Phase and Ongoing Phase <a id="bootstrapping-phase-and-ongoing-phase"></a>
 
-The technical steering committee and the chair listed below were seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period ends when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceeding period\) vote on the new TSC and chair. The specifications steering committee \(SSC\) has a variable number, and membership is based on whether one is named as an accountable party for an Epic in the [Baseline Roadmap repo](https://github.com/ethereum-oasis/baseline-roadmap).
+The technical steering committee and the chair listed below were seated provisionally for six months, from From March 19, 2020 to September 31, 2020. This bootstrapping period ends when the active contributors to the repo \(anyone who has submitted a pull request that was merged to master in the preceding period\) vote on the new TSC and chair. The specifications steering committee \(SSC\) has a variable number, and membership is based on whether one is named as an accountable party for an Epic in the [Baseline Roadmap repo](https://github.com/ethereum-oasis/baseline-roadmap).
 
 The people and companies listed below have stepped-up to identify themselves as supporters, stakeholders, and accountable parties to advance the Baseline Protocol work.
 
@@ -51,7 +51,7 @@ On September 30, 2020, the following people were voted in as the TSC for October
 
 ### Specifications Steering Committee <a id="your-specifications-steering-committee"></a>
 
-The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products. These are industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://www.zenhub.com/signup).\)
+The specifications committee \(SSC\) is responsible for organizing the community and helping set functional and non-functional requirements as well as targeting use cases, industry verticals, and horizontal platforms & products. These are industry executives and influencers who can rally support for the work and help find ways to structure incentives for people to focus on key Epics and Stories in the [repo](https://github.com/ethereum-oasis/baseline). \(Note, epics and stories maintained in [Zenhub](https://www.zenhub.com/sign-up).\)
 
 SSC members are seated by loose consensus of the sitting members. There is no specific maximum number of seats, and it is expected that the members will form sub-committees for topics like industry verticals.
 
