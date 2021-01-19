@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 const Config = require('../config');
-const { messagingServiceFactory } = require('../../../baseline/core/messaging');
+const { messagingServiceFactory } = require('@baseline-protocol/messaging');
 const { DEFAULT_TOPIC, forwardMessage } = require('../src/utils/generalUtils.js');
 const { decrypt } = require('../src/utils/encryptUtils.js');
 const { receiveMessageQueue } = require('../src/queues/receiveMessage/index.js');
