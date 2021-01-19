@@ -1,0 +1,97 @@
+version: '3.5'
+
+services:
+
+  ganache:
+    container_name: ganache
+    image: trufflesuite/ganache-cli:v6.6.0
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --account="0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63, 1000000000000000000000" --account="0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3, 1000000000000000000000" --account="0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f, 1000000000000000000000" --networkId '101010' --gasLimit 10000000 --allowUnlimitedContractSize --noVMErrorsOnRPCResponse
+    ports:
+      - 8545:8545
+    networks:
+      - alice
+    volumes:
+      - ./ops/ganache_health.sh:/app/health-check.sh:delegated
+    healthcheck:
+      test: ["CMD", "sh", "health-check.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+  
+  # alice
+
+  alice-besu:
+    container_name: alice-besu
+    image: hyperledger/besu:latest
+    command: "--config-file=/config/config.toml"
+    environment:
+      - LOG4J_CONFIGURATION_FILE=/config/log-config.xml
+    volumes:
+      - ./besu/config.toml:/config/config.toml
+      - ./besu/genesis.json:/config/genesis.json
+      - ./besu/key:/config/key
+      - ./besu/log-config.xml:/config/log-config.xml
+    ports:
+      - 8545:8545
+      - 8546:8546
+    networks:
+      - alice
+
+  alice-mongo:
+    container_name: alice-mongo
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password123
+      - MONGO_INITDB_DATABASE=baseline
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - alice-mongo:/data/db
+      - ./ops/mongo_health.sh:/health-check.sh:delegated
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - alice
+    ports:
+      - 27117:27017
+    healthcheck:
+      test: ["CMD", "sh", "health-check.sh"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  alice-commit-mgr:
+    hostname: alice-commit-mgr
+    container_name: alice-commit-mgr
+    depends_on:
+      - alice-mongo
+    build:
+      context: ./commit-mgr
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./commit-mgr/.env
+    environment:
+      - DATABASE_HOST=alice-mongo:27017
+    networks:
+      - alice
+    ports:
+     - 4001:4001
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/status"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  alice:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.40.0.0/24
+
+volumes:
+  alice-mongo:

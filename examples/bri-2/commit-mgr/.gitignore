@@ -1,0 +1,20 @@
+# Dependency directories
+node_modules/
+
+# dotenv environment variables file
+.env
+.env.test
+
+# Typescript compiled JS files
+dist/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# VS Code editor files
+.vscode/
+
+# .DS_Store in all directories
+**/.DS_Store

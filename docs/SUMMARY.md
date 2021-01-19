@@ -4,46 +4,54 @@
 
 ## Community
 
-* [Open Source Community](community/community.md)
-* [Contributors Guide](community/contributors-guide.md)
-* [Community Members](community/community-members.md)
+* [Open Source Community](community/open-source-community.md)
+* [Community Leaders](community/community-leaders.md)
+* [Contributors](community/contributors.md)
+* [Members](community/members.md)
+* [Maintainers](community/maintainers.md)
+* [Technical Steering Committee](community/technical-steering-committee.md)
+* [Specifications Steering Committee](community/specifications-steering-committee.md)
 * [Governance](community/governance.md)
-
-## Radish34
-
-* [Radish34 Explained](radish34/radish34-explained.md)
-* [Radish34 Interactive Demo](radish34/radish34-demo.md)
-* [Radish34 POC](radish34/radish34-poc.md)
-* [Radish34 Workflow](radish34/radish34-workflow.md)
-* [Radish34 Key Diagrams](radish34/radish34-diagrams.md)
-* [Modifying Radish34](radish34/radish34-mods.md)
-* [From POC to Protocol](radish34/poc-to-protocol.md)
 
 ## Baseline Protocol
 
-* [The Baseline Protocol](baseline-protocol/protocol.md)
-* [Baseline Process](baseline-protocol/process.md)
+* [Baseline Protocol](baseline-protocol/the-baseline-protocol.md)
+* [Baseline Process](baseline-protocol/baseline-process.md)
+* [Architecture](baseline-protocol/architecture.md)
+* [Packages](baseline-protocol/packages/README.md)
+  * [API](baseline-protocol/packages/api.md)
+  * [Contracts](baseline-protocol/packages/contracts.md)
+  * [Messaging](baseline-protocol/packages/messaging.md)
+  * [Persistence](baseline-protocol/packages/persistence.md)
+  * [Privacy](baseline-protocol/packages/privacy.md)
+  * [Types](baseline-protocol/packages/types.md)
 * [Components](baseline-protocol/components.md)
-* [Standards](baseline-protocol/standards/README.md)
-  * [Mainnet](baseline-protocol/standards/mainnet.md)
-  * [Driving Mainnet Evolution](baseline-protocol/standards/mainnet-1.md)
-* [Roadmap](baseline-protocol/roadmap.md)
-* [Performance Stats and Specs](baseline-protocol/performance.md)
 
-## Baselining Your Product <a id="baselining"></a>
+## Reference Implementations <a id="bri"></a>
 
-* [How to 'Baseline' Your Product](baselining/your-product.md)
-* [Industry Verticals](baselining/industry-verticals/README.md)
-  * [Healthcare](baselining/industry-verticals/healthcare.md)
-  * [Core Banking](baselining/industry-verticals/core-banking.md)
-  * [ERP & CRM](baselining/industry-verticals/erp-crm.md)
-  * [Supply Chain Management](baselining/industry-verticals/scm.md)
-* [Cloud](baselining/enterprise-middleware.md)
+* [Overview](bri/overview-of-reference-implementations.md)
+* [BRI-1](bri/bri-1/README.md)
+  * [Base Example](bri/bri-1/bri-1-base-example.md)
+  * [Libraries](bri/bri-1/bri-1-libraries/README.md)
+    * [SAP/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-sap-microsoft-dynamics.md)
+    * [Google Sheets/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-google-sheets-microsoft-dynamics.md)
+* [BRI-2](bri/bri-2/README.md)
+* [Radish34](bri/radish34/README.md)
+  * [Radish34 Explained](bri/radish34/radish34-explained.md)
+  * [Interactive Demo](bri/radish34/radish34-interactive-demo.md)
+  * [Workflow](bri/radish34/radish34-workflow.md)
+  * [Radish34 POC](bri/radish34/radish34-poc.md)
+  * [Key Diagrams](bri/radish34/radish34-key-diagrams.md)
+  * [Modifying Radish34](bri/radish34/modifying-radish34.md)
+  * [From POC to Protocol](bri/radish34/from-poc-to-protocol.md)
 
-## Baseline Basics <a id="basics"></a>
+## Baseline Protocol Standard
 
-* [Glossary](basics/glossary.md)
-* [FAQ](basics/faq.md)
-* [Code Docs](basics/code-docs/README.md)
-  * [BullJS](basics/code-docs/bulljs.md)
+* [Standard In Development](baseline-protocol-standard/standards/README.md)
+  * [Mainnet](baseline-protocol-standard/standards/mainnet.md)
+  * [Driving Mainnet Evolution](baseline-protocol-standard/standards/driving-mainnet-evolution.md)
+
+## Baseline Basics
+
+* [Glossary](baseline-basics/glossary.md)
 
