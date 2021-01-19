@@ -1,6 +1,8 @@
 import { assert } from 'chai';
 import { ParticipantStack } from '../src';
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => ParticipantStack) => () => {
   describe(`organization details`, () => {
     let org;
@@ -140,11 +142,15 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
 
     describe('workflow privacy', () => {
       let circuit;
-  
+
       describe('zkSNARK circuits', () => {
         describe('synchronization', () => {
           before(async () => {
-            circuit = await getApp().getBaselineCircuit();
+            // We need to Wait fo the Sync
+            while (getApp().getBaselineCircuit() === undefined) {
+              await sleep(10000);
+            }
+            circuit = getApp().getBaselineCircuit();
             assert(circuit, 'setup artifacts should not be null');
           });
 
@@ -330,7 +336,7 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => Par
 
           it('should track the workgroup shield in an off-chain merkle tree database', async () => {
             // @ts-ignore
-            const trackedShieldContracts = await getApp().baseline.getTracked(); 
+            const trackedShieldContracts = await getApp().baseline.getTracked();
             assert(trackedShieldContracts.indexOf(shield.address.toLowerCase()) !== -1, 'workgroup shield contract should have been tracked');
           });
 
