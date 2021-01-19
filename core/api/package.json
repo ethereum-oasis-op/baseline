@@ -21,7 +21,7 @@
     "test:teardown": "npm run nethermind:stop"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "ethers": "^4.0.47",
     "provide-js": "^1.3.1"
   },
