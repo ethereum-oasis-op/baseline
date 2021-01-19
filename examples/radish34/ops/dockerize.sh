@@ -1,9 +1,7 @@
 #!/bin/bash
 
 # party-agnostic
-docker-compose build ganache geth-bootnode geth-node geth-miner1 geth-miner2
-
-docker build ./logger -f ./logger/dev.Dockerfile -t radish34_logger
+docker-compose build ganache geth-bootnode geth-node geth-miner1 geth-miner2 logger
 
 # party-specific, external dependencies
 docker-compose build mongo-buyer mongo-supplier1 mongo-supplier2 redis-buyer redis-supplier1 redis-supplier2

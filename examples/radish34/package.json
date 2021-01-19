@@ -34,7 +34,7 @@
     "install-config": "mkdir -p ./config && cp -r ./deploy/src/config/backups/* ./config && cp -r ./deploy/src/config/keystore ./config",
     "lint": "solhint \"contracts/**/*.sol\"",
     "setup-circuits": "./ops/setup_circuits.sh",
-    "system-check": "docker system info | awk 'match($0, /Total Memory: (.*)GiB/) {print $3}' | awk '{gsub(\" |GiB\", \"\"); print $0}' | awk '{if ($0 < 12.0) {print \"WARNING: Docker needs at least 12GB to run the baseline stack.\"; exit 1}}'",
+    "system-check": "docker system info | awk 'match($0, /Total Memory: (.*)GiB/) {print $3}' | awk '{gsub(\" |GiB\", \"\"); print $0}' | awk '{if ($0 < 12.0) {print \"WARNING: Docker needs at least 12GB to run the baseline stack.\";}}'",
     "test": "NODE_ENV=test jest --verbose --runInBand --forceExit",
     "test-simple": "NODE_ENV=test jest -i __tests__/simple.test.js --verbose --runInBand --forceExit",
     "test:watch": "jest --watchAll --runInBand"
@@ -51,7 +51,7 @@
     "@babel/preset-env": "^7.9.0",
     "apidoc": "^0.20.1",
     "husky": "^4.2.3",
-    "jest": "^24.8.0",
+    "jest": "^24.9.0",
     "jsdoc": "^3.6.3",
     "minimist": ">=0.2.1",
     "mongodb": "^3.5.5",

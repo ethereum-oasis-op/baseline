@@ -14,6 +14,7 @@ services:
       - mongo-buyer
       - mongo-supplier1
       - mongo-supplier2
+      - logger
       - zkp
     environment:
       RPC_PROVIDER: http://ganache:8545
@@ -117,6 +118,7 @@ services:
       MONGO_CONNECTION_RETRIES: 5
     depends_on:
       - mongo-buyer # TODO: remove dependency on mongo-buyer.
+      - logger
     networks:
       - network-buyer
       - network-supplier1
@@ -129,6 +131,12 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+
+  logger:
+    container_name: radish34_logger
+    build:
+      context: ./logger/
+      dockerfile: dev.Dockerfile
 
   api-buyer:
     hostname: api-buyer
@@ -151,6 +159,7 @@ services:
       - messenger-buyer
       - redis-buyer
       - merkle-tree
+      - logger
     environment:
       MONGO_URL: mongodb://mongo-buyer
       MONGO_DB_NAME: 'radish34'
@@ -193,6 +202,7 @@ services:
       - messenger-supplier1
       - redis-supplier1
       - merkle-tree
+      - logger
     environment:
       MONGO_URL: mongodb://mongo-supplier1
       MONGO_DB_NAME: 'radish34'
@@ -234,6 +244,7 @@ services:
       - ganache
       - messenger-supplier2
       - merkle-tree
+      - logger
     environment:
       MONGO_URL: mongodb://mongo-supplier2
       MONGO_DB_NAME: 'radish34'
@@ -278,8 +289,6 @@ services:
       - network-buyer
     ports:
      - 4001:4001
-    volumes:
-      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
@@ -311,8 +320,6 @@ services:
       - network-supplier1
     ports:
      - 4002:4001
-    volumes:
-      - ../baseline/core/messaging:/app/node_modules/@baseline-protocol/messaging:delegated
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/api/v1/health"]
       interval: 15s
