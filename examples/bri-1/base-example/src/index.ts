@@ -163,6 +163,11 @@ export class ParticipantStack {
     return this.workgroupCounterparties;
   }
 
+  async disconnect() {
+    await this.nats?.flush();
+    await this.nats?.disconnect();
+  }
+
   private async dispatchProtocolMessage(msg: ProtocolMessage): Promise<any> {
     if (msg.opcode === Opcode.Baseline) {
       const vault = await this.requireVault();
