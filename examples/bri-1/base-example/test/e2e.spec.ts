@@ -119,6 +119,11 @@ describe('baseline', () => {
     await aliceApp.init();
   });
 
+  after('close connections',async () =>{
+    await bobApp.disconnect();
+    await aliceApp.disconnect();
+  })
+
   describe('workgroup', () => {
     describe('creation', () => {
       before(async () => {
