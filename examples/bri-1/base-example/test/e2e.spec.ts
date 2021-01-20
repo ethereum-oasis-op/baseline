@@ -115,8 +115,8 @@ describe('baseline', () => {
       'forest step weird object extend boat ball unit canoe pull render monkey drink monitor behind supply brush frown alone rural minute level host clock',
     );
 
-    bobApp.init();
-    aliceApp.init();
+    await bobApp.init();
+    await aliceApp.init();
   });
 
   describe('workgroup', () => {
@@ -159,20 +159,15 @@ describe('baseline', () => {
         assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      describe('workgroup initiator', function () {
-        before(async () => {
-          this.ctx.app = bobApp;
-        });
-
-        describe(`initial workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAnInitialWorkgroupOrganization.bind(this));
-        describe(`workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupOrganization.bind(this));
+      describe('workgroup initiator', () => {
+        describe(`initial workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAnInitialWorkgroupOrganization(() => bobApp));
+        describe(`workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupOrganization(() => bobApp));
       });
 
       describe('inviting participants to the workgroup', function () {
         let inviteToken;
 
         before(async () => {
-          this.ctx.app = aliceApp;
           await bobApp.inviteWorkgroupParticipant(alice.email);
           inviteToken = await scrapeInvitationToken('bob-ident-consumer'); // if configured, ident would have sent an email to Alice
         });
@@ -188,17 +183,13 @@ describe('baseline', () => {
             await aliceApp.acceptWorkgroupInvite(inviteToken, bobApp.getWorkgroupContracts());
           });
 
-          describe(`invited workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAnInvitedWorkgroupOrganization.bind(this));
-          describe(`workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupOrganization.bind(this));
-          describe(`workgroup counterparty: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
+          describe(`invited workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAnInvitedWorkgroupOrganization(() => aliceApp));
+          describe(`workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupOrganization(() => aliceApp));
+          describe(`workgroup counterparty: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization(() => aliceApp));
         });
 
         describe('counterparties post-onboarding', function () {
-          before(async () => {
-            this.ctx.app = bobApp;
-          });
-
-          describe(bobCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization.bind(this));
+          describe(bobCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization(() => bobApp));
         });
       });
 
