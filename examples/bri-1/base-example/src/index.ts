@@ -14,6 +14,28 @@ import { AuthService } from 'ts-natsutil';
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+class TryError extends Error {
+  promiseErrors: any[] = []
+}
+
+const tryTimes = async <T>(prom: () => Promise<T>, times: number = 80, wait: number = 9400): Promise<T> => {
+  const errors : any[] = [];
+  for (let index = 0; index < times; index++) {
+    try {
+      return await prom()
+    } catch (err) { 
+      errors.push(err);
+    }
+    await sleep(wait);
+  }
+  const error = new TryError("Unfulfilled promises");
+  error.promiseErrors = errors;
+  throw error;
+}
+
+
 export class ParticipantStack {
 
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
@@ -167,25 +189,25 @@ export class ParticipantStack {
             this.sendProtocolMessage(msg.sender, Opcode.Baseline, payload);
           });
         } else if (payload.signatures.length < workflowSignatories) {
-            if (payload.sibling_path && payload.sibling_path.length > 0) {
-              // perform off-chain verification to make sure this is a legal state transition
-              const root = payload.sibling_path[0];
-              const verified = this.baseline?.verify(this.contracts['shield'].address, payload.leaf, root, payload.sibling_path);
-              if (!verified) {
-                console.log('WARNING-- off-chain verification of proposed state transition failed...');
-                this.workgroupCounterparties.forEach(async recipient => {
-                  this.sendProtocolMessage(recipient, Opcode.Baseline, { err: 'verification failed' });
-                });
-                return Promise.reject('failed to verify');
-              }
+          if (payload.sibling_path && payload.sibling_path.length > 0) {
+            // perform off-chain verification to make sure this is a legal state transition
+            const root = payload.sibling_path[0];
+            const verified = this.baseline?.verify(this.contracts['shield'].address, payload.leaf, root, payload.sibling_path);
+            if (!verified) {
+              console.log('WARNING-- off-chain verification of proposed state transition failed...');
+              this.workgroupCounterparties.forEach(async recipient => {
+                this.sendProtocolMessage(recipient, Opcode.Baseline, { err: 'verification failed' });
+              });
+              return Promise.reject('failed to verify');
             }
+          }
 
-            // sign state transition
-            const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.hash)).signature;
-            payload.signatures.push(signature);
-            this.workgroupCounterparties.forEach(async recipient => {
-              this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
-            });
+          // sign state transition
+          const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.hash)).signature;
+          payload.signatures.push(signature);
+          this.workgroupCounterparties.forEach(async recipient => {
+            this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
+          });
         } else {
           // create state transition commitment
           payload.result = await this.generateProof('modify_state', JSON.parse(msg.payload.toString()));
@@ -210,7 +232,7 @@ export class ParticipantStack {
             this.workgroupCounterparties.forEach(async recipient => {
               await this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
             });
-        } else {
+          } else {
             return Promise.reject('failed to insert leaf');
           }
         }
@@ -317,7 +339,7 @@ export class ParticipantStack {
     this.natsBearerTokens[messagingEndpoint] = invite.prvd.data.params.authorized_bearer_token;
     this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
 
-    await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => {});
+    await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => { });
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
     await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
@@ -642,34 +664,23 @@ export class ParticipantStack {
   }
 
   async requireVault(token?: string): Promise<ProvideVault> {
-    let vault;
     let tkn = token;
     if (!tkn) {
       const orgToken = await this.createOrgToken();
       tkn = orgToken.accessToken || orgToken.token;
     }
 
-    let interval;
-    const promises = [] as any;
-    promises.push(new Promise<void>((resolve, reject) => {
-      interval = setInterval(async () => {
-        const vaults = await Vault.clientFactory(
-          tkn!,
-          this.baselineConfig.vaultApiScheme!,
-          this.baselineConfig.vaultApiHost!,
-        ).fetchVaults({});
-        if (vaults && vaults.length > 0) {
-          vault = vaults[0];
-          resolve();
-        }
-      }, 2500);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
-
-    return vault;
+    return await tryTimes(async () => {
+      const vaults = await Vault.clientFactory(
+        tkn!,
+        this.baselineConfig.vaultApiScheme!,
+        this.baselineConfig.vaultApiHost!,
+      ).fetchVaults({});
+      if (vaults && vaults.length > 0) {
+        return vaults[0];
+      }
+      throw new Error();
+    });
   }
 
   async signMessage(vaultId: string, keyId: string, message: string): Promise<any> {
@@ -816,79 +827,36 @@ export class ParticipantStack {
   }
 
   private async requireCapabilities(): Promise<void> {
-    let interval;
-    const promises = [] as any;
-    promises.push(new Promise<void>((resolve, reject) => {
-      interval = setInterval(async () => {
-        if (this.capabilities?.getBaselineRegistryContracts()) {
-          resolve();
-        }
-      }, 2500);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
+    return await tryTimes(async () => {
+      if (this.capabilities?.getBaselineRegistryContracts()) {
+        return;
+      }
+      throw new Error();
+    })
   }
 
   async requireOrganization(address: string): Promise<Organization> {
-    let organization;
-    let interval;
+    return await tryTimes(async () => {
+      const org = await this.fetchOrganization(address);
+      if (org && org['address'].toLowerCase() === address.toLowerCase()) {
+        return org;
+      }
 
-    const promises = [] as any;
-    promises.push(new Promise<void>((resolve, reject) => {
-      interval = setInterval(async () => {
-        this.fetchOrganization(address).then((org) => {
-          if (org && org['address'].toLowerCase() === address.toLowerCase()) {
-            organization = org;
-            resolve();
-          }
-        }).catch((err) => { });
-      }, 5000);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
-
-    return organization;
+      throw new Error();
+    })
   }
 
   async requireWorkgroup(): Promise<void> {
-    let interval;
-    const promises = [] as any;
-    promises.push(new Promise<void>((resolve, reject) => {
-      interval = setInterval(async () => {
-        if (this.workgroup) {
-          resolve();
-        }
-      }, 2500);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
+    return await tryTimes(async () => {
+      if (this.workgroup) {
+        return this.workgroup;
+      }
+      throw new Error();
+    })
   }
 
   async requireWorkgroupContract(type: string): Promise<any> {
-    let contract;
-    let interval;
-
-    const promises = [] as any;
-    promises.push(new Promise<void>((resolve, reject) => {
-      interval = setInterval(async () => {
-        this.resolveWorkgroupContract(type).then((cntrct) => {
-          contract = cntrct;
-          resolve();
-        }).catch((err) => { });
-      }, 5000);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
-
-    return contract;
+    return await tryTimes(() => this.resolveWorkgroupContract(type))
   }
 
   async resolveWorkgroupContract(type: string): Promise<any> {
