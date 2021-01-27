@@ -1,4 +1,5 @@
 # ***********************************************************************
+# * This code is extended from the StarkEx Settlemen Example            *
 # * This code is licensed under the Cairo Program License.              *
 # * The license can be found in: licenses/CairoProgramLicense.txt       *
 # ***********************************************************************
