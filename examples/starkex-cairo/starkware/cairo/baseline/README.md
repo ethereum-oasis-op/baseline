@@ -1,4 +1,4 @@
-# BRI Invoice Batch Transactions on StarkEx Cairo Compiler System
+# BRI Invoice Batch Transactions on StarkEx Cairo Compiler
 
 Invoice Transactions, Batching, Transfer, and Settlement using Cairo Language 
 
