@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import bodyParser from "body-parser";
+import cors from "cors";
 
 import { rpcServer } from "./rpc-server";
 import { logger, reqLogger, reqErrorLogger } from "./logger";
@@ -30,6 +31,8 @@ const main = async () => {
   app.use(reqLogger('COMMIT-MGR')); // Log requests
   app.use(reqErrorLogger('COMMIT-MGR')); // Log errors
   app.use(bodyParser.json({ limit: "2mb" })); // Pre-parse body content
+  app.use(cors());
+  app.use(rpcServer.middleware());
 
   app.get('/status', async (req: any, res: any) => {
     res.sendStatus(200);

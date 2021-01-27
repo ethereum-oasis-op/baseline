@@ -1,6 +1,6 @@
 # Google Sheets/Microsoft Dynamics
 
-**⚠️ The "Baseline Mycrosoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../) **as a result of the `v0.1` release.**
+**⚠️ The "Baseline Microsoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../) **as a result of the `v0.1` release.**
 
 ## Baselining Business Process Automation across SAP and Microsoft Dynamics
 

@@ -25,6 +25,7 @@
     "@baseline-protocol/messaging": "0.1.0",
     "@baseline-protocol/privacy": "0.1.0",
     "@baseline-protocol/types": "0.1.0",
+    "cors": "^2.8.5",
     "js-sha256": "^0.9.0",
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "8.5.1",
