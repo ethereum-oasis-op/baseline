@@ -1,5 +1,5 @@
 # ***********************************************************************
-# * This code is licensed under the Cairo Program License.              *
+# * This code is extended from the StarkEx Batching Transaction Example *
 # * The license can be found in: licenses/CairoProgramLicense.txt       *
 # ***********************************************************************
 
