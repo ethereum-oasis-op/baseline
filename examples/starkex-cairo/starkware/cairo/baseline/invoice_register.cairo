@@ -15,35 +15,22 @@ func get_ap() -> (ap_val):
     # Calling dummy_func places fp and pc at [fp], [fp + 1] (respectively), and advances ap by 2.
     # Hence, going two cells above we get [fp] = ap + 2, and by subtracting 2 we get the desired ap
     # value.
-    call dummy_func
+    call init_func
     return (ap_val=[ap - 2] - 2)
 end
 
-func dummy_func():
+func init_func():
     return ()
 end
 
-# Takes the value of a label (relative to program base) and returns the actual runtime address of
-# that label in the memory.
-#
-# Example usage:
-#
-# func do_callback(...):
-#     ...
-# end
-#
-# func do_thing_then_callback(callback):
-#     ...
-#     call abs callback
-# end
-#
-# func main():
-#     let (callback_address) = get_label_location(do_callback)
-#     do_thing_then_callback(callback=callback_address)
-# end
-func get_label_location(label_value) -> (res):
+func main():
+ let (callback_address) = get_invoice_location(do_callback)
+    do_thing_then_callback(callback=callback_address)
+  end
+
+func get_invoice_location(invoice_value) -> (res):
     let (_, pc_val) = get_fp_and_pc()
 
-    ret_pc_label:
-    return (res=label_value + pc_val - ret_pc_label)
+    ret_pc_invoice:
+    return (res=invoice_value + pc_val - ret_pc_invoice)
 end
