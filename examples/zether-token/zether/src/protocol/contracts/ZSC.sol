@@ -1,7 +1,7 @@
 pragma solidity 0.5.11;
 
 import './ZetherVerifier.sol';
-import './CashToken.sol';
+import './BaselineToken.sol';
 
 contract ZSC {
     CashToken coin;
