@@ -4,7 +4,7 @@ import './ZetherVerifier.sol';
 import './BaselineToken.sol';
 
 contract ZSC {
-    BaselineToken coin;
+    BaselineToken BaseLink;
     ZetherVerifier zetherverifier;
     uint256 public epochLength; // now in milliseconds.
 
@@ -22,7 +22,7 @@ contract ZSC {
 
     constructor(address _coin, address _zether, uint256 _epochLength) public {
         // epoch length, like block.time, is in _seconds_. 4 is the minimum!!! (To allow a withdrawal to go through.)
-        coin = CashToken(_coin);
+        BaseLink = BaselineToken(_coin);
         zetherverifier = ZetherVerifier(_zether);
         epochLength = _epochLength;
     }
