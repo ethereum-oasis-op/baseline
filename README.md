@@ -1,12 +1,12 @@
-# Baseline Protocol
+# Baseline Protocol Hackathon Submissions 2021
 
-## DeedNet - Tokenisation of Baseline Records using Zether Framework
+### DeedNet - Tokenisation of Baseline Records using Zether Framework
 - https://youtu.be/ZbyA2CrndRg
 
-## MantleNet - Integration of BLS Signature Smart Contracts into Privacy Library
+### MantleNet - Integration of BLS Signature Smart Contracts into Privacy Library
 - https://youtu.be/ZbyA2CrndRg
 
-## BeamNet - zkRollups for Baseline Scalabilty using StarkWare Cairo zkSTARKS Circuits
+### BeamNet - zkRollups for Baseline Scalabilty using StarkWare Cairo zkSTARKS Circuits
 - https://youtu.be/j6kcuOP-gbM
 
 <div align="center">
