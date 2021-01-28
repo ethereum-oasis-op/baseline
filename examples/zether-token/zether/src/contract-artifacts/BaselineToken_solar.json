@@ -1,7 +1,7 @@
 {
   "contracts": {
     "softwares/zether/packages/protocol/contracts/CashToken.sol": {
-      "source": "softwares/zether/packages/protocol/contracts/CashToken.sol:CashToken",
+      "source": "softwares/zether/packages/protocol/contracts/BaselineToken.sol:BaselineToken",
       "abi": [
         {
           "name": "approve",
