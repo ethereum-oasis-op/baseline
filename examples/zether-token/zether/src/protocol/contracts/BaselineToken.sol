@@ -2,7 +2,7 @@ pragma solidity ^0.6.0;
 pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20Mintable.sol";
-import "./verifier.sol";
+import "./BaseVerifier.sol";
 
 contract BaselineToken is ERC20Mintable{
 
