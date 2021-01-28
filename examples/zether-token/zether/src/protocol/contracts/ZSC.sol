@@ -4,7 +4,7 @@ import './ZetherVerifier.sol';
 import './BaselineToken.sol';
 
 contract ZSC {
-    CashToken coin;
+    BaselineToken coin;
     ZetherVerifier zetherverifier;
     uint256 public epochLength; // now in milliseconds.
 
