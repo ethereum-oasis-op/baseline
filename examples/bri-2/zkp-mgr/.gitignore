@@ -1,0 +1,12 @@
+.DS_Store
+
+# Logs
+logs
+# dotenv environment variables file
+.env
+
+# Circuit source code
+circuits/src
+
+# Compiled circuits
+circuits/output
