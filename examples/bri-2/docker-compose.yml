@@ -2,6 +2,8 @@ version: '3.5'
 
 services:
 
+  # shared containers
+
   ganache:
     container_name: ganache
     image: trufflesuite/ganache-cli:v6.6.0
@@ -74,7 +76,10 @@ services:
     env_file:
       - ./commit-mgr/.env
     environment:
-      - DATABASE_HOST=alice-mongo:27017
+      - DATABASE_USER="admin"
+      - DATABASE_PASSWORD="password123"
+      - DATABASE_HOST="alice-mongo:27017"
+      - DATABASE_NAME="baseline"
     networks:
       - alice
     ports:
