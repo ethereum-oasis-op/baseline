@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bri-3/models"
 	"os"
+
+	"bri-3/hcs"
 
 	"github.com/hashgraph/hedera-sdk-go"
 	logger "github.com/kthomas/go-logger"
@@ -12,6 +15,9 @@ var (
 	baselineMessageTopicID  *string
 
 	defaultHederaClient *hedera.Client
+	registry     *hcs.Registry
+	signer 		 *models.TransactionSigner
+	signerPrivateKey *string
 
 	log *logger.Logger
 )
@@ -46,26 +52,28 @@ func initDefaultHederaClient() {
 	}
 
 	operatorID := os.Getenv("HEDERA_OPERATOR_ID")
-	operatorKey := os.Getenv("HEDERA_OPERATOR_KEY")
+	signerPrivateKey := os.Getenv("HEDERA_OPERATOR_KEY")
 
-	if operatorID != "" && operatorKey != "" {
-		operatorAccountID, err := hedera.AccountIDFromString(operatorID)
-		if err != nil {
-			log.Panicf("failed to parse HEDERA_OPERATOR_ID; %s", err.Error())
-		}
-
-		operatorKey, err := hedera.PrivateKeyFromString(operatorKey)
+	if operatorID != "" && signerPrivateKey != "" {
+		privateKey, err := hedera.PrivateKeyFromString(signerPrivateKey)
 		if err != nil {
 			log.Panicf("failed to parse HEDERA_OPERATOR_KEY; %s", err.Error())
 		}
 
-		defaultHederaClient.SetOperator(operatorAccountID, operatorKey)
+		signer, err = models.NewTransactionSigner(operatorID, privateKey.PublicKey().String())
+		if err != nil {
+			log.Panicf("failed to parse HEDERA_OPERATOR_ID; %s", err.Error())
+		}
+
+		defaultHederaClient.SetEmptyOperator()
 	} else {
 		panic("HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY are required")
 	}
 }
 
 func initBaselineHCS() {
+	registry = hcs.NewRegistry(defaultHederaClient)
+
 	baselineMessageAdminKey = stringOrNil(os.Getenv("HEDERA_BASELINE_HCS_ADMIN_KEY"))
 	baselineMessageTopicID = stringOrNil(os.Getenv("HEDERA_BASELINE_HCS_TOPIC_ID"))
 

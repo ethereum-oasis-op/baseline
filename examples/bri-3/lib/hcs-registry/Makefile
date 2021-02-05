@@ -8,7 +8,7 @@ clean:
 
 build: clean mod
 	go fmt ./...
-	go build -v -o ./.bin/hcs_registry ./...
+	go build -v -o ./.bin/hcs_registry .
 
 mod:
 	go mod init 2>/dev/null || true

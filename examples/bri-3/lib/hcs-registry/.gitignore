@@ -45,3 +45,4 @@ profile.out
 *.env
 *.key
 *.crt
+test.go

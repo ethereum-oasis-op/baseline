@@ -7,6 +7,8 @@ import (
 	"sync/atomic"
 	"syscall"
 	"time"
+
+	"github.com/hashgraph/hedera-sdk-go"
 )
 
 const hcsStreamingSubscriptionStatusTickerInterval = 5 * time.Second
@@ -20,13 +22,27 @@ var (
 
 func init() {
 	if baselineMessageAdminKey != nil {
-		err := createBaselineMessageTopic(*baselineMessageAdminKey, 10)
+		registryID, err := registry.CreateAndBroadcast(
+			signer,
+			*signerPrivateKey,
+			[]string{*baselineMessageAdminKey},
+			"create registry",
+			10,
+			)
+
+
 		if err != nil {
 			log.Panicf("failed to initialize dedicated HCS subscription consumer; %s", err.Error())
 		}
+
+		baselineMessageTopicID = &registryID
 	}
 
-	err := subscribe(nil) // TODO: use last anchor
+	err := registry.SubscribeTo(*baselineMessageTopicID, nil, func(message hedera.TopicMessage) {
+		log.Debugf("received %d-byte message on HCS topic: %s", len(message.Contents), *baselineMessageTopicID)
+		// TODO: add configurable message handler...
+	})
+
 	if err != nil {
 		log.Panicf("failed to initialize dedicated HCS subscription consumer; %s", err.Error())
 	}
