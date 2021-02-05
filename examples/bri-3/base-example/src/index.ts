@@ -1,21 +1,22 @@
-import { IBaselineRPC, IBlockchainService, IRegistry, IVault, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
+import { IBaselineRPC, IBlockchainService, IRegistry, IVault, MerkleTreeNode, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
 import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
-import { IZKSnarkCircuitProvider, IZKSnarkCompilationArtifacts, IZKSnarkTrustedSetupArtifacts, zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
+import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceProvide, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
+import { ICircuitProver, ICircuitRegistry, ICircuitVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
 import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
-import { Application as Workgroup, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
+import { Application as Workgroup, Circuit, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
 import { Ident, Vault } from 'provide-js';
 import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
+import { tryTimes } from '../test/utils';
 
-const baselineProtocolMessageSubject = 'baseline';
+const baselineProtocolMessageSubject = 'baseline.proxy';
 
 export class ParticipantStack {
 
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
-  private baselineCircuitArtifacts?: IZKSnarkCompilationArtifacts;
-  private baselineCircuitSetupArtifacts?: IZKSnarkTrustedSetupArtifacts;
+  private baselineCircuit?: Circuit;
   private baselineConfig?: any;
   private babyJubJub?: VaultKey;
   private hdwallet?: VaultKey;
@@ -27,7 +28,7 @@ export class ParticipantStack {
   private protocolMessagesTx = 0;
   private protocolSubscriptions: any[] = [];
   private hcsTopics: any;
-  private zk?: IZKSnarkCircuitProvider;
+  private privacy?: ICircuitRegistry & ICircuitProver & ICircuitVerifier;
 
   private org?: any;
   private workgroup?: any;
@@ -48,7 +49,11 @@ export class ParticipantStack {
 
     this.baseline = await baselineServiceFactory(baselineProviderProvide, this.baselineConfig);
     this.nats = await messagingServiceFactory(messagingProviderNats, this.natsConfig);
-    this.zk = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceZokrates, {});
+    this.privacy = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceProvide, {
+      token: this.baselineConfig?.token,
+      privacyApiScheme: this.baselineConfig?.privacyApiScheme,
+      privacyApiHost: this.baselineConfig?.privacyApiHost,
+    }) as unknown as ICircuitRegistry & ICircuitProver & ICircuitVerifier; // HACK
 
     if (this.natsConfig?.natsBearerTokens) {
       this.natsBearerTokens = this.natsConfig.natsBearerTokens;
@@ -68,10 +73,6 @@ export class ParticipantStack {
     }
 
     this.initialized = true;
-  }
-
-  getBaselineCircuitArtifacts(): any | undefined {
-    return this.baselineCircuitArtifacts;
   }
 
   getBaselineConfig(): any | undefined {
@@ -135,66 +136,7 @@ export class ParticipantStack {
       const vault = await this.requireVault();
       const workflowSignatories = 2;
 
-      // const payload = JSON.parse(msg.payload.toString());
-      // if (payload.doc) {
-      //   if (!payload.sibling_path) {
-      //     payload.sibling_path = [];
-      //   }
-      //   if (!payload.signatures) {
-      //     payload.signatures = [];
-      //   }
-      //   if (!payload.hash) {
-      //     payload.hash = sha256(JSON.stringify(payload.doc));
-      //   }
-
-      //   if (payload.signatures.length === 0) {
-      //     // baseline this new document
-      //     payload.result = await this.generateProof('preimage', JSON.parse(msg.payload.toString()));
-      //     const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.result.proof.proof)).signature;
-      //     payload.signatures = [signature];
-      //     this.workgroupCounterparties.forEach(async recipient => {
-      //       this.sendProtocolMessage(msg.sender, Opcode.Baseline, payload);
-      //     });
-      //   } else if (payload.signatures.length < workflowSignatories) {
-      //       if (payload.sibling_path && payload.sibling_path.length > 0) {
-      //         // perform off-chain verification to make sure this is a legal state transition
-      //         const root = payload.sibling_path[0];
-      //         const verified = this.baseline?.verify(this.contracts['shield'].address, payload.leaf, root, payload.sibling_path);
-      //         if (!verified) {
-      //           console.log('WARNING-- off-chain verification of proposed state transition failed...');
-      //           this.workgroupCounterparties.forEach(async recipient => {
-      //             this.sendProtocolMessage(recipient, Opcode.Baseline, { err: 'verification failed' });
-      //           });
-      //           return Promise.reject('failed to verify');
-      //         }
-      //       }
-
-      //       // sign state transition
-      //       const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.hash)).signature;
-      //       payload.signatures.push(signature);
-      //       this.workgroupCounterparties.forEach(async recipient => {
-      //         this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
-      //       });
-      //   } else {
-      //     // create state transition commitment
-      //     payload.result = await this.generateProof('modify_state', JSON.parse(msg.payload.toString()));
-      //     console.log(payload);
-
-      //     const leaf = await this.baseline?.insertLeaf(msg.sender, this.contracts['shield'].address, payload.result.proof.proof);
-      //     if (leaf) {
-      //       console.log(`inserted leaf... ${leaf}`);
-      //       payload.sibling_path = (await this.baseline!.getSiblings(msg.shield, leaf.index)).map(node => node.index);
-      //       payload.sibling_path?.push(leaf.index);
-      //       this.workgroupCounterparties.forEach(async recipient => {
-      //         await this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
-      //       });
-      //   } else {
-      //       return Promise.reject('failed to insert leaf');
-      //     }
-      //   }
-      // } else if (payload.signature) {
-      //   console.log(`NOOP!!! received signature in BLINE protocol message: ${payload.signature}`);
-      // }
+      console.log(`NOOP!!! received BLINE protocol message: ${msg.toString()}`);
     } else if (msg.opcode === Opcode.Join) {
       const payload = JSON.parse(msg.payload.toString());
       const messagingEndpoint = await this.resolveMessagingEndpoint(payload.address);
@@ -203,6 +145,28 @@ export class ParticipantStack {
       }
       this.workgroupCounterparties.push(payload.address);
       this.natsBearerTokens[messagingEndpoint] = payload.authorized_bearer_token;
+
+      const circuit = JSON.parse(JSON.stringify(this.baselineCircuit));
+      circuit.proving_scheme = circuit.provingScheme;
+      circuit.verifier_contract = circuit.verifierContract;
+      delete circuit.verifierContract;
+      delete circuit.createdAt; 
+      delete circuit.vaultId;
+      delete circuit.provingScheme;
+      delete circuit.provingKeyId;
+      delete circuit.verifyingKeyId;
+      delete circuit.status;
+
+      // sync circuit artifacts
+      this.sendProtocolMessage(payload.address, Opcode.Sync, {
+        type: 'circuit',
+        payload: circuit,
+      });
+    } else if (msg.opcode === Opcode.Sync) {
+      const payload = JSON.parse(msg.payload.toString());
+      if (payload.type === 'circuit') {
+        this.baselineCircuit = await this.privacy?.deploy(payload.payload) as Circuit;
+      }
     }
   }
 
@@ -280,37 +244,14 @@ export class ParticipantStack {
         throw new Error('invalid proof type');
     }
 
-    const args = [
-      this.marshalCircuitArg(commitment), // should == what we are computing in the circuit
-      {
-        value: [
-          this.marshalCircuitArg(commitment.substring(0, 16)),
-          this.marshalCircuitArg(commitment.substring(16)),
-        ],
-        salt: [
-          this.marshalCircuitArg(salt.substring(0, 16)),
-          this.marshalCircuitArg(salt.substring(16)),
-        ],
-      },
-      {
-        senderPublicKey: [
-          this.marshalCircuitArg(senderZkPublicKey.substring(0, 16)),
-          this.marshalCircuitArg(senderZkPublicKey.substring(16)),
-        ],
-        agreementName: this.marshalCircuitArg(msg.doc.name),
-        agreementUrl: this.marshalCircuitArg(msg.doc.url),
-      }
-    ];
-
-    const proof = await this.zk?.generateProof(
-      this.baselineCircuitArtifacts?.program,
-      (await this.zk?.computeWitness(this.baselineCircuitArtifacts!, args)).witness,
-      this.baselineCircuitSetupArtifacts?.keypair?.pk,
-    );
+    const resp = await this.privacy?.prove(this.baselineCircuit?.id!, {
+      x: '3',
+      Y: '35',
+    });
 
     return {
       doc: msg.doc,
-      proof: proof,
+      proof: resp.proof,
       salt: salt,
     };
   }
@@ -512,34 +453,23 @@ export class ParticipantStack {
   }
 
   async requireVault(token?: string): Promise<ProvideVault> {
-    let vault;
     let tkn = token;
     if (!tkn) {
       const orgToken = await this.createOrgToken();
       tkn = orgToken.accessToken || orgToken.token;
     }
 
-    let interval;
-    const promises = [] as any;
-    promises.push(new Promise((resolve, reject) => {
-      interval = setInterval(async () => {
-        const vaults = await Vault.clientFactory(
-          tkn!,
-          this.baselineConfig.vaultApiScheme!,
-          this.baselineConfig.vaultApiHost!,
-        ).fetchVaults({});
-        if (vaults && vaults.length > 0) {
-          vault = vaults[0];
-          resolve();
-        }
-      }, 2500);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
-
-    return vault;
+    return await tryTimes(async () => {
+      const vaults = await Vault.clientFactory(
+        tkn!,
+        this.baselineConfig.vaultApiScheme!,
+        this.baselineConfig.vaultApiHost!,
+      ).fetchVaults({});
+      if (vaults && vaults.length > 0) {
+        return vaults[0];
+      }
+      throw new Error();
+    });
   }
 
   async signMessage(vaultId: string, keyId: string, message: string): Promise<any> {
@@ -557,26 +487,11 @@ export class ParticipantStack {
     return (await vault.fetchVaultKeys(vlt.id!, {}));
   }
 
-  async compileBaselineCircuit(): Promise<any> {
-    // FIXME-- call Provide Privacy API... (i.e., golang-based API...)
-    // TODO: impl privacy package provider for Provide API
-    this.baselineCircuitArtifacts = await this.zk?.compile('', 'main'); // FIXME-- use a named circuit
-    return this.baselineCircuitArtifacts;
-  }
-
-  async deployBaselineCircuit(): Promise<any> {
-    // compile the circuit...
-    await this.compileBaselineCircuit();
-
-    const setupArtifacts = undefined; // FIXME
-
-    this.baselineCircuitSetupArtifacts = setupArtifacts; // FIXME-- setupArtifacts is never written
-    this.workflowIdentifier = ''; // FIXME this.baselineCircuitSetupArtifacts?.identifier;
-
-    this.requireWorkgroupTopic(`baseline-circuit-${this.workflowIdentifier}`); // FIXME-- setup dynamic circuit topic key...
-    // FIXME-- do we need to call track() somewhere? -- probably not.. we are "tracking" HCS workflow topic(s) implicitly
-
-    return setupArtifacts;
+  async fetchSecret(vaultId: string, secretId: string): Promise<any> {
+    const orgToken = await this.createOrgToken();
+    const token = orgToken.accessToken || orgToken.token;
+    const vault = Vault.clientFactory(token!, this.baselineConfig?.vaultApiScheme, this.baselineConfig?.vaultApiHost);
+    return (await vault.fetchVaultSecret(vaultId, secretId));
   }
 
   async inviteWorkgroupParticipant(email: string): Promise<Invite> {
@@ -600,42 +515,23 @@ export class ParticipantStack {
   }
 
   async requireOrganization(address: string): Promise<Organization> {
-    let organization;
-    let interval;
+    return await tryTimes(async () => {
+      const org = await this.fetchOrganization(address);
+      if (org && org['address'].toLowerCase() === address.toLowerCase()) {
+        return org;
+      }
 
-    const promises = [] as any;
-    promises.push(new Promise((resolve, reject) => {
-      interval = setInterval(async () => {
-        this.fetchOrganization(address).then((org) => {
-          if (org && org['address'].toLowerCase() === address.toLowerCase()) {
-            organization = org;
-            resolve();
-          }
-        }).catch((err) => { });
-      }, 5000);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
-
-    return organization;
+      throw new Error();
+    })
   }
 
   async requireWorkgroup(): Promise<void> {
-    let interval;
-    const promises = [] as any;
-    promises.push(new Promise((resolve, reject) => {
-      interval = setInterval(async () => {
-        if (this.workgroup) {
-          resolve();
-        }
-      }, 2500);
-    }));
-
-    await Promise.all(promises);
-    clearInterval(interval);
-    interval = null;
+    return await tryTimes(async () => {
+      if (this.workgroup) {
+        return this.workgroup;
+      }
+      throw new Error();
+    })
   }
 
   async requireWorkgroupTopic(type: string): Promise<any> { // FIXME!!
@@ -714,7 +610,7 @@ export class ParticipantStack {
         allow: ['baseline.>'],
       },
       subscribe: {
-        allow: [`baseline.inbound`],
+        allow: [`baseline.proxy`],
       },
     };
 

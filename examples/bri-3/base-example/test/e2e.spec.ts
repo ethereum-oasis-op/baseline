@@ -20,7 +20,7 @@ import {
 const aliceCorpName = 'Alice Corp';
 const bobCorpName = 'Bob Corp';
 
-const hederaNetworkId = 'TODO...'; // Provide dedicated network id to be generated
+const hederaNetworkId = '9f3b2e72-554d-40e1-b995-1daf43c2eadd'; // Provide dedicated network id to be generated
 const networkId = process.env['NCHAIN_NETWORK_ID'] || hederaNetworkId;
 
 const setupUser = async (identHost, firstname, lastname, email, password) => {

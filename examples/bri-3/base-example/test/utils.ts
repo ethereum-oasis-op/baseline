@@ -130,3 +130,22 @@ export const vendNatsAuthorization = async (natsConfig, subject): Promise<string
     permissions,
   );
 };
+
+export class TryError extends Error {
+  promiseErrors: any[] = []
+}
+
+export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 80, wait: number = 9400): Promise<T> => {
+  const errors : any[] = [];
+  for (let index = 0; index < times; index++) {
+    try {
+      return await prom()
+    } catch (err) { 
+      errors.push(err);
+    }
+    await promisedTimeout(wait);
+  }
+  const error = new TryError("Unfulfilled promises");
+  error.promiseErrors = errors;
+  throw error;
+}

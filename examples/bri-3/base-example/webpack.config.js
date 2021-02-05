@@ -14,7 +14,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist', 'umd'),
     filename: 'index.js',
     libraryTarget: 'umd',
-    library: 'shuttle-app',
+    library: 'bri-3-base-example',
     globalObject: 'this'
   },
   resolve: {
@@ -36,4 +36,3 @@ module.exports = {
     }),
   ]
 };
-
