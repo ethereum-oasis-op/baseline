@@ -23,7 +23,7 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 | [**Tas Dienes**](https://www.linkedin.com/in/tasdienes/) | Ethereum Foundation |
 | [**John Wolpert**](https://linkedin.com/in/johnwolpert)\*\*\*\* | Current Baseline Protocol TSC Chair |
 | [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)\*\*\*\* | Unibright |
-| [**Gina Rubino**](https://www.linkedin.com/in/ginarubino/)\*\*\*\* | Nethermind |
+| [**Antonio Sabado**](https://www.linkedin.com/in/antonio-sabado-97150511b/)\*\*\*\* | Nethermind |
 | [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)\*\*\*\* | Provide |
 | [**Daniel Kochis**](https://www.linkedin.com/in/daniel-kochis-9b42627/)\*\*\*\* | Chainlink |
 | [**Tracy Kuhrt**](https://www.linkedin.com/in/tracykuhrt/)\*\*\*\* | Accenture |
