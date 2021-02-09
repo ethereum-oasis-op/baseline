@@ -341,6 +341,26 @@ services:
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
+  alice-web:
+    image: nginx
+    container_name: alice-web
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8888"]
+      interval: 1m
+      timeout: 1s
+      retries: 2
+      start_period: 10s
+    hostname: alice-web
+    networks:
+      - alice
+      - bob
+    ports:
+      - 8888:8888
+    restart: always
+    volumes:
+      - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
+      - ./.tmp/alice.did.config.json:/var/www/html:cached
+
   # bob
 
   bob-postgres:
@@ -677,6 +697,26 @@ services:
     restart: always
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
+
+  bob-web:
+    image: nginx
+    container_name: bob-web
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8889"]
+      interval: 1m
+      timeout: 1s
+      retries: 2
+      start_period: 10s
+    hostname: bob-web
+    networks:
+      - alice
+      - bob
+    ports:
+      - 8889:8888
+    restart: always
+    volumes:
+      - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
+      - ./.tmp/bob.did.config.json:/var/www/html:cached
 
 networks:
   alice:
