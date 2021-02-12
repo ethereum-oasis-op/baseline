@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import axios from 'axios';
 import { ethers } from 'ethers';
-
 import { logger } from "../logger";
 import { insertLeaf } from "../merkle-tree/leaves";
 import { merkleTrees } from "../db/models/MerkleTree";

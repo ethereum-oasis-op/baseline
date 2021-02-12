@@ -10,6 +10,7 @@
     "moduleResolution": "node",
     "noImplicitAny": false,
     "outDir": "dist",
+    "rootDir": "src",
     "resolveJsonModule": true,
     "sourceMap": true,
     "target": "es6",
