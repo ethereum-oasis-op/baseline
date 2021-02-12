@@ -1,3 +1,5 @@
+![Baseline Logo](./dashboard/assets/img/baselineHorizontal-Logo-Full-Color.svg)
+
 # bri-2
 
 `bri-2` is the second "baseline reference implementation". The purpose of this project is to show a baseline stack using different services compared to `bri-1`, but this stack must still comply with the baseline standards and specificiations, therefore allowing interoperability with other baseline stacks. `bri-2` introduces the `commit-mgr` service to `baseline`. The `commit-mgr` acts as an extension to a web3 provider, which allows a variety of Ethereum clients to become "baseline compatible". 
@@ -20,9 +22,6 @@ The purple/orange blocks in the following diagram have been built. The green blo
 
 
 # Baseline Chain Dashboard(bri-2)
-
-![Baseline Logo](./assets/img/baselineHorizontal-Logo-Full-Color.svg)
-
 
 # Requirements
 - docker and docker-compose
@@ -125,25 +124,38 @@ npm run prod
 
 ## Alpha Release [0.1.0] 2021-01-28
 [X] started project Baseline Chain Switcher Demo and Components
+
 [X] added UI Dashboard
 
 ## [0.1.1] 2021-01-29
 [X] added commit-mgr service tests report to dashboard
+
 [X] commit-mgr should be configurable via env vars such that it can use Infura as its web3 provider
+
 [ ] a repeatable test suite should be written to ensure baseline transactions can be submitted through Infura
+
 [X] Shield.sol and Verifier.sol contracts should be deployed on a public testnet/mainnet (verifiable via etherscan or similar)
+
 [ ] root/leaves of on-chain merkle-tree in Shield contract should match root/leaves of off-chain tree stored in mongo
+
 [X] commitments made in private Besu network should be replicated on public testnet/mainnet
 
 ### Bonus features:
 [X] add Well-Known DID configuration generator
+
 [X] add simple Baseline Phonebook UI
+
 [ ] use a faucet account or another way to fund public testnet/mainnet transactions so that judges can easily run test suite.
+
 [ ] find a way to securely+efficiently move what has already gone to the private Besu chain instance and move that to the public ethereum mainnet before commencing with new transactions.
+
 [ ] the verification circuit enforces some business logic (instead of using a no-op circuit)
+
 [X] add a UI that allows the user to configure the commit-mgr service
 
 ## Alpha Release [0.1.3] 2021-02-10
 [X] commit-mgr updated
+
 [X] dashboard UI moved to ./bri-2 folder
+
 [X] DID service moved to ./bri-2 folder
