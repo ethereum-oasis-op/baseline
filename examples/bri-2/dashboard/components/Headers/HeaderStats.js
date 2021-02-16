@@ -34,8 +34,8 @@ const switchChain = async (network) => {
     .then((response) => {
         //access the resp here....
         const currentChain = response.data;
-        console.log(`Current Chain: ${currentChain}`);
-        AlertSwitcher(9000, 'warning', 'Switching Network Mode...', `Commitment manager reconnecting to a network..`, 'Close now');
+        //console.log(`Current Chain: ${currentChain}`);
+        AlertSwitcher(process.env.NODE_ENV === 'development' ? 69000 : 9000, 'warning', 'Switching Network Mode...', `Commitment manager reconnecting to a network..`, 'Close now');
         return currentChain;
     })
     .catch((error) => {
@@ -50,7 +50,7 @@ export default function HeaderStats() {
 
   //const wallet = useWallet();
   const { data: status, error: statusError } = useSwr(`${commitMgrServerUrl}/status`, fetcherStatus);
-  const { data: network, error: netError } = useSwr(`${commitMgrServerUrl}/network-mode`, { refreshInterval: 3000, fetcher: fetcher });
+  const { data: network, error: netError } = useSwr(`${commitMgrServerUrl}/network-mode`, fetcher);
   const { data: db, error: dbError } = useSwr(`${commitMgrServerUrl}/db-status`, fetcher);
   const { data: commitments, error: commitError } = useSwr(`${commitMgrServerUrl}/get-commiments`, { refreshInterval: 3000, fetcher: fetcher });
   

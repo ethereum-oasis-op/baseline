@@ -40,28 +40,18 @@ export default function Index() {
     
   }, [user, status, loading, isConnectedWallet]);
 
-  /*function updateContractShield(address) {
-    if (network.chainName === 'LOCAL'){
-      setContractShieldLocal(address);
-    } else {
-      setContractShieldLocal(address);
-      setContractShield(address);
-    }
-  }*/
-
-
   return (
     <>
-      <div className="flex flex-wrap" style={{minHeight: (network && network.chainId === "101010") ? '589px' : '150px'}}>
+      { network && network.chainName === 'LOCAL' ? <div className="flex flex-wrap" style={{minHeight: (network && network.chainId === "101010") ? '389px' : '150px'}}>
         <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
           <CardContracts title="Contracts [ Besu / Ganache Local ]" network="local" contractShield={contractShieldLocal} setContractShield={setContractShieldLocal}/>
         </div>
         <div className="w-full xl:w-4/12 px-4">
           <CardTree title="[DB] Local" contractShield={contractShieldLocal} network="local" />
         </div>        
-      </div>
+      </div> : '' }
 
-      { network && network.chainId !== "101010" ? <div className="flex flex-wrap" style={{minHeight: (network && network.chainId !== "101010" && !contractShieldLocal) ? '589px' : '150px'}}>
+      { network && network.chainId !== "101010" ? <div className="flex flex-wrap" style={{minHeight: (network && network.chainId !== "101010" && !contractShieldLocal) ? '389px' : '150px' }}>
         <div className="w-full xl:w-8/12 mb-12 xl:mb-0 px-4">
           <CardContracts title={`Contracts Infura [ ${network.chainName} ]`} network={network ? network.chainName.toLowerCase() : 'goerli'} walletAddress={network ? network.walletAddress : ''} setContractShield={setContractShield} />
         </div>
@@ -71,9 +61,12 @@ export default function Index() {
       </div> : '' }
       
       <div className="flex flex-wrap">
-        <div className="w-full mb-3 px-4">
-          {process.env.NODE_ENV === 'production' ? <Iframe source={'./baseline-commit-mgr-tests-report.html'} /> : ''}
+        <div className="w-full mb-12 xl:mb-24 px-3">
+          {process.env.NODE_ENV === 'development' ? <Iframe source={'./baseline-commit-mgr-tests-report.html'} /> : ''}
         </div>
+        <div className="w-full mb-12 xl:mb-12 px-3">
+          {process.env.NODE_ENV === 'development' ? <Iframe source={'./baseline-dashboard-tests-report.html'} /> : ''}
+        </div>        
       </div>
     </>
   );

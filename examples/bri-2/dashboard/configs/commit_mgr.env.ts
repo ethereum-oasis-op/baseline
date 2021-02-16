@@ -1,16 +1,12 @@
-//import * as dotenv from 'dotenv';
 import * as path from 'path';
 import { readFileSync } from 'fs';
 // Include envfile
 import { parse, stringify } from 'envfile';
 
-//dotenv.config();
 
 export const commitMgrServerUrl = 'http://localhost:4001';
 
 export default function commitMgrEnv() {
-
-    //console.log(path.join(process.cwd(), '../','.env.localdev'))
 
     const fileEnvLocal: any = readFileSync(path.join(process.cwd(), '../', '.env.localdev'), 'utf-8');
     const fileEnvLive: any = readFileSync(path.join(process.cwd(), '../', '.env.network'), 'utf-8');

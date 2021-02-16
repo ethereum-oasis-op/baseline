@@ -25,8 +25,8 @@
     "start:dashboard": "cd dashboard && npm run build && npm run start",
     "build:didserver": "sh ./dafinstall.sh",
     "start:didserver": "cd did && npm run start",
-    "start:prod": "pm2 start ecosystem.config.js --no-daemon",
-    "start:dev": "cp .env.localdev commit-mgr/.env && nodemon --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all -p -r dev:dashboard start:didserver start:commit-mgr ",
+    "start:prod": "pm2 start ecosystem.config.js --env production --no-daemon",
+    "start:dev": "cp .env.localdev commit-mgr/.env && nodemon --watch .env --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all -p -r dev:dashboard start:didserver start:commit-mgr",
     "contracts:clean": "rm -rf ./contracts/artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",
     "contracts:compile": "cd node_modules/@baseline-protocol/contracts && npm install && make && cd - && mkdir -p ./contracts/artifacts && cp -R ./node_modules/@baseline-protocol/contracts/artifacts ./contracts"
   },

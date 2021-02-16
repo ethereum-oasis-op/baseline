@@ -81,8 +81,6 @@ npm run start:prod
 - Login using your metamask wallet account
 - Go Settings -> fill "infura id" and wallet private key fields -> Save
 
->*Switch network feature only fully works under production enviroment*
-
 ![Save settings](./docs/save-settings.jpg)
 
 # Video Demo
