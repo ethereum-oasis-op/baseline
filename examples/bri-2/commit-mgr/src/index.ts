@@ -192,7 +192,7 @@ const main = async () => {
   /*var whitelist = ['http://localhost:3000', 'http://localhost:4001']
   var corsOptions = {
     origin: function (origin, callback) {
-    8  if (whitelist.indexOf(origin) !== -1) {
+      if (whitelist.indexOf(origin) !== -1) {
         callback(null, true)
       } else {
         callback(new Error('Not allowed by CORS'))
@@ -265,21 +265,8 @@ const main = async () => {
     res.send(result || {});
   });
 
-  /*app.get('/shell', async (req: any, res: any) => {
 
-    const execInfo = req.body;
-
-    if (!execInfo) {
-      logger.error("No  command to execute...");
-      return false;
-    }
-    // const result = await didGenerateDidConfiguration('autotoyz.open4g.com');
-    // const result = await didGenerateDidConfiguration('{}');
-    const result = await didVerifyWellKnownDidConfiguration('tailwindpower.netlify.app');
-
-    res.send(result || {});
-  });*/
-
+  // api for switch network
   app.post('/switch-chain', async (req: any, res: any) => {
 
     const execInfo = req.body;
@@ -288,8 +275,7 @@ const main = async () => {
       logger.error("No  command to execute...");
       return false;
     }
-    // const result = await didGenerateDidConfiguration('autotoyz.open4g.com');
-    // const result = await didGenerateDidConfiguration('{}');
+
     const result = await switchChain(execInfo.network);
 
     res.send(result || {});
@@ -308,6 +294,7 @@ const main = async () => {
   });
 
 
+  // api for generate a daf/did for a domain
   app.post('/did-generate', async (req: any, res: any) => {
 
     const execInfo = req.body;
@@ -322,6 +309,7 @@ const main = async () => {
   });
 
 
+  // api for create did identity for a domain
   app.post('/did-create-identity', async (req: any, res: any) => {
 
     const execInfo = req.body ? req.body : '{}';
@@ -336,6 +324,7 @@ const main = async () => {
   });
 
 
+  // api for verify existent valid daf/did for a domain
   app.post('/did-verify', async (req: any, res: any) => {
 
     const execInfo = req.body;
@@ -350,6 +339,7 @@ const main = async () => {
   });
 
 
+  // api for add phonebook entries to database
   app.post('/add-phonebook', async (req: any, res: any) => {
 
     const entryInfo = req.body;
@@ -403,8 +393,8 @@ const main = async () => {
   });
 
 
-  // api for get merkle data from database
-  app.get("/remove-phonebook/:entryId", async (req: any, res: any) => {
+  // api for remove phonebook entries from database
+  app.post("/remove-phonebook/:entryId", async (req: any, res: any) => {
     await phonebookBaseline.deleteOne({_id: req.params.entryId}, (err: any, data: any) => {
               if (err) {
                   res.send(err);
@@ -415,7 +405,7 @@ const main = async () => {
   });
 
 
-  // api for get merkle data from database
+  // api for get phonebook entries from database
   app.get("/get-phonebook", async (req: any, res: any) => {
     await phonebookBaseline.find({}, (err: any, data: any) => {
               if (err) {
@@ -427,7 +417,7 @@ const main = async () => {
   });
 
 
-  // api for get merkle data from database
+  // api for get merkle tree data from database
   app.get("/getmerkletrees", async (req: any, res: any) => {
     await merkleTrees.find({}, (err: any, data: any) => {
               if (err) {
@@ -439,6 +429,7 @@ const main = async () => {
   });
 
 
+  // api for get merkle tree data by contract address from database
   app.get("/getmerkletree/:addressId", async (req: any, res: any) => {
     await merkleTrees.findOne({_id: req.params.addressId}, (err: any, data: any) => {
               if (err) {
@@ -500,7 +491,7 @@ const main = async () => {
   });
 
 
-  // api for get contracts data from database
+  // api for get all contracts data from database
   app.get("/contracts-available", async (req: any, res: any) => {
     await contractBaseline.find({}, (err: any, data: any) => {
               if (err) {
@@ -511,7 +502,7 @@ const main = async () => {
           });
   });
 
-  // api for get contracts data from database
+  // api for get local network contracts data from database
   app.get("/contracts-local", async (req: any, res: any) => {
     await contractBaseline.find({network: 'local'}, (err: any, data: any) => {
               if (err) {
@@ -522,7 +513,7 @@ const main = async () => {
           });
   });
 
-          // api for get contracts data from database
+  // api for get contracts data by network from database
   app.get("/contracts/:networkId", async (req: any, res: any) => {
     await contractBaseline.find({network: req.params.networkId}, (err: any, data: any) => {
               if (err) {
@@ -534,6 +525,7 @@ const main = async () => {
   });
 
 
+  // api for send a commitment to a shield contract
   app.post("/send-commit", async (req: any, res: any, next: any) => {
 
     const deployInfo = req.body;

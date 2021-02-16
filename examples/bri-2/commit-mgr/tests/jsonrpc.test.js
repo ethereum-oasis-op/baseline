@@ -1,8 +1,10 @@
 const request = require("supertest");
 const { ethers } = require("ethers");
 const mongoose = require('mongoose');
+const path = require("path");
 const dotenv = require("dotenv");
-dotenv.config();
+
+dotenv.config({path: path.resolve(__dirname, "../../.env.localdev")});
 
 const { web3provider, wallet, txManager, waitRelayTx, deposit, getBalance } = require("./utils.js");
 const shieldContract = require("../../contracts/artifacts/Shield.json");

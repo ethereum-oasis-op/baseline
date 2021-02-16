@@ -36,50 +36,46 @@ The purple/orange blocks in the following diagram have been built. The green blo
 ### 1. Clone Repo
 
 ```sh
-git clone https://github.com/sekmet/Baseline-Chain-Dashboard.git
+git clone https://github.com/ethereum-oasis/baseline.git
 ```
 
-### 2. Install packages and dependencies
+### 2. Install packages and dependencies + Build
 
 ```sh
-cd Baseline-Chain-Dashboard
+cd baseline/examples/bri-2
 ```
-
-```sh
-npm install
-```
-![Install packages and dependencies](./docs/install.gif)
-
-### 3. Build
 
 ```sh
 npm run build:all
 ```
-![Build](./docs/build.gif)
+[![Install packages and dependencies](https://asciinema.org/a/391633.svg)](https://asciinema.org/a/391633)
 
-### 4. Run development enviroment
-
-```sh
-npm run up:besu
-```
+### 3. Run development enviroment
 
 ```sh
-npm run dev
+npm run start:dev
 ```
-![Run development enviroment](./docs/run-dev.gif)
+[![Run development enviroment](https://asciinema.org/a/391634.svg)](https://asciinema.org/a/391634)
 
 ### Or production enviroment
 
+*Install pm2*
 ```sh
 npm install -g pm2
 ```
 
+*You will need rebuild the dashboard if you started the development enviroment previously*
 ```sh
-npm run prod
+npm run build:dashboard
 ```
 
+```sh
+npm run start:prod
+```
+[![Run production enviroment](https://asciinema.org/a/391640.svg)](https://asciinema.org/a/391640)
 
-# 5. Setup and Settings
+
+# 4. Setup and Settings
 
 - Open [http://localhost:3000](http://localhost:3000) in your browser
 - Login using your metamask wallet account
@@ -91,26 +87,26 @@ npm run prod
 
 # Video Demo
 
-[![Baseline Dashboard Demo](https://img.youtube.com/vi/Nm9v373pL0s/maxresdefault.jpg)](https://youtu.be/Nm9v373pL0s)
+[![Baseline Dashboard Demo](https://img.youtube.com/vi/wIyu6ptO0Q0/maxresdefault.jpg)](https://youtu.be/wIyu6ptO0Q0)
 
 
 # Screenshots
 
-![Login Page](./docs/baseline_dashboard_login.png)
+![Login Page](./docs/baseline_dashboard_login.jpg)
 
-![Dashboard](./docs/baseline_dashboard_1.png)
+![Dashboard](./docs/baseline_dashboard_1.jpg)
 
-![Dashboard](./docs/baseline_dashboard_2.png)
+![Dashboard](./docs/baseline_dashboard_2.jpg)
 
-![Dashboard](./docs/baseline_dashboard_3.png)
+![Dashboard](./docs/baseline_dashboard_3.jpg)
 
-![Switch Network](./docs/baseline_dashboard_switch_network.png)
+![Switch Network](./docs/baseline_dashboard_switch_network.jpg)
 
-![Baseline DID Generator](./docs/baseline_didgenerator.png)
+![Baseline DID Generator](./docs/baseline_didgenerator.jpg)
 
-![Baseline Basic Phonebook](./docs/baseline_phonebook.png)
+![Baseline Basic Phonebook](./docs/baseline_phonebook.jpg)
 
-![Commit-mgr Settings](./docs/baseline_dashboard_settings.png)
+![Commit-mgr Settings](./docs/baseline_dashboard_settings.jpg)
 
 
 # Contracts [GOERLI TEST NET]
@@ -159,3 +155,5 @@ npm run prod
 [X] dashboard UI moved to ./bri-2 folder
 
 [X] DID service moved to ./bri-2 folder
+
+[X] Unit tests added

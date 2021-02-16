@@ -48,7 +48,7 @@ const getEthClientInfo = (ethClientType, chainId, infuraId) => {
   // get chain information to connect
   const chain_info = get_chain_id_info(chainId);
 
-  console.log("chain_inf  ", chain_info, ethClientType)
+  //console.log("chain_inf  ", chain_info, ethClientType)
 
   let eth_client_ws;
   let eth_client_http;

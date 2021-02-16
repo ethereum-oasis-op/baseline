@@ -68,12 +68,13 @@ export default function Index() {
         <div className="w-full xl:w-4/12 px-4">
           <CardTree title="[DB] Infura" contractShield={contractShield} walletAddress={network ? network.walletAddress : ''} network={network ? network.chainName.toLowerCase() : 'goerli'} />
         </div>
-
-      <div className="w-full mb-3 px-4">
-        {process.env.NODE_ENV === 'production' ? <Iframe source={'./baseline-commit-mgr-tests-report.html'} /> : ''}
-      </div>
-
       </div> : '' }
+      
+      <div className="flex flex-wrap">
+        <div className="w-full mb-3 px-4">
+          {process.env.NODE_ENV === 'production' ? <Iframe source={'./baseline-commit-mgr-tests-report.html'} /> : ''}
+        </div>
+      </div>
     </>
   );
 }

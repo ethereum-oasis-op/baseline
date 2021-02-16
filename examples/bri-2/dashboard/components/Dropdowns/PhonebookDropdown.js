@@ -6,7 +6,7 @@ import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
 
 const removeEntry = async (entryId) => {
 
-  return await axios.get(`${commitMgrServerUrl}/remove-phonebook/${entryId}`)
+  return await axios.post(`${commitMgrServerUrl}/remove-phonebook/${entryId}`)
     .then((response) => {
         //access the resp here....
         console.log(`Status Phonebook : ${response.data.ok}`);

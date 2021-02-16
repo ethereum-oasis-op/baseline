@@ -1,0 +1,232 @@
+<html><head><meta charset="utf-8"/><title>[bri-2] Baseline Dashboard Tests</title><style type="text/css">html,
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+body {
+  padding: 2rem 1rem;
+  font-size: 0.85rem;
+}
+#jesthtml-content {
+  margin: 0 auto;
+  max-width: 70rem;
+}
+header {
+  display: flex;
+  align-items: center;
+}
+#title {
+  margin: 0;
+  flex-grow: 1;
+}
+#logo {
+  height: 4rem;
+}
+#timestamp {
+  color: #777;
+  margin-top: 0.5rem;
+}
+
+/** SUMMARY */
+#summary {
+  color: #333;
+  margin: 2rem 0;
+  display: flex;
+  font-family: monospace;
+  font-size: 1rem;
+}
+#summary > div {
+  margin-right: 2rem;
+  background: #eee;
+  padding: 1rem;
+  min-width: 15rem;
+}
+#summary > div:last-child {
+  margin-right: 0;
+}
+@media only screen and (max-width: 720px) {
+  #summary {
+    flex-direction: column;
+  }
+  #summary > div {
+    margin-right: 0;
+    margin-top: 2rem;
+  }
+  #summary > div:first-child {
+    margin-top: 0;
+  }
+}
+
+.summary-total {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+.summary-passed {
+  color: #4f8a10;
+  border-left: 0.4rem solid #4f8a10;
+  padding-left: 0.5rem;
+}
+.summary-failed,
+.summary-obsolete-snapshots {
+  color: #d8000c;
+  border-left: 0.4rem solid #d8000c;
+  padding-left: 0.5rem;
+}
+.summary-pending {
+  color: #9f6000;
+  border-left: 0.4rem solid #9f6000;
+  padding-left: 0.5rem;
+}
+.summary-empty {
+  color: #999;
+  border-left: 0.4rem solid #999;
+}
+
+.test-result {
+  padding: 1rem;
+  margin-bottom: 0.25rem;
+}
+.test-result:last-child {
+  border: 0;
+}
+.test-result.passed {
+  background-color: #dff2bf;
+  color: #4f8a10;
+}
+.test-result.failed {
+  background-color: #ffbaba;
+  color: #d8000c;
+}
+.test-result.pending {
+  background-color: #ffdf61;
+  color: #9f6000;
+}
+
+.test-info {
+  display: flex;
+  justify-content: space-between;
+}
+.test-suitename {
+  width: 20%;
+  text-align: left;
+  font-weight: bold;
+  word-break: break-word;
+}
+.test-title {
+  width: 40%;
+  text-align: left;
+  font-style: italic;
+}
+.test-status {
+  width: 20%;
+  text-align: right;
+}
+.test-duration {
+  width: 10%;
+  text-align: right;
+  font-size: 0.75rem;
+}
+
+.failureMessages {
+  padding: 0 1rem;
+  margin-top: 1rem;
+  border-top: 1px dashed #d8000c;
+}
+.failureMessages.suiteFailure {
+  border-top: none;
+}
+.failureMsg {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
+.suite-container {
+  margin-bottom: 2rem;
+}
+.suite-info {
+  padding: 1rem;
+  background-color: #eee;
+  color: #777;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+.suite-info .suite-path {
+  word-break: break-all;
+  flex-grow: 1;
+  font-family: monospace;
+  font-size: 1rem;
+}
+.suite-info .suite-time {
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.3rem;
+  font-size: 0.75rem;
+}
+.suite-info .suite-time.warn {
+  background-color: #d8000c;
+  color: #fff;
+}
+
+/* CONSOLE LOGS */
+.suite-consolelog {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: #efefef;
+}
+.suite-consolelog-header {
+  font-weight: bold;
+}
+.suite-consolelog-item {
+  padding: 0.5rem;
+}
+.suite-consolelog-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-consolelog-item-origin {
+  color: #777;
+  font-weight: bold;
+}
+.suite-consolelog-item-message {
+  color: #000;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+
+/* OBSOLETE SNAPSHOTS */
+.suite-obsolete-snapshots {
+  margin-bottom: 0.25rem;
+  padding: 1rem;
+  background-color: #ffbaba;
+  color: #d8000c;
+}
+.suite-obsolete-snapshots-header {
+  font-weight: bold;
+}
+.suite-obsolete-snapshots-item {
+  padding: 0.5rem;
+}
+.suite-obsolete-snapshots-item pre {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+.suite-obsolete-snapshots-item-message {
+  color: #000;
+  font-size: 1rem;
+  padding: 0 0.5rem;
+}
+</style></head><body><div id="jesthtml-content"><header><h1 id="title">[bri-2] Baseline Dashboard Tests</h1></header><div id="metadata-container"><div id="timestamp">Started: 2021-02-16 10:44:07</div><div id="summary"><div id="suite-summary"><div class="summary-total">Suites (1)</div><div class="summary-passed">1 passed</div><div class="summary-failed summary-empty">0 failed</div><div class="summary-pending summary-empty">0 pending</div></div><div id="test-summary"><div class="summary-total">Tests (23)</div><div class="summary-passed">23 passed</div><div class="summary-failed summary-empty">0 failed</div><div class="summary-pending summary-empty">0 pending</div></div></div></div><div id="suite-1" class="suite-container"><div class="suite-info"><div class="suite-path">/home/sekmet/DEVELOPMENT/baseline/examples/bri-2/dashboard/tests/restapi.test.js</div><div class="suite-time warn">101.751s</div></div><div class="suite-tests"><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check status and connectivity</div><div class="test-title">Dashboard GET /status returns 200</div><div class="test-status">passed</div><div class="test-duration">0.077s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check status and connectivity</div><div class="test-title">GET /db-status returns connected db params</div><div class="test-status">passed</div><div class="test-duration">0.019s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check status and connectivity</div><div class="test-title">GET /network-mode returns connected network chain info</div><div class="test-status">passed</div><div class="test-duration">0.01s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Deploy contracts and save info into database</div><div class="test-title">POST /deploy-contracts from rest-api</div><div class="test-status">passed</div><div class="test-duration">12.626s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check querying contracts data from database</div><div class="test-title">GET /contracts-available returns all contracts data from database</div><div class="test-status">passed</div><div class="test-duration">0.017s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check querying contracts data from database</div><div class="test-title">GET /contracts-local returns local network contracts data from database</div><div class="test-status">passed</div><div class="test-duration">0.019s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check querying contracts data from database</div><div class="test-title">GET /contracts/:networkId returns contracts data by network from database</div><div class="test-status">passed</div><div class="test-duration">0.014s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Send commitment to Shield contract and save info into database</div><div class="test-title">POST /send-commit to a shield contract</div><div class="test-status">passed</div><div class="test-duration">0.091s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check querying commitment and merkle tree data from database</div><div class="test-title">GET /get-commitments returns commitments data from database</div><div class="test-status">passed</div><div class="test-duration">0.013s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check querying commitment and merkle tree data from database</div><div class="test-title">GET /getmerkletrees returns merkle tree data from database</div><div class="test-status">passed</div><div class="test-duration">0.016s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check querying commitment and merkle tree data from database</div><div class="test-title">GET /getmerkletree/:addressId returns merkle tree data by contract address from database</div><div class="test-status">passed</div><div class="test-duration">0.012s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check DID generator / verifier</div><div class="test-title">POST /did-verify returns existent valid DID for a domain</div><div class="test-status">passed</div><div class="test-duration">4.085s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check DID generator / verifier</div><div class="test-title">POST /did-verify return non-valid DID</div><div class="test-status">passed</div><div class="test-duration">3.147s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check DID generator / verifier</div><div class="test-title">POST /did-create-identity return valid DID identity</div><div class="test-status">passed</div><div class="test-duration">3.282s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check DID generator / verifier</div><div class="test-title">POST /did-generate return valid DID configuration for a domain</div><div class="test-status">passed</div><div class="test-duration">3.081s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Verify with success and add a phonebook entry into database</div><div class="test-title">POST /add-phonebook returns existent valid DID for a domain</div><div class="test-status">passed</div><div class="test-duration">4.07s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Verify and return a error trying add a phonebook entry</div><div class="test-title">POST /add-phonebook return non-valid DID [404 error]</div><div class="test-status">passed</div><div class="test-duration">3.079s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Check querying phonebook data from database</div><div class="test-title">GET /get-phonebook returns phonebook entries from database</div><div class="test-status">passed</div><div class="test-duration">0.023s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Delete a phonebook entry from database</div><div class="test-title">POST /remove-phonebook/:entryId returns ok=1</div><div class="test-status">passed</div><div class="test-duration">0.013s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Delete contracts, commitments and merkle tree entries from database</div><div class="test-title">POST /reset-contracts returns ok=1</div><div class="test-status">passed</div><div class="test-duration">0.02s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Save application settings to enviroment variables</div><div class="test-title">POST /save-settings return 200</div><div class="test-status">passed</div><div class="test-duration">0.012s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Switch chain network</div><div class="test-title">POST /switch-chain to GOERLI return true</div><div class="test-status">passed</div><div class="test-duration">33.159s</div></div></div><div class="test-result passed"><div class="test-info"><div class="test-suitename">Switch chain network</div><div class="test-title">POST /switch-chain back to LOCAL return true</div><div class="test-status">passed</div><div class="test-duration">33.149s</div></div></div></div></div></div></body></html>

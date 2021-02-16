@@ -60,6 +60,7 @@ typings/
 .env
 
 # Compiled Solidity contract artifacts (i.e. abi, bytecode)
+constracts/
 artifacts/
 
 build/
