@@ -97,6 +97,26 @@ services:
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
+  alice-did-agent:
+    image: provide/serto-demo-did-agent
+    container_name: alice-did-agent
+    environment:
+      - BASELINE_MESSAGING_ENDPOINT=nats://alice-nats:4222
+      - PORT=8090
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8090"]
+      interval: 1m
+      timeout: 1s
+      retries: 2
+      start_period: 10s
+    hostname: alice-did-agent
+    networks:
+      - alice
+      - bob
+    ports:
+      - 8090:8090
+    restart: always
+
   alice-ident:
     image: provide/ident
     container_name: alice-ident
@@ -511,6 +531,26 @@ services:
     restart: always
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
+
+  bob-did-agent:
+    image: provide/serto-demo-did-agent
+    container_name: bob-did-agent
+    environment:
+      - BASELINE_MESSAGING_ENDPOINT=nats://bob-nats:4222
+      - PORT=8091
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8091"]
+      interval: 1m
+      timeout: 1s
+      retries: 2
+      start_period: 10s
+    hostname: bob-did-agent
+    networks:
+      - alice
+      - bob
+    ports:
+      - 8091:8091
+    restart: always
 
   bob-ident:
     image: provide/ident
