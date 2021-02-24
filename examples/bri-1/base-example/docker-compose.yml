@@ -109,7 +109,7 @@ services:
       timeout: 1s
       retries: 2
       start_period: 10s
-    hostname: alice-did-agent
+    hostname: alice-domain
     networks:
       - alice
       - bob
@@ -564,7 +564,7 @@ services:
       timeout: 1s
       retries: 2
       start_period: 10s
-    hostname: bob-did-agent
+    hostname: bob-domain
     networks:
       - alice
       - bob

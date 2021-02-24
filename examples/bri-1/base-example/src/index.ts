@@ -10,6 +10,8 @@ import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
+import { DIDConfigurationPlugin, IWKDidConfigVerification } from 'veramo-plugin-did-config';
+import { agent } from './agent';
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
@@ -21,11 +23,11 @@ class TryError extends Error {
 }
 
 const tryTimes = async <T>(prom: () => Promise<T>, times: number = 80, wait: number = 9400): Promise<T> => {
-  const errors : any[] = [];
+  const errors: any[] = [];
   for (let index = 0; index < times; index++) {
     try {
       return await prom()
-    } catch (err) { 
+    } catch (err) {
       errors.push(err);
     }
     await sleep(wait);
@@ -257,7 +259,7 @@ export class ParticipantStack {
       circuit.proving_scheme = circuit.provingScheme;
       circuit.verifier_contract = circuit.verifierContract;
       delete circuit.verifierContract;
-      delete circuit.createdAt; 
+      delete circuit.createdAt;
       delete circuit.vaultId;
       delete circuit.provingScheme;
       delete circuit.provingKeyId;
@@ -417,7 +419,28 @@ export class ParticipantStack {
       return Promise.reject(`organization not resolved: ${addr}`);
     }
 
-    const messagingEndpoint = org['config'].messaging_endpoint;
+    const domain = org.metadata.domain;
+    // Resolving the DID configuration from the organization domain
+    const didConfigRes: IWKDidConfigVerification = await agent.verifyWellKnownDidConfiguration({ domain });
+
+    // Resolving each DID looking for Baseline endpoints
+    let baselineEndpoint;
+    for (var did of didConfigRes.dids) {
+      const didDoc = await agent.resolveDid({ didUrl: did });
+      for (var service of didDoc.services) {
+        if (service.type.toLowerCase() === "baseline") {
+          // Found a Baseline endpoint
+          baselineEndpoint = service.serviceEndpoint;
+          break;
+        }
+      }
+      if (baselineEndpoint) break;
+    }
+
+    if (!baselineEndpoint) throw "No Baseline endpoint found in the DID from the organization domain: " + domain;
+
+    // const messagingEndpoint = org['config'].messaging_endpoint;
+    const messagingEndpoint = baselineEndpoint;
     if (!messagingEndpoint) {
       return Promise.reject(`organization messaging endpoint not resolved for recipient: ${addr}`);
     }
@@ -888,6 +911,7 @@ export class ParticipantStack {
       name: name,
       metadata: {
         messaging_endpoint: messagingEndpoint,
+        domain: `${name.split(" ")[0].toLowerCase()}-domain` // TODO Make it better later
       },
     });
 

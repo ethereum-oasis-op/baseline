@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@veramo/did-resolver": "^1.1.0"
+  }
+}
