@@ -419,7 +419,7 @@ export class ParticipantStack {
       return Promise.reject(`organization not resolved: ${addr}`);
     }
 
-    const domain = org.metadata.domain;
+    const domain = org.metadata?.domain;
     // Resolving the DID configuration from the organization domain
     const didConfigRes: IWKDidConfigVerification = await agent.verifyWellKnownDidConfiguration({ domain });
 
