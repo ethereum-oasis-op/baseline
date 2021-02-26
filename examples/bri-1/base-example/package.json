@@ -40,7 +40,7 @@
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "8.5.1",
     "loglevel": "^1.6.8",
-    "provide-js": "^1.5.8",
+    "provide-js": "^1.5.10",
     "solc": "^0.7.0",
     "veramo-plugin-did-config": "^1.0.3",
     "web-did-resolver": "^1.3.5",
