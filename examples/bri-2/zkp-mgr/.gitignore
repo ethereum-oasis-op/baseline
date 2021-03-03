@@ -5,8 +5,12 @@ logs
 # dotenv environment variables file
 .env
 
-# Circuit source code
-circuits/src
-
 # Compiled circuits
-circuits/output
+src/circuits/compiled/*
+
+# Circuit source code
+src/circuits/uncompiled/*
+
+# Temp circuit files
+src/circuits/circuit.go
+src/circuits/circuit.r1cs
