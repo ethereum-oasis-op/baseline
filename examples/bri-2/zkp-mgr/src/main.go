@@ -16,6 +16,7 @@ import (
 	"github.com/consensys/gnark/backend/r1cs"
 	"github.com/consensys/gurvy"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	nats "github.com/nats-io/nats.go"
 	"github.com/pborman/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -24,21 +25,18 @@ import (
 
 // ZKCircuit : Schema for mongoDb
 type ZKCircuit struct {
-	ID           string    `bson:"_id" json:"_id"`
-	Name         string    `json:"name"`
-	CurveID      gurvy.ID  `form:"curveID" json:"curveID" xml:"curveID"  binding:"required"`
-	R1CS         r1cs.R1CS `form:"r1cs" json:"r1cs" xml:"r1cs"  binding:"required"`
-	ProvingKey   []byte    `bson:"provingKey" json:"provingKey" xml:"provingKey"`
-	VerifyingKey []byte    `bson:"verifyingKey" json:"verifyingKey" xml:"verifyingKey"`
-	Status       string    `bson:"status" json:"status" form:"status"`
+	ID           string   `bson:"_id" json:"_id"`
+	Name         string   `bson:"name" json:"name"`
+	CurveID      gurvy.ID `bson:"curveId" json:"curveId" binding:"required"`
+	ProvingKey   []byte   `bson:"provingKey" json:"provingKey"`
+	VerifyingKey []byte   `bson:"verifyingKey" json:"verifyingKey"`
+	Status       string   `bson:"status" json:"status" form:"status"`
 }
 
 type createCircuitReq struct {
-	Name       string                `form:"name" json:"name" xml:"name"  binding:"required"`
-	ID         string                `bson:"_id" json:"_id"`
-	SourceCode *multipart.FileHeader `form:"sourceCode" json:"sourceCode" xml:"sourceCode"`
-	CurveID    gurvy.ID              `form:"curveID" json:"curveID" xml:"curveID"`
-	Status     string                `form:"status" json:"status"`
+	Name       string                `form:"name" json:"name" binding:"required"`
+	SourceCode *multipart.FileHeader `form:"sourceCode" json:"sourceCode"`
+	CurveID    gurvy.ID              `form:"curveId" json:"curveId"`
 }
 
 var dbClient *mongo.Client
@@ -55,6 +53,11 @@ const zkCircuitCollection = "zk-circuits"
 /******************************************************/
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file: " + err.Error())
+	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -81,14 +84,15 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/status", getStatus)
-	router.GET("/zkcircuits", getAllCircuits)
 	router.POST("/zkcircuits", createCircuit)
+	router.GET("/zkcircuits", getAllCircuits)
 	router.GET("/zkcircuits/:circuitID", getSingleCircuit)
 	router.POST("/zkcircuits/:circuitID/setup", setup)
 	router.POST("/zkcircuits/:circuitID/prove", prove)
 	router.POST("/zkcircuits/:circuitID/verify", verify)
 
-	router.Run(":8080")
+	serverPort := os.Getenv("SERVER_PORT")
+	router.Run(":" + serverPort)
 }
 
 /******************************************************/
@@ -101,8 +105,8 @@ func compileCircuits() {
 		log.Println("Starting compilation for circuit: ", circuitID)
 
 		// Copy source code into circuits/circuit.go
-		sourceFile := "circuits/src/" + circuitID + ".go"
-		destinationFile := "circuits/circuit.go"
+		sourceFile := "src/circuits/uncompiled/" + circuitID + ".go"
+		destinationFile := "src/circuits/circuit.go"
 
 		input, err := ioutil.ReadFile(sourceFile)
 		if err != nil {
@@ -116,15 +120,15 @@ func compileCircuits() {
 
 		// Compile and create circuit.r1cs file
 		cmd := exec.Command("go", "run", ".")
-		cmd.Dir = "circuits"
+		cmd.Dir = "src/circuits"
 		_, err = cmd.Output()
 		if err != nil {
 			log.Fatal("Error: " + err.Error())
 		}
 
-		// Copy circuit.r1cs into circuits/output/<circuitID>.r1cs
-		sourceFile = "circuits/circuit.r1cs"
-		destinationFile = "circuits/output/" + circuitID + ".r1cs"
+		// Copy circuit.r1cs into circuits/compiled/<circuitID>.r1cs
+		sourceFile = "src/circuits/circuit.r1cs"
+		destinationFile = "src/circuits/compiled/" + circuitID + ".r1cs"
 
 		input, err = ioutil.ReadFile(sourceFile)
 		if err != nil {
@@ -164,7 +168,7 @@ func setupCircuits() {
 		filter := bson.M{"_id": circuitID}
 
 		// Create reader for r1cs file
-		path := "circuits/output/" + circuitID + ".r1cs"
+		path := "src/circuits/compiled/" + circuitID + ".r1cs"
 		var r io.Reader
 		r, err := os.Open(path)
 		if err != nil {
@@ -267,6 +271,8 @@ func getAllCircuits(c *gin.Context) {
 
 func createCircuit(c *gin.Context) {
 	var requestBody createCircuitReq
+	var zkCircuitDoc ZKCircuit
+
 	err := c.ShouldBind(&requestBody)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -277,8 +283,13 @@ func createCircuit(c *gin.Context) {
 
 	// Create new uuid v4
 	id := uuid.NewRandom().String()
-	requestBody.ID = id
-	requestBody.Status = "created"
+	zkCircuitDoc.ID = id
+	zkCircuitDoc.Name = requestBody.Name
+	zkCircuitDoc.Status = "created"
+	zkCircuitDoc.CurveID = gurvy.BN256 // default curveId is BN256 for now
+	if requestBody.CurveID != 0 {
+		zkCircuitDoc.CurveID = requestBody.CurveID
+	}
 
 	// Create temporary source file
 	file, err := c.FormFile("sourceCode")
@@ -289,7 +300,7 @@ func createCircuit(c *gin.Context) {
 		return
 	}
 
-	err = c.SaveUploadedFile(file, "circuits/src/"+id+".go")
+	err = c.SaveUploadedFile(file, "src/circuits/uncompiled/"+id+".go")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Could not save uploaded file:" + err.Error(),
@@ -302,7 +313,7 @@ func createCircuit(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	result, err := collection.InsertOne(ctx, requestBody)
+	result, err := collection.InsertOne(ctx, zkCircuitDoc)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Mongo InsertOne:" + err.Error(),
@@ -358,7 +369,7 @@ func prove(c *gin.Context) {
 	circuitID := c.Param("circuitID")
 
 	// Create reader for r1cs file
-	path := "circuits/output/" + circuitID + ".r1cs"
+	path := "src/circuits/compiled/" + circuitID + ".r1cs"
 	var r io.Reader
 	r, err = os.Open(path)
 	if err != nil {
@@ -415,6 +426,7 @@ func prove(c *gin.Context) {
 }
 
 func verify(c *gin.Context) {
+	// Witness only needs to contain public inputs here
 	type verifyProofReq struct {
 		Proof   []byte      `form:"proof" json:"proof" xml:"proof"  binding:"required"`
 		Witness interface{} `form:"witness" json:"witness" xml:"witness"  binding:"required"`
