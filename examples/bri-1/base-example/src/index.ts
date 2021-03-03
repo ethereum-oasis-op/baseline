@@ -153,13 +153,11 @@ export class ParticipantStack {
   }
 
   private async dispatchProtocolMessage(msg: ProtocolMessage): Promise<any> {
-    console.log('Received message:', msg);
     if (msg.opcode === Opcode.Baseline) {
       const vault = await this.requireVault();
       const workflowSignatories = 2;
 
       const payload = JSON.parse(msg.payload.toString());
-      console.log('Message payload:', payload);
       if (payload.doc) {
         if (!payload.sibling_path) {
           payload.sibling_path = [];
@@ -172,7 +170,6 @@ export class ParticipantStack {
         }
 
         if (payload.signatures.length === 0) {
-          console.log(`payload.signatures.length === 0 ${payload.signatures.length}`)
           // baseline this new document
           payload.result = await this.generateProof('preimage', JSON.parse(msg.payload.toString()));
           const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.result.proof.proof)).signature;
@@ -181,31 +178,27 @@ export class ParticipantStack {
             this.sendProtocolMessage(msg.sender, Opcode.Baseline, payload);
           });
         } else if (payload.signatures.length < workflowSignatories) {
-          console.log(`payload.signatures.length = ${payload.signatures.length}`)
-          console.log('workflowSignatories=', workflowSignatories)
-          if (payload.sibling_path && payload.sibling_path.length > 0) {
-            // perform off-chain verification to make sure this is a legal state transition
-            console.log('Performing off-chain verification')
-            const root = payload.sibling_path[0];
-            const verified = this.baseline?.verify(this.contracts['shield'].address, payload.leaf, root, payload.sibling_path);
-            if (!verified) {
-              console.log('WARNING-- off-chain verification of proposed state transition failed...');
-              this.workgroupCounterparties.forEach(async recipient => {
-                this.sendProtocolMessage(recipient, Opcode.Baseline, { err: 'verification failed' });
-              });
-              return Promise.reject('failed to verify');
+            if (payload.sibling_path && payload.sibling_path.length > 0) {
+              // perform off-chain verification to make sure this is a legal state transition
+              const root = payload.sibling_path[0];
+              const verified = this.baseline?.verify(this.contracts['shield'].address, payload.leaf, root, payload.sibling_path);
+              if (!verified) {
+                console.log('WARNING-- off-chain verification of proposed state transition failed...');
+                this.workgroupCounterparties.forEach(async recipient => {
+                  this.sendProtocolMessage(recipient, Opcode.Baseline, { err: 'verification failed' });
+                });
+                return Promise.reject('failed to verify');
+              }
             }
-          }
 
-          // sign state transition
-          const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.hash)).signature;
-          payload.signatures.push(signature);
-          this.workgroupCounterparties.forEach(async recipient => {
-            this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
-          });
+            // sign state transition
+            const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.hash)).signature;
+            payload.signatures.push(signature);
+            this.workgroupCounterparties.forEach(async recipient => {
+              this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
+            });
         } else {
           // create state transition commitment
-          console.log("Generating proof with 'modify_state'")
           payload.result = await this.generateProof('modify_state', JSON.parse(msg.payload.toString()));
           const publicInputs = []; // FIXME
           const value = ''; // FIXME
@@ -228,7 +221,7 @@ export class ParticipantStack {
             this.workgroupCounterparties.forEach(async recipient => {
               await this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
             });
-          } else {
+        } else {
             return Promise.reject('failed to insert leaf');
           }
         }
@@ -313,7 +306,7 @@ export class ParticipantStack {
     this.natsBearerTokens[messagingEndpoint] = invite.prvd.data.params.authorized_bearer_token;
     this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
 
-    await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => { });
+    await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => {});
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
     await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {

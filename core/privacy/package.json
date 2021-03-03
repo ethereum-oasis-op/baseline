@@ -23,7 +23,7 @@
     "hex-to-binary": "^1.0.1",
     "keccak": "^3.0.1",
     "provide-js": "^1.5.1",
-    "zokrates-js": "^1.0.27"
+    "zokrates-js": "^1.0.25"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.3.4",
