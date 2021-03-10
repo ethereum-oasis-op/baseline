@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { Alert } from "../Utils/Alert";
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
+export const commitMgrUrl = 'http://localhost:4001';
+export const workflowMgrUrl = 'http://localhost:5001';
 
 const get_chain_id_info = (chainId) => {
   /* # Chain ID */
@@ -138,8 +139,8 @@ export default class FormSettings extends React.Component {
             ETH_CLIENT_WS: EthClientWs,
             ETH_CLIENT_HTTP: EthClientHttp ,
             CHAIN_ID: ChainId,
-            WALLET_PRIVATE_KEY: WalletPrivateKey,
-            WALLET_PUBLIC_KEY: WalletPublicKey,
+            WALLET_PRIVATE_KEY: WalletPrivateKey ? WalletPrivateKey : "",
+            WALLET_PUBLIC_KEY: WalletPublicKey ? WalletPublicKey : "",
             LOCAL_ETH_CLIENT_TYPE: LocalEthClientType ? LocalEthClientType : "besu",
             LOCAL_ETH_CLIENT_WS: LocalEthClientType === "besu" ? "http://localhost:8546" : "http://localhost:8545",
             LOCAL_ETH_CLIENT_HTTP: "http://localhost:8545",
@@ -155,23 +156,12 @@ export default class FormSettings extends React.Component {
 
     componentDidMount(){
         
-        const data = axios.get(`${commitMgrServerUrl}/network-mode`)
+        const data = axios.get(`${commitMgrUrl}/status`)
 
-        data.then((network) => {
-        
-            //console.log(network.data, this.props.wallet)
-            
+        data.then((blockchain) => {
             if (this.props.wallet.chainId !== this.state.CHAIN_ID){
                 this.setState({CHAIN_ID: parseInt(this.props.wallet.chainId, 10)})
-                //console.log({CHAIN_ID: parseInt(this.props.wallet.chainId, 10)})
             }
-
-            if (this.props.wallet.account !== this.state.WALLET_PUBLIC_KEY){
-                this.setState({WALLET_PUBLIC_KEY: this.props.wallet.account})
-                this.setState({WALLET_PRIVATE_KEY: ''})
-                //console.log({WALLET_PUBLIC_KEY: this.props.wallet.account})
-            }
-
         });
     }
 
@@ -215,7 +205,7 @@ export default class FormSettings extends React.Component {
         const { ws_provider, http_provider } = clientConfig;
         console.log('clientConfig   ', clientConfig)
 
-        axios.post(`${commitMgrServerUrl}/save-settings`, {
+        axios.post(`${commitMgrUrl}/settings`, {
             DATABASE_USER: DATABASE_USER,
             DATABASE_NAME: DATABASE_NAME,
             DATABASE_PASSWORD: DATABASE_PASSWORD, 

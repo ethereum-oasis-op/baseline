@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Alert } from "../Utils/Alert";
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
+import { commitMgrUrl } from "../Forms/FormSettings.js";
 
 function CheckIsValidDomain(domain) { 
   var re = new RegExp(/^((?:(?:(?:\w[\.\-\+]?)*)\w)+)((?:(?:(?:\w[\.\-\+]?){0,62})\w)+)\.(\w{2,6})$/); 
@@ -44,7 +44,7 @@ export default class CardCreateIdentity extends React.Component {
     if (CheckIsValidDomain(this.state.domainname)){
       this.setState({canSubmit: true, hasError: false, errorMessage: '', isGenerating: true});
 
-      return await axios.post(`${commitMgrServerUrl}/did-create-identity`, { domain: this.state.domainname } )
+      return await axios.post(`${commitMgrUrl}/did-create-identity`, { domain: this.state.domainname } )
         .then((response) => {
             //access the resp here....
             var payload = response.data;

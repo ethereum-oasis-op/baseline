@@ -42,11 +42,11 @@ services:
     container_name: alice-mongo
     image: mongo:latest
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=password123
-      - MONGO_INITDB_DATABASE=baseline
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_ROOT_DATABASE: root-db
     volumes:
-      - ./db:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d:ro
       - alice-mongo:/data/db
       - ./ops/mongo_health.sh:/health-check.sh:delegated
     logging:
@@ -79,6 +79,8 @@ services:
       - alice
     ports:
      - 4001:4001
+    volumes:
+      - ../contracts:/app/src/contracts
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/status"]
       interval: 15s

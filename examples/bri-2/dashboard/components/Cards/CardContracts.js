@@ -2,12 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Alert, ConfirmAlert } from "../Utils/Alert";
 import useSwr from 'swr';
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
-
+import { commitMgrUrl } from "../Forms/FormSettings.js";
 
 const deployContracts = async (network, senderAddress) => {
-
-  await axios.post(`${commitMgrServerUrl}/deploy-contracts`, {
+  await axios.post(`${commitMgrUrl}/deploy-contracts`, {
       network: network,
       sender: senderAddress
     })
@@ -22,12 +20,10 @@ const deployContracts = async (network, senderAddress) => {
         console.log(error);
         Alert('error', 'ERROR...', error);
     });
-
 }
 
 const resetContracts = async () => {
-
-  await axios.post(`${commitMgrServerUrl}/reset-contracts`)
+  await axios.post(`${commitMgrUrl}/delete/contracts`)
     .then((response) => {
         //access the resp here....
         console.log(`Status Contracts Reset: ${response.data}`);
@@ -37,11 +33,8 @@ const resetContracts = async () => {
         console.log(error);
         Alert('error', 'ERROR...', error);
     });
-
 }
 
-
-// components
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function CardContracts({ title, network, walletAddress, setContractShield }) {
@@ -50,7 +43,7 @@ export default function CardContracts({ title, network, walletAddress, setContra
 
   const contractsTitle = title ? title : "Contracts";
   const contractsNetwork = network ? network : "local";
-  const { data, error } = useSwr(`${commitMgrServerUrl}/contracts/${contractsNetwork}`, { refreshInterval: 3000, fetcher: fetcher });
+  const { data, error } = useSwr(`${commitMgrUrl}/contracts/?network=${contractsNetwork}`, { refreshInterval: 3000, fetcher: fetcher });
 
 
   if (data && data.length > 1)
@@ -78,7 +71,6 @@ export default function CardContracts({ title, network, walletAddress, setContra
                     setDeploying(1);
                     deployContracts(network, walletAddress).then((result) => {
                     setDeploying(0);
-                    //console.log('Deployed');
                   }); 
                 }}
               >

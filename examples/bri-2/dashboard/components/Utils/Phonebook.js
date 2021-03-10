@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 import axios from "axios";
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
+import { workflowMgrUrl } from "../Forms/FormSettings.js";
 
 export function addPhonebook() {
 //icon, title, message, buttonText
@@ -21,7 +21,7 @@ export function addPhonebook() {
                 throw new Error("No domain to validate...");
               }
     
-              return await axios.post(`${commitMgrServerUrl}/add-phonebook`, {
+              return await axios.post(`${workflowMgrUrl}/organizations`, {
                   domain: newEntry
                 })
                 .then(response => {

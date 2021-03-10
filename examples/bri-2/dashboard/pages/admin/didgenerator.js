@@ -1,12 +1,8 @@
 import React from "react";
 
-// components
-
 import CardDidCreateIdentity from "components/Cards/CardDidCreateIdentity.js";
 import CardDidGenerator from "components/Cards/CardDidGenerator.js";
 import CardDidVerifyIdentity from "components/Cards/CardDidVerifyIdentity.js";
-// layout for page
-
 import Admin from "layouts/Admin.js";
 
 export default function Didgenerator() {

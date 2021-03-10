@@ -21,9 +21,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "ethers": "^5.0.14",
     "express": "^4.17.1",
@@ -31,9 +32,11 @@
     "jayson": "^3.3.3",
     "keccak": "^3.0.1",
     "mongoose": "^5.10.7",
+    "object-hash": "^2.1.1",
     "os": "^0.1.1",
     "path": "^0.12.7",
     "rlp": "^2.2.6",
+    "uuid": "^8.3.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {

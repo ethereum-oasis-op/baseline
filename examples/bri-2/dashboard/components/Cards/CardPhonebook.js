@@ -4,7 +4,7 @@ import axios from "axios";
 import { Alert } from "../Utils/Alert";
 import useSwr from 'swr';
 import { addPhonebook } from '../Utils/Phonebook';
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
+import { workflowMgrUrl } from "../Forms/FormSettings.js";
 // components
 
 import PhonebookDropdown from "components/Dropdowns/PhonebookDropdown.js";
@@ -13,7 +13,7 @@ const fetcher = (url) => fetch(url).then((res) => res.json());
 
 export default function CardPhonebook({ color }) {
 
-  const { data, error } = useSwr(`${commitMgrServerUrl}/get-phonebook`, { refreshInterval: 3000, fetcher: fetcher });
+  const { data: orgs, error } = useSwr(`${workflowMgrUrl}/organizations`, { refreshInterval: 3000, fetcher: fetcher });
 
   return (
     <>
@@ -56,7 +56,7 @@ export default function CardPhonebook({ color }) {
                   className={
                     "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
                     (color === "light"
-                      ? "bg-gray-100 text-gray-600 border-gray-200"
+                      ? "bg-gray-700 text-gray-300 border-gray-600"
                       : "bg-gray-700 text-gray-300 border-gray-600")
                   }
                 >
@@ -66,7 +66,7 @@ export default function CardPhonebook({ color }) {
                   className={
                     "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
                     (color === "light"
-                      ? "bg-gray-100 text-gray-600 border-gray-200"
+                      ? "bg-gray-700 text-gray-300 border-gray-600"
                       : "bg-gray-700 text-gray-300 border-gray-600")
                   }
                 >
@@ -76,7 +76,7 @@ export default function CardPhonebook({ color }) {
                   className={
                     "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
                     (color === "light"
-                      ? "bg-gray-100 text-gray-600 border-gray-200"
+                      ? "bg-gray-700 text-gray-300 border-gray-600"
                       : "bg-gray-700 text-gray-300 border-gray-600")
                   }
                 >
@@ -86,7 +86,7 @@ export default function CardPhonebook({ color }) {
                   className={
                     "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
                     (color === "light"
-                      ? "bg-gray-100 text-gray-600 border-gray-200"
+                      ? "bg-gray-700 text-gray-300 border-gray-600"
                       : "bg-gray-700 text-gray-300 border-gray-600")
                   }
                 >
@@ -96,50 +96,69 @@ export default function CardPhonebook({ color }) {
                   className={
                     "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
                     (color === "light"
-                      ? "bg-gray-100 text-gray-600 border-gray-200"
+                      ? "bg-gray-700 text-gray-300 border-gray-600"
                       : "bg-gray-700 text-gray-300 border-gray-600")
                   }
                 ></th>
               </tr>
             </thead>
+
             <tbody>
-            {data && data.length ?
-              data.map((entry) => 
-              <tr key={entry._id}>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-left flex items-center">
-                  <img
-                    src={require("assets/img/identity.svg")}
-                    className="h-12 w-12 p-2 bg-white rounded-full border"
-                    alt="..."
-                  ></img>{" "}
-                  <span
-                    className={
-                      "ml-3 font-bold " +
-                      +(color === "light" ? "text-gray-700" : "text-white")
-                    }
-                  >
-                    <a href={`https://${entry.domain}`} target="_blank">{entry.domain}</a>
-                  </span>
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                  <a href={`https://${entry.domain}`} target="_blank">{entry.dididentity}</a>
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                    {entry.network}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                  <i className={entry.status === 'verified' ? "fas fa-circle text-green-500 mr-2" : "fas fa-circle text-orange-500 mr-2"}></i> {entry.status}
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-right">
-                  <PhonebookDropdown entryId={entry._id} />
-                </td>
-              </tr> )
-              :               
-              <tr>
-              <td colSpan="4" className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-center text-xs whitespace-no-wrap p-4">
-                <h3>No entries available</h3>
-            </td>
-            </tr>}
+              { (orgs && orgs.length > 0)
+                ? orgs.map(( org, index ) => {
+                  return (
+                    <tr key={org._id} style={{
+                      "borderTop":"solid 1px rgba(105, 105, 105)"
+                    }}>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                        {org._id}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                        {org.description}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                        {org.createdAt}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                        {org.clientType}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                        {org.status}
+                      </td>
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4 text-right">
+                        <WorkflowDropdown orgId={org._id}/>
+                      </td>
+                    </tr>
+                  );
+                })
+                : <tr>
+                    <td colSpan="5">
+                    <img
+                      src={require("assets/img/no-workflows.png")}
+                      alt="no workflows image"
+                      style={{
+                        display: "block",
+                        "marginLeft": "auto",
+                        "marginRight": "auto",
+                        "marginTop": "3rem",
+                        "marginBottom": "3rem",
+                        width: "50%"
+                      }}
+                    />
+                    <div style={{"textAlign": "center"}}>
+                      <strong>
+                        <a>You don't have any contacts yet. </a>
+                      </strong>
+                      <a
+                        href="/admin/workflow-test"
+                        className="md:pb-2 text-gray-700 mr-0 inline-block whitespace-no-wrap font-bold"
+                        style={{color:"#FF0000"}}
+                      ><u>Let's create one!</u></a>
+                    </div>
+                    <div style={{height:"50px"}}></div>
+                    </td>
+                  </tr>
+              }
             </tbody>
           </table>
         </div>

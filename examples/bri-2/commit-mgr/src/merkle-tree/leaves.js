@@ -64,6 +64,17 @@ async function getLeafByLeafIndex(contractAddress, leafIndex) {
 }
 
 /**
+ * Get the most recent leaf
+ * @param {string} merkleId
+ * @returns {object} the leaf object
+ */
+async function getLatestLeaf(merkleId) {
+  logger.info(`Getting latest leaf for merkle id ${merkleId}`);
+  const merkleTree_0 = await merkleTrees.findOne({ _id: `${merkleId}_0` });
+  return merkleTree_0.latestLeaf;
+}
+
+/**
  * Get all leaves within a range determined by their leafIndices
  * @param {string} contractAddress - address of merkle-tree contract
  * @param {number} minIndex
@@ -97,4 +108,5 @@ export {
   insertLeaf,
   getLeafByLeafIndex,
   getLeavesByLeafIndexRange,
+  getLatestLeaf
 };

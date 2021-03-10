@@ -1,6 +1,5 @@
 import { subscribeMerkleEvents, unsubscribeMerkleEvents } from "./events";
-import { get_ws_provider, http_provider, restartSubscriptions, checkChainLogs, jsonrpc } from "./utils";
-import { sendBaselineBalance, deployContracts, sendBaselineTrack, sendBaselineGetTracked, sendBaselineVerifyAndPush, sendCommit, sendFirstLeaf, runTests, switchChain } from "./chain";
+import { get_ws_provider, http_provider, restartSubscriptions, checkChainLogs, jsonrpc, switchChain, chainName } from "./utils";
 import { shieldContract } from "./shield-contract";
 
 export {
@@ -11,14 +10,7 @@ export {
   http_provider,
   checkChainLogs,
   jsonrpc,
-  deployContracts,
-  sendFirstLeaf,
-  sendBaselineTrack,
-  sendBaselineBalance,
-  sendBaselineGetTracked,
-  sendCommit,
-  sendBaselineVerifyAndPush,
-  runTests,
   switchChain,
+  chainName,
   shieldContract
 };

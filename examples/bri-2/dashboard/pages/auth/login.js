@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useWallet } from 'use-wallet';
-import Link from "next/link";
 import { useRouter } from 'next/router'
 
 // layout for page
@@ -16,9 +15,8 @@ export default function Login() {
   let connectedId;
 
   useEffect(() => {
-     connectedId = isWalletConnected();
-     console.log("connectedId  ", connectedId, wallet.status )
-     if (wallet.status == 'disconnected' && connectedId != null) {
+    connectedId = isWalletConnected();
+    if (wallet.status == 'disconnected' && connectedId != null) {
       wallet.connect(connectedId);
     }
     if (wallet.status === 'connected' && connectedId === null){
@@ -37,7 +35,7 @@ export default function Login() {
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-indigo-500 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
-                  <img src="/baseline_Horizontal-Logo-allWhite.svg" />
+                  <img src={require("assets/img/brand/baseline_Horizontal-Logo-allWhite.svg")} />
                   <h3 className="text-white text-sm font-bold">
                     Connect with
                   </h3>

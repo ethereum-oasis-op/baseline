@@ -1,38 +1,29 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
+import NProgress from 'nprogress'
 import { UseWalletProvider } from 'use-wallet';
 import detectEthereumProvider from '@metamask/detect-provider';
-import PageChange from "components/PageChange/PageChange.js";
 
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/styles/tailwind.css";
 
 Router.events.on("routeChangeStart", (url) => {
   console.log(`Loading: ${url}`);
-  document.body.classList.add("body-page-transition");
-  ReactDOM.render(
-    <PageChange path={url} />,
-    document.getElementById("page-transition")
-  );
+  NProgress.start()
 });
 Router.events.on("routeChangeComplete", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
+  NProgress.done()
 });
 Router.events.on("routeChangeError", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
+  NProgress.done()
 });
-
 
 const getEthChainId = async () => {
   const wallet_provider = typeof window !== 'undefined' && await detectEthereumProvider();
 
   if (wallet_provider) {
-
     console.log('Ethereum successfully detected!')
     // From now on, this should always be true:
     // provider === window.ethereum
@@ -41,12 +32,8 @@ const getEthChainId = async () => {
     let current_provider = await wallet_provider.request({
       method: 'eth_chainId'
     });
-
-    //console.log(parseInt(current_provider, 16), current_provider);
     return parseInt(current_provider, 16);
-
   } else {
-   
     // if the provider is not detected, detectEthereumProvider resolves to null
     console.error('Please install MetaMask!');
   }
@@ -75,8 +62,6 @@ export default class MyApp extends App {
     
   }
 
-  
-
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
 
@@ -88,7 +73,7 @@ export default class MyApp extends App {
   }
 
   state = {
-    chainId: 1
+    chainId: 1,
   }
 
 

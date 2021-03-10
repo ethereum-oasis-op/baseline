@@ -3,6 +3,7 @@ import { ethers } from 'ethers';
 
 import { logger } from "../logger";
 import { insertLeaf } from "../merkle-tree/leaves";
+import { commits } from "../db/models/Commit";
 import { get_ws_provider } from "./utils";
 import { shieldContract } from "./shield-contract";
 
@@ -44,7 +45,18 @@ export const subscribeMerkleEvents = (contractAddress) => {
       txHash: result.transactionHash,
       blockNumber: result.blockNumber
     }
+    // update merkle-tree
     await insertLeaf(contractAddress, leaf);
+
+    // update commit document
+    const filter = {
+      merkleId: contractAddress,
+      value: leafValue
+    }
+    await commits.findOneAndUpdate(filter, {
+      status: "mainnet",
+      txHash: result.transactionHash
+    }, { upsert: true });
   });
 }
 

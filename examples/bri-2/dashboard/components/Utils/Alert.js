@@ -1,19 +1,15 @@
 import Swal from 'sweetalert2';
 
 export function Alert(icon, title, message, buttonText) {
-
-    Swal.fire({
-        title: title,
-        text: message,
-        icon: icon,
-        confirmButtonText: buttonText ? buttonText : 'Ok'
-      });
-
+  Swal.fire({
+      title: title,
+      text: message,
+      icon: icon,
+      confirmButtonText: buttonText ? buttonText : 'Ok'
+    });
 }
 
-
 export function ConfirmAlert(icon, title, message, buttonText, callBack) {
-
   Swal.fire({
     title: title,
     text: message,
@@ -24,9 +20,7 @@ export function ConfirmAlert(icon, title, message, buttonText, callBack) {
     confirmButtonText: buttonText
   }).then(async (result) => {
     if (result.isConfirmed) {
-      
       await callBack();
-
       Swal.fire(
         'Reseted!',
         'Your db has been reseted.',
@@ -34,5 +28,4 @@ export function ConfirmAlert(icon, title, message, buttonText, callBack) {
       )
     }
   });
-
 }

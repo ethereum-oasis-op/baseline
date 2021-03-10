@@ -9,7 +9,7 @@ import { logger } from "./logger";
 import { updateTree, getSiblingPathByLeafIndex } from "./merkle-tree";
 import { getLeafByLeafIndex, getLeavesByLeafIndexRange } from "./merkle-tree/leaves.js";
 import { concatenateThenHash } from "./merkle-tree/hash.js";
-import { txManagerServiceFactory } from "./tx-manager";
+import { verifyAndPush } from "./routes/rpc-methods";
 
 // configs loaded
 dotenv.config();
@@ -174,46 +174,20 @@ const baseline_getTracked = new jayson.Method(
 
 const baseline_verifyAndPush = new jayson.Method(
   async (args: any, context: any, done: any) => {
-    let error = validateParams(args, 5);
+    const error = validateParams(args, 5);
     if (error) {
       done(error, null);
       return;
     };
 
     const senderAddress = args[0];
-    const contractAddress = args[1];
+    const treeId = args[1];
     const proof = args[2];
     const publicInputs = args[3];
     const newCommitment = args[4];
-    const record = await merkleTrees.findOne({ _id: `${contractAddress}_0` }).select('shieldContract').lean();
-    if (!record) {
-      logger.error(`[baseline_verifyAndPush] Merkle Tree not found in db: ${contractAddress}`);
-      error = {
-        code: -32603,
-        message: `Internal server error`,
-        data: `Merkle Tree not found in db: ${contractAddress}`,
-      };
-      done(error, null);
-      return;
-    }
-    logger.info(`[baseline_verifyAndPush] Found Shield/MerkleTree for contract address: ${contractAddress}`);
 
-    const txManager = await txManagerServiceFactory(process.env.ETH_CLIENT_TYPE);
-
-    let result;
-    try {
-      result = await txManager.insertLeaf(contractAddress, senderAddress, proof, publicInputs, newCommitment);
-    } catch (err) {
-      logger.error(`[baseline_verifyAndPush] ${err}`);
-      error = {
-        code: -32603,
-        message: `Internal server error`
-      };
-      done(error, null);
-      return;
-    }
-    logger.info(`[baseline_verifyAndPush] txHash: ${result.txHash}`);
-    done(result.error, { txHash: result.txHash });
+    const result = await verifyAndPush(senderAddress, treeId, proof, publicInputs, newCommitment);
+    done(result.error, { txHash: result.txHash } );
   },
   {
     useContext: true,
@@ -229,6 +203,8 @@ const baseline_track = new jayson.Method(
     };
 
     const contractAddress = args[0];
+
+    // First check to see if we're already tracking this MerkleTree
     const merkleTree = await merkleTrees.findOne({ _id: `${contractAddress}_0` });
     if (merkleTree && merkleTree.active === true) {
       error = {

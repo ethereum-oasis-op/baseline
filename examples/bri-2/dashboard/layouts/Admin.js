@@ -11,11 +11,23 @@ export default function Admin({ children }) {
   return (
     <>
       <Sidebar />
-      <div className="relative md:ml-64 bg-gray-200">
+      <div 
+        className="relative md:ml-64"
+        style={{"backgroundColor": "#C0C0C0"}}   
+      >
         <AdminNavbar />
         {/* Header */}
         <HeaderStats />
-        <div className="px-4 md:px-10 mx-auto w-full -m-24">
+        <div 
+          id="app-body"
+          className="px-4 md:px-10 mx-auto w-full -m-24"
+          style={{
+            position: "relative",
+            minHeight: "100vh",
+            paddingBottom: "2.5rem",
+            width: "100%"
+          }}
+        >
           {children}
           <FooterAdmin />
         </div>

@@ -2,16 +2,26 @@ import React, { useState, Suspense } from "react";
 import TreeMerkle from '../Utils/TreeData';
 import { SendCommitment } from '../Utils/Commitment';
 import useSwr from 'swr';
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
+import { commitMgrUrl } from "../Forms/FormSettings.js";
 
+//const fetcher = (url) => fetch(url, 
+                              //{ method: 'POST', body: { }})
+                              //.then((res) => res.json());
 const fetcher = (url) => fetch(url).then((res) => res.json());
+
 // components
 export default function CardTree({ title, contractShield, walletAddress, network }) {
 
   const treeTitle = title ? title : "[DB] Merkle Tree";
 
-  const { data, error } = contractShield ? useSwr(`${commitMgrServerUrl}/getmerkletree/${contractShield}_0`, { refreshInterval: 3000, fetcher: fetcher }) : {data:{}};
+  //const { data, error } = contractShield ? 
+                          //useSwr(
+                            //`${commitMgrUrl}/json/baseline_getTracked/${contractShield}_0`,
+                            //{ refreshInterval: 3000, fetcher: fetcher }
+                          //) :
+                          //{data:{}};
 
+  const { data, error } = contractShield ? useSwr(`${commitMgrUrl}/getmerkletree/${contractShield}_0`, { refreshInterval: 3000, fetcher: fetcher }) : {data:{}};
 
   return (
     <>

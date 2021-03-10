@@ -2,11 +2,11 @@ import React from "react";
 import axios from "axios";
 import { Alert } from "../Utils/Alert";
 import { createPopper } from "@popperjs/core";
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
+import { workflowMgrUrl } from "../Forms/FormSettings.js";
 
 const removeEntry = async (entryId) => {
 
-  return await axios.get(`${commitMgrServerUrl}/remove-phonebook/${entryId}`)
+  return await axios.delete(`${workflowMgrUrl}/organizations/${entryId}`)
     .then((response) => {
         //access the resp here....
         console.log(`Status Phonebook : ${response.data.ok}`);

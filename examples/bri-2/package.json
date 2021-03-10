@@ -1,7 +1,7 @@
 {
-  "name": "base-example",
+  "name": "bri-2",
   "version": "0.1.0",
-  "description": "Baseline Reference Implementation-2 using the core Provide stack",
+  "description": "Baseline Reference Implementation - 2",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
@@ -10,19 +10,10 @@
     "dist"
   ],
   "scripts": {
-    "build:image": "ops/build-image.sh",
-    "build:cjs": "./node_modules/.bin/tsc -p tsconfig.cjs.json",
-    "build:umd": "webpack",
-    "build:contracts": "./node_modules/.bin/truffle compile",
-    "build": "npm run clean && npm run build:cjs && npm run build:umd",
-    "clean": "rm -rf ./dist",
     "dev:commit-mgr": "nodemon --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all start",
-    "start": "node commit-mgr/.",
     "build:dashboard": "cd dashboard && npm run build",
     "dev:dashboard": "cd dashboard && npm run dev",
     "start:dashboard": "cd dashboard && npm run build && npm run start",
-    "build:didserver": "sh ./dafinstall.sh",
-    "start:didserver": "cd did && npm run start",
     "contracts:clean": "rm -rf ./contracts/artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",
     "contracts:compile": "cd node_modules/@baseline-protocol/contracts && npm install && make && cd - && mkdir -p ./contracts/artifacts && cp -R ./node_modules/@baseline-protocol/contracts/artifacts ./contracts"
   },
@@ -38,8 +29,7 @@
     "jsonwebtoken": "8.5.1",
     "loglevel": "^1.6.8",
     "provide-js": "^1.3.3",
-    "solc": "^0.6.1",
-    "zokrates-js": "1.0.23"
+    "solc": "^0.6.1"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.3.4",

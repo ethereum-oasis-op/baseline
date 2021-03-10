@@ -1,7 +1,7 @@
 import React, { useState }  from "react";
 import axios from "axios";
 import { useWallet } from 'use-wallet';
-import { commitMgrServerUrl } from "../../configs/commit_mgr.env";
+import { commitMgrUrl } from "../Forms/FormSettings.js";
 
 /*
 export function useUser() {
@@ -16,7 +16,7 @@ export function useUser() {
 
 export function useContract() {
 
-  const contractsAvailable = axios.get(`${commitMgrServerUrl}/contracts-available`)
+  const contractsAvailable = axios.get(`${commitMgrUrl}/contracts`)
     .then((response) => {
         //access the resp here....
         
