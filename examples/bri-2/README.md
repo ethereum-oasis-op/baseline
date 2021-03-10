@@ -19,6 +19,42 @@ Here is a comparison of the reference implementations:
 # Requirements
 - docker and docker-compose
 - node / npm
-- [metamask wallet](https://metamask.io/download.html)
-- ether account with some funds - [get Goerli funds here](https://faucet.goerli.mudit.blog/)
-- [Infura account id](https://infura.io/)
+## Setup and run
+
+Install node modules and compile imported Solidity smart contracts.
+```
+npm install
+npm run contracts:compile
+```
+
+Spin up helper containers
+```
+docker volume rm bri-2_alice-mongo
+docker-compose up -d alice-mongo ganache
+```
+
+Setup `commit-mgr`
+```
+cd commit-mgr
+npm install
+cp .env_example .env
+npm run dev
+```
+
+Setup `workflow-mgr`
+```
+cd workflow-mgr
+npm install
+cp .env_example .env
+npm run dev
+```
+
+Run `dashboard`
+```
+cd dashboard
+npm install
+npm run build
+npm run dev
+```
+
+Navigate to `http://localhost:3000` on your web browser to view the `dashboard`.
