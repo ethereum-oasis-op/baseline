@@ -15,15 +15,14 @@ export const deployVerifier = async () => {
   let error
   let res;
 
-  const nonce = await wallet.getTransactionCount();
-  //res = await axios.post(`${process.env.COMMIT_MGR_URL}/jsonrpc`, {
-    //jsonrpc: "2.0",
-    //method: "eth_getTransactionCount",
-    //params: [senderAddress, "latest"],
-    //id: 1,
-  //});
+  res = await axios.post(`${process.env.COMMIT_MGR_URL}/jsonrpc`, {
+    jsonrpc: "2.0",
+    method: "eth_getTransactionCount",
+    params: [senderAddress, "latest"],
+    id: 1,
+  });
   
-  //const nonce = res.data.result;
+  const nonce = res.data.result;
   logger.info(`nonce: ${nonce}`)
   const unsignedTx = {
     from: senderAddress,
@@ -40,7 +39,6 @@ export const deployVerifier = async () => {
   
   const gasEstimate = res.data.result;
   logger.info(`gasEstimate: ${gasEstimate}`)
-  //const gasEstimate = await wallet.estimateGas(unsignedTx);
   unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
   
   const tx = await wallet.sendTransaction(unsignedTx);
@@ -105,6 +103,18 @@ export const deployShield = async (verifierAddress, treeHeight = 4) => {
   
 export const trackShield = async (shieldAddress) => {
   const res = await axios.post(`${process.env.COMMIT_MGR_URL}/jsonrpc`, {
+    jsonrpc: "2.0",
+    method: "baseline_track",
+    params: [shieldAddress],
+    id: 1,
+  });
+  const { result, error } = res.data.result;
+  logger.info(`SUCCESS! Now tracking Shield contract address ${shieldAddress}`)
+  return { result, error }
+}
+
+export const createCommit = async (shieldAddress) => {
+  const res = await axios.post(`${process.env.COMMIT_MGR_URL}/commits`, {
     jsonrpc: "2.0",
     method: "baseline_track",
     params: [shieldAddress],

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState }  from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import axios from "axios";
@@ -21,16 +21,21 @@ const statusIcon = (status) => {
   }
 }
 
-const createNewCommit = (workflow) => {
+const createNewCommit = (workflow, testMessage) => {
     console.log('Creating commit using auto message');
     axios.post(`${commitMgrUrl}/commits`, {
       workflowId: workflow._id,
       merkleId: workflow.merkleId,
-      rawData: { message: "New commit" },
+      rawData: { testMessage },
     });
 }
 
 export default function CardWorkflow({ color, workflow, commits }) {
+  const [testMessage, setTestMessage] = useState("");
+  const handleMessageChange = (e) => {
+    setTestMessage(e.target.value);
+  }
+
   return (
     <>
       <div
@@ -39,7 +44,7 @@ export default function CardWorkflow({ color, workflow, commits }) {
           (color === "light" ? "bg-white" : "bg-gray-800 text-white")
         }
       >
-        <div className="rounded-t mb-0 px-4 py-3 border-0">
+        <div className="rounded-t mt-2 mb-2 px-6 py-1 border-0">
           <div className="flex flex-wrap items-center">
             <div className="relative w-full px-4 max-w-full flex-grow flex-1">
               <h3
@@ -51,15 +56,25 @@ export default function CardWorkflow({ color, workflow, commits }) {
                 Workflow: {workflow.description}
               </h3>
             </div>
-            <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
-              <button
-                className="bg-indigo-500 text-white active:bg-indigo-600 text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => createNewCommit(workflow)}
-              >
-                New Commit
-              </button>
-            </div>
+            { (workflow.clientType == "dashboard-test") ?
+              <div className="relative">
+                <input 
+                  className="px-6 py-2 mr-2 rounded shadow text-gray-700"
+                  type="text"
+                  name="testMessage"
+                  placeholder="Write message here..."
+                  value={testMessage}
+                  onChange={handleMessageChange}
+                />
+                <button
+                  className="bg-orange-500 active:bg-green-700 text-white text-xs font-bold uppercase px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                  type="button"
+                  onClick={() => createNewCommit(workflow, testMessage)}
+                >
+                  Commit Message
+                </button>
+              </div> : <></>
+            }
           </div>
         </div>
         <div className="block w-full overflow-x-auto">

@@ -57,7 +57,7 @@ export const jsonRpcHandler = async (req: any, res: any, next: any) => {
       req.socket.remoteAddress,
   };
 
-  await rpcServer.call(req.body, context, (err: any, result: any) => {
+  rpcServer.call(req.body, context, (err: any, result: any) => {
     if (err) {
       const errorMessage = err.error.data ? `${err.error.message}: ${err.error.data}` : `${err.error.message}`;
       logger.error(`Response error: ${errorMessage}`);

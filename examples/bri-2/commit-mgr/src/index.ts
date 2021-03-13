@@ -50,7 +50,7 @@ const main = async () => {
   app.get("/contracts", getContracts);
 
   // Single endpoint to handle all JSON-RPC requests
-  app.use(rpcServer.middleware());
+  // app.use(rpcServer.middleware());
   app.post("/jsonrpc", jsonRpcHandler);
 
   app.listen(port, () => {

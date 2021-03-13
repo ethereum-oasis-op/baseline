@@ -4,6 +4,7 @@ import { saveContact } from "../organizations"
 import { resolveDid } from "../organizations/veramo"
 import { organizations } from "../db/models/Organization";
 import { logger } from "../logger";
+import { connectNATS } from "../nats";
 import { deployVerifier, deployShield, trackShield } from "../workflow-test";
 import { didIdentityManagerCreateIdentity,
          didGenerateDidConfiguration,
@@ -74,45 +75,21 @@ export const createWorkflow = async (req, res) => {
   const { type } = req.query;
   if (type === "test") {
     logger.info('Received request to create test workflow. Creating now...')
-    logger.info('Deploying VerifierNoop contract...')
-    const { result: verifierAddress, error: errorVerifier} = await deployVerifier();
-    if (errorVerifier) {
-      logger.error('Error: problem deploying Verifier contract')
-      res.status(500).send({ message: "Error: problem deploying Verifier contract"})
-      return;
-    }
-
-    logger.info('Deploying Shield contract...')
-    const { result: shieldAddress, error: errorShield} = await deployShield(verifierAddress);
-    if (errorShield) {
-      logger.error('Error: problem deploying Shield contract')
-      res.status(500).send({ message: "Error: problem deploying Shield contract"})
-      return;
-    }
-
-    logger.info('Setting up tracking for Shield contract...')
-    const { result: trackResult, error: errorTrack } = await trackShield(shieldAddress);
-    if (errorTrack) {
-      logger.error('Error: problem tracking Shield contract')
-      res.status(500).send({ message: "Error: problem tracking Shield contract"})
-      return;
-    }
-
-    logger.info('Creating workflow...')
     const newWorkflow = await workflows.findOneAndUpdate(
       { _id: newId },
       {
         _id: newId,
         description: "automated internal test",
         clientType: "dashboard-test",
-        merkleId: shieldAddress,
         participants: [],
-        status: "active"
+        status: "created"
       },
       { upsert: true, new: true }
     );
     
     logger.info(`New workflow (id: ${newId}) created.`)
+    const nc = await connectNATS();
+    nc.publish('deploy-contracts', { workflowId: newId });
     res.status(201).send(newWorkflow || {});
     return
   }

@@ -21,6 +21,15 @@ services:
   
   # alice
 
+  alice-nats-server:
+    hostname: alice-nats-server
+    image: nats
+    ports:
+      - 8222:8222
+      - 4222:4222
+    networks:
+      - alice
+
   alice-besu:
     container_name: alice-besu
     image: hyperledger/besu:latest

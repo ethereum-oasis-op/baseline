@@ -17,8 +17,10 @@ Here is a comparison of the reference implementations:
 ![baseline-architecture](./docs/bri-2-stack.png)
 
 # Requirements
-- docker and docker-compose
-- node / npm
+- docker
+- docker-compose
+- node v12.16
+- npm
 ## Setup and run
 
 Install node modules and compile imported Solidity smart contracts.
@@ -30,7 +32,7 @@ npm run contracts:compile
 Spin up helper containers
 ```
 docker volume rm bri-2_alice-mongo
-docker-compose up -d alice-mongo ganache
+docker-compose up -d alice-mongo alice-nats ganache
 ```
 
 Setup `commit-mgr`
