@@ -24,6 +24,7 @@ Here is a comparison of the reference implementations:
 ## Setup and run
 
 Install node modules and compile imported Solidity smart contracts.
+Note: may need to run `contracts:compile` twice
 ```
 npm install
 npm run contracts:compile
@@ -43,6 +44,8 @@ docker-compose up -d
 ```
 
 Run `dashboard` front-end
+
+Note: be sure to use `node v12.16`
 ```
 cd dashboard
 npm install
