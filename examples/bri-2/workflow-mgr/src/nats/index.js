@@ -8,7 +8,7 @@ let nc;
 export const connectNATS = async () => {
   if (!nc) {
     try {
-      nc = NATS.connect({url: "nats://localhost:4222", json: true});
+      nc = NATS.connect({url: process.env.NATS_URL, json: true});
       nc.subscribe('deploy-contracts', deployContracts);
     } catch (err) {
       logger.error(`Could not connect to NATS: ${error.message}`)
