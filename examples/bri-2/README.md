@@ -29,29 +29,20 @@ npm install
 npm run contracts:compile
 ```
 
-Spin up helper containers
+Setup the backend services env's. The Env examples default to Ganache
 ```
-docker volume rm bri-2_alice-mongo
-docker-compose up -d alice-mongo alice-nats ganache
-```
-
-Setup `commit-mgr`
-```
-cd commit-mgr
-npm install
-cp .env_example .env
-npm run dev
+cp ./commit-mgr/.env_example ./commit-mgr/.env
+cp ./workflow-mgr/.env_example ./workflow-mgr/.env
 ```
 
-Setup `workflow-mgr`
+Spin up backend services in docker
+
+If you have an existing docker build, first run: `docker volume rm bri-2_alice-mongo`
 ```
-cd workflow-mgr
-npm install
-cp .env_example .env
-npm run dev
+docker-compose up -d
 ```
 
-Run `dashboard`
+Run `dashboard` front-end
 ```
 cd dashboard
 npm install
