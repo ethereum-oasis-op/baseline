@@ -30,22 +30,22 @@ services:
     networks:
       - alice
 
-  alice-besu:
-    container_name: alice-besu
-    image: hyperledger/besu:latest
-    command: "--config-file=/config/config.toml"
-    environment:
-      - LOG4J_CONFIGURATION_FILE=/config/log-config.xml
-    volumes:
-      - ./besu/config.toml:/config/config.toml
-      - ./besu/genesis.json:/config/genesis.json
-      - ./besu/key:/config/key
-      - ./besu/log-config.xml:/config/log-config.xml
-    ports:
-      - 8545:8545
-      - 8546:8546
-    networks:
-      - alice
+  # alice-besu:
+  #   container_name: alice-besu
+  #   image: hyperledger/besu:latest
+  #   command: "--config-file=/config/config.toml"
+  #   environment:
+  #     - LOG4J_CONFIGURATION_FILE=/config/log-config.xml
+  #   volumes:
+  #     - ./besu/config.toml:/config/config.toml
+  #     - ./besu/genesis.json:/config/genesis.json
+  #     - ./besu/key:/config/key
+  #     - ./besu/log-config.xml:/config/log-config.xml
+  #   ports:
+  #     - 8545:8545
+  #     - 8546:8546
+  #   networks:
+  #     - alice
 
   alice-mongo:
     container_name: alice-mongo
@@ -84,6 +84,8 @@ services:
       - ./commit-mgr/.env
     environment:
       - DATABASE_HOST=alice-mongo:27017
+      - ETH_CLIENT_WS=http://ganache:8545
+      - ETH_CLIENT_HTTP=ganache:8545
     networks:
       - alice
     ports:
