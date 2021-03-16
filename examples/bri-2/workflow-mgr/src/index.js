@@ -4,8 +4,9 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import { logger, reqLogger, reqErrorLogger } from "./logger";
 import { dbConnect } from "./db";
+import { connectNATS } from "./nats";
 import { getStatus, getOrganizations, createOrganization, deleteOrganization,
-         getWorkflows, getWorkflow, createWorkflow } from "./routes/rest-methods"
+         getWorkflows, getWorkflow, createWorkflow, acceptInvitation, deleteWorkflow } from "./routes/rest-methods"
 
 const main = async () => {
   dotenv.config();
@@ -21,6 +22,7 @@ const main = async () => {
 
   logger.debug(`Attempting to connect to db: ${process.env.DATABASE_HOST}/${process.env.DATABASE_NAME}`)
   await dbConnect(dbUrl);
+  await connectNATS();
 
   const app = express();
   app.use(reqLogger("WORKFLOW-MGR")); // Log requests
@@ -32,6 +34,8 @@ const main = async () => {
   app.get("/workflows", getWorkflows);
   app.get("/workflows/:workflowId", getWorkflow);
   app.post("/workflows", createWorkflow);
+  app.post("/workflows/:workflowId/accept-invite", acceptInvitation);
+  app.delete("/workflows/:workflowId", deleteWorkflow);
   app.get("/organizations", getOrganizations);
   app.post("/organizations", createOrganization);
   app.delete("/organizations/:orgId", deleteOrganization);

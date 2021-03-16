@@ -10,6 +10,7 @@ export const connectNATS = async () => {
     try {
       nc = NATS.connect({url: process.env.NATS_URL, json: true});
       nc.subscribe('deploy-contracts', deployContracts);
+      logger.info(`Subscribed to all NATS topics`)
     } catch (err) {
       logger.error(`Could not connect to NATS: ${error.message}`)
       return

@@ -6,9 +6,6 @@ import { organizations } from "../db/models/Organization";
 import { logger } from "../logger";
 import { connectNATS } from "../nats";
 import { deployVerifier, deployShield, trackShield } from "../workflow-test";
-import { didIdentityManagerCreateIdentity,
-         didGenerateDidConfiguration,
-         didVerifyWellKnownDidConfiguration } from "../organizations/did";
 
 export const getStatus = async (req, res) => {
   const result =  {
@@ -20,9 +17,27 @@ export const getStatus = async (req, res) => {
 
 export const createOrganization = async (req, res) => {
   logger.info('POST /organizations req.body:', req.body)
-  const { domain, name } = req.body;
+  const newId = v4();
+  const { domain, name, messengerUrl, signingKey } = req.body;
+
+  if (!req.query.did) {
+    const newContact = await organizations.findOneAndUpdate(
+      { _id: newId },
+      {
+        _id: newId,
+        name,
+        signingKey,
+        messengerUrl
+      },
+      { upsert: true, new: true }
+    );
+    logger.info(`New organization added: %o`, newContact);
+    res.status(201).send(newContact || {});
+    return;
+  }
+
   if (!domain) {
-    logger.error("No domain to add...");
+    logger.error("No domain included in request body");
     res.status(400).send({ error: "No domain included in request body" });
     return;
   }
@@ -112,6 +127,32 @@ export const createWorkflow = async (req, res) => {
     logger.error(`Could not create new workflow (id: ${newId}): ${err}`)
     res.status(500).send({ error: `${err.message}`});
   }
+};
+
+export const acceptInvitation = async (req, res) => {
+  const { workflowId } = req.params;
+  const foundWorkflow = await workflows.findOne({ _id: workflowId });
+  if (foundWorkflow.status !== "invited") {
+      logger.error(`Workflow ${workflowId} current state is ${foundWorkflow.status}. Request to accept invitation is invalid`);
+      res.status(400).send({ error: `Workflow ${workflowId} current state is ${foundWorkflow.status}. Request to accept invitation is invalid`});
+      return;
+  }
+  const newWorkflow = await workflows.findOneAndUpdate(
+    { _id: workflowId },
+    { status: "accepted-invite" },
+    { upsert: true }
+  );
+  res.status(200).send()
+};
+
+export const deleteWorkflow = async (req, res) => {
+  await workflows.deleteOne({_id: req.params.workflowId}, (err, data) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.send(data || {});
+    }
+  });
 };
 
 export const getWorkflow = async (req, res) => {

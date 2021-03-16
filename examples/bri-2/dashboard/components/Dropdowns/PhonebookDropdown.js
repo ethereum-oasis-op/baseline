@@ -4,12 +4,10 @@ import { Alert } from "../Utils/Alert";
 import { createPopper } from "@popperjs/core";
 import { workflowMgrUrl } from "../Forms/FormSettings.js";
 
-const removeEntry = async (entryId) => {
-
-  return await axios.delete(`${workflowMgrUrl}/organizations/${entryId}`)
+const removeEntry = async (orgId) => {
+  return await axios.delete(`${workflowMgrUrl}/organizations/${orgId}`)
     .then((response) => {
         //access the resp here....
-        console.log(`Status Phonebook : ${response.data.ok}`);
         Alert('success', 'Phonebook removed...', `Phonebook entry removed with success...`);
         return response.data;
     })
@@ -17,10 +15,9 @@ const removeEntry = async (entryId) => {
         console.log(error);
         Alert('error', 'ERROR...', error);
     });
-
 }
 
-const PhonebookDropdown = ({entryId}) => {
+const PhonebookDropdown = ({orgId}) => {
   // dropdown props
   const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
   const btnDropdownRef = React.createRef();
@@ -59,19 +56,10 @@ const PhonebookDropdown = ({entryId}) => {
           className={
             "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800"
           }
-          onClick={() => removeEntry(entryId)}
+          onClick={() => removeEntry(orgId)}
         >
           Delete Entry
         </a>
-        {/*<a
-          href="#pablo"
-          className={
-            "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800"
-          }
-          onClick={(e) => e.preventDefault()}
-        >
-          Verify Domain
-        </a>*/}
       </div>
     </>
   );

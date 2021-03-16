@@ -175,7 +175,7 @@ export default function Sidebar() {
               }}
             >
               <i className="fas fa-chevron-circle-right w-5 mr-1"></i>
-              Run Baseline Test
+              Run Internal Test
             </button>
             <button
               className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 mt-6 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"

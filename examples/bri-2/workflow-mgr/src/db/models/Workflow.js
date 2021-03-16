@@ -8,7 +8,7 @@ const workflowSchema = new Schema({
     zkCircuits: [ { circuitId: String, description: String } ],
     currentState: Number, // which workstep/zkCircuit are we on? Indicates the logic the next commitment needs to satisfy
     clientType: String, // What app created this workflow (i.e. dashboard-test, Excel, Google Sheets, SAP, D365, etc.)
-    status: String // 'created', 'contracts-deployed', 'invited', 'active', 'completed'
+    status: String // 'created', 'invited', 'contracts-deployed', 'active', 'completed'
   });
 
 // Automatically generate createdAt and updatedAt fields

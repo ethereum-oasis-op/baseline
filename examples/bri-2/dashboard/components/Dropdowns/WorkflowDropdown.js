@@ -1,6 +1,35 @@
 import React, { useState } from "react";
 import Link from "next/link";
+import axios from "axios";
 import { createPopper } from "@popperjs/core";
+import { Alert } from "../Utils/Alert";
+import { workflowMgrUrl } from "../Forms/FormSettings.js";
+
+const removeWorkflow = async (workflowId) => {
+  return await axios.delete(`${workflowMgrUrl}/workflows/${workflowId}`)
+    .then((response) => {
+        //access the resp here....
+        Alert('success', 'Workflow removed...', `${workflowId}`);
+        return response.data;
+    })
+    .catch((error) => {
+        console.log(error);
+        Alert('error', 'ERROR...', error);
+    });
+}
+
+const acceptInvitation = async (workflowId) => {
+  return await axios.post(`${workflowMgrUrl}/workflows/${workflowId}/accept-invite`)
+    .then((response) => {
+        //access the resp here....
+        Alert('success', 'Workflow removed...', `${workflowId}`);
+        return response.data;
+    })
+    .catch((error) => {
+        console.log(error);
+        Alert('error', 'ERROR...', error);
+    });
+}
 
 const WorkflowDropdown = ({ workflowId }) => {
   // dropdown props
@@ -58,7 +87,7 @@ const WorkflowDropdown = ({ workflowId }) => {
             "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800" +
             "text-blue-500 hover:text-blue-600"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={() => removeWorkflow(workflowId)}
         >
           Delete
         </a>
@@ -68,7 +97,7 @@ const WorkflowDropdown = ({ workflowId }) => {
             "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800" +
             "text-blue-500 hover:text-blue-600"
           }
-          onClick={(e) => e.preventDefault()}
+          onClick={() => acceptInvitation(workflowId)}
         >
           Accept Invitation
         </a>
