@@ -85,8 +85,8 @@ services:
       - ./commit-mgr/.env
     environment:
       - DATABASE_HOST=alice-mongo:27017
-      - ETH_CLIENT_WS=http://ganache:8545
-      - ETH_CLIENT_HTTP=ganache:8545
+      - ETH_CLIENT_WS=ws://ganache:8545
+      - ETH_CLIENT_HTTP=http://ganache:8545
     networks:
       - alice
     ports:
@@ -114,7 +114,7 @@ services:
       - ./workflow-mgr/.env
     environment: 
       - DATABASE_HOST=alice-mongo:27017
-      - COMMIT_MGR_URL=alice-commit-mgr:4001
+      - COMMIT_MGR_URL=http://alice-commit-mgr:4001
       - NATS_URL=nats://alice-nats-server:4222
     networks:
       - alice

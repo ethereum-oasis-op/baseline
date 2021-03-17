@@ -21,10 +21,12 @@ export const connectNATS = async () => {
 
 // set up a subscription to process a request
 const deployContracts = async (msg) => {
+  logger.info('NATS received request to deploy-contracts')
   if (msg.reply) {
       nc.publish(msg.reply, new Date().toLocaleTimeString());
   }
     
+  logger.info('Deploying Verifier contract...')
   const { result: verifierAddress, error: errorVerifier} = await deployVerifier();
   if (errorVerifier) {
     logger.error(`Error: problem deploying Verifier contract: ${errorVerifier.message}`)
