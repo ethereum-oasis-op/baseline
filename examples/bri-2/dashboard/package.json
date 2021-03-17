@@ -1,7 +1,7 @@
 {
   "name": "baseline-dashboard",
   "version": "0.1.3",
-  "description": "Baseline Dashboard  - A commitment manager UI",
+  "description": "UI for a baseline stack",
   "main": "index.js",
   "private": true,
   "scripts": {

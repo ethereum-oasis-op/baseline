@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import PropTypes from "prop-types";
 import useSwr from 'swr';
 import axios from "axios";
-import { addPhonebook } from '../Utils/Phonebook';
 import { workflowMgrUrl } from "../Forms/FormSettings.js";
 import PhonebookDropdown from "../Dropdowns/PhonebookDropdown.js";
 // components
@@ -11,13 +10,17 @@ import PhonebookDropdown from "../Dropdowns/PhonebookDropdown.js";
 
 const fetcher = (url) => fetch(url).then((res) => res.json());
 
-const customStyles = {
+const modalStyle = {
+  overlay: {
+    backgroundColor       : 'rgba(191, 191, 191, 0.75)'
+  },
   content : {
     top                   : '40%',
     left                  : '55%',
     right                 : 'auto',
     bottom                : 'auto',
-    transform             : 'translate(-50%, -50%)'
+    transform             : 'translate(-50%, -50%)',
+    border                : '3px solid #000',
   }
 };
 
@@ -90,7 +93,7 @@ export default function CardPhonebook({ color }) {
                 isOpen={modalIsOpen}
                 onAfterOpen={afterOpenModal}
                 onRequestClose={closeModal}
-                style={customStyles}
+                style={modalStyle}
                 contentLabel="New Contact"
                 ariaHideApp={false}
               >

@@ -23,6 +23,7 @@ services:
 
   alice-nats-server:
     hostname: alice-nats-server
+    container_name: alice-nats-server
     image: nats
     ports:
       - 8222:8222

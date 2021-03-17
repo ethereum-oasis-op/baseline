@@ -178,6 +178,16 @@ export default function Sidebar() {
               Run Internal Test
             </button>
             <button
+              className="bg-orange-500 active:bg-gray-100 text-gray-800 font-normal px-4 py-2 mt-6 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
+              type="button"
+              onClick={() => {
+                router.push('/admin/workflow-test');
+              }}
+            >
+              <i className="fas fa-chevron-circle-right w-5 mr-1"></i>
+              Start Hello World
+            </button>
+            <button
               className="bg-white active:bg-gray-100 text-gray-800 font-normal px-4 py-2 mt-6 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
               type="button"
               onClick={() => {
