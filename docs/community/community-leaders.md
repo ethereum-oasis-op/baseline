@@ -103,14 +103,15 @@ Details on how to become a [Maintainer here](members.md).
 
 | Maintainer \(with link to Github ID\) | Company |
 | :--- | :--- |
-| [**Brian Chamberlain**](https://github.com/breakpointer)| ConsenSys |
-| [**Lucas Rodriguez Benitez**](https://www.linkedin.com/in/lucas-rodriguez-benitez-229092171/) | EY |
+| [**Brian Chamberlain**](https://github.com/breakpointer) | ConsenSys |
 | [**Sam Stokes**](https://github.com/bitwiseguy) | ConsenSys |
-| [**Kartheek Solipuram**](https://github.com/skarred14)\ | EY |
+| [**Lucas Rodriguez Benitez**](https://www.linkedin.com/in/lucas-rodriguez-benitez-229092171/) | EY |
+| [**Kartheek Solipuram**](https://github.com/skarred14) | EY |
 | [**Kyle Thomas**](https://github.com/kthomas) | Provide |
 | [**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/) | Nethermind |
 | [**George Spasov**](https://www.linkedin.com/in/george-spasov/) | LimeChain |
 | [**Anais Ofranc**](https://github.com/Consianimis) | Consianimis |
+| [**Hamza Tokuchi**](https://github.com/Meuko) | [BlockLab](https://www.blocklab.nl/) |
 
 ## Founding Group on March 4, 2020 <a id="founding-group-on-march-4-2020"></a>
 
