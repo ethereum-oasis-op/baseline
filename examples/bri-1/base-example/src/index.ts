@@ -4,7 +4,7 @@ import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceProv
 import { ICircuitProver, ICircuitRegistry, ICircuitVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
 import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
 import { Application as Workgroup, Circuit, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
-import { Capabilities, Ident, NChain, Vault, capabilitiesFactory, nchainClientFactory } from 'provide-js';
+import { Baseline, Capabilities, Ident, NChain, Vault, baselineClientFactory, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
@@ -39,6 +39,7 @@ const tryTimes = async <T>(prom: () => Promise<T>, times: number = 80, wait: num
 export class ParticipantStack {
 
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
+  private baselineProxy?: Baseline;
   private baselineCircuit?: Circuit;
   private baselineConfig?: any;
   private babyJubJub?: VaultKey;
@@ -563,6 +564,17 @@ export class ParticipantStack {
     });
   }
 
+  async createOrgRefreshToken(): Promise<Token> {
+    return await Ident.clientFactory(
+      this.baselineConfig?.token,
+      this.baselineConfig?.identApiScheme,
+      this.baselineConfig?.identApiHost,
+    ).createToken({
+      organization_id: this.org.id,
+      scope: 'offline_access',
+    });
+  }
+
   async createWorkgroupToken(): Promise<Token> {
     return await Ident.clientFactory(
       this.baselineConfig?.token,
@@ -897,9 +909,38 @@ export class ParticipantStack {
       await this.createVaultKey(vault.id!, 'secp256k1');
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
       await this.registerWorkgroupOrganization();
+      await this.configureBaselineProxy();
     }
 
     return this.org;
+  }
+
+  async configureBaselineProxy(): Promise<any> {
+    const orgToken = await this.createOrgToken();
+    const tkn = orgToken.accessToken || orgToken.token;
+
+    const orgRefreshToken = await this.createOrgRefreshToken();
+    const refreshToken = orgRefreshToken.refreshToken;
+
+    const registryContract = await this.requireWorkgroupContract('organization-registry');
+
+    this.baselineProxy = baselineClientFactory(
+      tkn!,
+      this.baselineConfig?.baselineApiScheme,
+      this.baselineConfig?.baselineApiHost
+    );
+
+    const resp = await this.baselineProxy.configureProxy({
+      counterparties: [],
+      env: {},
+      network_id: this.baselineConfig?.networkId,
+      organization_address: (await this.resolveOrganizationAddress()),
+      organization_id: this.org?.id,
+      organization_refresh_token: refreshToken,
+      registry_contract_address: registryContract.address,
+    });
+
+    return resp;
   }
 
   async startProtocolSubscriptions(): Promise<any> {

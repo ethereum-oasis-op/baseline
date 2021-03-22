@@ -399,8 +399,8 @@ services:
       - alice-redis
       - alice-privacy
     environment:
-      - BASELINE_ORGANIZATION_ADDRESS=0x
-      - BASELINE_REGISTRY_CONTRACT_ADDRESS=0xfae7Cd9c0D9827E40224CbF9C2F11c9135f9B2B7
+      - BASELINE_ORGANIZATION_ADDRESS=
+      - BASELINE_REGISTRY_CONTRACT_ADDRESS=
       - DATABASE_HOST=alice-postgres
       - DATABASE_NAME=providibright_dev
       - DATABASE_USER=providibright
@@ -445,8 +445,8 @@ services:
       - alice-postgres
       - alice-redis
     environment:
-      - BASELINE_ORGANIZATION_ADDRESS=0x
-      - BASELINE_REGISTRY_CONTRACT_ADDRESS=0xfae7Cd9c0D9827E40224CbF9C2F11c9135f9B2B7
+      - BASELINE_ORGANIZATION_ADDRESS=
+      - BASELINE_REGISTRY_CONTRACT_ADDRESS=
       - DATABASE_HOST=alice-postgres
       - DATABASE_NAME=providibright_dev
       - DATABASE_USER=providibright
@@ -905,8 +905,8 @@ services:
       - bob-redis
       - bob-privacy
     environment:
-      - BASELINE_ORGANIZATION_ADDRESS=0x
-      - BASELINE_REGISTRY_CONTRACT_ADDRESS=0xfae7Cd9c0D9827E40224CbF9C2F11c9135f9B2B7
+      - BASELINE_ORGANIZATION_ADDRESS=
+      - BASELINE_REGISTRY_CONTRACT_ADDRESS=
       - DATABASE_HOST=bob-postgres
       - DATABASE_NAME=providibright_dev
       - DATABASE_USER=providibright
@@ -951,8 +951,8 @@ services:
       - bob-postgres
       - bob-redis
     environment:
-      - BASELINE_ORGANIZATION_ADDRESS=0x
-      - BASELINE_REGISTRY_CONTRACT_ADDRESS=0xfae7Cd9c0D9827E40224CbF9C2F11c9135f9B2B7
+      - BASELINE_ORGANIZATION_ADDRESS=
+      - BASELINE_REGISTRY_CONTRACT_ADDRESS=
       - DATABASE_HOST=bob-postgres
       - DATABASE_NAME=providibright_dev
       - DATABASE_USER=providibright
