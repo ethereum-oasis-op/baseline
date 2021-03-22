@@ -142,14 +142,14 @@ describe('baseline', () => {
         assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      it('should deploy the ERC1820 registry contract for the workgroup', async () => {
+      it('should deploy the global ERC1820 registry contract', async () => {
         const erc1820RegistryContract = await bobApp.requireWorkgroupContract('erc1820-registry');
-        assert(erc1820RegistryContract, 'workgroup ERC1820 registry contract should not be null');
+        assert(erc1820RegistryContract, 'global ERC1820 registry contract should not be null');
       });
 
-      it('should deploy the ERC1820 organization registry contract for the workgroup', async () => {
+      it('should deploy the global ERC1820 organization registry contract', async () => {
         const orgRegistryContract = await bobApp.requireWorkgroupContract('organization-registry');
-        assert(orgRegistryContract, 'workgroup organization registry contract should not be null');
+        assert(orgRegistryContract, 'global organization registry contract should not be null');
       });
     });
 
