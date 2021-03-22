@@ -98,10 +98,13 @@ export const createUser = async (identHost, firstName, lastName, email, password
 };
 
 export const scrapeInvitationToken = async (container) => {
+  await promisedTimeout(800);
+
   let logs;
   exec(`docker logs ${container}`, (err, stdout, stderr) => {
    logs = stderr.toString();
   });
+
   await promisedTimeout(800);
   const matches = logs.match(/\"dispatch invitation\: (.*)\"/);
   if (matches && matches.length > 0) {
