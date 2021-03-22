@@ -29,6 +29,7 @@ export const baselineAppFactory = async (
   networkId,
   vaultHost,
   privacyHost,
+  baselineHost,
   rcpEndpoint,
   rpcScheme,
   workgroup,
@@ -46,6 +47,8 @@ export const baselineAppFactory = async (
 
   return new ParticipantStack(
     {
+      baselineApiScheme: 'http',
+      baselineApiHost: baselineHost,
       identApiScheme: 'http',
       identApiHost: identHost,
       initiator: initiator,
