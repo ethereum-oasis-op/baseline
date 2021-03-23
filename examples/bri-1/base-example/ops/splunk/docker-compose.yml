@@ -530,13 +530,13 @@ services:
       retries: 2
     ports:
       - 8000:8000
-      - 8090:8088
+      - 8090:8090
       - 8514:8514
     volumes:
       - splunk-var:/opt/splunk/var
       - splunk-etc:/opt/splunk/etc
-      - ./splunk-config.yml:/tmp/defaults/default.yml
-      - ./dashboards:/opt/splunk/etc/apps/search/local/data/ui/views/
+      - ./ops/splunk/splunk-config.yml:/tmp/defaults/default.yml
+      - ./ops/splunk/dashboards:/opt/splunk/etc/apps/search/local/data/ui/views/
     networks:
       - alice
 
@@ -562,8 +562,8 @@ services:
     restart: unless-stopped
     hostname: alice-ethlogger
     volumes:
-      - ./abis:/app/abis:ro
-      - ./ops/splunk/alice-ethlogger:/app
+      - ./ops/splunk/abis:/app/abis
+      - ./ops/splunk:/app
     networks:
       - alice
     logging: *splunk-logging
