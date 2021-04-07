@@ -1,7 +1,7 @@
 {
-  "name": "base-example",
-  "version": "0.0.0",
-  "description": "Baseline Reference Implementation-1 using the core Provide stack",
+  "name": "bri-2",
+  "version": "0.1.0",
+  "description": "Baseline Reference Implementation - 2",
   "license": "CC0 1.0 Universal",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
@@ -10,18 +10,16 @@
     "dist"
   ],
   "scripts": {
-    "build:image": "ops/build-image.sh",
-    "build:cjs": "./node_modules/.bin/tsc -p tsconfig.cjs.json",
-    "build:umd": "webpack",
-    "build:contracts": "./node_modules/.bin/truffle compile",
-    "build": "npm run clean && npm run build:cjs && npm run build:umd",
-    "clean": "rm -rf ./dist",
+    "dev:commit-mgr": "nodemon --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all start",
+    "build:dashboard": "cd dashboard && npm run build",
+    "dev:dashboard": "cd dashboard && npm run dev",
+    "start:dashboard": "cd dashboard && npm run build && npm run start",
     "contracts:clean": "rm -rf ./contracts/artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",
-    "contracts:compile": "pushd node_modules/@baseline-protocol/contracts && npm install && make && popd && mkdir -p ./contracts/artifacts && cp -R node_modules/@baseline-protocol/contracts/artifacts/ ./contracts/artifacts"
+    "contracts:compile": "cd node_modules/@baseline-protocol/contracts && npm install && make && cd - && mkdir -p ./contracts/artifacts && cp -R ./node_modules/@baseline-protocol/contracts/artifacts ./contracts"
   },
   "dependencies": {
     "@baseline-protocol/api": "0.1.0",
-    "@baseline-protocol/contracts": "0.4.0",
+    "@baseline-protocol/contracts": "^0.4.0",
     "@baseline-protocol/messaging": "0.1.0",
     "@baseline-protocol/privacy": "0.1.0",
     "@baseline-protocol/types": "0.1.0",
@@ -31,8 +29,7 @@
     "jsonwebtoken": "8.5.1",
     "loglevel": "^1.6.8",
     "provide-js": "^1.3.3",
-    "solc": "^0.6.1",
-    "zokrates-js": "1.0.23"
+    "solc": "^0.6.1"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^8.3.4",
@@ -43,6 +40,8 @@
     "global-jsdom": "^6.1.0",
     "jsdom": "^16.3.0",
     "mocha": "^8.0.1",
+    "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5",
     "pg": "^8.3.3",
     "truffle": "^5.1.50",
     "ts-loader": "^6.0.4",

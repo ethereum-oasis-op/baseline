@@ -1,5 +1,6 @@
 import { InfuraGas } from './infura-gas';
 import { EthClient } from './eth-client';
+import { LocalDb } from './local-db';
 
 export interface ITxManager {
   insertLeaf(
@@ -29,6 +30,9 @@ export async function txManagerServiceFactory(
       break;
     case "ganache":
       service = new EthClient(config);
+      break;
+    case "local-db":
+      service = new LocalDb(config);
       break;
     default:
       throw new Error('TxManager provider not found.');

@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import axios from 'axios';
 import { ethers } from 'ethers';
-
 import { logger } from "../logger";
 import { insertLeaf } from "../merkle-tree/leaves";
 import { merkleTrees } from "../db/models/MerkleTree";
@@ -25,7 +24,7 @@ export const get_ws_provider = () => {
         logger.error(`[WEBSOCKET] "close" event: ${event}`);
         ws_provider = undefined;
       });
-      logger.info(`Established websocket connection: ${process.env.ETH_CLIENT_WS}`);
+      logger.info(`Established websocket connection to Ethereum client: ${process.env.ETH_CLIENT_WS}`);
     } catch (err) {
       logger.error(`[WEBSOCKET] Cannot establish connection: ${process.env.ETH_CLIENT_WS}`);
     }
@@ -109,4 +108,32 @@ export const jsonrpc = async (method, params, id) => {
     params: params
   });
   return response.data;
+}
+
+export const chainName = () => {
+  let name;
+  switch (parseInt(process.env.CHAIN_ID, 10)) {
+    case 1:
+      name = 'MAINNET';
+      break;
+    case 3:
+      name = 'ROPSTEN';
+      break;
+    case 4:
+      name = 'RINKEBY';
+      break;
+    case 5:
+      name = 'GOERLI';
+      break;
+    case 42:
+      name = 'KOVAN';
+      break;
+    case 101010:
+      name = 'LOCAL';
+      break;
+    default:
+      name = 'LOCAL';
+      break;
+  }
+  return name;
 }

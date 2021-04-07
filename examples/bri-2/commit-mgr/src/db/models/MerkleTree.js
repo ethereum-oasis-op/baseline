@@ -8,11 +8,18 @@ const merkleTreeSchema = new Schema(
       type: Number,
       default: 4,
     },
+    network: {
+      name: String, // [ 'mainnet', 'ropsten', 'rinkeby', 'goerli', 'kovan', 'private', 'local-db']
+      chainId: Number
+    },
     latestLeaf: {
       blockNumber: Number,
       leafIndex: Number,
     },
-    active: Boolean,
+    active: {
+      type: Boolean,
+      default: true,
+    },
     latestRecalculation: {
       blockNumber: Number,
       leafIndex: Number,
@@ -29,10 +36,10 @@ const merkleTreeSchema = new Schema(
     // node size ~ 200b. 200b * 25,000 ~ 5MB
     nodes: [{
       _id: false,
-      leafIndex: Number, // Only used for leaves
+      leafIndex: Number,   // Only used for leaves
       blockNumber: Number, // Only used for leaves
-      txHash: String, // Only used for leaves
-      hash: String // commitment value
+      txHash: String,      // Only used for leaves
+      hash: String         // hash/commitment value
     }],
   },
   { versionKey: false }
