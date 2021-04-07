@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"context"
+	"encoding/hex"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -10,10 +12,10 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"strconv"
 	"time"
 
 	"github.com/consensys/gnark/backend/groth16"
-	"github.com/consensys/gnark/backend/r1cs"
 	"github.com/consensys/gurvy"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -37,6 +39,7 @@ type createCircuitReq struct {
 	Name       string                `form:"name" json:"name" binding:"required"`
 	SourceCode *multipart.FileHeader `form:"sourceCode" json:"sourceCode"`
 	CurveID    gurvy.ID              `form:"curveId" json:"curveId"`
+	Identities []string              `form:"identities" json:"identities"`
 }
 
 var dbClient *mongo.Client
@@ -47,6 +50,7 @@ var proveQueue chan string
 var verifyQueue chan string
 
 const zkCircuitCollection = "zk-circuits"
+const databaseName = "baseline"
 
 /******************************************************/
 /***      Main                                      ***/
@@ -69,11 +73,15 @@ func main() {
 		}
 	}()
 
+	// Create directories (if they don't already exist) to store circuits
+	os.Mkdir("src/circuits/uncompiled/", 0755)
+	os.Mkdir("src/circuits/compiled/", 0755)
+
 	// Connect to NATS
 	//natsClient = initNats()
 	//defer natsClient.Close()
 
-	// Constantly running background processes
+	// Continuosly running background processes
 	compileQueue = make(chan string)
 	go compileCircuits()
 
@@ -90,6 +98,7 @@ func main() {
 	router.POST("/zkcircuits/:circuitID/setup", setup)
 	router.POST("/zkcircuits/:circuitID/prove", prove)
 	router.POST("/zkcircuits/:circuitID/verify", verify)
+	//router.POST("/keys/:circuitID/verify", generateKeyPair)
 
 	serverPort := os.Getenv("SERVER_PORT")
 	router.Run(":" + serverPort)
@@ -141,7 +150,7 @@ func compileCircuits() {
 		}
 
 		// Update zk-circuit in db: set status to "compiled"
-		collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+		collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
@@ -162,7 +171,7 @@ func setupCircuits() {
 		log.Println("Starting setup for circuit: ", circuitID)
 
 		// Get zk circuit collection for later updates
-		collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+		collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		filter := bson.M{"_id": circuitID}
@@ -179,8 +188,9 @@ func setupCircuits() {
 		}
 
 		// Decode r1cs binary, store in compiledCircuit
-		compiledCircuit := r1cs.New(gurvy.BN256)
+		compiledCircuit := groth16.NewCS(gurvy.BN256)
 		_, err = compiledCircuit.ReadFrom(r)
+
 		if err != nil {
 			log.Println("[ERROR: Decode r1cs] " + err.Error())
 			update := bson.M{"$set": bson.M{"status": "setup_failed"}}
@@ -189,6 +199,7 @@ func setupCircuits() {
 		}
 
 		pk, vk, err := groth16.Setup(compiledCircuit)
+
 		if err != nil {
 			log.Println("[ERROR: Gnark setup] " + err.Error())
 			update := bson.M{"$set": bson.M{"status": "setup_failed"}}
@@ -224,7 +235,7 @@ func getSingleCircuit(c *gin.Context) {
 	var circuit ZKCircuit
 	circuitID := c.Param("circuitID")
 
-	collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -241,7 +252,7 @@ func getSingleCircuit(c *gin.Context) {
 }
 
 func getAllCircuits(c *gin.Context) {
-	collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -282,8 +293,8 @@ func createCircuit(c *gin.Context) {
 	}
 
 	// Create new uuid v4
-	id := uuid.NewRandom().String()
-	zkCircuitDoc.ID = id
+	circuitId := uuid.NewRandom().String()
+	zkCircuitDoc.ID = circuitId
 	zkCircuitDoc.Name = requestBody.Name
 	zkCircuitDoc.Status = "created"
 	zkCircuitDoc.CurveID = gurvy.BN256 // default curveId is BN256 for now
@@ -291,25 +302,40 @@ func createCircuit(c *gin.Context) {
 		zkCircuitDoc.CurveID = requestBody.CurveID
 	}
 
-	// Create temporary source file
-	file, err := c.FormFile("sourceCode")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
+	circuitType := c.Query("type")
+	if circuitType == "consistency" {
+		//pubKey1 := generateEddsaKeyPair()
+		//pubKey2 := generateEddsaKeyPair()
+		//log.Println("pubKey1:", pubKey1)
+		//log.Println("pubKey2:", pubKey2)
 
-	err = c.SaveUploadedFile(file, "src/circuits/uncompiled/"+id+".go")
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Could not save uploaded file:" + err.Error(),
-		})
-		return
+		//var ids []string
+		//ids[0] = pubKey1
+		//ids[1] = pubKey2
+
+		// Pass identities to circuit generator
+		generateConsistencyCircuit(circuitId, requestBody.Identities)
+	} else {
+		// Create temporary source file
+		file, err := c.FormFile("sourceCode")
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		err = c.SaveUploadedFile(file, "src/circuits/uncompiled/"+circuitId+".go")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Could not save uploaded file:" + err.Error(),
+			})
+			return
+		}
 	}
 
 	// Save file artifacts in db
-	collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -321,8 +347,8 @@ func createCircuit(c *gin.Context) {
 		return
 	}
 
-	// Create new job to compile circuit, then create circuit.r1cs
-	compileQueue <- id
+	// Create new job to compile circuit, which creates circuit.r1cs
+	compileQueue <- circuitId
 
 	c.JSON(http.StatusCreated, result)
 }
@@ -331,7 +357,7 @@ func setup(c *gin.Context) {
 	circuitID := c.Param("circuitID")
 
 	// Update db to add keys, update status
-	collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -353,9 +379,12 @@ func setup(c *gin.Context) {
 	})
 }
 
+// Currently only supports groth16
 func prove(c *gin.Context) {
+	// Witness variables must be ordered as defined in Circuit definition
+	// Private variables come first, then public variables
 	type generateProofReq struct {
-		Witness interface{} `form:"witness" json:"witness" xml:"witness"  binding:"required"`
+		Witness map[string]string `form:"witness" json:"witness" xml:"witness"  binding:"required"`
 	}
 
 	var requestBody generateProofReq
@@ -380,7 +409,7 @@ func prove(c *gin.Context) {
 	}
 
 	// Decode r1cs binary, store in compiledCircuit
-	compiledCircuit := r1cs.New(gurvy.BN256)
+	compiledCircuit := groth16.NewCS(gurvy.BN256)
 	_, err = compiledCircuit.ReadFrom(r)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -391,7 +420,7 @@ func prove(c *gin.Context) {
 
 	// Get circuit from db
 	var circuit ZKCircuit
-	collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -409,27 +438,64 @@ func prove(c *gin.Context) {
 	provingKey := groth16.NewProvingKey(gurvy.BN256)
 	provingKey.ReadFrom(buf)
 
-	proof, err := groth16.Prove(compiledCircuit, provingKey, requestBody.Witness)
+	/************************************************************************/
+	/** Loop through witness struct and convert each input to 32 byte uint **/
+	/************************************************************************/
+	var numInputs uint32
+	var witnessString string
+	for _, value := range requestBody.Witness {
+		// Convert from string to 32 byte uint
+		log.Println("value:", value)
+		element_uint64, err := strconv.ParseUint(value, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "[parsing witness] " + err.Error(),
+			})
+			return
+		}
+		// Convert from uint64 to 32-byte hex string
+		hexInput := fmt.Sprintf("%064x", element_uint64)
+		log.Println("hexInput:", hexInput)
+
+		// Update counters
+		witnessString += fmt.Sprint(hexInput)
+		log.Printf("witnessString: %s", witnessString)
+		numInputs++
+	}
+
+	// Convert number of inputs to hex of uint32
+	hexInput := fmt.Sprintf("%08x", numInputs) + witnessString
+
+	// Convert hex string to decoded bytes
+	decodedHex, err := hex.DecodeString(hexInput)
+
+	// Create witness io.Reader
+	var witnessBuffer bytes.Buffer
+	witnessBuffer.Write([]byte(decodedHex))
+	/************************************************************************/
+
+	proof, err := groth16.ReadAndProve(compiledCircuit, provingKey, &witnessBuffer)
 	if err != nil {
+		log.Println("ERROR:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[groth16.Prove] " + err.Error(),
 		})
 		return
 	}
 
-	var proofBuf bytes.Buffer
-	proof.WriteTo(&proofBuf)
+	var proofWriter bytes.Buffer
+	proof.WriteTo(&proofWriter)
 
 	c.JSON(http.StatusOK, gin.H{
-		"proof": proofBuf.Bytes(),
+		"proof": proofWriter.Bytes(),
 	})
 }
 
 func verify(c *gin.Context) {
 	// Witness only needs to contain public inputs here
 	type verifyProofReq struct {
-		Proof   []byte      `form:"proof" json:"proof" xml:"proof"  binding:"required"`
-		Witness interface{} `form:"witness" json:"witness" xml:"witness"  binding:"required"`
+		Proof   []byte            `form:"proof" json:"proof" xml:"proof"  binding:"required"`
+		Witness map[string]string `form:"witness" json:"witness" xml:"witness"  binding:"required"`
 	}
 
 	var requestBody verifyProofReq
@@ -445,7 +511,7 @@ func verify(c *gin.Context) {
 
 	// Get circuit from db
 	var circuit ZKCircuit
-	collection := dbClient.Database("baseline").Collection(zkCircuitCollection)
+	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -468,7 +534,43 @@ func verify(c *gin.Context) {
 	proof := groth16.NewProof(gurvy.BN256)
 	proof.ReadFrom(proofBuf)
 
-	if err = groth16.Verify(proof, verifyingKey, requestBody.Witness); err != nil {
+	/************************************************************************/
+	/** Loop through witness struct and convert each input to 32 byte uint **/
+	/************************************************************************/
+	var numInputs uint32
+	var witnessString string
+	for _, value := range requestBody.Witness {
+		// Convert from string to 32 byte uint
+		log.Println("value:", value)
+		element_uint64, err := strconv.ParseUint(value, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "[parsing witness] " + err.Error(),
+			})
+			return
+		}
+		// Convert from uint64 to 32-byte hex string
+		hexInput := fmt.Sprintf("%064x", element_uint64)
+		log.Println("hexInput:", hexInput)
+
+		// Update counters
+		witnessString += fmt.Sprint(hexInput)
+		log.Printf("witnessString: %s", witnessString)
+		numInputs++
+	}
+
+	// Convert number of inputs to hex of uint32
+	hexInput := fmt.Sprintf("%08x", numInputs) + witnessString
+
+	// Convert hex string to decoded bytes
+	decodedHex, err := hex.DecodeString(hexInput)
+
+	// Create witness io.Reader
+	var witnessBuffer bytes.Buffer
+	witnessBuffer.Write([]byte(decodedHex))
+	/************************************************************************/
+
+	if err = groth16.ReadAndVerify(proof, verifyingKey, &witnessBuffer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "[groth16.Verify] " + err.Error(),
 		})
