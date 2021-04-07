@@ -2,6 +2,8 @@ version: '3.5'
 
 services:
 
+  # shared containers
+
   ganache:
     container_name: ganache
     image: trufflesuite/ganache-cli:v6.6.0

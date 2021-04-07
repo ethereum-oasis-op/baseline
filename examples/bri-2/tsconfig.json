@@ -1,6 +1,6 @@
 {
   "include": [
-    "api-gateway/**/*"
+    "commit-mgr/**/*"
   ],
   "compilerOptions": {
     "allowJs": false,

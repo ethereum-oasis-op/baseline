@@ -1,0 +1,16 @@
+.DS_Store
+
+# Logs
+logs
+# dotenv environment variables file
+.env
+
+# Compiled circuits
+src/circuits/compiled/*
+
+# Circuit source code
+src/circuits/uncompiled/*
+
+# Temp circuit files
+src/circuits/circuit.go
+src/circuits/circuit.r1cs

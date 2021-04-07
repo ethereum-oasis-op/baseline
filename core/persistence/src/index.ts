@@ -1,9 +1,10 @@
-import { d365ServiceFactory, excelServiceFactory, salesforceServiceFactory, sapServiceFactory } from './providers';
+import { d365ServiceFactory, excelServiceFactory, salesforceServiceFactory, sapServiceFactory, ramServiceFactory } from './providers';
 
 export const persistenceProviderDynamics365 = 'd365';
 export const persistenceProviderExcel = 'excel';
 export const persistenceProviderSalesforce = 'salesforce';
 export const persistenceProviderSAP = 'sap';
+export const persistenceProviderRAM = 'ram';
 
 export interface IPersistenceService {
   alert(params: any): Promise<any>;
@@ -11,11 +12,7 @@ export interface IPersistenceService {
   subscribe(params: any): Promise<any>;
   unsubscribe(params: any): Promise<any>;
 
-  query(q: string): Promise<any>;
-  read(id: string): Promise<any>;
-  create(params: any): Promise<any>;
-  update(id: string, params: any): Promise<any>;
-  delete(id: string): Promise<any>;
+  publish(params: any): Promise<any>;
 }
 
 export async function persistenceServiceFactory(
@@ -36,6 +33,9 @@ export async function persistenceServiceFactory(
       break;
     case persistenceProviderSAP:
       service = await sapServiceFactory(config);
+      break;
+    case persistenceProviderRAM:
+      service = await ramServiceFactory(config);
       break;
     default:
       throw new Error('persistence service provider required');

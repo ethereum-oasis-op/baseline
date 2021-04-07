@@ -21,13 +21,13 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 | [**Chaals Neville**](https://www.linkedin.com/in/chaals/) | ConsenSys |
 | [**Dan Burnett**](https://www.linkedin.com/in/daburnett/) | Enterprise Ethereum Alliance |
 | [**Tas Dienes**](https://www.linkedin.com/in/tasdienes/) | Ethereum Foundation |
-| [**John Wolpert**](https://linkedin.com/in/johnwolpert)\*\*\*\* | Current Baseline Protocol TSC Chair |
-| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)\*\*\*\* | Unibright |
-| [**Gina Rubino**](https://www.linkedin.com/in/ginarubino/)\*\*\*\* | Nethermind |
-| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)\*\*\*\* | Provide |
-| [**Daniel Kochis**](https://www.linkedin.com/in/daniel-kochis-9b42627/)\*\*\*\* | Chainlink |
-| [**Tracy Kuhrt**](https://www.linkedin.com/in/tracykuhrt/)\*\*\*\* | Accenture |
-| [**Melanie Marsollier**](https://www.linkedin.com/in/melaniemarsollier/)\*\*\*\* | Splunk |
+| [**John Wolpert**](https://linkedin.com/in/johnwolpert) | Current Baseline Protocol TSC Chair |
+| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/) | Unibright |
+| [**Antonio Sabado**](https://www.linkedin.com/in/antonio-sabado-97150511b/) | Nethermind |
+| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/) | Provide |
+| [**Daniel Kochis**](https://www.linkedin.com/in/daniel-kochis-9b42627/) | Chainlink |
+| [**Tracy Kuhrt**](https://www.linkedin.com/in/tracykuhrt/) | Accenture |
+| [**Melanie Marsollier**](https://www.linkedin.com/in/melaniemarsollier/) | Splunk |
 
 ### Technical Steering Committee 2020/21 <a id="your-technical-steering-committee"></a>
 
@@ -38,15 +38,15 @@ On September 30, 2020, the following people were voted in as the TSC for October
 | Name | Company |
 | :--- | :--- |
 | [**Brian Chamberlain**](https://www.linkedin.com/in/blchamberlain/) | ConsenSys AG |
-| [**Hudson Jameson**](https://www.linkedin.com/in/hudsonjameson/)\*\*\*\* | Ethereum Foundation |
-| [**Anais Ofranc**](https://www.linkedin.com/in/anaisofranc/)\*\*\*\* | Consianimis |
-| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)\*\*\*\* | Unibright |
-| [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/)\*\*\*\* | Ernst & Young |
-| [**George Spasov**](https://www.linkedin.com/in/george-spasov/)\*\*\*\* | Limechain |
-| [**Tomasz Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/)\*\*\*\* | Nethermind |
-| [**Conor Svensson**](https://www.linkedin.com/in/conor10/)\*\*\*\* | Web3Labs |
-| [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)\*\*\*\* | Microsoft |
-| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)\*\*\*\* | Provide |
+| [**Hudson Jameson**](https://www.linkedin.com/in/hudsonjameson/) | Ethereum Foundation |
+| [**Anais Ofranc**](https://www.linkedin.com/in/anaisofranc/)| Consianimis |
+| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)| Unibright |
+| [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/) | Ernst & Young |
+| [**George Spasov**](https://www.linkedin.com/in/george-spasov/) | Limechain |
+| [**Tomasz Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/) | Nethermind |
+| [**Conor Svensson**](https://www.linkedin.com/in/conor10/) | Web3Labs |
+| [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)| Microsoft |
+| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)| Provide |
 | [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) -- Chair | ConsenSys AG |
 
 ### Specifications Steering Committee <a id="your-specifications-steering-committee"></a>
@@ -69,21 +69,21 @@ _To be listed below, contact the_ [_TSC Chair_](community-leaders.md#your-provis
 | [**Stephan Baur**](https://www.linkedin.com/in/stephanbaur/) | Kaiser Permanente |
 | Steve Shortt | BP |
 | [**Yorke Rhodes**](https://www.linkedin.com/in/yorkerhodes/) | Microsoft |
-| [**Tim Coulter**](https://www.linkedin.com/in/timothyjcoulter/)\*\*\*\* | Truffle |
-| \*\*\*\*[**Christian Schmiedel**](https://www.linkedin.com/in/christian-schmiedel-0363b0a5/)\*\*\*\* | Fraunhofer IPK |
-| [**Peter Kris**](Https://linkedin.com/in/peter-kris-a7274054)\*\*\*\* | Block Unison |
-| [**John Monarch**](https://www.linkedin.com/in/johnmonarch/)\*\*\*\* | ShipChain |
-| [**Maciej Ziomek**](https://twitter.com/cryptoisland)\*\*\*\* | Baseline Community Videographer |
-| [**Stephen Garcia**](https://www.linkedin.com/in/stephengarciainfosec/)\*\*\*\* | ConsenSys CISO |
-| [**Avia Kraft**](https://www.linkedin.com/in/aviakraft/)\*\*\*\* | Core Convergence |
-| [**Juan Blanco**](https://www.linkedin.com/in/juanfranblanco/)\*\*\*\* | Nethereum |
-| [**Noam Eppel**](https://www.linkedin.com/in/noameppel/)\*\*\*\* | Morpheus.Network |
-| \*\*\*\*[**Nick Kritikos**](https://www.linkedin.com/in/kritikos40/)\*\*\*\* | ConsenSys |
-| \*\*\*\*[**Dominic Steil** ](https://www.linkedin.com/in/dominic-steil-b6092553/)\*\*\*\* | Stateset |
-| [**Zac Cole**](https://www.linkedin.com/in/zak-cole/)\*\*\*\* | Whiteblock |
-| [**Nate Blakely**](https://www.linkedin.com/in/nathaniel-blakely/)\*\*\*\* | Whiteblock |
-| [**David Goodman**](https://www.linkedin.com/in/dh6oodman/)\*\*\*\* | [Vitro](https://vitro.io/) |
-| \*\*\*\*[**Kevin Small**](https://uk.linkedin.com/in/kevinsmalldev)\*\*\*\* | Independent |
+| [**Tim Coulter**](https://www.linkedin.com/in/timothyjcoulter/) | Truffle |
+| [**Christian Schmiedel**](https://www.linkedin.com/in/christian-schmiedel-0363b0a5/) | Fraunhofer IPK |
+| [**Peter Kris**](Https://linkedin.com/in/peter-kris-a7274054) | Block Unison |
+| [**John Monarch**](https://www.linkedin.com/in/johnmonarch/) | ShipChain |
+| [**Maciej Ziomek**](https://twitter.com/cryptoisland) | Baseline Community Videographer |
+| [**Stephen Garcia**](https://www.linkedin.com/in/stephengarciainfosec/) | ConsenSys CISO |
+| [**Avia Kraft**](https://www.linkedin.com/in/aviakraft/) | Core Convergence |
+| [**Juan Blanco**](https://www.linkedin.com/in/juanfranblanco/) | Nethereum |
+| [**Noam Eppel**](https://www.linkedin.com/in/noameppel/) | Morpheus.Network |
+| [**Nick Kritikos**](https://www.linkedin.com/in/kritikos40/) | ConsenSys |
+| [**Dominic Steil** ](https://www.linkedin.com/in/dominic-steil-b6092553/) | Stateset |
+| [**Zac Cole**](https://www.linkedin.com/in/zak-cole/) | Whiteblock |
+| [**Nate Blakely**](https://www.linkedin.com/in/nathaniel-blakely/) | Whiteblock |
+| [**David Goodman**](https://www.linkedin.com/in/dh6oodman/) | [Vitro](https://vitro.io/) |
+| [**Kevin Small**](https://uk.linkedin.com/in/kevinsmalldev) | Independent |
 
 ### Provisional Chair <a id="your-provisional-chair"></a>
 
@@ -103,14 +103,15 @@ Details on how to become a [Maintainer here](members.md).
 
 | Maintainer \(with link to Github ID\) | Company |
 | :--- | :--- |
-| [**Brian Chamberlain**](https://github.com/breakpointer)\*\*\*\* | ConsenSys |
-| [**Lucas Rodriguez Benitez**](https://www.linkedin.com/in/lucas-rodriguez-benitez-229092171/)\*\*\*\* | EY |
-| [**Sam Stokes**](https://github.com/bitwiseguy)\*\*\*\* | ConsenSys |
-| [**Kartheek Solipuram**](https://github.com/skarred14)\*\*\*\* | EY |
-| \*\*\*\*[**Kyle Thomas**](https://github.com/kthomas)\*\*\*\* | Provide |
-| \*\*\*\*[**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/)\*\*\*\* | Nethermind |
-| [**George Spasov**](https://www.linkedin.com/in/george-spasov/)\*\*\*\* | LimeChain |
-| [**Anais Ofranc**](https://github.com/Consianimis)\*\*\*\* | Consianimis |
+| [**Brian Chamberlain**](https://github.com/breakpointer) | ConsenSys |
+| [**Sam Stokes**](https://github.com/bitwiseguy) | ConsenSys |
+| [**Lucas Rodriguez Benitez**](https://www.linkedin.com/in/lucas-rodriguez-benitez-229092171/) | EY |
+| [**Kartheek Solipuram**](https://github.com/skarred14) | EY |
+| [**Kyle Thomas**](https://github.com/kthomas) | Provide |
+| [**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/) | Nethermind |
+| [**George Spasov**](https://www.linkedin.com/in/george-spasov/) | LimeChain |
+| [**Anais Ofranc**](https://github.com/Consianimis) | Consianimis |
+| [**Hamza Tokuchi**](https://github.com/Meuko) | [BlockLab](https://www.blocklab.nl/) |
 
 ## Founding Group on March 4, 2020 <a id="founding-group-on-march-4-2020"></a>
 
