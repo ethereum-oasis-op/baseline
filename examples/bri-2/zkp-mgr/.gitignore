@@ -2,14 +2,12 @@
 
 # Logs
 logs
+
 # dotenv environment variables file
 .env
 
-# Compiled circuits
-src/circuits/compiled/*
-
-# Circuit source code
-src/circuits/uncompiled/*
+# Directories named after circuit UUIDs
+src/circuits/*-*/*
 
 # Temp circuit files
 src/circuits/circuit.go

@@ -73,10 +73,6 @@ func main() {
 		}
 	}()
 
-	// Create directories (if they don't already exist) to store circuits
-	os.Mkdir("src/circuits/uncompiled/", 0755)
-	os.Mkdir("src/circuits/compiled/", 0755)
-
 	// Connect to NATS
 	//natsClient = initNats()
 	//defer natsClient.Close()
@@ -95,10 +91,10 @@ func main() {
 	router.POST("/zkcircuits", createCircuit)
 	router.GET("/zkcircuits", getAllCircuits)
 	router.GET("/zkcircuits/:circuitID", getSingleCircuit)
+	router.GET("/zkcircuits/:circuitID/verifier", getSolidityVerifier)
 	router.POST("/zkcircuits/:circuitID/setup", setup)
 	router.POST("/zkcircuits/:circuitID/prove", prove)
 	router.POST("/zkcircuits/:circuitID/verify", verify)
-	//router.POST("/keys/:circuitID/verify", generateKeyPair)
 
 	serverPort := os.Getenv("SERVER_PORT")
 	router.Run(":" + serverPort)
@@ -114,17 +110,19 @@ func compileCircuits() {
 		log.Println("Starting compilation for circuit: ", circuitID)
 
 		// Copy source code into circuits/circuit.go
-		sourceFile := "src/circuits/uncompiled/" + circuitID + ".go"
+		sourceFile := "src/circuits/" + circuitID + "/uncompiled.go"
 		destinationFile := "src/circuits/circuit.go"
 
 		input, err := ioutil.ReadFile(sourceFile)
 		if err != nil {
-			log.Fatal("Error opening file: " + err.Error())
+			log.Println("ERROR opening file: " + err.Error())
+			continue
 		}
 
 		err = ioutil.WriteFile(destinationFile, input, 0644)
 		if err != nil {
-			log.Fatal("Error creating file: " + err.Error())
+			log.Println("ERROR creating file: " + err.Error())
+			continue
 		}
 
 		// Compile and create circuit.r1cs file
@@ -132,21 +130,24 @@ func compileCircuits() {
 		cmd.Dir = "src/circuits"
 		_, err = cmd.Output()
 		if err != nil {
-			log.Fatal("Error: " + err.Error())
+			log.Println("ERROR compiling circuit " + circuitID + ": " + err.Error())
+			continue
 		}
 
-		// Copy circuit.r1cs into circuits/compiled/<circuitID>.r1cs
+		// Copy circuit.r1cs into circuits/<circuitID>/compiled.r1cs
 		sourceFile = "src/circuits/circuit.r1cs"
-		destinationFile = "src/circuits/compiled/" + circuitID + ".r1cs"
+		destinationFile = "src/circuits/" + circuitID + "/compiled.r1cs"
 
 		input, err = ioutil.ReadFile(sourceFile)
 		if err != nil {
-			log.Fatal("Error opening file: " + err.Error())
+			log.Println("ERROR opening file: " + err.Error())
+			continue
 		}
 
 		err = ioutil.WriteFile(destinationFile, input, 0644)
 		if err != nil {
-			log.Fatal("Error creating file: " + err.Error())
+			log.Println("ERROR creating file: " + err.Error())
+			continue
 		}
 
 		// Update zk-circuit in db: set status to "compiled"
@@ -159,7 +160,8 @@ func compileCircuits() {
 
 		_, err = collection.UpdateOne(ctx, filter, update)
 		if err != nil {
-			log.Fatal("Error updating db: " + err.Error())
+			log.Println("ERROR updating db: " + err.Error())
+			continue
 		}
 		log.Println("Finished compilation for circuit: ", circuitID)
 	}
@@ -177,7 +179,7 @@ func setupCircuits() {
 		filter := bson.M{"_id": circuitID}
 
 		// Create reader for r1cs file
-		path := "src/circuits/compiled/" + circuitID + ".r1cs"
+		path := "src/circuits/" + circuitID + "/compiled.r1cs"
 		var r io.Reader
 		r, err := os.Open(path)
 		if err != nil {
@@ -207,6 +209,16 @@ func setupCircuits() {
 			continue
 		}
 
+		path = "src/circuits/" + circuitID + "/Verifier.sol"
+		file, _ := os.Create(path)
+		err = vk.ExportSolidity(file)
+		if err != nil {
+			log.Println("[ERROR: Export Solidity] " + err.Error())
+			update := bson.M{"$set": bson.M{"status": "setup_failed"}}
+			_, err = collection.UpdateOne(ctx, filter, update)
+			continue
+		}
+
 		var pkBuf bytes.Buffer
 		var vkBuf bytes.Buffer
 		pk.WriteRawTo(&pkBuf)
@@ -229,6 +241,17 @@ func setupCircuits() {
 
 func getStatus(c *gin.Context) {
 	c.String(http.StatusOK, "Zkp service is running")
+}
+
+func getSolidityVerifier(c *gin.Context) {
+	circuitID := c.Param("circuitID")
+	mimeType, fileContents, err := DownloadSolidity(circuitID)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": err})
+		return
+	}
+	c.Header("Content-Disposition", "attachment; filename=Verifier.sol")
+	c.Data(http.StatusOK, mimeType, fileContents)
 }
 
 func getSingleCircuit(c *gin.Context) {
@@ -304,15 +327,6 @@ func createCircuit(c *gin.Context) {
 
 	circuitType := c.Query("type")
 	if circuitType == "consistency" {
-		//pubKey1 := generateEddsaKeyPair()
-		//pubKey2 := generateEddsaKeyPair()
-		//log.Println("pubKey1:", pubKey1)
-		//log.Println("pubKey2:", pubKey2)
-
-		//var ids []string
-		//ids[0] = pubKey1
-		//ids[1] = pubKey2
-
 		// Pass identities to circuit generator
 		generateConsistencyCircuit(circuitId, requestBody.Identities)
 	} else {
@@ -325,7 +339,8 @@ func createCircuit(c *gin.Context) {
 			return
 		}
 
-		err = c.SaveUploadedFile(file, "src/circuits/uncompiled/"+circuitId+".go")
+		os.Mkdir("src/circuits/"+circuitId+"/", 0755)
+		err = c.SaveUploadedFile(file, "src/circuits/"+circuitId+"/uncompiled.go")
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"error": "Could not save uploaded file:" + err.Error(),
@@ -398,7 +413,7 @@ func prove(c *gin.Context) {
 	circuitID := c.Param("circuitID")
 
 	// Create reader for r1cs file
-	path := "src/circuits/compiled/" + circuitID + ".r1cs"
+	path := "src/circuits/" + circuitID + "/compiled.r1cs"
 	var r io.Reader
 	r, err = os.Open(path)
 	if err != nil {
@@ -580,4 +595,15 @@ func verify(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"result": "verified",
 	})
+}
+
+func DownloadSolidity(circuitId string) (string, []byte, error) {
+	dst := "src/circuits/" + circuitId + "/Verifier.sol"
+	contents, err := ioutil.ReadFile(dst)
+	if err != nil {
+		return "", nil, err
+	}
+	mimeType := http.DetectContentType(contents[:512])
+
+	return mimeType, contents, nil
 }
