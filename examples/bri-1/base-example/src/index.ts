@@ -3,7 +3,7 @@ import { IMessagingService, messagingProviderNats, messagingServiceFactory } fro
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceProvide, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
 import { ICircuitProver, ICircuitRegistry, ICircuitVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
 import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
-import { Application as Workgroup, Circuit, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
+import { Application as Workgroup, BusinessObject, Circuit, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
 import { Baseline, Capabilities, Ident, NChain, Vault, baselineClientFactory, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
@@ -170,82 +170,7 @@ export class ParticipantStack {
   }
 
   private async dispatchProtocolMessage(msg: ProtocolMessage): Promise<any> {
-    if (msg.opcode === Opcode.Baseline) {
-      const vault = await this.requireVault();
-      const workflowSignatories = 2;
-
-      const payload = JSON.parse(msg.payload.toString());
-      if (payload.doc) {
-        if (!payload.sibling_path) {
-          payload.sibling_path = [];
-        }
-        if (!payload.signatures) {
-          payload.signatures = [];
-        }
-        if (!payload.hash) {
-          payload.hash = sha256(JSON.stringify(payload.doc));
-        }
-
-        if (payload.signatures.length === 0) {
-          // baseline this new document
-          payload.result = await this.generateProof('preimage', JSON.parse(msg.payload.toString()));
-          const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.result.proof.proof)).signature;
-          payload.signatures = [signature];
-          this.workgroupCounterparties.forEach(async recipient => {
-            this.sendProtocolMessage(msg.sender, Opcode.Baseline, payload);
-          });
-        } else if (payload.signatures.length < workflowSignatories) {
-          if (payload.sibling_path && payload.sibling_path.length > 0) {
-            // perform off-chain verification to make sure this is a legal state transition
-            const root = payload.sibling_path[0];
-            const verified = this.baseline?.verify(this.contracts['shield'].address, payload.leaf, root, payload.sibling_path);
-            if (!verified) {
-              console.log('WARNING-- off-chain verification of proposed state transition failed...');
-              this.workgroupCounterparties.forEach(async recipient => {
-                this.sendProtocolMessage(recipient, Opcode.Baseline, { err: 'verification failed' });
-              });
-              return Promise.reject('failed to verify');
-            }
-          }
-
-          // sign state transition
-          const signature = (await this.signMessage(vault.id!, this.babyJubJub?.id!, payload.hash)).signature;
-          payload.signatures.push(signature);
-          this.workgroupCounterparties.forEach(async recipient => {
-            this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
-          });
-        } else {
-          // create state transition commitment
-          payload.result = await this.generateProof('modify_state', JSON.parse(msg.payload.toString()));
-          const publicInputs = []; // FIXME
-          const value = ''; // FIXME
-          console.log(payload);
-
-          const resp = await this.baseline?.verifyAndPush(
-            msg.sender,
-            this.contracts['shield'].address,
-            payload.result.proof.proof,
-            publicInputs,
-            value,
-          );
-
-          const leaf = resp!.commitment as MerkleTreeNode;
-
-          if (leaf) {
-            console.log(`inserted leaf... ${leaf}`);
-            payload.sibling_path = (await this.baseline!.getProof(msg.shield, leaf.location())).map(node => node.location());
-            payload.sibling_path?.push(leaf.index);
-            this.workgroupCounterparties.forEach(async recipient => {
-              await this.sendProtocolMessage(recipient, Opcode.Baseline, payload);
-            });
-          } else {
-            return Promise.reject('failed to insert leaf');
-          }
-        }
-      } else if (payload.signature) {
-        console.log(`NOOP!!! received signature in BLINE protocol message: ${payload.signature}`);
-      }
-    } else if (msg.opcode === Opcode.Join) {
+    if (msg.opcode === Opcode.Join) {
       const payload = JSON.parse(msg.payload.toString());
       const messagingEndpoint = await this.resolveMessagingEndpoint(payload.address);
       if (!messagingEndpoint || !payload.address || !payload.authorized_bearer_token) {
@@ -276,6 +201,10 @@ export class ParticipantStack {
         this.baselineCircuit = await this.privacy?.deploy(payload.payload) as Circuit;
       }
     }
+  }
+
+  async baselineBusinessObject(params: object): Promise<BusinessObject> {
+    return (await this.baselineProxy?.createBusinessObject(params)) as BusinessObject;
   }
 
   // HACK!! workgroup/contracts should be synced via protocol
@@ -353,63 +282,6 @@ export class ParticipantStack {
       authorized_bearer_token: await this.vendNatsAuthorization(),
       workflow_identifier: this.workflowIdentifier,
     });
-  }
-
-  private marshalCircuitArg(val: string, fieldBits?: number): string[] {
-    const el = elementify(val) as Element;
-    return el.field(fieldBits || 128, 1, true);
-  }
-
-  async generateProof(type: string, msg: any): Promise<any> {
-    const senderZkPublicKey = this.babyJubJub?.publicKey!;
-    let commitment: string;
-    let root: string | null = null;
-    const salt = msg.salt || rndHex(32);
-    if (msg.sibling_path && msg.sibling_path.length > 0) {
-      const siblingPath = elementify(msg.sibling_path) as Element;
-      root = siblingPath[0].hex(64);
-    }
-
-    console.log(`generating ${type} proof...\n`, msg);
-
-    switch (type) {
-      case 'preimage': // create agreement
-        const preimage = concatenateThenHash({
-          erc20ContractAddress: this.marshalCircuitArg(this.contracts['erc1820-registry'].address),
-          senderPublicKey: this.marshalCircuitArg(senderZkPublicKey),
-          name: this.marshalCircuitArg(msg.doc.name),
-          url: this.marshalCircuitArg(msg.doc.url),
-          hash: this.marshalCircuitArg(msg.hash),
-        });
-        console.log(`generating state genesis with preimage: ${preimage}; salt: ${salt}`);
-        commitment = concatenateThenHash(preimage, salt);
-        break;
-
-      case 'modify_state': // modify commitment state, nullify if applicable, etc.
-        const _commitment = concatenateThenHash({
-          senderPublicKey: this.marshalCircuitArg(senderZkPublicKey),
-          name: this.marshalCircuitArg(msg.doc.name),
-          url: this.marshalCircuitArg(msg.doc.url),
-          hash: this.marshalCircuitArg(msg.hash),
-        });
-        console.log(`generating state transition commitment with calculated delta: ${_commitment}; root: ${root}, salt: ${salt}`);
-        commitment = concatenateThenHash(root, _commitment, salt);
-        break;
-
-      default:
-        throw new Error('invalid proof type');
-    }
-
-    const resp = await this.privacy?.prove(this.baselineCircuit?.id!, {
-      x: '3',
-      Y: '35',
-    });
-
-    return {
-      doc: msg.doc,
-      proof: resp.proof,
-      salt: salt,
-    };
   }
 
   async resolveMessagingEndpoint(addr: string): Promise<string> {

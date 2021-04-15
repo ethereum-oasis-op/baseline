@@ -203,8 +203,7 @@ describe('baseline', () => {
       describe('workflow', () => {
         describe('workstep', () => {
           before(async () => {
-            const recipient = await aliceApp.resolveOrganizationAddress();
-            await bobApp.sendProtocolMessage(recipient, Opcode.Baseline, {
+            await bobApp.baselineBusinessObject({
               id: 'uuidv4()',
               name: 'hello world',
               url: 'proto://deep/link/to/doc',
