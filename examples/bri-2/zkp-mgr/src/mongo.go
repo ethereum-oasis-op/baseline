@@ -17,11 +17,13 @@ func DbConnect(ctx context.Context) *mongo.Client {
 	}
 
 	dbHost := os.Getenv("DATABASE_HOST")
+	dbName := os.Getenv("DATABASE_NAME")
 	dbUser := os.Getenv("DATABASE_USER")
 	dbPassword := os.Getenv("DATABASE_PASSWORD")
 	credential := options.Credential{
-		Username: dbUser,
-		Password: dbPassword,
+		AuthSource: dbName,
+		Username:   dbUser,
+		Password:   dbPassword,
 	}
 
 	clientOpts := options.Client().ApplyURI("mongodb://" + dbHost).SetAuth(credential)

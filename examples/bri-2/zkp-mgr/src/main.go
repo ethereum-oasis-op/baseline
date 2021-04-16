@@ -42,15 +42,15 @@ type WitnessInput struct {
 	Value     string `json:"value"`
 }
 
-var dbClient *mongo.Client
-var natsClient *nats.Conn
 var compileQueue chan string
 var setupQueue chan string
 var proveQueue chan string
 var verifyQueue chan string
+var natsClient *nats.Conn
+var dbClient *mongo.Client
+var dbName string
 
 const zkCircuitCollection = "zk-circuits"
-const databaseName = "baseline"
 
 /******************************************************/
 /***      Main                                      ***/
@@ -58,6 +58,7 @@ const databaseName = "baseline"
 
 func main() {
 	err := godotenv.Load(".env")
+	dbName = os.Getenv("DATABASE_NAME")
 	if err != nil {
 		log.Fatal("Error loading .env file: " + err.Error())
 	}
@@ -151,7 +152,7 @@ func compileCircuits() {
 		}
 
 		// Update zk-circuit in db: set status to "compiled"
-		collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+		collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
@@ -173,7 +174,7 @@ func setupCircuits() {
 		log.Println("Starting setup for circuit: ", circuitID)
 
 		// Get zk circuit collection for later updates
-		collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+		collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 		filter := bson.M{"_id": circuitID}
@@ -262,7 +263,7 @@ func getSingleCircuit(c *gin.Context) {
 	var circuit ZKCircuit
 	circuitID := c.Param("circuitID")
 
-	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -279,7 +280,7 @@ func getSingleCircuit(c *gin.Context) {
 }
 
 func getAllCircuits(c *gin.Context) {
-	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -354,7 +355,7 @@ func createCircuit(c *gin.Context) {
 	}
 
 	// Save file artifacts in db
-	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -376,7 +377,7 @@ func setup(c *gin.Context) {
 	circuitID := c.Param("circuitID")
 
 	// Update db to add keys, update status
-	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -441,7 +442,7 @@ func prove(c *gin.Context) {
 
 	// Get circuit from db
 	var circuit ZKCircuit
-	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -511,7 +512,7 @@ func verify(c *gin.Context) {
 
 	// Get circuit from db
 	var circuit ZKCircuit
-	collection := dbClient.Database(databaseName).Collection(zkCircuitCollection)
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
