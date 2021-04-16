@@ -3,8 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"encoding/hex"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"log"
@@ -12,7 +10,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"strconv"
 	"time"
 
 	"github.com/consensys/gnark/backend/groth16"
@@ -27,12 +24,10 @@ import (
 
 // ZKCircuit : Schema for mongoDb
 type ZKCircuit struct {
-	ID           string   `bson:"_id" json:"_id"`
-	Name         string   `bson:"name" json:"name"`
-	CurveID      gurvy.ID `bson:"curveId" json:"curveId" binding:"required"`
-	ProvingKey   []byte   `bson:"provingKey" json:"provingKey"`
-	VerifyingKey []byte   `bson:"verifyingKey" json:"verifyingKey"`
-	Status       string   `bson:"status" json:"status" form:"status"`
+	ID      string   `bson:"_id" json:"_id"`
+	Name    string   `bson:"name" json:"name"`
+	CurveID gurvy.ID `bson:"curveId" json:"curveId" binding:"required"`
+	Status  string   `bson:"status" json:"status" form:"status"`
 }
 
 type createCircuitReq struct {
@@ -40,6 +35,11 @@ type createCircuitReq struct {
 	SourceCode *multipart.FileHeader `form:"sourceCode" json:"sourceCode"`
 	CurveID    gurvy.ID              `form:"curveId" json:"curveId"`
 	Identities []string              `form:"identities" json:"identities"`
+}
+type WitnessInput struct {
+	Name      string `json:"name"`
+	InputType string `json:"inputType"`
+	Value     string `json:"value"`
 }
 
 var dbClient *mongo.Client
@@ -66,7 +66,7 @@ func main() {
 	defer cancel()
 
 	// Connect to mongoDb
-	dbClient = dbConnect(ctx)
+	dbClient = DbConnect(ctx)
 	defer func() {
 		if err := dbClient.Disconnect(ctx); err != nil {
 			panic(err)
@@ -74,7 +74,7 @@ func main() {
 	}()
 
 	// Connect to NATS
-	//natsClient = initNats()
+	//natsClient = init.InitNats()
 	//defer natsClient.Close()
 
 	// Continuosly running background processes
@@ -219,13 +219,17 @@ func setupCircuits() {
 			continue
 		}
 
-		var pkBuf bytes.Buffer
-		var vkBuf bytes.Buffer
-		pk.WriteRawTo(&pkBuf)
-		vk.WriteRawTo(&vkBuf)
+		// Write compressed keys to disk
+		path = "src/circuits/" + circuitID + "/proving.key"
+		pkFile, _ := os.Create(path)
+		pk.WriteTo(pkFile)
+
+		path = "src/circuits/" + circuitID + "/verifying.key"
+		vkFile, _ := os.Create(path)
+		vk.WriteTo(vkFile)
 
 		// Update db to add keys, update status
-		update := bson.M{"$set": bson.M{"provingKey": pkBuf.Bytes(), "verifyingKey": vkBuf.Bytes(), "status": "setup_complete"}}
+		update := bson.M{"$set": bson.M{"status": "setup_complete"}}
 		_, err = collection.UpdateOne(ctx, filter, update)
 		if err != nil {
 			log.Println("[ERROR: Mongo UpdateOne] " + err.Error())
@@ -326,6 +330,7 @@ func createCircuit(c *gin.Context) {
 	}
 
 	circuitType := c.Query("type")
+	os.Mkdir("src/circuits/"+circuitId+"/", 0755)
 	if circuitType == "consistency" {
 		// Pass identities to circuit generator
 		generateConsistencyCircuit(circuitId, requestBody.Identities)
@@ -339,7 +344,6 @@ func createCircuit(c *gin.Context) {
 			return
 		}
 
-		os.Mkdir("src/circuits/"+circuitId+"/", 0755)
 		err = c.SaveUploadedFile(file, "src/circuits/"+circuitId+"/uncompiled.go")
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -397,9 +401,9 @@ func setup(c *gin.Context) {
 // Currently only supports groth16
 func prove(c *gin.Context) {
 	// Witness variables must be ordered as defined in Circuit definition
-	// Private variables come first, then public variables
+	// Public variables come first, then secret variables
 	type generateProofReq struct {
-		Witness map[string]string `form:"witness" json:"witness" xml:"witness"  binding:"required"`
+		Witness []WitnessInput `form:"witness" json:"witness" xml:"witness"  binding:"required"`
 	}
 
 	var requestBody generateProofReq
@@ -414,24 +418,26 @@ func prove(c *gin.Context) {
 
 	// Create reader for r1cs file
 	path := "src/circuits/" + circuitID + "/compiled.r1cs"
-	var r io.Reader
-	r, err = os.Open(path)
+	var compiledReader io.Reader
+	compiledReader, err = os.Open(path)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Read r1cs file] " + err.Error(),
 		})
 		return
 	}
+	log.Println("Read from circuit binary file")
 
 	// Decode r1cs binary, store in compiledCircuit
 	compiledCircuit := groth16.NewCS(gurvy.BN256)
-	_, err = compiledCircuit.ReadFrom(r)
+	_, err = compiledCircuit.ReadFrom(compiledReader)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Decode r1cs] " + err.Error(),
 		})
 		return
 	}
+	log.Println("Converted circuit binary")
 
 	// Get circuit from db
 	var circuit ZKCircuit
@@ -447,53 +453,31 @@ func prove(c *gin.Context) {
 		})
 		return
 	}
+	log.Println("Retrieved circuit metadata from db")
 
-	// Convert proving key from []byte to groth16.ProvingKey
-	buf := bytes.NewReader(circuit.ProvingKey)
+	// Read proving key from disk and convert to groth16.ProvingKey
+	path = "src/circuits/" + circuitID + "/proving.key"
+	var pkReader io.Reader
+	pkReader, err = os.Open(path)
 	provingKey := groth16.NewProvingKey(gurvy.BN256)
-	provingKey.ReadFrom(buf)
-
-	/************************************************************************/
-	/** Loop through witness struct and convert each input to 32 byte uint **/
-	/************************************************************************/
-	var numInputs uint32
-	var witnessString string
-	for _, value := range requestBody.Witness {
-		// Convert from string to 32 byte uint
-		log.Println("value:", value)
-		element_uint64, err := strconv.ParseUint(value, 10, 64)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "[parsing witness] " + err.Error(),
-			})
-			return
-		}
-		// Convert from uint64 to 32-byte hex string
-		hexInput := fmt.Sprintf("%064x", element_uint64)
-		log.Println("hexInput:", hexInput)
-
-		// Update counters
-		witnessString += fmt.Sprint(hexInput)
-		log.Printf("witnessString: %s", witnessString)
-		numInputs++
+	_, err = provingKey.ReadFrom(pkReader)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "[Read proving.key file] " + err.Error(),
+		})
+		return
 	}
+	log.Println("Successfully read proving.key from file")
 
-	// Convert number of inputs to hex of uint32
-	hexInput := fmt.Sprintf("%08x", numInputs) + witnessString
-
-	// Convert hex string to decoded bytes
-	decodedHex, err := hex.DecodeString(hexInput)
-
-	// Create witness io.Reader
+	// Create witness io.Reader, then generate proof from witness
+	encodedHex, err := EncodeWitness(requestBody.Witness)
 	var witnessBuffer bytes.Buffer
-	witnessBuffer.Write([]byte(decodedHex))
-	/************************************************************************/
-
+	witnessBuffer.Write(encodedHex)
 	proof, err := groth16.ReadAndProve(compiledCircuit, provingKey, &witnessBuffer)
 	if err != nil {
 		log.Println("ERROR:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[groth16.Prove] " + err.Error(),
+			"error": "[groth16.ReadAndProve] " + err.Error(),
 		})
 		return
 	}
@@ -508,9 +492,10 @@ func prove(c *gin.Context) {
 
 func verify(c *gin.Context) {
 	// Witness only needs to contain public inputs here
+	// Variables must be ordered as defined in Circuit definition
 	type verifyProofReq struct {
-		Proof   []byte            `form:"proof" json:"proof" xml:"proof"  binding:"required"`
-		Witness map[string]string `form:"witness" json:"witness" xml:"witness"  binding:"required"`
+		Proof   []byte         `form:"proof" json:"proof" xml:"proof"  binding:"required"`
+		Witness []WitnessInput `form:"witness" json:"witness" xml:"witness"`
 	}
 
 	var requestBody verifyProofReq
@@ -539,52 +524,29 @@ func verify(c *gin.Context) {
 		return
 	}
 
-	// Convert verifying key from []byte to groth16.VerifyingKey
-	vkBuf := bytes.NewReader(circuit.VerifyingKey)
+	// Read proving key from disk and convert to groth16.ProvingKey
+	path := "src/circuits/" + circuitID + "/verifying.key"
+	var vkReader io.Reader
+	vkReader, err = os.Open(path)
 	verifyingKey := groth16.NewVerifyingKey(gurvy.BN256)
-	verifyingKey.ReadFrom(vkBuf)
+	_, err = verifyingKey.ReadFrom(vkReader)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "[Read verifying.key file] " + err.Error(),
+		})
+		return
+	}
+	log.Println("Successfully read verifying.key from file")
 
 	// Convert proof
 	proofBuf := bytes.NewReader(requestBody.Proof)
 	proof := groth16.NewProof(gurvy.BN256)
 	proof.ReadFrom(proofBuf)
 
-	/************************************************************************/
-	/** Loop through witness struct and convert each input to 32 byte uint **/
-	/************************************************************************/
-	var numInputs uint32
-	var witnessString string
-	for _, value := range requestBody.Witness {
-		// Convert from string to 32 byte uint
-		log.Println("value:", value)
-		element_uint64, err := strconv.ParseUint(value, 10, 64)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "[parsing witness] " + err.Error(),
-			})
-			return
-		}
-		// Convert from uint64 to 32-byte hex string
-		hexInput := fmt.Sprintf("%064x", element_uint64)
-		log.Println("hexInput:", hexInput)
-
-		// Update counters
-		witnessString += fmt.Sprint(hexInput)
-		log.Printf("witnessString: %s", witnessString)
-		numInputs++
-	}
-
-	// Convert number of inputs to hex of uint32
-	hexInput := fmt.Sprintf("%08x", numInputs) + witnessString
-
-	// Convert hex string to decoded bytes
-	decodedHex, err := hex.DecodeString(hexInput)
-
-	// Create witness io.Reader
+	// Create witness io.Reader, then verify proof using witness
+	encodedHex, err := EncodeWitness(requestBody.Witness)
 	var witnessBuffer bytes.Buffer
-	witnessBuffer.Write([]byte(decodedHex))
-	/************************************************************************/
-
+	witnessBuffer.Write([]byte(encodedHex))
 	if err = groth16.ReadAndVerify(proof, verifyingKey, &witnessBuffer); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "[groth16.Verify] " + err.Error(),

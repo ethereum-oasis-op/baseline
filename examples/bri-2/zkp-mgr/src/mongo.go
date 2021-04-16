@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func dbConnect(ctx context.Context) *mongo.Client {
+func DbConnect(ctx context.Context) *mongo.Client {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file: " + err.Error())

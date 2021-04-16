@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/aws/aws-sdk-go v1.36.19 // indirect
 	github.com/consensys/gnark v0.3.9-0.20210315223827-c3929949c52a
+	github.com/consensys/gnark-crypto v0.4.0
 	github.com/consensys/gurvy v0.3.8
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.4.1 // indirect
