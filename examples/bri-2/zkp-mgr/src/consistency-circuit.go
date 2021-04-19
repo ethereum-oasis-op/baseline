@@ -16,12 +16,15 @@ func generateConsistencyCircuit(circuitId string, identities []string) {
 
 	fileContents := `package main
 
-import (
-	"github.com/consensys/gnark/frontend"
-	"github.com/consensys/gnark/std/algebra/twistededwards"
-	"github.com/consensys/gnark/std/signature/eddsa"
-	"github.com/consensys/gurvy"
-)
+	import (
+		"encoding/hex"
+	
+		eddsa_gen "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
+		"github.com/consensys/gnark/frontend"
+		"github.com/consensys/gnark/std/algebra/twistededwards"
+		eddsa_circuit "github.com/consensys/gnark/std/signature/eddsa"
+		"github.com/consensys/gurvy"
+	)
 
 // Circuit input definitions
 type Circuit struct {
@@ -30,7 +33,6 @@ type Circuit struct {
 		"\n\tNewCommit  frontend.Variable `gnark:\",public\"`\n"
 
 	var privateInputs string
-	var publicKeys string
 	var sigChecks string
 
 	for index, identity := range identities {
@@ -42,22 +44,35 @@ type Circuit struct {
 
 		indexStr := strconv.Itoa(index)
 
-		privateInputs += "\tSig" + indexStr + " eddsa.Signature   `gnark:\",private\"`\n"
-		publicKeys += "\nvar pubKey" + indexStr + " = " + string(pk0.Bytes())
-		sigChecks += "\n\tpubKey" + indexStr + ".Curve = params\n" +
-			"\tif err = eddsa.Verify(cs, circuit.Sig" + indexStr + ", circuit.NewCommit, pubKey" + indexStr + `); err != nil {
+		privateInputs += "\tSig" + indexStr + " eddsa_circuit.Signature   `gnark:\",private\"`\n"
+		sigChecks += "\n\t/***** Check for signature by pubKey_" + indexStr + " *****/" +
+			"\n\tvar pubKeyString_" + indexStr + " = \"" + identity + "\"" +
+			"\n\tvar pubKeyGen_" + indexStr + " eddsa_gen.PublicKey" +
+			"\n\tvar pubKeyCircuit_" + indexStr + " eddsa_circuit.PublicKey" +
+			"\n\tpubKeyBytes_" + indexStr + ", _ := hex.DecodeString(pubKeyString_" + indexStr + ")" +
+			"\n\t_, err = pubKeyGen_" + indexStr + ".SetBytes(pubKeyBytes_" + indexStr + ")\n\t" + `if err != nil {
 		return err
+	}` +
+			"\n\tpubKeyCircuit_" + indexStr + ".A.X = cs.Constant(pubKeyGen_" + indexStr + ".A.X)" +
+			"\n\tpubKeyCircuit_" + indexStr + ".A.Y = cs.Constant(pubKeyGen_" + indexStr + ".A.Y)" +
+			"\n\n\t" + `// Prepare for signature check
+	params, err = twistededwards.NewEdCurve(gurvy.BN256)
+	if err != nil {
+		return err
+	}` +
+			"\n\tpubKeyCircuit_" + indexStr + ".Curve = params" +
+			"\n\n\t// Check for signature on hash" +
+			"\n\tif err = eddsa_circuit.Verify(cs, circuit.Sig" + indexStr + ", circuit.NewCommit, pubKeyCircuit_" + indexStr + "); err != nil {\n" +
+			`    return err
 	}` + "\n"
 	}
 
-	fileContents += privateInputs + "}" + "\n" + publicKeys + "\n\n"
+	// Append code segments to fileContents
+	fileContents += privateInputs + "}" + "\n\n"
 	fileContents += `// Define declares the circuit constraints
 func (circuit *Circuit) Define(curveID gurvy.ID, cs *frontend.ConstraintSystem) error {
-	// Prepare for signature checks
-	params, err := twistededwards.NewEdCurve(gurvy.BN256)
-	if err != nil {
-		return err
-	}` + "\n"
+	var err error
+	var params twistededwards.EdCurve` + "\n"
 
 	fileContents += sigChecks + "\n\t" + `return nil
 }`
