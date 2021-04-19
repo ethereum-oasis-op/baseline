@@ -40,4 +40,5 @@ All code in this repo is released under the CC0 1.0 Universal public domain dedi
 
 ## Contributing
 
-See [our contributing guidelines](CONTRIBUTING.md)
+See our contributing guidelines <a href="https://github.com/ethereum-oasis/baseline/CONTRIBUTING.md">CONTRIBUTING.md here </a>.
+
