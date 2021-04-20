@@ -8,7 +8,7 @@ import (
 	nats "github.com/nats-io/nats.go"
 )
 
-func initNats() *nats.Conn {
+func InitNats() *nats.Conn {
 	nc, err := nats.Connect(
 		nats.DefaultURL,
 		nats.Name("Demo connection name"),

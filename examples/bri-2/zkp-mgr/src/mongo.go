@@ -10,18 +10,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func dbConnect(ctx context.Context) *mongo.Client {
+func DbConnect(ctx context.Context) *mongo.Client {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file: " + err.Error())
 	}
 
 	dbHost := os.Getenv("DATABASE_HOST")
+	dbName := os.Getenv("DATABASE_NAME")
 	dbUser := os.Getenv("DATABASE_USER")
 	dbPassword := os.Getenv("DATABASE_PASSWORD")
 	credential := options.Credential{
-		Username: dbUser,
-		Password: dbPassword,
+		AuthSource: dbName,
+		Username:   dbUser,
+		Password:   dbPassword,
 	}
 
 	clientOpts := options.Client().ApplyURI("mongodb://" + dbHost).SetAuth(credential)

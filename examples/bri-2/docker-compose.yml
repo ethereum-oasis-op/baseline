@@ -117,6 +117,7 @@ services:
     environment: 
       - DATABASE_HOST=alice-mongo:27017
       - COMMIT_MGR_URL=http://alice-commit-mgr:4001
+      - ZKP_MGR_URL=http://alice-zkp-mgr:8080
       - NATS_URL=nats://alice-nats-server:4222
     networks:
       - alice
@@ -128,6 +129,32 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+  
+  alice-zkp-mgr:
+    hostname: alice-zkp-mgr
+    container_name: alice-zkp-mgr
+    depends_on: 
+      - alice-mongo
+      - alice-nats-server
+    build:
+      context: ./zkp-mgr
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./zkp-mgr/.env
+    environment: 
+      - DATABASE_HOST=alice-mongo:27017
+      - NATS_URL=nats://alice-nats-server:4222
+    networks:
+      - alice
+    ports:
+     - 8080:8080
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/status"]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
 
 networks:
   alice:

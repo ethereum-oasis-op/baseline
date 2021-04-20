@@ -9,8 +9,8 @@ import (
 type Circuit struct {
 	// struct tags on a variable is optional
 	// default uses variable name and secret visibility.
-	X frontend.Variable `gnark:"x"`
 	Y frontend.Variable `gnark:",public"`
+	X frontend.Variable `gnark:"x"`
 }
 
 // Define declares the circuit constraints
