@@ -4,46 +4,20 @@
 
 > Note: `bri-2` is still a work in progress. Components such as a vault/key manager, messenger, and system of record integration need to be added to make it a complete reference implementation.
 
-Here is a comparison of the reference implementations:
-
-| Service Type | bri-1 | bri-2 |
-| -------- | ----- | ----------- |
-| Eth. client | `Nethermind` | `commit-mgr` + `mongo` + `ITX` |
-| Key management |`Provide Vault` | TBD |
-| Messenger | `NATS` | TBD |
-
-## Proposed Architecture
-
-![baseline-architecture](./docs/bri-2-stack.png)
-
 # Requirements
 - docker
 - docker-compose
 - node v12.16
 - npm
-## Setup and run
 
-Install node modules and compile imported Solidity smart contracts.
-Note: may need to run `contracts:compile` twice
-```
-npm install
-npm run contracts:compile
-```
+# Quickstart
 
-Setup the backend services env's. The Env examples default to Ganache
 ```
-cp ./commit-mgr/.env_example ./commit-mgr/.env
-cp ./workflow-mgr/.env_example ./workflow-mgr/.env
+make build
+make start
 ```
 
-Spin up backend services in docker
-
-If you have an existing docker build, first run: `docker volume rm bri-2_alice-mongo`
-```
-docker-compose up -d
-```
-
-Run `dashboard` front-end
+## Run `dashboard` front-end
 
 Note: be sure to use `node v12.16`
 ```
@@ -54,3 +28,26 @@ npm run dev
 ```
 
 Navigate to `http://localhost:3000` on your web browser to view the `dashboard`.
+
+# Troubleshooting
+
+- If you have an existing bri-2 build, run the following sequence to remove old build artifacts:
+```
+make clean
+make build
+make start
+```
+- You may need to run `make build` twice in order to properly compile smart contracts
+- Note: Environment variables default to use Ganache as the Ethereum network
+
+# Architecture
+
+Here is a comparison of the reference implementations:
+
+| Service Type | bri-1 | bri-2 |
+| -------- | ----- | ----------- |
+| Eth. client | `Nethermind` | `commit-mgr` + `mongo` + `ITX` |
+| Key management |`Provide Vault` | `Codefi Orchestrate` |
+| P2P Messenger | `NATS` | `NATS` |
+
+![baseline-architecture](./docs/bri-2-stack.png)

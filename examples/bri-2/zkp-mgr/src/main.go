@@ -60,7 +60,7 @@ func main() {
 	err := godotenv.Load(".env")
 	dbName = os.Getenv("DATABASE_NAME")
 	if err != nil {
-		log.Fatal("Error loading .env file: " + err.Error())
+		log.Println("Error loading .env file: " + err.Error())
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

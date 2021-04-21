@@ -10,8 +10,9 @@
     "dist"
   ],
   "scripts": {
-    "dev:commit-mgr": "nodemon --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all start",
     "build:dashboard": "cd dashboard && npm run build",
+    "build": "npm-run-all contracts:clean contracts:compile ",
+    "dev:commit-mgr": "nodemon --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all start",
     "dev:dashboard": "cd dashboard && npm run dev",
     "start:dashboard": "cd dashboard && npm run build && npm run start",
     "contracts:clean": "rm -rf ./contracts/artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",

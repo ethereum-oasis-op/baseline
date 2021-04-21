@@ -1,21 +1,34 @@
-.PHONY: clean reset restart start start-attached stop
+.PHONY: clean build start logs test stop reset restart
 
 clean:
+	npm run contracts:clean && \
+	rm -rf ./node_modules && \
+	rm -f ./commit-mgr/.env && \
+	rm -f ./workflow-mgr/.env && \
+	rm -f ./zkp-mgr/.env && \
+	./ops/check_dot_env.sh && \
 	docker-compose down --rmi all --volumes --remove-orphans
 
-logs:
-	docker-compose logs -f
+build-containers:
+	docker-compose build
 
-reset: stop clean
-	docker-compose up -d --build --force-recreate --remove-orphans
-
-restart: stop start
+build: build-containers
+	./ops/check_node_modules.sh && \
+	./ops/check_dot_env.sh && \
+	./ops/check_contracts.sh 
 
 start:
 	docker-compose up -d --remove-orphans
 
-start-attached:
-	docker-compose up --remove-orphans
+logs:
+	docker-compose logs -f
+
+test:
+	npm test
 
 stop:
 	docker-compose down --remove-orphans
+
+reset: stop clean start
+	
+restart: stop start
