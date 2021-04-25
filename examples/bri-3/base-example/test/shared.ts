@@ -1,6 +1,8 @@
 import { assert } from 'chai';
 import { promisedTimeout } from './utils';
 
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const shouldBehaveLikeAWorkgroupOrganization = function () {
   describe(`organization details`, () => {
     let org;
@@ -17,9 +19,9 @@ export const shouldBehaveLikeAWorkgroupOrganization = function () {
       let workflowIdentifier;
 
       before(async () => {
-        orgRegistryTopic = await this.ctx.app.getWorkgroupTopic('organization-registry');
-        workgroupTopic = this.ctx.app.getWorkgroupTopic('workgroup');
-        workflowTopic = this.ctx.app.getWorkgroupTopic('workflow');
+        orgRegistryTopic = await this.ctx.app.requireWorkgroupTopic('hedera_public_hcs_topic');
+        workgroupTopic = this.ctx.app.requireWorkgroupTopic('hedera_hcs_topic');
+        // workflowTopic = this.ctx.app.getWorkgroupTopic('workflow');
         workflowIdentifier = this.ctx.app.getWorkflowIdentifier();
       });
 
@@ -32,17 +34,6 @@ export const shouldBehaveLikeAWorkgroupOrganization = function () {
         assert(workgroupTopic, 'workgroup HCS topic should not be null');
         // assert(shield.address, 'should have a reference to the on-chain workgroup shield contract address');
       });
-
-      it('should have a local reference to the on-chain workflow circuit HCS topic', async () => {
-        assert(workflowTopic, 'workflow circuit verifier HCS topic should not be null');
-        // assert(verifier.address, 'should have a reference to the on-chain workflow circuit verifier contract address');
-      });
-
-      // FIXME!! assert merkle tree db tracking...
-      // it('should track the workflow merkle tree in an off-chain merkle tree database', async () => {
-      //   const trackedShieldContracts = await this.ctx.app.baseline.getTracked();
-      //   assert(trackedShieldContracts.indexOf(shield.address.toLowerCase()) !== -1, 'workgroup shield contract should have been tracked');
-      // });
 
       it('should have a local reference to the workflow circuit identifier', async () => {
         assert(workflowIdentifier, 'workflow circuit identifier should not be null');
@@ -63,7 +54,7 @@ export const shouldBehaveLikeAWorkgroupOrganization = function () {
         assert(natsService.isConnected() === true, 'should have established a connection');
       });
 
-      it('should have an established a subscription on the baseline.inbound subject', async () => {
+      it('should have an established a subscription on the baseline.proxy subject', async () => {
         assert(natsSubscriptions, 'should not be null');
         assert(natsSubscriptions.length === 1, 'should have established a subscription');
       });
@@ -75,14 +66,14 @@ export const shouldBehaveLikeAWorkgroupOrganization = function () {
       before(async () => {
         const keys = await this.ctx.app.fetchKeys();
         address = keys && keys.length >= 3 ? keys[2].address : null;
-        assert(address, 'default secp256k1 keypair should not be null');
+        assert(address, 'default ed25519 keypair should not be null');
       });
 
       it('should register the organization in the local registry', async () => {
         assert(org.id, 'org id should not be null');
       });
 
-      it('should register the organization in the on-chain registry using its default secp256k1 address', async () => {
+      it('should register the organization using the hcs registry using its default ed25519 address', async () => {
         const org = await this.ctx.app.requireOrganization(address);
         assert(org, 'org should be present in on-chain registry');
       });
@@ -117,17 +108,66 @@ export const shouldBehaveLikeAWorkgroupOrganization = function () {
         assert(keys[1].spec === 'babyJubJub', 'default babyJubJub keypair not created');
       });
 
-      it('should create a secp256k1 keypair for the organization', async () => {
-        assert(keys[2].spec === 'secp256k1', 'default secp256k1 keypair not created');
+      it('should create a Ed25519 keypair for the organization', async () => {
+        assert(keys[2].spec === 'Ed25519', 'default Ed25519 keypair not created');
       });
 
-      it('should resolve the created secp256k1 keypair as the organization address', async () => {
+      it('should resolve the created Ed25519 keypair as the organization address', async () => {
         const addr = await this.ctx.app.resolveOrganizationAddress();
-        assert(keys[2].address === addr, 'default secp256k1 keypair should resolve as the organization address');
+        assert(keys[2].address === addr, 'default ed25519 keypair should resolve as the organization address');
       });
 
       it('should create a BIP39 HD wallet for the organization', async () => {
         assert(keys[3].spec === 'BIP39', 'default BIP39 HD wallet not created');
+      });
+    });
+
+    describe('workflow privacy', () => {
+      let circuit;
+
+      describe('zkSNARK circuits', () => {
+        describe('synchronization', () => {
+          before(async () => {
+            // We need to Wait fo the Sync
+            while (this.ctx.app.getBaselineCircuit() === undefined) {
+              await sleep(10000);
+            }
+            circuit = this.ctx.app.getBaselineCircuit();
+            assert(circuit, 'setup artifacts should not be null');
+          });
+
+          it('should have a copy of the unique identifier for the circuit', async () => {
+            assert(circuit.id, 'identifier should not be null');
+          });
+
+          it('should have a copy of the proving key id', async () => {
+            assert(circuit.provingKeyId, 'proving key id should not be null');
+          });
+
+          it('should have a copy of the verifying key id', async () => {
+            assert(circuit.verifyingKeyId, 'verifying key id should not be null');
+          });
+
+          it('should have a copy of the raw verifier source code', async () => {
+            assert(circuit.verifierContract, 'verifier contract should not be null');
+            assert(circuit.verifierContract.source, 'verifier source should not be null');
+          });
+
+          it('should store a reference to the workflow circuit identifier', async () => {
+            assert(this.ctx.app.getWorkflowIdentifier() === circuit.id, 'workflow circuit identifier should have a reference');
+          });
+
+          it('should have a copy of the compiled circuit r1cs', async () => {
+            assert(circuit.artifacts, 'circuit artifacts should not be null');
+            assert(circuit.artifacts.binary, 'circuit r1cs artifact should not be null');
+          });
+
+          it('should have a copy of the keypair for proving and verification', async () => {
+            assert(circuit.artifacts, 'circuit artifacts should not be null');
+            assert(circuit.artifacts.proving_key, 'proving key artifact should not be null');
+            assert(circuit.artifacts.verifying_key, 'verifying key artifact should not be null');
+          });
+        });
       });
     });
   });
@@ -187,72 +227,45 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = function () {
   });
 
   describe('workflow privacy', () => {
-    let circuitArtifacts;
-    let setupArtifacts;
+    let circuit;
 
     describe('zkSNARK circuits', () => {
-      describe('compile', () => {
+      describe('provisioning', () => {
         before(async () => {
-          circuitArtifacts = await this.ctx.app.compileBaselineCircuit();
-          assert(circuitArtifacts, 'compiled artifacts should not be null');
-        });
-
-        it('should output the compiled circuit', async () => {
-          assert(circuitArtifacts.program, 'artifacts should contain the compiled circuit');
-        });
-
-        it('should output the ABI of the compiled circuit', async () => {
-          assert(circuitArtifacts.abi, 'artifacts should contain the abi');
-        });
-      });
-
-      describe('trusted setup', () => {
-        before(async () => {
-          setupArtifacts = await this.ctx.app.deployBaselineCircuit();
-          assert(setupArtifacts, 'setup artifacts should not be null');
+          circuit = await this.ctx.app.deployBaselineCircuit();
+          assert(circuit, 'setup artifacts should not be null');
         });
 
         it('should output a unique identifier for the circuit', async () => {
-          assert(setupArtifacts.identifier, 'identifier should not be null');
+          assert(circuit.id, 'identifier should not be null');
         });
 
-        it('should output a keypair for proving and verification', async () => {
-          assert(setupArtifacts.keypair, 'keypair should not be null');
+        it('should output the proving key id', async () => {
+          assert(circuit.provingKeyId, 'proving key id should not be null');
+        });
+
+        it('should output the verifying key id', async () => {
+          assert(circuit.verifyingKeyId, 'verifying key id should not be null');
         });
 
         it('should output the raw verifier source code', async () => {
-          assert(setupArtifacts.verifierSource, 'verifier source should not be null');
+          assert(circuit.verifierContract, 'verifier contract should not be null');
+          assert(circuit.verifierContract.source, 'verifier source should not be null');
         });
 
         it('should store a reference to the workflow circuit identifier', async () => {
-          assert(this.ctx.app.getWorkflowIdentifier() === setupArtifacts.identifier, 'workflow circuit identifier should have a reference');
+          assert(this.ctx.app.getWorkflowIdentifier() === circuit.id, 'workflow circuit identifier should have a reference');
         });
 
-        describe('artifacts', () => {
-          let workgroupTopic;
-          let workflowTopic;
+        it('should output the compiled circuit r1cs', async () => {
+          assert(circuit.artifacts, 'circuit artifacts should not be null');
+          assert(circuit.artifacts.binary, 'circuit r1cs artifact should not be null');
+        });
 
-          before(async () => {
-            workgroupTopic = this.ctx.app.getWorkgroupTopic('workgroup');
-            workflowTopic = this.ctx.app.getWorkgroupTopic('workflow');
-          });
-
-          it('should deposit the workgroup HCS topic on-chain', async () => {
-            assert(workgroupTopic, 'workgroup shield contract should not be null');
-            // assert(shield.address, 'workgroup shield contract should have been deployed');
-          });
-
-          // FIXME!! assert merkle tree db tracking...
-          // it('should track the workflow merkle tree in an off-chain merkle tree database', async () => {
-          //   const trackedShieldContracts = await this.ctx.app.baseline.getTracked();
-          //   assert(trackedShieldContracts.indexOf(shield.address.toLowerCase()) !== -1, 'workgroup shield contract should have been tracked');
-          // });
-
-          // FIXME-- make assertions about the verifier availability within the Privacy service
-          // it('should deposit the circuit verifier within the privacy service', async () => {
-          //   assert(verifier, 'workflow circuit verifier contract should not be null');
-          //   assert(verifier.address, 'workflow circuit verifier contract should have been deployed');
-          // });
+        it('should output the keypair for proving and verification', async () => {
+          assert(circuit.artifacts, 'circuit artifacts should not be null');
+          assert(circuit.artifacts.proving_key, 'proving key artifact should not be null');
+          assert(circuit.artifacts.verifying_key, 'verifying key artifact should not be null');
         });
       });
     });

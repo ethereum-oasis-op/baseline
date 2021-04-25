@@ -98,7 +98,7 @@ services:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
   alice-ident:
-    image: provide/ident:bri-1
+    image: provide/ident:hcs
     container_name: alice-ident
     depends_on:
       - alice-nats-streaming
@@ -110,6 +110,10 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.533019
+      - HEDERA_NETWORK=testnet
+      - HEDERA_OPERATOR_ID=0.0.94715
+      - HEDERA_OPERATOR_KEY=302e020100300506032b6570042204201f0d22d8e3882a2eeed7b76c1d2dc5e3dad506ce65a203191e0c3c0a5818687c
       - NATS_CLIENT_PREFIX=alice-ident
       - NATS_URL=nats://alice-nats:4222
       - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
@@ -134,10 +138,11 @@ services:
     restart: always
 
   alice-ident-consumer:
-    image: provide/ident:bri-1
+    image: provide/ident:hcs
     entrypoint: ./ops/run_consumer.sh
     container_name: alice-ident-consumer
     depends_on:
+      - alice-ident
       - alice-nats-streaming
       - alice-postgres
       - alice-redis
@@ -148,6 +153,12 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.533019
+      - HEDERA_NETWORK=testnet
+      - HEDERA_OPERATOR_ID=0.0.94715
+      - HEDERA_OPERATOR_KEY=302e020100300506032b6570042204201f0d22d8e3882a2eeed7b76c1d2dc5e3dad506ce65a203191e0c3c0a5818687c
+      - IDENT_API_HOST=alice-ident:8080
+      - IDENT_API_SCHEME=http
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-ident-consumer
       - NATS_URL=nats://alice-nats:4222
@@ -185,11 +196,12 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.533019
+      - HEDERA_NETWORK=testnet
       - HEDERA_OPERATOR_ID=0.0.94715
       - HEDERA_OPERATOR_KEY=302e020100300506032b6570042204201f0d22d8e3882a2eeed7b76c1d2dc5e3dad506ce65a203191e0c3c0a5818687c
-      # - HEDERA_BASELINE_HCS_ADMIN_KEY=302a300506032b65700321009e08528aad9cba3de0799fe7d7b5e021ea098bca8fa126e9cefc7e5a99cea324
-      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.149336
-      - HEDERA_NETWORK=testnet
+      - IDENT_API_HOST=alice-ident:8080
+      - IDENT_API_SCHEME=http
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-ident-hcs-registry-consumer
       - NATS_URL=nats://alice-nats:4222
@@ -213,7 +225,7 @@ services:
     restart: always
 
   alice-nchain:
-    image: provide/nchain:bri-3
+    image: provide/nchain
     container_name: alice-nchain
     depends_on:
       - alice-ident
@@ -252,7 +264,7 @@ services:
     restart: always
 
   alice-nchain-consumer:
-    image: provide/nchain:bri-3
+    image: provide/nchain
     entrypoint: ./ops/run_consumer.sh
     container_name: alice-nchain-consumer
     depends_on:
@@ -291,7 +303,7 @@ services:
     restart: always
 
   alice-statsdaemon:
-    image: provide/nchain:bri-3
+    image: provide/nchain
     entrypoint: ./ops/run_statsdaemon.sh
     container_name: alice-statsdaemon
     depends_on:
@@ -406,7 +418,7 @@ services:
     restart: always
 
   alice-vault:
-    image: provide/vault:bri-1
+    image: provide/vault:privacy-dev
     container_name: alice-vault
     depends_on:
       - alice-postgres
@@ -415,6 +427,8 @@ services:
       - DATABASE_NAME=vault_dev
       - DATABASE_USER=vault
       - DATABASE_PASSWORD=vault
+      - IDENT_API_HOST=alice-ident:8080
+      - IDENT_API_SCHEME=http
       - LOG_LEVEL=DEBUG
       - PORT=8080
       - SEAL_UNSEAL_VALIDATION_HASH=0x05598175ac56c919ca39be16fdbb4335f755e53c27aca03717dc1b89e206aad1
@@ -430,36 +444,6 @@ services:
     ports:
       - 8082:8080
     restart: always
-
-  # alice-nethermind:
-  #   image: provide/nethermind:bri-1
-  #   container_name: alice-nethermind
-  #   environment:
-  #     - NETHERMIND_CONFIG=baseline
-  #     - NETHERMIND_INITCONFIG_STATICNODESPATH=Data/static-nodes-baseline-hosts.json
-  #     - NETHERMIND_JSONRPCCONFIG_ENABLED=true
-  #     - NETHERMIND_JSONRPCCONFIG_HOST=0.0.0.0
-  #     - NETHERMIND_JSONRPCCONFIG_PORT=8522
-  #     - NETHERMIND_KEYSTORECONFIG_TESTNODEKEY=020102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f
-  #     - NETHERMIND_NETWORKCONFIG_DISCOVERYPORT=30222
-  #     - NETHERMIND_NETWORKCONFIG_P2PPORT=30222
-  #     - NETHERMIND_VAULTCONFIG_HOST=alice-vault:8082
-  #   healthcheck:
-  #     test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8522"]
-  #     interval: 1m
-  #     timeout: 1s
-  #     retries: 2
-  #     start_period: 10s
-  #   hostname: alice-nethermind
-  #   networks:
-  #     - alice
-  #     - bob
-  #   ports:
-  #     - 8522:8522
-  #     - 30222:30222
-  #   restart: always
-  #   volumes:
-  #     - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
   # bob
 
@@ -555,7 +539,7 @@ services:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
   bob-ident:
-    image: provide/ident:bri-1
+    image: provide/ident:hcs
     container_name: bob-ident
     depends_on:
       - bob-nats-streaming
@@ -567,6 +551,10 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.533019
+      - HEDERA_NETWORK=testnet
+      - HEDERA_OPERATOR_ID=0.0.94715
+      - HEDERA_OPERATOR_KEY=302e020100300506032b6570042204201f0d22d8e3882a2eeed7b76c1d2dc5e3dad506ce65a203191e0c3c0a5818687c
       - NATS_CLIENT_PREFIX=bob-ident
       - NATS_URL=nats://bob-nats:4222
       - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
@@ -591,10 +579,11 @@ services:
     restart: always
 
   bob-ident-consumer:
-    image: provide/ident:bri-1
+    image: provide/ident:hcs
     entrypoint: ./ops/run_consumer.sh
     container_name: bob-ident-consumer
     depends_on:
+      - bob-ident
       - bob-nats-streaming
       - bob-postgres
       - bob-redis
@@ -605,6 +594,10 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.533019
+      - HEDERA_NETWORK=testnet
+      - HEDERA_OPERATOR_ID=0.0.94715
+      - HEDERA_OPERATOR_KEY=302e020100300506032b6570042204201f0d22d8e3882a2eeed7b76c1d2dc5e3dad506ce65a203191e0c3c0a5818687c
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-ident-consumer
       - NATS_URL=nats://bob-nats:4222
@@ -642,11 +635,10 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
+      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.533019
+      - HEDERA_NETWORK=testnet
       - HEDERA_OPERATOR_ID=0.0.94715
       - HEDERA_OPERATOR_KEY=302e020100300506032b6570042204201f0d22d8e3882a2eeed7b76c1d2dc5e3dad506ce65a203191e0c3c0a5818687c
-      # - HEDERA_BASELINE_HCS_ADMIN_KEY=302a300506032b65700321009e08528aad9cba3de0799fe7d7b5e021ea098bca8fa126e9cefc7e5a99cea324
-      - HEDERA_BASELINE_HCS_TOPIC_ID=0.0.149336
-      - HEDERA_NETWORK=testnet
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-ident-hcs-registry-consumer
       - NATS_URL=nats://bob-nats:4222
@@ -670,7 +662,7 @@ services:
     restart: always
 
   bob-nchain:
-    image: provide/nchain:bri-3
+    image: provide/nchain
     container_name: bob-nchain
     depends_on:
       - bob-ident
@@ -709,7 +701,7 @@ services:
     restart: always
 
   bob-nchain-consumer:
-    image: provide/nchain:bri-3
+    image: provide/nchain
     entrypoint: ./ops/run_consumer.sh
     container_name: bob-nchain-consumer
     depends_on:
@@ -748,7 +740,7 @@ services:
     restart: always
 
   bob-statsdaemon:
-    image: provide/nchain:bri-3
+    image: provide/nchain
     entrypoint: ./ops/run_statsdaemon.sh
     container_name: bob-statsdaemon
     depends_on:
@@ -863,7 +855,7 @@ services:
     restart: always
 
   bob-vault:
-    image: provide/vault:bri-1
+    image: provide/vault:privacy-dev
     container_name: bob-vault
     depends_on:
       - bob-postgres
@@ -872,6 +864,8 @@ services:
       - DATABASE_NAME=vault_dev
       - DATABASE_USER=vault
       - DATABASE_PASSWORD=vault
+      - IDENT_API_HOST=bob-ident:8080
+      - IDENT_API_SCHEME=http
       - LOG_LEVEL=DEBUG
       - PORT=8080
       - SEAL_UNSEAL_VALIDATION_HASH=0x1c1381fd075f1ee3d42799bb8da0602a2afb9ef4b492bf1eae72399ecc81b0f0
@@ -887,36 +881,6 @@ services:
     ports:
       - 8083:8080
     restart: always
-
-  # bob-nethermind:
-  #   image: provide/nethermind:bri-1
-  #   container_name: bob-nethermind
-  #   environment:
-  #     - NETHERMIND_CONFIG=baseline
-  #     - NETHERMIND_INITCONFIG_STATICNODESPATH=Data/static-nodes-baseline-hosts.json
-  #     - NETHERMIND_JSONRPCCONFIG_ENABLED=true
-  #     - NETHERMIND_JSONRPCCONFIG_HOST=0.0.0.0
-  #     - NETHERMIND_JSONRPCCONFIG_PORT=8511
-  #     - NETHERMIND_KEYSTORECONFIG_TESTNODEKEY=120102030405060708090a0b0c0d0e0f000102030405060708090a0b0c0d0e0f
-  #     - NETHERMIND_NETWORKCONFIG_DISCOVERYPORT=30111
-  #     - NETHERMIND_NETWORKCONFIG_P2PPORT=30111
-  #     - NETHERMIND_VAULTCONFIG_HOST=bob-vault:8083
-  #   healthcheck:
-  #     test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:8511"]
-  #     interval: 1m
-  #     timeout: 1s
-  #     retries: 2
-  #     start_period: 10s
-  #   hostname: bob-nethermind
-  #   networks:
-  #     - alice
-  #     - bob
-  #   ports:
-  #     - 8511:8511
-  #     - 30111:30111
-  #   restart: always
-  #   volumes:
-  #     - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
 networks:
   alice:

@@ -15,9 +15,9 @@ var (
 	baselineMessageTopicID  *string
 
 	defaultHederaClient *hedera.Client
-	registry     *hcs.Registry
-	signer 		 *models.TransactionSigner
-	signerPrivateKey *string
+	registry            *hcs.Registry
+	signer              *models.TransactionSigner
+	signerPrivateKey    *string
 
 	log *logger.Logger
 )

@@ -30,8 +30,6 @@ github.com/aristanetworks/goarista v0.0.0-20170210015632-ea17b1a17847/go.mod h1:
 github.com/aws/aws-sdk-go v1.25.48/go.mod h1:KmX6BPdI08NWTb3/sm4ZGu5ShLoqVDhKgpiN924inxo=
 github.com/bakasura980/hedera-sdk-go v0.9.2-0.20210120161409-95836daaecbf h1:IBVEOvBpUMCUF5jLimgfXcP3JJVeKKJsE279Qze3SZY=
 github.com/bakasura980/hedera-sdk-go v0.9.2-0.20210120161409-95836daaecbf/go.mod h1:75hVqcuQ7BAmfZkf5Hgh0JzLnz0IpJYELEDf6l5Ou8s=
-github.com/bakasura980/hedera-sdk-go v0.9.2 h1:baunf7BlU2P3xVG/WvMoAHWzbe/GV0KO1xZoXj/oH0A=
-github.com/bakasura980/hedera-sdk-go v0.9.2/go.mod h1:WDnvypmYDObjpW43f/Ohe0LJ+vAjavI9+FWRb0bo9NY=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/btcsuite/btcd v0.0.0-20171128150713-2e60448ffcc6/go.mod h1:Dmm/EzmjnCiweXmzRIAiUWCInVmPgjkzgv5k4tVyXiQ=
 github.com/btcsuite/btcd v0.20.1-beta/go.mod h1:wVuoA8VJLEcwgqHBwHmzLRazpKxTv13Px/pDuV7OomQ=
@@ -390,7 +388,6 @@ google.golang.org/grpc v1.19.0/go.mod h1:mqu4LbDTu4XGKhr4mRzUsmM4RtVoemTSY81AxZi
 google.golang.org/grpc v1.23.0/go.mod h1:Y5yQAOtifL1yxbo5wqy6BxZv8vAUGQwXBOALyacEbxg=
 google.golang.org/grpc v1.25.1/go.mod h1:c3i+UQWmh7LiEpx4sFZnkU36qjEYZ0imhYfXVyQciAY=
 google.golang.org/grpc v1.27.0/go.mod h1:qbnxyOmOxrQa7FizSgH+ReBfzJrCY1pSN7KXBS8abTk=
-google.golang.org/grpc v1.28.0/go.mod h1:rpkK4SK4GF4Ach/+MFLZUBavHOvF2JJB5uozKKal+60=
 google.golang.org/grpc v1.32.0/go.mod h1:N36X2cJ7JwdamYAgDz+s+rVMFjt3numwzf/HckM8pak=
 google.golang.org/grpc v1.34.0 h1:raiipEjMOIC/TO2AvyTxP25XFdLxNIBwzDh3FM3XztI=
 google.golang.org/grpc v1.34.0/go.mod h1:WotjhfgOW/POjDeRt8vscBtXq+2VjORFy659qA51WJ8=

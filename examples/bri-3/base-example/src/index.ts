@@ -46,7 +46,6 @@ export class ParticipantStack {
     if (this.initialized) {
       throw new Error(`already initialized participant stack: ${this.org.name}`);
     }
-
     this.baseline = await baselineServiceFactory(baselineProviderProvide, this.baselineConfig);
     this.nats = await messagingServiceFactory(messagingProviderNats, this.natsConfig);
     this.privacy = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceProvide, {
@@ -54,11 +53,9 @@ export class ParticipantStack {
       privacyApiScheme: this.baselineConfig?.privacyApiScheme,
       privacyApiHost: this.baselineConfig?.privacyApiHost,
     }) as unknown as ICircuitRegistry & ICircuitProver & ICircuitVerifier; // HACK
-
     if (this.natsConfig?.natsBearerTokens) {
       this.natsBearerTokens = this.natsConfig.natsBearerTokens;
     }
-
     this.hcsTopics = {};
     this.startProtocolSubscriptions();
 
@@ -73,6 +70,10 @@ export class ParticipantStack {
     }
 
     this.initialized = true;
+  }
+
+  getBaselineCircuit(): Circuit | undefined {
+    return this.baselineCircuit;
   }
 
   getBaselineConfig(): any | undefined {
@@ -117,6 +118,10 @@ export class ParticipantStack {
 
   getWorkgroup(): any {
     return this.workgroup;
+  }
+
+  getWorkgroupTopic(topic: string): any {
+    return this.hcsTopics[topic];
   }
 
   getWorkgroupTopics(): any {
@@ -330,6 +335,7 @@ export class ParticipantStack {
     this.workgroup = await this.baseline?.createWorkgroup({
       config: {
         baselined: true,
+        hcs: true,
       },
       name: name,
       network_id: this.baselineConfig?.networkId,
@@ -350,9 +356,8 @@ export class ParticipantStack {
       return Promise.reject('failed to init workgroup');
     }
 
-    // TODO-- create the HCS workgroup topic
-
-    await this.requireWorkgroupTopic('baseline-workgroup-<UUID>'); // FIXME-- setup dynamic workgroup topic key...
+    await this.requireWorkgroupTopic('hedera_public_topic_id');
+    await this.requireWorkgroupTopic('hedera_topic_id');
   }
 
   async registerWorkgroupOrganization(): Promise<Organization> {
@@ -378,6 +383,18 @@ export class ParticipantStack {
     this.workgroupToken = workgroupToken;
 
     return this.initWorkgroup();
+  }
+
+  async fetchWorkgroup(): Promise<Workgroup> {
+    if (!this.workgroup || !this.workgroupToken) {
+      return Promise.reject('failed to fetch workgroup');
+    }
+
+    return (await Ident.clientFactory(
+      this.workgroupToken,
+      this.baselineConfig?.identApiScheme,
+      this.baselineConfig?.identApiHost,
+    ).fetchApplicationDetails(this.workgroup.id));
   }
 
   async fetchWorkgroupOrganizations(): Promise<Organization[]> {
@@ -418,6 +435,29 @@ export class ParticipantStack {
       return keys[2].address; // HACK!
     }
     return Promise.reject('failed to resolve organization address');
+  }
+
+  async requireCircuit(circuitId: string): Promise<Circuit> {
+    let circuit: Circuit | undefined = undefined;
+    const orgToken = await this.createOrgToken();
+    const tkn = orgToken.accessToken || orgToken.token;
+
+    let interval;
+    const promises = [] as any;
+    promises.push(new Promise<void>((resolve, reject) => {
+      interval = setInterval(async () => {
+        circuit = await this.privacy?.fetchCircuit(circuitId) as Circuit;
+        if (circuit && circuit.verifierContract && circuit.verifierContract['source']) {
+          resolve();
+        }
+      }, 2500);
+    }));
+
+    await Promise.all(promises);
+    clearInterval(interval);
+    interval = null;
+
+    return circuit!;
   }
 
   // FIXME? fetchOrganization() can be dropped in favor of `this?.baseline.fetchOrganization(address);`
@@ -494,6 +534,22 @@ export class ParticipantStack {
     return (await vault.fetchVaultSecret(vaultId, secretId));
   }
 
+  async deployBaselineCircuit(): Promise<Circuit> {
+    // perform trusted setup and deploy verifier/shield contract
+    const circuit = await this.privacy?.deploy({
+      identifier: 'cubic',
+      proving_scheme: 'groth16',
+      curve: 'BN254',
+      provider: 'gnark',
+      name: 'my 1337 circuit',
+    }) as Circuit;
+
+    this.baselineCircuit = await this.requireCircuit(circuit.id!);
+    this.workflowIdentifier = this.baselineCircuit?.id;
+
+    return this.baselineCircuit;
+  }
+
   async inviteWorkgroupParticipant(email: string): Promise<Invite> {
     return await Ident.clientFactory(
       this.baselineConfig?.token,
@@ -506,9 +562,8 @@ export class ParticipantStack {
       params: {
         invitor_organization_address: await this.resolveOrganizationAddress(),
         authorized_bearer_token: await this.vendNatsAuthorization(),
-        organization_registry_hcs_topic: this.hcsTopics['organization-registry'].address, // FIXME -- audit hcs topic keys
-        workgroup_hcs_topic: this.hcsTopics['workgroup'].address, // FIXME -- audit hcs topic keys
-        workflow_hcs_topic: this.hcsTopics['workflow'].address, // FIXME -- audit hcs topic keys
+        organization_registry_hcs_topic: this.hcsTopics['hedera_public_topic_id'], // FIXME -- audit hcs topic keys
+        workgroup_hcs_topic: this.hcsTopics['hedera_topic_id'], // FIXME -- audit hcs topic keys
         workflow_identifier: this.workflowIdentifier,
       },
     });
@@ -535,7 +590,16 @@ export class ParticipantStack {
   }
 
   async requireWorkgroupTopic(type: string): Promise<any> { // FIXME!!
-    return Promise.reject(false);
+    return await tryTimes(async () => {
+      this.workgroup = await this.fetchWorkgroup();
+      if (this.workgroup.config[type]) {
+        this.hcsTopics[type] = this.workgroup.config[type];
+      }
+      if (this.getWorkgroupTopic(type)) {
+        return this.getWorkgroupTopic(type);
+      }
+      throw new Error();
+    })
   }
 
   async registerOrganization(name: string, messagingEndpoint: string): Promise<any> {
@@ -549,7 +613,7 @@ export class ParticipantStack {
     if (this.org) {
       const vault = await this.requireVault();
       this.babyJubJub = await this.createVaultKey(vault.id!, 'babyJubJub');
-      await this.createVaultKey(vault.id!, 'Ed25519'); // org's "default" key for HCS interactions...
+      const ed25519key = await this.createVaultKey(vault.id!, 'Ed25519'); // org's "default" key for HCS interactions...
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
       await this.registerWorkgroupOrganization();
     }

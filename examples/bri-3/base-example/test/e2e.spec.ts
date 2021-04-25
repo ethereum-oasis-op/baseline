@@ -20,7 +20,7 @@ import {
 const aliceCorpName = 'Alice Corp';
 const bobCorpName = 'Bob Corp';
 
-const hederaNetworkId = '9f3b2e72-554d-40e1-b995-1daf43c2eadd'; // Provide dedicated network id to be generated
+const hederaNetworkId = '9f3b2e72-554d-40e1-b995-1daf43c2eadd';
 const networkId = process.env['NCHAIN_NETWORK_ID'] || hederaNetworkId;
 
 const setupUser = async (identHost, firstname, lastname, email, password) => {
@@ -42,6 +42,7 @@ describe('baseline', () => {
 
   let workgroup;
   let workgroupToken;
+  let workgroupHcsTopic;
 
   before(async () => {
     await configureTestnet(5432, networkId);
@@ -84,6 +85,7 @@ describe('baseline', () => {
       'localhost:8080',
       networkId,
       'localhost:8082',
+      'localhost:8084',
       null,
       'http',
       null,
@@ -103,6 +105,7 @@ describe('baseline', () => {
       'localhost:8086',
       networkId,
       'localhost:8083',
+      'localhost:8087',
       null,
       'http',
       null,
@@ -111,19 +114,20 @@ describe('baseline', () => {
       'forest step weird object extend boat ball unit canoe pull render monkey drink monitor behind supply brush frown alone rural minute level host clock',
     );
 
-    bobApp.init();
-    aliceApp.init();
+    await bobApp.init();
+    await aliceApp.init();
   });
 
   describe('workgroup', () => {
+    before(async () => {
+      await bobApp.requireWorkgroup();
+
+      workgroup = bobApp.getWorkgroup();
+      workgroupToken = bobApp.getWorkgroupToken();
+      workgroupHcsTopic = bobApp.getWorkgroupTopic('hedera_topic_id');
+    });
+
     describe('creation', () => {
-      before(async () => {
-        await bobApp.requireWorkgroup();
-
-        workgroup = bobApp.getWorkgroup();
-        workgroupToken = bobApp.getWorkgroupToken();
-      });
-
       it('should create the workgroup in the local registry', async () => {
         assert(workgroup, 'workgroup should not be null');
         assert(workgroup.id, 'workgroup id should not be null');
@@ -135,7 +139,6 @@ describe('baseline', () => {
 
       it('should deploy the HCS topic for the workgroup', async () => {
         // const erc1820RegistryContract = await bobApp.requireWorkgroupContract('erc1820-registry');
-        const workgroupHcsTopic = null;
         assert(workgroupHcsTopic, 'workgroup HCS topic should not be null');
       });
     });
@@ -175,7 +178,7 @@ describe('baseline', () => {
 
         describe('alice', function () {
           before(async () => {
-            await bobApp.requireWorkgroupTopic('organization-registry');
+            await bobApp.requireWorkgroupTopic('hedera_public_topic_id');
             await aliceApp.acceptWorkgroupInvite(inviteToken, bobApp.getWorkgroupTopics());
           });
 
@@ -206,12 +209,12 @@ describe('baseline', () => {
           });
 
           it('should increment protocol message tx count for the sender', async () => {
-            assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 1');
+            assert(bobApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
           });
 
           it('should increment protocol message rx count for the recipient', async () => {
             await promisedTimeout(50);
-            assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 1');
+            assert(aliceApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
           });
         });
       });

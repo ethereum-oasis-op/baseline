@@ -28,8 +28,7 @@ func init() {
 			[]string{*baselineMessageAdminKey},
 			"create registry",
 			10,
-			)
-
+		)
 
 		if err != nil {
 			log.Panicf("failed to initialize dedicated HCS subscription consumer; %s", err.Error())

@@ -28,6 +28,7 @@ export const baselineAppFactory = async (
   nchainHost,
   networkId,
   vaultHost,
+  privacyHost,
   rcpEndpoint,
   rpcScheme,
   workgroup,
@@ -41,7 +42,7 @@ export const baselineAppFactory = async (
     privateKey: natsPrivateKey,
     publicKey: natsPublicKey,
   };
-  natsConfig.bearerToken = await vendNatsAuthorization(natsConfig, 'baseline.inbound');
+  natsConfig.bearerToken = await vendNatsAuthorization(natsConfig, 'baseline.proxy');
 
   return new ParticipantStack(
     {
@@ -50,6 +51,8 @@ export const baselineAppFactory = async (
       initiator: initiator,
       nchainApiScheme: 'http',
       nchainApiHost: nchainHost,
+      privacyApiScheme: 'http',
+      privacyApiHost: privacyHost,
       networkId: networkId, // FIXME-- boostrap network genesis if no public testnet faucet is configured...
       orgName: orgName,
       rpcEndpoint: rcpEndpoint,
@@ -120,7 +123,7 @@ export const vendNatsAuthorization = async (natsConfig, subject): Promise<string
       allow: ['baseline.>'],
     },
     subscribe: {
-      allow: [`baseline.inbound`],
+      allow: [`baseline.proxy`],
     },
   };
 
