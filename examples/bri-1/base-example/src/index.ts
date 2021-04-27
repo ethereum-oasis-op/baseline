@@ -599,7 +599,7 @@ export class ParticipantStack {
     const circuit = await this.privacy?.deploy({
       identifier: 'cubic',
       proving_scheme: 'groth16',
-      curve: 'BN256',
+      curve: 'BN254',
       provider: 'gnark',
       name: 'my 1337 circuit',
     }) as Circuit;
@@ -788,31 +788,34 @@ export class ParticipantStack {
   }
 
   async configureBaselineProxy(): Promise<any> {
-    const orgToken = await this.createOrgToken();
-    const tkn = orgToken.accessToken || orgToken.token;
+    console.log('WARNING: proxy intentionally not called at this time');
+    return null;
 
-    const orgRefreshToken = await this.createOrgRefreshToken();
-    const refreshToken = orgRefreshToken.refreshToken;
+    // const orgToken = await this.createOrgToken();
+    // const tkn = orgToken.accessToken || orgToken.token;
 
-    const registryContract = await this.requireWorkgroupContract('organization-registry');
+    // const orgRefreshToken = await this.createOrgRefreshToken();
+    // const refreshToken = orgRefreshToken.refreshToken;
 
-    this.baselineProxy = baselineClientFactory(
-      tkn!,
-      this.baselineConfig?.baselineApiScheme,
-      this.baselineConfig?.baselineApiHost
-    );
+    // const registryContract = await this.requireWorkgroupContract('organization-registry');
 
-    const resp = await this.baselineProxy.configureProxy({
-      counterparties: [],
-      env: {},
-      network_id: this.baselineConfig?.networkId,
-      organization_address: (await this.resolveOrganizationAddress()),
-      organization_id: this.org?.id,
-      organization_refresh_token: refreshToken,
-      registry_contract_address: registryContract.address,
-    });
+    // this.baselineProxy = baselineClientFactory(
+    //   tkn!,
+    //   this.baselineConfig?.baselineApiScheme,
+    //   this.baselineConfig?.baselineApiHost
+    // );
 
-    return resp;
+    // const resp = await this.baselineProxy.configureProxy({
+    //   counterparties: [],
+    //   env: {},
+    //   network_id: this.baselineConfig?.networkId,
+    //   organization_address: (await this.resolveOrganizationAddress()),
+    //   organization_id: this.org?.id,
+    //   organization_refresh_token: refreshToken,
+    //   registry_contract_address: registryContract.address,
+    // });
+
+    // return resp;
   }
 
   async startProtocolSubscriptions(): Promise<any> {
