@@ -36,11 +36,11 @@ We will hold Onboarding office hours once a week. Watch the [**Calendar**](https
 
 #### Technical Steering Committee <a id="technical-steering-committee"></a>
 
-The [TSC](community-leaders.md#your-technical-steering-committee) meets typically once a month to review progress -- biweekly during the early direction setting period from March to June of 2020. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
+The [TSC](community-leaders.md#your-technical-steering-committee) meets typically once a month to review progress. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
 
 #### Specifications Steering Committee <a id="specifications-steering-committee"></a>
 
-The [SSC](community-leaders.md#your-specifications-steering-committee) meets typically once a month to review roadmaps and set high-level priorities -- biweekly during the early direction setting period from March to June of 2020. Members of the SSC receive invitations, and you can join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
+The [SSC](community-leaders.md#your-specifications-steering-committee) meets typically once a month to review roadmaps and set high-level priorities. Members of the SSC receive invitations, and you can join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
 
 ### Communications: Connecting with Each Other Directly <a id="communications-connecting-with-each-other-directly"></a>
 
