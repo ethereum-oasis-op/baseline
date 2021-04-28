@@ -46,7 +46,7 @@ Here is a comparison of the reference implementations:
 
 | Service Type | bri-1 | bri-2 |
 | -------- | ----- | ----------- |
-| Eth. client | `Nethermind` | `commit-mgr` + `mongo` + `ITX` |
+| Eth. client | `Nchain` | `commit-mgr` + `ITX` |
 | Key management |`Provide Vault` | `Codefi Orchestrate` |
 | P2P Messenger | `NATS` | `NATS` |
 
