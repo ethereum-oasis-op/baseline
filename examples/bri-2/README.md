@@ -19,7 +19,8 @@ make start
 
 ## Run `dashboard` front-end
 
-Note: be sure to use `node v12.16`
+In order to run interact with the `bri-2` stack through a browser, please run the following commands.
+> Note: be sure to use `node v12.16`
 ```
 cd dashboard
 npm install
@@ -38,8 +39,26 @@ make build
 make start
 ```
 - You may need to run `make build` twice in order to properly compile smart contracts
-- Note: Environment variables default to use Ganache as the Ethereum network
+> Note: Environment variables default to use `ganache` as the Ethereum network
 
+# Current Capabilities
+
+Through the `dashboard` you can currently do the following:
+
+- Create new Workflows for a single party
+- Automatically deploy Shield and no-op Verifier smart contracts to `ganache`
+- Create new commitments (hashes of JSON objects) for the Workflows
+- Push the commitments (hashes) into the on-chain merkle tree inside the Shield contract
+
+# Future Capabilities
+
+- Create multiparty Workflows (which require multiple digital signatures for each commitment)
+- P2P messenger service for communicating commitment details to counterparties
+- Ability to use public Ethereum testnets and mainnet
+- Integrated L2 to reduce mainnet gas fees
+- Automated integration level test suite
+- Integrated `zkp-mgr` service for generating/compiling zk circuits, generating zk proofs, and creating Verifier smart-contracts
+  - Codefi Orchestrate Key-Manager service used for key storage and signing capabilities
 # Architecture
 
 Here is a comparison of the reference implementations:
