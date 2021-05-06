@@ -32,6 +32,5 @@ func (circuit *Circuit) Define(curveID gurvy.ID, cs *frontend.ConstraintSystem) 
 
 ## ToDo
 
-- Create dockerfile for this service
 - Add support for PLONK (`zkp-mgr` assumes zkSNARK/groth16 currently)
 - Add an automated test suite
