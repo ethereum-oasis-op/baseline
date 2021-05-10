@@ -3,16 +3,16 @@ package main
 import (
 	"os"
 
+	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend"
 	"github.com/consensys/gnark/frontend"
-	"github.com/consensys/gurvy"
 )
 
 func main() {
 	var circuit Circuit
 
 	// compiles our circuit into a R1CS
-	r1cs, err := frontend.Compile(gurvy.BN256, backend.GROTH16, &circuit)
+	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &circuit)
 	if err != nil {
 		panic(err)
 	}

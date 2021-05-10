@@ -12,8 +12,8 @@ import (
 	"os/exec"
 	"time"
 
+	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
-	"github.com/consensys/gurvy"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	nats "github.com/nats-io/nats.go"
@@ -24,16 +24,16 @@ import (
 
 // ZKCircuit : Schema for mongoDb
 type ZKCircuit struct {
-	ID      string   `bson:"_id" json:"_id"`
-	Name    string   `bson:"name" json:"name"`
-	CurveID gurvy.ID `bson:"curveId" json:"curveId" binding:"required"`
-	Status  string   `bson:"status" json:"status" form:"status"`
+	ID      string `bson:"_id" json:"_id"`
+	Name    string `bson:"name" json:"name"`
+	CurveID ecc.ID `bson:"curveId" json:"curveId" binding:"required"`
+	Status  string `bson:"status" json:"status" form:"status"`
 }
 
 type createCircuitReq struct {
 	Name       string                `form:"name" json:"name" binding:"required"`
 	SourceCode *multipart.FileHeader `form:"sourceCode" json:"sourceCode"`
-	CurveID    gurvy.ID              `form:"curveId" json:"curveId"`
+	CurveID    ecc.ID                `form:"curveId" json:"curveId"`
 	Identities []string              `form:"identities" json:"identities"`
 }
 type WitnessInput struct {
@@ -191,7 +191,8 @@ func setupCircuits() {
 		}
 
 		// Decode r1cs binary, store in compiledCircuit
-		compiledCircuit := groth16.NewCS(gurvy.BN256)
+		log.Println("Decoding r1cs binary for circuit: ", circuitID)
+		compiledCircuit := groth16.NewCS(ecc.BN254)
 		_, err = compiledCircuit.ReadFrom(r)
 
 		if err != nil {
@@ -201,6 +202,8 @@ func setupCircuits() {
 			continue
 		}
 
+		log.Println("Decoding r1cs binary complete for circuit: ", circuitID)
+		log.Println("Running groth16 setup for circuit: ", circuitID)
 		pk, vk, err := groth16.Setup(compiledCircuit)
 
 		if err != nil {
@@ -210,6 +213,8 @@ func setupCircuits() {
 			continue
 		}
 
+		log.Println("groth16 setup complete for circuit: ", circuitID)
+		log.Println("Creating Solidity verifier for circuit: ", circuitID)
 		path = "src/circuits/" + circuitID + "/Verifier.sol"
 		file, _ := os.Create(path)
 		err = vk.ExportSolidity(file)
@@ -221,15 +226,21 @@ func setupCircuits() {
 		}
 
 		// Write compressed keys to disk
+		log.Println("Solidity verifier created for circuit: ", circuitID)
+		log.Println("Creating proving.key file for circuit: ", circuitID)
 		path = "src/circuits/" + circuitID + "/proving.key"
 		pkFile, _ := os.Create(path)
 		pk.WriteTo(pkFile)
 
+		log.Println("Created proving.key file for circuit: ", circuitID)
+		log.Println("Creating verifying.key file for circuit: ", circuitID)
 		path = "src/circuits/" + circuitID + "/verifying.key"
 		vkFile, _ := os.Create(path)
 		vk.WriteTo(vkFile)
 
 		// Update db to add keys, update status
+		log.Println("Created verifying.key file for circuit: ", circuitID)
+		log.Println("Updating db metadata for circuit: ", circuitID)
 		update := bson.M{"$set": bson.M{"status": "setup_complete"}}
 		_, err = collection.UpdateOne(ctx, filter, update)
 		if err != nil {
@@ -325,7 +336,7 @@ func createCircuit(c *gin.Context) {
 	zkCircuitDoc.ID = circuitId
 	zkCircuitDoc.Name = requestBody.Name
 	zkCircuitDoc.Status = "created"
-	zkCircuitDoc.CurveID = gurvy.BN256 // default curveId is BN256 for now
+	zkCircuitDoc.CurveID = ecc.BN254 // default curveId is BN256 for now
 	if requestBody.CurveID != 0 {
 		zkCircuitDoc.CurveID = requestBody.CurveID
 	}
@@ -430,7 +441,7 @@ func prove(c *gin.Context) {
 	log.Println("Read from circuit binary file")
 
 	// Decode r1cs binary, store in compiledCircuit
-	compiledCircuit := groth16.NewCS(gurvy.BN256)
+	compiledCircuit := groth16.NewCS(ecc.BN254)
 	_, err = compiledCircuit.ReadFrom(compiledReader)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -460,7 +471,7 @@ func prove(c *gin.Context) {
 	path = "src/circuits/" + circuitID + "/proving.key"
 	var pkReader io.Reader
 	pkReader, err = os.Open(path)
-	provingKey := groth16.NewProvingKey(gurvy.BN256)
+	provingKey := groth16.NewProvingKey(ecc.BN254)
 	_, err = provingKey.ReadFrom(pkReader)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -529,7 +540,7 @@ func verify(c *gin.Context) {
 	path := "src/circuits/" + circuitID + "/verifying.key"
 	var vkReader io.Reader
 	vkReader, err = os.Open(path)
-	verifyingKey := groth16.NewVerifyingKey(gurvy.BN256)
+	verifyingKey := groth16.NewVerifyingKey(ecc.BN254)
 	_, err = verifyingKey.ReadFrom(vkReader)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -541,7 +552,7 @@ func verify(c *gin.Context) {
 
 	// Convert proof
 	proofBuf := bytes.NewReader(requestBody.Proof)
-	proof := groth16.NewProof(gurvy.BN256)
+	proof := groth16.NewProof(ecc.BN254)
 	proof.ReadFrom(proofBuf)
 
 	// Create witness io.Reader, then verify proof using witness

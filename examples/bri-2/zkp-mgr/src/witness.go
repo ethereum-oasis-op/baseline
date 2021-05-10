@@ -37,7 +37,6 @@ func EncodeWitness(inputs []WitnessInput) ([]byte, error) {
 			numInputs++
 		default:
 			log.Println("string input:", input.Value)
-
 			// Convert from string to single 64 bit (8 byte) uint
 			element_uint64, err := strconv.ParseUint(input.Value, 10, 64)
 			if err != nil {

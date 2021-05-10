@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/hex"
 
+	"github.com/consensys/gnark-crypto/ecc"
 	eddsa_gen "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/std/algebra/twistededwards"
 	eddsa_circuit "github.com/consensys/gnark/std/signature/eddsa"
-	"github.com/consensys/gurvy"
 )
 
 // Circuit input definitions
@@ -20,7 +20,7 @@ type Circuit struct {
 }
 
 // Define declares the circuit constraints
-func (circuit *Circuit) Define(curveID gurvy.ID, cs *frontend.ConstraintSystem) error {
+func (circuit *Circuit) Define(curveID ecc.ID, cs *frontend.ConstraintSystem) error {
 	var err error
 	var params twistededwards.EdCurve
 
@@ -37,7 +37,7 @@ func (circuit *Circuit) Define(curveID gurvy.ID, cs *frontend.ConstraintSystem) 
 	pubKeyCircuit_0.A.Y = cs.Constant(pubKeyGen_0.A.Y)
 
 	// Prepare for signature check
-	params, err = twistededwards.NewEdCurve(gurvy.BN256)
+	params, err = twistededwards.NewEdCurve(ecc.BN254)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func (circuit *Circuit) Define(curveID gurvy.ID, cs *frontend.ConstraintSystem) 
 	pubKeyCircuit_1.A.Y = cs.Constant(pubKeyGen_1.A.Y)
 
 	// Prepare for signature check
-	params, err = twistededwards.NewEdCurve(gurvy.BN256)
+	params, err = twistededwards.NewEdCurve(ecc.BN254)
 	if err != nil {
 		return err
 	}
