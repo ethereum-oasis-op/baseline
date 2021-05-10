@@ -42,11 +42,11 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
         assert(shield.address, 'should have a reference to the on-chain workgroup shield contract address');
       });
 
-      it('should track the workgroup shield in an off-chain merkle tree database', async () => {
-        // @ts-ignore
-        const trackedShieldContracts = await getApp().baseline.getTracked();
-        assert(trackedShieldContracts.indexOf(shield.address.toLowerCase()) !== -1, 'workgroup shield contract should have been tracked');
-      });
+      // it('should track the workgroup shield in an off-chain merkle tree database', async () => {
+      //   // @ts-ignore
+      //   const trackedShieldContracts = await getApp().baseline.getTracked();
+      //   assert(trackedShieldContracts.indexOf(shield.address.toLowerCase()) !== -1, 'workgroup shield contract should have been tracked');
+      // });
 
       it('should have a local reference to the on-chain workflow circuit verifier contract', async () => {
         assert(verifier, 'workflow circuit verifier contract should not be null');
