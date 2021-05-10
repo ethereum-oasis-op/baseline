@@ -94,7 +94,7 @@ services:
     ports:
      - 4001:4001
     volumes:
-      - ../contracts:/app/src/contracts
+      - ./contracts:/app/src/contracts
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/status"]
       interval: 15s
@@ -148,13 +148,15 @@ services:
       - alice
     ports:
      - 8080:8080
+    volumes:
+      - alice-zkp-circuits:/root/src/circuits
+      #- alice-zkp-circuits:./zkp-mgr/src/circuits:/root/src/circuits
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/status"]
       interval: 15s
       timeout: 10s
       retries: 3
       start_period: 10s
-
 
 networks:
   alice:
@@ -165,3 +167,4 @@ networks:
 
 volumes:
   alice-mongo:
+  alice-zkp-circuits:

@@ -10,11 +10,11 @@ clean:
 	docker-compose down --rmi all --volumes --remove-orphans
 
 build-containers:
+	./ops/check_dot_env.sh && \
 	docker-compose build
 
 build: build-containers
 	./ops/check_node_modules.sh && \
-	./ops/check_dot_env.sh && \
 	./ops/check_contracts.sh 
 
 start:
