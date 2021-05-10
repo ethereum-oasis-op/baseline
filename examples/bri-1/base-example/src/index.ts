@@ -13,6 +13,7 @@ import { AuthService } from 'ts-natsutil';
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
+const baselineProtocolDefaultDomain = 'baseline.local';
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -43,6 +44,7 @@ export class ParticipantStack {
   private baselineCircuit?: Circuit;
   private baselineConfig?: any;
   private babyJubJub?: VaultKey;
+  private domain?: string;
   private hdwallet?: VaultKey;
   private initialized = false;
   private nats?: IMessagingService;
@@ -82,6 +84,12 @@ export class ParticipantStack {
 
     if (this.natsConfig?.natsBearerTokens) {
       this.natsBearerTokens = this.natsConfig.natsBearerTokens;
+    }
+
+    if (this.baselineConfig?.domain) {
+      this.domain = this.baselineConfig?.domain;
+    } else {
+      this.domain = baselineProtocolDefaultDomain;
     }
 
     this.contracts = {};
@@ -597,7 +605,7 @@ export class ParticipantStack {
   async deployBaselineCircuit(): Promise<Circuit> {
     // perform trusted setup and deploy verifier/shield contract
     const circuit = await this.privacy?.deploy({
-      identifier: 'cubic',
+      identifier: 'purchase_order',
       proving_scheme: 'groth16',
       curve: 'BN254',
       provider: 'gnark',
@@ -771,6 +779,7 @@ export class ParticipantStack {
     this.org = await this.baseline?.createOrganization({
       name: name,
       metadata: {
+        domain: this.domain,
         messaging_endpoint: messagingEndpoint,
       },
     });
