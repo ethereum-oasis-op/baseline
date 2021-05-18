@@ -10,9 +10,9 @@ import (
 )
 
 // Creates a Zk-circuit source code file (uncompiled.go) that checks for
-// signatures from the supplied eddsa public keys
-func generateConsistencyCircuit(circuitId string, identities []string) {
-	log.Println("Received request to create new consistency circuit:", circuitId)
+// signature(s) from the supplied eddsa public keys
+func generateSignatureCircuit(circuitId string, identities []string) {
+	log.Println("Received request to create new signature circuit:", circuitId)
 
 	fileContents := `package main
 

@@ -1,8 +1,8 @@
-package main
+ppackage main
 
 import (
 	"encoding/hex"
-
+	
 	"github.com/consensys/gnark-crypto/ecc"
 	eddsa_gen "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
 	"github.com/consensys/gnark/frontend"
@@ -14,9 +14,8 @@ import (
 type Circuit struct {
 	// struct tags on a variable is optional
 	// default uses variable name and secret visibility.
-	NewCommit frontend.Variable       `gnark:",public"`
-	Sig0      eddsa_circuit.Signature `gnark:",private"`
-	Sig1      eddsa_circuit.Signature `gnark:",private"`
+	NewCommit  frontend.Variable `gnark:",public"`
+	Sig0 eddsa_circuit.Signature   `gnark:",private"`
 }
 
 // Define declares the circuit constraints
@@ -25,7 +24,7 @@ func (circuit *Circuit) Define(curveID ecc.ID, cs *frontend.ConstraintSystem) er
 	var params twistededwards.EdCurve
 
 	/***** Check for signature by pubKey_0 *****/
-	var pubKeyString_0 = "f5f2741d06ab0d802b68ddfe4461c09a44f04d4fa22cf77c891d7d7b3d575a16"
+	var pubKeyString_0 = "4bd3822517db41e55a9d234187b22215187d20ba37d83208ddc7788dc473f31e"
 	var pubKeyGen_0 eddsa_gen.PublicKey
 	var pubKeyCircuit_0 eddsa_circuit.PublicKey
 	pubKeyBytes_0, _ := hex.DecodeString(pubKeyString_0)
@@ -45,31 +44,7 @@ func (circuit *Circuit) Define(curveID ecc.ID, cs *frontend.ConstraintSystem) er
 
 	// Check for signature on hash
 	if err = eddsa_circuit.Verify(cs, circuit.Sig0, circuit.NewCommit, pubKeyCircuit_0); err != nil {
-		return err
-	}
-
-	/***** Check for signature by pubKey_1 *****/
-	var pubKeyString_1 = "14b7f496c18e536e6da96812b2583a0e507136275bc6710cfde3750e7b2cbaab"
-	var pubKeyGen_1 eddsa_gen.PublicKey
-	var pubKeyCircuit_1 eddsa_circuit.PublicKey
-	pubKeyBytes_1, _ := hex.DecodeString(pubKeyString_1)
-	_, err = pubKeyGen_1.SetBytes(pubKeyBytes_1)
-	if err != nil {
-		return err
-	}
-	pubKeyCircuit_1.A.X = cs.Constant(pubKeyGen_1.A.X)
-	pubKeyCircuit_1.A.Y = cs.Constant(pubKeyGen_1.A.Y)
-
-	// Prepare for signature check
-	params, err = twistededwards.NewEdCurve(ecc.BN254)
-	if err != nil {
-		return err
-	}
-	pubKeyCircuit_1.Curve = params
-
-	// Check for signature on hash
-	if err = eddsa_circuit.Verify(cs, circuit.Sig1, circuit.NewCommit, pubKeyCircuit_1); err != nil {
-		return err
+    return err
 	}
 
 	return nil

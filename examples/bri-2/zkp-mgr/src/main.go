@@ -343,9 +343,9 @@ func createCircuit(c *gin.Context) {
 
 	circuitType := c.Query("type")
 	os.Mkdir("src/circuits/"+circuitId+"/", 0755)
-	if circuitType == "consistency" {
+	if circuitType == "signature" {
 		// Pass identities to circuit generator
-		generateConsistencyCircuit(circuitId, requestBody.Identities)
+		generateSignatureCircuit(circuitId, requestBody.Identities)
 	} else {
 		// Create temporary source file
 		file, err := c.FormFile("sourceCode")
