@@ -2,13 +2,16 @@
 
 `bri-2` is the second "baseline reference implementation". The purpose of this project is to show a baseline stack using different services compared to `bri-1`, but this stack must still comply with the baseline standards and specificiations, therefore allowing interoperability with other baseline stacks. `bri-2` introduces the `commit-mgr` service to `baseline`. The `commit-mgr` acts as an extension to a web3 provider, which allows a variety of Ethereum clients to become "baseline compatible". 
 
-> Note: `bri-2` is still a work in progress. Components such as a vault/key manager, messenger, and system of record integration need to be added to make it a complete reference implementation.
+> **Note**: `bri-2` is still a work in progress. Components such as a vault/key manager, messenger, and system of record integration need to be added to make it a complete reference implementation.
 
 # Requirements
 - docker
 - docker-compose
 - node v12.16
 - npm
+- ConsenSys Quorum account (for `vault` + `key-manager` services)
+
+> **Note**: Create a free ConsenSys Quorum trial account [here](https://accounts.quorum.consensys.net/auth/realms/quorum/account). Access the API documention for the `key-manager` service [here](https://consensys.github.io/orchestrate/#tag/Key-Manager).
 
 # Quickstart
 

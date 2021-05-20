@@ -1,4 +1,24 @@
-version: '3.5'
+version: '3.7'
+
+x-default-variables: &default-variables
+  KEY_MANAGER_URL: ${KEY_MANAGER_URL-http://key-manager:8081}
+  KEY_MANAGER_METRICS_URL: ${KEY_MANAGER_URL-http://key-manager:8082}
+  VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+  LOG_LEVEL: ${LOG_LEVEL-debug}
+  LOG_FORMAT: ${LOG_FORMAT-}
+  LOG_TIMESTAMP: ${LOG_TIMESTAMP-true}
+
+x-container-common: &container-common
+  image: docker.consensys.net/priv/orchestrate:v21.1.4
+  restart: ${CONTAINER_RESTART-on-failure}
+  tty: true
+  networks:
+    - alice
+  labels:
+    filebeat: "true"
+
+x-key-manager-common: &key-manager-common
+  KEY_MANAGER_TYPE: ${KEY_MANAGER_TYPE-}
 
 services:
 
@@ -13,7 +33,7 @@ services:
     networks:
       - alice
     volumes:
-      - ./ops/ganache_health.sh:/app/health-check.sh:delegated
+      - ./scripts/ganache_health.sh:/app/health-check.sh:delegated
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
       interval: 15s
@@ -60,7 +80,7 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d:ro
       - alice-mongo:/data/db
-      - ./ops/mongo_health.sh:/health-check.sh:delegated
+      - ./scripts/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
@@ -157,14 +177,82 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+ 
+# Codefi Orchestrate Services
+
+  key-manager-init:
+    build: ./scripts/deps/hashicorp
+    hostname: alice-key-vault-init
+    container_name: alice-key-manager-init
+    environment:
+      VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+    networks:
+      - alice
+    depends_on:
+      - vault-init
+    volumes:
+      - vault-token:/vault/token
+      - ./scripts/deps/hashicorp/renew.sh:/renew.sh
+    command: sh /renew.sh
+
+  key-manager:
+    <<: *container-common
+    hostname: alice-key-manager
+    container_name: alice-key-manager
+    ports:
+      - 8091:8081
+      - 8092:8082
+    environment:
+      <<: *default-variables
+      <<: *key-manager-common
+    depends_on:
+      - key-manager-init
+    command: key-manager run
+    volumes:
+      - vault-token:/vault/token:ro
+      - ./build/bin/orchestrate:/bin/main
+  
+  vault:
+    image: library/vault:1.6.1
+    tty: true
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault-plugin:/vault/plugins
+      - ./scripts/deps/hashicorp/config/config.hcl:/vault/config.hcl:ro
+    entrypoint: vault server -config=/vault/config.hcl
+    ports:
+      - 8200:8200
+    restart: ${CONTAINER_RESTART-on-failure}
+    networks:
+      - alice
+
+  vault-init:
+    build: ./scripts/deps/hashicorp
+    environment:
+      VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+      PLUGIN_PATH: ${PLUGIN_PATH-/vault/plugins}
+      TOKEN_PATH: ${TOKEN_PATH-/vault/token}
+      PLUGIN_VERSION: ${PLUGIN_VERSION-v0.0.10-alpha.5}
+    restart: "no"
+    depends_on:
+      - vault
+    volumes:
+      - vault-token:/vault/token
+      - vault-plugin:/vault/plugins
+      - ./scripts/deps/hashicorp/init.sh:/init.sh
+      - ./scripts/deps/hashicorp/plugin.sh:/plugin.sh
+    command: >
+      sh -c "./plugin.sh && ./init.sh"
+    restart: ${CONTAINER_RESTART-on-failure}
+    networks:
+      - alice
 
 networks:
   alice:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 172.40.0.0/24
 
 volumes:
   alice-mongo:
   alice-zkp-circuits:
+  vault-token:
+  vault-plugin:
