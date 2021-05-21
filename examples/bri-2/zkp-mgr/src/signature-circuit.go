@@ -10,21 +10,21 @@ import (
 )
 
 // Creates a Zk-circuit source code file (uncompiled.go) that checks for
-// signatures from the supplied eddsa public keys
-func generateConsistencyCircuit(circuitId string, identities []string) {
-	log.Println("Received request to create new consistency circuit:", circuitId)
+// signature(s) from the supplied eddsa public keys
+func generateSignatureCircuit(circuitId string, identities []string) {
+	log.Println("Received request to create new signature circuit:", circuitId)
 
 	fileContents := `package main
 
-	import (
-		"encoding/hex"
+import (
+	"encoding/hex"
 	
-		eddsa_gen "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
-		"github.com/consensys/gnark/frontend"
-		"github.com/consensys/gnark/std/algebra/twistededwards"
-		eddsa_circuit "github.com/consensys/gnark/std/signature/eddsa"
-		"github.com/consensys/gurvy"
-	)
+	"github.com/consensys/gnark-crypto/ecc"
+	eddsa_gen "github.com/consensys/gnark-crypto/ecc/bn254/twistededwards/eddsa"
+	"github.com/consensys/gnark/frontend"
+	"github.com/consensys/gnark/std/algebra/twistededwards"
+	eddsa_circuit "github.com/consensys/gnark/std/signature/eddsa"
+)
 
 // Circuit input definitions
 type Circuit struct {
@@ -56,7 +56,7 @@ type Circuit struct {
 			"\n\tpubKeyCircuit_" + indexStr + ".A.X = cs.Constant(pubKeyGen_" + indexStr + ".A.X)" +
 			"\n\tpubKeyCircuit_" + indexStr + ".A.Y = cs.Constant(pubKeyGen_" + indexStr + ".A.Y)" +
 			"\n\n\t" + `// Prepare for signature check
-	params, err = twistededwards.NewEdCurve(gurvy.BN256)
+	params, err = twistededwards.NewEdCurve(ecc.BN254)
 	if err != nil {
 		return err
 	}` +
@@ -70,7 +70,7 @@ type Circuit struct {
 	// Append code segments to fileContents
 	fileContents += privateInputs + "}" + "\n\n"
 	fileContents += `// Define declares the circuit constraints
-func (circuit *Circuit) Define(curveID gurvy.ID, cs *frontend.ConstraintSystem) error {
+func (circuit *Circuit) Define(curveID ecc.ID, cs *frontend.ConstraintSystem) error {
 	var err error
 	var params twistededwards.EdCurve` + "\n"
 
