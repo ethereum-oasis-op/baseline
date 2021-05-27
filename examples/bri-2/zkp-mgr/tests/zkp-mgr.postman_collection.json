@@ -221,13 +221,13 @@
 			"response": []
 		},
 		{
-			"name": "create consistency circuit",
+			"name": "create signature circuit",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.globals.set('circuit_id', pm.response.json().InsertedID)"
+							"pm.collectionVariables.set('circuit_id', pm.response.json().InsertedID)"
 						],
 						"type": "text/javascript"
 					}
@@ -242,6 +242,11 @@
 					}
 				}
 			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
 			"request": {
 				"method": "POST",
 				"header": [
@@ -254,10 +259,15 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"name\": \"test-consistency\",\n    \"identities\": [\n        \"0xf5f2741d06ab0d802b68ddfe4461c09a44f04d4fa22cf77c891d7d7b3d575a16\",\n        \"0x14b7f496c18e536e6da96812b2583a0e507136275bc6710cfde3750e7b2cbaab\"\n    ]\n}"
+					"raw": "{\n    \"name\": \"test-signature\",\n    \"identities\": [\n        \"4bd3822517db41e55a9d234187b22215187d20ba37d83208ddc7788dc473f31e\"\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/zkcircuits?type=consistency",
+					"raw": "http://localhost:8080/zkcircuits?type=signature",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -269,7 +279,7 @@
 					"query": [
 						{
 							"key": "type",
-							"value": "consistency"
+							"value": "signature"
 						}
 					]
 				}
@@ -313,7 +323,7 @@
 					"formdata": [
 						{
 							"key": "name",
-							"value": "Consistency Test",
+							"value": "Cubic Test",
 							"type": "text"
 						},
 						{
@@ -400,7 +410,7 @@
 			"response": []
 		},
 		{
-			"name": "prove - consistency",
+			"name": "prove - signature",
 			"event": [
 				{
 					"listen": "test",
@@ -433,7 +443,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"witness\": [\n        {   \"name\": \"Sig0\",\n            \"inputType\": \"signature\",\n            \"value\": \"0fa6521d27348a1bb3d3bc87b52db62e59d7fb3436af5a606b4953c38c259e8404c6ceedbce4ffb857eb62dff4b1eb437bafe48e3e27e78a05f5d9a7c065f8e1\"\n        },\n        {\n            \"name\": \"NewCommit\",\n            \"inputType\": \"hash\",\n            \"value\": \"2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824\"\n        }\n    ]\n}",
+					"raw": "{\n    \"witness\": [\n        {\n            \"name\": \"NewCommit\",\n            \"inputType\": \"hash\",\n            \"value\": \"2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824\"\n        },\n        {   \n            \"name\": \"Sig0\",\n            \"inputType\": \"signature\",\n            \"value\": \"18f9334d12bbe544de1191001a9feca75fa6496931fcb5a55d441ee40161e38a043efacde668e60775463ab8ab3c7c1cce8fc27caa1196cc8332e677f373cf3e\"\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -451,6 +461,63 @@
 						"zkcircuits",
 						"{{circuit_id}}",
 						"prove"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify - signature",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"witness\": [\n        {\n            \"name\": \"NewCommit\",\n            \"inputType\": \"hash\",\n            \"value\": \"2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824\"\n        }\n    ],\n    \"proof\": \"{{proof}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/zkcircuits/{{circuit_id}}/verify",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"zkcircuits",
+						"{{circuit_id}}",
+						"verify"
 					]
 				}
 			},
