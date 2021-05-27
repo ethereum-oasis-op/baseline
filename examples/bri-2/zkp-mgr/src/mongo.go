@@ -11,11 +11,7 @@ import (
 )
 
 func DbConnect(ctx context.Context) *mongo.Client {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Println("Error loading .env file: " + err.Error())
-	}
-
+	godotenv.Load(".env")
 	dbHost := os.Getenv("DATABASE_HOST")
 	dbName := os.Getenv("DATABASE_NAME")
 	dbUser := os.Getenv("DATABASE_USER")

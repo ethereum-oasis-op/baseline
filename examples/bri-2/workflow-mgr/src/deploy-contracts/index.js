@@ -2,7 +2,7 @@ import { ethers, Wallet } from "ethers";
 import dotenv from "dotenv";
 import axios from "axios";
 import shieldContract from "./Shield.json";
-import verifierContract from "./VerifierNoop.json";
+import verifierNoopContract from "./VerifierNoop.json";
 import { logger } from "../logger";
 
 dotenv.config();
@@ -11,9 +11,14 @@ const senderAddress = process.env.WALLET_PUBLIC_KEY;
 const web3provider = new ethers.providers.JsonRpcProvider(`${process.env.COMMIT_MGR_URL}/jsonrpc`);
 const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY, web3provider);
 
-export const deployVerifier = async () => {
-  let error
+export const deployVerifier = async (bytecodeInput) => {
+  let error;
   let res;
+  let contractBytecode = verifierNoopContract.bytecode;
+
+  if (bytecodeInput) {
+    contractBytecode = bytecodeInput;
+  }
 
   res = await axios.post(`${process.env.COMMIT_MGR_URL}/jsonrpc`, {
     jsonrpc: "2.0",
@@ -26,7 +31,7 @@ export const deployVerifier = async () => {
   logger.info(`nonce: ${nonce}`)
   const unsignedTx = {
     from: senderAddress,
-    data: verifierContract.bytecode,
+    data: contractBytecode,
     nonce
   };
   
@@ -103,18 +108,6 @@ export const deployShield = async (verifierAddress, treeHeight = 4) => {
   
 export const trackShield = async (shieldAddress) => {
   const res = await axios.post(`${process.env.COMMIT_MGR_URL}/jsonrpc`, {
-    jsonrpc: "2.0",
-    method: "baseline_track",
-    params: [shieldAddress],
-    id: 1,
-  });
-  const { result, error } = res.data.result;
-  logger.info(`SUCCESS! Now tracking Shield contract address ${shieldAddress}`)
-  return { result, error }
-}
-
-export const createCommit = async (shieldAddress) => {
-  const res = await axios.post(`${process.env.COMMIT_MGR_URL}/commits`, {
     jsonrpc: "2.0",
     method: "baseline_track",
     params: [shieldAddress],

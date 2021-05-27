@@ -15,7 +15,7 @@ const commitSchema = new Schema(
     workflowStep: Number,
     txHash: String,
     creator: String, // i.e. Alice Eth address
-    signatures: Object, // mapping from participant id -> signature
+    signatures: Object, // mapping from participant uuid -> signature
     status: String, // 'created', 'signed', 'layer-2', 'sent-mainnet', 'mainnet'
   },
   { versionKey: false }

@@ -126,7 +126,6 @@ services:
     hostname: alice-workflow-mgr
     container_name: alice-workflow-mgr
     depends_on: 
-      - alice-commit-mgr
       - alice-mongo
       - alice-nats-server
     build:
@@ -163,6 +162,7 @@ services:
       - ./zkp-mgr/.env
     environment: 
       - DATABASE_HOST=alice-mongo:27017
+      - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
       - NATS_URL=nats://alice-nats-server:4222
     networks:
       - alice

@@ -6,7 +6,8 @@ import { logger, reqLogger, reqErrorLogger } from "./logger";
 import { dbConnect } from "./db";
 import { connectNATS } from "./nats";
 import { getStatus, getOrganizations, createOrganization, deleteOrganization,
-         getWorkflows, getWorkflow, createWorkflow, acceptInvitation, deleteWorkflow } from "./routes/rest-methods"
+         getWorkflows, getWorkflow, createWorkflow, deleteWorkflow, updateWorkflow,
+         deployContracts, inviteParticipants, acceptInvitation } from "./routes"
 
 const main = async () => {
   dotenv.config();
@@ -34,6 +35,9 @@ const main = async () => {
   app.get("/workflows", getWorkflows);
   app.get("/workflows/:workflowId", getWorkflow);
   app.post("/workflows", createWorkflow);
+  app.put("/workflows/:workflowId", updateWorkflow);
+  app.post("/workflows/:workflowId/deploy", deployContracts);
+  app.post("/workflows/:workflowId/invite", inviteParticipants);
   app.post("/workflows/:workflowId/accept-invite", acceptInvitation);
   app.delete("/workflows/:workflowId", deleteWorkflow);
   app.get("/organizations", getOrganizations);

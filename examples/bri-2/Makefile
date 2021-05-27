@@ -11,7 +11,7 @@ clean:
 
 build-containers:
 	./scripts/check_dot_env.sh && \
-	docker-compose build --no-cache
+	docker-compose build
 
 build: build-containers
 	./scripts/check_node_modules.sh && \

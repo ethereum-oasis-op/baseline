@@ -18,7 +18,7 @@
   "dependencies": {
     "@veramo/core": "^1.1.0",
     "@veramo/did-resolver": "^1.1.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
     "cors": "^2.8.5",
@@ -34,6 +34,7 @@
     "os": "^0.1.1",
     "path": "^0.12.7",
     "rlp": "^2.2.6",
+    "solc": "^0.8.4",
     "uuid": "^8.3.2",
     "web-did-resolver": "^1.3.5",
     "winston": "^3.3.3"
