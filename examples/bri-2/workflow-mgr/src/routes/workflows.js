@@ -55,7 +55,10 @@ export const createWorkflow = async (req, res) => {
     
     logger.info(`New workflow (id: ${newId}) created.`)
     const nc = await connectNATS();
-    nc.publish('circuit-compile', {
+    //TODO: Update to new-workflow-allocated event to finish off this step, 
+    //      these should not infer or reference the next activity since it should be
+    //      unaware
+    nc.publish('new-workflow-allocation', {
       workflowId: newId,
       circuitType: type,
       identities
