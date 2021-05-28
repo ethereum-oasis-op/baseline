@@ -63,15 +63,17 @@ func InitNats() *nats.Conn {
 	}
 
 	// Subscribe to subjects processed by zkp-mgr
-	nc.Subscribe("circuit-compile", func(m *nats.Msg) {
-		log.Println("NATS circuit-compile: received new request")
+	//TODO: The function complete / orchestrate should e outside of teh subscriber functon
+	//      so it can be tested in isolation fo the subscription event.
+	nc.Subscribe("new-workflow-allocation", func(m *nats.Msg) {
+		log.Println("NATS new-workflow-allocation: received new request")
 		var msgData circuitCompileMsg
 		var zkCircuitDoc ZKCircuit
 		var workflowUpdates = make(map[string]string)
 		var err error
 
 		json.Unmarshal(m.Data, &msgData)
-		log.Println("NATS circuit-compile: processing request for workflowId ", msgData.WorkflowId)
+		log.Println("NATS new-workflow-allocation: processing request for workflowId ", msgData.WorkflowId)
 
 		circuitId := uuid.NewRandom().String()
 		zkCircuitDoc.ID = circuitId
@@ -113,6 +115,9 @@ func InitNats() *nats.Conn {
 		updateWorkflow(msgData.WorkflowId, workflowUpdates)
 
 		// Create new "circuit-setup" job
+		//TODO: if a publish has been submitted against Workflow service this should be
+		//      an additinal sbuscription waiting for the Workflow Updated event
+		//      with a sepcific even type or value
 		log.Println("NATS circuit-compile: completed request for workflowId ", msgData.WorkflowId)
 		var setupMsg circuitSetupMsg
 		setupMsg.WorkflowId = msgData.WorkflowId
