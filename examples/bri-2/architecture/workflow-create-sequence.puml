@@ -1,0 +1,24 @@
+@startuml Create Workflow Sequence
+
+actor "Workflow Administrator" as wa
+participant "Api Gateway" as api 
+participant "Workflow Service" as ws
+database "Workflow Db" as wdb
+participant "Nats \n topic:new-workflow-allocated" as ntpc1
+
+wa -> api: [Post] /workflow
+activate api
+
+activate ws
+api -> ws: createWorkflow
+
+activate wdb
+ws -> wdb: workflows.findOneAndUpdate
+deactivate wdb
+
+ws -> ntpc1: publish(new-workflow-allocated)
+ws -> api: workflowId:uuid
+deactivate ws
+api -> wa: 201 workFlowCreateResponse
+deactivate api
+@enduml
