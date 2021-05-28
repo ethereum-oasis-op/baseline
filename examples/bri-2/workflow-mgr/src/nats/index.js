@@ -23,11 +23,15 @@ export const connectNATS = async () => {
   return nc;
 }
 
-const natsCompileVerifier = async (msg) => {
+//HOw to inject a stander storage provider, is this a good palce for an IoC Container
+const natsCompileVerifier = async (msg, IStorageProvider) => {
   logger.info(`NATS contracts-compile-verifier: received request for workflowId ${msg.WorkflowId}`)
   logger.info('message payload:' + JSON.stringify(msg, null, 4))
   
+  
   // Retrieve Verifier.sol source code from zkp-mgr
+  //NOTE: shoudl we pass this in the NATS message (the URI) ??
+  // 
   let res = await axios.get(`${process.env.ZKP_MGR_URL}/zkcircuits/${msg.ZkCircuitId}/verifier`);
   logger.info("GET /zkcircuits/{id}/verifier status code:" + res.status)
 
@@ -42,11 +46,12 @@ const natsCompileVerifier = async (msg) => {
   await workflows.findOneAndUpdate(
     { _id: msg.WorkflowId },
     { status: "success-compile-verifier" },
-    { upsert: true, new: true }
+    { upsert: false, new: true }
   );
 
   // Create new contracts-deploy-verifier job
   logger.info(`NATS contracts-compile-verifier: completed job for ${msg.WorkflowId}. Creating new contracts-deploy-verifier job`)
+  //NOTE: do an inservice not event bridged call as it's in domain
   nc.publish('contracts-deploy-verifier', { workflowId: msg.WorkflowId, zkCircuitId: msg.ZkCircuitId, verifierBytecode });
 }
 
@@ -59,7 +64,7 @@ const natsDeployVerifier = async (msg) => {
     await workflows.findOneAndUpdate(
       { _id: msg.workflowId },
       { status: "failed-deploy-verifier" },
-      { upsert: true, new: true }
+      { upsert: false, new: true }
     );
     return;
   }
@@ -71,11 +76,13 @@ const natsDeployVerifier = async (msg) => {
       status: "success-deploy-verifier",
       verifierAddress
     },
-    { upsert: true, new: true }
+    { upsert: false, new: true }
   );
   
   // Create new contracts-deploy-verifier job
   logger.info(`NATS contracts-deploy-verifier: completed job for ${msg.workflowId}. Creating new contracts-deploy-shield job`)
+
+  //NOTE: insrvice call
   nc.publish('contracts-deploy-shield', { workflowId: msg.workflowId, verifierAddress });
 }
 
@@ -89,7 +96,7 @@ const natsDeployShield = async (msg) => {
     await workflows.findOneAndUpdate(
       { _id: msg.workflowId },
       { status: "failed-deploy-shield" },
-      { upsert: true, new: true }
+      { upsert: false, new: true }
     );
     return;
   }
@@ -97,21 +104,21 @@ const natsDeployShield = async (msg) => {
   await workflows.findOneAndUpdate(
     { _id: msg.workflowId },
     {
-      _id: msg.workflowId,
       shieldAddress,
       status: "success-deploy-shield"
     },
-    { upsert: true, new: true }
+    { upsert: false, new: true }
   );
 
   logger.info('Setting up tracking for Shield contract...')
+  //NOTE: THIS IS COMMITTMENT MANGER this shoudl be an event call
   const { result: trackResult, error: errorTrack } = await trackShield(shieldAddress);
   if (errorTrack) {
     logger.error(`Error: problem tracking Shield contract address ${shieldAddress}`)
     await workflows.findOneAndUpdate(
       { _id: msg.workflowId },
       { status: "failed-track-shield" },
-      { upsert: true, new: true }
+      { upsert: false, new: true }
     );
     return;
   }
@@ -124,7 +131,7 @@ const natsDeployShield = async (msg) => {
       shieldAddress,
       status: "success-track-shield"
     },
-    { upsert: true, new: true }
+    { upsert: false, new: true }
   );
   
   logger.info('SUCCESS: Setup complete for workflow ' + msg.workflowId)

@@ -1,77 +1,110 @@
-import { v4 } from 'uuid';
-import { workflows } from "../db/models/Workflow";
-import { logger } from "../logger";
-import { connectNATS } from "../nats";
+import {
+  v4
+} from 'uuid';
+import {
+  workflows
+} from "../db/models/Workflow";
+import {
+  logger
+} from "../logger";
+import {
+  connectNATS
+} from "../nats";
 
 export const createWorkflow = async (req, res) => {
   const newId = v4();
-  const { description, clientType, identities, chainId } = req.body;
-  const { type } = req.query;
+  const {
+    description,
+    clientType,
+    identities,
+    chainId
+  } = req.body;
+
+  const {
+    type
+  } = req.query;
+
   let newWorkflow, updates;
-  if (type === "test") {
-    logger.info('Received request to create test workflow. Creating now...')
-    updates = {
-      _id: newId,
-      description: "automated internal test",
-      clientType: "dashboard-test",
-      chainId,
-      participants: [],
-      status: "created"
-    }
-  } else {
-    updates = {
-      _id: newId,
-      description,
-      clientType,
-      chainId,
-      participants: [],
-      status: "created"
-    }
+
+  updates = {
+    _id: newId,
+    description,
+    clientType,
+    chainId,
+    participants: [],
+    status: "created"
+  }
+
+  if (type === "signature") {
     for (let index = 0; index < identities.length; index++) {
-      updates.participants[index] = { publicKey: identities[index] }
+      updates.participants[index] = {
+        publicKey: identities[index]
+      }
     }
   }
 
   try {
-    newWorkflow = await workflows.findOneAndUpdate(
-      { _id: newId },
-      updates,
-      { upsert: true, new: true }
+    newWorkflow = await workflows.findOneAndUpdate({
+        _id: newId
+      },
+      updates, {
+        upsert: true,
+        new: true
+      }
     );
+    
     logger.info(`New workflow (id: ${newId}) created.`)
     const nc = await connectNATS();
-    nc.publish('circuit-compile', { workflowId: newId, circuitType: type, identities });
-    res.status(201).send(newWorkflow || {});
+    nc.publish('circuit-compile', {
+      workflowId: newId,
+      circuitType: type,
+      identities
+    });
+    res.status(201).send({"workflowId":newWorkflow._id});
     return
   } catch (err) {
     logger.error(`Could not create new workflow (id: ${newId}): ${err}`)
-    res.status(500).send({ error: `${err.message}`});
+    res.status(500).send({
+      error: `${err.message}`
+    });
     return
   }
 };
 
 export const updateWorkflow = async (req, res) => {
-  const { workflowId } = req.params;
-  const { status, zkCircuitId } = req.body;
+  const {
+    workflowId
+  } = req.params;
+  const {
+    status,
+    zkCircuitId
+  } = req.body;
   logger.info("updateWorkflow req.body:" + JSON.stringify(req.body, null, 4))
 
   try {
-    let updates = { status }
+    let updates = {
+      status
+    }
     if (zkCircuitId) {
       updates.zkCircuitId = zkCircuitId
     }
 
-    let updatedWorkflow = await workflows.findOneAndUpdate(
-      { _id: workflowId },
-      updates,
-      { upsert: true, new: true }
+    let updatedWorkflow = await workflows.findOneAndUpdate({
+        _id: workflowId
+      },
+      updates, {
+        upsert: true,
+        new: true
+      }
     );
     logger.info(`Workflow updated: ${workflowId}`)
     res.status(201).send(updatedWorkflow || {});
     return
   } catch (err) {
     logger.error(`Could not update workflow (id: ${newId}): ${err}`)
-    res.status(500).send({ error: `${err.message}`});
+    res.status(500).send({
+      error: `${err.message}`
+    });
     return
   }
 }
@@ -85,23 +118,33 @@ export const inviteParticipants = async (req, res) => {
 }
 
 export const acceptInvitation = async (req, res) => {
-  const { workflowId } = req.params;
-  const foundWorkflow = await workflows.findOne({ _id: workflowId });
+  const {
+    workflowId
+  } = req.params;
+  const foundWorkflow = await workflows.findOne({
+    _id: workflowId
+  });
   if (foundWorkflow.status !== "invited") {
-      logger.error(`Workflow ${workflowId} current state is ${foundWorkflow.status}. Request to accept invitation is invalid`);
-      res.status(400).send({ error: `Workflow ${workflowId} current state is ${foundWorkflow.status}. Request to accept invitation is invalid`});
-      return;
+    logger.error(`Workflow ${workflowId} current state is ${foundWorkflow.status}. Request to accept invitation is invalid`);
+    res.status(400).send({
+      error: `Workflow ${workflowId} current state is ${foundWorkflow.status}. Request to accept invitation is invalid`
+    });
+    return;
   }
-  const newWorkflow = await workflows.findOneAndUpdate(
-    { _id: workflowId },
-    { status: "accepted-invite" },
-    { upsert: true }
-  );
+  const newWorkflow = await workflows.findOneAndUpdate({
+    _id: workflowId
+  }, {
+    status: "accepted-invite"
+  }, {
+    upsert: true
+  });
   res.status(200).send()
 };
 
 export const deleteWorkflow = async (req, res) => {
-  await workflows.deleteOne({_id: req.params.workflowId}, (err, data) => {
+  await workflows.deleteOne({
+    _id: req.params.workflowId
+  }, (err, data) => {
     if (err) {
       res.status(400).send(err);
     } else {
@@ -111,7 +154,9 @@ export const deleteWorkflow = async (req, res) => {
 };
 
 export const getWorkflow = async (req, res) => {
-  await workflows.findOne({ _id: req.params.workflowId}, (err, data) => {
+  await workflows.findOne({
+    _id: req.params.workflowId
+  }, (err, data) => {
     if (err) {
       res.send(err);
     } else {
