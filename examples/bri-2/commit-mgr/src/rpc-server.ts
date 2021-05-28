@@ -207,12 +207,8 @@ const baseline_track = new jayson.Method(
     // First check to see if we're already tracking this MerkleTree
     const merkleTree = await merkleTrees.findOne({ _id: `${contractAddress}_0` });
     if (merkleTree && merkleTree.active === true) {
-      error = {
-        code: -32603,
-        message: `Internal server error`,
-        data: `Already tracking MerkleTree at address ${contractAddress}`
-      };
-      done(error, null)
+      logger.info(`[baseline_track] Already tracking MerkleTree at address ${contractAddress}`)
+      done(null, true);
       return;
     }
 
