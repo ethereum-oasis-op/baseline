@@ -18,9 +18,9 @@ import (
 )
 
 type circuitCompileMsg struct {
-	WorkflowId   string
-	Identities   []string
-	ZkCircuitDoc ZKCircuit
+	WorkflowId  string
+	Identities  []string
+	circuitType string
 }
 
 type circuitSetupMsg struct {
@@ -75,7 +75,7 @@ func InitNats() *nats.Conn {
 
 		circuitId := uuid.NewRandom().String()
 		zkCircuitDoc.ID = circuitId
-		zkCircuitDoc.Name = "signature circuit"
+		zkCircuitDoc.Name = msgData.circuitType
 		zkCircuitDoc.Status = "created"
 		zkCircuitDoc.CurveID = ecc.BN254 // default curveId is BN256 for now
 		os.Mkdir("src/circuits/"+circuitId+"/", 0755)
@@ -107,6 +107,9 @@ func InitNats() *nats.Conn {
 		// PUT /workflows/{id}
 		workflowUpdates["status"] = "success-circuit-compile"
 		workflowUpdates["zkCircuitId"] = circuitId
+
+		//NOTE: Should this be a async/await against NATS pub/sub against workflow manage eventing, or should it stay as a
+		//      "coupled" HTTP request/response???
 		updateWorkflow(msgData.WorkflowId, workflowUpdates)
 
 		// Create new "circuit-setup" job
@@ -115,6 +118,8 @@ func InitNats() *nats.Conn {
 		setupMsg.WorkflowId = msgData.WorkflowId
 		setupMsg.ZkCircuitId = circuitId
 		encodedSetupMsg, _ := json.Marshal(setupMsg)
+
+		//NOTE: Should this be direct inservice call since there is no boundary breach
 		nc.Publish("circuit-setup", encodedSetupMsg)
 	})
 
@@ -145,6 +150,9 @@ func InitNats() *nats.Conn {
 		compileMsg.ZkCircuitId = msgData.ZkCircuitId
 		encodedCompileMsg, _ := json.Marshal(compileMsg)
 		log.Println("NATS circuit-setup: completed job. Adding job to contracts-compile-verifier queue for workflowId", msgData.WorkflowId)
+		//NOTE: Terminating messages should not have awareness of next step but rather signal their completion / exit event
+		//      in this case it would be circuit-setup-complete event which is what cmpile verifier subsriver would listen for, in addition to it's
+		//      own init event message.
 		nc.Publish("contracts-compile-verifier", encodedCompileMsg)
 	})
 

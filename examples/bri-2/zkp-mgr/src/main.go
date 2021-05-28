@@ -181,6 +181,9 @@ func setupCircuit(circuitID string) error {
 	filter := bson.M{"_id": circuitID}
 
 	// Create reader for r1cs file
+	//NOTE: shoudl we use a blob store (S3) or put in MongoDb
+	//NOTE: Create a storage provider interface with IoC style implemetnation in our case we can use lcoalstack S3 but interface should
+	//      support any file system, or any cloud repository (define interface and implement with S3 ) IStorageProvider
 	path := "src/circuits/" + circuitID + "/compiled.r1cs"
 	var r io.Reader
 	r, err := os.Open(path)
