@@ -100,6 +100,7 @@ services:
     container_name: alice-commit-mgr
     depends_on:
       - alice-mongo
+      - alice-nats-server
     build:
       context: ./commit-mgr
       dockerfile: ./Dockerfile
@@ -109,6 +110,9 @@ services:
       - DATABASE_HOST=alice-mongo:27017
       - ETH_CLIENT_WS=ws://ganache:8545
       - ETH_CLIENT_HTTP=http://ganache:8545
+      - NATS_URL=nats://alice-nats-server:4222
+      - ZKP_MGR_URL=http://alice-zkp-mgr:8080
+      - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
     networks:
       - alice
     ports:

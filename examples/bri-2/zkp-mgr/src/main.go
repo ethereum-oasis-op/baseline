@@ -149,7 +149,7 @@ func compileCircuit(circuitID string) error {
 
 	// Update zk-circuit in db: set status to "compiled"
 	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 
 	filter := bson.M{"_id": circuitID}
@@ -176,7 +176,7 @@ func setupCircuit(circuitID string) error {
 
 	// Get zk circuit collection for later updates
 	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	filter := bson.M{"_id": circuitID}
 
