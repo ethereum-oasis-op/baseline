@@ -9,7 +9,7 @@ import { logger } from '../../logger';
 dotenv.config();
 
 const senderAddress = process.env.WALLET_PUBLIC_KEY;
-const web3provider = new ethers.providers.JsonRpcProvider(`${process.env.ETH_CLIENT_HTTP}/jsonrpc`);
+const web3provider = new ethers.providers.JsonRpcProvider(`${process.env.ETH_CLIENT_HTTP}`);
 const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY, web3provider);
 
 export { shieldContract, verifierNoopContract };
@@ -49,7 +49,7 @@ export const deployVerifier = async (bytecodeInput) => {
 		contractBytecode = bytecodeInput;
 	}
 
-	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}/jsonrpc`, {
+	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
 		jsonrpc: '2.0',
 		method: 'eth_getTransactionCount',
 		params: [senderAddress, 'latest'],
@@ -64,7 +64,7 @@ export const deployVerifier = async (bytecodeInput) => {
 		nonce
 	};
 
-	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}/jsonrpc`, {
+	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
 		jsonrpc: '2.0',
 		method: 'eth_estimateGas',
 		params: [unsignedTx],
@@ -83,7 +83,7 @@ export const deployVerifier = async (bytecodeInput) => {
 		return { error };
 	}
 
-	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}/jsonrpc`, {
+	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
 		jsonrpc: '2.0',
 		method: 'eth_getTransactionReceipt',
 		params: [txHash],
@@ -121,7 +121,7 @@ export const deployShield = async (verifierAddress, treeHeight = 4) => {
 		return { error };
 	}
 
-	const res = await axios.post(`${process.env.ETH_CLIENT_HTTP}/jsonrpc`, {
+	const res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
 		jsonrpc: '2.0',
 		method: 'eth_getTransactionReceipt',
 		params: [txHash],
@@ -135,6 +135,7 @@ export const deployShield = async (verifierAddress, treeHeight = 4) => {
 	return { result: shieldAddress };
 };
 
+// TODO: call internal method instead of using http request to self
 export const trackShield = async (shieldAddress) => {
 	const res = await axios.post(`${process.env.COMMIT_MGR_URL}/jsonrpc`, {
 		jsonrpc: '2.0',
@@ -143,6 +144,11 @@ export const trackShield = async (shieldAddress) => {
 		id: 1
 	});
 	const { result, error } = res.data.result;
-	logger.info(`SUCCESS! Now tracking Shield contract address ${shieldAddress}`);
+
+	logger.info(`baseline_track request status: ${res.status}`);
+	if (!error) {
+		logger.info(`SUCCESS! Now tracking Shield contract address ${shieldAddress}`);
+	}
+
 	return { result, error };
 };
