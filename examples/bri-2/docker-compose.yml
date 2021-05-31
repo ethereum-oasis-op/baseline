@@ -186,7 +186,7 @@ services:
 
   key-manager-init:
     build: ./scripts/deps/hashicorp
-    hostname: alice-key-vault-init
+    hostname: alice-key-manager-init
     container_name: alice-key-manager-init
     environment:
       VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
