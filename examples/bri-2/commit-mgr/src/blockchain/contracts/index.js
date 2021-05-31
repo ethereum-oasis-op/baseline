@@ -1,16 +1,13 @@
-import { ethers, Wallet } from 'ethers';
+import { ethers } from 'ethers';
 import solc from 'solc';
 import dotenv from 'dotenv';
 import axios from 'axios';
 import shieldContract from './Shield.json';
 import verifierNoopContract from './VerifierNoop.json';
 import { logger } from '../../logger';
+import { get_tx_manager, waitTx } from '../../tx-manager';
 
 dotenv.config();
-
-const senderAddress = process.env.WALLET_PUBLIC_KEY;
-const web3provider = new ethers.providers.JsonRpcProvider(`${process.env.ETH_CLIENT_HTTP}`);
-const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY, web3provider);
 
 export { shieldContract, verifierNoopContract };
 
@@ -42,54 +39,26 @@ export const compileContract = async (contractName, contractSourceCode) => {
 
 export const deployVerifier = async (bytecodeInput) => {
 	let error;
-	let res;
-	let contractBytecode = verifierNoopContract.bytecode;
 
+	// Deploy VerifierNoop by default
+	let contractBytecode = verifierNoopContract.bytecode;
 	if (bytecodeInput) {
 		contractBytecode = bytecodeInput;
 	}
 
-	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
-		jsonrpc: '2.0',
-		method: 'eth_getTransactionCount',
-		params: [senderAddress, 'latest'],
-		id: 1
-	});
+	const txManager = await get_tx_manager();
+	const { txHash } = await txManager.sendTransaction(
+		undefined,
+		process.env.WALLET_PUBLIC_KEY,
+		contractBytecode
+	);
 
-	const nonce = res.data.result;
-	logger.info(`nonce: ${nonce}`);
-	const unsignedTx = {
-		from: senderAddress,
-		data: contractBytecode,
-		nonce
-	};
-
-	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
-		jsonrpc: '2.0',
-		method: 'eth_estimateGas',
-		params: [unsignedTx],
-		id: 1
-	});
-
-	const gasEstimate = res.data.result;
-	logger.info(`gasEstimate: ${gasEstimate}`);
-	unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
-
-	const tx = await wallet.sendTransaction(unsignedTx);
-	await tx.wait();
-	const txHash = tx.hash;
 	if (!txHash) {
 		error = 'Deploy Verifier contract failed';
 		return { error };
 	}
 
-	res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
-		jsonrpc: '2.0',
-		method: 'eth_getTransactionReceipt',
-		params: [txHash],
-		id: 1
-	});
-	const txDetails = res.data.result;
+	const txDetails = await waitTx(txHash);
 	const verifierAddress = txDetails.contractAddress;
 	logger.info(`SUCCESS! Verifier contract address is ${verifierAddress}`);
 
@@ -98,37 +67,25 @@ export const deployVerifier = async (bytecodeInput) => {
 
 export const deployShield = async (verifierAddress, treeHeight = 4) => {
 	let error;
-	const nonce = await wallet.getTransactionCount();
-	const abiCoder = new ethers.utils.AbiCoder();
+
 	// Encode the constructor parameters, then append to bytecode
+	const abiCoder = new ethers.utils.AbiCoder();
 	const encodedParams = abiCoder.encode(['address', 'uint'], [verifierAddress, treeHeight]);
 	const bytecodeWithParams = shieldContract.bytecode + encodedParams.slice(2).toString();
-	const unsignedTx = {
-		from: senderAddress,
-		data: bytecodeWithParams,
-		nonce
-	};
 
-	const gasEstimate = await wallet.estimateGas(unsignedTx);
-	logger.info(`gasEstimate: ${gasEstimate}`);
-	unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
+	const txManager = await get_tx_manager();
+	const { txHash } = await txManager.sendTransaction(
+		undefined,
+		process.env.WALLET_PUBLIC_KEY,
+		bytecodeWithParams
+	);
 
-	const tx = await wallet.sendTransaction(unsignedTx);
-	await tx.wait();
-	const txHash = tx.hash;
 	if (!txHash) {
 		error = 'Deploy Verifier contract failed';
 		return { error };
 	}
 
-	const res = await axios.post(`${process.env.ETH_CLIENT_HTTP}`, {
-		jsonrpc: '2.0',
-		method: 'eth_getTransactionReceipt',
-		params: [txHash],
-		id: 1
-	});
-
-	const txDetails = res.data.result;
+	const txDetails = await waitTx(txHash);
 	const shieldAddress = txDetails.contractAddress;
 	logger.info(`SUCCESS! Shield contract address is ${shieldAddress}`);
 
