@@ -32,13 +32,14 @@ export default function Workflows() {
   };
   return (
     <>
-      <div className="flex flex-wrap mt-4">
+      <div className="flex flex-wrap mt-4 mb-6">
         <div className="w-full px-4">
           <CardWorkflows
             workflows={currentPageData}
             isLoading={isLoading}
             isError={isError}
           />
+          {workflows?.length > PER_PAGE ? (
           <div className="flex justify-center">
             <ReactPaginate
               previousLabel={"← Previous"}
@@ -51,6 +52,7 @@ export default function Workflows() {
               activeClassName={"underline"}
             />
           </div>
+          ) : null }
         </div>
       </div>
     </>
