@@ -1635,6 +1635,10 @@ video {
   justify-self: stretch;
 }
 
+.gap-2 {
+  gap: 0.5rem;
+}
+
 .flex-1 {
   flex: 1 1 0%;
 }
@@ -2488,6 +2492,12 @@ video {
   --text-opacity: 1;
   color: #3182ce;
   color: rgba(49, 130, 206, var(--text-opacity));
+}
+
+.hover\:text-blue-700:hover {
+  --text-opacity: 1;
+  color: #2d3748;
+  color: rgba(45, 55, 72, var(--text-opacity));
 }
 
 .italic {
