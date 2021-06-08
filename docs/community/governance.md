@@ -68,3 +68,15 @@ This document shall be ratified by the PGB before the public launch of the Basel
 
 Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis/oasis-open-project/blob/master/GOVERNANCE.md​).
 
+### TSC Rules for Mid-term Member Replacements <a id="replacements"></a>
+
+In the event that a TSC Member resigns more than 30 days before the end of their elected term, they may nominate a replacement. The resigning member shall consider the replacement’s active participation in, contribution to, and commitment toward the Baseline Protocol community when selecting such candidate.
+
+The position shall remain open for 30 days or until 7 days after the next steering committee meeting, whichever comes first (the open period). During that period, any other TSC member or Active Contributor to the /baseline github repo, may nominate another person.
+
+If there is only one candidate, the TSC Chair must issue a “call for objections” to the remaining TSC members. If there is unanimous approval (no objections), then the candidate is elected. If there are one or more objections recorded, the position must be put up for a vote of the Active Contributors according to the rules of normal TSC voting as written in this document.
+
+If more than one candidate is nominated during the open period, the position must be run through the same voting process used during normal periodic TSC elections. 
+
+The “call for objections” or the vote must be conducted during a live TSC meeting that has a quorum present or must be conducted over a seven day asynchronous voting period via any messaging or voting system approved for use by OASIS. In a “call for objections,” non-responses shall be considered assent. In a vote, non-responses must be ignored. 
+In the event that the number of TSC Members resigning in the same open period reduces the total number of TSC members to below a quorum from the previous number, then a new full TSC must be elected following the standard procedure for periodic elections.
