@@ -18,7 +18,7 @@ import {
 	deployContracts,
 	inviteParticipants,
 	acceptInvitation
-} from './routes';
+} from './rest-routes';
 
 const main = async () => {
 	dotenv.config();

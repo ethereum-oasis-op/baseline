@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { Wallet, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { ITxManager } from '.';
 import { logger } from '../logger';
 import { http_provider, jsonrpc, shieldContract } from '../blockchain';
@@ -7,25 +7,35 @@ import { http_provider, jsonrpc, shieldContract } from '../blockchain';
 dotenv.config();
 
 export class InfuraGas implements ITxManager {
-	constructor(private readonly config: any) {
-		this.config = config;
+	constructor(public signer: any, public signerType: string) {
+		this.signerType = signerType;
+		this.signer = signer;
 	}
 
-	async signTx(toAddress: string, fromAddress: string, txData: string) {
-		const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY, http_provider);
-		const nonce = await wallet.getTransactionCount();
+	async constructTx(toAddress: string, fromAddress: string, txData: string) {
+		logger.debug('Received request for EthClient.signTx');
+		const { result: nonce } = await jsonrpc('eth_getTransactionCount', [
+			process.env.WALLET_PUBLIC_KEY,
+			'latest'
+		]);
 		logger.debug(`nonce: ${nonce}`);
 
 		const unsignedTx = {
-			to: toAddress,
+			to: toAddress || '',
 			from: fromAddress,
 			data: txData,
+			nonce,
 			chainId: parseInt(process.env.CHAIN_ID, 10),
-			gasLimit: 0,
-			nonce
+			gasLimit: 0
 		};
 
-		const gasEstimate = await wallet.estimateGas(unsignedTx);
+		// key-manager returns 400 if "from" field is provided in tx
+		if (this.signerType === 'key-manager') {
+			delete unsignedTx.from;
+		}
+
+		const res = await jsonrpc('eth_estimateGas', [unsignedTx]);
+		const gasEstimate = res.result;
 		logger.debug(`gasEstimate: ${gasEstimate}`);
 		const gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
 		logger.debug(`gasLimit set: ${gasLimit}`);
@@ -37,9 +47,31 @@ export class InfuraGas implements ITxManager {
 			)
 		);
 
-		// TODO: use key-manager service to perform this signature
-		const signature = await wallet.signMessage(ethers.utils.arrayify(relayTransactionHash));
+		logger.debug('Unsigned tx: ' + JSON.stringify(unsignedTx, null, 4));
+		const signature = await this.signer.signMessage(ethers.utils.arrayify(relayTransactionHash));
+		logger.debug(`Message signature: ${signature}`);
 		return { signature, gasLimit };
+	}
+
+	async sendTransaction(toAddress: string, fromAddress: string, txData: string) {
+		logger.debug('Received request for EthClient.sendTransaction');
+		let error = null;
+		let txHash: string;
+		try {
+			const signedTx = await this.constructTx(toAddress, fromAddress, txData);
+
+			// TODO: SAS pick up here
+			const res = await jsonrpc('eth_sendRawTransaction', [signedTx]);
+			txHash = res.result;
+		} catch (err) {
+			logger.error('EthClient.sendTransaction:', err);
+			if (err.error) {
+				error = { data: err.error.message };
+			} else {
+				error = { data: err };
+			}
+		}
+		return { error, txHash };
 	}
 
 	async insertLeaf(
@@ -58,7 +90,7 @@ export class InfuraGas implements ITxManager {
 				publicInputs,
 				newCommitment
 			]);
-			const { signature, gasLimit } = await this.signTx(toAddress, fromAddress, txData);
+			const { signature, gasLimit } = await this.constructTx(toAddress, fromAddress, txData);
 			logger.debug(`Signature for relay: ${signature}`);
 			logger.debug(`txData: ${txData}`);
 			const transaction = {

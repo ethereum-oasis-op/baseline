@@ -1,17 +1,20 @@
-import { ethers, Wallet } from 'ethers';
+import { ethers } from 'ethers';
 import { ITxManager } from '.';
 import { logger } from '../logger';
-import { http_provider, jsonrpc, shieldContract } from '../blockchain';
+import { jsonrpc, shieldContract } from '../blockchain';
 
 export class EthClient implements ITxManager {
-	constructor(private readonly config: any) {
-		this.config = config;
+	constructor(public signer: any, public signerType: string) {
+		this.signerType = signerType;
+		this.signer = signer;
 	}
 
-	async signTx(toAddress: string, fromAddress: string, txData: any) {
+	async constructTx(toAddress: string, fromAddress: string, txData: string) {
 		logger.debug('Received request for EthClient.signTx');
-		const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY, http_provider);
-		const { result: nonce } = await jsonrpc('eth_getTransactionCount', [process.env.WALLET_PUBLIC_KEY]);
+		const { result: nonce } = await jsonrpc('eth_getTransactionCount', [
+			process.env.WALLET_PUBLIC_KEY,
+			'latest'
+		]);
 		logger.debug(`nonce: ${nonce}`);
 		const { result: gasPrice } = await jsonrpc('eth_gasPrice', []);
 		logger.debug(`gasPrice found: ${gasPrice}`);
@@ -19,14 +22,19 @@ export class EthClient implements ITxManager {
 		logger.debug(`gasPrice set: ${gasPriceSet}`);
 
 		const unsignedTx = {
-			to: toAddress || '',
+			//to: toAddress || '',
 			from: fromAddress,
 			data: txData,
 			nonce,
 			chainId: parseInt(process.env.CHAIN_ID, 10),
 			gasLimit: 0,
-			gasPrice: gasPriceSet
+			gasPrice: '0x' + gasPriceSet.toString(16)
 		};
+
+		// key-manager returns 400 if "from" field is provided in tx
+		if (this.signerType === 'key-manager') {
+			delete unsignedTx.from;
+		}
 
 		const res = await jsonrpc('eth_estimateGas', [unsignedTx]);
 		const gasEstimate = res.result;
@@ -34,8 +42,9 @@ export class EthClient implements ITxManager {
 		unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
 		logger.debug(`gasLimit set: ${unsignedTx.gasLimit}`);
 
-		// TODO: use key-manager service to perform this signature
-		const signedTx = wallet.signTransaction(unsignedTx);
+		logger.debug('Unsigned tx: ' + JSON.stringify(unsignedTx, null, 4));
+		const signedTx = await this.signer.signTransaction(unsignedTx, fromAddress);
+		logger.debug(`Signed tx: ${signedTx}`);
 		return signedTx;
 	}
 
@@ -44,9 +53,8 @@ export class EthClient implements ITxManager {
 		let error = null;
 		let txHash: string;
 		try {
-			const signedTx = await this.signTx(toAddress, fromAddress, txData);
+			const signedTx = await this.constructTx(toAddress, fromAddress, txData);
 			const res = await jsonrpc('eth_sendRawTransaction', [signedTx]);
-			logger.debug('eth_sendRawTransaction result:', res);
 			txHash = res.result;
 		} catch (err) {
 			logger.error('EthClient.sendTransaction:', err);
@@ -75,10 +83,9 @@ export class EthClient implements ITxManager {
 				publicInputs,
 				newCommitment
 			]);
-			const signedTx = await this.signTx(toAddress, fromAddress, txData);
+			const signedTx = await this.constructTx(toAddress, fromAddress, txData);
 			logger.debug(`signedTx: ${signedTx}`);
 			const res = await jsonrpc('eth_sendRawTransaction', [signedTx]);
-			logger.debug('eth_sendRawTransaction result:', res);
 			txHash = res.result;
 		} catch (err) {
 			logger.error('[baseline_verifyAndPush]:', err);

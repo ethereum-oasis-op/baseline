@@ -109,6 +109,7 @@ export const jsonrpc = async (method, params, id) => {
 		method: method,
 		params: params
 	});
+	logger.debug(`${method} result:`, response.data);
 	return response.data;
 };
 

@@ -26,10 +26,12 @@ services:
 
   ganache:
     container_name: ganache
-    image: trufflesuite/ganache-cli:v6.6.0
+    #image: trufflesuite/ganache-cli:v6.6.0
+    image: trufflesuite/ganache-cli:latest
     command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --account="0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63, 1000000000000000000000" --account="0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3, 1000000000000000000000" --account="0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f, 1000000000000000000000" --networkId '101010' --gasLimit 10000000 --allowUnlimitedContractSize --noVMErrorsOnRPCResponse
     ports:
       - 8545:8545
+      - 8546:8546
     networks:
       - alice
     volumes:
@@ -111,8 +113,13 @@ services:
       - NATS_URL=nats://alice-nats-server:4222
       - ZKP_MGR_URL=http://alice-zkp-mgr:8080
       - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
+      - KEY_MGR_URL=http://alice-key-manager:8081
+      - SIGNING_SERVICE=ethers
+      - ETH_CLIENT_TYPE=ganache
       - ETH_CLIENT_WS=ws://ganache:8545
       - ETH_CLIENT_HTTP=http://ganache:8545
+      - WALLET_PRIVATE_KEY=0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f
+      - WALLET_PUBLIC_KEY=0xf17f52151EbEF6C7334FAD080c5704D77216b732
     networks:
       - alice
     ports:
