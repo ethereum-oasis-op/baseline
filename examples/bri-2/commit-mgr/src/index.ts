@@ -10,12 +10,11 @@ import { jsonRpcHandler } from './route-handlers/rpc-methods';
 import {
 	getStatus,
 	getSettings,
-	saveSettings,
 	getCommits,
 	getCommit,
 	createCommit,
 	sendCommitToPartners,
-	sendCommitMainnet,
+	sendCommitOnChain,
 	getMerkleTrees,
 	getMerkleTree,
 	createMerkleTree,
@@ -45,12 +44,11 @@ const main = async () => {
 
 	app.get('/status', getStatus);
 	app.get('/settings', getSettings);
-	app.post('/settings', saveSettings);
 	app.get('/commits', getCommits);
 	app.get('/commits/:commitId', getCommit);
 	app.post('/commits', createCommit);
 	app.post('/commits/:commitId/send-partners', sendCommitToPartners);
-	app.post('/commits/:commitId/send-mainnet', sendCommitMainnet);
+	app.post('/commits/:commitId/send-mainnet', sendCommitOnChain);
 	app.get('/merkle-trees', getMerkleTrees);
 	app.get('/merkle-trees/:treeId', getMerkleTree);
 	app.post('/merkle-trees', createMerkleTree);

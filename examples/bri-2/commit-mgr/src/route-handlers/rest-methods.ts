@@ -9,7 +9,6 @@ import { contractBaseline } from '../db/models/Contract';
 import { logger } from '../logger';
 import { concatenateThenHash } from '../merkle-tree/hash';
 import { verifyAndPush } from './rpc-methods';
-import { saveEnv } from '../config';
 
 dotenv.config();
 
@@ -92,7 +91,7 @@ export const sendCommitToPartners = async (req: any, res: any) => {
 		// send to partners via messenger
 		const newCommit = await commits.findOneAndUpdate(
 			{ _id: req.params.commitId },
-			{ status: 'sent-to-partners' },
+			{ status: 'sent-to-participants' },
 			{ upsert: true, new: true }
 		);
 		res.send(newCommit || {});
@@ -102,7 +101,7 @@ export const sendCommitToPartners = async (req: any, res: any) => {
 	}
 };
 
-export const sendCommitMainnet = async (req: any, res: any) => {
+export const sendCommitOnChain = async (req: any, res: any) => {
 	const commit = await commits.findOne({ _id: req.params.commitId });
 	if (commit.status === 'mainnet') {
 		res.status(400).send({ message: 'Error: commit already on mainnet' });
@@ -116,7 +115,7 @@ export const sendCommitMainnet = async (req: any, res: any) => {
 	await commits.findOneAndUpdate(
 		{ _id: req.params.commitId },
 		{
-			status: 'sent-mainnet',
+			status: 'sent-to-chain',
 			proof,
 			publicInputs
 		},
@@ -239,15 +238,4 @@ export const getSettings = async (req: any, res: any) => {
 		WALLET_PUBLIC_KEY: process.env.WALLET_PUBLIC_KEY
 	};
 	res.send(data || {});
-};
-
-export const saveSettings = async (req: any, res: any, next: any) => {
-	const settings = req.body;
-	if (!settings) {
-		logger.error('No settings provided for storage in .env file');
-		res.status(400).send({ error: 'No settings provided' });
-		return;
-	}
-	saveEnv(settings);
-	res.sendStatus(200);
 };

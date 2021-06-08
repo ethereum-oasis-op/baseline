@@ -1,13 +1,17 @@
+import dotenv from 'dotenv';
+import axios from 'axios';
+import { Wallet } from 'ethers';
+
+import { logger } from '../logger';
 import { InfuraGas } from './infura-gas';
 import { EthClient } from './eth-client';
 import { LocalDb } from './local-db';
-import { logger } from '../logger';
-import dotenv from 'dotenv';
-import { jsonrpc } from '../blockchain';
+import { http_provider, jsonrpc } from '../blockchain';
 
 dotenv.config();
 
-let txManager;
+let txManager: ITxManager;
+const wallet = new Wallet(process.env.WALLET_PRIVATE_KEY, http_provider);
 
 export const get_tx_manager = async () => {
 	if (!txManager) {
@@ -21,7 +25,7 @@ export const get_tx_manager = async () => {
 	return txManager;
 };
 
-const sleep = (ms) => {
+const sleep = (ms: number) => {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
@@ -31,6 +35,12 @@ export const waitTx = async (txHash: string, confirmsNeeded = 0) => {
 
 	while (!mined) {
 		const { result: txReceipt } = await jsonrpc('eth_getTransactionReceipt', [txHash]);
+		if (txReceipt === null) {
+			// Wait 1 sec then retry if tx is not queryable on-chain yet
+			await sleep(1000);
+			continue;
+		}
+
 		const { result: currentBlock } = await jsonrpc('eth_blockNumber', []);
 		const confirms = currentBlock - txReceipt.blockNumber;
 		if (txReceipt.blockNumber && confirms >= confirmsNeeded) {
@@ -42,6 +52,26 @@ export const waitTx = async (txHash: string, confirmsNeeded = 0) => {
 	}
 };
 
+export const keyManager_signTx = async (txObject: any, fromAddr: string) => {
+	const res = await axios.post(`${process.env.KEY_MGR_URL}/ethereum/accounts/${fromAddr}/sign-transaction`, {
+		to: txObject.to || '',
+		chainId: txObject.chainId.toString() || process.env.CHAIN_ID.toString(),
+		gasLimit: txObject.gasLimit,
+		gasPrice: txObject.gasPrice.toString(),
+		nonce: Number(txObject.nonce),
+		amount: txObject.amount || '0',
+		data: txObject.data
+	});
+	return res.data;
+};
+
+export const keyManager_signMessage = async (address: string, message: string) => {
+	const res = await axios.post(`${process.env.KEY_MGR_URL}/ethereum/accounts/${address}/sign`, {
+		data: message
+	});
+	return res.data;
+};
+
 export interface ITxManager {
 	insertLeaf(
 		toAddress: string,
@@ -51,29 +81,34 @@ export interface ITxManager {
 		newCommitment: string
 	): Promise<any>;
 }
-
-export async function txManagerServiceFactory(provider: string, config?: any): Promise<ITxManager> {
-	let service;
+export async function txManagerServiceFactory(provider: string): Promise<ITxManager> {
+	let txManagerService: ITxManager;
+	let signerType = process.env.SIGNING_SERVICE || 'ethers';
+	let signingService;
 
 	switch (provider) {
 		case 'infura-gas':
-			service = new InfuraGas(config);
-			break;
-		case 'infura':
-			service = new EthClient(config);
-			break;
-		case 'besu':
-			service = new EthClient(config);
-			break;
-		case 'ganache':
-			service = new EthClient(config);
+			signingService = wallet;
+			if (signerType === 'key-manager') {
+				signingService.signMessage = keyManager_signMessage;
+			}
+			txManagerService = new InfuraGas(signingService, provider);
 			break;
 		case 'local-db':
-			service = new LocalDb(config);
+			signingService = wallet;
+			if (signerType === 'key-manager') {
+				signingService.signTransaction = keyManager_signTx;
+			}
+			txManagerService = new LocalDb(signingService);
 			break;
 		default:
-			throw new Error('TxManager provider not found.');
+			signingService = wallet;
+			if (signerType === 'key-manager') {
+				signingService.signTransaction = keyManager_signTx;
+			}
+			txManagerService = new EthClient(signingService, provider);
 	}
 
-	return service;
+	logger.debug(`Creating TxManager of type ${provider} with signing service type ${signerType}`);
+	return txManagerService;
 }
