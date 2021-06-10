@@ -90,6 +90,7 @@ const baseline_getCommits = new jayson.Method(
 // Retrieve root from db and on-chain. Verify they are equal
 const baseline_getRoot = new jayson.Method(
 	async (args: any, context: any, done: any) => {
+		logger.debug(`[baseline_getRoot] received request with params:` + JSON.stringify(args, null, 4));
 		let error = validateParams(args, 1);
 		if (error) {
 			done(error, null);
@@ -177,6 +178,7 @@ const baseline_getTracked = new jayson.Method(
 
 const baseline_verifyAndPush = new jayson.Method(
 	async (args: any, context: any, done: any) => {
+		logger.debug(`[baseline_verifyAndPush] received request with params:` + JSON.stringify(args, null, 4));
 		const error = validateParams(args, 5);
 		if (error) {
 			done(error, null);

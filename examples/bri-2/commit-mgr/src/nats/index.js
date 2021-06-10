@@ -23,13 +23,12 @@ export const connectNATS = async () => {
 	return nc;
 };
 
-//HOw to inject a stander storage provider, is this a good palce for an IoC Container
-const natsCompileVerifier = async (msg, storageProvider) => {
+const natsCompileVerifier = async (msg) => {
 	logger.info(`NATS contracts-compile-verifier: received request for workflowId ${msg.WorkflowId}`);
 	logger.info('message payload:' + JSON.stringify(msg, null, 4));
 
 	// Retrieve Verifier.sol source code from zkp-mgr
-	//NOTE: shoudl we pass this in the NATS message (the URI) ??
+	// NOTE: should we pass this in the NATS message (the URI) ??
 	let res = await axios.get(`${process.env.ZKP_MGR_URL}/zkcircuits/${msg.ZkCircuitId}/verifier`);
 	logger.info('GET /zkcircuits/{id}/verifier status code:' + res.status);
 
@@ -47,7 +46,8 @@ const natsCompileVerifier = async (msg, storageProvider) => {
 	logger.info(
 		`NATS contracts-compile-verifier: completed job for ${msg.WorkflowId}. Creating new contracts-deploy-verifier job`
 	);
-	//NOTE: do an inservice not event bridged call as it's in domain
+
+	// NOTE: call an inservice method instead of external NATS call to improve efficiency
 	nc.publish('contracts-deploy-verifier', {
 		workflowId: msg.WorkflowId,
 		zkCircuitId: msg.ZkCircuitId,
@@ -77,7 +77,7 @@ const natsDeployVerifier = async (msg) => {
 		`NATS contracts-deploy-verifier: completed job for ${msg.workflowId}. Creating new contracts-deploy-shield job`
 	);
 
-	//NOTE: insrvice call
+	// NOTE: call an inservice method instead of external NATS call to improve efficiency
 	nc.publish('contracts-deploy-shield', {
 		workflowId: msg.workflowId,
 		verifierAddress

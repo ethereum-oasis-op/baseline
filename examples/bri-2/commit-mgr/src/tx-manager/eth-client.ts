@@ -22,7 +22,7 @@ export class EthClient implements ITxManager {
 		logger.debug(`gasPrice set: ${gasPriceSet}`);
 
 		const unsignedTx = {
-			//to: toAddress || '',
+			to: toAddress || '',
 			from: fromAddress,
 			data: txData,
 			nonce,
@@ -39,13 +39,21 @@ export class EthClient implements ITxManager {
 		const res = await jsonrpc('eth_estimateGas', [unsignedTx]);
 		const gasEstimate = res.result;
 		logger.debug(`gasEstimate: ${gasEstimate}`);
+		if (!gasEstimate) {
+			return {
+				error: {
+					code: -32000,
+					message: `eth_estimateGas returned null value`
+				}
+			};
+		}
 		unsignedTx.gasLimit = Math.ceil(Number(gasEstimate) * 1.1);
 		logger.debug(`gasLimit set: ${unsignedTx.gasLimit}`);
 
 		logger.debug('Unsigned tx: ' + JSON.stringify(unsignedTx, null, 4));
 		const signedTx = await this.signer.signTransaction(unsignedTx, fromAddress);
 		logger.debug(`Signed tx: ${signedTx}`);
-		return signedTx;
+		return { result: signedTx };
 	}
 
 	async sendTransaction(toAddress: string, fromAddress: string, txData: string) {
@@ -53,7 +61,14 @@ export class EthClient implements ITxManager {
 		let error = null;
 		let txHash: string;
 		try {
-			const signedTx = await this.constructTx(toAddress, fromAddress, txData);
+			const { error: constructError, result: signedTx } = await this.constructTx(
+				toAddress,
+				fromAddress,
+				txData
+			);
+			if (constructError) {
+				return { error: constructError };
+			}
 			const res = await jsonrpc('eth_sendRawTransaction', [signedTx]);
 			txHash = res.result;
 		} catch (err) {
@@ -83,8 +98,14 @@ export class EthClient implements ITxManager {
 				publicInputs,
 				newCommitment
 			]);
-			const signedTx = await this.constructTx(toAddress, fromAddress, txData);
-			logger.debug(`signedTx: ${signedTx}`);
+			const { error: constructError, result: signedTx } = await this.constructTx(
+				toAddress,
+				fromAddress,
+				txData
+			);
+			if (constructError) {
+				return { error: constructError };
+			}
 			const res = await jsonrpc('eth_sendRawTransaction', [signedTx]);
 			txHash = res.result;
 		} catch (err) {
