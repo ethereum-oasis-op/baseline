@@ -8,6 +8,27 @@ import { checkChainLogs, subscribeMerkleEvents, jsonrpc } from '../blockchain';
 // configs loaded
 dotenv.config();
 
+export const jsonRpcHandler = async (req: any, res: any) => {
+	const context = {
+		headers: req.headers,
+		params: req.params,
+		body: req.body,
+		ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress
+	};
+
+	rpcServer.call(req.body, context, (err: any, result: any) => {
+		if (err) {
+			const errorMessage = err.error.data
+				? `${err.error.message}: ${err.error.data}`
+				: `${err.error.message}`;
+			logger.error(`Response error: ${errorMessage}`);
+			res.send(err);
+			return;
+		}
+		res.send(result || {});
+	});
+};
+
 export const verifyAndPush = async (
 	senderAddress: string,
 	treeId: string,
@@ -47,27 +68,6 @@ export const verifyAndPush = async (
 	}
 	logger.info(`[baseline_verifyAndPush] txHash: ${result.txHash}`);
 	return result;
-};
-
-export const jsonRpcHandler = async (req: any, res: any) => {
-	const context = {
-		headers: req.headers,
-		params: req.params,
-		body: req.body,
-		ipAddress: req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress
-	};
-
-	rpcServer.call(req.body, context, (err: any, result: any) => {
-		if (err) {
-			const errorMessage = err.error.data
-				? `${err.error.message}: ${err.error.data}`
-				: `${err.error.message}`;
-			logger.error(`Response error: ${errorMessage}`);
-			res.send(err);
-			return;
-		}
-		res.send(result || {});
-	});
 };
 
 export const trackShield = async (contractAddress: string) => {

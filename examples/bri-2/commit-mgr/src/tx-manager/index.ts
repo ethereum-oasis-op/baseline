@@ -81,9 +81,10 @@ export interface ITxManager {
 		newCommitment: string
 	): Promise<any>;
 }
+
 export async function txManagerServiceFactory(provider: string): Promise<ITxManager> {
 	let txManagerService: ITxManager;
-	let signerType = process.env.SIGNING_SERVICE || 'ethers';
+	const signerType = process.env.SIGNING_SERVICE || 'ethers';
 	let signingService;
 
 	switch (provider) {

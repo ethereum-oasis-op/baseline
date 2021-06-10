@@ -45,7 +45,7 @@ export const getCommits = async (req: any, res: any) => {
 export const getCommit = async (req: any, res: any) => {
 	await commits.findOne({ _id: req.params.commitId }, (err: any, data: any) => {
 		if (err) {
-			logger.error(`Could not retrieve commits: ${err}`);
+			logger.error(`Could not retrieve commit: ${err}`);
 			res.send(err);
 		} else {
 			res.send(data || {});

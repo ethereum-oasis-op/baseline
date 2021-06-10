@@ -4,7 +4,7 @@ The commitment manager service acts as an extension to an existing web3 provider
 
 ## Details
 
-- Node 12
+- Node 14
 - Typescript
 - Express based REST+jsonrpc server
 - TSLinting
@@ -35,8 +35,8 @@ Then, set the following environment variables in `commit-mgr/.env` file to corre
 
 ## Run
 
-- `npm run up:besu` OR `npm run up:ganache` OR `npm run up:infura` - spin up complementary containers/services
-- `npm run dev` - run the baseline-relay as a local node process
+- `npm run up:ganache` (OR `npm run up:besu` OR `npm run up:infura`) - spin up complementary containers/services
+- `npm run dev` - run the commit-mgr as a local node process
 - `npm test` - run jest test suite against baseline-relay
 
 ## Baseline JSON-RPC Module
@@ -57,4 +57,4 @@ The `commit-mgr` service implements and processes the baseline JSON-RPC methods:
 
 ## TODO
 
-- Convert all javascript files to typescript
+- Convert all typescript files to javascript for consistency across services

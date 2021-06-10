@@ -1,21 +1,17 @@
 {
-  "include": [
-    "src/**/*"
-  ],
-  "compilerOptions": {
-    "allowJs": true,
-    "baseUrl": ".",
-    "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noImplicitAny": false,
-    "outDir": "dist",
-    "rootDir": "src",
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "target": "es6",
-    "typeRoots": [
-      "./node_modules/@types"
-    ]
-  }
+	"include": ["src/**/*"],
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"allowJs": true,
+		"baseUrl": ".",
+		"esModuleInterop": true,
+		"moduleResolution": "node",
+		"noImplicitAny": false,
+		"outDir": "dist",
+		"rootDir": "src",
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"typeRoots": ["./node_modules/@types"]
+	}
 }
