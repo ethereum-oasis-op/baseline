@@ -6,4 +6,4 @@
 # the repo. Unless a later match takes precedence,
 # the following owers will be requested for
 # review when someone opens a pull request.
-*       @skarred14 @bitwiseguy @breakpointer @kthomas
+*       @skarred14 @bitwiseguy @kthomas
