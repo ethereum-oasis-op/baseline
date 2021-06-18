@@ -21,6 +21,26 @@ make build
 make start
 ```
 
+## Workflow creation
+
+After the docker containers have successfully initialized, make the following request to `workflow-mgr` in order to create a new workflow.
+
+```
+POST http://localhost:5001/workflows?type=signature
+{
+   "description": "signature test",
+   "clientType": "test client",
+   "chainId": "101010",
+   "identities": [
+       "4bd3822517db41e55a9d234187b22215187d20ba37d83208ddc7788dc473f31e"
+   ]
+}
+```
+
+This request should initiate the following sequence of events. The sequencing of steps is accomplished by using NATS as a job queuing service. If successful, steps 1-8 will be completed and the workflow object will have a ZkCircuitId, Shield contract address, Verifier address, and a status of `success-track-shield`.
+
+![workflow-setup](./docs/workflow-setup.png)
+
 ## Run `dashboard` front-end
 
 In order to run interact with the `bri-2` stack through a browser, please run the following commands.
@@ -51,22 +71,19 @@ make start
 
 # Current Capabilities
 
-Through the `dashboard` you can currently do the following:
-
-- Create new Workflows for a single party
-- Automatically deploy Shield and no-op Verifier smart contracts to `ganache`
-- Create new commitments (hashes of JSON objects) for the Workflows
-- Push the commitments (hashes) into the on-chain merkle tree inside the Shield contract
+- Create new workflows
+- Automatically generate, compile, and run setup for zero-knowledge signature-checking circuit
+- Automatically compile newly created Verifier Solidity smart contract
+- Automatically deploy Shield and signature-checking Verifier smart contracts to `ganache`
 
 # Future Capabilities
 
-- Create multiparty Workflows (which require multiple digital signatures for each commitment)
+- Create new commitments (hashes of JSON objects) for the Workflows
+- Push the commitments (hashes) into the on-chain merkle tree inside the Shield contract
 - P2P messenger service for communicating commitment details to counterparties
-- Ability to use public Ethereum testnets and mainnet
 - Integrated L2 to reduce mainnet gas fees
 - Automated integration level test suite
-- Integrated `zkp-mgr` service for generating/compiling zk circuits, generating zk proofs, and creating Verifier smart-contracts
-  - Codefi Orchestrate Key-Manager service used for key storage and signing capabilities
+- Codefi Orchestrate Key-Manager service integrated for Eth/EDDSA key storage and signing capabilities
 
 # Architecture
 
