@@ -23,7 +23,7 @@ const bobCorpName = 'Bob Corp';
 const ropstenNetworkId = '66d44f30-9092-4182-a3c4-bc02736d6ae5';
 const kovanNetworkId = '8d31bf48-df6b-4a71-9d7c-3cb291111e27';
 const goerliNetworkId = '1b16996e-3595-4985-816c-043345d22f8c';
-const networkId = process.env['NCHAIN_NETWORK_ID'] || ropstenNetworkId;
+const networkId = process.env['NCHAIN_NETWORK_ID'] || kovanNetworkId;
 
 const setupUser = async (identHost, firstname, lastname, email, password) => {
   const user = (await createUser(identHost, firstname, lastname, email, password));
@@ -33,7 +33,7 @@ const setupUser = async (identHost, firstname, lastname, email, password) => {
   return [user, bearerToken];
 };
 
-describe('baseline', () => {
+describe('Baseline', () => {
   let bearerTokens; // user API credentials
 
   let alice;
@@ -88,7 +88,7 @@ describe('baseline', () => {
       'localhost:8082',
       'localhost:8084',
       'localhost:8088',
-      'nethermind-ropsten.provide.services:8888',
+      'https://kovan.infura.io/v3/cb6285a29e9c4f91ad6dc3ef6abd06bd',
       'http',
       null,
       'baseline workgroup',
@@ -109,7 +109,7 @@ describe('baseline', () => {
       'localhost:8083',
       'localhost:8087',
       'localhost:8089',
-      'nethermind-ropsten.provide.services:8888',
+      'https://kovan.infura.io/v3/cb6285a29e9c4f91ad6dc3ef6abd06bd',
       'http',
       null,
       'baseline workgroup',

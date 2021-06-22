@@ -10,6 +10,7 @@ import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
+import { format } from 'path';
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
@@ -614,32 +615,36 @@ export class ParticipantStack {
 
     this.baselineCircuit = await this.requireCircuit(circuit.id!);
     this.workflowIdentifier = this.baselineCircuit?.id;
-
-    const compilerOutput = JSON.parse(solidityCompile(JSON.stringify({
-      language: 'Solidity',
-      sources: {
-        'verifier.sol': {
-          content: this.baselineCircuit?.verifierContract!['source'].replace(/\^0.5.0/g, '^0.7.3').replace(/view/g, '').replace(/gas,/g, 'gas(),'),
-        },
-      },
-      settings: {
-        outputSelection: {
+    const content = this.baselineCircuit?.verifierContract!['source'].replace(/\^0.5.0/g, '^0.7.3').replace(/view/g, '').replace(/gas,/g, 'gas(),').replace(/\\n/g, /\n/).replace(/uint256\[0\]/g, 'uint256[]')
+    const input = {
+      'language': 'Solidity',
+      'settings': {
+        'outputSelection': {
           '*': {
-            '*': ['*'],
-          },
+            '*': ['*']
+          }
         }
       },
-    })));
+      'sources': {
+        'verifier.sol': {
+          'content': content
+        }
+      }
+    };
 
+    const compilerOutput = JSON.parse(solidityCompile(JSON.stringify(input)));
     if (!compilerOutput.contracts || !compilerOutput.contracts['verifier.sol']) {
       throw new Error('verifier contract compilation failed');
     }
 
     const contractParams = compilerOutput.contracts['verifier.sol']['Verifier'];
+    console.log('before deploy workgroup contract')
     await this.deployWorkgroupContract('Verifier', 'verifier', contractParams);
+    console.log('before require workgroup contract')
     await this.requireWorkgroupContract('verifier');
-
+    console.log('before deploy shield')
     const shieldAddress = await this.deployWorkgroupShieldContract();
+    console.log('before track shield')
     const trackedShield = await this.baseline?.track(shieldAddress);
     if (!trackedShield) {
       console.log('WARNING: failed to track baseline shield contract');
@@ -672,7 +677,7 @@ export class ParticipantStack {
       params: {
         account_id: signerResp['id'],
         compiled_artifact: params,
-        // network: 'mainnet',
+        // network: 'kovan',
         argv: arvg || [],
       },
       name: name,
