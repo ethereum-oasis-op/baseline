@@ -422,7 +422,7 @@ func setup(c *gin.Context) {
 }
 
 // Currently only supports groth16
-func prove(c *gin.Context) {
+func prove(ginContext *gin.Context) {
 	// Witness variables must be ordered as defined in Circuit definition
 	// Public variables come first, then secret variables
 	type generateProofReq struct {
@@ -430,21 +430,21 @@ func prove(c *gin.Context) {
 	}
 
 	var requestBody generateProofReq
-	err := c.BindJSON(&requestBody)
+	err := ginContext.BindJSON(&requestBody)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		ginContext.JSON(http.StatusBadRequest, gin.H{
 			"error": "Request body missing fields",
 		})
 	}
 
-	circuitID := c.Param("circuitID")
+	circuitID := ginContext.Param("circuitID")
 
 	// Create reader for r1cs file
 	path := "src/circuits/" + circuitID + "/compiled.r1cs"
 	var compiledReader io.Reader
 	compiledReader, err = os.Open(path)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Read r1cs file] " + err.Error(),
 		})
 		return
@@ -455,7 +455,7 @@ func prove(c *gin.Context) {
 	compiledCircuit := groth16.NewCS(ecc.BN254)
 	_, err = compiledCircuit.ReadFrom(compiledReader)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Decode r1cs] " + err.Error(),
 		})
 		return
@@ -471,7 +471,7 @@ func prove(c *gin.Context) {
 	filter := bson.M{"_id": circuitID}
 	err = collection.FindOne(ctx, filter).Decode(&circuit)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Mongo FindOne] " + err.Error(),
 		})
 		return
@@ -485,7 +485,7 @@ func prove(c *gin.Context) {
 	provingKey := groth16.NewProvingKey(ecc.BN254)
 	_, err = provingKey.ReadFrom(pkReader)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Read proving.key file] " + err.Error(),
 		})
 		return
@@ -493,23 +493,31 @@ func prove(c *gin.Context) {
 	log.Println("Successfully read proving.key from file")
 
 	// Create witness io.Reader, then generate proof from witness
-	encodedHex, err := EncodeWitness(requestBody.Witness)
-	var witnessBuffer bytes.Buffer
-	witnessBuffer.Write(encodedHex)
-	proof, err := groth16.ReadAndProve(compiledCircuit, provingKey, &witnessBuffer)
+	encodedWitnessHex, err := EncodeWitness(requestBody.Witness)
 	if err != nil {
 		log.Println("ERROR:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[groth16.ReadAndProve] " + err.Error(),
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
+			"error": "[encoding witness] " + err.Error(),
 		})
 		return
 	}
 
-	var proofWriter bytes.Buffer
-	proof.WriteTo(&proofWriter)
+	proofBytes, proofSolidity, err := GenerateProof(compiledCircuit, provingKey, encodedWitnessHex)
+	if err != nil {
+		log.Println("ERROR:", err)
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
+			"error": "[generating proof] " + err.Error(),
+		})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"proof": proofWriter.Bytes(),
+	ginContext.JSON(http.StatusOK, gin.H{
+		"proof_rawBytes": proofBytes,
+		"proof_solidity": gin.H{ 
+			"a": proofSolidity.a,
+			"b": proofSolidity.b,
+			"c": proofSolidity.c,
+		},
 	})
 }
 

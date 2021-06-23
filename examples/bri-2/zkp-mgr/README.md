@@ -11,7 +11,7 @@ The `zkp-mgr` service is a REST server written in Golang which wraps the [gnark]
 
 ## Run
 
-- `docker-compose up -d alice-mongo` (spin up mongodb container used by this service)
+- `docker-compose up -d alice-mongo alice-nats-server` (spin up mongodb container used by this service)
 - `go mod tidy` (import go modules used by this package)
 - `go run src/*.go` (build and run this package)
 
@@ -20,6 +20,7 @@ The `zkp-mgr` service is a REST server written in Golang which wraps the [gnark]
 The file `./tests/zkp-mgr.postman_collection.json` can be imported directly into Postman in order to manually test the REST endpoints.
 
 `zkp-mgr` will attempt to compile any circuit that is uploaded via `POST /zkcircuits` request. The simplest circuit to use is provided in `tests/example-circuits/cubic.go`. The circuit source code file must implement the following interface:
+
 ```
 package main
 
