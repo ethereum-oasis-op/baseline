@@ -10,7 +10,6 @@ import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
-import { format } from 'path';
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
@@ -643,12 +642,7 @@ export class ParticipantStack {
     console.log('before require workgroup contract')
     await this.requireWorkgroupContract('verifier');
     console.log('before deploy shield')
-    const shieldAddress = await this.deployWorkgroupShieldContract();
-    console.log('before track shield')
-    const trackedShield = await this.baseline?.track(shieldAddress);
-    if (!trackedShield) {
-      console.log('WARNING: failed to track baseline shield contract');
-    }
+    await this.deployWorkgroupShieldContract();
 
     return this.baselineCircuit;
   }
@@ -677,7 +671,7 @@ export class ParticipantStack {
       params: {
         account_id: signerResp['id'],
         compiled_artifact: params,
-        // network: 'kovan',
+        // network: 'ropsten',
         argv: arvg || [],
       },
       name: name,
@@ -694,14 +688,19 @@ export class ParticipantStack {
   }
 
   async deployWorkgroupShieldContract(): Promise<any> {
+    console.log('before verifier contract')
     const verifierContract = await this.requireWorkgroupContract('verifier');
+    console.log('before registry contract')
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
-    const contractParams = registryContracts[3]; // "shuttle circle" factory contract
+    const contractParams = registryContracts[2]; // "shuttle circle" factory contract
 
     const argv = ['MerkleTreeSHA Shield', verifierContract.address, 32];
 
     // deploy EYBlockchain's MerkleTreeSHA contract (see https://github.com/EYBlockchain/timber)
+    console.log('before workgroup contract')
     await this.deployWorkgroupContract('ShuttleCircuit', 'circuit', contractParams, argv);
+
+    console.log('before shield contract')
     const shieldContract = await this.requireWorkgroupContract('shield');
 
     return shieldContract.address;
@@ -767,11 +766,12 @@ export class ParticipantStack {
       this.baselineConfig?.nchainApiScheme,
       this.baselineConfig?.nchainApiHost,
     );
+    console.log(type)
 
     const contracts = await nchain.fetchContracts({
       type: type,
     });
-
+    console.log(contracts)
     if (contracts && contracts.length === 1 && contracts[0]['address'] !== '0x') {
       const contract = await nchain.fetchContractDetails(contracts[0].id!);
       this.contracts[type] = contract;
