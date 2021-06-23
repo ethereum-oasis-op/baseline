@@ -545,8 +545,8 @@ services:
     container_name: alice-ethlogger
     image: splunkdlt/ethlogger:latest
     environment:
-      - ETH_RPC_URL=https://kovan.infura.io/v3/cb6285a29e9c4f91ad6dc3ef6abd06bd
-      - NETWORK_NAME=kovan
+      - ETH_RPC_URL=http://nethermind-ropsten.provide.services:8888
+      - NETWORK_NAME=ropsten
       - START_AT_BLOCK=latest
       - SPLUNK_HEC_URL=https://splunk:8088
       - SPLUNK_HEC_TOKEN=11111111-1111-1111-1111-1111111111113
