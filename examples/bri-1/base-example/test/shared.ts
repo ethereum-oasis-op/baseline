@@ -282,7 +282,6 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => Par
         before(async () => {
           circuit = await getApp().deployBaselineCircuit();
           assert(circuit, 'setup artifacts should not be null');
-          console.log("circuit: ", circuit)
         });
 
         it('should output a unique identifier for the circuit', async () => {
