@@ -637,11 +637,8 @@ export class ParticipantStack {
     }
 
     const contractParams = compilerOutput.contracts['verifier.sol']['Verifier'];
-    console.log('before deploy workgroup contract')
     await this.deployWorkgroupContract('Verifier', 'verifier', contractParams);
-    console.log('before require workgroup contract')
     await this.requireWorkgroupContract('verifier');
-    console.log('before deploy shield')
     await this.deployWorkgroupShieldContract();
 
     return this.baselineCircuit;
@@ -688,19 +685,14 @@ export class ParticipantStack {
   }
 
   async deployWorkgroupShieldContract(): Promise<any> {
-    console.log('before verifier contract')
     const verifierContract = await this.requireWorkgroupContract('verifier');
-    console.log('before registry contract')
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
-    const contractParams = registryContracts[2]; // "shuttle circle" factory contract
+    const contractParams = registryContracts[3]; // "shuttle circuit" factory contract
 
     const argv = ['MerkleTreeSHA Shield', verifierContract.address, 32];
 
     // deploy EYBlockchain's MerkleTreeSHA contract (see https://github.com/EYBlockchain/timber)
-    console.log('before workgroup contract')
     await this.deployWorkgroupContract('ShuttleCircuit', 'circuit', contractParams, argv);
-
-    console.log('before shield contract')
     const shieldContract = await this.requireWorkgroupContract('shield');
 
     return shieldContract.address;
@@ -766,12 +758,11 @@ export class ParticipantStack {
       this.baselineConfig?.nchainApiScheme,
       this.baselineConfig?.nchainApiHost,
     );
-    console.log(type)
 
     const contracts = await nchain.fetchContracts({
       type: type,
     });
-    console.log(contracts)
+
     if (contracts && contracts.length === 1 && contracts[0]['address'] !== '0x') {
       const contract = await nchain.fetchContractDetails(contracts[0].id!);
       this.contracts[type] = contract;
