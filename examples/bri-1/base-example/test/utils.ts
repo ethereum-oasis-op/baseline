@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import * as log from 'loglevel';
 import { Client } from 'pg';
+import { domain } from 'process';
 import { Ident } from 'provide-js';
 import { AuthService } from 'ts-natsutil';
 import { ParticipantStack } from '../src/index';
@@ -19,6 +20,7 @@ export const authenticateUser = async (identHost, email, password) => {
 
 export const baselineAppFactory = async (
   orgName,
+  domain,
   bearerToken,
   initiator,
   identHost,
@@ -49,6 +51,7 @@ export const baselineAppFactory = async (
     {
       baselineApiScheme: 'http',
       baselineApiHost: baselineHost,
+      domain: domain,
       identApiScheme: 'http',
       identApiHost: identHost,
       initiator: initiator,

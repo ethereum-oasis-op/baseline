@@ -21,7 +21,7 @@ class TryError extends Error {
   promiseErrors: any[] = []
 }
 
-const tryTimes = async <T>(prom: () => Promise<T>, times: number = 80, wait: number = 9400): Promise<T> => {
+const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100, wait: number = 2500): Promise<T> => {
   const errors : any[] = [];
   for (let index = 0; index < times; index++) {
     try {
@@ -467,9 +467,17 @@ export class ParticipantStack {
 
   async resolveOrganizationAddress(): Promise<string> {
     const keys = await this.fetchKeys();
-    if (keys && keys.length >= 3) {
-      return keys[2].address; // HACK!
+    var address;
+    keys.forEach(key => {
+      if (key.spec == 'secp256k1') {
+        address = key.address; // HACK!
+      }
+    });
+
+    if (address) {
+      return Promise.resolve(address);
     }
+
     return Promise.reject('failed to resolve organization address');
   }
 
@@ -500,9 +508,11 @@ export class ParticipantStack {
     if (resp && resp['response'] && resp['response'][0] !== '0x0000000000000000000000000000000000000000') {
       const org = {} as Organization;
       org.name = resp['response'][1].toString();
+      // FIXME-- merge into metadata...
       org['address'] = resp['response'][0];
       org['config'] = JSON.parse(atob(resp['response'][5]));
-      org['config']['messaging_endpoint'] = atob(resp['response'][2]);
+      org['config']['domain'] = atob(resp['response'][2]);
+      org['config']['messaging_endpoint'] = atob(resp['response'][3]);
       org['config']['zk_public_key'] = atob(resp['response'][4]);
       return Promise.resolve(org);
     }
