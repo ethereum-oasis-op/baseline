@@ -18,7 +18,10 @@ import {
 } from './utils';
 
 const aliceCorpName = 'Alice Corp';
+const aliceDomain = 'alice.baseline.local';
+
 const bobCorpName = 'Bob Corp';
+const bobDomain = 'bob.baseline.local';
 
 const ropstenNetworkId = '66d44f30-9092-4182-a3c4-bc02736d6ae5';
 const kovanNetworkId = '8d31bf48-df6b-4a71-9d7c-3cb291111e27';
@@ -77,6 +80,7 @@ describe('Baseline', () => {
 
     aliceApp = await baselineAppFactory(
       aliceCorpName,
+      aliceDomain,
       bearerTokens[alice['id']],
       false,
       'localhost:8081',
@@ -98,6 +102,7 @@ describe('Baseline', () => {
 
     bobApp = await baselineAppFactory(
       bobCorpName,
+      bobDomain,
       bearerTokens[bob['id']],
       true,
       'localhost:8085',
@@ -203,7 +208,8 @@ describe('Baseline', () => {
       describe('workflow', () => {
         describe('workstep', () => {
           before(async () => {
-            await bobApp.baselineBusinessObject({
+            const recipient = await aliceApp.resolveOrganizationAddress();
+            await bobApp.sendProtocolMessage(recipient, Opcode.Baseline, {
               id: 'uuidv4()',
               name: 'hello world',
               url: 'proto://deep/link/to/doc',
