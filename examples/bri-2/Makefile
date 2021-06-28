@@ -6,16 +6,16 @@ clean:
 	rm -f ./commit-mgr/.env && \
 	rm -f ./workflow-mgr/.env && \
 	rm -f ./zkp-mgr/.env && \
-	./ops/check_dot_env.sh && \
+	./scripts/check_dot_env.sh && \
 	docker-compose down --rmi all --volumes --remove-orphans
 
 build-containers:
-	./ops/check_dot_env.sh && \
+	./scripts/check_dot_env.sh && \
 	docker-compose build
 
 build: build-containers
-	./ops/check_node_modules.sh && \
-	./ops/check_contracts.sh 
+	./scripts/check_node_modules.sh && \
+	./scripts/check_contracts.sh 
 
 start:
 	docker-compose up -d --remove-orphans
@@ -26,7 +26,7 @@ logs:
 test:
 	npm test
 
-stop:
+stop: 
 	docker-compose down --remove-orphans
 
 reset: stop clean start

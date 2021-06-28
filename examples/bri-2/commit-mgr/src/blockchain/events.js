@@ -1,15 +1,15 @@
-import dotenv from "dotenv";
+import dotenv from 'dotenv';
 import { ethers } from 'ethers';
 
-import { logger } from "../logger";
-import { insertLeaf } from "../merkle-tree/leaves";
-import { commits } from "../db/models/Commit";
-import { get_ws_provider } from "./utils";
-import { shieldContract } from "./shield-contract";
+import { logger } from '../logger';
+import { insertLeaf } from '../merkle-tree/leaves';
+import { commits } from '../db/models/Commit';
+import { get_ws_provider } from './utils';
+import { shieldContract } from './contracts';
 
 dotenv.config();
 
-export const newLeafEvent = ethers.utils.id("NewLeaf(uint256,bytes32,bytes32)");
+export const newLeafEvent = ethers.utils.id('NewLeaf(uint256,bytes32,bytes32)');
 
 export const subscribeMerkleEvents = (contractAddress) => {
   logger.info(`Creating event listeners for contract: ${contractAddress}`);
@@ -17,7 +17,7 @@ export const subscribeMerkleEvents = (contractAddress) => {
   const singleLeafFilter = {
     address: contractAddress,
     topics: [newLeafEvent]
-  }
+  };
 
   const contractInterface = new ethers.utils.Interface(shieldContract.abi);
   const provider = get_ws_provider();
@@ -44,7 +44,7 @@ export const subscribeMerkleEvents = (contractAddress) => {
       leafIndex: leafIndex,
       txHash: result.transactionHash,
       blockNumber: result.blockNumber
-    }
+    };
     // update merkle-tree
     await insertLeaf(contractAddress, leaf);
 
@@ -52,21 +52,25 @@ export const subscribeMerkleEvents = (contractAddress) => {
     const filter = {
       merkleId: contractAddress,
       value: leafValue
-    }
-    await commits.findOneAndUpdate(filter, {
-      status: "mainnet",
-      txHash: result.transactionHash
-    }, { upsert: true });
+    };
+    await commits.findOneAndUpdate(
+      filter,
+      {
+        status: 'mainnet',
+        txHash: result.transactionHash
+      },
+      { upsert: true }
+    );
   });
-}
+};
 
 export const unsubscribeMerkleEvents = (contractAddress) => {
   logger.info(`Removing event listeners for contract: ${contractAddress}`);
   const singleLeafFilter = {
     address: contractAddress,
     topics: [newLeafEvent]
-  }
+  };
 
   const provider = get_ws_provider();
   provider.off(singleLeafFilter);
-}
+};

@@ -4,11 +4,9 @@ import { Schema, model } from "mongoose";
 const organizationSchema = new Schema({
     _id: String,
     name: String, // entity name
+    didUri: String, // Format: did:method:method-specific-identifier
     messengerUrl: String,
     signingKey: String, // did identity
-    network: String, // did network
-    domain: String, // did domain
-    dididentity: String, // did identity
     status: String, // did verification status
     active: Boolean
   });

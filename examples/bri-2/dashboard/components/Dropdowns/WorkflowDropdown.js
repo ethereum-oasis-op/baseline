@@ -4,6 +4,7 @@ import axios from "axios";
 import { createPopper } from "@popperjs/core";
 import { Alert } from "../Utils/Alert";
 import { workflowMgrUrl } from "../Forms/FormSettings.js";
+import {useOnClickOutside} from '../Utils/useOnClickOutside.js'
 
 const removeWorkflow = async (workflowId) => {
   return await axios.delete(`${workflowMgrUrl}/workflows/${workflowId}`)
@@ -46,6 +47,8 @@ const WorkflowDropdown = ({ workflowId }) => {
     setDropdownPopoverShow(false);
   };
 
+  useOnClickOutside(popoverDropdownRef, () => setDropdownPopoverShow(false));
+
   return (
     <>
       <a
@@ -67,19 +70,19 @@ const WorkflowDropdown = ({ workflowId }) => {
           "bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
         }
       >
-      <li className="items-center">
-        <Link href={`/admin/workflows/${workflowId}`} >
-          <a
-            href="#phonebook"
-            className={
-              "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800" +
-              "text-blue-500 hover:text-blue-600"
-            }
-          >
-            Inspect
-          </a>
-        </Link>
-      </li>
+        <li className="items-center">
+          <Link href={`/admin/workflows/${workflowId}`}>
+            <a
+              href="#phonebook"
+              className={
+                "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800" +
+                "text-blue-500 hover:text-blue-600"
+              }
+            >
+              Inspect
+            </a>
+          </Link>
+        </li>
 
         <a
           href="#pablo"
@@ -87,7 +90,10 @@ const WorkflowDropdown = ({ workflowId }) => {
             "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800" +
             "text-blue-500 hover:text-blue-600"
           }
-          onClick={() => removeWorkflow(workflowId)}
+          onClick={() => {
+            removeWorkflow(workflowId);
+            closeDropdownPopover();
+          }}
         >
           Delete
         </a>
@@ -97,7 +103,10 @@ const WorkflowDropdown = ({ workflowId }) => {
             "text-sm py-2 px-4 font-normal block w-full whitespace-no-wrap bg-transparent text-gray-800" +
             "text-blue-500 hover:text-blue-600"
           }
-          onClick={() => acceptInvitation(workflowId)}
+          onClick={() => {
+            acceptInvitation(workflowId);;;;
+            closeDropdownPopover();
+          }}
         >
           Accept Invitation
         </a>

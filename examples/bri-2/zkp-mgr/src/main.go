@@ -57,11 +57,8 @@ const zkCircuitCollection = "zk-circuits"
 /******************************************************/
 
 func main() {
-	err := godotenv.Load(".env")
+	godotenv.Load(".env")
 	dbName = os.Getenv("DATABASE_NAME")
-	if err != nil {
-		log.Println("Error loading .env file: " + err.Error())
-	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -75,8 +72,8 @@ func main() {
 	}()
 
 	// Connect to NATS
-	//natsClient = init.InitNats()
-	//defer natsClient.Close()
+	natsClient = InitNats()
+	defer natsClient.Close()
 
 	// Continuosly running background processes
 	compileQueue = make(chan string)
@@ -91,6 +88,7 @@ func main() {
 	router.GET("/status", getStatus)
 	router.POST("/zkcircuits", createCircuit)
 	router.GET("/zkcircuits", getAllCircuits)
+	//router.GET("/zkcircuits/types", getCircuitTypes)
 	router.GET("/zkcircuits/:circuitID", getSingleCircuit)
 	router.GET("/zkcircuits/:circuitID/verifier", getSolidityVerifier)
 	router.POST("/zkcircuits/:circuitID/setup", setup)
@@ -105,149 +103,162 @@ func main() {
 /***      Go routines                               ***/
 /******************************************************/
 
+func compileCircuit(circuitID string) error {
+	log.Println("Starting compilation for circuit: ", circuitID)
+
+	// Copy source code into circuits/circuit.go
+	sourceFile := "src/circuits/" + circuitID + "/uncompiled.go"
+	destinationFile := "src/circuits/circuit.go"
+
+	input, err := ioutil.ReadFile(sourceFile)
+	if err != nil {
+		log.Println("ERROR opening file: " + err.Error())
+		return err
+	}
+
+	err = ioutil.WriteFile(destinationFile, input, 0644)
+	if err != nil {
+		log.Println("ERROR creating file: " + err.Error())
+		return err
+	}
+
+	// Compile and create circuit.r1cs file
+	cmd := exec.Command("go", "run", ".")
+	cmd.Dir = "src/circuits"
+	_, err = cmd.Output()
+	if err != nil {
+		log.Println("ERROR compiling circuit " + circuitID + ": " + err.Error())
+		return err
+	}
+
+	// Copy circuit.r1cs into circuits/<circuitID>/compiled.r1cs
+	sourceFile = "src/circuits/circuit.r1cs"
+	destinationFile = "src/circuits/" + circuitID + "/compiled.r1cs"
+
+	input, err = ioutil.ReadFile(sourceFile)
+	if err != nil {
+		log.Println("ERROR opening file: " + err.Error())
+		return err
+	}
+
+	err = ioutil.WriteFile(destinationFile, input, 0644)
+	if err != nil {
+		log.Println("ERROR creating file: " + err.Error())
+		return err
+	}
+
+	// Update zk-circuit in db: set status to "compiled"
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+
+	filter := bson.M{"_id": circuitID}
+	update := bson.M{"$set": bson.M{"status": "compiled"}}
+
+	_, err = collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		log.Println("ERROR updating db: " + err.Error())
+		return err
+	}
+	log.Println("Finished compilation for circuit: ", circuitID)
+	return nil
+}
+
 func compileCircuits() {
 	for {
 		circuitID := <-compileQueue
-		log.Println("Starting compilation for circuit: ", circuitID)
-
-		// Copy source code into circuits/circuit.go
-		sourceFile := "src/circuits/" + circuitID + "/uncompiled.go"
-		destinationFile := "src/circuits/circuit.go"
-
-		input, err := ioutil.ReadFile(sourceFile)
-		if err != nil {
-			log.Println("ERROR opening file: " + err.Error())
-			continue
-		}
-
-		err = ioutil.WriteFile(destinationFile, input, 0644)
-		if err != nil {
-			log.Println("ERROR creating file: " + err.Error())
-			continue
-		}
-
-		// Compile and create circuit.r1cs file
-		cmd := exec.Command("go", "run", ".")
-		cmd.Dir = "src/circuits"
-		_, err = cmd.Output()
-		if err != nil {
-			log.Println("ERROR compiling circuit " + circuitID + ": " + err.Error())
-			continue
-		}
-
-		// Copy circuit.r1cs into circuits/<circuitID>/compiled.r1cs
-		sourceFile = "src/circuits/circuit.r1cs"
-		destinationFile = "src/circuits/" + circuitID + "/compiled.r1cs"
-
-		input, err = ioutil.ReadFile(sourceFile)
-		if err != nil {
-			log.Println("ERROR opening file: " + err.Error())
-			continue
-		}
-
-		err = ioutil.WriteFile(destinationFile, input, 0644)
-		if err != nil {
-			log.Println("ERROR creating file: " + err.Error())
-			continue
-		}
-
-		// Update zk-circuit in db: set status to "compiled"
-		collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-
-		filter := bson.M{"_id": circuitID}
-		update := bson.M{"$set": bson.M{"status": "compiled"}}
-
-		_, err = collection.UpdateOne(ctx, filter, update)
-		if err != nil {
-			log.Println("ERROR updating db: " + err.Error())
-			continue
-		}
-		log.Println("Finished compilation for circuit: ", circuitID)
+		compileCircuit(circuitID)
 	}
+}
+
+func setupCircuit(circuitID string) error {
+	log.Println("Starting setup for circuit: ", circuitID)
+
+	// Get zk circuit collection for later updates
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	filter := bson.M{"_id": circuitID}
+
+	// Create reader for r1cs file
+	//NOTE: shoudl we use a blob store (S3) or put in MongoDb
+	//NOTE: Create a storage provider interface with IoC style implemetnation in our case we can use lcoalstack S3 but interface should
+	//      support any file system, or any cloud repository (define interface and implement with S3 ) IStorageProvider
+	path := "src/circuits/" + circuitID + "/compiled.r1cs"
+	var r io.Reader
+	r, err := os.Open(path)
+	if err != nil {
+		log.Println("[ERROR: Read r1cs file] " + err.Error())
+		update := bson.M{"$set": bson.M{"status": "setup_failed"}}
+		_, err = collection.UpdateOne(ctx, filter, update)
+		return err
+	}
+
+	// Decode r1cs binary, store in compiledCircuit
+	log.Println("Decoding r1cs binary for circuit: ", circuitID)
+	compiledCircuit := groth16.NewCS(ecc.BN254)
+	_, err = compiledCircuit.ReadFrom(r)
+
+	if err != nil {
+		log.Println("[ERROR: Decode r1cs] " + err.Error())
+		update := bson.M{"$set": bson.M{"status": "setup_failed"}}
+		_, err = collection.UpdateOne(ctx, filter, update)
+		return err
+	}
+
+	log.Println("Decoding r1cs binary complete for circuit: ", circuitID)
+	log.Println("Running groth16 setup for circuit: ", circuitID)
+	pk, vk, err := groth16.Setup(compiledCircuit)
+
+	if err != nil {
+		log.Println("[ERROR: Gnark setup] " + err.Error())
+		update := bson.M{"$set": bson.M{"status": "setup_failed"}}
+		_, err = collection.UpdateOne(ctx, filter, update)
+		return err
+	}
+
+	log.Println("groth16 setup complete for circuit: ", circuitID)
+	log.Println("Creating Solidity verifier for circuit: ", circuitID)
+	path = "src/circuits/" + circuitID + "/Verifier.sol"
+	file, _ := os.Create(path)
+	err = vk.ExportSolidity(file)
+	if err != nil {
+		log.Println("[ERROR: Export Solidity] " + err.Error())
+		update := bson.M{"$set": bson.M{"status": "setup_failed"}}
+		_, err = collection.UpdateOne(ctx, filter, update)
+		return err
+	}
+
+	// Write compressed keys to disk
+	log.Println("Solidity verifier created for circuit: ", circuitID)
+	log.Println("Creating proving.key file for circuit: ", circuitID)
+	path = "src/circuits/" + circuitID + "/proving.key"
+	pkFile, _ := os.Create(path)
+	pk.WriteTo(pkFile)
+
+	log.Println("Created proving.key file for circuit: ", circuitID)
+	log.Println("Creating verifying.key file for circuit: ", circuitID)
+	path = "src/circuits/" + circuitID + "/verifying.key"
+	vkFile, _ := os.Create(path)
+	vk.WriteTo(vkFile)
+
+	// Update db to add keys, update status
+	log.Println("Created verifying.key file for circuit: ", circuitID)
+	log.Println("Updating db metadata for circuit: ", circuitID)
+	update := bson.M{"$set": bson.M{"status": "setup_complete"}}
+	_, err = collection.UpdateOne(ctx, filter, update)
+	if err != nil {
+		log.Println("[ERROR: Mongo UpdateOne] " + err.Error())
+		return err
+	}
+	log.Println("Finished setup for circuit: ", circuitID)
+	return nil
 }
 
 func setupCircuits() {
 	for {
 		circuitID := <-setupQueue
-		log.Println("Starting setup for circuit: ", circuitID)
-
-		// Get zk circuit collection for later updates
-		collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
-		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-		defer cancel()
-		filter := bson.M{"_id": circuitID}
-
-		// Create reader for r1cs file
-		path := "src/circuits/" + circuitID + "/compiled.r1cs"
-		var r io.Reader
-		r, err := os.Open(path)
-		if err != nil {
-			log.Println("[ERROR: Read r1cs file] " + err.Error())
-			update := bson.M{"$set": bson.M{"status": "setup_failed"}}
-			_, err = collection.UpdateOne(ctx, filter, update)
-			continue
-		}
-
-		// Decode r1cs binary, store in compiledCircuit
-		log.Println("Decoding r1cs binary for circuit: ", circuitID)
-		compiledCircuit := groth16.NewCS(ecc.BN254)
-		_, err = compiledCircuit.ReadFrom(r)
-
-		if err != nil {
-			log.Println("[ERROR: Decode r1cs] " + err.Error())
-			update := bson.M{"$set": bson.M{"status": "setup_failed"}}
-			_, err = collection.UpdateOne(ctx, filter, update)
-			continue
-		}
-
-		log.Println("Decoding r1cs binary complete for circuit: ", circuitID)
-		log.Println("Running groth16 setup for circuit: ", circuitID)
-		pk, vk, err := groth16.Setup(compiledCircuit)
-
-		if err != nil {
-			log.Println("[ERROR: Gnark setup] " + err.Error())
-			update := bson.M{"$set": bson.M{"status": "setup_failed"}}
-			_, err = collection.UpdateOne(ctx, filter, update)
-			continue
-		}
-
-		log.Println("groth16 setup complete for circuit: ", circuitID)
-		log.Println("Creating Solidity verifier for circuit: ", circuitID)
-		path = "src/circuits/" + circuitID + "/Verifier.sol"
-		file, _ := os.Create(path)
-		err = vk.ExportSolidity(file)
-		if err != nil {
-			log.Println("[ERROR: Export Solidity] " + err.Error())
-			update := bson.M{"$set": bson.M{"status": "setup_failed"}}
-			_, err = collection.UpdateOne(ctx, filter, update)
-			continue
-		}
-
-		// Write compressed keys to disk
-		log.Println("Solidity verifier created for circuit: ", circuitID)
-		log.Println("Creating proving.key file for circuit: ", circuitID)
-		path = "src/circuits/" + circuitID + "/proving.key"
-		pkFile, _ := os.Create(path)
-		pk.WriteTo(pkFile)
-
-		log.Println("Created proving.key file for circuit: ", circuitID)
-		log.Println("Creating verifying.key file for circuit: ", circuitID)
-		path = "src/circuits/" + circuitID + "/verifying.key"
-		vkFile, _ := os.Create(path)
-		vk.WriteTo(vkFile)
-
-		// Update db to add keys, update status
-		log.Println("Created verifying.key file for circuit: ", circuitID)
-		log.Println("Updating db metadata for circuit: ", circuitID)
-		update := bson.M{"$set": bson.M{"status": "setup_complete"}}
-		_, err = collection.UpdateOne(ctx, filter, update)
-		if err != nil {
-			log.Println("[ERROR: Mongo UpdateOne] " + err.Error())
-			continue
-		}
-		log.Println("Finished setup for circuit: ", circuitID)
+		setupCircuit(circuitID)
 	}
 }
 
@@ -330,6 +341,7 @@ func createCircuit(c *gin.Context) {
 		})
 		return
 	}
+	circuitType := c.Query("type")
 
 	// Create new uuid v4
 	circuitId := uuid.NewRandom().String()
@@ -341,7 +353,6 @@ func createCircuit(c *gin.Context) {
 		zkCircuitDoc.CurveID = requestBody.CurveID
 	}
 
-	circuitType := c.Query("type")
 	os.Mkdir("src/circuits/"+circuitId+"/", 0755)
 	if circuitType == "signature" {
 		// Pass identities to circuit generator
@@ -411,7 +422,7 @@ func setup(c *gin.Context) {
 }
 
 // Currently only supports groth16
-func prove(c *gin.Context) {
+func prove(ginContext *gin.Context) {
 	// Witness variables must be ordered as defined in Circuit definition
 	// Public variables come first, then secret variables
 	type generateProofReq struct {
@@ -419,21 +430,21 @@ func prove(c *gin.Context) {
 	}
 
 	var requestBody generateProofReq
-	err := c.BindJSON(&requestBody)
+	err := ginContext.BindJSON(&requestBody)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		ginContext.JSON(http.StatusBadRequest, gin.H{
 			"error": "Request body missing fields",
 		})
 	}
 
-	circuitID := c.Param("circuitID")
+	circuitID := ginContext.Param("circuitID")
 
 	// Create reader for r1cs file
 	path := "src/circuits/" + circuitID + "/compiled.r1cs"
 	var compiledReader io.Reader
 	compiledReader, err = os.Open(path)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Read r1cs file] " + err.Error(),
 		})
 		return
@@ -444,7 +455,7 @@ func prove(c *gin.Context) {
 	compiledCircuit := groth16.NewCS(ecc.BN254)
 	_, err = compiledCircuit.ReadFrom(compiledReader)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Decode r1cs] " + err.Error(),
 		})
 		return
@@ -460,7 +471,7 @@ func prove(c *gin.Context) {
 	filter := bson.M{"_id": circuitID}
 	err = collection.FindOne(ctx, filter).Decode(&circuit)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Mongo FindOne] " + err.Error(),
 		})
 		return
@@ -474,7 +485,7 @@ func prove(c *gin.Context) {
 	provingKey := groth16.NewProvingKey(ecc.BN254)
 	_, err = provingKey.ReadFrom(pkReader)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": "[Read proving.key file] " + err.Error(),
 		})
 		return
@@ -482,23 +493,31 @@ func prove(c *gin.Context) {
 	log.Println("Successfully read proving.key from file")
 
 	// Create witness io.Reader, then generate proof from witness
-	encodedHex, err := EncodeWitness(requestBody.Witness)
-	var witnessBuffer bytes.Buffer
-	witnessBuffer.Write(encodedHex)
-	proof, err := groth16.ReadAndProve(compiledCircuit, provingKey, &witnessBuffer)
+	encodedWitnessHex, err := EncodeWitness(requestBody.Witness)
 	if err != nil {
 		log.Println("ERROR:", err)
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[groth16.ReadAndProve] " + err.Error(),
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
+			"error": "[encoding witness] " + err.Error(),
 		})
 		return
 	}
 
-	var proofWriter bytes.Buffer
-	proof.WriteTo(&proofWriter)
+	proofBytes, proofSolidity, err := GenerateProof(compiledCircuit, provingKey, encodedWitnessHex)
+	if err != nil {
+		log.Println("ERROR:", err)
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
+			"error": "[generating proof] " + err.Error(),
+		})
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"proof": proofWriter.Bytes(),
+	ginContext.JSON(http.StatusOK, gin.H{
+		"proof_rawBytes": proofBytes,
+		"proof_solidity": gin.H{ 
+			"a": proofSolidity.a,
+			"b": proofSolidity.b,
+			"c": proofSolidity.c,
+		},
 	})
 }
 

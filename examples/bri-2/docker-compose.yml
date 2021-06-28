@@ -1,4 +1,24 @@
-version: '3.5'
+version: '3.7'
+
+x-default-variables: &default-variables
+  KEY_MANAGER_URL: ${KEY_MANAGER_URL-http://key-manager:8081}
+  KEY_MANAGER_METRICS_URL: ${KEY_MANAGER_URL-http://key-manager:8082}
+  VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+  LOG_LEVEL: ${LOG_LEVEL-debug}
+  LOG_FORMAT: ${LOG_FORMAT-}
+  LOG_TIMESTAMP: ${LOG_TIMESTAMP-true}
+
+x-container-common: &container-common
+  image: docker.consensys.net/priv/orchestrate:v21.1.4
+  restart: ${CONTAINER_RESTART-on-failure}
+  tty: true
+  networks:
+    - alice
+  labels:
+    filebeat: "true"
+
+x-key-manager-common: &key-manager-common
+  KEY_MANAGER_TYPE: ${KEY_MANAGER_TYPE-}
 
 services:
 
@@ -6,14 +26,16 @@ services:
 
   ganache:
     container_name: ganache
-    image: trufflesuite/ganache-cli:v6.6.0
+    #image: trufflesuite/ganache-cli:v6.6.0
+    image: trufflesuite/ganache-cli:latest
     command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --account="0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63, 1000000000000000000000" --account="0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3, 1000000000000000000000" --account="0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f, 1000000000000000000000" --networkId '101010' --gasLimit 10000000 --allowUnlimitedContractSize --noVMErrorsOnRPCResponse
     ports:
       - 8545:8545
+      - 8546:8546
     networks:
       - alice
     volumes:
-      - ./ops/ganache_health.sh:/app/health-check.sh:delegated
+      - ./scripts/ganache_health.sh:/app/health-check.sh:delegated
     healthcheck:
       test: ["CMD", "sh", "health-check.sh"]
       interval: 15s
@@ -60,7 +82,7 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d:ro
       - alice-mongo:/data/db
-      - ./ops/mongo_health.sh:/health-check.sh:delegated
+      - ./scripts/mongo_health.sh:/health-check.sh:delegated
     logging:
       options:
         max-size: 10m
@@ -80,6 +102,7 @@ services:
     container_name: alice-commit-mgr
     depends_on:
       - alice-mongo
+      - alice-nats-server
     build:
       context: ./commit-mgr
       dockerfile: ./Dockerfile
@@ -87,8 +110,16 @@ services:
       - ./commit-mgr/.env
     environment:
       - DATABASE_HOST=alice-mongo:27017
+      - NATS_URL=nats://alice-nats-server:4222
+      - ZKP_MGR_URL=http://alice-zkp-mgr:8080
+      - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
+      - KEY_MGR_URL=http://alice-key-manager:8081
+      - SIGNING_SERVICE=ethers
+      - ETH_CLIENT_TYPE=ganache
       - ETH_CLIENT_WS=ws://ganache:8545
       - ETH_CLIENT_HTTP=http://ganache:8545
+      - WALLET_PRIVATE_KEY=0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f
+      - WALLET_PUBLIC_KEY=0xf17f52151EbEF6C7334FAD080c5704D77216b732
     networks:
       - alice
     ports:
@@ -106,7 +137,6 @@ services:
     hostname: alice-workflow-mgr
     container_name: alice-workflow-mgr
     depends_on: 
-      - alice-commit-mgr
       - alice-mongo
       - alice-nats-server
     build:
@@ -143,6 +173,7 @@ services:
       - ./zkp-mgr/.env
     environment: 
       - DATABASE_HOST=alice-mongo:27017
+      - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
       - NATS_URL=nats://alice-nats-server:4222
     networks:
       - alice
@@ -157,14 +188,82 @@ services:
       timeout: 10s
       retries: 3
       start_period: 10s
+ 
+# Codefi Orchestrate Services
+
+  key-manager-init:
+    build: ./scripts/deps/hashicorp
+    hostname: alice-key-manager-init
+    container_name: alice-key-manager-init
+    environment:
+      VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+    networks:
+      - alice
+    depends_on:
+      - vault-init
+    volumes:
+      - vault-token:/vault/token
+      - ./scripts/deps/hashicorp/renew.sh:/renew.sh
+    command: sh /renew.sh
+
+  key-manager:
+    <<: *container-common
+    hostname: alice-key-manager
+    container_name: alice-key-manager
+    ports:
+      - 8091:8081
+      - 8092:8082
+    environment:
+      <<: *default-variables
+      <<: *key-manager-common
+    depends_on:
+      - key-manager-init
+    command: key-manager run
+    volumes:
+      - vault-token:/vault/token:ro
+      - ./build/bin/orchestrate:/bin/main
+  
+  vault:
+    image: library/vault:1.6.1
+    tty: true
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - vault-plugin:/vault/plugins
+      - ./scripts/deps/hashicorp/config/config.hcl:/vault/config.hcl:ro
+    entrypoint: vault server -config=/vault/config.hcl
+    ports:
+      - 8200:8200
+    restart: ${CONTAINER_RESTART-on-failure}
+    networks:
+      - alice
+
+  vault-init:
+    build: ./scripts/deps/hashicorp
+    environment:
+      VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+      PLUGIN_PATH: ${PLUGIN_PATH-/vault/plugins}
+      TOKEN_PATH: ${TOKEN_PATH-/vault/token}
+      PLUGIN_VERSION: ${PLUGIN_VERSION-v0.0.10-alpha.5}
+    restart: "no"
+    depends_on:
+      - vault
+    volumes:
+      - vault-token:/vault/token
+      - vault-plugin:/vault/plugins
+      - ./scripts/deps/hashicorp/init.sh:/init.sh
+      - ./scripts/deps/hashicorp/plugin.sh:/plugin.sh
+    command: >
+      sh -c "./plugin.sh && ./init.sh"
+    restart: ${CONTAINER_RESTART-on-failure}
+    networks:
+      - alice
 
 networks:
   alice:
-    driver: bridge
-    ipam:
-      config:
-      - subnet: 172.40.0.0/24
 
 volumes:
   alice-mongo:
   alice-zkp-circuits:
+  vault-token:
+  vault-plugin:
