@@ -37,13 +37,13 @@ On September 30, 2020, the following people were voted in as the TSC for October
 
 | Name | Company |
 | :--- | :--- |
-| [**Brian Chamberlain**](https://www.linkedin.com/in/blchamberlain/) | ConsenSys AG |
 | [**Hudson Jameson**](https://www.linkedin.com/in/hudsonjameson/) | Ethereum Foundation |
+| [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/) | Golden Next Ventures |
 | [**Anais Ofranc**](https://www.linkedin.com/in/anaisofranc/)| Consianimis |
 | [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)| Unibright |
 | [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/) | Ernst & Young |
-| [**George Spasov**](https://www.linkedin.com/in/george-spasov/) | Limechain |
 | [**Tomasz Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/) | Nethermind |
+| [**Sam Stokes**](https://www.linkedin.com/in/sam-stokes-91ba1813/) | ConsenSys AG |
 | [**Conor Svensson**](https://www.linkedin.com/in/conor10/) | Web3Labs |
 | [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)| Microsoft |
 | [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)| Provide |
