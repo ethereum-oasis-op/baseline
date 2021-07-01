@@ -394,56 +394,6 @@ services:
       - 8082:8080
     restart: always
 
-  alice-proxy:
-    image: provide/baseline
-    container_name: alice-proxy
-    entrypoint: ./ops/run_api.sh
-    depends_on:
-      - alice-nats-streaming
-      - alice-postgres
-      - alice-redis
-      - alice-privacy
-    environment:
-      - BASELINE_ORGANIZATION_ADDRESS=0x
-      - BASELINE_ORGANIZATION_MESSAGING_ENDPOINT=nats://alice-nats-streaming:4222
-      - BASELINE_ORGANIZATION_PROXY_ENDPOINT=http://alice-proxy:8080
-      - BASELINE_REGISTRY_CONTRACT_ADDRESS=0x
-      - BASELINE_WORKGROUP_ID=00000000-0000-0000-0000-00000000000
-      - DATABASE_HOST=alice-postgres
-      - DATABASE_NAME=providibright_dev
-      - DATABASE_USER=providibright
-      - DATABASE_PASSWORD=providibright
-      - IDENT_API_HOST=alice-ident:8080
-      - IDENT_API_SCHEME=http
-      - LOG_LEVEL=DEBUG
-      - NATS_CLIENT_PREFIX=alice-proxy
-      - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
-      - NCHAIN_API_HOST=alice-nchain:8080
-      - NCHAIN_API_SCHEME=http
-      - NCHAIN_BASELINE_NETWORK_ID=66d44f30-9092-4182-a3c4-bc02736d6ae5
-      - PRIVACY_API_HOST=alice-privacy:8080
-      - PRIVACY_API_SCHEME=http
-      - PROVIDE_ORGANIZATION_ID=00000000-0000-0000-0000-00000000000
-      - PROVIDE_ORGANIZATION_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImRjOmM5OmM0OjJjOmFlOjBjOjBjOmZiOmQwOjE0OmY2OjIyOmI5OmVmOjc1OjJmIiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL3Byb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiZXhwIjoxNjI3NTE3MzY5LCJpYXQiOjE2MjQ5MjUzNjksImlzcyI6Imh0dHBzOi8vaWRlbnQucHJvdmlkZS5zZXJ2aWNlcyIsImp0aSI6ImRkNjY4MzI0LTNjZjItNDE0ZC1hOGM3LTQ4MDUxMmIwOWFkMyIsIm5hdHMiOnsicGVybWlzc2lvbnMiOnsicHVibGlzaCI6eyJhbGxvdyI6WyJiYXNlbGluZS5cdTAwM2UiXX0sInN1YnNjcmliZSI6eyJhbGxvdyI6WyJ1c2VyLmQxYzBiOTI0LWUzMjgtNDI0Zi1iMTlkLWNhN2MxMTU4MzNmMiIsIm9yZ2FuaXphdGlvbi40ODNmYmE1MC0xMTU0LTRkM2ItOTM2ZC1kOTM5OTRkZDFhYjgiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIiwiYmFzZWxpbmUuXHUwMDNlIl19fX0sInBydmQiOnsib3JnYW5pemF0aW9uX2lkIjoiNDgzZmJhNTAtMTE1NC00ZDNiLTkzNmQtZDkzOTk0ZGQxYWI4IiwicGVybWlzc2lvbnMiOjAsInVzZXJfaWQiOiJkMWMwYjkyNC1lMzI4LTQyNGYtYjE5ZC1jYTdjMTE1ODMzZjIifSwic3ViIjoidG9rZW46NjA4ZDkxZWItZWRlMC00NDczLWIyMWUtNGMxMmRmMTQzYjU1In0.eaTh9RZFzG55i_bpRWCefK8N912o3rp5XFiojpLCF17sNnor1g2evoB-EsB3xBWcOPpOvvv9tci84Z0mm-Kt1hwRJqRF1FqBqA0X9wYzJjSqmU9Oih6kUCq3MBBLJwB3d90i1XhRiw7x4UN0_3JzY0F-ypf9DDB6JsGmpH3JG2pMrUyP1vG4CT1sUcdJo7CglEqZ1MF8LW-6XilcHzg-zv5HYiHpy2dLc_yw_mxhMASrgVtW_eM7VfBuUmchh9n0WeZ87e9ZRigvG_EOKCd_ZQhdIiqAK1xZkphP4DyVJEGe8nElDPn0SjIrO1-PaAF5pjnhJdEn5HBAPFsE8orOjEM8Dy0k43FSWzBXhDLHVFozJdrRkPuXIdRcn2_mawnFPp2zFjcetNV6-yBozdZOoIsvpdu4vheItJoUbpj9Jp_xJhVA5OuWG5_twfOhrKbcAdjCExP135trjkMtp0QIvtbtmrQqXoPEUVDMZBvBwrUo0c9ZxqtpHjKF7NQCw_RtruvIK4rovjsz2wvPxZDb2KgkaLSl7XF07QuUNMd4c9nXzMLOl9wCx4nQ7jnCZt-mg5c_KuIZItL2NWkpNGW8U39JdRs5yVMzOeixl-vJAbAnBbD5BYgfKhQB7itkhvVwdXFvkcrPEeA2JhaheqRwFgKVoavf6Lmfir2AgtOPj9k
-      - PROVIDE_SOR_IDENTIFIER=ephemeral
-      - VAULT_API_HOST=alice-vault:8080
-      - VAULT_API_SCHEME=http
-      - VAULT_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwOjJlOmQ5OmUxOmI4OmEyOjM0OjM3Ojk5OjNhOjI0OmZjOmFhOmQxOmM4OjU5IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL3Byb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjA1NzkxMjQ4LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiI5YjUxNGIxNS01NTdlLTRhYWQtYTcwOC0wMTcwZTAwZWE1ZmIiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4zNjAxNTdmOC1kNWExLTQ0NDAtOTE4Yi1mNjhiYjM5YzBkODAiLCJ1c2VyLjIzY2MwN2UwLTM4NTEtNDBkZC1iNjc1LWRmNzY4MDY3MmY3ZCIsIm5ldHdvcmsuKi5jb25uZWN0b3IuKiIsIm5ldHdvcmsuKi5zdGF0dXMiLCJwbGF0Zm9ybS5cdTAwM2UiXX19fSwicHJ2ZCI6eyJhcHBsaWNhdGlvbl9pZCI6IjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCIsImV4dGVuZGVkIjp7InBlcm1pc3Npb25zIjp7IioiOjUxMH19LCJwZXJtaXNzaW9ucyI6NTEwLCJ1c2VyX2lkIjoiMjNjYzA3ZTAtMzg1MS00MGRkLWI2NzUtZGY3NjgwNjcyZjdkIn0sInN1YiI6ImFwcGxpY2F0aW9uOjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCJ9.SUh84MKBNstdu3KFu1zEAQq03xbPw1D0lLXeogz1HfBJy77bIGf7HLvCuc6bjkh0xj3cEuEus1dC1Dj3BvlZoSXsvz_biTzSapkXzJjpkwOL6qkYDmqTPZvXwqmk-mUNrHTPkqdiIJL7xA46tzHW3E_hjSA9HjEk1kXjPdJQ6_ifkgWNoAaSD--kudIrhZ7vLnfy0H1JEAOsXzSAMoc5_pNG2n79m0ywvb_4l9BqdsHW8N3xSQOFjcp9gD_tqo6ffug3pkpoy-RSguM_OaMR2lj_CHhYxAt0phtjUceDD3K1h5iZ38kSl7izhOdULMmGBhVpBMoSy6_R6ZzpCL3pj8FcReX9RXR5oYpm8PDtlmWqblQzjwY00-uYLfOX0_iS4MGfEsjadZPfTmJLcOTYC7H4PL9ZRu_XtMDUrGBQQz5b_ad2ZzMXbBNeU6vbxVKDG8VFKWOHAemqHTcvuOAsOCLIqOu-eJpZHlXbx-FXPTYledd-GBDe7IjaC9ll_JK3utCOnCq0qUs6lnXIrQ_Sp1LcTKJJ7aY5f9TxeoAuL-ghDbQ3Xkw6huKyPCz2evOwVLwrB9ZRMlQXgmTnB1OeQvWii1WbmkyV1Zhbz_RPB8ckK7_mFxuPvsXK8wTFiWFmj96sRX470kV-ooSfM5CzKZhSLqgyyaUNC0VaCPq0uuE
-      - REDIS_HOSTS=alice-redis:6379
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://alice-proxy:8080/status"]
-      interval: 1m
-      timeout: 1s
-      retries: 2
-      start_period: 10s
-    hostname: alice-proxy
-    networks:
-      - alice
-    ports:
-      - 8088:8080
-    restart: always
-
   alice-proxy-consumer:
     image: provide/baseline
     container_name: alice-proxy-consumer
@@ -881,56 +831,6 @@ services:
       - 8083:8080
     restart: always
 
-  bob-proxy:
-    image: provide/baseline
-    container_name: bob-proxy
-    entrypoint: ./ops/run_api.sh
-    depends_on:
-      - bob-nats-streaming
-      - bob-postgres
-      - bob-redis
-      - bob-privacy
-    environment:
-      - BASELINE_ORGANIZATION_ADDRESS=0x
-      - BASELINE_ORGANIZATION_MESSAGING_ENDPOINT=nats://bob-nats-streaming:4222
-      - BASELINE_ORGANIZATION_PROXY_ENDPOINT=http://bob-proxy:8080
-      - BASELINE_WORKGROUP_ID=00000000-0000-0000-0000-00000000000
-      - BASELINE_REGISTRY_CONTRACT_ADDRESS=0x
-      - DATABASE_HOST=bob-postgres
-      - DATABASE_NAME=providibright_dev
-      - DATABASE_USER=providibright
-      - DATABASE_PASSWORD=providibright
-      - IDENT_API_HOST=bob-ident:8080
-      - IDENT_API_SCHEME=http
-      - LOG_LEVEL=DEBUG
-      - NATS_CLIENT_PREFIX=bob-proxy
-      - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
-      - NCHAIN_API_HOST=bob-nchain:8080
-      - NCHAIN_API_SCHEME=http
-      - NCHAIN_BASELINE_NETWORK_ID=66d44f30-9092-4182-a3c4-bc02736d6ae5
-      - PRIVACY_API_HOST=bob-privacy:8080
-      - PRIVACY_API_SCHEME=http
-      - PROVIDE_SOR_IDENTIFIER=ephemeral
-      - PROVIDE_ORGANIZATION_ID=00000000-0000-0000-0000-00000000000
-      - PROVIDE_ORGANIZATION_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImRjOmM5OmM0OjJjOmFlOjBjOjBjOmZiOmQwOjE0OmY2OjIyOmI5OmVmOjc1OjJmIiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL3Byb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiZXhwIjoxNjI3NTE3MzY5LCJpYXQiOjE2MjQ5MjUzNjksImlzcyI6Imh0dHBzOi8vaWRlbnQucHJvdmlkZS5zZXJ2aWNlcyIsImp0aSI6ImRkNjY4MzI0LTNjZjItNDE0ZC1hOGM3LTQ4MDUxMmIwOWFkMyIsIm5hdHMiOnsicGVybWlzc2lvbnMiOnsicHVibGlzaCI6eyJhbGxvdyI6WyJiYXNlbGluZS5cdTAwM2UiXX0sInN1YnNjcmliZSI6eyJhbGxvdyI6WyJ1c2VyLmQxYzBiOTI0LWUzMjgtNDI0Zi1iMTlkLWNhN2MxMTU4MzNmMiIsIm9yZ2FuaXphdGlvbi40ODNmYmE1MC0xMTU0LTRkM2ItOTM2ZC1kOTM5OTRkZDFhYjgiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIiwiYmFzZWxpbmUuXHUwMDNlIl19fX0sInBydmQiOnsib3JnYW5pemF0aW9uX2lkIjoiNDgzZmJhNTAtMTE1NC00ZDNiLTkzNmQtZDkzOTk0ZGQxYWI4IiwicGVybWlzc2lvbnMiOjAsInVzZXJfaWQiOiJkMWMwYjkyNC1lMzI4LTQyNGYtYjE5ZC1jYTdjMTE1ODMzZjIifSwic3ViIjoidG9rZW46NjA4ZDkxZWItZWRlMC00NDczLWIyMWUtNGMxMmRmMTQzYjU1In0.eaTh9RZFzG55i_bpRWCefK8N912o3rp5XFiojpLCF17sNnor1g2evoB-EsB3xBWcOPpOvvv9tci84Z0mm-Kt1hwRJqRF1FqBqA0X9wYzJjSqmU9Oih6kUCq3MBBLJwB3d90i1XhRiw7x4UN0_3JzY0F-ypf9DDB6JsGmpH3JG2pMrUyP1vG4CT1sUcdJo7CglEqZ1MF8LW-6XilcHzg-zv5HYiHpy2dLc_yw_mxhMASrgVtW_eM7VfBuUmchh9n0WeZ87e9ZRigvG_EOKCd_ZQhdIiqAK1xZkphP4DyVJEGe8nElDPn0SjIrO1-PaAF5pjnhJdEn5HBAPFsE8orOjEM8Dy0k43FSWzBXhDLHVFozJdrRkPuXIdRcn2_mawnFPp2zFjcetNV6-yBozdZOoIsvpdu4vheItJoUbpj9Jp_xJhVA5OuWG5_twfOhrKbcAdjCExP135trjkMtp0QIvtbtmrQqXoPEUVDMZBvBwrUo0c9ZxqtpHjKF7NQCw_RtruvIK4rovjsz2wvPxZDb2KgkaLSl7XF07QuUNMd4c9nXzMLOl9wCx4nQ7jnCZt-mg5c_KuIZItL2NWkpNGW8U39JdRs5yVMzOeixl-vJAbAnBbD5BYgfKhQB7itkhvVwdXFvkcrPEeA2JhaheqRwFgKVoavf6Lmfir2AgtOPj9k
-      - VAULT_API_HOST=bob-vault:8080
-      - VAULT_API_SCHEME=http
-      - VAULT_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwOjJlOmQ5OmUxOmI4OmEyOjM0OjM3Ojk5OjNhOjI0OmZjOmFhOmQxOmM4OjU5IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL3Byb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjA1NzkxMjQ4LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiI5YjUxNGIxNS01NTdlLTRhYWQtYTcwOC0wMTcwZTAwZWE1ZmIiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4zNjAxNTdmOC1kNWExLTQ0NDAtOTE4Yi1mNjhiYjM5YzBkODAiLCJ1c2VyLjIzY2MwN2UwLTM4NTEtNDBkZC1iNjc1LWRmNzY4MDY3MmY3ZCIsIm5ldHdvcmsuKi5jb25uZWN0b3IuKiIsIm5ldHdvcmsuKi5zdGF0dXMiLCJwbGF0Zm9ybS5cdTAwM2UiXX19fSwicHJ2ZCI6eyJhcHBsaWNhdGlvbl9pZCI6IjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCIsImV4dGVuZGVkIjp7InBlcm1pc3Npb25zIjp7IioiOjUxMH19LCJwZXJtaXNzaW9ucyI6NTEwLCJ1c2VyX2lkIjoiMjNjYzA3ZTAtMzg1MS00MGRkLWI2NzUtZGY3NjgwNjcyZjdkIn0sInN1YiI6ImFwcGxpY2F0aW9uOjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCJ9.SUh84MKBNstdu3KFu1zEAQq03xbPw1D0lLXeogz1HfBJy77bIGf7HLvCuc6bjkh0xj3cEuEus1dC1Dj3BvlZoSXsvz_biTzSapkXzJjpkwOL6qkYDmqTPZvXwqmk-mUNrHTPkqdiIJL7xA46tzHW3E_hjSA9HjEk1kXjPdJQ6_ifkgWNoAaSD--kudIrhZ7vLnfy0H1JEAOsXzSAMoc5_pNG2n79m0ywvb_4l9BqdsHW8N3xSQOFjcp9gD_tqo6ffug3pkpoy-RSguM_OaMR2lj_CHhYxAt0phtjUceDD3K1h5iZ38kSl7izhOdULMmGBhVpBMoSy6_R6ZzpCL3pj8FcReX9RXR5oYpm8PDtlmWqblQzjwY00-uYLfOX0_iS4MGfEsjadZPfTmJLcOTYC7H4PL9ZRu_XtMDUrGBQQz5b_ad2ZzMXbBNeU6vbxVKDG8VFKWOHAemqHTcvuOAsOCLIqOu-eJpZHlXbx-FXPTYledd-GBDe7IjaC9ll_JK3utCOnCq0qUs6lnXIrQ_Sp1LcTKJJ7aY5f9TxeoAuL-ghDbQ3Xkw6huKyPCz2evOwVLwrB9ZRMlQXgmTnB1OeQvWii1WbmkyV1Zhbz_RPB8ckK7_mFxuPvsXK8wTFiWFmj96sRX470kV-ooSfM5CzKZhSLqgyyaUNC0VaCPq0uuE
-      - REDIS_HOSTS=bob-redis:6379
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://bob-proxy:8080/status"]
-      interval: 1m
-      timeout: 1s
-      retries: 2
-      start_period: 10s
-    hostname: bob-proxy
-    networks:
-      - bob
-    ports:
-      - 8089:8080
-    restart: always
-
   bob-proxy-consumer:
     image: provide/baseline
     container_name: bob-proxy-consumer
@@ -962,6 +862,7 @@ services:
       - PRIVACY_API_SCHEME=http
       - PROVIDE_SOR_IDENTIFIER=ephemeral
       - PROVIDE_ORGANIZATION_ID=00000000-0000-0000-0000-00000000000
+      - BASELINE_CONFIG_FORCE_OVERWRITE=true
       - PROVIDE_ORGANIZATION_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImRjOmM5OmM0OjJjOmFlOjBjOjBjOmZiOmQwOjE0OmY2OjIyOmI5OmVmOjc1OjJmIiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL3Byb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiZXhwIjoxNjI3NTE3MzY5LCJpYXQiOjE2MjQ5MjUzNjksImlzcyI6Imh0dHBzOi8vaWRlbnQucHJvdmlkZS5zZXJ2aWNlcyIsImp0aSI6ImRkNjY4MzI0LTNjZjItNDE0ZC1hOGM3LTQ4MDUxMmIwOWFkMyIsIm5hdHMiOnsicGVybWlzc2lvbnMiOnsicHVibGlzaCI6eyJhbGxvdyI6WyJiYXNlbGluZS5cdTAwM2UiXX0sInN1YnNjcmliZSI6eyJhbGxvdyI6WyJ1c2VyLmQxYzBiOTI0LWUzMjgtNDI0Zi1iMTlkLWNhN2MxMTU4MzNmMiIsIm9yZ2FuaXphdGlvbi40ODNmYmE1MC0xMTU0LTRkM2ItOTM2ZC1kOTM5OTRkZDFhYjgiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIiwiYmFzZWxpbmUuXHUwMDNlIl19fX0sInBydmQiOnsib3JnYW5pemF0aW9uX2lkIjoiNDgzZmJhNTAtMTE1NC00ZDNiLTkzNmQtZDkzOTk0ZGQxYWI4IiwicGVybWlzc2lvbnMiOjAsInVzZXJfaWQiOiJkMWMwYjkyNC1lMzI4LTQyNGYtYjE5ZC1jYTdjMTE1ODMzZjIifSwic3ViIjoidG9rZW46NjA4ZDkxZWItZWRlMC00NDczLWIyMWUtNGMxMmRmMTQzYjU1In0.eaTh9RZFzG55i_bpRWCefK8N912o3rp5XFiojpLCF17sNnor1g2evoB-EsB3xBWcOPpOvvv9tci84Z0mm-Kt1hwRJqRF1FqBqA0X9wYzJjSqmU9Oih6kUCq3MBBLJwB3d90i1XhRiw7x4UN0_3JzY0F-ypf9DDB6JsGmpH3JG2pMrUyP1vG4CT1sUcdJo7CglEqZ1MF8LW-6XilcHzg-zv5HYiHpy2dLc_yw_mxhMASrgVtW_eM7VfBuUmchh9n0WeZ87e9ZRigvG_EOKCd_ZQhdIiqAK1xZkphP4DyVJEGe8nElDPn0SjIrO1-PaAF5pjnhJdEn5HBAPFsE8orOjEM8Dy0k43FSWzBXhDLHVFozJdrRkPuXIdRcn2_mawnFPp2zFjcetNV6-yBozdZOoIsvpdu4vheItJoUbpj9Jp_xJhVA5OuWG5_twfOhrKbcAdjCExP135trjkMtp0QIvtbtmrQqXoPEUVDMZBvBwrUo0c9ZxqtpHjKF7NQCw_RtruvIK4rovjsz2wvPxZDb2KgkaLSl7XF07QuUNMd4c9nXzMLOl9wCx4nQ7jnCZt-mg5c_KuIZItL2NWkpNGW8U39JdRs5yVMzOeixl-vJAbAnBbD5BYgfKhQB7itkhvVwdXFvkcrPEeA2JhaheqRwFgKVoavf6Lmfir2AgtOPj9k
       - VAULT_API_HOST=bob-vault:8080
       - VAULT_API_SCHEME=http
