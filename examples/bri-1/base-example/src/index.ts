@@ -818,135 +818,40 @@ export class ParticipantStack {
       this.baselineConfig?.baselineApiHost
     );
   
-    //everythign in configuration baseline
-    exec(`prvd baseline stack run --name=${this.baselineConfig?.name} --api-endpoint=${name} `)
-    if name == "" {
-      name = common.FreeInput("Name", "", common.NoValidation)
-    }
-    if common.APIEndpoint == "" {
-      common.APIEndpoint = common.FreeInput("API endpoint", "", common.NoValidation)
-    }
-    if common.MessagingEndpoint == "" {
-      common.MessagingEndpoint = common.FreeInput("Messaging endpoint", "", common.NoValidation)
-    }
-    if !common.Tunnel {
-      common.Tunnel = common.SelectInput(boolPromptArgs, tunnelPromptLabel) == "Yes"
-    }
-    if !common.ExposeAPITunnel {
-      common.ExposeAPITunnel = common.SelectInput(boolPromptArgs, tunnelAPIPromptLabel) == "Yes"
-    }
-    if !common.ExposeMessagingTunnel {
-      common.ExposeMessagingTunnel = common.SelectInput(boolPromptArgs, tunnelMessagingPromptLabel) == "Yes"
-    }
-    // TODO ... call app flags
-    if sorID == "" {
-      sorID = common.SelectInput(SoRPromptArgs, SoRPromptLabel)
-    }
-    if sorURL == "" {
-      sorURL = common.FreeInput("SoR URL", "", common.NoValidation)
-    }
-    if apiHostname == "" {
-      apiHostname = common.FreeInput("API Hostname", "", common.NoValidation)
-    }
-    if port == 8080 {
-      port, _ = strconv.Atoi(common.FreeInput("Port", "8080", common.NumberValidation))
-    }
-    if consumerHostname == name+"-consumer" {
-      consumerHostname = common.FreeInput("Consumer Hostname", name+"-consumer", common.NoValidation)
-    }
-    if natsHostname == name+"-nats" {
-      natsHostname = common.FreeInput("Nats Hostname", name+"-nats", common.NoValidation)
-    }
-    if natsPort == 4222 {
-      natsPort, _ = strconv.Atoi(common.FreeInput("Nats Port", "4222", common.NumberValidation))
-    }
-    if natsWebsocketPort == 4221 {
-      natsWebsocketPort, _ = strconv.Atoi(common.FreeInput("Nats Websocket Port", "4221", common.NumberValidation))
-    }
-    if natsAuthToken == "testtoken" {
-      natsAuthToken = common.FreeInput("Nats Auth Token", "testtoken", common.NoValidation)
-    }
-    if natsStreamingHostname == name+"-nats-streaming" {
-      natsStreamingHostname = common.FreeInput("Nats Streaming Token", name+"-nats-streaming", common.NoValidation)
-    }
-    if natsStreamingPort == 4220 {
-      natsStreamingPort, _ = strconv.Atoi(common.FreeInput("Nats Streaming Port", "4221", common.NumberValidation))
-    }
-    if redisHostname == name+"-reddis" {
-      redisHostname = common.FreeInput("Reddis Host Name", name+"-reddis", common.NoValidation)
-    }
-    if redisPort == 6379 {
-      redisPort, _ = strconv.Atoi(common.FreeInput("Reddis Port", "6379", common.NumberValidation))
-    }
-    if redisHosts == redisHostname+":"+strconv.Itoa(redisContainerPort) {
-      redisPort, _ = strconv.Atoi(common.FreeInput("Reddis Port", redisHostname+":"+strconv.Itoa(redisContainerPort), common.NoValidation))
-    }
-    if !autoRemove {
-      autoRemove = common.SelectInput(boolPromptArgs, autoRemovePromptLabel) == "Yes"
-    }
-    if logLevel == "DEBUG" {
-      logLevel = common.FreeInput("Reddis Host Name", "DEBUG", common.NoValidation)
-    }
-    if jwtSignerPublicKey == "" {
-      jwtSignerPublicKey = common.FreeInput("JWT Signer Public Key", "", common.NoValidation)
-    }
-    if identAPIHost == "ident.provide.services" {
-      nchainAPIHost = common.FreeInput("Ident API Host", "ident.provide.services", common.NoValidation)
-    }
-    if identAPIScheme == "https" {
-      nchainAPIScheme = common.FreeInput("Ident API Scheme", "https", common.NoValidation)
-    }
-    if nchainAPIHost == "nchain.provide.services" {
-      nchainAPIHost = common.FreeInput("Nchain API Host", "nchain.provide.services", common.NoValidation)
-    }
-    if nchainAPIScheme == "https" {
-      nchainAPIScheme = common.FreeInput("Nchain API Scheme", "https", common.NoValidation)
-    }
-    if privacyAPIHost == "privacy.provide.services" {
-      privacyAPIHost = common.FreeInput("Privacy API Host", "privacy.provide.services", common.NoValidation)
-    }
-    if privacyAPIScheme == "https" {
-      privacyAPIScheme = common.FreeInput("Privacy API Scheme", "https", common.NoValidation)
-    }
-    if vaultAPIHost == "vault.provide.services" {
-      vaultAPIHost = common.FreeInput("Vault API Host", "vault.provide.services", common.NoValidation)
-    }
-    if vaultAPIScheme == "https" {
-      vaultAPIScheme = common.FreeInput("Vault API Scheme", "https", common.NoValidation)
-    }
-    if vaultRefreshToken == os.Getenv("VAULT_REFRESH_TOKEN") {
-      vaultRefreshToken = common.FreeInput("Vault API Refresh Token", os.Getenv("VAULT_REFRESH_TOKEN"), common.NoValidation)
-    }
-    if vaultSealUnsealKey == os.Getenv("VAULT_SEAL_UNSEAL_KEY") {
-      vaultSealUnsealKey = common.FreeInput("Vault Un/Seal Token", os.Getenv("VAULT_SEAL_UNSEAL_KEY"), common.NoValidation)
-    }
-    if !withLocalVault {
-      withLocalVault = strings.ToLower(common.SelectInput(boolPromptArgs, localVaultPromptLabel)) == "yes"
-    }
-    if !withLocalIdent {
-      withLocalIdent = strings.ToLower(common.SelectInput(boolPromptArgs, localIdentPromptLabel)) == "yes"
-    }
-    if !withLocalNChain {
-      withLocalNChain = strings.ToLower(common.SelectInput(boolPromptArgs, localNchainPromptLabel)) == "yes"
-    }
-    if !withLocalPrivacy {
-      withLocalPrivacy = strings.ToLower(common.SelectInput(boolPromptArgs, localPrivacyPromptLabel)) == "yes"
-    }
-    if organizationRefreshToken == os.Getenv("PROVIDE_ORGANIZATION_REFRESH_TOKEN") {
-      organizationRefreshToken = common.FreeInput("Organization Refresh Token", os.Getenv("PROVIDE_ORGANIZATION_REFRESH_TOKEN"), common.NoValidation)
-    }
-    if baselineOrganizationAddress == "0x" {
-      baselineOrganizationAddress = common.FreeInput("Baseline Organization Address", "0x", common.NoValidation)
-    }
-    if baselineRegistryContractAddress == "0x" {
-      baselineOrganizationAddress = common.FreeInput("Baseline Registry Contract Address", "0x", common.HexValidation)
-    }
-    if baselineWorkgroupID == "" {
-      baselineOrganizationAddress = common.FreeInput("Baseline Workgroup ID", "", common.HexValidation)
-    }
-    if nchainBaselineNetworkID == "0x" {
-      baselineOrganizationAddress = common.FreeInput("Nchain Baseline Network ID", "0x", common.HexValidation)
-    }
+    var runcmd = `prvd baseline stack run`
+
+    // FIXME...
+    runcmd += ` BASELINE_ORGANIZATION_ADDRESS=${baselineConfig.baselineOrganizationAddress}`
+		runcmd += ` BASELINE_ORGANIZATION_MESSAGING_ENDPOINT=${baselineConfig.common}`
+		runcmd += ` BASELINE_ORGANIZATION_PROXY_ENDPOINT=${baselineConfig.common}`
+		runcmd += ` BASELINE_REGISTRY_CONTRACT_ADDRESS=${baselineConfig.baselineRegistryContractAddress}`
+		runcmd += ` BASELINE_WORKGROUP_ID=${baselineConfig.baselineWorkgroupID}`
+		runcmd += ` IDENT_API_HOST=${baselineConfig.identAPIHost}`
+		runcmd += ` IDENT_API_SCHEME=${baselineConfig.identAPIScheme}`
+		runcmd += ` JWT_SIGNER_PUBLIC_KEY=${baselineConfig.jwtSignerPublicKey}`
+		runcmd += ` LOG_LEVEL=${baselineConfig.logLevel}`
+		runcmd += ` NATS_CLIENT_PREFIX=${baselineConfig.name}`
+		runcmd += ` NATS_STREAMING_URL=${baselineConfig.natsStreamingHostname}`
+		runcmd += ` NATS_TOKEN=${baselineConfig.natsAuthToken}`
+		runcmd += ` NATS_URL=${baselineConfig.fmt}`
+		runcmd += ` NCHAIN_API_HOST=${baselineConfig.nchainAPIHost}`
+		runcmd += ` NCHAIN_API_SCHEME=${baselineConfig.nchainAPIScheme}`
+		runcmd += ` NCHAIN_BASELINE_NETWORK_ID=${baselineConfig.nchainBaselineNetworkID}`
+		runcmd += ` PRIVACY_API_HOST=${baselineConfig.privacyAPIHost}`
+		runcmd += ` PRIVACY_API_SCHEME=${baselineConfig.privacyAPIScheme}`
+		runcmd += ` PROVIDE_ORGANIZATION_ID=${baselineConfig}`,
+		runcmd += ` PROVIDE_ORGANIZATION_REFRESH_TOKEN=${baselineConfig.organizationRefreshToken}`
+		runcmd += ` PROVIDE_SOR_IDENTIFIER=${baselineConfig.sorID}`
+		runcmd += ` PROVIDE_SOR_ORGANIZATION_CODE=${baselineConfig.sorOrganizationCode}`
+		runcmd += ` PROVIDE_SOR_URL=${baselineConfig.sorURL}`
+		runcmd += ` PRIVACY_API_SCHEME=${baselineConfig.privacyAPIScheme}`
+		runcmd += ` REDIS_HOSTS=${baselineConfig.redisHosts}`
+		runcmd += ` VAULT_API_HOST=${baselineConfig.vaultAPIHost}`
+		runcmd += ` VAULT_API_SCHEME=${baselineConfig.vaultAPIScheme}`
+		runcmd += ` VAULT_REFRESH_TOKEN=${baselineConfig.vaultRefreshToken}`
+		runcmd += ` VAULT_SEAL_UNSEAL_KEY=${baselineConfig.vaultSealUnsealKey}`
+
+    exec(runcmd);
   }
 
   async startProtocolSubscriptions(): Promise<any> {
