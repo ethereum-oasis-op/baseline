@@ -11,6 +11,8 @@ import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
 import { exec } from 'child_process';
+import fs from 'fs';
+import * as process from 'process'
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
@@ -797,18 +799,17 @@ export class ParticipantStack {
       await this.createVaultKey(vault.id!, 'secp256k1');
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
       await this.registerWorkgroupOrganization();
-      await this.deployBaselineStack(name);
+      await this.deployBaselineStack();
     }
 
     return this.org;
   }
 
-  async deployBaselineStack(containerName: string): Promise<any> {
+  async deployBaselineStack(): Promise<any> {
     const orgToken = await this.createOrgToken();
     const tkn = orgToken.accessToken || orgToken.token;
 
     const orgRefreshToken = await this.createOrgRefreshToken();
-    const refreshToken = orgRefreshToken.refreshToken;
 
     const registryContract = await this.requireWorkgroupContract('organization-registry');
 
@@ -817,41 +818,62 @@ export class ParticipantStack {
       this.baselineConfig?.baselineApiScheme,
       this.baselineConfig?.baselineApiHost
     );
-  
+    const orgAddress= await this.resolveOrganizationAddress()
+
+    // Generate config file
+    const tokenResp = await this.createWorkgroupToken();
+    const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${tokenResp.token}\n`
+    const provideConfigFileName=`/Users/lucasrodriguez/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`
+    fs.writeFileSync(provideConfigFileName, configurationFileContents);
+
+    // Write to file
     var runcmd = `prvd baseline stack run`
+    runcmd += ` --config="${provideConfigFileName}"`
+    runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
+    runcmd += ` --organization-address="${orgAddress}"`
+		runcmd += ` --messaging-endpoint="${this.org.metadata.messaging_endpoint}"`
+		runcmd += ` --registry-contract-address="${registryContract.address}"`
+		runcmd += ` --workgroup="${this.workgroup?.id}"`
+		runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
+		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
+		runcmd += ` --nchain-host="${this.baselineConfig?.nchainApiHost}"`
+		runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
+		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
+		runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
+		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
+		runcmd += ` --organization="${this.org.id}"`,
+		runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
+		runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
+		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
+		runcmd += ` --vault-seal-unseal-key="${this.baselineConfig?.vaultSealUnsealKey}"`
+		runcmd += ` --sor="ephemeral"`
+    runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}" -v`
 
-    // FIXME...
-    runcmd += ` BASELINE_ORGANIZATION_ADDRESS=${baselineConfig.baselineOrganizationAddress}`
-		runcmd += ` BASELINE_ORGANIZATION_MESSAGING_ENDPOINT=${baselineConfig.common}`
-		runcmd += ` BASELINE_ORGANIZATION_PROXY_ENDPOINT=${baselineConfig.common}`
-		runcmd += ` BASELINE_REGISTRY_CONTRACT_ADDRESS=${baselineConfig.baselineRegistryContractAddress}`
-		runcmd += ` BASELINE_WORKGROUP_ID=${baselineConfig.baselineWorkgroupID}`
-		runcmd += ` IDENT_API_HOST=${baselineConfig.identAPIHost}`
-		runcmd += ` IDENT_API_SCHEME=${baselineConfig.identAPIScheme}`
-		runcmd += ` JWT_SIGNER_PUBLIC_KEY=${baselineConfig.jwtSignerPublicKey}`
-		runcmd += ` LOG_LEVEL=${baselineConfig.logLevel}`
-		runcmd += ` NATS_CLIENT_PREFIX=${baselineConfig.name}`
-		runcmd += ` NATS_STREAMING_URL=${baselineConfig.natsStreamingHostname}`
-		runcmd += ` NATS_TOKEN=${baselineConfig.natsAuthToken}`
-		runcmd += ` NATS_URL=${baselineConfig.fmt}`
-		runcmd += ` NCHAIN_API_HOST=${baselineConfig.nchainAPIHost}`
-		runcmd += ` NCHAIN_API_SCHEME=${baselineConfig.nchainAPIScheme}`
-		runcmd += ` NCHAIN_BASELINE_NETWORK_ID=${baselineConfig.nchainBaselineNetworkID}`
-		runcmd += ` PRIVACY_API_HOST=${baselineConfig.privacyAPIHost}`
-		runcmd += ` PRIVACY_API_SCHEME=${baselineConfig.privacyAPIScheme}`
-		runcmd += ` PROVIDE_ORGANIZATION_ID=${baselineConfig}`,
-		runcmd += ` PROVIDE_ORGANIZATION_REFRESH_TOKEN=${baselineConfig.organizationRefreshToken}`
-		runcmd += ` PROVIDE_SOR_IDENTIFIER=${baselineConfig.sorID}`
-		runcmd += ` PROVIDE_SOR_ORGANIZATION_CODE=${baselineConfig.sorOrganizationCode}`
-		runcmd += ` PROVIDE_SOR_URL=${baselineConfig.sorURL}`
-		runcmd += ` PRIVACY_API_SCHEME=${baselineConfig.privacyAPIScheme}`
-		runcmd += ` REDIS_HOSTS=${baselineConfig.redisHosts}`
-		runcmd += ` VAULT_API_HOST=${baselineConfig.vaultAPIHost}`
-		runcmd += ` VAULT_API_SCHEME=${baselineConfig.vaultAPIScheme}`
-		runcmd += ` VAULT_REFRESH_TOKEN=${baselineConfig.vaultRefreshToken}`
-		runcmd += ` VAULT_SEAL_UNSEAL_KEY=${baselineConfig.vaultSealUnsealKey}`
+    
+    // //REDIS ?
+		// runcmd += ` --redis-hostname=${this.baselineConfig?.redisHosts}`
 
-    exec(runcmd);
+    // // ?
+		// runcmd += ` --vault-refresh-token=${this.baselineConfig?.vaultRefreshToken}`
+
+    // //nats is undefined
+		// runcmd += ` --nats-hostname=${this.baselineConfig?.natsHostname}`
+		// runcmd += ` --nats-streaming-hostname=${this.baselineConfig?.natsStreamingHostname}`
+
+
+		// runcmd += ` --jwt-signer-public-key=${this.baselineConfig?.jwtSignerPublicKey}`
+    console.log(runcmd)
+    const childProcess = exec(runcmd)
+    childProcess.stdout!.on('data', function (data) {
+      console.log(data.toString());
+    });
+    childProcess.stderr!.on('data', function (data) {
+      console.log(data.toString());
+
+    });
+    childProcess.on('exit', function (code) {
+      console.log(code!.toString());
+    });
   }
 
   async startProtocolSubscriptions(): Promise<any> {

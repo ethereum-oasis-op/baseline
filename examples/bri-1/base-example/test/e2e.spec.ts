@@ -31,9 +31,9 @@ const networkId = process.env['NCHAIN_NETWORK_ID'] || ropstenNetworkId;
 const setupUser = async (identHost, firstname, lastname, email, password) => {
   const user = (await createUser(identHost, firstname, lastname, email, password));
   const auth = await authenticateUser(identHost, email, password);
-  const bearerToken = auth.token.token;
-  assert(bearerToken, `failed to authorize bearer token for user ${email}`);
-  return [user, bearerToken];
+  const token = JSON.parse(JSON.stringify(auth.token));
+  assert(token.access_token, `failed to authorize bearer token for user ${email}`);
+  return [user, token.access_token, token.refresh_token];
 };
 
 describe('Baseline', () => {
@@ -79,9 +79,10 @@ describe('Baseline', () => {
     const natsPublicKey = '-----BEGIN PUBLIC KEY-----\nMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAullT/WoZnxecxKwQFlwE\n9lpQrekSD+txCgtb9T3JvvX/YkZTYkerf0rssQtrwkBlDQtm2cB5mHlRt4lRDKQy\nEA2qNJGM1Yu379abVObQ9ZXI2q7jTBZzL/Yl9AgUKlDIAXYFVfJ8XWVTi0l32Vsx\ntJSd97hiRXO+RqQu5UEr3jJ5tL73iNLp5BitRBwa4KbDCbicWKfSH5hK5DM75EyM\nR/SzR3oCLPFNLs+fyc7zH98S1atglbelkZsMk/mSIKJJl1fZFVCUxA+8CaPiKbpD\nQLpzydqyrk/y275aSU/tFHidoewvtWorNyFWRnefoWOsJFlfq1crgMu2YHTMBVtU\nSJ+4MS5D9fuk0queOqsVUgT7BVRSFHgDH7IpBZ8s9WRrpE6XOE+feTUyyWMjkVgn\ngLm5RSbHpB8Wt/Wssy3VMPV3T5uojPvX+ITmf1utz0y41gU+iZ/YFKeNN8WysLxX\nAP3Bbgo+zNLfpcrH1Y27WGBWPtHtzqiafhdfX6LQ3/zXXlNuruagjUohXaMltH+S\nK8zK4j7n+BYl+7y1dzOQw4CadsDi5whgNcg2QUxuTlW+TQ5VBvdUl9wpTSygD88H\nxH2b0OBcVjYsgRnQ9OZpQ+kIPaFhaWChnfEArCmhrOEgOnhfkr6YGDHFenfT3/RA\nPUl1cxrvY7BHh4obNa6Bf8ECAwEAAQ==\n-----END PUBLIC KEY-----';
 
     aliceApp = await baselineAppFactory(
+      aliceUserToken[1],
+      aliceUserToken[2],
       aliceCorpName,
       aliceDomain,
-      bearerTokens[alice['id']],
       false,
       'localhost:8081',
       'nats://localhost:4222',
@@ -101,9 +102,10 @@ describe('Baseline', () => {
     );
 
     bobApp = await baselineAppFactory(
+      bobUserToken[1],
+      bobUserToken[2],
       bobCorpName,
       bobDomain,
-      bearerTokens[bob['id']],
       true,
       'localhost:8085',
       'nats://localhost:4224',
