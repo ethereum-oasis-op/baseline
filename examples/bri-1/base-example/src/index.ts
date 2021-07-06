@@ -12,7 +12,6 @@ import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
 import { exec } from 'child_process';
 import fs from 'fs';
-import * as process from 'process'
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
@@ -798,6 +797,7 @@ export class ParticipantStack {
       this.babyJubJub = await this.createVaultKey(vault.id!, 'babyJubJub');
       await this.createVaultKey(vault.id!, 'secp256k1');
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
+      await this.createVaultKey(vault.id!, 'RSA-4096');
       await this.registerWorkgroupOrganization();
       await this.deployBaselineStack();
     }
@@ -823,15 +823,18 @@ export class ParticipantStack {
     // Generate config file
     const tokenResp = await this.createWorkgroupToken();
     const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${tokenResp.token}\n`
-    const provideConfigFileName=`/Users/lucasrodriguez/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`
+    const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
 
     // Write to file
-    var runcmd = `prvd baseline stack run`
+    var runcmd = `IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme}`
+    runcmd += ` prvd baseline stack run -v`
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --organization-address="${orgAddress}"`
-		runcmd += ` --messaging-endpoint="${this.org.metadata.messaging_endpoint}"`
+    runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
+		runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
+    runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
 		runcmd += ` --registry-contract-address="${registryContract.address}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
 		runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
@@ -847,21 +850,20 @@ export class ParticipantStack {
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --vault-seal-unseal-key="${this.baselineConfig?.vaultSealUnsealKey}"`
 		runcmd += ` --sor="ephemeral"`
-    runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}" -v`
+    runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
+		runcmd += ` --vault-refresh-token=${orgRefreshToken.refreshToken}`
+
+    // runcmd += ` --jwt-signer-public-key=${this.baselineConfig?.jwtSignerPublicKey}`
 
     
     // //REDIS ?
 		// runcmd += ` --redis-hostname=${this.baselineConfig?.redisHosts}`
-
-    // // ?
-		// runcmd += ` --vault-refresh-token=${this.baselineConfig?.vaultRefreshToken}`
 
     // //nats is undefined
 		// runcmd += ` --nats-hostname=${this.baselineConfig?.natsHostname}`
 		// runcmd += ` --nats-streaming-hostname=${this.baselineConfig?.natsStreamingHostname}`
 
 
-		// runcmd += ` --jwt-signer-public-key=${this.baselineConfig?.jwtSignerPublicKey}`
     console.log(runcmd)
     const childProcess = exec(runcmd)
     childProcess.stdout!.on('data', function (data) {

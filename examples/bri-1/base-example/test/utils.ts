@@ -34,7 +34,8 @@ export const baselineAppFactory = async (
   vaultHost,
   privacyHost,
   baselineHost,
-  rcpEndpoint,
+  baselineMessagingPort,
+  rpcEndpoint,
   rpcScheme,
   workgroup,
   workgroupName,
@@ -53,6 +54,7 @@ export const baselineAppFactory = async (
     {
       baselineApiScheme: 'http',
       baselineApiHost: baselineHost,
+      baselineMessagingPort: baselineMessagingPort,
       domain: domain,
       identApiScheme: 'http',
       identApiHost: identHost,
@@ -63,7 +65,7 @@ export const baselineAppFactory = async (
       privacyApiHost: privacyHost,
       networkId: networkId, // FIXME-- boostrap network genesis if no public testnet faucet is configured...
       orgName: orgName,
-      rpcEndpoint: rcpEndpoint,
+      rpcEndpoint: rpcEndpoint,
       rpcScheme: rpcScheme,
       token: userAccessToken, // HACK
       userAccessToken: userAccessToken,
