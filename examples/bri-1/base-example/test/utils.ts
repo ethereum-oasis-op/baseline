@@ -14,14 +14,16 @@ export const authenticateUser = async (identHost, email, password) => {
   const auth = await Ident.authenticate({
     email: email,
     password: password,
+    scope: 'offline_access',
   }, 'http', identHost);
   return auth;
 };
 
 export const baselineAppFactory = async (
+  userAccessToken,
+  userRefreshToken,
   orgName,
   domain,
-  bearerToken,
   initiator,
   identHost,
   natsHost,
@@ -63,7 +65,9 @@ export const baselineAppFactory = async (
       orgName: orgName,
       rpcEndpoint: rcpEndpoint,
       rpcScheme: rpcScheme,
-      token: bearerToken,
+      token: userAccessToken, // HACK
+      userAccessToken: userAccessToken,
+      userRefreshToken: userRefreshToken,
       vaultApiScheme: 'http',
       vaultApiHost: vaultHost,
       vaultSealUnsealKey: vaultSealUnsealKey,
