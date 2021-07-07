@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 import hash from 'object-hash';
-import { v4 } from 'uuid';
+import axios from 'axios';
+import * as uuid from 'uuid';
 import { chainName } from '../blockchain';
 import { commits } from '../db/models/Commit';
 import { merkleTrees } from '../db/models/MerkleTree';
@@ -9,6 +10,8 @@ import { contractBaseline } from '../db/models/Contract';
 import { logger } from '../logger';
 import { concatenateThenHash } from '../merkle-tree/hash';
 import { verifyAndPush } from './rpc-methods';
+import { signHash } from '../utils';
+import { connectNATS } from '../nats';
 
 dotenv.config();
 
@@ -54,36 +57,116 @@ export const getCommit = async (req: any, res: any) => {
 };
 
 export const createCommit = async (req: any, res: any) => {
-  const newId = v4();
-  const { merkleId, workflowId, rawData, workflowStep } = req.body;
+  logger.info(`Received request to create new commit`);
+  const newId = uuid.v4();
+  let status = 'success-create';
+  const { workflowId, rawData, workflowStep, eddsaKey, participants } = req.body;
+  if (!Array.isArray(participants)) {
+    res.status(400).send({ message: 'Error: participants must be provided as an array' });
+    return;
+  }
+
+  // Check if provided workflowId exists. If it does, get its zkCircuitId
+  let response;
+  try {
+    logger.info(`Querying workflow-mgr for workflowId ${workflowId}.`);
+    response = await axios.get(`${process.env.WORKFLOW_MGR_URL}/workflows/${workflowId}`);
+  } catch (err) {
+    logger.error(`Axios error when calling workflow-mgr: ${err.message}`);
+    res.status(500).send({ message: `Error when calling workflow-mgr: ${err.message}` });
+    return;
+  }
+
+  const { zkCircuitId, shieldAddress } = response.data;
+
   // generate salt
   const salt = crypto.randomBytes(32).toString('hex');
   // sort json object alphabetically then hash
   const rawDataHash = hash(rawData, 'sha256');
-  // value = H(rawDataHash + salt)
-  const hashValue = concatenateThenHash(rawDataHash, salt);
-  // run zkp verification?
+  // const prevCommit = await getLatestCommit(workflowId);
+  // value = H(salt + rawDataHash)
+  const hashValue = concatenateThenHash(salt, rawDataHash);
+  const { result: signature, error } = await signHash(eddsaKey, hashValue);
+  if (error) {
+    res.status(400).send({ message: error.message });
+    return;
+  }
+  participants.push({
+    self: true,
+    signingKey: eddsaKey,
+    signingKeyType: 'eddsa',
+    signature
+  });
+
   try {
     const newCommit = await commits.findOneAndUpdate(
       { _id: newId },
       {
         _id: newId,
-        merkleId,
+        merkleId: shieldAddress,
         workflowId,
+        zkCircuitId,
         rawData,
         salt,
         hashValue,
+        participants,
         workflowStep: workflowStep || 1,
-        status: 'created'
+        status
       },
       { upsert: true, new: true }
     );
     logger.info(`New commit (id: ${newId}) created.`);
-    res.send(newCommit || {});
+    res.status(201).send(newCommit || {});
   } catch (err) {
     logger.error(`Could not create new commit: ${err}`);
-    res.send(err);
+    res.status(500).send(err);
   }
+};
+
+export const signCommit = async (req: any, res: any) => {
+  res.status(404).send('Not implemented');
+};
+
+export const generateProof = async (req: any, res: any) => {
+  const { commitId } = req.params;
+  if (!uuid.validate(commitId)) {
+    logger.error(`Commit Id (${commitId}) is not a valid uuid.`);
+    res.status(400).send({ message: `Error: Commit Id (${commitId}) is not a valid uuid.` });
+    return;
+  }
+
+  logger.info(`Received request to generate proof for commitId ${commitId}`);
+  const commit = await commits.findOne({ _id: commitId });
+
+  let witness = [
+    {
+      inputType: 'hash',
+      value: commit.hashValue
+    }
+  ];
+
+  // Add each digital signature to the witness
+  for (let i = 0; i < commit.participants.length; i++) {
+    if (!commit.participants[i].signature) {
+      res.status(400).send({ message: 'Error: commit needs more signatures before generating a proof' });
+      return;
+    }
+    witness.push({
+      inputType: 'signature',
+      value: commit.participants[i].signature
+    });
+  }
+
+  // Create job for zkp-mgr to generate a new zk proof
+  const nc = await connectNATS();
+  nc.publish('generate-zk-proof', {
+    commitId,
+    witness,
+    hashValue: commit.hashValue,
+    zkCircuitId: commit.zkCircuitId
+  });
+
+  res.status(200).send(`Created NATS job to generate proof for commitId ${commitId}`);
 };
 
 export const sendCommitToPartners = async (req: any, res: any) => {
@@ -103,31 +186,38 @@ export const sendCommitToPartners = async (req: any, res: any) => {
 
 export const sendCommitOnChain = async (req: any, res: any) => {
   const commit = await commits.findOne({ _id: req.params.commitId });
-  if (commit.status === 'mainnet') {
-    res.status(400).send({ message: 'Error: commit already on mainnet' });
+  if (commit.status === 'success-send-on-chain' || commit.status === 'success-arrive-on-chain') {
+    res.status(400).send({ message: 'Error: commit already successfully sent on-chain' });
     return;
   }
   const senderAddress = req.body.senderAddress || process.env.WALLET_PUBLIC_KEY;
-  const proof = req.body.proof || commit.proof;
-  const publicInputs = req.body.publicInputs || commit.publicInputs;
 
-  // Update commit to ensure it has proof, publicInputs
   await commits.findOneAndUpdate(
     { _id: req.params.commitId },
-    {
-      status: 'sent-to-chain',
-      proof,
-      publicInputs
-    },
+    { status: 'success-send-on-chain' },
     { upsert: true }
   );
 
   // send on-chain via baseline_verifyAndPush
   // event listener should change status to "on-chain"
-  const result = await verifyAndPush(senderAddress, commit.merkleId, proof, publicInputs, commit.value);
+  const result = await verifyAndPush(
+    senderAddress,
+    commit.merkleId,
+    commit.proofSolidity.a,
+    [commit.proofSolidity.b0, commit.proofSolidity.b1],
+    commit.proofSolidity.c,
+    commit.publicInputs,
+    commit.hashValue
+  );
+
   logger.info(`[baseline_verifyAndPush] result: %o`, result);
   if (result.error) {
     logger.error(`Could not push new commit on-chain: %o`, result.error);
+    await commits.findOneAndUpdate(
+      { _id: req.params.commitId },
+      { status: 'fail-send-to-chain' },
+      { upsert: true }
+    );
     res.status(500).send(result.error);
     return;
   }
@@ -158,7 +248,7 @@ export const getMerkleTree = async (req: any, res: any) => {
 
 export const createMerkleTree = async (req: any, res: any) => {
   // Create new MerkleTree instance in db
-  const newId = v4();
+  const newId = uuid.v4();
   await merkleTrees.findOneAndUpdate(
     {
       _id: `${newId}_0`,

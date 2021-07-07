@@ -13,7 +13,9 @@ import {
   getCommits,
   getCommit,
   createCommit,
+  signCommit,
   sendCommitToPartners,
+  generateProof,
   sendCommitOnChain,
   getMerkleTrees,
   getMerkleTree,
@@ -47,8 +49,10 @@ const main = async () => {
   app.get('/commits', getCommits);
   app.get('/commits/:commitId', getCommit);
   app.post('/commits', createCommit);
+  app.post('/commits/:commitId/sign', signCommit);
   app.post('/commits/:commitId/send-partners', sendCommitToPartners);
-  app.post('/commits/:commitId/send-mainnet', sendCommitOnChain);
+  app.post('/commits/:commitId/generate-proof', generateProof);
+  app.post('/commits/:commitId/send-on-chain', sendCommitOnChain);
   app.get('/merkle-trees', getMerkleTrees);
   app.get('/merkle-trees/:treeId', getMerkleTree);
   app.post('/merkle-trees', createMerkleTree);

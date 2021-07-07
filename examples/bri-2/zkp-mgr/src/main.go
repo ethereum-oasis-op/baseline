@@ -88,7 +88,6 @@ func main() {
 	router.GET("/status", getStatus)
 	router.POST("/zkcircuits", createCircuit)
 	router.GET("/zkcircuits", getAllCircuits)
-	//router.GET("/zkcircuits/types", getCircuitTypes)
 	router.GET("/zkcircuits/:circuitID", getSingleCircuit)
 	router.GET("/zkcircuits/:circuitID/verifier", getSolidityVerifier)
 	router.POST("/zkcircuits/:circuitID/setup", setup)
@@ -292,9 +291,7 @@ func getSingleCircuit(c *gin.Context) {
 	filter := bson.M{"_id": circuitID}
 	err := collection.FindOne(ctx, filter).Decode(&circuit)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Could not query database",
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{ "error": "Could not query database" })
 		return
 	}
 
@@ -310,9 +307,7 @@ func getAllCircuits(c *gin.Context) {
 
 	cursor, err := collection.Find(ctx, bson.M{})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Could not query database",
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{ "error": "Could not query database" })
 		return
 	}
 	defer cursor.Close(ctx)
@@ -320,9 +315,7 @@ func getAllCircuits(c *gin.Context) {
 	for cursor.Next(ctx) {
 		var circuit bson.M
 		if err = cursor.Decode(&circuit); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(http.StatusInternalServerError, gin.H{ "error": err.Error() })
 			return
 		}
 		circuits = append(circuits, circuit)
@@ -336,9 +329,7 @@ func createCircuit(c *gin.Context) {
 
 	err := c.ShouldBind(&requestBody)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Request body missing fields:" + err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, gin.H{ "error": "Request body missing fields:" + err.Error() })
 		return
 	}
 	circuitType := c.Query("type")
@@ -361,17 +352,13 @@ func createCircuit(c *gin.Context) {
 		// Create temporary source file
 		file, err := c.FormFile("sourceCode")
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			c.JSON(http.StatusBadRequest, gin.H{ "error": err.Error() })
 			return
 		}
 
 		err = c.SaveUploadedFile(file, "src/circuits/"+circuitId+"/uncompiled.go")
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"error": "Could not save uploaded file:" + err.Error(),
-			})
+			c.JSON(http.StatusInternalServerError, gin.H{ "error": "Could not save uploaded file:" + err.Error() })
 			return
 		}
 	}
@@ -383,15 +370,12 @@ func createCircuit(c *gin.Context) {
 
 	result, err := collection.InsertOne(ctx, zkCircuitDoc)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Mongo InsertOne:" + err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{ "error": "Mongo InsertOne:" + err.Error() })
 		return
 	}
 
 	// Create new job to compile circuit, which creates circuit.r1cs
 	compileQueue <- circuitId
-
 	c.JSON(http.StatusCreated, result)
 }
 
@@ -407,18 +391,13 @@ func setup(c *gin.Context) {
 	update := bson.M{"$set": bson.M{"status": "setup_started"}}
 	_, err := collection.UpdateOne(ctx, filter, update)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[Mongo UpdateOne] " + err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{ "error": "[Mongo UpdateOne] " + err.Error() })
 		return
 	}
 
-	// Create new job to generate proving/verifying key, then update db
+	// Create new job to generate proving/verifying key
 	setupQueue <- circuitID
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Setup job queued for circuit ID " + circuitID,
-	})
+	c.JSON(http.StatusOK, gin.H{ "message": "Setup job queued for circuit ID " + circuitID })
 }
 
 // Currently only supports groth16
@@ -432,82 +411,27 @@ func prove(ginContext *gin.Context) {
 	var requestBody generateProofReq
 	err := ginContext.BindJSON(&requestBody)
 	if err != nil {
-		ginContext.JSON(http.StatusBadRequest, gin.H{
-			"error": "Request body missing fields",
-		})
+		ginContext.JSON(http.StatusBadRequest, gin.H{ "error": "Request body missing fields" })
 	}
-
 	circuitID := ginContext.Param("circuitID")
 
-	// Create reader for r1cs file
-	path := "src/circuits/" + circuitID + "/compiled.r1cs"
-	var compiledReader io.Reader
-	compiledReader, err = os.Open(path)
+	compiledCircuit, provingKey, err := GetCompiledCircuit(circuitID)
 	if err != nil {
-		ginContext.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[Read r1cs file] " + err.Error(),
-		})
+		ginContext.JSON(http.StatusInternalServerError, gin.H{ "error": err.Error() })
 		return
 	}
-	log.Println("Read from circuit binary file")
 
-	// Decode r1cs binary, store in compiledCircuit
-	compiledCircuit := groth16.NewCS(ecc.BN254)
-	_, err = compiledCircuit.ReadFrom(compiledReader)
-	if err != nil {
-		ginContext.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[Decode r1cs] " + err.Error(),
-		})
-		return
-	}
-	log.Println("Converted circuit binary")
-
-	// Get circuit from db
-	var circuit ZKCircuit
-	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	filter := bson.M{"_id": circuitID}
-	err = collection.FindOne(ctx, filter).Decode(&circuit)
-	if err != nil {
-		ginContext.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[Mongo FindOne] " + err.Error(),
-		})
-		return
-	}
-	log.Println("Retrieved circuit metadata from db")
-
-	// Read proving key from disk and convert to groth16.ProvingKey
-	path = "src/circuits/" + circuitID + "/proving.key"
-	var pkReader io.Reader
-	pkReader, err = os.Open(path)
-	provingKey := groth16.NewProvingKey(ecc.BN254)
-	_, err = provingKey.ReadFrom(pkReader)
-	if err != nil {
-		ginContext.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[Read proving.key file] " + err.Error(),
-		})
-		return
-	}
-	log.Println("Successfully read proving.key from file")
-
-	// Create witness io.Reader, then generate proof from witness
 	encodedWitnessHex, err := EncodeWitness(requestBody.Witness)
 	if err != nil {
 		log.Println("ERROR:", err)
-		ginContext.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[encoding witness] " + err.Error(),
-		})
+		ginContext.JSON(http.StatusInternalServerError, gin.H{ "error": "[encoding witness] " + err.Error() })
 		return
 	}
 
 	proofBytes, proofSolidity, err := GenerateProof(compiledCircuit, provingKey, encodedWitnessHex)
 	if err != nil {
 		log.Println("ERROR:", err)
-		ginContext.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[generating proof] " + err.Error(),
-		})
+		ginContext.JSON(http.StatusInternalServerError, gin.H{ "error": "[generating proof] " + err.Error() })
 		return
 	}
 
@@ -532,9 +456,7 @@ func verify(c *gin.Context) {
 	var requestBody verifyProofReq
 	err := c.BindJSON(&requestBody)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "[Parsing request body] " + err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, gin.H{ "error": "[Parsing request body] " + err.Error() })
 		return
 	}
 
@@ -549,9 +471,7 @@ func verify(c *gin.Context) {
 	filter := bson.M{"_id": circuitID}
 	err = collection.FindOne(ctx, filter).Decode(&circuit)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"error": "[Mongo FindOne] " + err.Error(),
-		})
+		c.JSON(http.StatusNotFound, gin.H{ "error": "[Mongo FindOne] " + err.Error() })
 		return
 	}
 
@@ -562,9 +482,7 @@ func verify(c *gin.Context) {
 	verifyingKey := groth16.NewVerifyingKey(ecc.BN254)
 	_, err = verifyingKey.ReadFrom(vkReader)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "[Read verifying.key file] " + err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, gin.H{ "error": "[Read verifying.key file] " + err.Error() })
 		return
 	}
 	log.Println("Successfully read verifying.key from file")
@@ -579,15 +497,11 @@ func verify(c *gin.Context) {
 	var witnessBuffer bytes.Buffer
 	witnessBuffer.Write([]byte(encodedHex))
 	if err = groth16.ReadAndVerify(proof, verifyingKey, &witnessBuffer); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "[groth16.Verify] " + err.Error(),
-		})
+		c.JSON(http.StatusBadRequest, gin.H{ "error": "[groth16.Verify] " + err.Error() })
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"result": "verified",
-	})
+	
+	c.JSON(http.StatusOK, gin.H{ "result": "verified" })
 }
 
 func DownloadSolidity(circuitId string) (string, []byte, error) {
@@ -597,6 +511,5 @@ func DownloadSolidity(circuitId string) (string, []byte, error) {
 		return "", nil, err
 	}
 	mimeType := http.DetectContentType(contents[:512])
-
 	return mimeType, contents, nil
 }
