@@ -10,7 +10,7 @@ import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
-import { exec } from 'child_process';
+import { spawn } from 'child_process';
 import fs from 'fs';
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
@@ -828,12 +828,13 @@ export class ParticipantStack {
 
     // Write to file
     var runcmd = `IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme}`
-    runcmd += ` prvd baseline stack run -v`
+    runcmd += ` prvd baseline stack run`
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --organization-address="${orgAddress}"`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
 		runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
+    runcmd += ` --nats-streaming-port=${this.baselineConfig?.baselineMessagingStreamingPort}`
     runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
 		runcmd += ` --registry-contract-address="${registryContract.address}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
@@ -844,6 +845,8 @@ export class ParticipantStack {
 		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
 		runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
 		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
+		runcmd += ` --redis-hostname=${this.baselineConfig?.redisHost}`
+    runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
 		runcmd += ` --organization="${this.org.id}"`,
 		runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
@@ -851,31 +854,27 @@ export class ParticipantStack {
 		runcmd += ` --vault-seal-unseal-key="${this.baselineConfig?.vaultSealUnsealKey}"`
 		runcmd += ` --sor="ephemeral"`
     runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
-		runcmd += ` --vault-refresh-token=${orgRefreshToken.refreshToken}`
+		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 
     // runcmd += ` --jwt-signer-public-key=${this.baselineConfig?.jwtSignerPublicKey}`
 
     
     // //REDIS ?
 		// runcmd += ` --redis-hostname=${this.baselineConfig?.redisHosts}`
+		// runcmd += ` --redis-hostname=${this.baselineConfig?.redisHosts}`
 
     // //nats is undefined
 		// runcmd += ` --nats-hostname=${this.baselineConfig?.natsHostname}`
 		// runcmd += ` --nats-streaming-hostname=${this.baselineConfig?.natsStreamingHostname}`
 
+    var child = spawn(
+      runcmd
+      , []
+      , { detached: true, stdio: 'inherit', shell: true}
+      );
 
     console.log(runcmd)
-    const childProcess = exec(runcmd)
-    childProcess.stdout!.on('data', function (data) {
-      console.log(data.toString());
-    });
-    childProcess.stderr!.on('data', function (data) {
-      console.log(data.toString());
-
-    });
-    childProcess.on('exit', function (code) {
-      console.log(code!.toString());
-    });
+    child.unref()
   }
 
   async startProtocolSubscriptions(): Promise<any> {
