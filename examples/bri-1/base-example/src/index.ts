@@ -810,7 +810,6 @@ export class ParticipantStack {
     const tkn = orgToken.accessToken || orgToken.token;
 
     const orgRefreshToken = await this.createOrgRefreshToken();
-
     const registryContract = await this.requireWorkgroupContract('organization-registry');
 
     this.baselineProxy = baselineClientFactory(
@@ -822,58 +821,44 @@ export class ParticipantStack {
 
     // Generate config file
     const tokenResp = await this.createWorkgroupToken();
-    const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${tokenResp.token}\n`
-    const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`
+    const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${tokenResp.token}\n`;
+    const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
 
-    // Write to file
     var runcmd = `IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme}`
     runcmd += ` prvd baseline stack run`
-    runcmd += ` --config="${provideConfigFileName}"`
-    runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
-    runcmd += ` --organization-address="${orgAddress}"`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
-		runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
-    runcmd += ` --nats-streaming-port=${this.baselineConfig?.baselineMessagingStreamingPort}`
-    runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
-		runcmd += ` --registry-contract-address="${registryContract.address}"`
-		runcmd += ` --workgroup="${this.workgroup?.id}"`
-		runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
+    runcmd += ` --config="${provideConfigFileName}"`
+    runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
 		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
-		runcmd += ` --nchain-host="${this.baselineConfig?.nchainApiHost}"`
+    runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
+    runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
+    runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
+    runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
+    runcmd += ` --nats-streaming-port=${this.baselineConfig?.baselineMessagingStreamingPort}`
+    runcmd += ` --nats-ws-port=${this.baselineConfig?.baselineMessagingWebsocketPort}`
+    runcmd += ` --nchain-host="${this.baselineConfig?.nchainApiHost}"`
 		runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
 		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
-		runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
-		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
-		runcmd += ` --redis-hostname=${this.baselineConfig?.redisHost}`
-    runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
 		runcmd += ` --organization="${this.org.id}"`,
-		runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
-		runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
+    runcmd += ` --organization-address="${orgAddress}"`
+    runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
+    runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
+    runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
+		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
+    runcmd += ` --redis-hostname=${this.baselineConfig?.redisHost}`
+    runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
+		runcmd += ` --registry-contract-address="${registryContract.address}"`
+    runcmd += ` --sor="ephemeral"`
+    runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
+		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --vault-seal-unseal-key="${this.baselineConfig?.vaultSealUnsealKey}"`
-		runcmd += ` --sor="ephemeral"`
-    runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
-		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
-
-    // runcmd += ` --jwt-signer-public-key=${this.baselineConfig?.jwtSignerPublicKey}`
-
-    
-    // //REDIS ?
-		// runcmd += ` --redis-hostname=${this.baselineConfig?.redisHosts}`
-		// runcmd += ` --redis-hostname=${this.baselineConfig?.redisHosts}`
-
-    // //nats is undefined
-		// runcmd += ` --nats-hostname=${this.baselineConfig?.natsHostname}`
-		// runcmd += ` --nats-streaming-hostname=${this.baselineConfig?.natsStreamingHostname}`
-
-    var child = spawn(
-      runcmd
-      , []
-      , { detached: true, stdio: 'inherit', shell: true}
-      );
+		runcmd += ` --workgroup="${this.workgroup?.id}"`
 
     console.log(runcmd)
+
+    var child = spawn(runcmd, [], { detached: true, stdio: 'inherit', shell: true });
     child.unref()
   }
 
