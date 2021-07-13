@@ -1,32 +1,34 @@
 {
-	"name": "bri-2",
-	"version": "0.1.0",
-	"description": "Baseline Reference Implementation - 2",
-	"license": "CC0 1.0 Universal",
-	"main": "./dist/cjs/index.js",
-	"types": "./dist/cjs/index.d.ts",
-	"unpkg": "./dist/umd/index.min.js",
-	"files": [
-		"dist"
-	],
-	"scripts": {
-		"build:dashboard": "cd dashboard && npm run build",
-		"build": "npm-run-all contracts:clean contracts:compile ",
-		"dev:commit-mgr": "nodemon --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all start",
-		"dev:dashboard": "cd dashboard && npm run dev",
-		"start:dashboard": "cd dashboard && npm run build && npm run start",
-		"contracts:clean": "rm -rf ./contracts/artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",
-		"contracts:compile": "cd node_modules/@baseline-protocol/contracts && npm install && make && cd - && mkdir -p ./contracts/artifacts && cp -R ./node_modules/@baseline-protocol/contracts/artifacts ./contracts"
-	},
-	"dependencies": {
-		"@baseline-protocol/api": "0.1.0",
-		"@baseline-protocol/contracts": "^0.4.0",
-		"@baseline-protocol/messaging": "0.1.0",
-		"@baseline-protocol/privacy": "0.1.0",
-		"@baseline-protocol/types": "0.1.0"
-	},
-	"devDependencies": {
-		"nodemon": "^2.0.7",
-		"npm-run-all": "^4.1.5"
-	}
+  "name": "bri-2",
+  "version": "0.1.0",
+  "description": "Baseline Reference Implementation - 2",
+  "license": "CC0 1.0 Universal",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "unpkg": "./dist/umd/index.min.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build:dashboard": "cd dashboard && npm run build",
+    "build": "npm-run-all contracts:clean contracts:compile ",
+    "dev:commit-mgr": "nodemon --watch commit-mgr/src -e ts,ejs,js --exec npm-run-all start",
+    "dev:dashboard": "cd dashboard && npm run dev",
+    "start:dashboard": "cd dashboard && npm run build && npm run start",
+    "contracts:clean": "rm -rf ./contracts/artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",
+    "contracts:compile-old": "cd node_modules/@baseline-protocol/contracts && npm install && make && cd - && mkdir -p ./contracts/artifacts && cp -R ./node_modules/@baseline-protocol/contracts/artifacts ./contracts",
+    "contracts:compile": "node_modules/.bin/truffle compile"
+  },
+  "dependencies": {
+    "@baseline-protocol/api": "0.1.0",
+    "@baseline-protocol/contracts": "^0.4.0",
+    "@baseline-protocol/messaging": "0.1.0",
+    "@baseline-protocol/privacy": "0.1.0",
+    "@baseline-protocol/types": "0.1.0",
+    "truffle": "^5.3.14"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7",
+    "npm-run-all": "^4.1.5"
+  }
 }

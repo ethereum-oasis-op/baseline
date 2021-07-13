@@ -95,13 +95,11 @@ export class EthClient implements ITxManager {
     let txHash: string;
     try {
       const shieldInterface = new ethers.utils.Interface(shieldContract.abi);
-      const txData = shieldInterface.encodeFunctionData('verifyAndPush(uint256[],uint256[],bytes32)', [
-        proofA,
-        proofB,
-        proofC,
-        publicInputs,
-        newCommitment
-      ]);
+      //const txData = shieldInterface.encodeFunctionData('verifyAndPush(uint256[],uint256[],bytes32)', [
+      const txData = shieldInterface.encodeFunctionData(
+        'verifyAndPush(uint256[2],uint256[2][2],uint256[2],uint256[1],bytes32)',
+        [proofA, proofB, proofC, publicInputs, newCommitment]
+      );
       const { error: constructError, result: signedTx } = await this.constructTx(
         toAddress,
         fromAddress,

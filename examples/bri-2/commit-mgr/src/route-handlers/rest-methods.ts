@@ -199,7 +199,7 @@ export const sendCommitOnChain = async (req: any, res: any) => {
   );
 
   // send on-chain via baseline_verifyAndPush
-  // event listener should change status to "on-chain"
+  // event listener should change status to "success-arrive-on-chain"
   const result = await verifyAndPush(
     senderAddress,
     commit.merkleId,
