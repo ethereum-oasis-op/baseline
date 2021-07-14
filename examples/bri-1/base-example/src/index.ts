@@ -12,6 +12,7 @@ import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
 import { spawn } from 'child_process';
 import fs from 'fs';
+import { receiveMessageOnPort } from 'worker_threads';
 
 // const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
@@ -23,7 +24,7 @@ class TryError extends Error {
   promiseErrors: any[] = []
 }
 
-const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100, wait: number = 2500): Promise<T> => {
+const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait: number = 500): Promise<T> => {
   const errors : any[] = [];
   for (let index = 0; index < times; index++) {
     try {
@@ -793,7 +794,9 @@ export class ParticipantStack {
     });
 
     if (this.org) {
+      console.log("before require vault")
       const vault = await this.requireVault();
+      console.log(vault)
       this.babyJubJub = await this.createVaultKey(vault.id!, 'babyJubJub');
       await this.createVaultKey(vault.id!, 'secp256k1');
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
@@ -825,7 +828,7 @@ export class ParticipantStack {
     const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
 
-    var runcmd = `IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme}`
+    var runcmd = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
     runcmd += ` prvd baseline stack run`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
     runcmd += ` --config="${provideConfigFileName}"`
@@ -853,9 +856,9 @@ export class ParticipantStack {
     runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
 		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
-		runcmd += ` --vault-seal-unseal-key="${this.baselineConfig?.vaultSealUnsealKey}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
 
+    runcmd.replace(/localhost/ig, 'host.docker.internal')
     console.log(runcmd)
 
     var child = spawn(runcmd, [], { detached: true, stdio: 'inherit', shell: true });

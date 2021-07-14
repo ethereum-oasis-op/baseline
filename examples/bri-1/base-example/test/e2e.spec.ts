@@ -26,7 +26,7 @@ const bobDomain = 'bob.baseline.local';
 const ropstenNetworkId = '66d44f30-9092-4182-a3c4-bc02736d6ae5';
 const kovanNetworkId = '8d31bf48-df6b-4a71-9d7c-3cb291111e27';
 const goerliNetworkId = '1b16996e-3595-4985-816c-043345d22f8c';
-const networkId = process.env['NCHAIN_NETWORK_ID'] || ropstenNetworkId;
+const networkId = process.env['NCHAIN_NETWORK_ID'] || kovanNetworkId;
 
 const setupUser = async (identHost, firstname, lastname, email, password) => {
   const user = (await createUser(identHost, firstname, lastname, email, password));
@@ -96,8 +96,8 @@ describe('Baseline', () => {
       '4228',
       '4320',
       '4321',
-      'nethermind-ropsten.provide.services:8888',
-      'http',
+      'kovan.poa.network:443',
+      'https',
       'localhost',
       '6390',
       null,
@@ -124,8 +124,8 @@ describe('Baseline', () => {
       '4229',
       '4322',
       '4323',
-      'nethermind-ropsten.provide.services:8888',
-      'http',
+      'kovan.poa.network:443',
+      'https',
       'localhost',
       '6391',
       null,
