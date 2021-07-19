@@ -1,11 +1,12 @@
 import { Opcode } from '@baseline-protocol/types';
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { ParticipantStack } from '../src';
 import {
   shouldBehaveLikeAWorkgroupOrganization,
   shouldBehaveLikeAnInitialWorkgroupOrganization,
   shouldBehaveLikeAnInvitedWorkgroupOrganization,
   shouldBehaveLikeAWorkgroupCounterpartyOrganization,
+  shouldCreateBaselineStack,
 } from './shared';
 
 import {
@@ -16,6 +17,7 @@ import {
   promisedTimeout,
   scrapeInvitationToken
 } from './utils';
+import { uuid } from 'uuidv4';
 
 const aliceCorpName = 'Alice Corp';
 const aliceDomain = 'alice.baseline.local';
@@ -142,7 +144,7 @@ describe('Baseline', () => {
     await bobApp.disconnect();
     await aliceApp.disconnect();
   })
-
+  
   describe('workgroup', () => {
     describe('creation', () => {
       before(async () => {
@@ -184,6 +186,7 @@ describe('Baseline', () => {
       });
 
       describe('workgroup initiator', () => {
+        describe(`baseline stack for "${bobCorpName}"`, shouldCreateBaselineStack(() => bobApp))
         describe(`initial workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAnInitialWorkgroupOrganization(() => bobApp));
         describe(`workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupOrganization(() => bobApp));
       });
@@ -207,6 +210,7 @@ describe('Baseline', () => {
             await aliceApp.acceptWorkgroupInvite(inviteToken, bobApp.getWorkgroupContracts());
           });
 
+          describe(`baseline stack for "${aliceCorpName}"`, shouldCreateBaselineStack(() => aliceApp))
           describe(`invited workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAnInvitedWorkgroupOrganization(() => aliceApp));
           describe(`workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupOrganization(() => aliceApp));
           describe(`workgroup counterparty: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization(() => aliceApp));
@@ -218,11 +222,12 @@ describe('Baseline', () => {
       });
 
       describe('workflow', () => {
-        describe('workstep', () => {
+        var workstepId
+        describe('create a work step', () => {
           before(async () => {
-            const recipient = await aliceApp.resolveOrganizationAddress();
-            await bobApp.sendProtocolMessage(recipient, Opcode.Baseline, {
-              wid: 'uuidv4()',
+            workstepId = uuid()
+            await bobApp.createBaselineBusinessObject({
+              id: workstepId,
               name: 'hello world',
               url: 'proto://deep/link/to/doc',
               rfp_id: null,
@@ -232,11 +237,39 @@ describe('Baseline', () => {
           it('should increment protocol message tx count for the sender', async () => {
             assert(bobApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
           });
-
           it('should increment protocol message rx count for the recipient', async () => {
             await promisedTimeout(50);
             assert(aliceApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
           });
+          it('should match the merkle root between sender and receiver', async() => {
+            let bobRoot = bobApp.getMerkleRoot()
+            let aliceRoot = aliceApp.getMerkleRoot()
+            expect(bobRoot).to.equal(aliceRoot);
+          })
+        });
+        describe('update a work step', () => {
+          before(async () => {
+            await aliceApp.updateBaselineBusinessObject(workstepId,{
+              id: 'uuidv4()',
+              name: 'hello world',
+              url: 'proto://deep/link/to/doc',
+              rfp_id: uuid(),
+            });
+          });
+
+          it('should increment protocol message tx count for the sender', async () => {
+            assert(aliceApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
+          });
+
+          it('should increment protocol message rx count for the recipient', async () => {
+            await promisedTimeout(50);
+            assert(bobApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
+          });
+          it('should match the merkle root between sender and receiver', async() => {
+            let bobRoot = bobApp.getMerkleRoot()
+            let aliceRoot = aliceApp.getMerkleRoot()
+            expect(bobRoot).to.equal(aliceRoot);
+          })
         });
       });
     });

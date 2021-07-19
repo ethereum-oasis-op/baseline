@@ -45,6 +45,7 @@ export class ParticipantStack {
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
   private baselineProxy?: Baseline;
   private baselineCircuit?: Circuit;
+  private baselineMerkleTree?:any;
   private baselineConfig?: any;
   private babyJubJub?: VaultKey;
   private domain?: string;
@@ -214,9 +215,18 @@ export class ParticipantStack {
     }
   }
 
-  async baselineBusinessObject(params: object): Promise<BusinessObject> {
+  async createBaselineBusinessObject(params: object): Promise<BusinessObject> {
     return (await this.baselineProxy?.createBusinessObject(params)) as BusinessObject;
   }
+
+  async updateBaselineBusinessObject(id: string, params: object): Promise<BusinessObject> {
+    return (await this.baselineProxy?.updateBusinessObject(id, params)) as BusinessObject;
+  }
+
+  async getMerkleRoot(): Promise<String> {
+    return (await this.baselineMerkleTree?.Root());
+  }
+
 
   // HACK!! workgroup/contracts should be synced via protocol
   async acceptWorkgroupInvite(inviteToken: string, contracts: any): Promise<void> {
@@ -794,9 +804,7 @@ export class ParticipantStack {
     });
 
     if (this.org) {
-      console.log("before require vault")
       const vault = await this.requireVault();
-      console.log(vault)
       this.babyJubJub = await this.createVaultKey(vault.id!, 'babyJubJub');
       await this.createVaultKey(vault.id!, 'secp256k1');
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
@@ -828,8 +836,8 @@ export class ParticipantStack {
     const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
 
-    var runcmd = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
-    runcmd += ` prvd baseline stack run`
+    const runenv = `IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
+    var runcmd = ` prvd baseline stack run`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
@@ -858,10 +866,8 @@ export class ParticipantStack {
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
 
-    runcmd.replace(/localhost/ig, 'host.docker.internal')
-    console.log(runcmd)
-
-    var child = spawn(runcmd, [], { detached: true, stdio: 'inherit', shell: true });
+    runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
+    var child = spawn(runenv+runcmd, [], { detached: true, shell: true })
     child.unref()
   }
 

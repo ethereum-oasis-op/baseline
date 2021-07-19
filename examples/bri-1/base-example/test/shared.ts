@@ -1,5 +1,6 @@
-import { assert } from 'chai';
+import { assert, expect } from 'chai';
 import { ParticipantStack } from '../src';
+import { spawnSync } from 'child_process'
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -8,7 +9,7 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
     let org;
 
     before(async () => {
-      org = getApp().getOrganization();
+      org = await getApp().getOrganization();
       assert(org, 'org should not be null');
     });
 
@@ -41,12 +42,6 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
         assert(shield, 'workgroup shield contract should not be null');
         assert(shield.address, 'should have a reference to the on-chain workgroup shield contract address');
       });
-
-      // it(' shield in an off-chain merkle tree database', async () => {
-      //   // @ts-ignore
-      //   const trackedShieldContracts = await getApp().baseline.getTracked();
-      //   assert(trackedShieldContracts.indexOf(shield.address.toLowerCase()) !== -1, 'workgroup shield contract should have been tracked');
-      // });
 
       it('should have a local reference to the on-chain workflow circuit verifier contract', async () => {
         assert(verifier, 'workflow circuit verifier contract should not be null');
@@ -204,12 +199,6 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
               assert(shield.address, 'workgroup shield contract should have been deployed');
             });
 
-            // it(' shield in an off-chain merkle tree database', async () => {
-            //   // @ts-ignore
-            //   const trackedShieldContracts = await getApp().baseline.getTracked();
-            //   assert(trackedShieldContracts.indexOf(shield.address.toLowerCase()) !== -1, 'workgroup shield contract should have been tracked');
-            // });
-
             it('should reference the deposited circuit verifier on-chain', async () => {
               assert(verifier, 'workflow circuit verifier contract should not be null');
               assert(verifier.address, 'workflow circuit verifier contract should have been deployed');
@@ -257,12 +246,30 @@ export const shouldBehaveLikeAWorkgroupCounterpartyOrganization = (getApp: () =>
   });
 };
 
+export const shouldCreateBaselineStack = (getApp: () => ParticipantStack) => () => {
+  var org
+  before(async () => {
+    org = await getApp().getOrganization();
+    await sleep(10000)
+  });
+
+  it('should have the baseline stack running ', async () => {
+    var stackStatusCmd = spawnSync(`docker container inspect -f '{{.State.Status}}' ${org.name.replace(/\s+/g, '')}-api`, [], { stdio: 'pipe', shell: true, encoding: 'utf-8'});
+    var stackStatus = stackStatusCmd.output.toString()
+    var stackStatust = stackStatus.split(",")
+    expect(stackStatust[1].toString().replace(/\,+/g, '')).to.equal(`running\n`);
+  })
+}
+
 export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => ParticipantStack) => () => {
   describe('baseline config', () => {
     let cfg;
+    var org
 
     before(async () => {
       cfg = getApp().getBaselineConfig();
+      org = await getApp().getOrganization();
+      await sleep(11000)
     });
 
     it('should have a non-null config', async () => {
