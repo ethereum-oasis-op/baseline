@@ -10,6 +10,36 @@ export const promisedTimeout = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
+const infuraProjectId = '';
+const altNetworkConfiguration = JSON.stringify({
+  "chainspec_url": "https://",
+  "chain": "kovan",
+  "client": "geth",
+  "engine_id": "ethash",
+  "is_ethereum_network": true,
+  "json_rpc_url": `https://kovan.infura.io/v3/${infuraProjectId}`,
+  "native_currency": "ETH",
+  "network_id": 42,
+  "platform": "evm",
+  "protocol_id": "pow",
+  "websocket_url": `wss://kovan.infura.io/ws/v3/${infuraProjectId}`,
+  "security": {
+      "egress": "*",
+      "ingress": {
+          "0.0.0.0/0": {
+              "tcp": [
+                  8050,
+                  8051,
+                  30300
+              ],
+              "udp": [
+                  30300
+              ]
+          }
+      }
+  }
+})
+
 export const authenticateUser = async (identHost, email, password) => {
   const auth = await Ident.authenticate({
     email: email,
@@ -101,6 +131,7 @@ export const configureTestnet = async (dbport, networkId) => {
   try {
     await nchainPgclient.connect();
     await nchainPgclient.query(`UPDATE networks SET enabled = true WHERE id = '${networkId}'`);
+    await nchainPgclient.query(`UPDATE networks SET config = '${altNetworkConfiguration}' WHERE id = '${networkId}'`);
   } finally {
     await nchainPgclient.end();
     return true;
