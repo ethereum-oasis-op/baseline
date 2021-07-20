@@ -3,7 +3,7 @@ import { IMessagingService, messagingProviderNats, messagingServiceFactory } fro
 import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceProvide, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
 import { ICircuitProver, ICircuitRegistry, ICircuitVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
 import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
-import { Application as Workgroup, BusinessObject, Circuit, Invite, Vault as ProvideVault, Organization, Token, Key as VaultKey } from '@provide/types';
+import { Application as Workgroup, Circuit, Invite, Vault as ProvideVault, Object as BaselineObject, Organization, Token, Key as VaultKey } from '@provide/types';
 import { Baseline, Capabilities, Ident, NChain, Vault, baselineClientFactory, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
@@ -215,12 +215,12 @@ export class ParticipantStack {
     }
   }
 
-  async createBaselineBusinessObject(params: object): Promise<BusinessObject> {
-    return (await this.baselineProxy?.createBusinessObject(params)) as BusinessObject;
+  async createBaselineObject(params: object): Promise<BaselineObject> {
+    return (await this.baselineProxy?.createObject(params)) as BaselineObject;
   }
 
-  async updateBaselineBusinessObject(id: string, params: object): Promise<BusinessObject> {
-    return (await this.baselineProxy?.updateBusinessObject(id, params)) as BusinessObject;
+  async updateBaselineObject(id: string, params: object): Promise<BaselineObject> {
+    return (await this.baselineProxy?.updateObject(id, params)) as BaselineObject;
   }
 
   async getMerkleRoot(): Promise<String> {
@@ -444,7 +444,7 @@ export class ParticipantStack {
       this.workgroupToken,
       this.baselineConfig?.identApiScheme,
       this.baselineConfig?.identApiHost,
-    ).fetchApplicationOrganizations(this.workgroup.id, {}));
+    ).fetchApplicationOrganizations(this.workgroup.id, {})).results;
   }
 
   async createOrgToken(): Promise<Token> {
@@ -533,6 +533,26 @@ export class ParticipantStack {
     return Promise.reject(`failed to fetch organization ${address}`);
   }
 
+  async requireBaselineStack(token?: string): Promise<boolean> {
+    let tkn = token;
+    if (!tkn) {
+      const orgToken = await this.createOrgToken();
+      tkn = orgToken.accessToken || orgToken.token;
+    }
+
+    return await tryTimes(async () => {
+      const status = await Baseline.clientFactory(
+        tkn!,
+        this.baselineConfig.baselineApiScheme!,
+        this.baselineConfig.baselineApiHost!,
+      ).status();
+      if (status === 204) {
+        return true;
+      }
+      throw new Error();
+    });
+  }
+
   async requireCircuit(circuitId: string): Promise<Circuit> {
     let circuit: Circuit | undefined = undefined;
     const orgToken = await this.createOrgToken();
@@ -563,7 +583,7 @@ export class ParticipantStack {
       token!,
       this.baselineConfig.vaultApiScheme!,
       this.baselineConfig.vaultApiHost!,
-    ).fetchVaults({}));
+    ).fetchVaults({})).results;
   }
 
   async createVaultKey(vaultId: string, spec: string, type?: string, usage?: string): Promise<VaultKey> {
@@ -596,7 +616,7 @@ export class ParticipantStack {
         this.baselineConfig.vaultApiScheme!,
         this.baselineConfig.vaultApiHost!,
       ).fetchVaults({});
-      if (vaults && vaults.length > 0) {
+      if (vaults && vaults.results.length > 0) {
         return vaults[0];
       }
       throw new Error();
@@ -786,7 +806,7 @@ export class ParticipantStack {
       type: type,
     });
 
-    if (contracts && contracts.length === 1 && contracts[0]['address'] !== '0x') {
+    if (contracts && contracts.results.length === 1 && contracts.results[0]['address'] !== '0x') {
       const contract = await nchain.fetchContractDetails(contracts[0].id!);
       this.contracts[type] = contract;
       return Promise.resolve(contract);
@@ -811,6 +831,7 @@ export class ParticipantStack {
       await this.createVaultKey(vault.id!, 'RSA-4096');
       await this.registerWorkgroupOrganization();
       await this.deployBaselineStack();
+      await this.requireBaselineStack();
     }
 
     return this.org;
@@ -836,7 +857,7 @@ export class ParticipantStack {
     const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
 
-    const runenv = `IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
+    const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
     var runcmd = ` prvd baseline stack run`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
     runcmd += ` --config="${provideConfigFileName}"`
@@ -867,7 +888,9 @@ export class ParticipantStack {
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
-    var child = spawn(runenv+runcmd, [], { detached: true, shell: true })
+    console.log(runenv+runcmd)
+
+    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'inherit', shell: true });
     child.unref()
   }
 

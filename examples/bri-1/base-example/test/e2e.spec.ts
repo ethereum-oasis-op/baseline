@@ -223,10 +223,13 @@ describe('Baseline', () => {
 
       describe('workflow', () => {
         var workstepId
+
         describe('create a work step', () => {
           before(async () => {
+            await bobApp.requireBaselineStack();
+
             workstepId = uuid()
-            await bobApp.createBaselineBusinessObject({
+            await bobApp.createBaselineObject({
               id: workstepId,
               name: 'hello world',
               url: 'proto://deep/link/to/doc',
@@ -237,19 +240,22 @@ describe('Baseline', () => {
           it('should increment protocol message tx count for the sender', async () => {
             assert(bobApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
           });
+
           it('should increment protocol message rx count for the recipient', async () => {
             await promisedTimeout(50);
             assert(aliceApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
           });
+
           it('should match the merkle root between sender and receiver', async() => {
             let bobRoot = bobApp.getMerkleRoot()
             let aliceRoot = aliceApp.getMerkleRoot()
             expect(bobRoot).to.equal(aliceRoot);
           })
         });
+
         describe('update a work step', () => {
           before(async () => {
-            await aliceApp.updateBaselineBusinessObject(workstepId,{
+            await aliceApp.updateBaselineObject(workstepId,{
               id: 'uuidv4()',
               name: 'hello world',
               url: 'proto://deep/link/to/doc',
@@ -265,6 +271,7 @@ describe('Baseline', () => {
             await promisedTimeout(50);
             assert(bobApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
           });
+
           it('should match the merkle root between sender and receiver', async() => {
             let bobRoot = bobApp.getMerkleRoot()
             let aliceRoot = aliceApp.getMerkleRoot()
