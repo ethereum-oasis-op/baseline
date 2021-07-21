@@ -12,9 +12,7 @@ import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
 import { spawn } from 'child_process';
 import fs from 'fs';
-import { receiveMessageOnPort } from 'worker_threads';
 
-// const baselineDocumentCircuitPath = '../../../lib/circuits/createAgreement.zok';
 const baselineProtocolMessageSubject = 'baseline.proxy';
 const baselineProtocolDefaultDomain = 'baseline.local';
 
@@ -39,9 +37,7 @@ const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait:
   throw error;
 }
 
-
 export class ParticipantStack {
-
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
   private baselineProxy?: Baseline;
   private baselineCircuit?: Circuit;
@@ -617,7 +613,7 @@ export class ParticipantStack {
         this.baselineConfig.vaultApiHost!,
       ).fetchVaults({});
       if (vaults && vaults.results.length > 0) {
-        return vaults[0];
+        return vaults.results[0];
       }
       throw new Error();
     });
@@ -630,12 +626,12 @@ export class ParticipantStack {
     return (await vault.signMessage(vaultId, keyId, message));
   }
 
-  async fetchKeys(): Promise<any> {
+  async fetchKeys(): Promise<VaultKey[]> {
     const orgToken = await this.createOrgToken();
     const token = orgToken.accessToken || orgToken.token;
     const vault = Vault.clientFactory(token!, this.baselineConfig?.vaultApiScheme, this.baselineConfig?.vaultApiHost);
     const vlt = await this.requireVault(token!);
-    return (await vault.fetchVaultKeys(vlt.id!, {}));
+    return (await vault.fetchVaultKeys(vlt.id!, {})).results;
   }
 
   async fetchSecret(vaultId: string, secretId: string): Promise<any> {
@@ -711,7 +707,6 @@ export class ParticipantStack {
       params: {
         account_id: signerResp['id'],
         compiled_artifact: params,
-        // network: 'ropsten',
         argv: arvg || [],
       },
       name: name,
@@ -807,7 +802,7 @@ export class ParticipantStack {
     });
 
     if (contracts && contracts.results.length === 1 && contracts.results[0]['address'] !== '0x') {
-      const contract = await nchain.fetchContractDetails(contracts[0].id!);
+      const contract = await nchain.fetchContractDetails(contracts.results[0].id!);
       this.contracts[type] = contract;
       return Promise.resolve(contract);
     }
