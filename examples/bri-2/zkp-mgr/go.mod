@@ -17,6 +17,6 @@ require (
 	github.com/nats-io/nats.go v1.10.0
 	github.com/pborman/uuid v1.2.1
 	github.com/ugorji/go v1.2.2 // indirect
-	go.mongodb.org/mongo-driver v1.4.4
+	go.mongodb.org/mongo-driver v1.5.1
 	golang.org/x/sync v0.0.0-20201207232520-09787c993a3a // indirect
 )
