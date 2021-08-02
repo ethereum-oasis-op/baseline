@@ -1,6 +1,6 @@
 # Technical Steering Committee
 
-The core of the day-to-day work of the Baseline Protocol community is managed by [members](members.md) and [maintainers](maintainers.md). The Technical Steering Committee \(TSC\) is here mainly to ensure the smooth running of the maintainer team and to be accountable to the Ethereum-Oasis Project [Governance Board](community-leaders.md#your-project-governance-board) \(and to the community at large\).
+The core of the day-to-day work of the Baseline Protocol community is managed by [members](members.md) and [maintainers](maintainers.md). The Technical Steering Committee \(TSC\) is here mainly to ensure the smooth running of the maintainer team and to be accountable to the EEA Community Projects' [Project Governing Board](https://github.com/eea-oasis/managed-open-project/blob/main/PROJECT-GOVERNING-BOARD.md) \(and to the community at large\).
 
 While it is up to any contributor what one works on, the TSC helps maintainers and members by organizing planning and review sessions, roadmapping, and highlighting engineering tasks as high-priority for any given period.
 
