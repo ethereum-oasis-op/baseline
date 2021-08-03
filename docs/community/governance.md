@@ -4,23 +4,23 @@
 
 OASIS Open is a non-profit, vendor-neutral standards developing organization. It provides rules and guidelines to ensure equitable and transparent oversight of technical collaborations in open source and open standards. Additionally, it provides services such as technical program support, legal, marketing, and events management.
 
-The Baseline Protocol is governed by the [Ethereum OASIS Project Governing Board](https://www.baseline-protocol.org/about/) under the [OASIS Open Projects Program](http://oasis-open-projects.org/). Ethereum OASIS exists to provide a neutral forum for companies and community representatives to create high-quality specifications that facilitate Ethereum’s longevity, interoperability, and ease of integration. One does not have to "join" the group formally or financially in order to make a contribution to Baseline or other Ethereum OASIS projects.
+The Baseline Protocol is governed by the [EEA Community Projects Governing Board](https://github.com/eea-oasis/managed-open-project/blob/main/PROJECT-GOVERNING-BOARD.md) under the [OASIS Open Projects Program](http://oasis-open-projects.org/). EEA Community Projects, an OASIS Managed Open Project, exists to provide a neutral forum for companies and community representatives to create high-quality specifications that facilitate Ethereum’s longevity, interoperability, and ease of integration. One does not have to "join" the group formally or financially in order to make a contribution to Baseline or other EEA Community Projects.
 
 Additional documentation about the OASIS Open Projects program can be found [here](https://github.com/oasis-open-projects/documentation).
 
 ## License and Patent Policies <a id="license-and-patent-policies"></a>
 
-All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md).
+All repos in the EEA Community Projects organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md).
 
-In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](http://cla-assistant.io/ethereum-oasis/baseline) for community contributions. You must [sign the ICLA](http://cla-assistant.io/ethereum-oasis/baseline) before your pull requests to the baseline repository will be merged. [Check here](https://www.oasis-open.org/resources/projects/cla/projects-view-entity-cla) to see if your company has signed the ECLA.
+In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](https://cla-assistant.io/eea-oasis/managed-open-project) for community contributions. You must [sign the ICLA](https://cla-assistant.io/eea-oasis/managed-open-project) before your pull requests to the baseline repository will be merged. [Check here](https://community.oasis-open.org/s/searchdirectory?id=a233l0000038IIo) to see if your company has signed the ECLA.
 
 ## Code of Conduct <a id="code-of-conduct"></a>
 
-​Here is the link to the official [code of conduct](https://github.com/ethereum-oasis/baseline/blob/master/CODE_OF_CONDUCT.md).
+​Here is the link to the official [code of conduct](https://github.com/eea-oasis/managed-open-project/blob/main/CODE-OF-CONDUCT.md).
 
 ## **Charter: Baseline Open Source Project Governance** <a id="charter-baseline-open-source-project-governance"></a>
 
-**Ratified on March 18, 2020 by the** [**PGB**](community-leaders.md#your-project-governance-board)**.**
+**Ratified on March 18, 2020 by the** [**PGB**](https://github.com/eea-oasis/managed-open-project/blob/main/PROJECT-GOVERNING-BOARD.md)**.**
 
 The Baseline Protocol shall be a project within the Ethereum-Oasis project of [OASIS](https://www.oasis-open.org/) through at least May 31, 2020. The Project Governing Board \(PGB\) of the Ethereum-OASIS project, which was established in 2019 and is currently supported by the EEA and the Ethereum Foundation \(EF\), currently consists of Dan Burnett \(ConsenSys\), Tas Dienes \(EF\), and Chaals Neville \(EEA\) – supported by Jory Burson \(OASIS\). The Baseline Project shall be supported under the existing contract with OASIS and shall require no additional fees than those already paid by EEA/EF and the parties to the Open Ethereum Project until May 31, 2020. Negotiation to continue the Baseline Project with OASIS shall be conducted between March and May 2020.
 
@@ -32,11 +32,11 @@ Contributions to the open source repo shall be under creative commons public dom
 
 The Baseline Protocol shall be governed by a Technical Steering Committee, with 7, 9 or 11 Members, one of whom will serve as TSC Chair. The initial number of seats for the bootstrapping period \(see below\) shall be 11.
 
-A quorum of two-thirds of the TSC members can conduct any vote required of the TSC during any given meeting. Disputes on whether a matter should be tabled for a different TSC meeting can be presented to the PGB of the Ethereum-OASIS project for a decision. A move to table a matter can be lodged during a TSC meeting, and it shall be tabled and submitted to the PGB with a simple majority vote. If a majority cannot be achieved during the meeting, a minimum of two members that were present at the meeting in question may dispute the matter after the fact to the PGB.
+A quorum of two-thirds of the TSC members can conduct any vote required of the TSC during any given meeting. Disputes on whether a matter should be tabled for a different TSC meeting can be presented to the PGB of EEA Community Projects for a decision. A move to table a matter can be lodged during a TSC meeting, and it shall be tabled and submitted to the PGB with a simple majority vote. If a majority cannot be achieved during the meeting, a minimum of two members that were present at the meeting in question may dispute the matter after the fact to the PGB.
 
 No legal entity \(or set of entities controlled by a single party\) shall hold more than three seats out of eleven \(or two seats out of seven or nine\) on the TSC during any given period.
 
-A TSC member is eligible to lose their seat upon missing two consecutive TSC meetings or three total during a period between elections. Removal is completed by a simple majority vote of the remaining TSC members that are not being considered for removal. The PGB of the Ethereum-OASIS project has the option to consider extenuating circumstances and determine whether or not to remove a member, if the TSC itself cannot come to a determination. After removal, a special election of the vacant seat shall be held among contributors. The seat will be up for re-election at the next regular election cycle.
+A TSC member is eligible to lose their seat upon missing two consecutive TSC meetings or three total during a period between elections. Removal is completed by a simple majority vote of the remaining TSC members that are not being considered for removal. The PGB of EEA Community Projects has the option to consider extenuating circumstances and determine whether or not to remove a member, if the TSC itself cannot come to a determination. After removal, a special election of the vacant seat shall be held among contributors. The seat will be up for re-election at the next regular election cycle.
 
 ### Bootstrapping Period:  <a id="bootstrapping-period"></a>
 
@@ -64,9 +64,9 @@ The TSC shall determine the number of maintainers required to merge a contributi
 
 This document shall be ratified by the PGB before the public launch of the Baseline Protocol. Changes to this document shall require a simple majority of the PGB.
 
-### Details on OASIS and the Open Ethereum Project <a id="details-on-oasis-and-the-open-ethereum-project"></a>
+### Details on OASIS and EEA Community Projects <a id="details-on-oasis-and-eea-community-projects"></a>
 
-Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis/oasis-open-project/blob/master/GOVERNANCE.md​).
+Governance documents for [EEA Community Projects](https://github.com/eea-oasis/managed-open-project/blob/main/GOVERNANCE.md).
 
 ### TSC Rules for Mid-term Member Replacements <a id="replacements"></a>
 
