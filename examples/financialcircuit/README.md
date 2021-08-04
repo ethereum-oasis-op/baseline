@@ -68,7 +68,3 @@ It conceals the quotes
 
 [5] Who are you trying to conceal private inputs from?
 Counter parties don't know each other quotes.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
