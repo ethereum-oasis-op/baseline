@@ -10,7 +10,7 @@ export const promisedTimeout = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 };
 
-const infuraProjectId = '';
+const infuraProjectId = 'd2d8b5ef43d348e8b2871105a047c4b7';
 const altNetworkConfiguration = JSON.stringify({
   "chainspec_url": "https://",
   "chain": "kovan",

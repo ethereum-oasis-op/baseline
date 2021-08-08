@@ -10,7 +10,8 @@ import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
-import { spawn } from 'child_process';
+import { spawn, exec } from 'child_process';
+
 import fs from 'fs';
 
 const baselineProtocolMessageSubject = 'baseline.proxy';
@@ -21,6 +22,21 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 class TryError extends Error {
   promiseErrors: any[] = []
 }
+
+const ipGetter = async(host) =>{
+  return new Promise((resolve, reject) => {
+    exec(`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${host}`, (error, stdout, stderr) => {
+     if (error) {
+      console.warn(error);
+      reject(error)
+     }else if(stdout){
+      resolve(stdout? stdout : stderr);
+     }
+    });
+  });
+}
+
+
 
 const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait: number = 500): Promise<T> => {
   const errors : any[] = [];
@@ -549,6 +565,22 @@ export class ParticipantStack {
     });
   }
 
+  async requireIdent(): Promise<boolean> {
+    return await tryTimes(async () => {
+      await exec(`curl localhost:8085/status`, (err, stdout, stderr) => {
+        if(err) {
+          console.log("error: ", err);
+          return;
+        }
+        else{
+          console.log("stdout: ", stdout)
+          return
+        }
+      })
+      return false
+    });
+  }
+
   async requireCircuit(circuitId: string): Promise<Circuit> {
     let circuit: Circuit | undefined = undefined;
     const orgToken = await this.createOrgToken();
@@ -825,6 +857,7 @@ export class ParticipantStack {
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
       await this.createVaultKey(vault.id!, 'RSA-4096');
       await this.registerWorkgroupOrganization();
+      await this.requireIdent();
       await this.deployBaselineStack();
       await this.requireBaselineStack();
     }
@@ -851,12 +884,32 @@ export class ParticipantStack {
     const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${tokenResp.token}\n`;
     const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
+    await this.requireIdent();
 
+    // Get the IP for the Ident Containers
+    var userName = this.baselineConfig?.orgName.split(' ')
+    //ident IP
+    var identPort = this.baselineConfig?.identApiHost.split(':')
+    var identIp = String(await ipGetter(`${userName[0].toLowerCase()}-ident`)).split('\n')
+
+    // vault IP
+    var vaultPort = this.baselineConfig?.vaultApiHost.split(':')
+    var vaultIp = String(await ipGetter(`${userName[0].toLowerCase()}-vault`)).split('\n')
+
+    // nchain
+    var nchainPort = this.baselineConfig?.nchainApiHost.split(':')
+    var nchainIp = String(await ipGetter(`${userName[0].toLowerCase()}-nchain`)).split('\n')
+
+    // privacy
+    var privacyPort = this.baselineConfig?.privacyApiHost.split(':')
+    var privacyIp = String(await ipGetter(`${userName[0].toLowerCase()}-privacy`)).split('\n')
+
+    
     const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
     var runcmd = ` prvd baseline stack run`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
     runcmd += ` --config="${provideConfigFileName}"`
-    runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
+    runcmd += ` --ident-host="${identIp[0]}:${identPort[1]}"`
 		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
     runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
@@ -864,25 +917,24 @@ export class ParticipantStack {
     runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
     runcmd += ` --nats-streaming-port=${this.baselineConfig?.baselineMessagingStreamingPort}`
     runcmd += ` --nats-ws-port=${this.baselineConfig?.baselineMessagingWebsocketPort}`
-    runcmd += ` --nchain-host="${this.baselineConfig?.nchainApiHost}"`
+    runcmd += ` --nchain-host="${nchainIp[0]}:${nchainPort[1]}"`
 		runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
 		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
 		runcmd += ` --organization="${this.org.id}"`,
     runcmd += ` --organization-address="${orgAddress}"`
     runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
     runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
-    runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
+    runcmd += ` --privacy-host="${privacyIp[0]}:${privacyPort[1]}"`
 		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
     runcmd += ` --redis-hostname=${this.baselineConfig?.redisHost}`
     runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
 		runcmd += ` --registry-contract-address="${registryContract.address}"`
     runcmd += ` --sor="ephemeral"`
-    runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
+    runcmd += ` --vault-host="${vaultIp[0]}:${vaultPort[1]}"`
 		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
 
-    runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
     console.log(runenv+runcmd)
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'inherit', shell: true });
@@ -953,3 +1005,5 @@ export class ParticipantStack {
     );
   }
 }
+
+

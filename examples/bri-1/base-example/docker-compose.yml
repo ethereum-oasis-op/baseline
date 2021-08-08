@@ -109,7 +109,7 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
-      - IDENT_API_HOST=localhost:8080
+      - IDENT_API_HOST=alice-ident:8080
       - IDENT_API_SCHEME=http
       - NATS_CLIENT_PREFIX=alice-ident
       - NATS_URL=nats://alice-nats:4222
@@ -376,6 +376,8 @@ services:
       - DATABASE_PASSWORD=vault
       - IDENT_API_HOST=alice-ident:8080
       - IDENT_API_SCHEME=http
+      - VAULT_API_HOST=alice-vault:8080
+      - VAULT_API_SCHEME=http
       - LOG_LEVEL=DEBUG
       - PORT=8080
       - REDIS_HOSTS=alice-redis:6379
@@ -499,7 +501,7 @@ services:
       - DATABASE_NAME=ident_dev
       - DATABASE_USER=ident
       - DATABASE_PASSWORD=ident
-      - IDENT_API_HOST=localhost:8080
+      - IDENT_API_HOST=bob-ident:8080
       - IDENT_API_SCHEME=http
       - NATS_CLIENT_PREFIX=bob-ident
       - NATS_URL=nats://bob-nats:4222
@@ -768,6 +770,8 @@ services:
       - IDENT_API_SCHEME=http
       - LOG_LEVEL=DEBUG
       - PORT=8080
+      - VAULT_API_HOST=bob-vault:8080
+      - VAULT_API_SCHEME=http
       - REDIS_HOSTS=bob-redis:6379
       - SEAL_UNSEAL_KEY=forest step weird object extend boat ball unit canoe pull render monkey drink monitor behind supply brush frown alone rural minute level host clock
       - SEAL_UNSEAL_VALIDATION_HASH=0x1c1381fd075f1ee3d42799bb8da0602a2afb9ef4b492bf1eae72399ecc81b0f0
