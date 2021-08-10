@@ -560,7 +560,8 @@ export class ParticipantStack { q
       if (status === 204) {
         return true;
       }
-      throw new Error();
+      console.log("Baseline instance is not up. Retrying...")
+      return false
     });
   }
 
@@ -572,7 +573,6 @@ export class ParticipantStack { q
           return;
         }
         else{
-          console.log("stdout: ", stdout)
           return
         }
       })
@@ -906,37 +906,35 @@ export class ParticipantStack { q
     
     const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
     var runcmd = ` prvd baseline stack run`
-    runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
+    runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${(this.baselineConfig?.baselineApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
     runcmd += ` --config="${provideConfigFileName}"`
-    runcmd += ` --ident-host="${identIp}:8080"`
+    runcmd += ` --ident-host="${(this.baselineConfig?.identApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
 		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
-    runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
+    runcmd += ` --messaging-endpoint="nats://host.docker.internal:${this.baselineConfig?.baselineMessagingPort}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
     runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
     runcmd += ` --nats-streaming-port=${this.baselineConfig?.baselineMessagingStreamingPort}`
     runcmd += ` --nats-ws-port=${this.baselineConfig?.baselineMessagingWebsocketPort}`
-    runcmd += ` --nchain-host="${nchainIp}:8080"`
+    runcmd += ` --nchain-host="${(this.baselineConfig?.nchainApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
 		runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
 		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
 		runcmd += ` --organization="${this.org.id}"`,
     runcmd += ` --organization-address="${orgAddress}"`
     runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
     runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
-    runcmd += ` --privacy-host="${privacyIp}:8080"`
+    runcmd += ` --privacy-host="${(this.baselineConfig?.privacyApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
 		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
     runcmd += ` --redis-hostname=${this.baselineConfig?.redisHost}`
     runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
 		runcmd += ` --registry-contract-address="${registryContract.address}"`
     runcmd += ` --sor="ephemeral"`
-    runcmd += ` --vault-host="${vaultIp}:8080"`
+    runcmd += ` --vault-host="${(this.baselineConfig?.vaultApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
 		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
 
-    console.log(runenv+runcmd)
-
-    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'inherit', shell: true });
+    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     child.unref()
   }
 
