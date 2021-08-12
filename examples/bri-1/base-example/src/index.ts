@@ -52,7 +52,7 @@ const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait:
   throw error;
 }
 
-export class ParticipantStack { q
+export class ParticipantStack {
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
   private baselineProxy?: Baseline;
   private baselineCircuit?: Circuit;
@@ -193,6 +193,7 @@ export class ParticipantStack { q
   }
 
   private async dispatchProtocolMessage(msg: ProtocolMessage): Promise<any> {
+    console.log(msg)
     if (msg.opcode === Opcode.Join) {
       const payload = JSON.parse(msg.payload.toString());
       const messagingEndpoint = await this.resolveMessagingEndpoint(payload.address);
@@ -545,24 +546,8 @@ export class ParticipantStack { q
   }
 
   async requireBaselineStack(token?: string): Promise<boolean> {
-    let tkn = token;
-    if (!tkn) {
-      const orgToken = await this.createOrgToken();
-      tkn = orgToken.accessToken || orgToken.token;
-    }
-
-    return await tryTimes(async () => {
-      const status = await Baseline.clientFactory(
-        tkn!,
-        this.baselineConfig.baselineApiScheme!,
-        this.baselineConfig.baselineApiHost!,
-      ).status();
-      if (status === 204) {
-        return true;
-      }
-      console.log("Baseline instance is not up. Retrying...")
+      await sleep(60000)
       return false
-    });
   }
 
   async requireIdent(): Promise<boolean> {
@@ -858,7 +843,7 @@ export class ParticipantStack { q
       await this.registerWorkgroupOrganization();
       await this.requireIdent();
       await this.deployBaselineStack();
-      //await this.requireBaselineStack();
+      await this.requireBaselineStack();
     }
 
     return this.org;
@@ -884,27 +869,8 @@ export class ParticipantStack { q
     const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
     await this.requireIdent();
-    // FIX change the ip return type in the ipGetter
-    // Get the IP for the Ident Containers
-    var userName = this.baselineConfig?.orgName.split(' ')
-    //ident IP
-    // var identPort = this.baselineConfig?.identApiHost.split(':')
-    var identIp = await ipGetter(`${userName[0].toLowerCase()}-ident`)
-
-    // vault IP
-    // var vaultPort = this.baselineConfig?.vaultApiHost.split(':')
-    var vaultIp = await ipGetter(`${userName[0].toLowerCase()}-vault`)
-
-    // nchain
-    // var nchainPort = this.baselineConfig?.nchainApiHost.split(':')
-    var nchainIp = await ipGetter(`${userName[0].toLowerCase()}-nchain`)
-
-    // privacy
-    // var privacyPort = this.baselineConfig?.privacyApiHost.split(':')
-    var privacyIp = await ipGetter(`${userName[0].toLowerCase()}-privacy`)
-
-    
-    const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
+    var name = this.baselineConfig?.orgName.split(' ')
+    const runenv = `LOG_LEVEL=TRACE REDIS_HOSTS=${this.baselineConfig?.redisHost}:${this.baselineConfig?.redisPort} BASELINE_API_HOST=${this.baselineConfig?.baselineHost} BASELINE_API_SCHEME=http IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
     var runcmd = ` prvd baseline stack run`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${(this.baselineConfig?.baselineApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
     runcmd += ` --config="${provideConfigFileName}"`
@@ -925,15 +891,16 @@ export class ParticipantStack { q
     runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
     runcmd += ` --privacy-host="${(this.baselineConfig?.privacyApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
 		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
-    runcmd += ` --redis-hostname=${this.baselineConfig?.redisHost}`
-    runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
 		runcmd += ` --registry-contract-address="${registryContract.address}"`
+    runcmd += ` --redis-hostname=${name[0]}-redis`
+    runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
     runcmd += ` --sor="ephemeral"`
     runcmd += ` --vault-host="${(this.baselineConfig?.vaultApiHost).replace(/localhost/ig, 'host.docker.internal')}"`
 		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
-
+    
+    console.log(runenv+runcmd)
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     child.unref()
   }

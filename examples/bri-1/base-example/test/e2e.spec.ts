@@ -87,7 +87,7 @@ describe('Baseline', () => {
       aliceDomain,
       false,
       'localhost:8081',
-      'nats://host.docker.internal:4222',
+      'nats://localhost:4222',
       natsPrivateKey,
       natsPublicKey,
       'localhost:8080',
@@ -95,12 +95,12 @@ describe('Baseline', () => {
       'localhost:8082',
       'localhost:8084',
       'localhost:8092',
-      '4228',
+      '4222',
       '4320',
       '4321',
       'kovan.poa.network:443',
       'https',
-      'host.docker.internal',
+      'localhost',
       '6390',
       null,
       'baseline workgroup',
@@ -115,7 +115,7 @@ describe('Baseline', () => {
       bobDomain,
       true,
       'localhost:8085',
-      'nats://host.docker.internal:4224',
+      'nats://localhost:4224',
       natsPrivateKey,
       natsPublicKey,
       'localhost:8086',
@@ -123,12 +123,12 @@ describe('Baseline', () => {
       'localhost:8083',
       'localhost:8087',
       'localhost:8089',
-      '4229',
+      '4224',
       '4322',
       '4323',
       'kovan.poa.network:443',
       'https',
-      'host.docker.internal',
+      'localhost',
       '6391',
       null,
       'baseline workgroup',
@@ -228,22 +228,28 @@ describe('Baseline', () => {
           before(async () => {
             await bobApp.requireBaselineStack();
 
-            workstepId = uuid()
+            workstepId = String(uuid())
+            const recipient = await aliceApp.resolveOrganizationAddress();
             await bobApp.createBaselineObject({
-              id: workstepId,
-              name: 'hello world',
-              url: 'proto://deep/link/to/doc',
-              rfp_id: null,
+              "id": workstepId,
+              "payload": {
+                "proof": "8d8f7498db7aee910428c737d8427ac4add98353f981ca70db07697a091d8c23972b55b0b20fc0eebc1ac6c2ae427d783291c7fcb2e3f7417d279fea78ce1eac2d2293e53579abbef4960a1e290bd023e2999d8ff423d01080d449ce5d14ca89c94e277e8e0bb14fb91a0b71129920ae4411e77685287611f4d2aaf66b8fc5dc",
+                "type": "general_consistency",
+                "witness":{}
+              },
+              "type":"general_consistency",
             });
-          });
+        })
 
           it('should increment protocol message tx count for the sender', async () => {
-            assert(bobApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
+            console.log(bobApp.getProtocolMessagesTx())
+            assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 2');
           });
 
           it('should increment protocol message rx count for the recipient', async () => {
             await promisedTimeout(50);
-            assert(aliceApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
+            console.log(aliceApp.getProtocolMessagesTx())
+            assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 2');
           });
 
           // it('should match the merkle root between sender and receiver', async() => {
