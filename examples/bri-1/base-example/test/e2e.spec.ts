@@ -242,13 +242,11 @@ describe('Baseline', () => {
         })
 
           it('should increment protocol message tx count for the sender', async () => {
-            console.log(bobApp.getProtocolMessagesTx())
             assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 2');
           });
 
           it('should increment protocol message rx count for the recipient', async () => {
             await promisedTimeout(50);
-            console.log(aliceApp.getProtocolMessagesTx())
             assert(aliceApp.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 2');
           });
 

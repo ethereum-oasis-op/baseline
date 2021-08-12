@@ -141,12 +141,8 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
       describe('zkSNARK circuits', () => {
         describe('synchronization', () => {
           before(async () => {
-            console.log("Before Loop")
             // We need to Wait for the Sync
             while (getApp().getBaselineCircuit() === undefined) {
-              console.log("Baseline Circuit: ", getApp().getBaselineCircuit())
-              console.log("Waiting: ")
-
               await sleep(10000);
             }
             circuit = getApp().getBaselineCircuit();

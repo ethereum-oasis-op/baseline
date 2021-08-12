@@ -18,5 +18,4 @@ start-attached:
 	docker-compose  up --remove-orphans
 
 stop:
-	docker-compose  down --remove-orphans
-
+	docker-compose  down --remove-orphans && prvd baseline stack stop --name BobCorp && prvd baseline stack stop --name AliceCorp
