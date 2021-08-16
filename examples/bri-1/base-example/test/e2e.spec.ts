@@ -95,7 +95,7 @@ describe('Baseline', () => {
       'localhost:8082',
       'localhost:8084',
       'localhost:8092',
-      '4222',
+      '4722',
       '4320',
       '4321',
       'kovan.poa.network:443',
@@ -123,7 +123,7 @@ describe('Baseline', () => {
       'localhost:8083',
       'localhost:8087',
       'localhost:8089',
-      '4224',
+      '4724',
       '4322',
       '4323',
       'kovan.poa.network:443',
@@ -230,6 +230,7 @@ describe('Baseline', () => {
 
             workstepId = String(uuid())
             const recipient = await aliceApp.resolveOrganizationAddress();
+
             await bobApp.createBaselineObject({
               "id": workstepId,
               "payload": {
