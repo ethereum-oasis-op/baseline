@@ -536,14 +536,12 @@ export class ParticipantStack {
       const orgToken = await this.createOrgToken();
       token = orgToken.accessToken || orgToken.token;
     } 
-
     return await tryTimes(async () => {
-      const status = await Baseline.clientFactory(
-        token!,
+      const status = await Baseline.fetchStatus(
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
-      ).status();
-      if (status == 204) {
+      );
+      if (status != null) {
         return true;
       }
       throw new Error();
@@ -557,12 +555,11 @@ export class ParticipantStack {
     } 
 
     return await tryTimes(async () => {
-      const status = await Ident.clientFactory(
-        token!,
+      const status = await Ident.fetchStatus(
         this.baselineConfig.identApiScheme!,
         this.baselineConfig.identApiHost!,
-      ).status();
-      if (status == 204) {
+      );
+      if (status != null) {
         return true;
       }
       throw new Error();
