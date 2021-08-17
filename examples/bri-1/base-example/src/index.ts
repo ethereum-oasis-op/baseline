@@ -543,27 +543,30 @@ export class ParticipantStack {
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
       ).status();
-      console.log(status)
-      if (status === 204) {
+      if (status == 204) {
         return true;
       }
       throw new Error();
     }, 100, 5000);
   }
 
-  async requireIdent(): Promise<boolean> {
+  async requireIdent(token?: string): Promise<boolean> {
+    if (!token) {
+      const orgToken = await this.createOrgToken();
+      token = orgToken.accessToken || orgToken.token;
+    } 
+
     return await tryTimes(async () => {
-      await exec(`curl localhost:8085/status`, (err, stdout, stderr) => {
-        if(err) {
-          console.log("error: ", err);
-          return;
-        }
-        else{
-          return
-        }
-      })
-      return false
-    });
+      const status = await Ident.clientFactory(
+        token!,
+        this.baselineConfig.identApiScheme!,
+        this.baselineConfig.identApiHost!,
+      ).status();
+      if (status == 204) {
+        return true;
+      }
+      throw new Error();
+    }, 100, 5000);
   }
 
   async requireCircuit(circuitId: string): Promise<Circuit> {
