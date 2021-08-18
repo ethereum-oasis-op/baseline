@@ -96,3 +96,30 @@ Here is a comparison of the reference implementations:
 | P2P Messenger  | `NATS`          | `NATS`               |
 
 ![baseline-architecture](./docs/bri-2-stack.png)
+
+# Running From Windows 10
+The text below describes what you will need todo if you are running the project from a Windows 10 machine. 
+
+If running in windows you will need to install the wsl2 windows subsystem for linux. https://docs.microsoft.com/en-us/windows/wsl/install-win10 You will need to install Ubuntu 20.04 when prompted.
+
+If you want, you can install the new windows terminal and use it for your linux commands. https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab
+
+
+After installing Docker For Windows you will need to change docker to use the installed WSL2. https://docs.docker.com/desktop/windows/wsl/
+
+From your windows terminal or bash shell you will need to run https://github.com/nodejs/node-gyp/issues/1207
+* npm install -g npm
+* npm install -g node-gyp make
+See github repo for more info https://github.com/nodejs/node-gyp
+This is to fix an error while running the make commands.
+
+Install make in the linux subsystem using apt-get install make
+
+VSCode is designed to be used with both the native operating system and the Windows linux subsystem. You will need to mount the linux system to the source code of this project. When you open VSCode in this projects directory, you can make changes to the files and have them working in the linux subsystem.  https://code.visualstudio.com/docs/remote/wsl
+
+After installing all of these items you are ready to build and run the examples above. 
+
+## Windows Troubleshooting
+If you run into errors when running the shell scripts it might be because there are CTRL M characters, which is a common problem in converting between Unix and DOS. Run the command below on the files that are having issues to fix the problem. 
+
+* sed -i -e 's/\r$//' NAME-OF-FILE.sh on all the script files
