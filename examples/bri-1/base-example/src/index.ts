@@ -872,7 +872,7 @@ export class ParticipantStack {
     await this.requireIdent();
     var name = this.baselineConfig?.orgName.split(' ')
     const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
-    var runcmd = ` prvd baseline stack run`
+    var runcmd = ` prvd baseline stack start`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
