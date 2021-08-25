@@ -1,6 +1,7 @@
 import { assert, expect } from 'chai';
 import { ParticipantStack } from '../src';
 import { spawnSync } from 'child_process'
+import { tryTimes } from '../src/index'
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -142,9 +143,14 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
         describe('synchronization', () => {
           before(async () => {
             // We need to Wait for the Sync
-            while (getApp().getBaselineCircuit() === undefined) {
-              await sleep(10000);
-            }
+            await tryTimes(async () => {
+                if (getApp().getBaselineCircuit() === undefined) {
+                  console.log("yeah boi")
+                  throw new Error();
+                }else{
+                  return true;
+                }
+              }, 100, 5000);
             circuit = getApp().getBaselineCircuit();
             assert(circuit, 'setup artifacts should not be null');
           });

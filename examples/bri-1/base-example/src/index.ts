@@ -24,7 +24,7 @@ class TryError extends Error {
 }
 
 
-const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait: number = 500): Promise<T> => {
+export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait: number = 500): Promise<T> => {
   const errors : any[] = [];
   for (let index = 0; index < times; index++) {
     try {
