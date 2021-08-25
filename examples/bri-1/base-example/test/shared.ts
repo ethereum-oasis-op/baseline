@@ -145,7 +145,6 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
             // We need to Wait for the Sync
             await tryTimes(async () => {
                 if (getApp().getBaselineCircuit() === undefined) {
-                  console.log("yeah boi")
                   throw new Error();
                 }else{
                   return true;
