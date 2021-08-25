@@ -12,7 +12,7 @@ reset: stop clean
 restart: stop start
 
 start:
-	docker-compose  up -d --remove-orphans
+	docker-compose  up -d --remove-orphans && docker network prune -f && docker network prune -f
 
 start-attached:
 	docker-compose  up --remove-orphans
