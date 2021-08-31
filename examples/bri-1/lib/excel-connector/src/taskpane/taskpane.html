@@ -1,0 +1,114 @@
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT License. -->
+<!-- This file shows how to design a first-run page that provides a welcome screen to the user about the features of the add-in. -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shuttle Excel</title>
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+  </head>
+
+  <body class="bg-dark">
+    <div id="overlay" style="display: none;">
+      <div class="spinner-border text-light" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <section id="sideload-msg" class="text-light text-center">
+      <h2>Loading...</h2>
+    </section>
+    <main id="app-body" class="h-100" style="display: none">
+
+      <div id="login-ui" class="card h-100 border-0 bg-transparent text-light" style="display: none; min-height: 29rem">
+        <div class="card-header border-0 bg-transparent d-flex justify-content-center">
+          <div>
+            <img src="../../assets/logo-filled.png" class="img-fluid" style="max-width: 9rem" />
+            <div class="text-center text-monospace">Welcome to Shuttle.</div>
+          </div>
+        </div>
+        <div class="card-body border-0 bg-transparent">
+          <form class="bg-secondary p-3">
+            <div class="form-group">
+              <input
+                type="email"
+                id="email"
+                class="form-control bg-transparent text-light shadow-none"
+                placeholder="Email*"
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="password"
+                id="password"
+                class="form-control bg-transparent text-light shadow-none"
+                placeholder="Password*"
+              />
+            </div>
+            <div>
+              <button type="button" id="login-btn" class="btn btn-primary btn-lg btn-block text-light shadow-none">
+                LOGIN
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="card-footer border-0 bg-transparent container text-muted">
+          <div class="row text-monospace">
+            <div class="col text-truncate">2021 Provide</div>
+            </div>
+           <!-- > <div class="col text-right text-truncate">revision: 4dc70e3 (dirty)</div> -->
+          </div>
+        </div>
+      </div>
+
+      <div id="work-ui" class="card h-100 border-0 bg-transparent text-light" style="display: none">
+        <div class="card-header border-0 bg-transparent">
+          <div id="user-name" class="text-truncate"></div> 
+        </div>
+        <div class="card-body border-0 bg-transparent container text-truncate lead text-md-left">
+          <div class="h3"> Workgroups
+            <button id="refresh-workgroups-btn" class="btn-sm btn-secondary" style="background-color: transparent; border: transparent;"><i class="fa" >&#xf021;</i></button>
+          </div>
+            <div id="workgroups-list" class="list-group">
+          </div>
+          <div>
+            <button id="show-jwt-input-btn" class="btn btn-primary btn-sm float-right">Accept Workgroup invitation</button>
+          </div>
+          <div>
+           <!-- <button id="start-baselining-btn" class="btn btn-primary btn-sm float-right">Start Baselining</button>-->
+          </div>
+        </div>
+
+        <div class="card-footer border-0 bg-transparent container text-muted">
+          <div class="row text-monospace">
+            <div class="col text-truncate">2021 Provide</div>
+            <button id="logout-btn" class="btn btn-light float-right py-0"><i class="fas fa-sign-out-alt"></i></button>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div id="workgroup-ui" class="card h-100 border-0 bg-transparent text-light" style="display: none; min-height: 29rem">
+        <div class="card-header border-0 bg-transparent">
+          <button id="back-btn" class="btn btn-light float-left py-0"><i class="fas fa-arrow-left" aria-hidden="true"></i></button>
+          <div id="user-name" class="text-truncate"></div> 
+        </div>
+        <div id="mapping-form" class="card-body border-0 bg-transparent container text-truncate text-md-left" style="overflow:auto;">
+          <!-- ADD INPUT, Make Changes-->
+          <form class="form-horizontal">
+            <div id="mapping-form-header" class="h3" style="margin-bottom: 2rem;"> </div>
+            <div id="mapping-form-options">
+            </div>
+            <div>
+              <button type="button" id="mapping-form-btn" class="btn btn-primary btn-lg btn-block text-light shadow-none">
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </body>
+</html>
