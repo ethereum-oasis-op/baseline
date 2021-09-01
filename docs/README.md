@@ -6,11 +6,11 @@ The Baseline Protocol initiative was [announced](https://consensys.net/blog/pres
 
 The work of the community is maintained under a public domain[ license](https://github.com/ethereum-oasis/baseline/blob/master/LICENSE).
 
-The Baseline Protocol is a set of techniques that must be implemented in a standard way across different systems. The draft [open standard](https://github.com/eea-oasis/baseline-standard) was completed in September, 2021 and submitted to OASIS for review. The current specifications are maintained [here](https://github.com/eea-oasis/baseline-standard).
+The Baseline Protocol is a set of techniques that must be implemented in a standard way across different systems. The draft [open standard](baseline-protocol-standard/core-specification.md) was completed in September, 2021 and submitted to OASIS for review. The current specifications are maintained [here](https://github.com/eea-oasis/baseline-standard).
 
 There are lots of opportunities to get informed, get involved, and **get value** out of developing reusable components, and ultimately deploying the Baseline Protocol in your own offerings. Go to [https://baseline-protocol.org](https://baseline-protocol.org) and click "**Join the Team**".
 
-**New Contributors to the codebase and standard: Go** [**here**](community/contributors.md) **for contribution guidelines.**
+**New Contributors to the codebase and standard: Go** [**here**](community/open-source-community/contributors.md) **for contribution guidelines.**
 
 ## About the Baseline Protocol
 
@@ -18,13 +18,13 @@ The Baseline Protocol is the emerging standard for synchronizing state across di
 
 The approach is designed to appeal to security and performance-minded technology officers.
 
-You can find all the details on the current version of the Baseline Protocol [here](baseline-protocol/the-baseline-protocol.md).
+You can find all the details on the current version of the Baseline Protocol [here](baseline-basics/the-baseline-protocol.md).
 
 ## The Baseline Protocol Source Code
 
 Version 1.0 of the Baseline Protocol has been released. It is composed of a set of 6 core packages that are available open-source, under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [license](https://github.com/eea-oasis/baseline/blob/master/LICENSE).
 
-You can find more about the source code [here](baseline-protocol/packages/).
+You can find more about the source code [here](baseline-protocol-code/packages/).
 
 ## The Baseline Protocol Standard
 
@@ -32,7 +32,7 @@ The Baseline Protocol Standard will be a set of three specifications - CORE, API
 
 It is developed and will be ratified as an Oasis open standard, available under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [license](https://github.com/eea-oasis/baseline/blob/master/LICENSE).
 
-You can find more details on the Baseline Protocol Standard [here]().
+You can find more details on the Baseline Protocol Standard [here](baseline-protocol-standard/overview.md).
 
 ## The Baseline Protocol Reference Implementations
 
