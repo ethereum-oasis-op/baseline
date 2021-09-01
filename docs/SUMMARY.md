@@ -2,68 +2,56 @@
 
 * [Welcome](README.md)
 
-## Basics <a id="baseline-basics"></a>
-
-* [Introduction](baseline-basics/the-baseline-protocol.md)
-* [Architecture](baseline-basics/architecture.md)
-* [Glossary](baseline-basics/glossary.md)
-* [FAQ](baseline-basics/faq.md)
-
 ## Community
 
-* [Open Source Community](community/open-source-community/README.md)
-  * [Contributors](community/open-source-community/contributors.md)
-  * [Members](community/open-source-community/members.md)
-* [Community Leaders](community/community-leaders/README.md)
-  * [Core Developers](community/community-leaders/maintainers.md)
-  * [General Assembly](community/community-leaders/specifications-steering-committee.md)
+* [Open Source Community](community/open-source-community.md)
+* [Community Leaders](community/community-leaders.md)
+* [Contributors](community/contributors.md)
+* [Members](community/members.md)
+* [Maintainers](community/maintainers.md)
+* [Technical Steering Committee](community/technical-steering-committee.md)
+* [Specifications Steering Committee](community/specifications-steering-committee.md)
+* [Governance](community/governance.md)
 
-## GOVERNANCE
+## Baseline Protocol
 
-* [Overview](governance/governance.md)
-* [Project Governance Board](governance/project-governance-board.md)
-* [Technical Steering Committee](governance/technical-steering-committee.md)
-
-## Source Code <a id="baseline-protocol-code"></a>
-
-* [Packages](baseline-protocol-code/packages/README.md)
-  * [API](baseline-protocol-code/packages/api-1.md)
-  * [Baseline](baseline-protocol-code/packages/api.md)
-  * [CCSM](baseline-protocol-code/packages/contracts.md)
-  * [Identity](baseline-protocol-code/packages/persistence.md)
-  * [Privacy](baseline-protocol-code/packages/privacy.md)
-  * [Vault](baseline-protocol-code/packages/messaging.md)
-  * [Types](baseline-protocol-code/packages/types.md)
-* [Baseline Process](baseline-protocol-code/baseline-process.md)
-* [Developer Resources](baseline-protocol-code/developer-resources.md)
-
-## Standard <a id="baseline-protocol-standard"></a>
-
-* [Overview](baseline-protocol-standard/overview.md)
-* [CORE Specification](baseline-protocol-standard/core-specification.md)
-* [API Specification](baseline-protocol-standard/api-specification.md)
-* [CCSM Specification](baseline-protocol-standard/ccsm-specification.md)
+* [Baseline Protocol](baseline-protocol/the-baseline-protocol.md)
+* [Baseline Process](baseline-protocol/baseline-process.md)
+* [Architecture](baseline-protocol/architecture.md)
+* [Packages](baseline-protocol/packages/README.md)
+  * [API](baseline-protocol/packages/api.md)
+  * [Contracts](baseline-protocol/packages/contracts.md)
+  * [Messaging](baseline-protocol/packages/messaging.md)
+  * [Persistence](baseline-protocol/packages/persistence.md)
+  * [Privacy](baseline-protocol/packages/privacy.md)
+  * [Types](baseline-protocol/packages/types.md)
+* [Components](baseline-protocol/components.md)
 
 ## Reference Implementations <a id="bri"></a>
 
 * [Overview](bri/overview-of-reference-implementations.md)
 * [BRI-1](bri/bri-1/README.md)
   * [Base Example](bri/bri-1/bri-1-base-example.md)
-  * [Running BRI-1](bri/bri-1/running-bri-1.md)
+  * [Libraries](bri/bri-1/bri-1-libraries/README.md)
+    * [SAP/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-sap-microsoft-dynamics.md)
+    * [Google Sheets/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-google-sheets-microsoft-dynamics.md)
 * [BRI-2](bri/bri-2.md)
+* [Radish34](bri/radish34/README.md)
+  * [Radish34 Explained](bri/radish34/radish34-explained.md)
+  * [Interactive Demo](bri/radish34/radish34-interactive-demo.md)
+  * [Workflow](bri/radish34/radish34-workflow.md)
+  * [Radish34 POC](bri/radish34/radish34-poc.md)
+  * [Key Diagrams](bri/radish34/radish34-key-diagrams.md)
+  * [Modifying Radish34](bri/radish34/modifying-radish34.md)
+  * [From POC to Protocol](bri/radish34/from-poc-to-protocol.md)
 
-## Connectors
+## Baseline Protocol Standard
 
-* [SAP/Microsoft Dynamics](connectors/erp-connector-sap-microsoft-dynamics.md)
-* [Google Sheets/Microsoft Dynamics](connectors/erp-connector-google-sheets-microsoft-dynamics.md)
-* [MSFT Excel Connector](connectors/msft-excel-connector.md)
+* [Standard In Development](baseline-protocol-standard/standards/README.md)
+  * [Mainnet](baseline-protocol-standard/standards/mainnet.md)
+  * [Driving Mainnet Evolution](baseline-protocol-standard/standards/driving-mainnet-evolution.md)
 
-## Deprecated Work
+## Baseline Basics
 
-* [Overview](deprecated-work/overview.md)
-* [Radish34 - DEPRECATED](deprecated-work/radish34/README.md)
-  * [Radish34 Explained - DEPRECATED](deprecated-work/radish34/radish34-explained.md)
-  * [Interactive Demo - DEPRECATED](deprecated-work/radish34/radish34-interactive-demo.md)
-  * [Workflow  - DEPRECATED](deprecated-work/radish34/radish34-workflow.md)
-  * [Key Diagrams - DEPRECATED](deprecated-work/radish34/radish34-key-diagrams.md)
+* [Glossary](baseline-basics/glossary.md)
 
