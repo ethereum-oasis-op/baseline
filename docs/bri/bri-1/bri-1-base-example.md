@@ -1,19 +1,65 @@
 # Base Example
 
+## Overview
+
+[**Provide**](https://provide.services/) has contributed a complete reference implementation of the core interfaces as specified in the v0.1.0 release of the [Baseline Protocol](https://baseline-protocol.org/). This reference implementation will inform the OASIS standard.
+
+The reference implementation runs on the Ethereum Ropsten testnet and can be configured to run on many other public or permissioned EVM-based blockchains; a complete list of supported Ethereum clients will be curated over the coming months.
+
+### Setup
+
+Clone the Baseline repository:
+
+```text
+git clone https://github.com/eea-oasis/baseline.git
+```
+
+Checkout the bri-1-privacy branch:
+
+```text
+git checkout bri-1-privacy
+```
+
+Once checked out, navigate to the /examples/bri-1/base-examples folder. 
+
+### Running Locally
+
+Run the following to install local packages and run the test suite against the Ropsten testnet:
+
+```text
+npm install
+npm test
+```
+
+In a separate terminal window, run the following command to view all container logs while the tests are running:
+
+```text
+make logs
+```
+
 ## Alice & Bob
 
-The reference implementation illustrates Alice & Bob, respective owners of Alice Corp and Bob Corp, establishing a workgroup and _baselining_ an in-memory record \(i.e., a JSON object\) using the Provide stack.
+The reference implementation illustrates Alice & Bob, respective owners of Alice Corp and Bob Corp, establishing a workgroup and baselining an in-memory record \(i.e., a JSON object\) using the Provide stack.
 
-The following high-level architecture diagram illustrates how the concepts discussed in previous sections \(i.e., the Provide and Baseline Protocol architecture sections\) fit together in the context of two organizations deploying the Baseline Protocol using Provide as a common technology stack and their own cloud infrastructure vendors \(i.e., AWS and Azure\). The reference implementation deploys these same two distinct stacks to your local machine using `docker-compose` when running the test suite.
+The following high-level architecture diagram illustrates how the concepts discussed in previous sections \(i.e., the Provide and Baseline Protocol architecture sections\) fit together in the context of two organizations deploying the Baseline Protocol using Provide as a common technology stack and their own cloud infrastructure vendors \(i.e., AWS and Azure\). The reference implementation deploys these same two distinct stacks to your local machine using docker-compose when running the test suite
 
-![This reference implementation supports cloud-agnostic experiments out-of-the-box.](../../.gitbook/assets/image%20%282%29.png)
+![This reference implementation supports cloud-agnostic experiments out-of-the-box.](../../.gitbook/assets/image%20%284%29.png)
 
-### Initiating the Workgroup
+There are several assertion and checks that have to be carried out, in full and in a specific order to ensure that the base example can run and fully demonstrate the functionality and potential of the Baseline protocol, leveraged by the Provide stack. Subsequent sections illustrate the necessary components and their outputs as well as the rationale for their importance.
 
-Bob is designated as the initiator of the workgroup and the end-to-end test suite makes assertions as Bob Corp deploys the ERC1820 organization registry contract to the Ropsten testnet, compiles and performs the trusted setup of a zero-knowledge circuit to govern an initial business process among workgroup participants and invites Alice to join the workgroup.
+**Workgroup assertions**  
+All on-chain artifacts existence and accessibility will be asserted, this includes the ERC1820 contract, the organization registry, workgroup shield, workflow circuit verifier contract, and the circuit identifier. We will also assert we have established a connection with NATS, and that there is an active subscription to the  baseline.proxy subject.
 
-### Decoded Workgroup Invitation JWT
+**Vault assertions**  
+The user will be able to register its corporation in the local registry and the on-chain registry using the default secp256k1 address. We will the ensure all vault related services are fully functional. We will assert a default vault for the organization has been created as well as a set of key pairs for the organization for babyJubJub, secp256k1, and finally ensure the secp256k1 key pair can resolve as the organization address.
 
+**Messaging assertions**  
+We will also assert we have established a connection with NATS, and that there is an active subscription to the  baseline.proxy subject. 
+
+**SNARK assertions**  
+TBD
+
+**Decoded workgroup Invitation**  
 The following JSON object represents the decoded invitation JWT signed by Bob Corp and delivered to Alice. The invitation has everything Alice needs to join Bob's new Baseline workgroup, register Alice Corp with the on-chain `OrgRegistry` contract and use the protocol to synchronize her local Provide stack.
 
 ```text
@@ -60,8 +106,4 @@ The following JSON object represents the decoded invitation JWT signed by Bob Co
   "sub": "invite:alice1597987999175@baseline.local"
 }
 ```
-
-### Accepting the Workgroup Invitation
-
-Alice accepts the invitation and synchronizes with the on- and off-chain state of the workgroup. Following Alice's acceptance of Bob's invitation on behalf of Alice Corp, both organizations have been registered with the on-chain `OrgRegistry` contract; both organizations are running their own local, off-chain copy of the organization registry, workgroup contracts registry and merkle tree database.
 
