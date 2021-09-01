@@ -22,5 +22,5 @@ Eth2 will further extend the range of applications that baselining can serve at 
 
 Some providers of ERP, CRM and other enterprise systems are now seen to be optimizing their products for the protocol, but baselining works without requiring any modification to legacy systems.
 
-Any state machine should be able to "baseline." Permissioned blockchains \(aka DLT\) are state machines. Hyperledger projects like Fabric have Channels, which are, each of them, state machines. Public blockchain networks are also state machines. So...all of these may use the baseline approach. Their question: what will they choose to use as the common frame of reference. 
+Any state machine should be able to "baseline." Permissioned blockchains \(aka DLT\) are state machines. Hyperledger projects like Fabric have Channels, which are, each of them, state machines. Public blockchain networks are also state machines. So...all of these may use the baseline approach. Their question: what will they choose to use as the common frame of reference.
 

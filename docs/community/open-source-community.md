@@ -1,6 +1,6 @@
 # Open Source Community
 
-The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020 and launched as an [OASIS](https://oasis-open-projects.org/) open source project on March 19, 2020, supported by fourteen founding companies. The number of active companies and individuals contributing to the work and using it in products and enterprise solutions grew quickly through the Summer of 2020 and currently is estimated at over 600. 
+The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020 and launched as an [OASIS](https://oasis-open-projects.org/) open source project on March 19, 2020, supported by fourteen founding companies. The number of active companies and individuals contributing to the work and using it in products and enterprise solutions grew quickly through the Summer of 2020 and currently is estimated at over 600.
 
 The initiative is strongly aligned with the Mainnet Working Group, a joint effort of the [Enterprise Ethereum Alliance](https://entethalliance.org/) and the [Ethereum Foundation](https://ethereum.org/).
 

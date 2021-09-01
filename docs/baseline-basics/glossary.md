@@ -72,6 +72,10 @@ The Verifier Contract is the on-chain component of the ZK Service, which ensures
 
 The hash deposited in a Shield Contract when a Workflow Step successfully completes, representing successful verification on chain of the correctness of a logical statement \(proof\); successful storage of the hash in a Merkle tree within a Shield contract on chain.
 
+### Prover 
+
+A state synchronization and consistency mechanism for completing on- and off-chain state transitions. 
+
 ## Radish34-Specific Terms
 
 \(work in progress...see [Radish34]() section for full documentation.\)

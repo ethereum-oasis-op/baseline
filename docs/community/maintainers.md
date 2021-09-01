@@ -8,7 +8,6 @@ Here's a list of [current Maintainers](community-leaders.md#maintainer-team).
 
 ### What do maintainers do? <a id="what-do-maintainers-do"></a>
 
-
 Maintainers are people who take an active role in advancing the Baseline Protocol and/or related projects. They are primarily responsible for:
 
 * Contributing code or contributing to specification work in the form of PRs that are linked to open and prioritized issues

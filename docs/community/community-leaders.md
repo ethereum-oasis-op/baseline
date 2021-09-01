@@ -39,14 +39,14 @@ On September 30, 2020, the following people were voted in as the TSC for October
 | :--- | :--- |
 | [**Hudson Jameson**](https://www.linkedin.com/in/hudsonjameson/) | Ethereum Foundation |
 | [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/) | Golden Next Ventures |
-| [**Anais Ofranc**](https://www.linkedin.com/in/anaisofranc/)| Consianimis |
-| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)| Unibright |
+| [**Anais Ofranc**](https://www.linkedin.com/in/anaisofranc/) | Consianimis |
+| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/) | Unibright |
 | [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/) | Ernst & Young |
 | [**Tomasz Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/) | Nethermind |
 | [**Sam Stokes**](https://www.linkedin.com/in/sam-stokes-91ba1813/) | ConsenSys AG |
 | [**Conor Svensson**](https://www.linkedin.com/in/conor10/) | Web3Labs |
-| [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)| Microsoft |
-| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)| Provide |
+| [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/) | Microsoft |
+| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/) | Provide |
 | [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) -- Chair | ConsenSys AG |
 
 ### Specifications Steering Committee <a id="your-specifications-steering-committee"></a>
@@ -119,5 +119,5 @@ Details on how to become a [Maintainer here](members.md).
 
 ## Contributors <a id="contributors"></a>
 
-The active contributors and maintainers of the Baseline Protocol repo can be found on [Github](https://github.com/ethereum-oasis/baseline/graphs/contributors). \(Note: many contributors work in clones extending the protocol for their products. These people don't necessarily show up in the Github contributors list.\) 
+The active contributors and maintainers of the Baseline Protocol repo can be found on [Github](https://github.com/ethereum-oasis/baseline/graphs/contributors). \(Note: many contributors work in clones extending the protocol for their products. These people don't necessarily show up in the Github contributors list.\)
 

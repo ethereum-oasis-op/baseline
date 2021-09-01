@@ -2,18 +2,37 @@
 
 ## Alice & Bob
 
-The reference implementation illustrates Alice & Bob, respective owners of Alice Corp and Bob Corp, establishing a workgroup and _baselining_ an in-memory record \(i.e., a JSON object\) using the Provide stack.
+The reference implementation illustrates Alice & Bob, respective owners of Alice Corp and Bob Corp, establishing a workgroup and baselining an in-memory record \(i.e., a JSON object\) using the Provide stack.
 
-The following high-level architecture diagram illustrates how the concepts discussed in previous sections \(i.e., the Provide and Baseline Protocol architecture sections\) fit together in the context of two organizations deploying the Baseline Protocol using Provide as a common technology stack and their own cloud infrastructure vendors \(i.e., AWS and Azure\). The reference implementation deploys these same two distinct stacks to your local machine using `docker-compose` when running the test suite.
+The following high-level architecture diagram illustrates how the concepts discussed in previous sections \(i.e., the Provide and Baseline Protocol architecture sections\) fit together in the context of two organizations deploying the Baseline Protocol using Provide as a common technology stack and their own cloud infrastructure vendors \(i.e., AWS and Azure\). The reference implementation deploys these same two distinct stacks to your local machine using docker-compose when running the test suite
 
-![This reference implementation supports cloud-agnostic experiments out-of-the-box.](../../.gitbook/assets/image%20%282%29.png)
+![This reference implementation supports cloud-agnostic experiments out-of-the-box.](../../.gitbook/assets/image%20%284%29.png)
 
-### Initiating the Workgroup
+### Assertions
 
-Bob is designated as the initiator of the workgroup and the end-to-end test suite makes assertions as Bob Corp deploys the ERC1820 organization registry contract to the Ropsten testnet, compiles and performs the trusted setup of a zero-knowledge circuit to govern an initial business process among workgroup participants and invites Alice to join the workgroup.
+There are several assertion and checks that have to be carried out, in full and in a specific order to ensure that the base example can run and fully demonstrate the functionality and potential of the baseline protocol, leveraged by the provide stack. The following sections illustrate the necessary components and their outputs as well as the rationale for their importance.
 
-### Decoded Workgroup Invitation JWT
+**Workgroup**  
+All on-chain artefacts existence and accessibility will be asserted, this includes the ERC1820 Contract, the Organisation Registry, Workgroup Shield Contract, Workflow Circuit Verifier Contract, and the Circuit Identifier. This will ensure that we can access all the information related to workgroups, their participants and the circuits they have created as well as being able to verify any circuits that come out way.
 
+**Vault**  
+The user will be able to register its corporation in the local registry and the on-chain registry using the default secp256k1 address. We will then ensure all vault related services are fully functional. We will assert a default vault for the organisation has been created as well as a set of key pairs for the organisation for babyJubJub, secp256k1, and finally ensure the secp256k1 key pair can resolve as the organisation address. All these assertions are responsible of verifying that the organisation and the users that create them have indeed 
+
+**Messaging**  
+We will assert we have e established a connection with NATS, and that there is an active subscription to the  baseline.proxy subject. 
+
+**zk-SNARK**   
+Will assert the unique identifier for the circuit, the proving key id, the verifying key id, a copy of the raw verifier source code, a reference to the workflow circuit identifier, the compiled circuit r1cs, the key pair for proving and verification, the deposited workgroup shield contract on-chain, and finally the deposited circuit verifier on-chain. There are two main assertion types: 
+
+Provisioning - Ensures a circuit gets deployed correctly and that all the necessary elements for its proving and verification are available to the users that will want to use them.
+
+Synchronisation - Retrieves the objects on-chain and locally created in the provision assertion.
+
+**Counterparty** 
+
+add counterparty assertion here
+
+**Decoded workgroup Invitation**  
 The following JSON object represents the decoded invitation JWT signed by Bob Corp and delivered to Alice. The invitation has everything Alice needs to join Bob's new Baseline workgroup, register Alice Corp with the on-chain `OrgRegistry` contract and use the protocol to synchronize her local Provide stack.
 
 ```text
@@ -61,7 +80,10 @@ The following JSON object represents the decoded invitation JWT signed by Bob Co
 }
 ```
 
-### Accepting the Workgroup Invitation
+### End to end user flow
 
-Alice accepts the invitation and synchronizes with the on- and off-chain state of the workgroup. Following Alice's acceptance of Bob's invitation on behalf of Alice Corp, both organizations have been registered with the on-chain `OrgRegistry` contract; both organizations are running their own local, off-chain copy of the organization registry, workgroup contracts registry and merkle tree database.
+The base example process flow is made up of two users, Alice & Bob and their corresponding Orgs, Alice-Corp & BobCorp. Bob will be assigned as the initiator and execute the Stack, Workgroup,  Vault and zk-SNARK Provision assertions. When all of these pass Bob-Corp will generate an invite token, as described in the Decoded Workgroup Invitation. Alice then accepts the invitation and synchronizes with the on- and off-chain state of the workgroup. Following Alice's acceptance of Bob's invitation on behalf of Alice Corp, both organizations have been registered with the on-chain OrgRegistry contract; both organizations are running their own local, off-chain copy of the organization registry, workgroup contracts registry and merkle tree database. At this point both Alice and bob will carry out a counterparty assertion check. Which ensure they have all the necessary information about each other to communicate and initialise a workflow, and subsequently a workstep. Bob will generate a general consistency circuit and transfer it over nats to Alice who will receive it and verify it.   
+
+
+
 

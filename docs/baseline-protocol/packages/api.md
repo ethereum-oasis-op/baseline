@@ -18,20 +18,19 @@ Run the local test suite with `npm test`.
 
 ### Baseline JSON-RPC Module
 
-An initial set of JSON-RPC methods have been defined for inclusion in the specification. These methods allow easy interaction with on-chain shield contracts (which contain merkle-tree fragments) and maintain full merkle-trees (along with metadata) in local off-chain storage.
+An initial set of JSON-RPC methods have been defined for inclusion in the specification. These methods allow easy interaction with on-chain shield contracts \(which contain merkle-tree fragments\) and maintain full merkle-trees \(along with metadata\) in local off-chain storage.
 
 | Method | Params | Description |
-| -------- | ----- | ----------- |
+| :--- | :--- | :--- |
 | `baseline_getCommit` | address, commitIndex | Retrieve a single commit from a tree at the given shield contract address |
 | `baseline_getCommits` | address, startIndex, count | Retrieve multiple commits from a tree at the given shield contract address |
 | `baseline_getRoot` | address | Retrieve the root of a tree at the given shield contract address |
 | `baseline_getProof` | address, commitIndex | Retrieve the membership proof for the given commit index |
-| `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
+| `baseline_getTracked` |  | Retrieve a list of the shield contract addresses being tracked and persisted |
 | `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address |
 | `baseline_track` | address | Initialize a merkle tree database for the given shield contract address |
 | `baseline_untrack` | address | Remove event listeners for a given shield contract address |
 | `baseline_verify` | address, value, siblings | Verify a proof for a given root and commit value |
-
 
 #### Ethereum clients that support baseline JSON-RPC
 
@@ -40,7 +39,7 @@ An initial set of JSON-RPC methods have been defined for inclusion in the specif
   * [ganache](https://github.com/trufflesuite/ganache)
   * [besu](https://github.com/hyperledger/besu)
   * [Infura](https://infura.io/docs/ethereum)
-  * [Infura Transactions (ITX)](https://infura.io/docs/transactions)
+  * [Infura Transactions \(ITX\)](https://infura.io/docs/transactions)
 
 ### Interfaces
 

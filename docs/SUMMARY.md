@@ -35,7 +35,7 @@
   * [Libraries](bri/bri-1/bri-1-libraries/README.md)
     * [SAP/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-sap-microsoft-dynamics.md)
     * [Google Sheets/Microsoft Dynamics](bri/bri-1/bri-1-libraries/erp-connector-google-sheets-microsoft-dynamics.md)
-* [BRI-2](bri/bri-2/README.md)
+* [BRI-2](bri/bri-2.md)
 * [Radish34](bri/radish34/README.md)
   * [Radish34 Explained](bri/radish34/radish34-explained.md)
   * [Interactive Demo](bri/radish34/radish34-interactive-demo.md)
@@ -47,6 +47,10 @@
 
 ## Baseline Protocol Standard
 
+* [Overview](baseline-protocol-standard/standard-overview.md)
+* [CORE Specification](baseline-protocol-standard/core-specification.md)
+* [API Specification](baseline-protocol-standard/api-specification.md)
+* [CCSM Specification](baseline-protocol-standard/ccsm-specification.md)
 * [Standard In Development](baseline-protocol-standard/standards/README.md)
   * [Mainnet](baseline-protocol-standard/standards/mainnet.md)
   * [Driving Mainnet Evolution](baseline-protocol-standard/standards/driving-mainnet-evolution.md)
@@ -54,4 +58,9 @@
 ## Baseline Basics
 
 * [Glossary](baseline-basics/glossary.md)
+* [FAQ](baseline-basics/faq.md)
+
+## DEVELOPERS
+
+* [Developer Resources](developers/developer-resources.md)
 

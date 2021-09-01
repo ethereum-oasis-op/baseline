@@ -50,7 +50,7 @@ Baseline itself is a microservice architecture, where the different components o
 
 The architecture proposal of this demo builds upon the existing microservices, and adds layers to extract communication and integration with baseline towards an external system.
 
-![Shuttle Microservice Containers](docs/images/image5.png)   
+![Shuttle Microservice Containers](https://github.com/ethereum-oasis/baseline/tree/5efb0a43596f1f4d7ba0625381c112e3f9b4b2c9/docs/bri/bri-1/bri-1-libraries/docs/images/image5.png)  
 **Microservice container environment for a participant in a baselined business process.**&lt;/sup&gt;
 
 **Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis/baseline/tree/init-core) in GitHub, including several key fixes \(i.e., unwiring cyclic dependencies within the existing Radish34 environment\) and enhancements \(i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements\).
@@ -159,7 +159,7 @@ The Radish 34 Service Operations module will periodically check for incoming pur
 
 **Radish34 Service Operations Module \(Unchecked for incoming purchase orders\)**
 
-The Sales Order modules to look at the approved proposal from the Buyer and confirm the sales order  
-  
+The Sales Order modules to look at the approved proposal from the Buyer and confirm the sales order
+
 **Sales Order module**
 

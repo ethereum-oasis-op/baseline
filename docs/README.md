@@ -6,15 +6,15 @@ The Baseline Protocol initiative was [announced](https://consensys.net/blog/pres
 
 The work of the community is maintained under a public domain[ license](https://github.com/ethereum-oasis/baseline/blob/master/LICENSE).
 
-The Baseline Protocol is a set of techniques that must be implemented in a standard way across different systems. This open standard is under development now, following the release of the **Baseline Protocol v0.1** reference implementation, which can be found [**here**](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1).
+The Baseline Protocol is a set of techniques that must be implemented in a standard way across different systems. The [draft standard](https://github.com/eea-oasis/baseline-standard) has been completed, and V1.0.0 of the [Core Interfaces](https://github.com/eea-oasis/baseline/tree/master/core), [Examples, and Reference Implementations](https://github.com/eea-oasis/baseline/tree/master/examples) are under active development.
 
 There are lots of opportunities to get informed, get involved, and **get value** out of defining requirements, developing reusable components, and ultimately deploying the Baseline Protocol in your own offerings.
 
-**New Contributors: Go** [**here**](community/contributors.md) **for details on how to get involved.**
+**New Community Members: Go** [**here**](community/contributors.md) **for details on how to get involved.**
 
 ## The Baseline Protocol
 
-The Baseline Protocol is an approach to using the public [Mainnet](baseline-protocol-standard/standards/mainnet.md) as a common frame of reference between different systems, including traditional corporate systems of record, any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine), and even different blockchains or DLTs. It is particularly promising as a way to reduce capital expense and other overheads while increasing operational integrity when **automating business processes** across multiple companies.
+The Baseline Protocol is a standard for synchronizing the state of systems of record using a public blockchain as a common frame of reference. This includes synchronizing traditional corporate systems of record, any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine), and even different blockchains or DLTs. It is particularly promising as a way to reduce capital expense and other overheads while increasing operational integrity when **automating business processes** across multiple companies.
 
 The approach is designed to appeal to security and performance-minded technology officers.
 
