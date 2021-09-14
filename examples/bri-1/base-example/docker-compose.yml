@@ -43,9 +43,9 @@ services:
     restart: always
 
   alice-nats:
-    image: provide/nats-server
+    image: provide/nats-server:2.2.3-beta.4-PRVD
     container_name: alice-provide-nats
-    command: ["-auth", "testtoken", "-p", "4222", "-D", "-V"]
+    command: ["--js", "--server_name", "alice_prvd", "--auth", "testtoken", "-p", "4222", "-D", "-V"]
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----
@@ -78,30 +78,11 @@ services:
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
-  alice-nats-streaming:
-    image: provide/nats-streaming
-    command: ["-cid", "provide", "--auth", "testtoken", "-SDV"]
-    container_name: alice-nats-streaming
-    depends_on:
-      - alice-nats
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
-      interval: 1m
-      timeout: 1s
-      retries: 2
-      start_period: 10s
-    hostname: alice-nats-streaming
-    networks:
-      - alice
-    restart: always
-    volumes:
-      - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
-
   alice-ident:
     image: provide/ident
     container_name: alice-ident
     depends_on:
-      - alice-nats-streaming
+      - alice-nats
       - alice-postgres
       - alice-redis
     environment:
@@ -113,7 +94,7 @@ services:
       - IDENT_API_SCHEME=http
       - NATS_CLIENT_PREFIX=alice-ident
       - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://alice-nats:4222
       - REDIS_HOSTS=alice-redis:6379
       - LOG_LEVEL=DEBUG
       - PORT=8080
@@ -139,7 +120,7 @@ services:
     container_name: alice-ident-consumer
     depends_on:
       - alice-ident
-      - alice-nats-streaming
+      - alice-nats
       - alice-postgres
       - alice-redis
     environment:
@@ -153,7 +134,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-ident-consumer
       - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://alice-nats:4222
       - NCHAIN_API_HOST=alice-nchain:8080
       - NCHAIN_API_SCHEME=http
       - REDIS_HOSTS=alice-redis:6379
@@ -176,7 +157,7 @@ services:
     container_name: alice-nchain
     depends_on:
       - alice-ident
-      - alice-nats-streaming
+      - alice-nats
       - alice-postgres
       - alice-redis
       - alice-vault
@@ -190,7 +171,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-nchain
       - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://alice-nats:4222
       - PAYMENTS_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImU2OmY3OmQ1OjI0OmUyOjU5OjA2OjJiOmJjOmEyOjhjOjM1OjlkOmNhOjBhOjg3IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjAwNzA5Njg3LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiJkMDIzM2JlZC1iMThkLTRmNGEtODNlYS02MjBmYjdjYTY0NWMiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4wYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIl19fX0sInBydmQiOnsiYXBwbGljYXRpb25faWQiOiIwYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJleHRlbmRlZCI6eyJwZXJtaXNzaW9ucyI6eyIqIjo1MTB9fSwicGVybWlzc2lvbnMiOjUxMH0sInN1YiI6ImFwcGxpY2F0aW9uOjBjNWE5ZmViLTE2MGMtNGZlMS05MTBlLTE4NzQyZjg2NGJjZSJ9.SUd50x0g6opm2oU9zFMu6rLpc-22WeEi50OByzluBsoV1fCN1INzqHnCJAMLC2myXIDRKaP1Q-MZVAw97hpzuGQjXEY8yobX0Br3DjGADqaM3iJiaD4GB73lZtd2w2jAsy3PDfvEE_dd9SalGA90WLoSUwkEObFxqufj2vnMVuiH1UwUnMawuVGfZPzZ7Wtoe9K4sq0E7qYiND5lgz0tyDnP7FWyd_wHEwjan_AhabgUJA0w5XlUq7AnjHe-NTrCzU_ZTJ6Hdvxy_uNRSOOv4fV4_MVRomqPePBTPXeeLBpjpsVVKSsKGrP3z7oAWclCm21i-9hEvyEeIN3TV71KgYDLaMtHsHZYPdo1WaKdnq49uPVgXbzCsAAWvgjKbOT62VciQVgv1ognm_22gPgxRksrOAhArSUX_LP0NLMxXDGP0TGwx218QgNW4qj6OxQZrBCO5YRl0Lb-mQVZZ2L3AQXk39gvArTnqIQ8aV9hwLeiBqq1qZU7Q77RUHI-yMUfkH3FAy2xQS1AIn7-rM6rCXtjXVUzdjm1_6HrJkDjS20HUFsaqmKacPxlkkCFa08zxsIsuU_h9LY4VdeVHJKnvWUFWy2M6jYvKIJRuF0Dk1PCTLqbiBUmyCnr20qGe5Y8Vc9c3pvuudm6hdk6aGa3zuNOIzftPthPEoUzoG4qZ3c
       - PORT=8080
       - REDIS_HOSTS=alice-redis:6379
@@ -216,7 +197,7 @@ services:
     container_name: alice-nchain-consumer
     depends_on:
       - alice-ident
-      - alice-nats-streaming
+      - alice-nats
       - alice-postgres
       - alice-redis
       - alice-vault
@@ -231,7 +212,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-nchain-consumer
       - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://alice-nats:4222
       - NATS_TOKEN=testtoken
       - PAYMENTS_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImU2OmY3OmQ1OjI0OmUyOjU5OjA2OjJiOmJjOmEyOjhjOjM1OjlkOmNhOjBhOjg3IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjAwNzA5Njg3LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiJkMDIzM2JlZC1iMThkLTRmNGEtODNlYS02MjBmYjdjYTY0NWMiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4wYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIl19fX0sInBydmQiOnsiYXBwbGljYXRpb25faWQiOiIwYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJleHRlbmRlZCI6eyJwZXJtaXNzaW9ucyI6eyIqIjo1MTB9fSwicGVybWlzc2lvbnMiOjUxMH0sInN1YiI6ImFwcGxpY2F0aW9uOjBjNWE5ZmViLTE2MGMtNGZlMS05MTBlLTE4NzQyZjg2NGJjZSJ9.SUd50x0g6opm2oU9zFMu6rLpc-22WeEi50OByzluBsoV1fCN1INzqHnCJAMLC2myXIDRKaP1Q-MZVAw97hpzuGQjXEY8yobX0Br3DjGADqaM3iJiaD4GB73lZtd2w2jAsy3PDfvEE_dd9SalGA90WLoSUwkEObFxqufj2vnMVuiH1UwUnMawuVGfZPzZ7Wtoe9K4sq0E7qYiND5lgz0tyDnP7FWyd_wHEwjan_AhabgUJA0w5XlUq7AnjHe-NTrCzU_ZTJ6Hdvxy_uNRSOOv4fV4_MVRomqPePBTPXeeLBpjpsVVKSsKGrP3z7oAWclCm21i-9hEvyEeIN3TV71KgYDLaMtHsHZYPdo1WaKdnq49uPVgXbzCsAAWvgjKbOT62VciQVgv1ognm_22gPgxRksrOAhArSUX_LP0NLMxXDGP0TGwx218QgNW4qj6OxQZrBCO5YRl0Lb-mQVZZ2L3AQXk39gvArTnqIQ8aV9hwLeiBqq1qZU7Q77RUHI-yMUfkH3FAy2xQS1AIn7-rM6rCXtjXVUzdjm1_6HrJkDjS20HUFsaqmKacPxlkkCFa08zxsIsuU_h9LY4VdeVHJKnvWUFWy2M6jYvKIJRuF0Dk1PCTLqbiBUmyCnr20qGe5Y8Vc9c3pvuudm6hdk6aGa3zuNOIzftPthPEoUzoG4qZ3c
       - REDIS_HOSTS=alice-redis:6379
@@ -254,7 +235,7 @@ services:
     container_name: alice-privacy
     depends_on:
       - alice-ident
-      - alice-nats-streaming
+      - alice-nats
       - alice-postgres
       - alice-privacy-consumer
       - alice-redis
@@ -271,7 +252,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-privacy
       - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://alice-nats:4222
       - PORT=8080
       - VAULT_API_HOST=alice-vault:8080
       - VAULT_API_SCHEME=http
@@ -294,7 +275,7 @@ services:
     entrypoint: ./ops/run_consumer.sh
     container_name: alice-privacy-consumer
     depends_on:
-      - alice-nats-streaming
+      - alice-nats
       - alice-postgres
       - alice-redis
       - alice-vault
@@ -311,7 +292,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=alice-privacy-consumer
       - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://alice-nats:4222
       - VAULT_API_HOST=alice-vault:8080
       - VAULT_API_SCHEME=http
       - VAULT_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwOjJlOmQ5OmUxOmI4OmEyOjM0OjM3Ojk5OjNhOjI0OmZjOmFhOmQxOmM4OjU5IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL3Byb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjA1NzkxMjQ4LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiI5YjUxNGIxNS01NTdlLTRhYWQtYTcwOC0wMTcwZTAwZWE1ZmIiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4zNjAxNTdmOC1kNWExLTQ0NDAtOTE4Yi1mNjhiYjM5YzBkODAiLCJ1c2VyLjIzY2MwN2UwLTM4NTEtNDBkZC1iNjc1LWRmNzY4MDY3MmY3ZCIsIm5ldHdvcmsuKi5jb25uZWN0b3IuKiIsIm5ldHdvcmsuKi5zdGF0dXMiLCJwbGF0Zm9ybS5cdTAwM2UiXX19fSwicHJ2ZCI6eyJhcHBsaWNhdGlvbl9pZCI6IjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCIsImV4dGVuZGVkIjp7InBlcm1pc3Npb25zIjp7IioiOjUxMH19LCJwZXJtaXNzaW9ucyI6NTEwLCJ1c2VyX2lkIjoiMjNjYzA3ZTAtMzg1MS00MGRkLWI2NzUtZGY3NjgwNjcyZjdkIn0sInN1YiI6ImFwcGxpY2F0aW9uOjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCJ9.SUh84MKBNstdu3KFu1zEAQq03xbPw1D0lLXeogz1HfBJy77bIGf7HLvCuc6bjkh0xj3cEuEus1dC1Dj3BvlZoSXsvz_biTzSapkXzJjpkwOL6qkYDmqTPZvXwqmk-mUNrHTPkqdiIJL7xA46tzHW3E_hjSA9HjEk1kXjPdJQ6_ifkgWNoAaSD--kudIrhZ7vLnfy0H1JEAOsXzSAMoc5_pNG2n79m0ywvb_4l9BqdsHW8N3xSQOFjcp9gD_tqo6ffug3pkpoy-RSguM_OaMR2lj_CHhYxAt0phtjUceDD3K1h5iZ38kSl7izhOdULMmGBhVpBMoSy6_R6ZzpCL3pj8FcReX9RXR5oYpm8PDtlmWqblQzjwY00-uYLfOX0_iS4MGfEsjadZPfTmJLcOTYC7H4PL9ZRu_XtMDUrGBQQz5b_ad2ZzMXbBNeU6vbxVKDG8VFKWOHAemqHTcvuOAsOCLIqOu-eJpZHlXbx-FXPTYledd-GBDe7IjaC9ll_JK3utCOnCq0qUs6lnXIrQ_Sp1LcTKJJ7aY5f9TxeoAuL-ghDbQ3Xkw6huKyPCz2evOwVLwrB9ZRMlQXgmTnB1OeQvWii1WbmkyV1Zhbz_RPB8ckK7_mFxuPvsXK8wTFiWFmj96sRX470kV-ooSfM5CzKZhSLqgyyaUNC0VaCPq0uuE
@@ -332,7 +313,7 @@ services:
     container_name: alice-statsdaemon
     depends_on:
       - alice-ident
-      - alice-nats-streaming
+      - alice-nats
       - alice-postgres
       - alice-redis
     environment:
@@ -345,7 +326,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=statsdaemon
       - NATS_URL=nats://alice-nats:4222
-      - NATS_STREAMING_URL=nats://alice-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://alice-nats:4222
       - PAYMENTS_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImU2OmY3OmQ1OjI0OmUyOjU5OjA2OjJiOmJjOmEyOjhjOjM1OjlkOmNhOjBhOjg3IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjAwNzA5Njg3LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiJkMDIzM2JlZC1iMThkLTRmNGEtODNlYS02MjBmYjdjYTY0NWMiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4wYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIl19fX0sInBydmQiOnsiYXBwbGljYXRpb25faWQiOiIwYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJleHRlbmRlZCI6eyJwZXJtaXNzaW9ucyI6eyIqIjo1MTB9fSwicGVybWlzc2lvbnMiOjUxMH0sInN1YiI6ImFwcGxpY2F0aW9uOjBjNWE5ZmViLTE2MGMtNGZlMS05MTBlLTE4NzQyZjg2NGJjZSJ9.SUd50x0g6opm2oU9zFMu6rLpc-22WeEi50OByzluBsoV1fCN1INzqHnCJAMLC2myXIDRKaP1Q-MZVAw97hpzuGQjXEY8yobX0Br3DjGADqaM3iJiaD4GB73lZtd2w2jAsy3PDfvEE_dd9SalGA90WLoSUwkEObFxqufj2vnMVuiH1UwUnMawuVGfZPzZ7Wtoe9K4sq0E7qYiND5lgz0tyDnP7FWyd_wHEwjan_AhabgUJA0w5XlUq7AnjHe-NTrCzU_ZTJ6Hdvxy_uNRSOOv4fV4_MVRomqPePBTPXeeLBpjpsVVKSsKGrP3z7oAWclCm21i-9hEvyEeIN3TV71KgYDLaMtHsHZYPdo1WaKdnq49uPVgXbzCsAAWvgjKbOT62VciQVgv1ognm_22gPgxRksrOAhArSUX_LP0NLMxXDGP0TGwx218QgNW4qj6OxQZrBCO5YRl0Lb-mQVZZ2L3AQXk39gvArTnqIQ8aV9hwLeiBqq1qZU7Q77RUHI-yMUfkH3FAy2xQS1AIn7-rM6rCXtjXVUzdjm1_6HrJkDjS20HUFsaqmKacPxlkkCFa08zxsIsuU_h9LY4VdeVHJKnvWUFWy2M6jYvKIJRuF0Dk1PCTLqbiBUmyCnr20qGe5Y8Vc9c3pvuudm6hdk6aGa3zuNOIzftPthPEoUzoG4qZ3c
       - REDIS_HOSTS=alice-redis:6379
       - VAULT_API_HOST=alice-vault:8080
@@ -437,9 +418,9 @@ services:
     restart: always
 
   bob-nats:
-    image: provide/nats-server
+    image: provide/nats-server:2.2.3-beta.4-PRVD
     container_name: bob-provide-nats
-    command: ["-auth", "testtoken", "-p", "4222", "-D", "-V"]
+    command: ["--js", "--server_name", "bob_prvd", "--auth", "testtoken", "-p", "4222", "-DVV"]
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----
@@ -457,7 +438,7 @@ services:
         PUl1cxrvY7BHh4obNa6Bf8ECAwEAAQ==
         -----END PUBLIC KEY-----
     healthcheck:
-      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4224"]
       interval: 1m
       timeout: 1s
       retries: 2
@@ -472,31 +453,12 @@ services:
     volumes:
       - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
 
-  bob-nats-streaming:
-    image: provide/nats-streaming
-    command: ["-cid", "provide", "--auth", "testtoken", "-SDV"]
-    container_name: bob-nats-streaming
-    depends_on:
-      - bob-nats
-    healthcheck:
-      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
-      interval: 1m
-      timeout: 1s
-      retries: 2
-      start_period: 10s
-    hostname: bob-nats-streaming
-    networks:
-      - bob
-    restart: always
-    volumes:
-      - ./ops/await_tcp.sh:/usr/local/bin/await_tcp.sh:cached
-
   bob-ident:
     image: provide/ident
     container_name: bob-ident
     depends_on:
-      - bob-nats-streaming
       - bob-postgres
+      - bob-nats
       - bob-redis
     environment:
       - DATABASE_HOST=bob-postgres
@@ -507,7 +469,7 @@ services:
       - IDENT_API_SCHEME=http
       - NATS_CLIENT_PREFIX=bob-ident
       - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://bob-nats:4222
       - REDIS_HOSTS=bob-redis:6379
       - LOG_LEVEL=DEBUG
       - PORT=8080
@@ -533,7 +495,7 @@ services:
     container_name: bob-ident-consumer
     depends_on:
       - bob-ident
-      - bob-nats-streaming
+      - bob-nats
       - bob-postgres
       - bob-redis
     environment:
@@ -547,7 +509,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-ident-consumer
       - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://bob-nats:4222
       - NCHAIN_API_HOST=bob-nchain:8080
       - NCHAIN_API_SCHEME=http
       - REDIS_HOSTS=bob-redis:6379
@@ -570,7 +532,7 @@ services:
     container_name: bob-nchain
     depends_on:
       - bob-ident
-      - bob-nats-streaming
+      - bob-nats
       - bob-postgres
       - bob-redis
       - bob-vault
@@ -584,7 +546,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-nchain
       - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://bob-nats:4222
       - PAYMENTS_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImU2OmY3OmQ1OjI0OmUyOjU5OjA2OjJiOmJjOmEyOjhjOjM1OjlkOmNhOjBhOjg3IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjAwNzA5NzU0LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiJjN2I2YzI2ZS00OTkwLTQ4YWYtYmMwYy05YWRiY2E5ZmRmNzYiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4wMTU1NGUyMi0zZDdhLTQ0YTMtOWM2NS02YmNhYmFhMDhjMzgiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIl19fX0sInBydmQiOnsiYXBwbGljYXRpb25faWQiOiIwMTU1NGUyMi0zZDdhLTQ0YTMtOWM2NS02YmNhYmFhMDhjMzgiLCJleHRlbmRlZCI6eyJwZXJtaXNzaW9ucyI6eyIqIjo1MTB9fSwicGVybWlzc2lvbnMiOjUxMH0sInN1YiI6ImFwcGxpY2F0aW9uOjAxNTU0ZTIyLTNkN2EtNDRhMy05YzY1LTZiY2FiYWEwOGMzOCJ9.iPYYSS0hHNYLUXcgpBfQbo6goMGDHF5Oxv1OvkB-WAzRgZSAm2HFroOUsmPlCQwO5eNeTfMqRaQMDdl6idTCip99y-zYTu8ys7dahyk4P1lhh4BB8vTCl3AHQuyUTGloMrY2JytpkmXMZTsxu-UhQxaaQN0IlSotSIFAYPT3jHH5nYy2MJbcfxePt8xKmXzwvpjTEVJRmUfAfEXjJF34S3hAuw9S7WncKucZfuP1WwP65h53HbLB69DR6KFZ76eiRavke5RpT40r9UKC6zPP-UZhTAuWQjOSmBhkd_IUg4T2a8r4W9CJT6aLgtwE0i1OUrPDVj_EzQV9tsjlwIOv5y9r_p-sfdxXdHFfoT8nAs5uIcWTw45J2Ycc0b4vqs-sYDr2qn7TS5DvJbPQSnRBS9YZ8CJq9mFpc5GjunCzEqO6JkvEWaN1mqPJbcvMGmLRQt5zA-2D0fFq1mvIUCUcg3EQ5J5lAZqudGf9mnYf4xRIMacCssF5VsP36xXg7pnscqh3u3JdQ-Fon3nB5vbIXn2fxaJjYl4ggNr-IgLxK7_h9KlDkiv7I7EKWGl2Np0q3-mVvuTIk7M-GqT3Dx9TtpR6MsK6EX0frUH3bZH8RHBHnxx67oxNMamviT-XUNudUU7Wan1PfnaPSsqfrn6OT5Abep-BbewKJn3ErY0Z-oU
       - PORT=8080
       - REDIS_HOSTS=bob-redis:6379
@@ -610,7 +572,7 @@ services:
     container_name: bob-nchain-consumer
     depends_on:
       - bob-ident
-      - bob-nats-streaming
+      - bob-nats
       - bob-postgres
       - bob-redis
       - bob-vault
@@ -625,7 +587,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-nchain-consumer
       - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://bob-nats:4222
       - NATS_TOKEN=testtoken
       - PAYMENTS_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImU2OmY3OmQ1OjI0OmUyOjU5OjA2OjJiOmJjOmEyOjhjOjM1OjlkOmNhOjBhOjg3IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjAwNzA5NzU0LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiJjN2I2YzI2ZS00OTkwLTQ4YWYtYmMwYy05YWRiY2E5ZmRmNzYiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4wMTU1NGUyMi0zZDdhLTQ0YTMtOWM2NS02YmNhYmFhMDhjMzgiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIl19fX0sInBydmQiOnsiYXBwbGljYXRpb25faWQiOiIwMTU1NGUyMi0zZDdhLTQ0YTMtOWM2NS02YmNhYmFhMDhjMzgiLCJleHRlbmRlZCI6eyJwZXJtaXNzaW9ucyI6eyIqIjo1MTB9fSwicGVybWlzc2lvbnMiOjUxMH0sInN1YiI6ImFwcGxpY2F0aW9uOjAxNTU0ZTIyLTNkN2EtNDRhMy05YzY1LTZiY2FiYWEwOGMzOCJ9.iPYYSS0hHNYLUXcgpBfQbo6goMGDHF5Oxv1OvkB-WAzRgZSAm2HFroOUsmPlCQwO5eNeTfMqRaQMDdl6idTCip99y-zYTu8ys7dahyk4P1lhh4BB8vTCl3AHQuyUTGloMrY2JytpkmXMZTsxu-UhQxaaQN0IlSotSIFAYPT3jHH5nYy2MJbcfxePt8xKmXzwvpjTEVJRmUfAfEXjJF34S3hAuw9S7WncKucZfuP1WwP65h53HbLB69DR6KFZ76eiRavke5RpT40r9UKC6zPP-UZhTAuWQjOSmBhkd_IUg4T2a8r4W9CJT6aLgtwE0i1OUrPDVj_EzQV9tsjlwIOv5y9r_p-sfdxXdHFfoT8nAs5uIcWTw45J2Ycc0b4vqs-sYDr2qn7TS5DvJbPQSnRBS9YZ8CJq9mFpc5GjunCzEqO6JkvEWaN1mqPJbcvMGmLRQt5zA-2D0fFq1mvIUCUcg3EQ5J5lAZqudGf9mnYf4xRIMacCssF5VsP36xXg7pnscqh3u3JdQ-Fon3nB5vbIXn2fxaJjYl4ggNr-IgLxK7_h9KlDkiv7I7EKWGl2Np0q3-mVvuTIk7M-GqT3Dx9TtpR6MsK6EX0frUH3bZH8RHBHnxx67oxNMamviT-XUNudUU7Wan1PfnaPSsqfrn6OT5Abep-BbewKJn3ErY0Z-oU
       - REDIS_HOSTS=bob-redis:6379
@@ -648,7 +610,7 @@ services:
     container_name: bob-privacy
     depends_on:
       - bob-ident
-      - bob-nats-streaming
+      - bob-nats
       - bob-postgres
       - bob-privacy-consumer
       - bob-redis
@@ -665,7 +627,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-privacy
       - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://bob-nats:4222
       - PORT=8080
       - VAULT_API_HOST=bob-vault:8080
       - VAULT_API_SCHEME=http
@@ -688,7 +650,7 @@ services:
     entrypoint: ./ops/run_consumer.sh
     container_name: bob-privacy-consumer
     depends_on:
-      - bob-nats-streaming
+      - bob-nats
       - bob-postgres
       - bob-redis
       - bob-vault
@@ -705,7 +667,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=bob-privacy-consumer
       - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://bob-nats:4222
       - VAULT_API_HOST=bob-vault:8080
       - VAULT_API_SCHEME=http
       - VAULT_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IjEwOjJlOmQ5OmUxOmI4OmEyOjM0OjM3Ojk5OjNhOjI0OmZjOmFhOmQxOmM4OjU5IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL3Byb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjA1NzkxMjQ4LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiI5YjUxNGIxNS01NTdlLTRhYWQtYTcwOC0wMTcwZTAwZWE1ZmIiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4zNjAxNTdmOC1kNWExLTQ0NDAtOTE4Yi1mNjhiYjM5YzBkODAiLCJ1c2VyLjIzY2MwN2UwLTM4NTEtNDBkZC1iNjc1LWRmNzY4MDY3MmY3ZCIsIm5ldHdvcmsuKi5jb25uZWN0b3IuKiIsIm5ldHdvcmsuKi5zdGF0dXMiLCJwbGF0Zm9ybS5cdTAwM2UiXX19fSwicHJ2ZCI6eyJhcHBsaWNhdGlvbl9pZCI6IjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCIsImV4dGVuZGVkIjp7InBlcm1pc3Npb25zIjp7IioiOjUxMH19LCJwZXJtaXNzaW9ucyI6NTEwLCJ1c2VyX2lkIjoiMjNjYzA3ZTAtMzg1MS00MGRkLWI2NzUtZGY3NjgwNjcyZjdkIn0sInN1YiI6ImFwcGxpY2F0aW9uOjM2MDE1N2Y4LWQ1YTEtNDQ0MC05MThiLWY2OGJiMzljMGQ4MCJ9.SUh84MKBNstdu3KFu1zEAQq03xbPw1D0lLXeogz1HfBJy77bIGf7HLvCuc6bjkh0xj3cEuEus1dC1Dj3BvlZoSXsvz_biTzSapkXzJjpkwOL6qkYDmqTPZvXwqmk-mUNrHTPkqdiIJL7xA46tzHW3E_hjSA9HjEk1kXjPdJQ6_ifkgWNoAaSD--kudIrhZ7vLnfy0H1JEAOsXzSAMoc5_pNG2n79m0ywvb_4l9BqdsHW8N3xSQOFjcp9gD_tqo6ffug3pkpoy-RSguM_OaMR2lj_CHhYxAt0phtjUceDD3K1h5iZ38kSl7izhOdULMmGBhVpBMoSy6_R6ZzpCL3pj8FcReX9RXR5oYpm8PDtlmWqblQzjwY00-uYLfOX0_iS4MGfEsjadZPfTmJLcOTYC7H4PL9ZRu_XtMDUrGBQQz5b_ad2ZzMXbBNeU6vbxVKDG8VFKWOHAemqHTcvuOAsOCLIqOu-eJpZHlXbx-FXPTYledd-GBDe7IjaC9ll_JK3utCOnCq0qUs6lnXIrQ_Sp1LcTKJJ7aY5f9TxeoAuL-ghDbQ3Xkw6huKyPCz2evOwVLwrB9ZRMlQXgmTnB1OeQvWii1WbmkyV1Zhbz_RPB8ckK7_mFxuPvsXK8wTFiWFmj96sRX470kV-ooSfM5CzKZhSLqgyyaUNC0VaCPq0uuE
@@ -726,7 +688,7 @@ services:
     container_name: bob-statsdaemon
     depends_on:
       - bob-ident
-      - bob-nats-streaming
+      - bob-nats
       - bob-postgres
       - bob-redis
     environment:
@@ -739,7 +701,7 @@ services:
       - LOG_LEVEL=DEBUG
       - NATS_CLIENT_PREFIX=statsdaemon
       - NATS_URL=nats://bob-nats:4222
-      - NATS_STREAMING_URL=nats://bob-nats-streaming:4222
+      - NATS_JETSTREAM_URL=nats://bob-nats:4222
       - PAYMENTS_REFRESH_TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6ImU2OmY3OmQ1OjI0OmUyOjU5OjA2OjJiOmJjOmEyOjhjOjM1OjlkOmNhOjBhOjg3IiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiaWF0IjoxNjAwNzA5Njg3LCJpc3MiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMiLCJqdGkiOiJkMDIzM2JlZC1iMThkLTRmNGEtODNlYS02MjBmYjdjYTY0NWMiLCJuYXRzIjp7InBlcm1pc3Npb25zIjp7InN1YnNjcmliZSI6eyJhbGxvdyI6WyJhcHBsaWNhdGlvbi4wYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIl19fX0sInBydmQiOnsiYXBwbGljYXRpb25faWQiOiIwYzVhOWZlYi0xNjBjLTRmZTEtOTEwZS0xODc0MmY4NjRiY2UiLCJleHRlbmRlZCI6eyJwZXJtaXNzaW9ucyI6eyIqIjo1MTB9fSwicGVybWlzc2lvbnMiOjUxMH0sInN1YiI6ImFwcGxpY2F0aW9uOjBjNWE5ZmViLTE2MGMtNGZlMS05MTBlLTE4NzQyZjg2NGJjZSJ9.SUd50x0g6opm2oU9zFMu6rLpc-22WeEi50OByzluBsoV1fCN1INzqHnCJAMLC2myXIDRKaP1Q-MZVAw97hpzuGQjXEY8yobX0Br3DjGADqaM3iJiaD4GB73lZtd2w2jAsy3PDfvEE_dd9SalGA90WLoSUwkEObFxqufj2vnMVuiH1UwUnMawuVGfZPzZ7Wtoe9K4sq0E7qYiND5lgz0tyDnP7FWyd_wHEwjan_AhabgUJA0w5XlUq7AnjHe-NTrCzU_ZTJ6Hdvxy_uNRSOOv4fV4_MVRomqPePBTPXeeLBpjpsVVKSsKGrP3z7oAWclCm21i-9hEvyEeIN3TV71KgYDLaMtHsHZYPdo1WaKdnq49uPVgXbzCsAAWvgjKbOT62VciQVgv1ognm_22gPgxRksrOAhArSUX_LP0NLMxXDGP0TGwx218QgNW4qj6OxQZrBCO5YRl0Lb-mQVZZ2L3AQXk39gvArTnqIQ8aV9hwLeiBqq1qZU7Q77RUHI-yMUfkH3FAy2xQS1AIn7-rM6rCXtjXVUzdjm1_6HrJkDjS20HUFsaqmKacPxlkkCFa08zxsIsuU_h9LY4VdeVHJKnvWUFWy2M6jYvKIJRuF0Dk1PCTLqbiBUmyCnr20qGe5Y8Vc9c3pvuudm6hdk6aGa3zuNOIzftPthPEoUzoG4qZ3c
       - REDIS_HOSTS=bob-redis:6379
       - VAULT_API_HOST=bob-vault:8080
