@@ -881,7 +881,6 @@ export class ParticipantStack {
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
     runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
-    runcmd += ` --nats-streaming-port=${this.baselineConfig?.baselineMessagingStreamingPort}`
     runcmd += ` --nats-ws-port=${this.baselineConfig?.baselineMessagingWebsocketPort}`
     runcmd += ` --nchain-host="${this.baselineConfig?.nchainApiHost}"`
 		runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
