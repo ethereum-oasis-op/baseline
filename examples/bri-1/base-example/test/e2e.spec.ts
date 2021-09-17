@@ -15,7 +15,8 @@ import {
   configureTestnet,
   createUser,
   promisedTimeout,
-  scrapeInvitationToken
+  scrapeInvitationToken,
+  JSDomErrorHandler
 } from './utils';
 import { uuid } from 'uuidv4';
 
@@ -50,7 +51,11 @@ describe('Baseline', () => {
   let workgroup;
   let workgroupToken;
 
+  let errorHandler: JSDomErrorHandler = new JSDomErrorHandler();
+
   before(async () => {
+    errorHandler.register();
+    errorHandler.ignoreNetworkFailures();
     await configureTestnet(5432, networkId);
     await configureTestnet(5433, networkId);
 
