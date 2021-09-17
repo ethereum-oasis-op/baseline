@@ -187,3 +187,42 @@ export const vendNatsAuthorization = async (natsConfig, subject): Promise<string
     permissions,
   );
 };
+
+export class JSDomErrorHandler {
+  private static readonly defaultConsoleError = console.error;
+  private errorHandlers: { [key: string]: () => void } = {};
+
+  register() {
+    console.error = (msg: string) => { this.errorHandler(msg) };
+  }
+
+  deregister() {
+    console.error = JSDomErrorHandler.defaultConsoleError;
+  }
+
+  private errorHandler(msg: string) {
+    let matched = false;
+    for (let match in this.errorHandlers) {
+      if (msg.indexOf(match) > 0) {
+        this.errorHandlers[match]();
+        matched = true;
+      }
+    }
+
+    if (!matched) {
+      throw new Error(msg);
+    }
+  }
+
+  public addHandler(match: string, replacement: () => void) {
+    this.errorHandlers[match] = replacement;
+  }
+
+  public removeHandler(match: string) {
+    delete this.errorHandlers[match]
+  }
+
+  public ignoreNetworkFailures() {
+    this.addHandler("Request.onRequestError", () => {});
+  }
+}
