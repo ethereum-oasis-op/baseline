@@ -45,11 +45,7 @@ services:
   alice-nats:
     image: provide/nats-server:2.2.3-beta.4-PRVD
     container_name: alice-provide-nats
-<<<<<<< HEAD
     command: ["--js", "--server_name", "alice_prvd", "-auth", "testtoken", "-p", "4222", "-D", "-V"]
-=======
-    command: ["--js", "--server_name", "alice-prvd", "-auth", "testtoken", "-p", "4222",  "-D", "-V"]
->>>>>>> first iteration of battleline
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----

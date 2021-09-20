@@ -131,7 +131,8 @@ export const setBoatLocation = async (rowLoc, columnLoc, layout, boat, board, ra
                     }
                 }
             }
-            board.properties.boats.push(boat)
+            board.properties.numberOfBoats += 1
+            // generate a proof for the full boat coordinates
         } else {
             // console.log("This Boat is already positioned")
         }
