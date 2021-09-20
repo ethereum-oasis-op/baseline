@@ -45,7 +45,7 @@ services:
   alice-nats:
     image: provide/nats-server:2.2.3-beta.4-PRVD
     container_name: alice-provide-nats
-    command: ["--js", "--server_name", "alice_prvd", "--auth", "testtoken", "-p", "4222", "-D", "-V"]
+    command: ["--js", "--server_name", "alice-prvd", "-auth", "testtoken", "-p", "4222",  "-D", "-V"]
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----
@@ -420,7 +420,7 @@ services:
   bob-nats:
     image: provide/nats-server:2.2.3-beta.4-PRVD
     container_name: bob-provide-nats
-    command: ["--js", "--server_name", "bob_prvd", "--auth", "testtoken", "-p", "4222", "-DVV"]
+    command: ["--js", "--server_name", "bob-prvd", "-auth", "testtoken", "-p", "4222",  "-D", "-V"]
     environment:
       JWT_SIGNER_PUBLIC_KEY: |-
         -----BEGIN PUBLIC KEY-----
@@ -438,7 +438,7 @@ services:
         PUl1cxrvY7BHh4obNa6Bf8ECAwEAAQ==
         -----END PUBLIC KEY-----
     healthcheck:
-      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4224"]
+      test: ["CMD", "/usr/local/bin/await_tcp.sh", "localhost:4222"]
       interval: 1m
       timeout: 1s
       retries: 2
