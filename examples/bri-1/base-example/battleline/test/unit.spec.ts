@@ -325,6 +325,7 @@ describe('Battle Line', () => {
             });
           })
         })
+
         describe('In game Logic', () => {
           it('should manage the turns logic between users', async () => {
             // manage the users turn control
