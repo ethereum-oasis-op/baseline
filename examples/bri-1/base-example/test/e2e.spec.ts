@@ -145,11 +145,11 @@ describe('Baseline', () => {
     await aliceApp.init();
   });
 
-  after('close connections',async () =>{
+  after('close connections', async () => {
     await bobApp.disconnect();
     await aliceApp.disconnect();
   })
-  
+
   describe('workgroup', () => {
     describe('creation', () => {
       before(async () => {
@@ -241,11 +241,11 @@ describe('Baseline', () => {
               "payload": {
                 "proof": "8d8f7498db7aee910428c737d8427ac4add98353f981ca70db07697a091d8c23972b55b0b20fc0eebc1ac6c2ae427d783291c7fcb2e3f7417d279fea78ce1eac2d2293e53579abbef4960a1e290bd023e2999d8ff423d01080d449ce5d14ca89c94e277e8e0bb14fb91a0b71129920ae4411e77685287611f4d2aaf66b8fc5dc",
                 "type": "general_consistency",
-                "witness":{}
+                "witness": {}
               },
-              "type":"general_consistency",
+              "type": "general_consistency",
             });
-        })
+          })
 
           it('should increment protocol message tx count for the sender', async () => {
             assert(bobApp.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 2');

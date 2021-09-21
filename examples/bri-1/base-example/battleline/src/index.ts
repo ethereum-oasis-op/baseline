@@ -1,6 +1,5 @@
 import { randomIntFromInterval } from './utils';
 
-
 export const newBoard = async (rows, columns, owner) => {
     let board = {
         grid: {},
@@ -15,7 +14,6 @@ export const newBoard = async (rows, columns, owner) => {
         }
         board.properties['rows'] = rows
         board.properties['columns'] = columns
-        board.properties['numberOfBoats'] = 0
         board.properties['boats'] = []
         board.properties['owner'] = owner
     } else {
@@ -24,7 +22,7 @@ export const newBoard = async (rows, columns, owner) => {
     return board
 }
 
-export const boat = async (size, name, board) => {
+export const newBoat = async (size, name, board) => {
     let boat = {}
     if (board.properties.rows < size || board.properties.columns < size) {
         //console.log('This Boat is too big for the board')
@@ -34,7 +32,6 @@ export const boat = async (size, name, board) => {
         boat['size'] = size
         boat['position'] = []
         boat['state'] = 'afloat'
-
     }
     return boat
 }
@@ -80,7 +77,7 @@ export const checkBoatSuperposition = async (rowLoc, columnLoc, layout, boat, bo
     return true
 }
 
-// TODO - Keep an inmemory record of the positions occupied by the boats so we are not gussing infinitely
+// TODO - Keep an in-memory record of the positions occupied by the boats so we are not gussing infinitely
 export const randomiseBoatLocation = async (boat, board) => {
     let layout
     let x = (Math.floor(Math.random() * 2) == 0);
@@ -97,6 +94,7 @@ export const randomiseBoatLocation = async (boat, board) => {
     return board
 }
 
+// TODO - Boat wont fit in this location
 export const setBoatLocation = async (rowLoc, columnLoc, layout, boat, board, randomiserFunction) => {
     if (await checkBoatSuperposition(rowLoc, columnLoc, layout, boat, board)) {
         if (boat.position.length < boat.size) {
@@ -133,10 +131,7 @@ export const setBoatLocation = async (rowLoc, columnLoc, layout, boat, board, ra
                     }
                 }
             }
-
-            board.properties.numberOfBoats += 1
-            // generate a proof for the full boat coordinates
-
+            board.properties.boats.push(boat)
         } else {
             // console.log("This Boat is already positioned")
         }
@@ -147,37 +142,14 @@ export const setBoatLocation = async (rowLoc, columnLoc, layout, boat, board, ra
             // console.log("This position in the grid has already been taken")
         }
     }
-    board.properties.boats.push(boat)
     return board
 }
 
 // TODO: keep all proofs of single grid position and verify whether they match the missile location
 // Use the array containing all the proofs instead of the board to verify the accuracy of the hit
 export const launchMisile = async (rowLoc, columnLoc, board) => {
-    for (let i = 0; i < board.properties.boats.length; i++) {
-        for (let j = 0; j < board.properties.boats[i].position.length; j++) {
-            if (board.properties.boats[i].position[j].location == `${rowLoc},${columnLoc}`) {
-                board.properties.boats[i].position[j].state = 'hit'
-                return 'hit'
-            }
-        }
-    }
-    return 'miss'
-}
+    if (turnControl(board.owner)) {
 
-// A proof for the array of full boat coordinates is used against 
-// A proof that contains all the point of the boat
-export const checkDamage = async (board) => {
-    for (let i = 0; i < board.properties.boats.length; i++) {
-        let hitCounter = 0
-        for (let j = 0; j < board.properties.boats[i].position.length; j++) {
-            if (board.properties.boats[i].position[j].state == 'hit') {
-                hitCounter += 1
-                if (board.properties.boats[i].position.length == hitCounter) {
-                    board.properties.boats[i].state = 'sunk'
-                }
-            }
-        }
     }
 }
 
@@ -191,12 +163,18 @@ export const checkGame = async (board) => {
             }
         }
     }
-    return { owner: board.properties.owner, gameState: 'pending' }
+    return { owner: board.properties.owner, gameState: 'In progress' }
 }
 
 //
 export const turnControl = async (user) => {
-
+    // verify proof with sender of verification
+    // generate a new proof with the other persons name
+    // aliceSignatureProof
+    // bobSignatureProof
+    // currentTurn = aliceSignatureProof
+    // verify == true
+    // if currentTurn==aliceSignatureProof{currentTurn = bobSignatureProof}else{currentTurn = aliceSignatureProof}
 }
 
 // Generating proofs exclusively to verify a correct set up
@@ -205,12 +183,13 @@ export const baselineSetUp = async (board) => {
     // The size of the board (size of board and owner) 1 per board
     // The number of boats on the board (number of boats, board, and owner) 1 per board
     // The size of the boat (size of the boat and board and owner)  1 per boat
+    // Generate a proof of movement for alice and bob
 }
 
 export const gridProofs = async (board) => {
     // Generate a proof for each coordinate to know whether it contains a ship or not
-    // Iterate throught the board.grid and generate a proof for water or ship at that location 
+    // Iterate throught the board.grid and generate a proof for water or ship at that location
+    // Push into a 
 }
 
-
-
+// deployBaselineCircuit
