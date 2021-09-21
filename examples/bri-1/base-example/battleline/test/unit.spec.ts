@@ -1,11 +1,19 @@
-import { setBoatLocation, randomiseBoatLocation, newBoard, boat, launchMisile, checkGame } from '../src';
+import { setBoatLocation, randomiseBoatLocation, newBoard, newBoat, launchMisile, checkGame } from '../src';
 import { randomIntFromInterval } from '../src/utils';
 import { ParticipantStack } from '../../src';
+import {
+  shouldBehaveLikeAWorkgroupOrganization,
+  shouldBehaveLikeAnInitialWorkgroupOrganization,
+  shouldBehaveLikeAnInvitedWorkgroupOrganization,
+  shouldBehaveLikeAWorkgroupCounterpartyOrganization,
+  shouldCreateBaselineStack,
+} from '../../test/shared';
 import {
   authenticateUser,
   baselineAppFactory,
   configureTestnet,
   createUser,
+  scrapeInvitationToken,
 } from '../../test/utils';
 
 const aliceCorpName = 'Alice Corp';
@@ -213,7 +221,6 @@ describe('Battle Line', () => {
       });
 
       describe('Battleship', () => {
-        var workstepId
         let bobBoardInstance
         let bobCruiser
         let aliceBoardInstance
@@ -235,9 +242,9 @@ describe('Battle Line', () => {
             });
 
             it('should generate a boat instance', async () => {
-              bobCruiser = await boat(1, 'bobCruiser', bobBoardInstance);
-              bobDestroyer = await boat(2, 'bobDestroyer', bobBoardInstance);
-              bobFrigate = await boat(3, 'bobFrigate', bobBoardInstance);
+              bobCruiser = await newBoat(1, 'bobCruiser', bobBoardInstance);
+              bobDestroyer = await newBoat(2, 'bobDestroyer', bobBoardInstance);
+              bobFrigate = await newBoat(3, 'bobFrigate', bobBoardInstance);
 
               expect(bobCruiser.name).to.equal('bobCruiser')
               expect(bobCruiser.size).to.equal(1)
@@ -302,7 +309,7 @@ describe('Battle Line', () => {
             });
 
             it('should generate a boat instance', async () => {
-              aliceCruiser = await boat(1, 'aliceCruiser', aliceBoardInstance);
+              aliceCruiser = await newBoat(1, 'aliceCruiser', aliceBoardInstance);
 
               expect(aliceCruiser.name).to.equal('aliceCruiser')
               expect(aliceCruiser.size).to.equal(1)
@@ -317,34 +324,7 @@ describe('Battle Line', () => {
               expect(aliceCruiser.position[0].location).to.deep.equal('1,1')
             });
           })
-
-          describe('In game Logic', () => {
-            it('should manage the turns logic between users', async () => {
-              // manage the users turn control
-            })
-
-            it('should launch a misile and miss', async () => {
-              let bobTurn = await launchMisile(2, 1, aliceBoardInstance)
-
-              expect(aliceBoardInstance.properties.boats[0].position[0].state).to.equal(null)
-              expect(bobTurn).to.equal('miss')
-            })
-
-            it('should launch a misile and hit a boat', async () => {
-              let aliceTurn = await launchMisile(1, 1, bobBoardInstance)
-
-              expect(bobBoardInstance.properties.boats[0].position[0].state).to.equal('hit')
-              expect(aliceTurn).to.equal('hit')
-            })
-
-            it('should finish a game when no more boats are standing. ', async () => {
-              let game = await checkGame(bobBoardInstance)
-
-              expect(game.gameState).to.equal('pending')
-            })
-          })
         })
-
         describe('In game Logic', () => {
           it('should manage the turns logic between users', async () => {
             // manage the users turn control

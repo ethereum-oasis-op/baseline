@@ -149,7 +149,7 @@ export const setBoatLocation = async (rowLoc, columnLoc, layout, boat, board, ra
 // Use the array containing all the proofs instead of the board to verify the accuracy of the hit
 export const launchMisile = async (rowLoc, columnLoc, board) => {
     if (turnControl(board.owner)) {
-
+        //if(hit){checkGame(board)}
     }
 }
 
