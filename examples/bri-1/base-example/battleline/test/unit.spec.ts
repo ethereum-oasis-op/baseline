@@ -14,6 +14,7 @@ import {
   configureTestnet,
   createUser,
   scrapeInvitationToken,
+  JSDomErrorHandler,
 } from '../../test/utils';
 
 const aliceCorpName = 'Alice Corp';
@@ -35,6 +36,7 @@ const setupUser = async (identHost, firstname, lastname, email, password) => {
 
 import { assert, expect } from 'chai';
 
+
 describe('Battle Line', () => {
   let bearerTokens; // user API credentials
 
@@ -47,8 +49,13 @@ describe('Battle Line', () => {
   let workgroup;
   let workgroupToken;
 
+  let errorHandler: JSDomErrorHandler = new JSDomErrorHandler();
+
   describe('Baseline', () => {
+
     before(async () => {
+      errorHandler.register();
+      errorHandler.ignoreNetworkFailures();
       await configureTestnet(5432, networkId);
       await configureTestnet(5433, networkId);
 
@@ -325,10 +332,6 @@ describe('Battle Line', () => {
             });
           })
         })
-<<<<<<< HEAD
-
-=======
->>>>>>> a9e4204ea2f5eb55ec6ce4e3b83e8023fe33e1a5
         describe('In game Logic', () => {
           it('should manage the turns logic between users', async () => {
             // manage the users turn control
@@ -351,7 +354,7 @@ describe('Battle Line', () => {
           it('should finish a game when no more boats are standing. ', async () => {
             let game = await checkGame(bobBoardInstance)
 
-            expect(game.gameState).to.equal('pending')
+            expect(game.gameState).to.equal('In progress')
           })
         })
 

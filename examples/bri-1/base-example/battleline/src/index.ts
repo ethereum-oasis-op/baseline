@@ -192,8 +192,4 @@ export const gridProofs = async (board) => {
     // Push into a 
 }
 
-<<<<<<< HEAD
 // deployBaselineCircuit
-=======
-// deployBaselineCircuit
->>>>>>> a9e4204ea2f5eb55ec6ce4e3b83e8023fe33e1a5
