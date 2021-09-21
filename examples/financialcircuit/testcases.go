@@ -8,6 +8,7 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// Represent a test case
 type TestCase struct {
 	quoteCpt1       []byte
 	quoteCpt2       []byte
@@ -20,15 +21,16 @@ type TestCase struct {
 	message         string
 }
 
+// Bond has an Isin, size and ticker
 type Bond struct {
 	Isin   string
 	Size   string
 	Ticker string
 }
 
-func createTestCases() [8]TestCase {
+func createTestCases() [16]TestCase {
 
-	toRet := [8]TestCase{}
+	toRet := [16]TestCase{}
 
 	bond := &Bond{
 		Isin:   "CA29250NAT24",
@@ -53,6 +55,38 @@ func createTestCases() [8]TestCase {
 
 	toRet[6] = getQuotesValue(bond, "91.63", "92.63", "95.63", "Initiator Party selects the smallest quote")
 	toRet[7] = getQuotesValue(bond, "93", "98", "94", "Initiator Party selects the smallest integer quote")
+
+	//test cases for exotic bonds, callable bond, step up, FRN. need to update quotes
+	bond = &Bond{
+		Isin:   "6625HKC3",
+		Size:   "550000",
+		Ticker: "JPM 3.125% 01/23/2025 Callable",
+	}
+	toRet[8] = getQuotesValue(bond, "91.63", "92.63", "95.63", "Initiator Party selects the smallest quote")
+	toRet[9] = getQuotesValue(bond, "93", "98", "94", "Initiator Party selects the smallest integer quote")
+	// Callable with a step up on 6/23/26
+	bond = &Bond{
+		Isin:   "8128GT91",
+		Size:   "450000",
+		Ticker: "JPM  STEP 06/23/2030 Callable Step 06/23/2026 @ 2.25",
+	}
+	toRet[10] = getQuotesValue(bond, "91.63", "92.63", "95.63", "Initiator Party selects the smallest quote")
+	toRet[11] = getQuotesValue(bond, "93", "98", "94", "Initiator Party selects the smallest integer quote")
+	// FRN/Variable rate bond
+	bond = &Bond{
+		Isin:   "89114QCR7",
+		Size:   "600000",
+		Ticker: "The Toronto-Dominion VAR 03/04/2024",
+	}
+	toRet[12] = getQuotesValue(bond, "91.63", "92.63", "95.63", "Initiator Party selects the smallest quote")
+	toRet[13] = getQuotesValue(bond, "93", "98", "94", "Initiator Party selects the smallest integer quote")
+	bond = &Bond{
+		Isin:   "46625HKC3",
+		Size:   "625000",
+		Ticker: "JPM 3.125% 01/23/2025 Callable",
+	}
+	toRet[14] = getQuotesValue(bond, "91.63", "92.63", "95.63", "Initiator Party selects the smallest quote")
+	toRet[15] = getQuotesValue(bond, "93", "98", "94", "Initiator Party selects the smallest integer quote")
 
 	return toRet
 }
@@ -92,6 +126,7 @@ func getQuotesValue(bond *Bond, quoteCpt1, quoteCpt2, quoteCpt3, message string)
 	testCase.quoteCpt1 = _quoteCpt1.BigInt().Bytes()
 	testCase.quoteCpt2 = _quoteCpt2.BigInt().Bytes()
 	testCase.quoteCpt3 = _quoteCpt3.BigInt().Bytes()
+
 	testCase.acceptedQuote = _quoteCpt1.BigInt().Bytes()
 
 	reqBodyBytes := new(bytes.Buffer)
