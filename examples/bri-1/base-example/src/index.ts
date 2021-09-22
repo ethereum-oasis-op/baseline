@@ -25,11 +25,11 @@ class TryError extends Error {
 
 
 export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait: number = 500): Promise<T> => {
-  const errors : any[] = [];
+  const errors: any[] = [];
   for (let index = 0; index < times; index++) {
     try {
       return await prom()
-    } catch (err) { 
+    } catch (err) {
       errors.push(err);
     }
     await sleep(wait);
@@ -43,7 +43,7 @@ export class ParticipantStack {
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
   private baselineProxy?: Baseline;
   private baselineCircuit?: Circuit;
-  private baselineMerkleTree?:any;
+  private baselineMerkleTree?: any;
   private baselineConfig?: any;
   private babyJubJub?: VaultKey;
   private domain?: string;
@@ -193,7 +193,7 @@ export class ParticipantStack {
       circuit.proving_scheme = circuit.provingScheme;
       circuit.verifier_contract = circuit.verifierContract;
       delete circuit.verifierContract;
-      delete circuit.createdAt; 
+      delete circuit.createdAt;
       delete circuit.vaultId;
       delete circuit.provingScheme;
       delete circuit.provingKeyId;
@@ -535,7 +535,7 @@ export class ParticipantStack {
     if (!token) {
       const orgToken = await this.createOrgToken();
       token = orgToken.accessToken || orgToken.token;
-    } 
+    }
     return await tryTimes(async () => {
       const status = await Baseline.fetchStatus(
         this.baselineConfig.baselineApiScheme!,
@@ -552,7 +552,7 @@ export class ParticipantStack {
     if (!token) {
       const orgToken = await this.createOrgToken();
       token = orgToken.accessToken || orgToken.token;
-    } 
+    }
 
     return await tryTimes(async () => {
       const status = await Ident.fetchStatus(
@@ -576,6 +576,7 @@ export class ParticipantStack {
     promises.push(new Promise<void>((resolve, reject) => {
       interval = setInterval(async () => {
         circuit = await this.privacy?.fetchCircuit(circuitId) as Circuit;
+        console.log(circuit)
         if (circuit && circuit.verifierContract && circuit.verifierContract['source']) {
           resolve();
         }
@@ -658,16 +659,15 @@ export class ParticipantStack {
     return (await vault.fetchVaultSecret(vaultId, secretId));
   }
 
-  async deployBaselineCircuit(): Promise<Circuit> {
+  async deployBaselineCircuit(id: string, circuitName: string): Promise<Circuit> {
     // perform trusted setup and deploy verifier/shield contract
     const circuit = await this.privacy?.deploy({
-      identifier: 'purchase_order',
+      identifier: id,
       proving_scheme: 'groth16',
       curve: 'BN254',
       provider: 'gnark',
-      name: 'my 1337 circuit',
+      name: circuitName,
     }) as Circuit;
-
     this.baselineCircuit = await this.requireCircuit(circuit.id!);
     this.workflowIdentifier = this.baselineCircuit?.id;
     const content = this.baselineCircuit?.verifierContract!['source'].replace(/\^0.5.0/g, '^0.7.3').replace(/view/g, '').replace(/gas,/g, 'gas(),').replace(/\\n/g, /\n/).replace(/uint256\[0\]/g, 'uint256[]')
@@ -698,6 +698,32 @@ export class ParticipantStack {
     await this.deployWorkgroupShieldContract();
 
     return this.baselineCircuit;
+  }
+
+  async proveBaselineCircuit(id:string, params:any){
+    // witness := map[string]interface{}{
+    //   "Preimage": preImageString,
+    //   "Hash":     hashString,
+    // }
+
+    let params = map[string]interface{}{
+      witness:witness
+    }
+
+    let baselineProof = await this.privacy?.prove(id!, params)
+  }
+
+  async verifyBaselineProof(id:string, params:any){
+    // witness := map[string]interface{}{
+    //   "Preimage": preImageString,
+    //   "Hash":     hashString,
+    // }
+
+    let params = map[string]interface{}{
+      witness:witness
+    }
+
+    let baselineProof = await this.privacy?.verify(id, params)
   }
 
   async deployWorkgroupContract(name: string, type: string, params: any, arvg?: any[]): Promise<any> {
@@ -862,12 +888,12 @@ export class ParticipantStack {
       this.baselineConfig?.baselineApiScheme,
       this.baselineConfig?.baselineApiHost
     );
-    const orgAddress= await this.resolveOrganizationAddress()
+    const orgAddress = await this.resolveOrganizationAddress()
 
     // Generate config file
     const tokenResp = await this.createWorkgroupToken();
     const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${tokenResp.token}\n`;
-    const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
+    const provideConfigFileName = `${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
     await this.requireIdent();
     var name = this.baselineConfig?.orgName.split(' ')
@@ -876,33 +902,33 @@ export class ParticipantStack {
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
-		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
+    runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
     runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
     runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
     runcmd += ` --nats-ws-port=${this.baselineConfig?.baselineMessagingWebsocketPort}`
     runcmd += ` --nchain-host="${this.baselineConfig?.nchainApiHost}"`
-		runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
-		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
-		runcmd += ` --organization="${this.org.id}"`,
-    runcmd += ` --organization-address="${orgAddress}"`
+    runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
+    runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
+    runcmd += ` --organization="${this.org.id}"`,
+      runcmd += ` --organization-address="${orgAddress}"`
     runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
     runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
     runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
-		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
-		runcmd += ` --registry-contract-address="${registryContract.address}"`
+    runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
+    runcmd += ` --registry-contract-address="${registryContract.address}"`
     runcmd += ` --redis-hostname=${name[0]}-redis`
     runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
     runcmd += ` --sor="ephemeral"`
     runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
-		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
-		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
-		runcmd += ` --workgroup="${this.workgroup?.id}"`
-    
+    runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
+    runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
+    runcmd += ` --workgroup="${this.workgroup?.id}"`
+
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
-    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
+    var child = spawn(runenv + runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     child.unref()
   }
 

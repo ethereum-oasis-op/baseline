@@ -145,29 +145,8 @@ export const setBoatLocation = async (rowLoc, columnLoc, layout, boat, board, ra
     return board
 }
 
-// TODO: keep all proofs of single grid position and verify whether they match the missile location
-// Use the array containing all the proofs instead of the board to verify the accuracy of the hit
-export const launchMisile = async (rowLoc, columnLoc, board) => {
-    if (turnControl(board.owner)) {
-        //if(hit){checkGame(board)}
-    }
-}
-
-export const checkGame = async (board) => {
-    let sunkCounter = 0
-    for (let i = 0; i < board.properties.boats.length; i++) {
-        if (board.properties.boats[i].state == 'sunk') {
-            sunkCounter += 1
-            if (board.properties.boats[i].length == sunkCounter) {
-                return { owner: board.properties.owner, gameState: 'won' }
-            }
-        }
-    }
-    return { owner: board.properties.owner, gameState: 'In progress' }
-}
-
-//
 export const turnControl = async (user) => {
+    // turnProofs = [aliceSignatureProof, bobSignatureProof]
     // verify proof with sender of verification
     // generate a new proof with the other persons name
     // aliceSignatureProof
@@ -179,17 +158,83 @@ export const turnControl = async (user) => {
 
 // Generating proofs exclusively to verify a correct set up
 export const baselineSetUp = async (board) => {
-    // Set-up conditions
-    // The size of the board (size of board and owner) 1 per board
+    // Single hash proof with the struct:
+    //
+    // initGame = {
+    //    boardSize=2,2
+    //    numberOfBoats=1
+    //    sizeOfBoats=[]
+    // }
+    // 
+    // Alice will generate a proof with the content above and bob will verify it, if they both agree they can submit it onchain?
+    //
+    // The size of the board (size of board and owner) 1 per board 
     // The number of boats on the board (number of boats, board, and owner) 1 per board
     // The size of the boat (size of the boat and board and owner)  1 per boat
-    // Generate a proof of movement for alice and bob
 }
 
 export const gridProofs = async (board) => {
     // Generate a proof for each coordinate to know whether it contains a ship or not
     // Iterate throught the board.grid and generate a proof for water or ship at that location
-    // Push into a 
+    // Alice would take her board and iterate through the grid
+    // let aliceProofArray= []
+    // for(board.properties.rows){
+    //     for(board.properties.columns){
+    //         if(board.grid[row,column]==false)
+    //             aliceProofArray.push(`${row},${column}`: generate coordinateProof state = water)
+    //         else{
+    //             aliceProofArray.push(`${row},${column}`: generate coordinateProof state = boat)
+    //         }
+    //     }
+    // }
+    //
+    // Single hash proof with the struct:
+    // coordinateProof = {
+    //     row:1
+    //     column:1
+    //     state: 'hit'
+    // }
+    //
+    // return proofArray
 }
 
-// deployBaselineCircuit
+// we are passing our own board here
+// TODO- request the opponent proof for coordinate through NATS
+export const launchMisile = async (rowLoc, columnLoc, board) => {
+    if (turnControl(board.owner)) {
+        // Build hash
+        // Request proof from Counterpart
+        // requesOpponentProof(rowloc,columnLoc)
+        // pass the proof and the hash to verify proof
+        // if proof is verified keep track as hit other wise verify with miss
+    }
+}
+
+export const checkGame = async (board) => {
+    // Generate a proof for all coordinates containing a ship
+    // Alice would take her board and iterate through the grid
+    // let aliceProofArray= []
+    // for(board.properties.rows){
+    //     for(board.properties.columns){
+    //         if(board.grid[row,column]==true)
+    //            boatLocations.push(`${row},${column}`)
+    //     }
+    //  generate aliceGameProof
+    // }
+    //
+    // Single hash proof with the struct:
+    // gameProof = {
+    //     boatCoordinates: boatLocations
+    // }
+    //
+    // return proofArray
+}
+
+// Create a circuit
+// circuit = await getApp().deployBaselineCircuit('mimc', `battleLineGrid${}`);
+
+// Generate a Proof
+// call proveBaselineCircuit with circuit ID... and store whats returned which is a proof
+
+// Verify
+// call verifyBaselineProof with circuit ID... and store whats returned which is a result

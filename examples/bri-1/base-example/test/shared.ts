@@ -292,7 +292,7 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => Par
     describe('zkSNARK circuits', () => {
       describe('provisioning', () => {
         before(async () => {
-          circuit = await getApp().deployBaselineCircuit();
+          circuit = await getApp().deployBaselineCircuit('purchase_order', 'my 1337 circuit');
           assert(circuit, 'setup artifacts should not be null');
         });
 
