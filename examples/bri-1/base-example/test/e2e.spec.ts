@@ -236,13 +236,19 @@ describe('Baseline', () => {
             workstepId = String(uuid())
             const recipient = await aliceApp.resolveOrganizationAddress();
 
-            await bobApp.createBaselineObject({
+            let messageProof = await bobApp.createBaselineObject({
               "id": workstepId,
               "payload": {
-                "message": "working proof"
+                "message": "workingproof"
               },
-              "type": "general_consistency",
+              "type": "mimc",
             });
+            console.log(messageProof)
+
+              // call
+              bobApp.verifyBaselineProof('id', 'proofFromOpponent', {
+                "Hash":'[hash of state struct]' // only public witness
+              })
           })
 
           it('should increment protocol message tx count for the sender', async () => {

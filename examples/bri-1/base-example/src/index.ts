@@ -71,6 +71,15 @@ export class ParticipantStack {
     this.natsConfig = natsConfig;
   }
 
+  // mapping of string to string for public witness
+  async verifyBaselineProof(id: string, proof: string, publicWitness: any) {
+    let params = {
+      "witness": publicWitness,
+      "proof": proof
+    }
+    this.privacy?.verify(id, params)
+  }
+  
   async init() {
     if (this.initialized) {
       throw new Error(`already initialized participant stack: ${this.org.name}`);
@@ -698,32 +707,6 @@ export class ParticipantStack {
     await this.deployWorkgroupShieldContract();
 
     return this.baselineCircuit;
-  }
-
-  async proveBaselineCircuit(id:string, params:any){
-    // witness := map[string]interface{}{
-    //   "Preimage": preImageString,
-    //   "Hash":     hashString,
-    // }
-
-    let params = map[string]interface{}{
-      witness:witness
-    }
-
-    let baselineProof = await this.privacy?.prove(id!, params)
-  }
-
-  async verifyBaselineProof(id:string, params:any){
-    // witness := map[string]interface{}{
-    //   "Preimage": preImageString,
-    //   "Hash":     hashString,
-    // }
-
-    let params = map[string]interface{}{
-      witness:witness
-    }
-
-    let baselineProof = await this.privacy?.verify(id, params)
   }
 
   async deployWorkgroupContract(name: string, type: string, params: any, arvg?: any[]): Promise<any> {
