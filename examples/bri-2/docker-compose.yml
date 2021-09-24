@@ -3,25 +3,40 @@ version: '3.7'
 x-default-variables: &default-variables
   KEY_MANAGER_URL: ${KEY_MANAGER_URL-http://key-manager:8081}
   KEY_MANAGER_METRICS_URL: ${KEY_MANAGER_URL-http://key-manager:8082}
-  VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+  VAULT_ADDR: ${VAULT_ADDR-http://hashicorp:8200}
   LOG_LEVEL: ${LOG_LEVEL-debug}
   LOG_FORMAT: ${LOG_FORMAT-}
   LOG_TIMESTAMP: ${LOG_TIMESTAMP-true}
 
-x-container-common: &container-common
-  image: docker.consensys.net/priv/orchestrate:v21.1.4
+x-hashicorp-common: &hashicorp-common
   restart: ${CONTAINER_RESTART-on-failure}
-  tty: true
   networks:
-    - alice
-  labels:
-    filebeat: "true"
+    - hashicorp
 
-x-key-manager-common: &key-manager-common
-  KEY_MANAGER_TYPE: ${KEY_MANAGER_TYPE-}
+x-key-manager-default-variables: &key-manager-default-variables
+  LOG_LEVEL: ${LOG_LEVEL-INFO}
+  LOG_FORMAT: ${LOG_FORMAT-text}
+  HTTP_PORT: ${HTTP_PORT-8080}
+  HTTP_HOST: ${HTTP_HOST-0.0.0.0}
+  HEALTH_PORT: ${HEALTH_PORT-8081}
+  DB_TLS_SSLMODE: ${DB_TLS_SSLMODE-disable}
+  DB_TLS_CERT: ${DB_TLS_CERT-}
+  DB_TLS_KEY: ${DB_TLS_KEY-}
+  DB_TLS_CA: ${DB_TLS_CA-}
+  DB_HOST: ${DB_HOST-postgres}
+  DB_PORT: ${DB_PORT-}
+  DB_DATABASE: ${DB_DATABASE-}
+  DB_POOLSIZE: ${DB_POOLSIZE-}
+  DB_POOL_TIMEOUT: ${DB_POOL_TIMEOUT-}
+  AUTH_OIDC_CA_CERT: ${AUTH_OIDC_CA_CERT-}
+  AUTH_OIDC_ISSUER_URL: ${AUTH_OIDC_ISSUER_URL-}
+  HTTPS_ENABLED: ${HTTPS_ENABLED-}
+  HTTPS_SERVER_KEY: ${HTTPS_SERVER_KEY-}
+  HTTPS_SERVER_CERT: ${HTTPS_SERVER_CERT-}
+  AUTH_TLS_CA: ${AUTH_TLS_CA-}
+  AUTH_API_KEY_FILE: ${AUTH_API_KEY_FILE-}
 
 services:
-
   # shared containers
 
   ganache:
@@ -37,12 +52,12 @@ services:
     volumes:
       - ./scripts/ganache_health.sh:/app/health-check.sh:delegated
     healthcheck:
-      test: ["CMD", "sh", "health-check.sh"]
+      test: ['CMD', 'sh', 'health-check.sh']
       interval: 15s
       timeout: 10s
       retries: 3
       start_period: 10s
-  
+
   # alice
 
   alice-nats-server:
@@ -91,7 +106,7 @@ services:
     ports:
       - 27117:27017
     healthcheck:
-      test: ["CMD", "sh", "health-check.sh"]
+      test: ['CMD', 'sh', 'health-check.sh']
       interval: 15s
       timeout: 10s
       retries: 3
@@ -123,20 +138,20 @@ services:
     networks:
       - alice
     ports:
-     - 4001:4001
+      - 4001:4001
     volumes:
       - ./contracts:/app/src/contracts
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:4001/status"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:4001/status']
       interval: 15s
       timeout: 10s
       retries: 3
       start_period: 10s
-  
+
   alice-workflow-mgr:
     hostname: alice-workflow-mgr
     container_name: alice-workflow-mgr
-    depends_on: 
+    depends_on:
       - alice-mongo
       - alice-nats-server
     build:
@@ -144,7 +159,7 @@ services:
       dockerfile: ./Dockerfile
     env_file:
       - ./workflow-mgr/.env
-    environment: 
+    environment:
       - DATABASE_HOST=alice-mongo:27017
       - COMMIT_MGR_URL=http://alice-commit-mgr:4001
       - ZKP_MGR_URL=http://alice-zkp-mgr:8080
@@ -152,18 +167,18 @@ services:
     networks:
       - alice
     ports:
-     - 5001:5001
+      - 5001:5001
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5001/status"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:5001/status']
       interval: 15s
       timeout: 10s
       retries: 3
       start_period: 10s
-  
+
   alice-zkp-mgr:
     hostname: alice-zkp-mgr
     container_name: alice-zkp-mgr
-    depends_on: 
+    depends_on:
       - alice-mongo
       - alice-nats-server
     build:
@@ -171,91 +186,119 @@ services:
       dockerfile: ./Dockerfile
     env_file:
       - ./zkp-mgr/.env
-    environment: 
+    environment:
       - DATABASE_HOST=alice-mongo:27017
       - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
       - NATS_URL=nats://alice-nats-server:4222
     networks:
       - alice
     ports:
-     - 8080:8080
+      - 8090:8080
     volumes:
       - alice-zkp-circuits:/root/src/circuits
       #- alice-zkp-circuits:./zkp-mgr/src/circuits:/root/src/circuits
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/status"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:8080/status']
       interval: 15s
       timeout: 10s
       retries: 3
       start_period: 10s
- 
-# Codefi Orchestrate Services
 
-  key-manager-init:
-    build: ./scripts/deps/hashicorp
-    hostname: alice-key-manager-init
-    container_name: alice-key-manager-init
+  # Codefi Orchestrate Services
+
+  postgres:
+    container_name: alice-vault-db
+    image: postgres:13.4-alpine
     environment:
-      VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
-    networks:
-      - alice
-    depends_on:
-      - vault-init
+      POSTGRES_PASSWORD: postgres
     volumes:
-      - vault-token:/vault/token
-      - ./scripts/deps/hashicorp/renew.sh:/renew.sh
-    command: sh /renew.sh
+      - db-data-api:/var/lib/postgresql/data
+    ports:
+      - 5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 1s
+      timeout: 1s
+      retries: 5
+    restart: 'on-failure'
+
+  migration:
+    image: consensys/quorum-key-manager:latest
+    environment:
+      <<: *key-manager-default-variables
+    command: migrate up
+    restart: 'on-failure'
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   key-manager:
-    <<: *container-common
-    hostname: alice-key-manager
-    container_name: alice-key-manager
-    ports:
-      - 8091:8081
-      - 8092:8082
+    container_name: alice-key-mgr
+    image: consensys/quorum-key-manager:latest
     environment:
-      <<: *default-variables
-      <<: *key-manager-common
+      <<: *key-manager-default-variables
+      MANIFEST_PATH: ${MANIFEST_PATH-/manifests}
+    ports:
+      - 8080:8080
+      - 8081:8081
     depends_on:
-      - key-manager-init
-    command: key-manager run
+      - migration
+    command: run
     volumes:
-      - vault-token:/vault/token:ro
-      - ./build/bin/orchestrate:/bin/main
-  
-  vault:
-    image: library/vault:1.6.1
+      - ${HOST_MANIFEST_PATH-./scripts/deps/config/manifests}:/manifests:ro
+    restart: 'on-failure'
+
+  hashicorp:
+    container_name: alice-vault
+    <<: *hashicorp-common
+    image: library/vault:1.8.2
     tty: true
     cap_add:
       - IPC_LOCK
     volumes:
-      - vault-plugin:/vault/plugins
+      - hashicorp-plugin:/vault/plugins
       - ./scripts/deps/hashicorp/config/config.hcl:/vault/config.hcl:ro
     entrypoint: vault server -config=/vault/config.hcl
     ports:
       - 8200:8200
-    restart: ${CONTAINER_RESTART-on-failure}
     networks:
       - alice
 
-  vault-init:
+  hashicorp-init:
+    <<: *hashicorp-common
     build: ./scripts/deps/hashicorp
     environment:
-      VAULT_ADDR: ${VAULT_ADDR-http://vault:8200}
+      VAULT_ADDR: ${VAULT_ADDR-http://hashicorp:8200}
       PLUGIN_PATH: ${PLUGIN_PATH-/vault/plugins}
       TOKEN_PATH: ${TOKEN_PATH-/vault/token}
-      PLUGIN_VERSION: ${PLUGIN_VERSION-v0.0.10-alpha.5}
-    restart: "no"
+      PLUGIN_VERSION: ${PLUGIN_VERSION-v1.0.0}
+    restart: 'no'
     depends_on:
-      - vault
+      - hashicorp
     volumes:
-      - vault-token:/vault/token
-      - vault-plugin:/vault/plugins
+      - hashicorp-token:/vault/token
+      - hashicorp-plugin:/vault/plugins
       - ./scripts/deps/hashicorp/init.sh:/init.sh
       - ./scripts/deps/hashicorp/plugin.sh:/plugin.sh
     command: >
       sh -c "./plugin.sh && ./init.sh"
-    restart: ${CONTAINER_RESTART-on-failure}
+    networks:
+      - alice
+
+  hashicorp-agent:
+    container_name: alice-vault-agent
+    <<: *hashicorp-common
+    image: library/vault:1.8.2
+    tty: true
+    depends_on:
+      - hashicorp
+      - hashicorp-init
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - hashicorp-token:/vault/token
+      - ./scripts/deps/hashicorp/config/agent-config.hcl:/vault/config.hcl:ro
+    entrypoint: vault agent -config=/vault/config.hcl
     networks:
       - alice
 
@@ -265,5 +308,10 @@ networks:
 volumes:
   alice-mongo:
   alice-zkp-circuits:
-  vault-token:
-  vault-plugin:
+  hashicorp-token:
+    driver: local
+    name: hashicorp-token
+  hashicorp-plugin:
+    driver: local
+  db-data-api:
+    driver: local

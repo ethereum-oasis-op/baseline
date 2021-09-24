@@ -11,6 +11,11 @@ UNSEAL_KEY=$(cat init.json | jq .keys | jq .[0])
 SHA256SUM=$(cat $PLUGIN_PATH/SHA256SUM)
 rm init.json
 
+if [ "$UNSEAL_KEY" = "null" ]; then
+  echo "cannot retrieve unseal token"
+  exit 1
+fi
+
 echo $VAULT_TOKEN > $TOKEN_PATH/.root
 echo "ROOT_TOKEN: $VAULT_TOKEN"
 echo "SHA256SUM: ${SHA256SUM}"
@@ -18,20 +23,21 @@ echo "SHA256SUM: ${SHA256SUM}"
 # Unseal Vault
 curl --request POST --data '{"key": '${UNSEAL_KEY}'}' ${VAULT_ADDR}/v1/sys/unseal
 
-# Enable kv-v2 secret engine (DEPRECATED)
+# Enable kv-v2 secret engine
 curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST \
         --data '{"type": "kv-v2", "config": {"force_no_cache": true} }' \
     ${VAULT_ADDR}/v1/sys/mounts/secret
 
-# Register orchestrate plugin
-curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST \
-  --data "{\"sha256\": \"${SHA256SUM}\", \"command\": \"orchestrate\" }" \
-  ${VAULT_ADDR}/v1/sys/plugins/catalog/secret/orchestrate
 
-# Enable orchestrate secret engine
+# Register Quorum plugin
 curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST \
-  --data '{"type": "plugin", "plugin_name": "orchestrate", "config": {"force_no_cache": true, "passthrough_request_headers": ["X-Vault-Namespace"]} }' \
-  ${VAULT_ADDR}/v1/sys/mounts/orchestrate
+  --data "{\"sha256\": \"${SHA256SUM}\", \"command\": \"quorum\" }" \
+  ${VAULT_ADDR}/v1/sys/plugins/catalog/secret/quorum
+
+# Enable quorum secret engine
+curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST \
+  --data '{"type": "plugin", "plugin_name": "quorum", "config": {"force_no_cache": true, "passthrough_request_headers": ["X-Vault-Namespace"]} }' \
+  ${VAULT_ADDR}/v1/sys/mounts/quorum
 
 # Enable role policies
 # Instructions taken from https://learn.hashicorp.com/tutorials/vault/getting-started-apis
@@ -41,7 +47,7 @@ curl --header "X-Vault-Token: ${VAULT_TOKEN}" --request POST \
 
 curl --header "X-Vault-Token: $VAULT_TOKEN" \
   --request PUT \
-  --data '{ "policy":"path \"orchestrate/*\" { capabilities = [\"create\", \"read\", \"update\", \"delete\", \"list\"] }" }' \
+  --data '{ "policy":"path \"quorum/*\" { capabilities = [\"create\", \"read\", \"update\", \"delete\", \"list\"] }" }' \
   ${VAULT_ADDR}/v1/sys/policies/acl/allow_secrets
 
 curl --header "X-Vault-Token: $VAULT_TOKEN" \
