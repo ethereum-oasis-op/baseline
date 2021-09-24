@@ -72,23 +72,23 @@ const clientLogo = (clientType) => {
 };
 
 const CopyBtn = ({text}) => {
-  const [copiedText, setCopiedText] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (copiedText !== null) {
-      const interval = setInterval(() => setCopiedText(null), 2000);
+    if (copied) {
+      const interval = setInterval(() => setCopied(false), 2000);
       return () => clearInterval(interval);
     }
-  }, [copiedText]);
+  }, [copied]);
 
   const copy = () => {
     navigator.clipboard.writeText(text);
-    setCopiedText(text);
+    setCopied(true);
   };
 
   return <>
           <i className="far fa-copy px-2 text-gray-700 cursor-pointer" onClick={copy} />
-          {copiedText ? (
+          {copied ? (
             <div className="text-green-500">
               Copied<i className="fas fa-check px-2 text-green-500" />
             </div>
