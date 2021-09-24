@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import WorkflowDropdown from "components/Dropdowns/WorkflowDropdown.js";
+
+const shorten = (str) => {
+  const beg = str.substring(0, 5);
+  const end = str.substring(str.length - 3, str.length);
+  return `${beg}...${end}`
+};
 
 const statusIcon = (status) => {
   switch (status) {
@@ -64,7 +70,6 @@ const clientLogo = (clientType) => {
       return <>{clientType}</>;
   }
 };
-
 export default function CardWorkflows({
   workflows,
   isLoading,
@@ -72,6 +77,32 @@ export default function CardWorkflows({
   color,
 }) {
   const [rowExpand, setRowExpand] = useState({});
+  const [copiedText, setCopiedText] = useState(null);
+
+  useEffect(() => {
+      const interval = setInterval(() => {
+        if (copiedText !== null) {
+          console.log("changing...");
+          setCopiedText(null);
+        }
+      }, 1000);
+      return () => clearInterval(interval);
+  }, []);
+
+  const CopyBtn = ({text}) => {
+    const copy = () => {
+      navigator.clipboard.writeText(text);
+      setCopiedText(text);
+    }
+    return <>
+          <button onClick={copy}>
+            <i className="far fa-copy px-2 text-gray-700"></i>
+          </button>
+            {copiedText === text ? (
+              <div>Copied<i className="fas fa-check px-2 text-gray-700"></i></div>
+            ) : null}
+        </>
+  };
 
   const openCollapse = (id) => {
     setRowExpand((prevState) => ({ ...prevState, [id]: !prevState[id] }));
@@ -219,7 +250,8 @@ export default function CardWorkflows({
                         ZK Circuit Id
                       </th>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                        {workflow.zkCircuitId}
+                        {shorten(workflow.zkCircuitId)}
+                        <CopyBtn text={workflow.zkCircuitId} />
                       </td>
                     </tr>
                     <tr
@@ -230,13 +262,15 @@ export default function CardWorkflows({
                         verifier address
                       </th>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                        {workflow.verifierAddress}
+                        {shorten(workflow.verifierAddress)}
+                        <CopyBtn text={workflow.verifierAddress} />
                       </td>
                       <th className="px-6 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
                         shield Address
                       </th>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                        {workflow.shieldAddress}
+                        {shorten(workflow.shieldAddress)}
+                        <CopyBtn text={workflow.shieldAddress} />
                       </td>
                     </tr>
                   </tbody>
