@@ -70,6 +70,31 @@ const clientLogo = (clientType) => {
       return <>{clientType}</>;
   }
 };
+
+const CopyBtn = ({text}) => {
+  const [copiedText, setCopiedText] = useState(null);
+
+  useEffect(() => {
+    if (copiedText !== null) {
+      const interval = setInterval(() => setCopiedText(null), 2000);
+      return () => clearInterval(interval);
+    }
+  }, [copiedText]);
+
+  const copy = () => {
+    navigator.clipboard.writeText(text);
+    setCopiedText(text);
+  };
+
+  return <>
+          <i className="far fa-copy px-2 text-gray-700 cursor-pointer" onClick={copy} />
+          {copiedText ? (
+            <div className="text-green-500">
+              Copied<i className="fas fa-check px-2 text-green-500" />
+            </div>
+          ) : null}
+      </>
+};
 export default function CardWorkflows({
   workflows,
   isLoading,
@@ -77,32 +102,6 @@ export default function CardWorkflows({
   color,
 }) {
   const [rowExpand, setRowExpand] = useState({});
-  const [copiedText, setCopiedText] = useState(null);
-
-  useEffect(() => {
-      const interval = setInterval(() => {
-        if (copiedText !== null) {
-          console.log("changing...");
-          setCopiedText(null);
-        }
-      }, 1000);
-      return () => clearInterval(interval);
-  }, []);
-
-  const CopyBtn = ({text}) => {
-    const copy = () => {
-      navigator.clipboard.writeText(text);
-      setCopiedText(text);
-    }
-    return <>
-          <button onClick={copy}>
-            <i className="far fa-copy px-2 text-gray-700"></i>
-          </button>
-            {copiedText === text ? (
-              <div>Copied<i className="fas fa-check px-2 text-gray-700"></i></div>
-            ) : null}
-        </>
-  };
 
   const openCollapse = (id) => {
     setRowExpand((prevState) => ({ ...prevState, [id]: !prevState[id] }));
@@ -161,6 +160,7 @@ export default function CardWorkflows({
                   Date Created
                 </th>
                 <th
+                  style={{minWidth: "175px"}}
                   className={
                     "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
                     (color === "light"
@@ -201,9 +201,9 @@ export default function CardWorkflows({
                       <td>
                         <button onClick={() => openCollapse(index)}>
                           {rowExpand[index] ? (
-                            <i class="fas fa-chevron-down px-4 text-gray-700"></i>
+                            <i className="fas fa-chevron-down px-4 text-gray-700"></i>
                           ) : (
-                            <i class="fas fa-chevron-up px-4 text-gray-700"></i>
+                            <i className="fas fa-chevron-up px-4 text-gray-700"></i>
                           )}
                         </button>
                       </td>
@@ -240,10 +240,10 @@ export default function CardWorkflows({
                         } `}
                     >
                       <th></th>
-                      <th className="px-6  w-1/2 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
-                        <div className="w-3">Chain Id</div>
+                      <th className="px-6 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
+                        Chain Id
                       </th>
-                      <td className="border-t-0 px-6 w-1/2 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
                         {workflow.chainId}
                       </td>
                       <th className="px-6 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
