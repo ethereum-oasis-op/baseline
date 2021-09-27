@@ -3,9 +3,13 @@ import PropTypes from "prop-types";
 import WorkflowDropdown from "components/Dropdowns/WorkflowDropdown.js";
 
 const shorten = (str) => {
-  const beg = str.substring(0, 5);
-  const end = str.substring(str.length - 3, str.length);
-  return `${beg}...${end}`
+  if (str) {
+    const beg = str.substring(0, 5);
+    const end = str.substring(str.length - 3, str.length);
+    return `${beg}...${end}`;
+  } else {
+    return "N/A";
+  }
 };
 
 const statusIcon = (status) => {
@@ -86,6 +90,7 @@ const CopyBtn = ({text}) => {
     setCopied(true);
   };
 
+  if (text === undefined) return null;
   return <>
           <i className="far fa-copy px-2 text-gray-700 cursor-pointer" onClick={copy} />
           {copied ? (
@@ -193,7 +198,7 @@ export default function CardWorkflows({
             {workflows && workflows.length > 0 ? (
               workflows.map((workflow, index) => {
                 return (
-                  <tbody>
+                  <tbody key={workflow._id}>
                     <tr
                       key={workflow._id}
                       style={{ borderTop: "solid 1px rgba(105, 105, 105)" }}
