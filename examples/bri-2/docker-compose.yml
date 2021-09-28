@@ -8,11 +8,6 @@ x-default-variables: &default-variables
   LOG_FORMAT: ${LOG_FORMAT-}
   LOG_TIMESTAMP: ${LOG_TIMESTAMP-true}
 
-x-hashicorp-common: &hashicorp-common
-  restart: ${CONTAINER_RESTART-on-failure}
-  networks:
-    - hashicorp
-
 x-key-manager-default-variables: &key-manager-default-variables
   LOG_LEVEL: ${LOG_LEVEL-INFO}
   LOG_FORMAT: ${LOG_FORMAT-text}
@@ -221,6 +216,8 @@ services:
       timeout: 1s
       retries: 5
     restart: 'on-failure'
+    networks:
+      - alice
 
   migration:
     image: consensys/quorum-key-manager:latest
@@ -231,6 +228,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - alice
 
   key-manager:
     container_name: alice-key-mgr
@@ -239,66 +238,44 @@ services:
       <<: *key-manager-default-variables
       MANIFEST_PATH: ${MANIFEST_PATH-/manifests}
     ports:
-      - 8080:8080
-      - 8081:8081
+      - 8080:8080 # API port
+      - 8081:8081 # health-check port
     depends_on:
       - migration
     command: run
     volumes:
-      - ${HOST_MANIFEST_PATH-./scripts/deps/config/manifests}:/manifests:ro
+      - ${HOST_MANIFEST_PATH-./key-mgr/config/manifests}:/manifests:ro
     restart: 'on-failure'
+    networks:
+      - alice
 
   hashicorp:
     container_name: alice-vault
-    <<: *hashicorp-common
     image: library/vault:1.8.2
     tty: true
     cap_add:
       - IPC_LOCK
     volumes:
-      - hashicorp-plugin:/vault/plugins
-      - ./scripts/deps/hashicorp/config/config.hcl:/vault/config.hcl:ro
-    entrypoint: vault server -config=/vault/config.hcl
+      - ./key-mgr/hashicorp/plugins/quorum-hashicorp-vault-plugin:/vault/plugins/quorum-hashicorp-vault-plugin
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN-DevVaultToken}
+    entrypoint: vault server -dev -dev-plugin-dir=/vault/plugins/ -dev-listen-address="0.0.0.0:8200" -log-level=trace
     ports:
       - 8200:8200
     networks:
       - alice
 
   hashicorp-init:
-    <<: *hashicorp-common
-    build: ./scripts/deps/hashicorp
+    build: ./key-mgr/hashicorp
     environment:
-      VAULT_ADDR: ${VAULT_ADDR-http://hashicorp:8200}
-      PLUGIN_PATH: ${PLUGIN_PATH-/vault/plugins}
-      TOKEN_PATH: ${TOKEN_PATH-/vault/token}
-      PLUGIN_VERSION: ${PLUGIN_VERSION-v1.0.0}
+      VAULT_ADDR: http://alice-vault:8200
+      VAULT_TOKEN: ${VAULT_TOKEN-DevVaultToken}
     restart: 'no'
     depends_on:
       - hashicorp
     volumes:
-      - hashicorp-token:/vault/token
-      - hashicorp-plugin:/vault/plugins
-      - ./scripts/deps/hashicorp/init.sh:/init.sh
-      - ./scripts/deps/hashicorp/plugin.sh:/plugin.sh
-    command: >
-      sh -c "./plugin.sh && ./init.sh"
-    networks:
-      - alice
-
-  hashicorp-agent:
-    container_name: alice-vault-agent
-    <<: *hashicorp-common
-    image: library/vault:1.8.2
-    tty: true
-    depends_on:
-      - hashicorp
-      - hashicorp-init
-    cap_add:
-      - IPC_LOCK
-    volumes:
-      - hashicorp-token:/vault/token
-      - ./scripts/deps/hashicorp/config/agent-config.hcl:/vault/config.hcl:ro
-    entrypoint: vault agent -config=/vault/config.hcl
+      - ./key-mgr/hashicorp/init-dev.sh:/init.sh
+    command: sh ./init.sh
     networks:
       - alice
 
@@ -308,10 +285,5 @@ networks:
 volumes:
   alice-mongo:
   alice-zkp-circuits:
-  hashicorp-token:
-    driver: local
-    name: hashicorp-token
-  hashicorp-plugin:
-    driver: local
   db-data-api:
     driver: local

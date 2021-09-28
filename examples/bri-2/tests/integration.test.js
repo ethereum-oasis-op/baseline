@@ -53,6 +53,7 @@ afterAll(async () => {
  * then add a commit to that workflow
  *
  * POST /zk-snarks/accounts
+ * POST http://localhost:8080/stores/keystore/keys/baseline
  * POST /workflows?type=signature
  * GET /workflows/:workflowId
  * POST /commits
