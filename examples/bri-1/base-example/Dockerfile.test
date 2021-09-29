@@ -1,0 +1,26 @@
+FROM node:10.15.3-alpine
+
+RUN mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
+
+COPY package.json /usr/src/app/
+COPY tsconfig.json ./
+
+
+RUN apk --no-cache --virtual build-dependencies add git python make g++ \
+    && apk add curl \
+    && git config --global url."https://".insteadOf git:// \
+    && npm install  \
+    && apk del build-dependencies \
+    && apk add git bash && git clone https://github.com/vishnubob/wait-for-it.git
+
+COPY . /usr/src/app
+RUN npm run tsc
+
+
+COPY entrypoint.sh /usr/src/app
+RUN chmod +x /usr/src/app/entrypoint.sh
+
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+CMD ["npm","run","test"]

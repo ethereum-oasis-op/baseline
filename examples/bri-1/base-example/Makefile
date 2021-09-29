@@ -19,3 +19,6 @@ start-attached:
 
 stop:
 	docker-compose  down --remove-orphans && prvd baseline stack stop --name BobCorp && prvd baseline stack stop --name AliceCorp
+
+tests: 
+	docker-compose up -d --build && docker logs integration-test -f

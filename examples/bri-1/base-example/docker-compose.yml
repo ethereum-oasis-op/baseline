@@ -2,8 +2,7 @@ version: '3.5'
 
 services:
 
-  # alice
-
+  # Alice Containers
   alice-postgres:
     image: postgres
     container_name: alice-postgres
@@ -379,8 +378,7 @@ services:
       - 8082:8080
     restart: always
 
-  # bob
-
+  # Bob Containers
   bob-postgres:
     image: postgres
     container_name: bob-postgres
@@ -755,6 +753,20 @@ services:
     ports:
       - 8083:8080
     restart: always
+
+  # Test Container
+  integration-test:
+    build:
+      context: ./
+      dockerfile: Dockerfile.test
+    container_name: integration-test
+    restart: always
+    networks: 
+      - bob
+      - alice
+    volumes:
+      - ./coverage:/usr/src/app/coverage:delegated
+
 
 networks:
   alice:
