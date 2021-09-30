@@ -766,6 +766,8 @@ services:
       - alice
     volumes:
       - ./coverage:/usr/src/app/coverage:delegated
+      - /var/run/docker.sock:/var/run/docker.sock
+      
 
 
 networks:
