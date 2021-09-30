@@ -1,35 +1,63 @@
+
 # GOLANG IMAGE
 FROM golang:1.16.5-alpine
 
-WORKDIR /go/src/github.com/provideplatform/provide-cli/
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build .
-
-# NODE IMAGE
-FROM node:10.15.3-alpine
-
 RUN mkdir -p /usr/src/app
+RUN mkdir -p /root/.nvm
 
 WORKDIR /usr/src/app
 
-COPY package.json /usr/src/app/
+ENV NODE_VERSION=10.15.3
+ENV NVM_DIR=/root/.nvm
 
-RUN apk --no-cache --virtual build-dependencies add git python make docker g++ \
-    && apk add curl \
-    && git config --global url."https://".insteadOf git:// \
-    && npm install  \
+
+RUN apk --no-cache --virtual build-dependencies add git make docker g++ \
     && apk add make \
-    && apk add docker \
-    && apk del build-dependencies
+    && apk add curl \
+    && apk add bash \
+    && apk add docker
 
-RUN && apk add git bash && git clone https://github.com/vishnubob/wait-for-it.git
-    
 RUN git clone https://github.com/provideplatform/provide-cli \
     && cd provide-cli && make install
-COPY . /usr/src/app
 
-COPY entrypoint.sh /usr/src/app
-RUN chmod +x /usr/src/app/entrypoint.sh
+RUN CGO_ENABLED=0 GOOS=linux
 
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
-CMD ["npm","run","test"]
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+
+RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm use ${NODE_VERSION}
+RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
+ENV PATH="/root/.nvm/versions/node/v10.15.3/bin/:$PATH"
+
+CMD ["ls", "/root/.nvm/versions/node/"]
+#CMD ["tail", "-f", "/dev/null"]
+
+RUN node -v
+# RUN npm -v
+
+
+# COPY package.json /usr/src/app/
+
+# RUN npm install \
+#     && apk del build-dependencies
+
+# COPY . /usr/src/app
+
+# RUN apk --no-cache --virtual build-dependencies add git python make docker g++ \
+#     && apk add curl \
+#     && git config --global url."https://".insteadOf git:// \
+#     && apk add make \
+#     && apk add docker \
+#     && apk del build-dependencies
+
+# CMD ["npm","run","test"]
+
+# RUN apk add git bash && git clone https://github.com/vishnubob/wait-for-it.git
+
+# COPY . /usr/src/app
+
+# COPY entrypoint.sh /usr/src/app
+# RUN chmod +x /usr/src/app/entrypoint.sh
+
+# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+# CMD ["npm","run","test"]
