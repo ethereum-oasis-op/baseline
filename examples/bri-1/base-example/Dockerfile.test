@@ -1,15 +1,4 @@
-
-# GOLANG IMAGE
-FROM golang:1.16.5-alpine
-
-RUN mkdir -p /usr/src/app
-RUN mkdir -p /root/.nvm
-
-WORKDIR /usr/src/app
-
-ENV NODE_VERSION=10.15.3
-ENV NVM_DIR=/root/.nvm
-
+FROM golang:1.16.5-alpine as prvd-cli
 
 RUN apk --no-cache --virtual build-dependencies add git make docker g++ \
     && apk add make \
@@ -20,44 +9,24 @@ RUN apk --no-cache --virtual build-dependencies add git make docker g++ \
 RUN git clone https://github.com/provideplatform/provide-cli \
     && cd provide-cli && make install
 
-RUN CGO_ENABLED=0 GOOS=linux
+FROM node:10.15.3-alpine
 
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v10.15.3/bin/:$PATH"
-
-CMD ["ls", "/root/.nvm/versions/node/"]
-#CMD ["tail", "-f", "/dev/null"]
-
-RUN node -v
-# RUN npm -v
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
 
-# COPY package.json /usr/src/app/
+RUN apk add docker
 
-# RUN npm install \
-#     && apk del build-dependencies
+COPY --from=prvd-cli /usr/local/go/ /usr/local/go/
+COPY --from=prvd-cli /go/bin/prvd /usr/local/go/bin/prvd
+ENV PATH="/usr/local/go/bin:${PATH}"
 
-# COPY . /usr/src/app
 
-# RUN apk --no-cache --virtual build-dependencies add git python make docker g++ \
-#     && apk add curl \
-#     && git config --global url."https://".insteadOf git:// \
-#     && apk add make \
-#     && apk add docker \
-#     && apk del build-dependencies
+COPY package.json /usr/src/app/
 
-# CMD ["npm","run","test"]
+RUN npm install
 
-# RUN apk add git bash && git clone https://github.com/vishnubob/wait-for-it.git
+COPY . /usr/src/app
 
-# COPY . /usr/src/app
 
-# COPY entrypoint.sh /usr/src/app
-# RUN chmod +x /usr/src/app/entrypoint.sh
-
-# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
-# CMD ["npm","run","test"]
+CMD ["npm", "run", "test"]

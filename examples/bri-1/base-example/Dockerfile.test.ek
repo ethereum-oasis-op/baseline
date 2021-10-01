@@ -1,0 +1,65 @@
+
+# GOLANG IMAGE
+FROM alpine:latest
+
+# RUN mkdir -p /usr/src/app
+# RUN mkdir -p /root/.nvm
+
+# WORKDIR /usr/src/app
+
+# ENV NODE_VERSION=10.15.3
+# ENV NVM_DIR=/root/.nvm
+RUN apk update && \
+    apk add --no-cache curl bash ca-certificates openssl ncurses coreutils python2 make gcc g++ libgcc linux-headers grep util-linux binutils findutils && \
+    touch ~/.bashrc && \
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+
+# RUN apk --no-cache --virtual build-dependencies add git make docker g++ \
+#     && apk add make \
+#     && apk add curl \
+#     && apk add bash \
+#     && apk add docker
+
+# RUN git clone https://github.com/provideplatform/provide-cli \
+#     && cd provide-cli && make install
+
+# RUN CGO_ENABLED=0 GOOS=linux
+
+CMD ["tail", "-f", "/dev/null"]
+
+
+# FROM alpine:3.14
+
+# RUN mkdir -p /usr/src/app
+
+# WORKDIR /usr/src/app
+
+# COPY package.json /usr/src/app/
+
+# RUN npm install
+
+# COPY . /usr/src/app
+
+# RUN apk update && apk add go
+# RUN echo http://dl-cdn.alpinelinux.org/alpine/v3.14/main >> /etc/apk/repositories 
+# RUN command apk add  --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.14/main go=1.16.8-r0 
+
+# RUN apk --no-cache --virtual build-dependencies add git python make docker g++ \
+#     && apk add curl \
+#     && git config --global url."https://".insteadOf git:// \
+#     && apk add make \
+#     && apk add docker \
+#     && apk del build-dependencies
+
+# RUN git clone https://github.com/provideplatform/provide-cli \
+#     && cd provide-cli && make install
+
+# RUN apk add git bash && git clone https://github.com/vishnubob/wait-for-it.git
+
+# COPY . /usr/src/app
+
+# COPY entrypoint.sh /usr/src/app
+# RUN chmod +x /usr/src/app/entrypoint.sh
+
+# ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+# CMD ["npm","run","test"]
