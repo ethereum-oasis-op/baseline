@@ -42,7 +42,7 @@ make logs
 
 NATS and NATS streaming are used as a fault-tolerant messaging backplane to dispatch and scale idempotent tasks asynchronously. Each NATS subject is configured with a `ttl` for the specific message type which will be published to subscribers of the subject; if no positive acknowledgement has been received for a redelivered message when its `ttl` expires, the message will be negatively acknowledged and dead-lettered.
 
-Redis is used to cache frequently-updated and frequently-accessed key/value pairs (i.e., real-time network metrics).
+In this implementation Redis is used to cache frequently-updated and frequently-accessed key/value pairs (i.e., real-time network metrics).
 
 ### Authorization
 
