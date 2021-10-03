@@ -70,6 +70,76 @@
       "artifacts": [
         "ZKBattleship"
       ]
+    },
+    "/home/jpag/Playground/baseline/examples/battleline/contracts/contracts/IZKBattleship.sol": {
+      "lastModificationDate": 1633273520951,
+      "contentHash": "cdad9d78e18d1fdb033c626c6daf4fe3",
+      "sourceName": "contracts/IZKBattleship.sol",
+      "solcConfig": {
+        "version": "0.8.6",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.6"
+      ],
+      "artifacts": [
+        "IZKBattleship"
+      ]
+    },
+    "/home/jpag/Playground/baseline/examples/battleline/contracts/contracts/ZKBattleship.sol": {
+      "lastModificationDate": 1633267126479,
+      "contentHash": "8d1a1f479429e1a59c3b67b9d893c1a7",
+      "sourceName": "contracts/ZKBattleship.sol",
+      "solcConfig": {
+        "version": "0.8.6",
+        "settings": {
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "./IZKBattleship.sol"
+      ],
+      "versionPragmas": [
+        "0.8.6"
+      ],
+      "artifacts": [
+        "ZKBattleship"
+      ]
     }
   }
 }

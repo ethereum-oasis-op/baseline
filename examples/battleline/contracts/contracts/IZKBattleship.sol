@@ -70,7 +70,7 @@ abstract contract IZKBattleship {
 
     /// ENUMERATIONS ///
     
-    enum Phase { None, Lobby, Placement, Shooting, Complete }
+    enum Phase { None, Lobby, Shooting, Complete }
     
     /// CONSTANTS ///
     uint8 public constant WIDTH = 6; // the width/ heigth of the game matrix (hardcoded for demo)
