@@ -1,0 +1,16 @@
+type Game @entity {
+  id: ID! # game room
+  boards: [Bytes!]!
+  moves: [Move!]! @derivedFrom(field: "game")
+  started: Boolean!
+  winner: Bytes! # address of winning user
+  won: Boolean!
+}
+
+type Move @entity {
+  id: ID!
+  by: Bytes!
+  game: Game!
+  landed: Boolean!
+  proof: Bytes
+}

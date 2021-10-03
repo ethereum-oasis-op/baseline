@@ -1,0 +1,38 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: ZKBattleship
+    network: rinkeby
+    source:
+      address: "0x78019a3700fd84f22a78942ea21359a8353b786a"
+      abi: ZKBattleship
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - GameCreated
+        - GameStarted
+        - Placed
+        - ShotFired
+        - ShotLanded
+        - Won
+      abis:
+        - name: ZKBattleship
+          file: ./abis/ZKBattleship.json
+      eventHandlers:
+        - event: GameCreated(indexed uint256)
+          handler: handleGameCreated
+        - event: GameStarted(indexed uint256)
+          handler: handleGameStarted
+        - event: Placed(indexed uint256,bytes)
+          handler: handlePlaced
+        - event: ShotFired(indexed uint256,uint8,uint8,address)
+          handler: handleShotFired
+        - event: ShotLanded(indexed uint256,uint8,uint8,bytes)
+          handler: handleShotLanded
+        - event: Won(indexed uint256,address)
+          handler: handleWon
+      file: ./src/mapping.ts
