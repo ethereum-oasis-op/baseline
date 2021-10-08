@@ -9,7 +9,7 @@
   </p>
   Read the full documentation <a href="https://docs.baseline-protocol.org">here at docs.baseline-protocol.org</a>.
   <p>
-    <em>Join our <a href="https://communityinviter.com/apps/ethereum-baseline/join-us">Slack workspace</a>, <a href="https://discord.gg/NE8AYD7">Discord channel</a>, <a href="https://t.me/baselineprotocol">Telegram channel</a> and follow us on <a href="https://twitter.com/baselineproto">Twitter</a> for Baseline news and updates!</em>
+    <em>Join our <a href="https://communityinviter.com/apps/ethereum-baseline/join-us">Slack workspace</a>, <a href="https://discord.gg/NE8AYD7">Discord channel</a>, <a href="https://t.me/baselineprotocol">Telegram channel</a>, <a href="https://www.youtube.com/channel/UCPkZ73TH69tMBaC111wxHYw">YouTube channel</a>,  and follow us on <a href="https://twitter.com/baselineproto">Twitter</a> for Baseline news and updates!</em>
   </p>
   <br/>
 </div>
@@ -34,6 +34,12 @@ One or more "core" baseline protocol packages are needed to baseline-enable appl
 
 ## Architecture
 ![baseline-protocol-architecture](https://user-images.githubusercontent.com/161261/86484557-79504f00-bd24-11ea-8edb-d665cb55db20.png)
+
+
+## Resources
+![Provide Documentation](https://docs.provide.services/)
+![Provide Postman Collections](https://github.com/provideplatform/provide-postman)
+
 
 ## License
 
