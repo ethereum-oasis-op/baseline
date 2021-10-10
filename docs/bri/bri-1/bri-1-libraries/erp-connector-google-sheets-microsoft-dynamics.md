@@ -33,7 +33,7 @@ The Use-case shown in the demo follows this path:
 * Julia is the supply manager in the "USMF - Contoso Entertainment System USA". She deals with finding and working with suppliers. Contoso uses Microsoft Dynamics 365 to manage all its operations.
 * Todd is the owner of the small niche HDMI manufacturing plant called ACME. Todd is quite happy to manage his plant via good old Google Spreadsheet.
 * Julia is in need of HDMI cables and has found Todd.
-* This demo will show how "Baseline" can help Julia and Todds records stay in sync despite Todd not using a sophisticated system.
+* This demo will show how "Baseline" can help Julia and Todd's records stay in sync despite Todd not using a sophisticated system.
 
 #### RFQ
 
