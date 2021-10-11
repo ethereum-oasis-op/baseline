@@ -75,11 +75,8 @@ export class ParticipantStack {
     if (this.initialized) {
       throw new Error(`already initialized participant stack: ${this.org.name}`);
     }
-    console.log("baselineServiceFactory")
     this.baseline = await baselineServiceFactory(baselineProviderProvide, this.baselineConfig);
-    console.log("messagingServiceFactory")
     this.nats = await messagingServiceFactory(messagingProviderNats, this.natsConfig);
-    console.log("zkSnarkCircuitProviderServiceFactory")
     this.privacy = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceProvide, {
       token: this.baselineConfig?.token,
       privacyApiScheme: this.baselineConfig?.privacyApiScheme,
@@ -97,21 +94,16 @@ export class ParticipantStack {
     }
 
     this.contracts = {};
-    console.log("startProtocolSubscriptions")
-
     this.startProtocolSubscriptions();
 
     if (this.baselineConfig.initiator) {
       if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
-        console.log("setWorkgroup")
         await this.setWorkgroup(this.baselineConfig.workgroup, this.baselineConfig.workgroupToken);
       } else if (this.baselineConfig.workgroupName) {
-        console.log("createWorkgroup")
         await this.createWorkgroup(this.baselineConfig.workgroupName);
       }
-      console.log("registerOrganization")
-
-      await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+      console.log('before registerOrganization: ', this.natsConfig.natsServers[0])
+      await this.registerOrganization(this.baselineConfig.orgName, `${this.natsConfig.natsServers[0]}`);
     }
 
     this.initialized = true;
@@ -297,11 +289,11 @@ export class ParticipantStack {
     this.workgroupCounterparties.push(counterpartyAddr);
 
     const messagingEndpoint = await this.resolveMessagingEndpoint(counterpartyAddr);
-    this.natsBearerTokens[messagingEndpoint] = invite.prvd.data.params.authorized_bearer_token;
+    this.natsBearerTokens[`${messagingEndpoint}`] = invite.prvd.data.params.authorized_bearer_token;
     this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
 
     await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => { });
-    await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+    await this.registerOrganization(this.baselineConfig.orgName, `${this.natsConfig.natsServers[0]}`);
     await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
       address: await this.resolveOrganizationAddress(),
@@ -315,8 +307,7 @@ export class ParticipantStack {
     if (!org) {
       return Promise.reject(`organization not resolved: ${addr}`);
     }
-
-    const messagingEndpoint = org['config'].messaging_endpoint;
+    const messagingEndpoint = `${org['config'].messaging_endpoint}`;
     if (!messagingEndpoint) {
       return Promise.reject(`organization messaging endpoint not resolved for recipient: ${addr}`);
     }
@@ -380,7 +371,7 @@ export class ParticipantStack {
     if (this.workgroup) {
       return Promise.reject(`workgroup not created; instance is associated with workgroup: ${this.workgroup.name}`);
     }
-    console.log('createWorkgroup')
+
     this.workgroup = await this.baseline?.createWorkgroup({
       config: {
         baselined: true,
@@ -388,12 +379,9 @@ export class ParticipantStack {
       name: name,
       network_id: this.baselineConfig?.networkId,
     });
-    console.log('createWorkgroupToken')
 
     const tokenResp = await this.createWorkgroupToken();
     this.workgroupToken = tokenResp.accessToken || tokenResp.token;
-    
-    console.log('initWorkgroup')
 
     if (this.baselineConfig.initiator) {
       await this.initWorkgroup();
@@ -525,7 +513,7 @@ export class ParticipantStack {
       value: 0,
       account_id: signerResp['id'],
     });
-
+    
     if (resp && resp['response'] && resp['response'][0] !== '0x0000000000000000000000000000000000000000') {
       const org = {} as Organization;
       org.name = resp['response'][1].toString();
@@ -535,6 +523,11 @@ export class ParticipantStack {
       org['config']['domain'] = atob(resp['response'][2]);
       org['config']['messaging_endpoint'] = atob(resp['response'][3]);
       org['config']['zk_public_key'] = atob(resp['response'][4]);
+      var endpoint = org['config']['messaging_endpoint']
+      var start = endpoint.indexOf('//')
+      var end = endpoint.indexOf(':', start)
+      var address = endpoint.substring(start, end)
+      org['config']['messaging_endpoint'] = endpoint.replace(address, "//localhost")
       return Promise.resolve(org);
     }
 
@@ -547,7 +540,6 @@ export class ParticipantStack {
       token = orgToken.accessToken || orgToken.token;
     } 
     return await tryTimes(async () => {
-      console.log("fetchStatus")
       const status = await Baseline.fetchStatus(
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
@@ -838,34 +830,23 @@ export class ParticipantStack {
   }
 
   async registerOrganization(name: string, messagingEndpoint: string): Promise<any> {
-    console.log('createOrganization')
     this.org = await this.baseline?.createOrganization({
       name: name,
       metadata: {
         domain: this.domain,
-        messaging_endpoint: messagingEndpoint,
+        messaging_endpoint: `${messagingEndpoint}`,
       },
     });
 
     if (this.org) {
-      console.log('requireVault')
       const vault = await this.requireVault();
-      console.log('createVaultKey')
-
       this.babyJubJub = await this.createVaultKey(vault.id!, 'babyJubJub');
-      console.log('createVaultKey')
       await this.createVaultKey(vault.id!, 'secp256k1');
-      console.log('createVaultKey')
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
-      console.log('createVaultKey')
       await this.createVaultKey(vault.id!, 'RSA-4096');
-      console.log('registerWorkgroupOrganization')
       await this.registerWorkgroupOrganization();
-      console.log('requireIdent')
       await this.requireIdent();
-      console.log('deployBaselineStack')
       await this.deployBaselineStack();
-      console.log('requireBaselineStack')
       await this.requireBaselineStack();
     }
 
@@ -893,10 +874,10 @@ export class ParticipantStack {
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
     await this.requireIdent();
     var name = this.baselineConfig?.orgName.split(' ')
-    var runcmd = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
-    runcmd += ` prvd baseline stack start`
+    const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
+    var runcmd = ` prvd baseline stack start`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
-    runcmd += ` --config="${provideConfigFileName}"`
+    runcmd += ` --config="${provideConfigFileName}"` 
     runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
 		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
     runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
@@ -924,8 +905,7 @@ export class ParticipantStack {
     
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
-    var child = spawn(runcmd, [], { detached: true, stdio: 'pipe', shell: true });
-    console.log(child)
+    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     child.unref()
   }
 

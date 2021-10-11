@@ -20,7 +20,7 @@
     "test": "./node_modules/.bin/mocha --colors *.js --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.spec.ts --timeout 940000 --trace-warnings --unhandled-rejections=strict --max-old-space-size=8192 --exit",
     "test:startup": "make start",
     "test:teardown": "make stop"
-    },
+  },
   "dependencies": {
     "@baseline-protocol/api": "0.2.0",
     "@baseline-protocol/messaging": "0.1.0",

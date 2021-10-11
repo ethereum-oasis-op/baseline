@@ -1,24 +1,24 @@
 .PHONY: clean reset restart start start-attached stop
 
 clean:
-	docker-compose  down --rmi all --volumes --remove-orphans
+	docker-compose down --rmi all --volumes --remove-orphans
 
 logs:
-	docker-compose  logs -f
+	docker-compose logs -f
 
 reset: stop clean
-	docker-compose  up -d --build --force-recreate --remove-orphans
+	docker-compose up -d --build --force-recreate --remove-orphans
 
 restart: stop start
 
 start:
-	docker-compose  up -d --remove-orphans && docker network prune -f && docker network prune -f && docker volume prune -f
+	docker-compose up && docker network prune -f && docker network prune -f && docker volume prune -f
 
 start-attached:
-	docker-compose  up --remove-orphans
+	docker compose up --remove-orphans
 
 stop:
-	docker-compose  down --remove-orphans && prvd baseline stack stop --name BobCorp && prvd baseline stack stop --name AliceCorp
+	docker-compose down && prvd baseline stack stop --name BobCorp && prvd baseline stack stop --name AliceCorp
 
 tests: 
-	docker-compose up -d --build && docker logs integration-test -f
+	docker compose up --build && docker logs integration-test -f

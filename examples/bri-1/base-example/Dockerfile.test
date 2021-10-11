@@ -1,4 +1,4 @@
-FROM golang:1.16.5-alpine as prvd-cli
+FROM golang:1.16.6-alpine as prvd-cli
 
 RUN apk --no-cache --virtual build-dependencies add git make docker g++ \
     && apk add make \
@@ -15,7 +15,11 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 
-RUN apk add docker
+RUN apk update && apk upgrade\
+    && apk add curl --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main \
+    && docker-compose
+RUN apk add docker docker-compose --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community 
+RUN apk add make 
 
 COPY --from=prvd-cli /usr/local/go/ /usr/local/go/
 COPY --from=prvd-cli /go/bin/prvd /usr/local/go/bin/prvd
@@ -29,4 +33,4 @@ RUN npm install
 COPY . /usr/src/app
 
 
-CMD ["npm", "run", "test"]
+CMD ["tail", "-f", "/dev/null"]
