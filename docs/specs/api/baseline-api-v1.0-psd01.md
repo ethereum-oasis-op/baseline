@@ -303,7 +303,7 @@ Describes the object providing metadata information about the API (example: titl
 | ORGM1|**#Workgroup**<br>**id:**  <br>**createdAt:**  <br>**networkId:** <br>**userId:** <br> **name**: <br>**description:**<br>**type:**<br>**config:**<br>**hidden:**|
 | ORGM2|**#Organization**<br> {id, createdAt, name, userId, description, metadata}|
 | ORGM3|**#User**<br>{id, createdAt, name, firstName, lastName, email, permissions}\|
-| ORGM4|**#orgRegistry**<br>|
+| ORGM4|**#OrgRegistry**<br>|
 
 ## 4.1.1 Examples
 
@@ -361,7 +361,7 @@ User {
 
 
 
-## 4.2.4 orgRegistry
+## 4.2.4 OrgRegistry
 
 
 ## 4.2 Messaging

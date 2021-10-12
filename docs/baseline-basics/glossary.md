@@ -26,7 +26,7 @@ WIP section - Placeholder for future updates
 
 ### Workgroup
 
-A set of Parties \(defined in the orgRegistry\) when a Registrar factory smart contract is called to start a Workflow.
+A set of Parties \(defined in the OrgRegistry\) when a Registrar factory smart contract is called to start a Workflow.
 
 ### Workflow
 
@@ -50,15 +50,15 @@ In Radish34, there isn't a coherent "Baseline Server", but in the ultimate refer
 
 ### Baseline Proof
 
-There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. An important one is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the orgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and also is used as a state-marker for managing Workflow integrity.
+There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. An important one is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the OrgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and also is used as a state-marker for managing Workflow integrity.
 
 ### CodeBook =&gt; Package
 
 During the Radish34 project, the notion of a shared "codebook" was often discussed. This in concept refers to a collection of artifacts or library components that enable a business process to be "baselined", but in general is extensible to any such components that subject to a business process. These artifacts in the case of Radish34 and presumably what would be "importable" components include the zk snark based circuits for usage in off chain zkp based proof generation and/or other logical components representing a business logic in a workflow process.
 
-### orgRegistry Contract
+### OrgRegistry Contract
 
-Think of the orgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
+Think of the OrgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
 
 ### Shield Contract
 
