@@ -8,17 +8,17 @@ A set of components and procedures that allows separate systems of record to mai
 
 ### Atomic Compartmentalization
 
-Even counterparties to the same business-to-business Workflow typically must not have access to -- or even awareness of -- processes that they are not directly involved in. A Workflow that can restrict access and awareness to a specific set of Parties down to a single Step or Record has achieved "atomic compartmentalization." With the Mainnet, this kind of compartmentalization can be said to be "silo-less," because, while each Step in a Workflow can restrict awareness and access, different Workflows -- even ones created and operated separately over a long period -- can integrate Steps. Workflow A can pass parameters between it Step A\#33 with Workflow B's Step B\#22, if done with care, and the logic and data can be made compatible. There is still work there to integrate the different Workflows, but because they are all baselined on the same Mainnet, this can be done at the application/business-process level. One need not call a network administrator to set up a new channel or figure out which private blockchain network will be primary.
+Even counterparties to the same business-to-business Workflow typically must not have access to -- or even awareness of -- processes that they are not directly involved in. A Workflow that can restrict access and awareness with levels of granularity as fine as a single Step or Record with regard to a specific set of Parties has achieved "atomic compartmentalization". With the Mainnet, this kind of compartmentalization can be said to be "silo-less" because, while each Step in a Workflow can restrict awareness and access, different Workflows -- even ones created and operated separately over a long period -- can integrate Steps. Workflow A can pass parameters between its Step A\#33 with Workflow B's Step B\#22 if done with care, and the logic and data can be made compatible. There still exists tasks necessary to integrate the different Workflows, but because they are all baselined on the same Mainnet, this can be done at the application/business-process level. One need not contact a network administrator to set up a new channel or ascertain which private blockchain network will be primary.
 
 ### **Mainnet**
 
-The Mainnet is an always-on state machine that is maintained as a public good in such a way that it maximizes the resistance to an individual or group to gain control, lock out users from valid functions, or change history. The term, Mainnet, is capitalized to emphasize its relationship to the capitalized Internet.
+The Mainnet is an always-on state machine that is maintained as a public good in such a way that it maximizes resistance toward an individual or group attempting to gain control, lock out users from valid functions, or alter the existing history. 
 
-Used without capitalization to distinguish a public production network from public testnets. For example, the Ethereum mainnet vs. its testnets, such as ropsten.
+The term Mainnet is capitalized to emphasize its relationship to the capitalized term Internet. Usage of the term mainnet without capitalization is done so in distinguishing a public production network from public testnets. For example, the Ethereum mainnet vs. its testnets, such as ropsten.
 
 ### Middleware
 
-There are many forms of middleware. We use the term in the context of the Baseline Protocol in a particular way. Systems of record maintained by legally separate entities require a common frame of reference in order to run business process integration across them. Flow control, ensuring that two processes don't run inappropriately against the same shared state, terminating the back and forth of the [two generals problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), non-repudiation, etc. In this context, the protocol is primarily about loose-coupling architecture in the transaction-processing middleware \(TPM\) area. It is not necessarily about schema translators, though a typical system would very likely run CRUD access between a baseline server and a system of record through translation services in a traditional Enterprise Service Bus \(ESB\). Unlike some RPC middleware, the Baseline Protocol is asynchronous, though it is certainly about passing parameters between functions running on two or more remote machines...and ensuring consistency between them.
+There exist a large variety of forms corresponding to the general use term "middleware". In context of the Baseline Protocol a reference to middleware is unique. Systems of record maintained by legally separate entities require a common frame of reference in order to achieve business process integration across them. This commone frame of reference is subject to issues, such as Flow control, ensuring that two processes don't run inappropriately against the same shared state, terminating the back and forth of the [two generals problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), non-repudiation, etc. In this context, the protocol primarily seeks to accomplish loose-coupling architecture in the transaction-processing middleware \(TPM\) layer. Said layer's focus is not necessarily schema translators, though a typical system would very likely run CRUD access between a baseline server and a system of record through translation services in a traditional Enterprise Service Bus \(ESB\).The Baseline Protocol is, unlike some RPC middleware, asynchronous, therefore passing parameters between functions running on two or more remote machines while ensuring consistency between said machines.
 
 A common pattern inside Baseline is to use a connection between two System of Records by an established standard. The baseline "middleware" part would then extend this standard connection by an additional, standardized connection to the mainnet, to anchor and verify baseline compliant proofs. The combination of established off-chain- and on-chain connection define the complete middleware in this scenario. For example, when baselining two SAP systems, the communication between the two systems could be using standard iDoc interfaces and SAP-PI middleware.
 
@@ -40,15 +40,15 @@ A discrete _baselined_ Record/Function/BusinessEvent/Document \(e.g,. RFP, MSA, 
 
 ### Task
 
-Different Workflow Steps implement either all or a subset of Tasks, such as selecting a set of counter-parties, serializing a record, sending messages, sometimes executing off-chain functions \(not in Radish34, but definitely in protocol-compliant stack\), executing and sending/receiving EdDSA sigs, invoking ZK service, sometimes ensuring that the ZK circuit \(or a code package/container in a non-Radish34 implementation\) of a previous Step is executed correctly \(only for Steps that follow previous steps that enforce 'entanglement'\)...etc. The set of Tasks that a Step implements is called its LifeCycle. Most of these Tasks invoke on or more Components.
+Different Workflow Steps implement either all or a subset of Tasks, such as selecting a set of counter-parties, serializing a record, sending messages, sometimes executing off-chain functions \(not in Radish34, but definitely in protocol-compliant stack\), executing and sending/receiving EdDSA sigs, invoking ZK service, sometimes ensuring that the ZK circuit \(or a code package/container in a non-Radish34 implementation\) of a previous Step is executed correctly \(only for Steps that follow previous steps that enforce 'entanglement'\), etc. The set of Tasks that a Step implements is called its LifeCycle. Most of these Tasks invoke one or more Components.
 
 ### Components
 
-In the Baseline Protocol context, Components are just the general term for services, smart contracts, etc., like the ZK service, messenger and smart contracts. Some of these are not in the current Radish34 implementation as distinct components, but some/all should be constructed in the protocol work.
+In the Baseline Protocol context, Components are just the general term for services, smart contracts, etc. For exmaple, the ZK service, and messenger and smart contracts. Some of these are not in the current Radish34 implementation as distinct components, but some/all should be constructed in the protocol work.
 
 ### Baseline Server
 
-In Radish34, there isn't a coherent "Baseline Server", but in the ultimate reference implementation of the protocol, the set of off-chain Components and APIs to messaging, systems of record, etc. presumably will be packaged as the "Baseline Server".
+In Radish34, there isn't a coherent "Baseline Server", but in the ultimate reference implementation of the protocol, the set of off-chain Components and APIs for messaging, systems of record, etc. will presumably be packaged as the "Baseline Server".
 
 ### Baseline Proof
 
@@ -56,15 +56,16 @@ There are several things passed to the Mainnet, primarily from the ZK Service, i
 
 ### CodeBook =&gt; Package
 
-During the Radish34 project, the notion of a shared "codebook" was often discussed. This in concept refers to a collection of artifacts or library components that enable a business process to be "baselined", but in general is extensible to any such components that subject to a business process. These artifacts in the case of Radish34 and presumably what would be "importable" components include the zk snark based circuits for usage in off chain zkp based proof generation and/or other logical components representing a business logic in a workflow process.
+During the Radish34 project, the notion of a shared "codebook" was often discussed. This concept refers to a collection of artifacts or library components that enable a business process to be "baselined", but, in general, is extensible to any such components that are subject to a business process. These artifacts, in the case of Radish34 and presumably what would be "importable" components, include the zk-snark based circuits for usage in off chain zkp based proof generation and/or other logical components representing business logic in a workflow process.
 
 ### OrgRegistry Contract
+
 
 Think of the OrgRegistry Contract as a [rolodex](https://en.wikipedia.org/wiki/Rolodex) contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
 
 ### Shield Contract
 
-The Shield Contract holds a Merkle Tree that holds the Baseline Proofs. The off-chain ZK Service will send the proof to the Shield contract, which will call the Verifier contract. If the Verifier contract returns 'true', then the proof is stored in a leaf on the Merkle Tree.
+The Shield Contract holds a Merkle Tree storing Baseline Proofs. The off-chain ZK Service will send a proof to the Shield contract, which will call the Verifier contract. If the Verifier contract returns 'true', then the stated proof is stored in a leaf on the Merkle Tree.
 
 ### Verifier Contract
 
