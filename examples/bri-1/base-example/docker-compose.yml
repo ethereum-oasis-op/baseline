@@ -45,7 +45,7 @@ services:
   alice-nats:
     image: provide/nats-server:2.5.0-PRVD
     container_name: alice-provide-nats
-    command: ["--js", "--server_name", "alice_prvd", "-auth", "testtoken", "-p", "4222", "-D", "-V"]
+    command: ["--js", "--server_name", "alice_prvd", "-auth", "testtoken", "-p", "4222", "-D"]
     environment:
       IDENT_API_HOST: alice-ident:8080
       IDENT_API_SCHEME: http
@@ -422,7 +422,7 @@ services:
   bob-nats:
     image: provide/nats-server:2.5.0-PRVD
     container_name: bob-provide-nats
-    command: ["--js", "--server_name", "bob_prvd", "--auth", "testtoken", "-p", "4222", "-DVV"]
+    command: ["--js", "--server_name", "bob_prvd", "--auth", "testtoken", "-p", "4222", "-D"]
     environment:
       IDENT_API_HOST: bob-ident:8080
       IDENT_API_SCHEME: http

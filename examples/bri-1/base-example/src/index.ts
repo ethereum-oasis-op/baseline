@@ -898,10 +898,9 @@ export class ParticipantStack {
 		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
-    
-    runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
     runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
 
+    runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     child.unref()
