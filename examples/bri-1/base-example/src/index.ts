@@ -877,7 +877,6 @@ export class ParticipantStack {
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
 		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
-    runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
     runcmd += ` --nats-port=${this.baselineConfig?.baselineMessagingPort}`
@@ -901,6 +900,8 @@ export class ParticipantStack {
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
     
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
+    runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
+
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     child.unref()
