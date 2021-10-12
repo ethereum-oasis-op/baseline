@@ -60,7 +60,7 @@ During the Radish34 project, the notion of a shared "codebook" was often discuss
 
 ### orgRegistry Contract
 
-Think of the orgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
+Think of the orgRegistry Contract as a [rolodex](https://en.wikipedia.org/wiki/Rolodex) contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
 
 ### Shield Contract
 
