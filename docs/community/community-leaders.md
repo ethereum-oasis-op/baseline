@@ -4,7 +4,7 @@ Over 500 people and companies signed up to be notified about the opening of the 
 
 #### People listed here or appearing on community videos or in the github repos should be assumed to be representing themselves, and not necessarily the companies they work for.\* <a id="people-listed-here-or-appearing-on-community-videos-or-in-the-github-repos-should-be-assumed-to-be-representing-themselves-and-not-necessarily-the-companies-they-work-for"></a>
 
-> \*\(In the mid-1990s, the [Java](https://en.wikipedia.org/wiki/Java_%28programming_language%29) community amassed thousands of developers from many companies before any of those companies officially sanctioned their involvement. Many of the companies participating in the Baseline Protocol initiative embrace the work, some already adding baselining to their strategic plans. But anyone observing someone's participation in the baseline community should assume that they do so as individuals. Please refrain from making assertions about the intentions of their employers.\)
+> \*\(In the mid-1990s, the [Java](https://en.wikipedia.org/wiki/Java_%28programming_language%29) community amassed thousands of developers from many companies before any of those companies officially sanctioned their involvement. Many of the companies participating in the Baseline Protocol initiative embrace the work, some already adding baselining to their strategic plans. But anyone observing someone's participation in the baseline community should assume that they do so as individuals. Please refrain from making assertions about the intentions of their employers.\) 
 
 ### Bootstrapping Phase and Ongoing Phase <a id="bootstrapping-phase-and-ongoing-phase"></a>
 
