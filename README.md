@@ -20,7 +20,7 @@ Version 0.1 of the baseline protocol packages has been released! For some backgr
 - [`core/`](https://github.com/ethereum-oasis/baseline/tree/master/core) -- the "core" Baseline Protocol packages
 - [`examples/bri-1`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example) -- the BRI-1 reference implementation.
 One or more "core" baseline protocol packages are needed to baseline-enable applications and systems of record.
-- [`examples/bri-2`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/base-example) -- the experimental BRI-2 reference implementation includes examples of semi functioning dashboard to the baseline protocol 
+- [`examples/bri-2`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/base-example) -- the experimental BRI-2 reference implementation includes examples of semi functioning dashboard to the baseline protocol.
 
 ## Core Modules & Packages
 | Package | Source Path | Description |
