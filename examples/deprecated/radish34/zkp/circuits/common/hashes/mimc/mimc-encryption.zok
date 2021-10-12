@@ -1,0 +1,12 @@
+// the mimc encryption function, used as the basis of hashing rounds
+// encryption function
+
+import "./mimc-constants.zok" as constants
+
+def main(field x, field k)->(field):
+  field[91] c = constants()
+  for field i in 0..91 do
+    field t = x + c[i] + k
+    x = t**7 // t^7 because 7th power is bijective in this field
+  endfor
+  return x + k

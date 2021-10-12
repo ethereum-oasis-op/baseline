@@ -1,0 +1,80 @@
+{
+  "name": "radish34-api",
+  "version": "1.0.0",
+  "description": "GraphQL based API orchestration microservice for the Radish34 project",
+  "contributors": [
+    "Brian Chamberlain <breakpointer>",
+    "Chaitanya Konda <ChaitanyaKonda>",
+    "Duncan Westland <Westlad>",
+    "Michael Connor <iAmMichaelConnor>",
+    "Kartheek Solipuram <skarred14>",
+    "Patrick Macom <pmacom>",
+    "Sam Stokes <bitwiseguy>",
+    "Wenxing Wang <wenxing-wang-ey>"
+  ],
+  "license": "SEE LICENSE in root/license.md",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "start": "npm run build && node ./dist/index.js",
+    "dev": "npm run build && nodemon --exec babel-node ./src/index.js",
+    "fix": "npm run format && npm run lint -- --fix",
+    "format": "prettier --write \"**/*.{json,css,scss,md}\"",
+    "lint": "eslint .",
+    "lint:md": "markdownlint -i node_modules -i dist .",
+    "test": "jest --watchAll --verbose=true --silent",
+    "test:ci": "jest --verbose=true --silent --ci --coverage",
+    "validate": "npm run lint && npm run lint:md"
+  },
+  "dependencies": {
+    "apollo-server": "^2.11.0",
+    "apollo-server-express": "^2.11.0",
+    "axios": "^0.19.2",
+    "big-integer": "^1.6.47",
+    "body-parser": "^1.19.0",
+    "bull": "^3.13.0",
+    "bull-board": "^0.6.0",
+    "config": "^3.3.0",
+    "cors": "^2.8.5",
+    "elliptic": "^6.5.2",
+    "ethers": "^4.0.46",
+    "express": "^4.17.1",
+    "graphql": "^14.6.0",
+    "graphql-subscriptions": "^1.1.0",
+    "graphql-tag": "^2.10.3",
+    "hex-to-binary": "1.0.1",
+    "keccak": "^2.1.0",
+    "lodash": "^4.17.15",
+    "mongodb": "^3.5.5",
+    "mongoose": "^5.9.5",
+    "node-fetch": "^2.6.0",
+    "object-hash": "^2.0.3",
+    "radish34-logger": "file:../logger",
+    "request": "^2.88.2",
+    "safe-buffer": "^5.2.0",
+    "uuidv4": "^6.0.6",
+    "web3-utils": "^1.2.6",
+    "zokrates-pycryptojs": "1.0.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "cod-scripts": "^3.2.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-jsdoc": "^22.1.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "faker": "git+https://git@github.com/Marak/faker.js.git#d3ce6f1",
+    "markdownlint-cli": "^0.15.0",
+    "nodemon": "^1.18.9",
+    "solhint": "2.0.0-alpha.3",
+    "supertest": "^3.4.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "./node_modules/cod-scripts/eslint.js"
+    ]
+  }
+}

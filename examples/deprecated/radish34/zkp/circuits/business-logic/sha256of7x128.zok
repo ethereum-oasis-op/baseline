@@ -1,0 +1,16 @@
+import "hashes/sha256/1024bit.zok" as sha256of1024
+import "utils/pack/unpack128.zok" as unpack128
+
+// Concatenate, then hash, seven inputs (each assumed to be at most 128 bits)
+
+def main(field[7] inputs) -> (field[256]):
+
+  field[7][128] inputsAsBits = [unpack128(inputs[0]), unpack128(inputs[1]), unpack128(inputs[2]), unpack128(inputs[3]), unpack128(inputs[4]), unpack128(inputs[5]), unpack128(inputs[6])]
+
+  field[896] preimage896 = [...inputsAsBits[0], ...inputsAsBits[1], ...inputsAsBits[2], ...inputsAsBits[3], ...inputsAsBits[4], ...inputsAsBits[5], ...inputsAsBits[6]]
+
+  field[1024] preimage1024 = [...preimage896, 1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  0,  0,  0,  0,  0,  0,  0]
+
+  field[256] output = sha256of1024(preimage1024[0..256], preimage1024[256..512], preimage1024[512..768], preimage1024[768..1024])
+
+  return output

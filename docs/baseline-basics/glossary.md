@@ -20,7 +20,7 @@ Used without capitalization to distinguish a public production network from publ
 
 There are many forms of middleware. We use the term in the context of the Baseline Protocol in a particular way. Systems of record maintained by legally separate entities require a common frame of reference in order to run business process integration across them. Flow control, ensuring that two processes don't run inappropriately against the same shared state, terminating the back and forth of the [two generals problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), non-repudiation, etc. In this context, the protocol is primarily about loose-coupling architecture in the transaction-processing middleware \(TPM\) area. It is not necessarily about schema translators, though a typical system would very likely run CRUD access between a baseline server and a system of record through translation services in a traditional Enterprise Service Bus \(ESB\). Unlike some RPC middleware, the Baseline Protocol is asynchronous, though it is certainly about passing parameters between functions running on two or more remote machines...and ensuring consistency between them.
 
-A common pattern inside Baseline is to use a connection between two System of Records by an established standard. The baseline "middleware" part would then extend this standard connection by an additional, standardized connection to the mainnet, to anchor and verify baseline compliant proofs. The combination of established off-chain- and on-chain connection define the complete middleware in this scenario.
+A common pattern inside Baseline is to use a connection between two System of Records by an established standard. The baseline "middleware" part would then extend this standard connection by an additional, standardized connection to the mainnet, to anchor and verify baseline compliant proofs. The combination of established off-chain- and on-chain connection define the complete middleware in this scenario. For example, when baselining two SAP systems, the communication between the two systems could be using standard iDoc interfaces and SAP-PI middleware.
 
 WIP section - Placeholder for future updates
 
@@ -28,7 +28,7 @@ WIP section - Placeholder for future updates
 
 ### Workgroup
 
-A set of Parties \(defined in the orgRegistry\) when a Registrar factory smart contract is called to start a Workflow.
+A set of Parties \(defined in the OrgRegistry\) when a Registrar factory smart contract is called to start a Workflow.
 
 ### Workflow
 
@@ -52,15 +52,15 @@ In Radish34, there isn't a coherent "Baseline Server", but in the ultimate refer
 
 ### Baseline Proof
 
-There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. An important one is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the orgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and also is used as a state-marker for managing Workflow integrity.
+There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. An important one is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the OrgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and also is used as a state-marker for managing Workflow integrity.
 
 ### CodeBook =&gt; Package
 
 During the Radish34 project, the notion of a shared "codebook" was often discussed. This in concept refers to a collection of artifacts or library components that enable a business process to be "baselined", but in general is extensible to any such components that subject to a business process. These artifacts in the case of Radish34 and presumably what would be "importable" components include the zk snark based circuits for usage in off chain zkp based proof generation and/or other logical components representing a business logic in a workflow process.
 
-### orgRegistry Contract
+### OrgRegistry Contract
 
-Think of the orgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
+Think of the OrgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
 
 ### Shield Contract
 

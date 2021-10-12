@@ -1,6 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import WorkflowDropdown from "components/Dropdowns/WorkflowDropdown.js";
+
+const shorten = (str) => {
+  if (str) {
+    const beg = str.substring(0, 5);
+    const end = str.substring(str.length - 3, str.length);
+    return `${beg}...${end}`;
+  } else {
+    return "N/A";
+  }
+};
 
 const statusIcon = (status) => {
   switch (status) {
@@ -65,6 +75,31 @@ const clientLogo = (clientType) => {
   }
 };
 
+const CopyBtn = ({text}) => {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (copied) {
+      const interval = setInterval(() => setCopied(false), 2000);
+      return () => clearInterval(interval);
+    }
+  }, [copied]);
+
+  const copy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+  };
+
+  if (text === undefined) return null;
+  return <>
+          <i className="far fa-copy px-2 text-gray-700 cursor-pointer" onClick={copy} />
+          {copied ? (
+            <div className="text-green-500">
+              Copied<i className="fas fa-check px-2 text-green-500" />
+            </div>
+          ) : null}
+      </>
+};
 export default function CardWorkflows({
   workflows,
   isLoading,
@@ -130,6 +165,7 @@ export default function CardWorkflows({
                   Date Created
                 </th>
                 <th
+                  style={{minWidth: "175px"}}
                   className={
                     "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left " +
                     (color === "light"
@@ -162,7 +198,7 @@ export default function CardWorkflows({
             {workflows && workflows.length > 0 ? (
               workflows.map((workflow, index) => {
                 return (
-                  <tbody>
+                  <tbody key={workflow._id}>
                     <tr
                       key={workflow._id}
                       style={{ borderTop: "solid 1px rgba(105, 105, 105)" }}
@@ -170,9 +206,9 @@ export default function CardWorkflows({
                       <td>
                         <button onClick={() => openCollapse(index)}>
                           {rowExpand[index] ? (
-                            <i class="fas fa-chevron-down px-4 text-gray-700"></i>
+                            <i className="fas fa-chevron-down px-4 text-gray-700"></i>
                           ) : (
-                            <i class="fas fa-chevron-up px-4 text-gray-700"></i>
+                            <i className="fas fa-chevron-up px-4 text-gray-700"></i>
                           )}
                         </button>
                       </td>
@@ -209,17 +245,18 @@ export default function CardWorkflows({
                         } `}
                     >
                       <th></th>
-                      <th className="px-6  w-1/2 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
-                        <div className="w-3">Chain Id</div>
+                      <th className="px-6 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
+                        Chain Id
                       </th>
-                      <td className="border-t-0 px-6 w-1/2 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
+                      <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
                         {workflow.chainId}
                       </td>
                       <th className="px-6 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
                         ZK Circuit Id
                       </th>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                        {workflow.zkCircuitId}
+                        {shorten(workflow.zkCircuitId)}
+                        <CopyBtn text={workflow.zkCircuitId} />
                       </td>
                     </tr>
                     <tr
@@ -230,13 +267,15 @@ export default function CardWorkflows({
                         verifier address
                       </th>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                        {workflow.verifierAddress}
+                        {shorten(workflow.verifierAddress)}
+                        <CopyBtn text={workflow.verifierAddress} />
                       </td>
                       <th className="px-6 align-middle py-2 text-xs uppercase border-l-0 border-r-0 whitespace-no-wrap font-semibold text-left text-gray-800">
                         shield Address
                       </th>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-no-wrap p-4">
-                        {workflow.shieldAddress}
+                        {shorten(workflow.shieldAddress)}
+                        <CopyBtn text={workflow.shieldAddress} />
                       </td>
                     </tr>
                   </tbody>

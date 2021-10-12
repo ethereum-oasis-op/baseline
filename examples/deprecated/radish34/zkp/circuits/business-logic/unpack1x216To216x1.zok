@@ -1,0 +1,7 @@
+import "utils/pack/nonStrictUnpack256.zok" as unpack256
+
+// Unpacks a field (assumed to be one 216-bit value) into 216 bits:
+// unpack1x216To216x1
+def main(field input)->(field[216]):
+	field[256] inputBits = unpack256(input)
+	return inputBits[40..256]
