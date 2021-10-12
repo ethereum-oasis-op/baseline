@@ -1,0 +1,8 @@
+// MiMC hashing function for one input field
+
+import "./mimc-encryption.zok" as mimcpe7
+
+def main(field a)->(field):
+  field r = 0
+  r = a + mimcpe7(a, r)
+  return r

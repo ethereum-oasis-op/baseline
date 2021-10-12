@@ -1,9 +1,0 @@
-{
-  "plugins": [
-      "plugins/markdown",
-      "plugins/summarize"
-  ],
-  "source": {
-    "exclude": [ "__tests__", "test" ]
-  }
-}

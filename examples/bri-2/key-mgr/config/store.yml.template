@@ -1,0 +1,70 @@
+- kind: AKVSecrets
+  version: 0.0.1
+  name: akv-secrets
+  allowedTenants: ['{TENANT_ID1}', '{TENANT_ID2}']
+  specs:
+    vaultName: '{VAULT_NAME}'
+    tenantID: '{TENANT_ID}'
+    clientID: '{CLIENT_ID}'
+    clientSecret: '{SECRET}'
+- kind: AKVKeys
+  version: 0.0.1
+  name: akv-keys
+  allowedTenants: ['{TENANT_ID1}', '{TENANT_ID2}']
+  specs:
+    vaultName: '{VAULT_NAME}'
+    tenantID: '{TENANT_ID}'
+    clientID: '{CLIENT_ID}'
+    clientSecret: '{SECRET}'
+- kind: HashicorpSecrets
+  version: 0.0.1
+  name: hashicorp-secrets
+  specs:
+    mountPoint: secret
+    address: http://hashicorp:8200
+    token: '{VAULT_TOKEN}'
+    namespace: ''
+- kind: HashicorpKeys
+  version: 0.0.1
+  name: hashicorp-keys
+  specs:
+    mountPoint: quorum
+    address: http://hashicorp:8200
+    tokenPath: '{VAULT_TOKEN_PATH}'
+    namespace: ''
+- kind: AWSSecrets
+  version: 0.0.1
+  name: aws-secrets
+  specs:
+    accessID: '{AWS_ACCESS_ID}'
+    secretKey: '{AWS_SECRET_KEY}'
+    region: '{AWS_REGION}'
+    debug: false
+- kind: AWSKeys
+  version: 0.0.1
+  name: aws-keys
+  specs:
+    accessID: '{AWS_ACCESS_ID}'
+    secretKey: '{AWS_SECRET_KEY}'
+    region: '{AWS_REGION}'
+    debug: false
+- kind: LocalKeys
+  version: 0.0.1
+  name: local-keys
+  specs:
+    secretstore: HashicorpSecrets
+    specs:
+      mountPoint: secret
+      address: http://hashicorp:8200
+      token: '{VAULT_TOKEN}'
+      namespace: ''
+- kind: Ethereum
+  version: 0.0.1
+  name: eth-accounts
+  specs:
+    keystore: HashicorpKeys
+    specs:
+      mountPoint: secret
+	  address: http://hashicorp:8200
+	  token: '{VAULT_TOKEN}'
+	  namespace: ''

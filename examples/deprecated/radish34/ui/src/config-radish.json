@@ -1,0 +1,7 @@
+{
+    "Config": {
+      "radishBuyerAPIURL": "localhost:8001",
+      "radishSupplier1APIURL": "localhost:8002",
+      "radishSupplier2APIURL": "localhost:8003"
+    }
+  }

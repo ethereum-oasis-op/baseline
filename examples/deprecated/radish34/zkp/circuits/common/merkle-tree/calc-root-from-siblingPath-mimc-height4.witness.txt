@@ -1,0 +1,3 @@
+1234 2345 3456 4567 1235678 3
+
+// Note: in this example witness, the witness values 1234 2345 3456 4567 are dummy values of nodes in the Merkle Tree, which are siblings to the MSA commitment's path. In reality these will be hash values.

@@ -20,13 +20,15 @@ The term Mainnet is capitalized to emphasize its relationship to the capitalized
 
 There exist a large variety of forms corresponding to the general use term "middleware". In context of the Baseline Protocol a reference to middleware is unique. Systems of record maintained by legally separate entities require a common frame of reference in order to achieve business process integration across them. This commone frame of reference is subject to issues, such as Flow control, ensuring that two processes don't run inappropriately against the same shared state, terminating the back and forth of the [two generals problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), non-repudiation, etc. In this context, the protocol primarily seeks to accomplish loose-coupling architecture in the transaction-processing middleware \(TPM\) layer. Said layer's focus is not necessarily schema translators, though a typical system would very likely run CRUD access between a baseline server and a system of record through translation services in a traditional Enterprise Service Bus \(ESB\).The Baseline Protocol is, unlike some RPC middleware, asynchronous, therefore passing parameters between functions running on two or more remote machines while ensuring consistency between said machines.
 
+For example, when baselining two SAP systems, the communication between the two systems could be using standard iDoc interfaces and SAP-PI middleware.
+
 WIP section - Placeholder for future updates
 
 ## Baseline Protocol Components and Conventions
 
 ### Workgroup
 
-A set of Parties \(defined in the orgRegistry\) when a Registrar factory smart contract is called to start a Workflow.
+A set of Parties \(defined in the OrgRegistry\) when a Registrar factory smart contract is called to start a Workflow.
 
 ### Workflow
 
@@ -50,15 +52,15 @@ In Radish34, there isn't a coherent "Baseline Server", but in the ultimate refer
 
 ### Baseline Proof
 
-There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. One principal pieve of information passed is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the orgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and is also used as a state-marker for managing Workflow integrity.
+There are several things passed to the Mainnet, primarily from the ZK Service, in the process of _baselining_ a Workflow Step. An important one is a hash, which is stored in the Shield contract \(created when setting up a WorkGroup by the Registrar "factory" smart contract, along with the OrgRegistry and Validator contract\). This happens when a Step successfully passes the ZK validation process. The Baseline Proof is a "proof of consistency" _token_, and also is used as a state-marker for managing Workflow integrity.
 
 ### CodeBook =&gt; Package
 
 During the Radish34 project, the notion of a shared "codebook" was often discussed. This concept refers to a collection of artifacts or library components that enable a business process to be "baselined", but, in general, is extensible to any such components that are subject to a business process. These artifacts, in the case of Radish34 and presumably what would be "importable" components, include the zk-snark based circuits for usage in off chain zkp based proof generation and/or other logical components representing business logic in a workflow process.
 
-### orgRegistry Contract
+### OrgRegistry Contract
 
-Think of the orgRegistry Contract as a "rolodex" contact list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations. Therefore a party is aware when it adds a company to its WorkGroup. Parties can be sure they are baselining with the company they intended to work with.
+Think of the OrgRegistry Contract as a "rolodex" contact list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations. Therefore a party is aware when it adds a company to its WorkGroup. Parties can be sure they are baselining with the company they intended to work with.
 
 ### Shield Contract
 

@@ -1,0 +1,40 @@
+struct EdDSASignature {
+  field[2] R
+  field S
+}
+
+struct MSAConstants {
+  field[2] publicKeyOfBuyer
+  field[2] publicKeyOfSupplier
+  field[4] tierBounds
+  field[3] pricesByTier
+  field[2] hashOfTieredPricing
+  field minVolume
+  field maxVolume
+  field sku
+  field[2] erc20ContractAddress
+  EdDSASignature buyerSignature
+  EdDSASignature supplierSignature
+}
+
+struct MSAVariables {
+  field accumulatedVolumeOrdered
+  field accumulatedVolumeDelivered
+}
+
+struct NewCommitment {
+  field[2] commitment
+  field[2] salt
+}
+
+struct NewMSA {
+  MSAConstants constants
+  MSAVariables variables
+  NewCommitment commitment
+}
+
+def main(field publicInputHash, private NewMSA newMSA) -> ():
+
+  newMSA.variables.accumulatedVolumeDelivered == 0
+
+  return

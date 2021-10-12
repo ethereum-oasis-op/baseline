@@ -1,0 +1,10 @@
+# /node_modules/* and /bower_components/* in the project root are ignored by default
+
+# Ignore config files too
+config/*
+
+# Ignore generated documentation
+docs/*
+
+# Ignore coverage
+coverage/* 

@@ -39,14 +39,15 @@ type Circuit struct {
 		// Convert identities from strings of public keys to eddsa.PublicKey
 		var pk0 eddsa_gen.PublicKey
 		//var circuit_pk0 eddsa.PublicKey
-		identityBytes, _ := hex.DecodeString(identity)
+		strippedIdentity := strip0x(identity)
+		identityBytes, _ := hex.DecodeString(strippedIdentity)
 		pk0.SetBytes(identityBytes)
 
 		indexStr := strconv.Itoa(index)
 
 		privateInputs += "\tSig" + indexStr + " eddsa_circuit.Signature   `gnark:\",private\"`\n"
 		sigChecks += "\n\t/***** Check for signature by pubKey_" + indexStr + " *****/" +
-			"\n\tvar pubKeyString_" + indexStr + " = \"" + identity + "\"" +
+			"\n\tvar pubKeyString_" + indexStr + " = \"" + strippedIdentity + "\"" +
 			"\n\tvar pubKeyGen_" + indexStr + " eddsa_gen.PublicKey" +
 			"\n\tvar pubKeyCircuit_" + indexStr + " eddsa_circuit.PublicKey" +
 			"\n\tpubKeyBytes_" + indexStr + ", _ := hex.DecodeString(pubKeyString_" + indexStr + ")" +
