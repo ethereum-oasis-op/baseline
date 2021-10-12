@@ -20,6 +20,8 @@ Used without capitalization to distinguish a public production network from publ
 
 There are many forms of middleware. We use the term in the context of the Baseline Protocol in a particular way. Systems of record maintained by legally separate entities require a common frame of reference in order to run business process integration across them. Flow control, ensuring that two processes don't run inappropriately against the same shared state, terminating the back and forth of the [two generals problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), non-repudiation, etc. In this context, the protocol is primarily about loose-coupling architecture in the transaction-processing middleware \(TPM\) area. It is not necessarily about schema translators, though a typical system would very likely run CRUD access between a baseline server and a system of record through translation services in a traditional Enterprise Service Bus \(ESB\). Unlike some RPC middleware, the Baseline Protocol is asynchronous, though it is certainly about passing parameters between functions running on two or more remote machines...and ensuring consistency between them.
 
+A common pattern inside Baseline is to use a connection between two System of Records by an established standard. The baseline "middleware" part would then extend this standard connection by an additional, standardized connection to the mainnet, to anchor and verify baseline compliant proofs. The combination of established off-chain- and on-chain connection define the complete middleware in this scenario.
+
 WIP section - Placeholder for future updates
 
 ## Baseline Protocol Components and Conventions
