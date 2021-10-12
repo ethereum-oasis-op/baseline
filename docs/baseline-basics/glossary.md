@@ -20,7 +20,7 @@ The term Mainnet is capitalized to emphasize its relationship to the capitalized
 
 There exist a large variety of forms corresponding to the general use term "middleware". In context of the Baseline Protocol a reference to middleware is unique. Systems of record maintained by legally separate entities require a common frame of reference in order to achieve business process integration across them. This commone frame of reference is subject to issues, such as Flow control, ensuring that two processes don't run inappropriately against the same shared state, terminating the back and forth of the [two generals problem](https://en.wikipedia.org/wiki/Two_Generals%27_Problem), non-repudiation, etc. In this context, the protocol primarily seeks to accomplish loose-coupling architecture in the transaction-processing middleware \(TPM\) layer. Said layer's focus is not necessarily schema translators, though a typical system would very likely run CRUD access between a baseline server and a system of record through translation services in a traditional Enterprise Service Bus \(ESB\).The Baseline Protocol is, unlike some RPC middleware, asynchronous, therefore passing parameters between functions running on two or more remote machines while ensuring consistency between said machines.
 
-For example, when baselining two SAP systems, the communication between the two systems could be using standard iDoc interfaces and SAP-PI middleware.
+A common pattern inside Baseline is to use a connection between two System of Records by an established standard. The baseline "middleware" part would then extend this standard connection by an additional, standardized connection to the mainnet, to anchor and verify baseline compliant proofs. The combination of established off-chain- and on-chain connection define the complete middleware in this scenario. For example, when baselining two SAP systems, the communication between the two systems could be using standard iDoc interfaces and SAP-PI middleware.
 
 WIP section - Placeholder for future updates
 
@@ -60,7 +60,8 @@ During the Radish34 project, the notion of a shared "codebook" was often discuss
 
 ### OrgRegistry Contract
 
-Think of the OrgRegistry Contract as a "rolodex" contact list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations. Therefore a party is aware when it adds a company to its WorkGroup. Parties can be sure they are baselining with the company they intended to work with.
+
+Think of the OrgRegistry Contract as a [rolodex](https://en.wikipedia.org/wiki/Rolodex) contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
 
 ### Shield Contract
 
