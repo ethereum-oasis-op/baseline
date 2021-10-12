@@ -1,6 +1,0 @@
-// tests the mimc hash function
-
-import "./mimc-hash-5.zok" as mimc5
-
-def main(field[5] a)->(field):
-  return mimc5(a)

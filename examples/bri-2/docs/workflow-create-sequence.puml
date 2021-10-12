@@ -1,0 +1,67 @@
+@startuml Create Workflow Sequence
+skinparam monochrome true
+actor "Workflow Administrator" as wa
+participant "Api Gateway" as api 
+participant "Workflow Service" as ws
+database "Workflow Db" as wdb
+queue "NATS \n Event Relay" as nats
+participant "ZKP Manager Service" as zkps
+database "Circuit Db" as zdb
+
+group Init New Workflow
+    wa -> api: [Post] /workflow
+    activate wa
+        activate api
+            activate ws
+                api -> ws: createWorkflow
+                ws -> wdb: workflows.findOneAndUpdate
+                ws -> nats: publish(new-workflow-allocated)
+                ws --> api: workflowId:uuid
+            deactivate ws    
+            api --> wa: 201 workflowCreateResponse
+        deactivate api
+    deactivate wa 
+end
+
+group Workflow Status Polling 
+    wa -> api: [GET]workflow/{workflowId}
+    activate api
+        api -> ws: getWorkflow
+        activate ws
+            ws --> api: workflow
+        deactivate ws
+        api --> wa: getWorkflowResponse
+    deactivate api
+end
+
+group Async Create Workflow
+    zkps <--> nats: subscribe(new-workflow-allocated)
+    activate zkps
+        zkps -> zkps: generateSignatureCircuit
+        zkps -> zdb: save circuit
+        zkps -> zkps: compileCircuit
+        zkps -> nats: publish(circuit-compiled)
+    deactivate zkps
+
+    ws <--> nats: subscribe(circuit-compiled)
+    activate ws
+        ws -> wdb: workflows.findOneAndUpdate
+        ws -> nats: publish(workflow-status-updated)
+    deactivate ws 
+
+    nats <--> zkps: subscribe(workflow-status-updated:filter=circuit-compiled)
+    activate zkps
+        zkps -> zkps: setupCircuit
+        zkps -> nats: publish(circuit-setup)
+    deactivate zkps
+
+    ws <--> nats: subscribe(circuit-setup)
+    activate ws
+        ws -> wdb: workflows.findOneAndUpdate
+        ws -> nats: publish(workflow-status-updated)
+    deactivate ws
+
+    nats <--> zkps: subscribe(workflow-status-updated:filter=circuit-setup)
+
+end
+@enduml

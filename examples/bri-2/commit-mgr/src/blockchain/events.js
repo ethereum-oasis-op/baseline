@@ -51,12 +51,12 @@ export const subscribeMerkleEvents = (contractAddress) => {
     // update commit document
     const filter = {
       merkleId: contractAddress,
-      value: leafValue
+      hashValue: leafValue
     };
     await commits.findOneAndUpdate(
       filter,
       {
-        status: 'mainnet',
+        status: 'success-arrive-on-chain',
         txHash: result.transactionHash
       },
       { upsert: true }

@@ -1,7 +1,0 @@
-{
-  "name": "messenger",
-  "version": "0.1.0",
-  "description": "Whisper based enterprise messaging service that adds message storage and delivery confirmation",
-  "title": "Messenger for Whisper, REST API",
-  "url": "https://github.com/EYBlockchain/radish-34/messenger"
-}

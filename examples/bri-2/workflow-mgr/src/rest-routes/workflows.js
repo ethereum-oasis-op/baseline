@@ -6,7 +6,6 @@ import { connectNATS } from '../nats';
 export const createWorkflow = async (req, res) => {
   const newId = v4();
   const { description, clientType, identities, chainId } = req.body;
-
   const { type } = req.query;
 
   let newWorkflow;
@@ -23,29 +22,14 @@ export const createWorkflow = async (req, res) => {
 
   if (type === 'signature') {
     for (let index = 0; index < identities.length; index++) {
-      updates.participants[index] = {
-        publicKey: identities[index]
-      };
+      updates.participants[index] = { publicKey: identities[index] };
     }
   }
 
   try {
-    newWorkflow = await workflows.findOneAndUpdate(
-      {
-        _id: newId
-      },
-      updates,
-      {
-        upsert: true,
-        new: true
-      }
-    );
-
+    newWorkflow = await workflows.findOneAndUpdate({ _id: newId }, updates, { upsert: true, new: true });
     logger.info(`New workflow (id: ${newId}) created.`);
     const nc = await connectNATS();
-    //TODO: Update to new-workflow-allocated event to finish off this step,
-    //      these should not infer or reference the next activity since it should be
-    //      unaware
     nc.publish('new-workflow-allocation', {
       workflowId: newId,
       circuitType: type,
@@ -55,9 +39,7 @@ export const createWorkflow = async (req, res) => {
     return;
   } catch (err) {
     logger.error(`Could not create new workflow (id: ${newId}): ${err}`);
-    res.status(500).send({
-      error: `${err.message}`
-    });
+    res.status(500).send({ error: `${err.message}` });
     return;
   }
 };
@@ -77,16 +59,10 @@ export const updateWorkflow = async (req, res) => {
       ...(verifierAddress && { verifierAddress })
     };
 
-    let updatedWorkflow = await workflows.findOneAndUpdate(
-      {
-        _id: workflowId
-      },
-      updates,
-      {
-        upsert: false,
-        new: true
-      }
-    );
+    let updatedWorkflow = await workflows.findOneAndUpdate({ _id: workflowId }, updates, {
+      upsert: false,
+      new: true
+    });
     logger.info(`Workflow updated: ${workflowId}`);
     res.status(201).send(updatedWorkflow || {});
     return;
@@ -122,47 +98,31 @@ export const acceptInvitation = async (req, res) => {
     return;
   }
   const newWorkflow = await workflows.findOneAndUpdate(
-    {
-      _id: workflowId
-    },
-    {
-      status: 'accepted-invite'
-    },
-    {
-      upsert: true
-    }
+    { _id: workflowId },
+    { status: 'accepted-invite' },
+    { upsert: true }
   );
   res.status(200).send();
 };
 
 export const deleteWorkflow = async (req, res) => {
-  await workflows.deleteOne(
-    {
-      _id: req.params.workflowId
-    },
-    (err, data) => {
-      if (err) {
-        res.status(400).send(err);
-      } else {
-        res.send(data || {});
-      }
+  await workflows.deleteOne({ _id: req.params.workflowId }, (err, data) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.send(data || {});
     }
-  );
+  });
 };
 
 export const getWorkflow = async (req, res) => {
-  await workflows.findOne(
-    {
-      _id: req.params.workflowId
-    },
-    (err, data) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(data || []);
-      }
+  await workflows.findOne({ _id: req.params.workflowId }, (err, data) => {
+    if (err) {
+      res.send(err);
+    } else {
+      res.send(data || []);
     }
-  );
+  });
 };
 
 export const getWorkflows = async (req, res) => {
