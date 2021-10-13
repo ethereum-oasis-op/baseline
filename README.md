@@ -43,7 +43,7 @@ One or more "core" baseline protocol packages are needed to baseline-enable appl
 
 ## License
 
-All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](LICENSE).
+All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](LICENSE)
 
 ## Contributing
 
