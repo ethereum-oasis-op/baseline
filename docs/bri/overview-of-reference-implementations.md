@@ -1,8 +1,8 @@
 # Overview
 
-The Baseline Protocol is a set of techniques and specifications that can be implemented by any number of products, services and solutions.  
+The Baseline Protocol is a set of techniques and specifications that can be implemented by any number of products, projects, services and solutions.  
 
-The baseline initiative's primary mission is to standardize these abstract techniques within the OASIS open standards process. To do that, it's best to start in the crucible of real, functional code. Through the intensive development of a set of core working packages and reference implementations, the team discovers what works and what needs to be specified in the standard.
+The baseline initiative's primary mission is to standardize these abstract techniques within the OASIS open standards process. To do that, it is best to start in the crucible of real, functional code. Through the intensive development of a set of core working packages and reference implementations, the team can discover what works and what needs to be specified in the standard.
 
 Both the core libraries and the reference implementations should be thought of as a starting point for developers, a way of understanding the techniques and getting a jump start on their own work. So long as a developer follows the standard specifications of the baseline protocol, their work should interoperate with anyone else's implementation. 
 
