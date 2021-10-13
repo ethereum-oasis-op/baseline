@@ -903,7 +903,7 @@ export class ParticipantStack {
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
-    child.unref()
+    console.log(`shelled out to start baseline protocol instance (BPI) containers; child: ${child}`)
   }
 
   async startProtocolSubscriptions(): Promise<any> {
