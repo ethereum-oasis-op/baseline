@@ -902,8 +902,8 @@ export class ParticipantStack {
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
-    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
-    child.unref()
+    spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
+
   }
 
   async startProtocolSubscriptions(): Promise<any> {
