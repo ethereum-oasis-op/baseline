@@ -66,4 +66,7 @@ ops/splunk/ops/splunk/alice-ethlogger/.ethlogger-state.json
 ops/splunk/ops/splunk/alice-ethlogger/checkpoints.json
 
 .prvd-AliceCorp-cli.yaml
+.prvd-alice-cli.yaml
+
 .prvd-BobCorp-cli.yaml
+.prvd-bob-cli.yaml
