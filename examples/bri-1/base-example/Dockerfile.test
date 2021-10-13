@@ -14,11 +14,8 @@ FROM node:10.15.3-alpine
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-
 RUN apk update && apk upgrade\
-    && apk add curl --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main \
-    && docker-compose
-RUN apk add docker docker-compose --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community 
+    && apk add curl --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main
 RUN apk add make 
 
 COPY --from=prvd-cli /usr/local/go/ /usr/local/go/
@@ -32,5 +29,4 @@ RUN npm install
 
 COPY . /usr/src/app
 
-
-CMD ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["./node_modules/.bin/mocha", "--colors", "*.js", "--require", "esm", "--require ts-node/register", "--require", "global-jsdom/lib/register", "test/**/*.spec.ts" ,"--timeout" "940000", "--trace-warnings", "--unhandled-rejections=strict", "--max-old-space-size=8192", "--exit"]

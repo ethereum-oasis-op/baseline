@@ -20,5 +20,5 @@ start-attached:
 stop:
 	docker-compose down && prvd baseline stack stop --name BobCorp && prvd baseline stack stop --name AliceCorp
 
-tests: 
-	docker compose up --build && docker logs integration-test -f
+integration: 
+	docker build -f Dockerfile.test -t bri-1-integration-suite . && docker run -t bri-1-integration-suite
