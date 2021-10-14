@@ -16,7 +16,7 @@
     "clean": "rm -rf ./dist",
     "contracts:clean": "rm -rf ./artifacts && rm -rf node_modules/@baseline-protocol/contracts/artifacts",
     "contracts:compile": "npm install && pushd node_modules/@baseline-protocol/contracts && npm install && make && popd && cp -r node_modules/@baseline-protocol/contracts/artifacts .",
-    "test": "npm run test:startup && sleep 5 && ./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.spec.ts --timeout 940000 --trace-warnings --unhandled-rejections=strict --max-old-space-size=8192 && npm run test:teardown",
+    "test": "npm run test:startup && sleep 30 && ./node_modules/.bin/mocha --require esm --require ts-node/register --require global-jsdom/lib/register test/**/*.spec.ts --timeout 940000 --trace-warnings --unhandled-rejections=strict --max-old-space-size=8192 && npm run test:teardown",
     "test:startup": "make start",
     "test:teardown": "make stop"
   },
