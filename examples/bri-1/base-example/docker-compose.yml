@@ -43,7 +43,7 @@ services:
     restart: always
 
   alice-nats:
-    image: provide/nats-server:2.2.3-beta.4-PRVD
+    image: provide/nats-server:2.5.0-PRVD
     container_name: alice-provide-nats
     command: ["--js", "--server_name", "alice_prvd", "-auth", "testtoken", "-p", "4222", "-D", "-V"]
     environment:
@@ -420,7 +420,7 @@ services:
     restart: always
 
   bob-nats:
-    image: provide/nats-server:2.2.3-beta.4-PRVD
+    image: provide/nats-server:2.5.0-PRVD
     container_name: bob-provide-nats
     command: ["--js", "--server_name", "bob_prvd", "--auth", "testtoken", "-p", "4222", "-DVV"]
     environment:
