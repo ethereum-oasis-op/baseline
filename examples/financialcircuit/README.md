@@ -4,7 +4,7 @@
 
 # Financial Circuit
 
-Writing zero-knowledge circuits using gnark to expand the existing library – Focus on Financial Circuit Development and Approach
+Writing zero-knowledge circuits using `gnark` to expand the existing library – Focus on Financial Circuit Development and Approach
 
 ## Technologies Used 
 
@@ -39,21 +39,36 @@ Develop circuits for baselining over-the-counter (OTC) Corporate Bonds:
 
 The circuits will be built in such a manner that they will keep the details of the trade private for 15 minutes. After that per regulatory requirement the information of the trade will become transparent to the regulators, trade participants and the general public.
 
+> **_NOTE:_** **Callable Bonds** - is a bond with an embedded call option. It provides the issuer of the bond with the right, but not the obligation, to redeem the bond before its maturity date. **Floating rate notes** - are bonds that have a variable coupon. **Step-Up Coupon Bonds** - The coupon of a step-up coupon bond, which may be fixed or floating, increases by specified margins at specified dates.
+
 **Motivation**
 
 Strong belief that [Baseline protocol](https://github.com/eea-oasis/baseline/blob/master/README.md) on public blockchain will set a new direction for participants and financial regulators that want/need to coordinate multi party business processes with privacy and without putting sensitive enterprise information on the blockchain.
 
-**Specific expected project benefits:**
+**Specific expected project benefits**
 
-* Research and build financial circuits using gnark. Steps and challenges to build this application will be documented and made available.
+* Research and build financial circuits using `gnark`. Steps and challenges to build this application will be documented and made available.
 * Building a Baselined – private, cost effective and regulatory conforming trade circuits/confirmation process, for OTC instruments in scope.
-  Presently users need to pay for TRACE data and for services to complete EOD trade    reconciliation with Front Office Blotters.
+  Presently users need to pay for TRACE data and for services to complete EOD trade reconciliation with Front Office Blotters.
 * Gives a  chance/opportunity to smaller participants who can’t afford Bloomberg service and require a safe, inexpensive, audited and baselined/confirmation process.
 
-## Risks
-gnark has not been fully audit yet and is provided “as-is” we might encounter some challenges/blockers that will require assistance from the gnark/ConsenSys team.
+**Implementation**
 
-We might find limitations in gnark circuit development, that might require more time to build than initially planned.
+The implementation can process Requests for Bids for Vanilla Bonds and Exotic Bonds ( Callable, FRN and Step Up).
+
+**Flow steps**
+
+ 1. The initiating party request quote for a specific bond/Isin. That can be done via an existing platform or NATS
+ 2. Responders/Counterparties respond with signed quotes.
+ 3. Initiating party selects the quote for the Bond/Isin and the corresponding counterparty.
+
+**What off chain rules gnark Circuit enforces:**
+
+- A quote can not be zero or negative.
+- Selects the smallest quote submitted for the specific Bond by the participating counterparty. (that  can be verified via the deployed smart contract/circuit by the counterparty).
+- For other participating counterparties for which a quote was not accepted the verification/circuit will fail   .
+- If all quotes received are the same, the first one received in sequence will be accepted.
+
 
 ## ZKP
 
