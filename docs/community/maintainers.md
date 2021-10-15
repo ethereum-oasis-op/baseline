@@ -35,7 +35,7 @@ All provisional maintainers must meet with the existing maintainers and demonstr
 * Explaining the components of the system architecture
 * Walking through the code and explain the baseline process
 
-Once the provisional maintainer demonstrates their capabilities, the existing maintainers will vote during the next scheduled maintainer meeting to give the prospect full maintainer status. Members must vote with 2/3rds majority to add a new maintainer. Voting that results in a tie or potentially other issue will be brought to the TSC for review.
+Once the provisional maintainer demonstrates their capabilities, the existing maintainers will vote during the next scheduled maintainer meeting to give the prospect full maintainer status. Members must vote with 2/3rds majority to add a new maintainer. Voting that results in a tie or potentially other issues will be brought to the TSC for review.
 
 ## What is expected of maintainers?
 
@@ -61,7 +61,7 @@ Maintainers meet and discuss issues virtually via the \#maintainers slack room i
 
 ### Weekly Meetings
 
-There are weekly _Maintainers meetings,_ listed on the member [calendar](https://lists.oasis-open-projects.org/g/baseline/calendar), where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are public, but the bulk of the meetings are reserved for maintainers. Attendees may ask questions . The summaries of the meetings will be posted to the public \#maintainer-meeting slack room.
+There are weekly _Maintainers meetings,_ listed on the member [calendar](https://lists.oasis-open-projects.org/g/baseline/calendar), where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are public, but the bulk of the meetings are reserved for maintainers. Attendees may ask questions. The summaries of the meetings will be posted to the public \#maintainer-meeting slack room.
 
 ## How to stop being a maintainer?
 
