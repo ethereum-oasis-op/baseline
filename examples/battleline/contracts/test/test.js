@@ -15,6 +15,7 @@ describe('Battle line demo', async () => {
         const ZKBattleshipFactory = await ethers.getContractFactory('ZKBattleship');
         instance = await ZKBattleshipFactory.deploy()
         await instance.deployed()
+        console.log('deployed to', instance.address)
     })
     it('Create game', async () => {
         const board = ethers.utils.sha256(`0x0${parseInt(boardStates[0], 2).toString(16).toUpperCase()}`)
@@ -112,7 +113,7 @@ describe('Battle line demo', async () => {
         //  .withArgs(1, 1, 3, signers[1].address)
         
         // alice verifies bob hit, fires at bob
-        
+
     })
     xit('Exit condition', async () => {
 

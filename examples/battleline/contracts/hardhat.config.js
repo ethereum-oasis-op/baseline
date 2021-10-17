@@ -34,5 +34,8 @@ module.exports = {
   networks: networks.reduce((obj, entry) => {
     obj[entry] = makeNetwork(entry)
     return obj
-  }, {})
+  }, {}),
+  mocha: {
+    timeout: 20000000
+  }
 }
