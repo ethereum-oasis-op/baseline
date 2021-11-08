@@ -3,6 +3,7 @@ module.exports = {
   testEnvironment: 'jsdom',
   testPathIgnorePatterns: [
     "./examples/",
+    "./reference-implementations/",
     "./node_modules/",
   ],
 };
