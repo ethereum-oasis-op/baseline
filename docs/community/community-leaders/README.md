@@ -52,7 +52,7 @@ Details on how to become a [Core Developer here](maintainers.md).
 | Maintainer (with link to Github ID)                                                           | Company                             |
 | --------------------------------------------------------------------------------------------- | ----------------------------------- |
 | [**Sam Stokes**](https://github.com/bitwiseguy)                                               | ConsenSys                           |
-| [**Lucas Rodriguez Benitez**](https://www.linkedin.com/in/lucas-rodriguez-benitez-229092171/) | EY                                  |
+| [**Lucas Rodriguez Benitez**](https://www.linkedin.com/in/lucas-rodriguez-benitez-229092171/) | Provide                             |
 | [**Kartheek Solipuram**](https://github.com/skarred14)                                        | EY                                  |
 | [**Kyle Thomas**](https://github.com/kthomas)                                                 | Provide                             |
 | [**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/)             | Nethermind                          |
