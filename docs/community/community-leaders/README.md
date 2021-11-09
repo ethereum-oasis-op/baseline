@@ -63,11 +63,11 @@ Details on how to become a [Core Developer here](maintainers.md).
 
 The standards team worked through most of 2021 to develop a world-class technical specification that implementers and test developers can use to ensure compliance with the baseline protocol specification. The draft will now be shepherded through the OASIS process of review and amendments, culminating in becoming an official OASIS standard. Standards writing is hard, and reviewing the writing is equally hard. This team deserves the highest regard from the community for its hard-toiling service and commitment to excellence.
 
-| Member                             | Company     |
-| ---------------------------------- | ----------- |
-| Anais OFranc                       | Consianimis |
-| Andreas Freund                     |             |
-| Others being confirmed for listing |             |
+| Member         | Company            |
+| -------------- | ------------------ |
+| Anais OFranc   | Consianimis        |
+| Andreas Freund | ZK & L2 Consultant |
+| Kyle Thomas    | Provide            |
 
 ## Outreach Team
 
