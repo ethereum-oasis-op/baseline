@@ -4,7 +4,7 @@
   "description": "Project containing a set of tests describing functionalities of a standard-based BPI, written agains a mock BPI monolith application",
   "main": "index.js",
   "scripts": {
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'"
+    "test": "mocha -r ts-node/register 'tests/**/*.ts'"
   },
   "repository": {
     "type": "git",
