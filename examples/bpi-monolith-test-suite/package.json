@@ -4,7 +4,7 @@
   "description": "Project containing a set of tests describing functionalities of a standard-based BPI, written agains a mock BPI monolith application",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'tests/**/*.ts'"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
     "@types/mocha": "^9.0.0",
     "chai": "^4.3.4",
     "mocha": "^9.1.3",
-    "ts-node": "^10.4.0"
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
   }
 }
