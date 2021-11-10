@@ -23,7 +23,7 @@ OASIS employs key personnel that support all the open standards and open source 
 | Lillian Guinther | EEA          |
 | Sonal Patel      | ConsenSys    |
 
-### Technical Steering Committee 2020/21 <a href="your-technical-steering-committee" id="your-technical-steering-committee"></a>
+### Technical Steering Committee 2021/22 <a href="your-technical-steering-committee" id="your-technical-steering-committee"></a>
 
 The technical steering committee (TSC) is accountable to the Project Governance Board for managing conflicts on merges and Core Dev self-organization. It also governs the allocation of grant money. And it meets regularly to set technical roadmaps and ensure progress of the community toward the ubiquitous implementation of the baseline protocol in systems of record everywhere.
 
