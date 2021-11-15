@@ -12,12 +12,9 @@ export class BPI {
         this.organizations.push(organization);
     }
 
+    // Retrieves the organization/BpiSubject's details 
     getOrganizationById(id: string): BpiSubject {
         const orgs = this.organizations.filter(org => org.id === id);
-
-        if (!orgs) {
-            return null;
-        }
 
         return orgs[0];
     }

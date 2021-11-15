@@ -9,6 +9,15 @@ describe('Org and Workgroup setup', () => {
 
         expect(aliceBpi.getOrganizationById("AL1").name).equal("Alice Organization");
     });
+
+    it('ALice searches for a new organization that does not exist', () => {
+        const aliceBpi = new BPI();
+        aliceBpi.addOrganization("BO1", "Bob Organization");
+
+        expect(aliceBpi.getOrganizationById("EV1")).to.be.undefined;
+    })
+
+
     it('Alice creates a simple workgroup and invites Bob', () => {
         const aliceBpi = new BPI();
         
