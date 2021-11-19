@@ -1,0 +1,31 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Manik-Jain",
+  "license": "CC0 1.0 Universal",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "curl-to-json-object": "0.0.3",
+    "dateformat": "^4.5.1",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.1",
+    "fs": "0.0.1-security",
+    "got": "^11.8.2",
+    "http-status-codes": "^2.1.4",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "node-cmd": "^4.0.0",
+    "nodemon": "^2.0.7",
+    "path": "^0.12.7",
+    "properties-reader": "^2.2.0",
+    "request": "^2.88.2"
+  }
+}

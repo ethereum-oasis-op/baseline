@@ -1,0 +1,21 @@
+{
+  "name": "cardano-kafka",
+  "version": "1.0.0",
+  "description": "POC to demo Kafka with Cardano",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:consumer": "node ./consumer/index.js",
+    "dev": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "avsc": "^5.7.0",
+    "fs": "0.0.1-security",
+    "lodash": "^4.17.21",
+    "node-rdkafka": "^2.10.1",
+    "path": "^0.12.7"
+  }
+}
