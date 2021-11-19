@@ -1,7 +1,7 @@
 {
   "name": "cardano-kafka",
   "version": "1.0.0",
-  "description": "POC to demo Kafka with Cardano",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
