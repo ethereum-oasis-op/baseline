@@ -9,8 +9,8 @@
     "dev": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Manik Jain",
+  "license": "CC0 1.0 Universal",
   "dependencies": {
     "avsc": "^5.7.0",
     "fs": "0.0.1-security",
