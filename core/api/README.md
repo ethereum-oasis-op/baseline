@@ -105,5 +105,5 @@ deleteVaultSecret(vaultId: string, secretId: string): Promise<any>;
 The following providers of the Baseline API are available:
 
 - Ethers.js - *example provider; not yet implemented*
-- [Provide](https://provide.services) - enterprise-grade reference implementation (see [examples/bri-1/base-example](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example))
+- [Provide](https://provide.services) - enterprise-grade reference implementation (see [reference-implementations/bri-1/base-example](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-1/base-example))
 - RPC - generic JSON-RPC provider

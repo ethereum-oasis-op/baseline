@@ -6,7 +6,7 @@ The Baseline Protocol initiative was [announced](https://consensys.net/blog/pres
 
 The work of the community is maintained under a public domain[ license](https://github.com/ethereum-oasis/baseline/blob/master/LICENSE).
 
-The Baseline Protocol is a set of techniques that must be implemented in a standard way across different systems. This open standard is under development now, following the release of the **Baseline Protocol v0.1** reference implementation, which can be found [**here**](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1).
+The Baseline Protocol is a set of techniques that must be implemented in a standard way across different systems. This open standard is under development now, following the release of the **Baseline Protocol v0.1** reference implementation, which can be found [**here**](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-1).
 
 There are lots of opportunities to get informed, get involved, and **get value** out of defining requirements, developing reusable components, and ultimately deploying the Baseline Protocol in your own offerings.
 
@@ -22,5 +22,5 @@ You can find all the details on the current version of the Baseline Protocol [he
 
 ## The Baseline Protocol Demos
 
-A growing number of [Reference Implementations](bri/overview-of-reference-implementations.md) and demos to help you understand _**baselining**_ and give you ideas for your own projects can be found [**here**](https://github.com/ethereum-oasis/baseline/tree/master/examples). The original demo, called [**Radish34**](https://github.com/ethereum-oasis/baseline/tree/master/examples/radish34), was created by founding members, EY, ConsenSys and Microsoft. Today, there are demos, prototypes, and production systems being developed in more places than can be tracked, but some have been submitted as public domain contributions to the community.
+A growing number of [Reference Implementations](bri/overview-of-reference-implementations.md) and demos to help you understand _**baselining**_ and give you ideas for your own projects can be found [**here**](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations). The original demo, called [**Radish34**](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/radish34), was created by founding members, EY, ConsenSys and Microsoft. Today, there are demos, prototypes, and production systems being developed in more places than can be tracked, but some have been submitted as public domain contributions to the community.
 

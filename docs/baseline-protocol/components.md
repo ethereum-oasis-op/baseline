@@ -65,7 +65,7 @@ It costs more in Mainnet $gas fees and in time to set up specialized circuits. B
 
 ## UI Integration <a id="ui-integration"></a>
 
-In the Radish34 Demo, the team built a simple web-based UI to simulate the user experience of systems of record that were enabled with the Baseline Protocol. You can find that here: [https://github.com/ethereum-oasis/baseline/tree/master/examples/radish34/ui](https://github.com/ethereum-oasis/baseline/tree/master/examples/radish34/ui)
+In the Radish34 Demo, the team built a simple web-based UI to simulate the user experience of systems of record that were enabled with the Baseline Protocol. You can find that here: [https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/radish34/ui](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/radish34/ui)
 
 In the real world, the user experience is the experience of any number of products.
 
