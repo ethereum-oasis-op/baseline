@@ -1,7 +1,10 @@
 export class Agreement{
-    verifier(previous_state,input_state){
-        if previous_state === null {
-            
-        }
+    isOrder(stateObject: any ) {
+        return stateObject["type"] === "Order";
     }
+
+    orderPriceIsGreater(stateObject: any) {
+        return stateObject["price"] > 23;
+    }
+
 }

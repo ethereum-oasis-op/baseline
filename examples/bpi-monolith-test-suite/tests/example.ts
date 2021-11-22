@@ -1,5 +1,7 @@
 import { BPI }  from '../bpi/bpi';
 import { expect } from 'chai';
+import { Agreement } from '../bpi/agreement';
+import { Workstep } from '../bpi/workstep';
 
 
 describe('Org and Workgroup setup', () => {
@@ -18,8 +20,10 @@ describe('Org and Workgroup setup', () => {
 
     it('Alice creates a simple workgroup and her organization is automatically added', () => {
         const aliceBpi = new BPI("AL1", "Alice Organization");
-
+        const agreement = new Agreement();
+        const worksteps = new Workstep();
         const workgroup = aliceBpi.addWorkgroup('123','MyWorkgroup');
+        
         expect(aliceBpi.getWorkgroupById(workgroup.id).name).is.equal(workgroup.name);
 
         expect(aliceBpi.getWorkgroupById(workgroup.id).participants[0]).is.equal(aliceBpi.owner);
@@ -31,4 +35,9 @@ describe('Org and Workgroup setup', () => {
 
         expect(aliceBpi.getWorkgroupById("nonsense")).to.be.undefined;
     });
+
+    it('Alice invites Bob to her workgroup, Bob accepts, and Alice can view Bob within her workgroup', () => {
+
+        
+    })
 });
