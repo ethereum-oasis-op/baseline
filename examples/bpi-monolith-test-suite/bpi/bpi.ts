@@ -2,14 +2,19 @@ import { BpiSubject } from "./bpiSubject";
 import { Workgroup } from "./workgroup";
 
 export class BPI {
+    owner : BpiSubject
     organizations: BpiSubject[] = [];
     workgroups: Workgroup[] = [];
+
+    constructor(id:string, name: string){
+        this.owner = this.addOrganization(id, name);
+    }
 
     // Used to register a new organization with the BPI and the external registry
     addOrganization(id: string, name: string): BpiSubject {
         const organization = new BpiSubject();
         organization.id = id;    
-        organization.name = name;    
+        organization.name = name;
 
         this.organizations.push(organization);
 
@@ -29,8 +34,9 @@ export class BPI {
 
         workgroup.id = id;
         workgroup. name = name;
-
+        workgroup.participants.push(this.owner);
         this.workgroups.push(workgroup);
+
 
         return workgroup;
     }

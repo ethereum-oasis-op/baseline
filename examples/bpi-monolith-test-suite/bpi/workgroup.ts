@@ -1,11 +1,8 @@
 import { BpiSubject } from "./bpiSubject";
 
-export class Workgroup {
-
-    
+export class Workgroup {   
      id: string;
      name: string;
-     participants: BpiSubject[];
-
+     participants: BpiSubject[] = [];
 }
 
