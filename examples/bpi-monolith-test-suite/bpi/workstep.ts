@@ -1,8 +1,14 @@
 export class Workstep { 
-    name: String;
-    id: String;
-    status: String;
+    name: string;
+    id: string;
+    status: string;
     agreementFunction: any;
+
+    constructor(id: string, name: string) {
+        this.id = id;
+        this.name = name;
+    }
+
     execute(stateObject: any ) {
         return this.agreementFunction(stateObject);
     }
