@@ -20,3 +20,4 @@ First test block:
 ## Questions
 
 * OrgRegistry contract is in the core repo. Is this still a proper way to register and  search for new organization?
+* Who keeps the state of the workflow? Is it in the agreement object? Who performs the state changes?
