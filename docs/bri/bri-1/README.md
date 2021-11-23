@@ -10,7 +10,7 @@ This reference implementation of the core interfaces specified in the v0.1 relea
 
 The reference implementation is instrumented to run on the Ethereum Ropsten testnet and can be configured to run on many other public or permissioned EVM-based blockchains.
 
-The BRI-1 "base" example codebase can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-1/base-example).
+The BRI-1 "base" example codebase can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example).
 
 ## Provide Architecture
 
