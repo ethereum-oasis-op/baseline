@@ -19,7 +19,6 @@ yarn.lock
 src
 test
 examples
-reference-implementations
 CHANGELOG.md
 tsconfig.json
 tslint.json
