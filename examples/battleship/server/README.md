@@ -1,4 +1,4 @@
-# Baseline Battleship Client
+# Baseline Battleship Server
 
 Prerequisite
 ```
