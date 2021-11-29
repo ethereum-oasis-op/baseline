@@ -18,9 +18,9 @@
 
 Version 0.1 of the baseline protocol packages has been released! For some background information, check out [this section](https://docs.baseline-protocol.org/baseline-protocol/the-baseline-protocol) of our docs. There are two entrypoints where you can get involved in the codebase:
 - [`core/`](https://github.com/ethereum-oasis/baseline/tree/master/core) -- the "core" Baseline Protocol packages
-- [`reference-implementations/bri-1`](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-1/base-example) -- the BRI-1 reference implementation.
+- [`examples/bri-1`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example) -- the BRI-1 reference implementation.
 One or more "core" baseline protocol packages are needed to baseline-enable applications and systems of record.
-- [`reference-implementations/bri-2`](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-2/base-example) -- the experimental BRI-2 reference implementation includes examples of semi functioning dashboard to the baseline protocol.
+- [`examples/bri-2`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/base-example) -- the experimental BRI-2 reference implementation includes examples of semi functioning dashboard to the baseline protocol.
 
 ## Core Modules & Packages
 | Package | Source Path | Description |
@@ -28,7 +28,7 @@ One or more "core" baseline protocol packages are needed to baseline-enable appl
 | `@baseline-protocol/api` | `core/api` | Core *baseline* API package providing unified access to the `baseline` JSON-RPC module and blockchain, registry and key management interfaces |
 | `@baseline-protocol/contracts` | `core/contracts` | Solidity contracts packaged as a Truffle project; includes ERC1820/organization registry |
 | `@baseline-protocol/messaging` | `core/messaging` | Core messaging package with protocol-agnostic p2p interface with NATS and Whisper implementations |
-| `@baseline-protocol/persistence` | `core/persistence` | Persistence package; this is a placeholder for system of record integration standards (see ERP connector projects under `reference-implementations/`) |
+| `@baseline-protocol/persistence` | `core/persistence` | Persistence package; this is a placeholder for system of record integration standards (see ERP connector projects under `examples/`) |
 | `@baseline-protocol/privacy` | `core/privacy` | Core privacy package initially exposing a zkSnark circuit provider factory; designed to support future privacy implementations |
 | `@baseline-protocol/types` | `core/types` | Core reuseable type definitions; also provides a convenience wrapper around interacting with `lib/` assets (i.e. circuits) |
 
@@ -48,3 +48,4 @@ All code in this repo is released under the CC0 1.0 Universal public domain dedi
 ## Contributing
 
 See [our contributing guidelines](CONTRIBUTING.md)
+

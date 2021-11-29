@@ -4,7 +4,7 @@
 
 Parties store data in local systems of record \(Mongo, Oracle, SAP, etc\). Components involved in the baseline process are given CRUD access to this and conduct a series of operations to serialize records \(including any associated business logic\), send those records to counterparties, receive the records, sign them, generate proofs, and store these proofs to a Merkle Tree on the Mainnet. 
 
-Connectors for various systems can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-1/lib).
+Connectors for various systems can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/lib).
 
 ## Setting up the Workgroup <a id="setting-up-the-workgroup-and-sending-messages-to-counterparties"></a>
 
@@ -41,7 +41,7 @@ To set up this business logic, use the Baseline Protocol Privacy Package [here](
 
 Once the business logic is rendered into circuits, deploy the Workflow as follows: 
 
-First deploy a Node that has the baseline protocol RPC interface implemented. The Nethermind Ethereum Client is the first to implement this code. Alternatively, you can deploy the [commit-mgr](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-2/commit-mgr) Ethereum client extension plus a client type of your choice (i.e. Besu, Infura, etc.)
+First deploy a Node that has the baseline protocol RPC interface implemented. The Nethermind Ethereum Client is the first to implement this code. Alternatively, you can deploy the [commit-mgr](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/commit-mgr) Ethereum client extension plus a client type of your choice (i.e. Besu, Infura, etc.)
 
 Next, use the `IBaselineRPC` call in the Client to deploy the Shield and Verifier contracts on-chain. This can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/core/api). 
 
@@ -49,5 +49,5 @@ Next, use the `IBaselineRPC` call in the Client to deploy the Shield and Verifie
 
 Now that the Workgroup and Workflow have been established, counterparties can send each other serialized records, confirm consistency between those records, and enforce business rules on the state changes from Workstep to Workstep.
 
-An example of this is in the BRI-1 Reference implementation [here](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-1). And a walkthrough of an "Alice and Bob" simple case is [here](https://youtu.be/2WXvTHR4_7Q) and [here](https://youtu.be/R0AEww6fKLk).
+An example of this is in the BRI-1 Reference implementation [here](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1). And a walkthrough of an "Alice and Bob" simple case is [here](https://youtu.be/2WXvTHR4_7Q) and [here](https://youtu.be/R0AEww6fKLk).
 

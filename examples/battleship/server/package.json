@@ -1,0 +1,34 @@
+{
+  "name": "Battleship",
+  "version": "0.0.1",
+  "description": "Baseline battleship hello world game",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "truffle test test/*"
+  },
+  "author": "Baseline core devs",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.22.2",
+    "babel-core": "^6.22.1",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-preset-env": "^1.1.8",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-register": "^6.22.0",
+    "css-loader": "^0.26.1",
+    "json-loader": "^0.5.4",
+    "style-loader": "^0.13.1",
+    "truffle-contract": "^1.1.11",
+    "web3": "^0.20.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "circomlib": "^2.0.2",
+    "express": "^4.16.2",
+    "jquery": "^3.3.1",
+    "nodemon": "^1.14.12",
+    "snarkjs": "^0.4.10"
+  }
+}
