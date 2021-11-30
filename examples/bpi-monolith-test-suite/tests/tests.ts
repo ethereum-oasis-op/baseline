@@ -29,15 +29,49 @@ describe('BPI, Workgroup and Worflow setup', () => {
     it('Given newly created workgroup, Alice creates a workstep, workstep is added to the workgroup and is visible in the list of worksteps for a given workgroup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        
+        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        orderGroup.addWorkstep(workStep);
+        expect(orderGroup.worksteps.length).to.be.equal(1);
+        expect(orderGroup.worksteps.length).to.be.above(0);
+        expect(orderGroup.worksteps[0]).to.be.equal(workStep);
+        expect(orderGroup.worksteps[0].id).to.be.equal("W1");
+        expect(orderGroup.worksteps[0].name).to.be.equal("WRKSTP1");
     });
 
     // we assume one workgroup and one workstep 
-    it('Given a prepared workgroup, Alice invites Bob, BPI stored the invitation and invitee email and this information is available to Bob though a list of invitations', () => {
-        expect(1).to.be.equal(2);
+    it('Given a prepared workgroup, Alice invites Bob, BPI stores the invitation and invitee email and this information is available to Bob through a list of invitations', () => {
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        
+        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+        expect(aliceBpi.invitations).not.to.be.empty;
+        expect(aliceBpi.invitations[0]).to.be.equal(aliceBpi.getInvitationById("BI1"));
+        expect(aliceBpi.invitations[0].name).to.be.equal(inviteBob.name);
+        expect(aliceBpi.invitations[0].recipient).to.be.equal(inviteBob.recipient);
+        expect(aliceBpi.invitations[0].agreement.productIds).to.be.equal(inviteBob.agreement.productIds);
+
     });
 
     it('Given a sent invitation, Alice queries list of sent invitations, can see Bob invitation details', () => {
-        expect(1).to.be.equal(2);
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+
+        const bobsInvitation = aliceBpi.getInvitationById("BI1");
+        
+        expect(aliceBpi.invitations.length).to.be.above(0);
+        expect(bobsInvitation.id).to.be.equal("BI1");
+        expect(bobsInvitation.name).to.be.equal("BobsInvite");
+        expect(bobsInvitation.sender).to.be.equal(aliceBpi.owner);
+        expect(bobsInvitation.recipient).to.be.equal("bob@bob.com");
     });
 
     it('Given a sent invitation, Bob queries list of received invitations, can see invitation details from Alice', () => {
@@ -45,7 +79,26 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given a received invitation, Bob accepts by singing the agreement, Bob is added as a subject to the Bpi, to the collection of workgroup participants and proof is stored in the collection of proofs for the workgroup', () => {
-        expect(1).to.be.equal(2);
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+
+        aliceBpi.signInvite(inviteBob,"BO1","BobOrganisation");
+
+        //Agreement signed?
+        expect(aliceBpi.agreement.signature).to.be.true;
+        //Bob is added as subject to bpi?
+        expect(aliceBpi.getOrganizationById("BO1")).to.not.be.undefined;
+        //Bob is added to participants to workgroup?
+        expect(aliceBpi.getWorkgroupById(orderGroup.id).participants.length).to.be.equal(2);
+        expect(aliceBpi.getWorkgroupById(orderGroup.id).participants[1].id).to.be.equal("BO1");
+        expect(aliceBpi.getWorkgroupById(orderGroup.id).participants[1].name).to.be.equal("BobOrganisation");
+        //Store some rand proof is in the agreement proofs?
+        expect(aliceBpi.agreement.proofs).to.not.be.empty;
+        expect(aliceBpi.agreement.proofs[0].length).to.be.above(0);
     });
 
     it('Given accepted invite, Alice queries the list of sent invitations, and can verify the proof aginst the Bpi', () => {

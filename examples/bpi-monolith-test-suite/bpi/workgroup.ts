@@ -14,5 +14,8 @@ export class Workgroup {
      addWorkstep(workstep: Workstep){
           this.worksteps.push(workstep);
      }
+     addParticipants(bpiSubject:BpiSubject){
+         this.participants.push(bpiSubject);
+     }
 }
 

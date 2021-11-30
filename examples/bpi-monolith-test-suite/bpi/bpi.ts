@@ -1,5 +1,6 @@
 import { Agreement } from "./agreement";
 import { BpiSubject } from "./bpiSubject";
+import { Invitation } from "./invitation";
 import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
 
@@ -8,6 +9,7 @@ export class BPI {
     organizations: BpiSubject[] = [];
     workgroups: Workgroup[] = [];
     agreement: Agreement = new Agreement;
+    invitations: Invitation[] = [];
 
     constructor(id: string, name: string, productIds: string[]) {
         this.owner = this.addOrganization(id, name);
@@ -50,4 +52,31 @@ export class BPI {
         return workgroups[0];
     }
 
+    invite(id:string, name:string, sender:BpiSubject, recipient:string, workgroupId: string ,agreement:Agreement):Invitation{
+        const inv = new Invitation(id,name,sender,recipient,workgroupId,agreement);
+        
+        this.invitations.push(inv);
+        return inv;
+    }
+
+    getInvitationById(id:string):Invitation{
+        const filtInv = this.invitations.filter(inv=>inv.id === id)
+
+        return filtInv[0];
+    }
+
+    signInvite(invitation: Invitation, id: string, name: string){
+        const bob = new BpiSubject();
+        bob.id = id;
+        bob.name = name;
+        
+        invitation.agreement.signature = true;
+        invitation.agreement.proofs.push(this.createProof(this.agreement));
+        this.organizations.push(bob);
+        this.getWorkgroupById(invitation.workgroupId).addParticipants(bob);
+    }
+
+    createProof(input:any){
+        return Math.random().toString(36).substr(2, 20);
+    }
 }

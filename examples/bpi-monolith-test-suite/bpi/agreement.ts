@@ -6,6 +6,8 @@ export class Agreement{
 
     proofs: string[] = [];
 
+    signature: boolean = false;
+
 
     isOrder(stateObject: any ) {
         return stateObject["type"] === "Order";
@@ -13,6 +15,14 @@ export class Agreement{
 
     orderPriceIsGreater(stateObject: any) {
         return stateObject["price"] > 23;
+    }
+
+    idsMatch() {
+        return this.idCheck();
+    }
+
+    private idCheck(){
+        return true;
     }
 
 }
