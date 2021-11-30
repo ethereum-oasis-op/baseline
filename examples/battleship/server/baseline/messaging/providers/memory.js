@@ -1,3 +1,10 @@
+/*
+ * A simple in-memory messaging provider.
+ * Requires all clients to be connected to same server instance
+ */
+
+
+
 const publish = (subject, message) => {
     error('Not implemented')
 }

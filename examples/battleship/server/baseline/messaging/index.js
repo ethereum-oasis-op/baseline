@@ -1,15 +1,15 @@
-const socketProvider = require('./providers/socket')
+const memoryProvider = require('./providers/memory')
 const kafkaProvider = require('./providers/kafka')
 
-const messagingProviderSocket = 'socket'
+const messagingProviderMemory = 'memory'
 const messagingProviderKafka = 'kafka'
 
 const messagingServiceFactory = (provider) => {
     let service
 
     switch(provider) {
-        case messagingProviderSocket:
-            service = socketProvider
+        case messagingProviderMemory:
+            service = memoryProvider
             break
         case messagingProviderKafka:
             service = kafkaProvider
@@ -23,6 +23,6 @@ const messagingServiceFactory = (provider) => {
 
 module.exports = {
     messagingServiceFactory,
-    messagingProviderSocket,
+    messagingProviderMemory,
     messagingProviderKafka
 }
