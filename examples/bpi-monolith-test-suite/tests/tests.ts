@@ -13,7 +13,8 @@ describe('BPI, Workgroup and Worflow setup', () => {
     it('Given newly created workgroup, Alice creates a workstep, workstep is added to the workgroup and is visible in the list of worksteps for a given workgroup', () => {
     });
 
-    it('Given a prepared workgroup, Alice invites Bob, BPI stored the invitation per workgroup and invitee email and this information is available to Bob though a list of invitations', () => {
+    // we assume one workgroup and one workstep 
+    it('Given a prepared workgroup, Alice invites Bob, BPI stored the invitation and invitee email and this information is available to Bob though a list of invitations', () => {
     });
 
     it('Given a sent invitation, Alice queries list of sent invitations, can see Bob invitation details', () => {
@@ -22,7 +23,22 @@ describe('BPI, Workgroup and Worflow setup', () => {
     it('Given a sent invitation, Bob queries list of received invitations, can see invitation details from Alice', () => {
     });
 
-    it('Given a received invitation, Bob accepts by singing the agreement, Bob is added to the collection of workgroup participants and proof is stored in the collection of proofs for the workgroup', () => {
+    it('Given a received invitation, Bob accepts by singing the agreement, Bob is added as a subject to the Bpi, to the collection of workgroup participants and proof is stored in the collection of proofs for the workgroup', () => {
+    });
+
+    it('Given accepted invite, Alice queries the list of sent invitations, and can verify the proof aginst the Bpi', () => {
+    });
+
+    it('Given verified proof, Alice sends request for the order that is valid, the request is verified against the agreement, the proof and order is sent to Bob', () => {
+    });
+
+    it('Given verified proof, Alice sends request for the order that is invalid, the request is verified against the agreement, error response is sent back to Alice', () => {
+    });
+
+    it('Given recieved Order, Bob validates proof against Bpi, gets positive result from Bpi', () => {
+    });
+
+    it('Given validated Order, Bob sends back accaptance,', () => {
     });
 });
 
