@@ -28,7 +28,7 @@ export const App = () => {
 
   return (
     <React.Fragment>
-      { appState === SETUP_STATE ? <Setup setSession={setSession} /> : <div><Game session={session} id={appState}/></div> }
+      { appState === SETUP_STATE ? <Setup session={session} setSession={setSession} /> : <div><Game session={session} id={appState}/></div> }
 
     </React.Fragment>
   )

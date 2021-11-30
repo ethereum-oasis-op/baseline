@@ -1,12 +1,13 @@
 import { useState } from 'react';
 
+import axios from 'axios'
+
 import { Button, FormGroup, FormFeedback, Input, InputGroup, InputGroupText, Container, Row, Col } from 'reactstrap';
 
-import { socket } from '../utils/socket'
 
 import '../styles/gameSetup.css'
 
-export const GameSetup = ({orgName}) => {
+export const GameSetup = ({session}) => {
   
     const [gameCode, setGameCode] = useState('')
     const [workgroupId, setWorkgroupId] = useState('')
@@ -29,22 +30,31 @@ export const GameSetup = ({orgName}) => {
     }
 
     const createWorkgroup = () => {
-        socket.emit('workgroup:create')
+        axios.post('/workgroup/create', {
+            session: session
+        })
+        .then((res) => {
+            setWorkgroupId(res.data.id)
+        })
     }
 
     const joinWorkgroup = () => {
-        socket.emit('workgroup:join', gameCode)
+        axios.post(`/workgroup/join/${gameCode}`, {
+            session: session
+        })
+        .then((res) => {
+            setWorkgroupId(res.data.id)
+        })
+        .catch(() => {
+            setInvalidId(gameCode)
+        })
     }
-
-    socket.on('workgroup:id', setWorkgroupId)
-
-    socket.on('workgroup:invalid_id', setInvalidId)
 
     return (
       <>
         <h2>Setup Workgroup</h2>
         <p>
-            Hello {orgName}. Now that you've registered an organization it's time to create or join a workgroup. (EXPAND EXPLANATION) 
+            Now that you've registered an organization it's time to create or join a workgroup. (EXPAND EXPLANATION) 
         </p>
 
         <Container>
