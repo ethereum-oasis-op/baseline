@@ -4,7 +4,7 @@ import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
 
 export class BPI {
-    owner: BpiSubject
+    owner: BpiSubject;
     organizations: BpiSubject[] = [];
     workgroups: Workgroup[] = [];
 
