@@ -1,10 +1,10 @@
 export class Agreement{
 
-    productIds: string[];
+    productIds: string[] = [];
 
-    orders: string[];
+    orders: string[] = [];
 
-    proofs: string[];
+    proofs: string[] = [];
 
 
     isOrder(stateObject: any ) {

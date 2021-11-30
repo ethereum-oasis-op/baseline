@@ -11,47 +11,65 @@ describe('BPI, Workgroup and Worflow setup', () => {
         expect(aliceBpi.owner.name).to.be.equal("AliceOrganisation");
         expect(aliceBpi.agreement.productIds.length).to.be.equal(1);
         expect(aliceBpi.agreement.productIds[0]).to.be.equal("555333");
-        expect(aliceBpi.agreement.orders).to.be.empty;
-        expect(aliceBpi.agreement.proofs).to.be.empty;
+        expect(aliceBpi.agreement.orders).to.be.an("array").that.is.empty;
+        expect(aliceBpi.agreement.proofs).to.be.an("array").that.is.empty;
     });
 
     it('Given freshly instantiated BPI, Alice creates a workgroup, workgroup is added to the BPI and available in the list of workgroups', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+
+        expect(aliceBpi.workgroups.length).to.be.equal(1);
+        expect(aliceBpi.workgroups[0].id).to.be.equal(orderGroup.id);
+        expect(aliceBpi.workgroups[0].name).to.be.equal(orderGroup.name);
+        expect(aliceBpi.workgroups[0].participants.length).to.be.equal(1);
+        expect(aliceBpi.workgroups[0].participants[0].id).to.be.equal("AL1");
     });
 
     it('Given newly created workgroup, Alice creates a workstep, workstep is added to the workgroup and is visible in the list of worksteps for a given workgroup', () => {
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
     });
 
     // we assume one workgroup and one workstep 
     it('Given a prepared workgroup, Alice invites Bob, BPI stored the invitation and invitee email and this information is available to Bob though a list of invitations', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given a sent invitation, Alice queries list of sent invitations, can see Bob invitation details', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given a sent invitation, Bob queries list of received invitations, can see invitation details from Alice', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given a received invitation, Bob accepts by singing the agreement, Bob is added as a subject to the Bpi, to the collection of workgroup participants and proof is stored in the collection of proofs for the workgroup', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given accepted invite, Alice queries the list of sent invitations, and can verify the proof aginst the Bpi', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given verified proof, Alice sends request for the order that is valid, the request is verified against the agreement, the proof and order is sent to Bob', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given verified proof, Alice sends request for the order that is invalid, the request is verified against the agreement, error response is sent back to Alice', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given recieved Order, Bob validates proof against Bpi, gets positive result from Bpi', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Given Bob receives a positive result, Bob performs acceptance, the acceptance is returned to Alice', () => {
+        expect(1).to.be.equal(2);
     });
 
     it('Alice receives Bobs acceptance proof, Alice validates the proof, Alice recieves a positive result', () => {
+        expect(1).to.be.equal(2);
     });
 });
 
