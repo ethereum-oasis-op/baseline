@@ -32,8 +32,8 @@ export class BPI {
         return orgs[0];
     }
 
-    addWorkgroup(id: string, name: string, agreement: Agreement, worksteps: Workstep[]): Workgroup {
-        const workgroup = new Workgroup(agreement, worksteps);
+    addWorkgroup(id: string, name: string, worksteps: Workstep[]): Workgroup {
+        const workgroup = new Workgroup(worksteps);
 
         workgroup.id = id;
         workgroup.name = name;
@@ -42,6 +42,7 @@ export class BPI {
 
         return workgroup;
     }
+    
 
     getWorkgroupById(id: string): Workgroup {
         const workgroups = this.workgroups.filter(workgroup => workgroup.id === id);

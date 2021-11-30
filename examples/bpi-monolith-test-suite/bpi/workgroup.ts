@@ -6,12 +6,13 @@ export class Workgroup {
      id: string;
      name: string;
      participants: BpiSubject[] = [];
-     agreement: Agreement;
      worksteps: Workstep[] = [];
 
-     constructor(agreement: Agreement, worksteps: Workstep[]) {
-          this.agreement = agreement;
+     constructor(worksteps: Workstep[]) {
           this.worksteps = worksteps;
+     }
+     addWorkstep(workstep: Workstep){
+          this.worksteps.push(workstep);
      }
 }
 

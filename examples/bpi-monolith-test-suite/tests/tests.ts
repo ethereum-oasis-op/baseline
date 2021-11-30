@@ -5,11 +5,19 @@ import { Workstep } from '../bpi/workstep';
 
 describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {
-        const aliceBpi = new BPI("AL1", "AliceBPI", ["555333"] );
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
 
+        expect(aliceBpi.owner.id).to.be.equal("AL1");
+        expect(aliceBpi.owner.name).to.be.equal("AliceOrganisation");
+        expect(aliceBpi.agreement.productIds.length).to.be.equal(1);
+        expect(aliceBpi.agreement.productIds[0]).to.be.equal("555333");
+        expect(aliceBpi.agreement.orders).to.be.empty;
+        expect(aliceBpi.agreement.proofs).to.be.empty;
     });
 
     it('Given freshly instantiated BPI, Alice creates a workgroup, workgroup is added to the BPI and available in the list of workgroups', () => {
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
     });
 
     it('Given newly created workgroup, Alice creates a workstep, workstep is added to the workgroup and is visible in the list of worksteps for a given workgroup', () => {
