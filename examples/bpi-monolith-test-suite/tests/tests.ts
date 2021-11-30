@@ -5,6 +5,8 @@ import { Workstep } from '../bpi/workstep';
 
 describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {
+        const aliceBpi = new BPI("AL1", "AliceBPI", ["555333"] );
+
     });
 
     it('Given freshly instantiated BPI, Alice creates a workgroup, workgroup is added to the BPI and available in the list of workgroups', () => {
@@ -38,7 +40,10 @@ describe('BPI, Workgroup and Worflow setup', () => {
     it('Given recieved Order, Bob validates proof against Bpi, gets positive result from Bpi', () => {
     });
 
-    it('Given validated Order, Bob sends back accaptance,', () => {
+    it('Given Bob receives a positive result, Bob performs acceptance, the acceptance is returned to Alice', () => {
+    });
+
+    it('Alice receives Bobs acceptance proof, Alice validates the proof, Alice recieves a positive result', () => {
     });
 });
 

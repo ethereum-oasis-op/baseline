@@ -7,9 +7,11 @@ export class BPI {
     owner: BpiSubject;
     organizations: BpiSubject[] = [];
     workgroups: Workgroup[] = [];
+    agreement: Agreement = new Agreement;
 
-    constructor(id: string, name: string) {
+    constructor(id: string, name: string, productIds: string[]) {
         this.owner = this.addOrganization(id, name);
+        this.agreement.productIds = productIds;
     }
 
     // Used to register a new organization with the BPI and the external registry
