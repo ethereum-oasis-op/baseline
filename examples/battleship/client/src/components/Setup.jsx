@@ -2,6 +2,8 @@ import React from 'react';
 
 import axios from 'axios'
 
+import { socket } from '../utils/socket'
+
 import { Row, Col } from 'reactstrap'
 import { OrgCreation } from './OrgCreation';
 import { GameSetup } from './GameSetup';
@@ -12,7 +14,7 @@ const SETUP_WORKGROUP_STATE = 'setupWorkgroup'
 export const Setup = ({session, setSession}) => {
 
   const createOrg = (orgName) => {
-    axios.post('/organization/register', {
+    axios.post(`/organization/register/${socket.id}`, {
       name: orgName
     })
     .then((res) => {

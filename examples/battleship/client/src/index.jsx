@@ -25,6 +25,10 @@ export const App = () => {
     setAppState(GAME_STATE)
   })
 
+  socket.on('message', (msg) => {
+    console.log(msg)
+  })
+
 
   return (
     <React.Fragment>

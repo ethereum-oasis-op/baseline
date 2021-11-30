@@ -7,8 +7,6 @@
 const express = require('express')
 const router = express.Router()
 
-const uuid = require('uuid')
-
 const orgRegistry = new Map()
 
 router.get('/:id', (req, res) => {
@@ -19,8 +17,8 @@ router.get('/:id', (req, res) => {
     res.sendStatus(404)
 })
 
-router.post('/register', (req, res) => {
-    const id = uuid.v4()
+router.post('/register/:id', (req, res) => {
+    const id = req.params.id
 
     if (req.body.name) {
         orgRegistry.set(id, req.body.name)

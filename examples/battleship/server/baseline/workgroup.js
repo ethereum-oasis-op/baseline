@@ -7,6 +7,8 @@ const router = express.Router()
 
 const { organizationExists } = require('./organization')
 
+const { joinGame, startGame } = require('./battleship')
+
 const Randexp = require('randexp')
 const codeRegExp = new Randexp(/([A-Z0-9]){4}/)
 
@@ -25,6 +27,8 @@ router.post('/create', (req, res) => {
     }
     workgroupRegistry.set(id, 0)
 
+    joinGame(req.body.session, id)
+
     res.json({id: id})
 })
     
@@ -38,6 +42,10 @@ router.post('/join/:id', (req, res) => {
     if (workgroupRegistry.has(id)) {
         if (workgroupRegistry.get(id) === 0) {
             workgroupRegistry.set(id, 1)
+
+            joinGame(req.body.session, id)
+            startGame(req.body.session, id)
+
             return res.json({id: id})
         }
 

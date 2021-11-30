@@ -2,23 +2,19 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 const http = require('http')
-const { Server } = require('socket.io')
 const server = http.createServer(app)
-const socketio = new Server(server)
 const Web3 = require('web3');
 const truffle_connect = require('./connection/app.js');
 const bodyParser = require('body-parser');
+
+const { socketConnection } = require('./utils/socket')
+socketConnection(server)
 
 const proofVerify = require('./privacy/proof-verify.js')
 
 const { organizationRouter } = require('./baseline/organization')
 const { workgroupRouter } = require('./baseline/workgroup')
 
-const {messagingServiceFactory, messagingProviderSocket} = require('./baseline/messaging')
-const messagingProvider = messagingServiceFactory(messagingProviderSocket)
-
-// const socketLogic = require('./socket/socket.js')
-// socketLogic(socketio)
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

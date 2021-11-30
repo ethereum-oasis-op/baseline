@@ -31,7 +31,6 @@
     "nodemon": "^1.14.12",
     "randexp": "^0.5.3",
     "snarkjs": "^0.4.10",
-    "socket.io": "^4.4.0",
-    "uuid": "^8.3.2"
+    "socket.io": "^4.4.0"
   }
 }
