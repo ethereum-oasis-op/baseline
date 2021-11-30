@@ -14,6 +14,8 @@ const proofVerify = require('./privacy/proof-verify.js')
 const { organizationRouter } = require('./baseline/organization')
 const { workgroupRouter } = require('./baseline/workgroup')
 
+const {messagingServiceFactory, messagingProviderSocket} = require('./baseline/messaging')
+const messagingProvider = messagingServiceFactory(messagingProviderSocket)
 
 // const socketLogic = require('./socket/socket.js')
 // socketLogic(socketio)
