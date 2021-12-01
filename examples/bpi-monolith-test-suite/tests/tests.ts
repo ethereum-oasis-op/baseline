@@ -2,6 +2,7 @@ import { BPI } from '../bpi/bpi';
 import { expect } from 'chai';
 import { Agreement } from '../bpi/agreement';
 import { Workstep } from '../bpi/workstep';
+import { Order } from '../bpi/order';
 
 describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {
@@ -30,7 +31,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        
+        //This agreement function is not right i think...should here be an order related check???
         workStep.agreementFunction = aliceBpi.agreement.idsMatch;
         orderGroup.addWorkstep(workStep);
         expect(orderGroup.worksteps.length).to.be.equal(1);
@@ -45,10 +46,11 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        
+        //This agreement function is not right i think...should here be an order related check???
         workStep.agreementFunction = aliceBpi.agreement.idsMatch;
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+
         expect(aliceBpi.invitations).not.to.be.empty;
         expect(aliceBpi.invitations[0]).to.be.equal(aliceBpi.getInvitationById("BI1"));
         expect(aliceBpi.invitations[0].name).to.be.equal(inviteBob.name);
@@ -61,10 +63,10 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
+        //This agreement function is not right i think...should here be an order related check???
         workStep.agreementFunction = aliceBpi.agreement.idsMatch;
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
-
         const bobsInvitation = aliceBpi.getInvitationById("BI1");
         
         expect(aliceBpi.invitations.length).to.be.above(0);
@@ -85,9 +87,10 @@ describe('BPI, Workgroup and Worflow setup', () => {
         workStep.agreementFunction = aliceBpi.agreement.idsMatch;
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
-
-        aliceBpi.signInvite(inviteBob,"BO1","BobOrganisation");
-
+        //the invitation is signed (so the invitation has a sign method)
+        const bobsEnteredData =  inviteBob.sign();
+        //signed invitation "triggers" Bpi to create dummy proof and add Bob to orgs and workgrouop participants
+        aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
         //Agreement signed?
         expect(aliceBpi.agreement.signature).to.be.true;
         //Bob is added as subject to bpi?
@@ -102,11 +105,47 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given accepted invite, Alice queries the list of sent invitations, and can verify the proof aginst the Bpi', () => {
-        expect(1).to.be.equal(2);
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+        const bobsEnteredData =  inviteBob.sign();
+        aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
+        
+        //getinvite
+        const invQuedByAlice = aliceBpi.getInvitationById("BI1");
+        expect(invQuedByAlice).to.be.equal(inviteBob);
+        //check if signed
+        expect(invQuedByAlice.agreement.signature).to.be.true;
+        //verify proof against bpi
+        expect(aliceBpi.verifyProof(invQuedByAlice.agreement.proofs[0])).to.be.true;
+        // Add something here??? Now is just a dummy proof check with a true/false response from Bpi
     });
 
     it('Given verified proof, Alice sends request for the order that is valid, the request is verified against the agreement, the proof and order is sent to Bob', () => {
-        expect(1).to.be.equal(2);
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+        const bobsEnteredData =  inviteBob.sign();
+        aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
+
+        //Alice creates an order with a given price...that will be checked in the validation process
+        const businessObject = new Order("0001","Purchase",30);
+        //send request with the order (valid)
+        const bpiResponse = aliceBpi.sendObject(businessObject,orderGroup.id);
+        //if response from bpi to alice is true or false
+        expect(bpiResponse[0]).to.be.true;
+        //if response message from bpi to alice is error or not
+        expect(bpiResponse[1]).to.not.be.equal("Error: Message");
+        //if proof is same as saved in agreement
+        expect(bpiResponse[1]).to.be.equal(aliceBpi.agreement.proofs[1]);
+        //if proof was added to agreement
+        expect(aliceBpi.agreement.proofs.length).to.be.equal(2);
     });
 
     it('Given verified proof, Alice sends request for the order that is invalid, the request is verified against the agreement, error response is sent back to Alice', () => {

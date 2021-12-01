@@ -1,3 +1,5 @@
+import { Order } from "./order";
+
 export class Agreement{
 
     productIds: string[] = [];
@@ -9,12 +11,14 @@ export class Agreement{
     signature: boolean = false;
 
 
-    isOrder(stateObject: any ) {
-        return stateObject["type"] === "Order";
+    isOrder(stateObject: Order ) {
+        //return stateObject["type"] === "Order";
+        return stateObject.type === "Purchase";
     }
 
-    orderPriceIsGreater(stateObject: any) {
-        return stateObject["price"] > 23;
+    orderPriceIsGreater(stateObject: Order) {
+        //return stateObject["price"] > 23;
+        return stateObject.price > 23;
     }
 
     idsMatch() {

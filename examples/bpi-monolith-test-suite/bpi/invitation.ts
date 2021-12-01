@@ -17,5 +17,10 @@ export class Invitation{
         this.workgroupId = workgroupId;
         this. agreement = agreement;
     }
+
+    sign():[string,string]{
+        this.agreement.signature = true;
+        return ["BO1","BobOrganisation"];
+    }
     
 }

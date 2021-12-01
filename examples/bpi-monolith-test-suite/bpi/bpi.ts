@@ -1,6 +1,7 @@
 import { Agreement } from "./agreement";
 import { BpiSubject } from "./bpiSubject";
 import { Invitation } from "./invitation";
+import { Order } from "./order";
 import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
 
@@ -65,18 +66,46 @@ export class BPI {
         return filtInv[0];
     }
 
-    signInvite(invitation: Invitation, id: string, name: string){
-        const bob = new BpiSubject();
-        bob.id = id;
-        bob.name = name;
-        
-        invitation.agreement.signature = true;
-        invitation.agreement.proofs.push(this.createProof(this.agreement));
-        this.organizations.push(bob);
-        this.getWorkgroupById(invitation.workgroupId).addParticipants(bob);
+    createProof(input:any){
+    return Math.random().toString(36).substr(2, 20);
     }
 
-    createProof(input:any){
-        return Math.random().toString(36).substr(2, 20);
+    signedInviteEvent(invId: string, bobsData: [string,string]){
+        const invite = this.getInvitationById(invId);
+        const bob = new BpiSubject();
+        bob.id = bobsData[0];
+        bob.name = bobsData[1];
+
+        invite.agreement.proofs.push(this.createProof(this.agreement));
+        this.organizations.push(bob);
+        this.getWorkgroupById(invite.workgroupId).addParticipants(bob);
+    }
+
+    verifyProof(proof: string):boolean{
+        if(proof.length > 0) return true;
+        else return false;
+    }
+
+    sendObject(object: Order, workgroupId: string):[boolean,string]{
+        //gets workgroup that is chosen to send the object in
+        const workgroup = this.getWorkgroupById(workgroupId);
+        //executes the workstep of the workgroup
+        const objCheck = workgroup.worksteps[0].execute(object)
+        //if valid
+        if(objCheck){
+            //create some proof and save it
+            const proof = this.createProof(object);
+            this.agreement.proofs.push(proof);
+            //send order and proof to bob
+            //workgroup.send(object,"BO1");
+            //return proof and status to Alice
+            return [objCheck,proof];
+        }
+        //not valid
+        else{
+            //return error message to Alice
+            return [objCheck,"Error: Message"];
+        }
+
     }
 }
