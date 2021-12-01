@@ -50,7 +50,7 @@ app.post('/verify', async(req, res) => {
 
 
 server.listen(port, () => {
-  truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://127.0.0.1:8545"));
+  truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://ganache-cli:8545"));
 
   console.log("Express Listening at http://localhost:" + port);
 });

@@ -10,7 +10,8 @@ module.exports = {
 
     self.web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
-        console.log("There was an error fetching your accounts.");
+        console.log("There was an error fetching your accounts.", err);
+        callback([])
         return;
       }
 

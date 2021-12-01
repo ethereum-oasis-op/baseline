@@ -19,6 +19,11 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
+  ganache-cli:
+    image: 'trufflesuite/ganache-cli:latest'
+    container_name: 'ganache-cli'
+    ports:
+      - '8545:8545'
   p1-bpi:
     build:
       context: ../server
@@ -28,6 +33,7 @@ services:
       - '3001:3000'
     depends_on:
       - kafka
+      - ganache-cli
   p2-bpi:
     build:
       context: ../server
@@ -37,3 +43,4 @@ services:
       - '3002:3000'
     depends_on:
       - kafka
+      - ganache-cli
