@@ -136,8 +136,18 @@ describe('BPI, Workgroup and Worflow setup', () => {
 
         //Alice creates an order with a given price...that will be checked in the validation process
         const businessObject = new Order("0001","Purchase",30);
+        //Order is saved in Alices databse of orders
+        const aliceOrg = aliceBpi.getOrganizationById("AL1");
+        aliceOrg.orders.push(businessObject);
         //send request with the order (valid)
-        const bpiResponse = aliceBpi.sendObject(businessObject,orderGroup.id);
+        const bpiResponse = aliceBpi.sendOrder(businessObject,orderGroup.id);
+
+        //if order is saved in Alices org
+        expect(aliceOrg.orders.length).to.be.above(0);
+        //if order is saved in Bobs org
+        expect(aliceBpi.getOrganizationById("BO1").orders.length).to.be.above(0);
+        //if proof is saved in Bobs org
+        expect(aliceBpi.getOrganizationById("BO1").proofForActualWorkstep).to.not.be.undefined;
         //if response from bpi to alice is true or false
         expect(bpiResponse[0]).to.be.true;
         //if response message from bpi to alice is error or not
@@ -149,18 +159,91 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given verified proof, Alice sends request for the order that is invalid, the request is verified against the agreement, error response is sent back to Alice', () => {
-        expect(1).to.be.equal(2);
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+        const bobsEnteredData =  inviteBob.sign();
+        aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
+
+        //Alice creates an order with a given price...that will be checked in the validation process
+        const businessObject = new Order("0001","Purchase",15);
+        //Order is saved in Alices databse of orders
+        const aliceOrg = aliceBpi.getOrganizationById("AL1");
+        aliceOrg.orders.push(businessObject);
+        //send request with the order (invalid)
+        const bpiResponse = aliceBpi.sendOrder(businessObject,orderGroup.id);
+
+        //if order is saved in Alices org
+        expect(aliceOrg.orders.length).to.be.above(0);
+        //if order is saved in Bobs org
+        expect(aliceBpi.getOrganizationById("BO1").orders.length).to.be.equal(0);
+        //if proof is saved in Bobs org
+        expect(aliceBpi.getOrganizationById("BO1").proofForActualWorkstep).to.be.undefined;
+        //if response from bpi to alice is true or false
+        expect(bpiResponse[0]).to.not.be.true;
+        //if response message from bpi to alice is error or not
+        expect(bpiResponse[1]).to.be.equal("Error: Message");
+        //if proof is same as saved in agreement
+        expect(aliceBpi.agreement.proofs.length).to.be.equal(1);
     });
 
     it('Given recieved Order, Bob validates proof against Bpi, gets positive result from Bpi', () => {
-        expect(1).to.be.equal(2);
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+        const bobsEnteredData =  inviteBob.sign();
+        aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
+        //Alice creates an order with a given price...that will be checked in the validation process
+        const businessObject = new Order("0001","Purchase",30);
+        //Order is saved in Alices databse of orders
+        const aliceOrg = aliceBpi.getOrganizationById("AL1");
+        aliceOrg.orders.push(businessObject);
+        //send request with the order (valid)
+        const bpiResponse = aliceBpi.sendOrder(businessObject,orderGroup.id);
+        //bob validates the recieved proof and should recieve a positive result
+        const bpiResponseForBob =  aliceBpi.verifyProof(aliceBpi.getOrganizationById("BO1").proofForActualWorkstep);
+        //if response is true or false
+        expect(bpiResponseForBob).to.be.true;
     });
 
     it('Given Bob receives a positive result, Bob performs acceptance, the acceptance is returned to Alice', () => {
-        expect(1).to.be.equal(2);
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+        const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
+        const workStep = new Workstep("W1","WRKSTP1");
+        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        orderGroup.addWorkstep(workStep);
+        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+        const bobsEnteredData =  inviteBob.sign();
+        aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
+        //Alice creates an order with a given price...that will be checked in the validation process
+        const businessObject = new Order("0001","Purchase",30);
+        //Order is saved in Alices databse of orders
+        const aliceOrg = aliceBpi.getOrganizationById("AL1");
+        aliceOrg.orders.push(businessObject);
+        //send request with the order (valid)
+        const bpiResponseForAlice = aliceBpi.sendOrder(businessObject,orderGroup.id);
+        //bob validates the recieved proof and should recieve a positive result
+        const bpiResponseForBob =  aliceBpi.verifyProof(aliceBpi.getOrganizationById("BO1").proofForActualWorkstep);
+        //bpi registers accept/decline with order id 
+        aliceBpi.acceptOrder(businessObject.id);
+
+        //if Bobs order status updated to accepted
+        expect(aliceBpi.getOrganizationById("BO1").getOrderById("0001").acceptanceStatus).to.be.equal("accepted");
+        //proof to be updated to new one
+        expect(aliceBpi.getOrganizationById("BO1").proofForActualWorkstep).to.be.equal(aliceBpi.agreement.proofs[2]);
+        //if Alices order status updated to accepted
+        expect(aliceBpi.getOrganizationById("AL1").getOrderById("0001").acceptanceStatus).to.be.equal("accepted");
+        //proof to be equal to recieved one
+        expect(aliceBpi.getOrganizationById("AL1").proofForActualWorkstep).to.be.equal(aliceBpi.agreement.proofs[2]);
     });
 
-    it('Alice receives Bobs acceptance proof, Alice validates the proof, Alice recieves a positive result', () => {
+    it('Alice receives Bobs acceptance and proof, Alice validates the proof, Alice recieves a positive result', () => {
         expect(1).to.be.equal(2);
     });
 });

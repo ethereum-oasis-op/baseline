@@ -86,7 +86,7 @@ export class BPI {
         else return false;
     }
 
-    sendObject(object: Order, workgroupId: string):[boolean,string]{
+    sendOrder(object: any, workgroupId: string):[boolean,string]{
         //gets workgroup that is chosen to send the object in
         const workgroup = this.getWorkgroupById(workgroupId);
         //executes the workstep of the workgroup
@@ -96,8 +96,9 @@ export class BPI {
             //create some proof and save it
             const proof = this.createProof(object);
             this.agreement.proofs.push(proof);
-            //send order and proof to bob
-            //workgroup.send(object,"BO1");
+            //send order and proof to bob.....                              => this should be implemented with workgroup participants logic not hardcoded
+            workgroup.getParticipantsById("BO1").orders.push(object);
+            workgroup.getParticipantsById("BO1").proofForActualWorkstep = proof;
             //return proof and status to Alice
             return [objCheck,proof];
         }
@@ -107,5 +108,18 @@ export class BPI {
             return [objCheck,"Error: Message"];
         }
 
+    }
+
+    acceptOrder(orderId: string){
+                                                                            //this should be implemented with workgroup participants logic not hardcoded....
+        this.getOrganizationById("BO1").getOrderById(orderId).acceptanceStatus = "accepted";
+        //create some proof and save it
+        const proof = this.createProof('');                                 // up to discussion 
+        this.agreement.proofs.push(proof);
+        this.getOrganizationById("BO1").proofForActualWorkstep = proof;
+
+        //sending it all to Alice
+        this.getOrganizationById("AL1").getOrderById(orderId).acceptanceStatus = "accepted";
+        this.getOrganizationById("AL1").proofForActualWorkstep = proof;
     }
 }

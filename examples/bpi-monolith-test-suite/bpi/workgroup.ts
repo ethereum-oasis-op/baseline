@@ -17,5 +17,10 @@ export class Workgroup {
      addParticipants(bpiSubject:BpiSubject){
          this.participants.push(bpiSubject);
      }
+     getParticipantsById(id:string):BpiSubject{
+         const orgs = this.participants.filter(org=>org.id === id);
+
+         return orgs[0];
+     }
 }
 
