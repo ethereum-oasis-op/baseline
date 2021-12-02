@@ -14,7 +14,7 @@ services:
     environment:
       - KAFKA_BROKER_ID=1
       - KAFKA_LISTENERS=PLAINTEXT://:9092
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://127.0.0.1:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
@@ -31,6 +31,8 @@ services:
     container_name: 'p1-bpi'
     ports:
       - '3001:3000'
+    environment:
+      - KAFKA_GROUP='p1-kafka'
     depends_on:
       - kafka
       - ganache-cli
@@ -41,6 +43,8 @@ services:
     container_name: 'p2-bpi'
     ports:
       - '3002:3000'
+    environment:
+      - KAFKA_GROUP='p2-kafka'
     depends_on:
       - kafka
       - ganache-cli

@@ -3,7 +3,7 @@ const Kafka = require('node-rdkafka');
 class KafkaConfig {
   producer() {
     return Kafka.Producer.createWriteStream({
-      'metadata.broker.list' : 'localhost:9092'
+      'metadata.broker.list' : 'kafka:9092'
       }, 
       {}, {
           topic : 'battleship'
@@ -11,9 +11,10 @@ class KafkaConfig {
   }
 
   consumer() {
+    console.log('group ', process.env.KAFKA_GROUP)
     return new Kafka.KafkaConsumer({
-        'group.id': 'kafka',
-        'metadata.broker.list': 'localhost:9092',
+        'group.id': process.env.KAFKA_GROUP,
+        'metadata.broker.list': `kafka:9092`,
       }, {});
   }
 }

@@ -14,6 +14,10 @@
 
 ```docker exec -it kafka /opt/bitnami/kafka/bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1  --partitions 1 --topic battleship```
 
+   If above is deprecated, try this
+
+```docker exec -it kafka /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1  --partitions 1 --topic battleship```
+
 4. Run the consumer node in order to process messages
 ```npm run start:consumer```
 

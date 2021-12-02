@@ -11,8 +11,8 @@ let cardonMessageProducer = new CardonMessageProducer();
 
 setInterval(() => {
     const message = {
-        category: 'BASELINE',
-        name: 'BATTLESHIP'
+        category: 'Battleship',
+        name: 'Baseline'
     };
     cardonMessageProducer.queue(message);
   }, 3000);
