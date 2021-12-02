@@ -24,10 +24,12 @@
     "web3": "^0.20.0"
   },
   "dependencies": {
+    "avsc": "^5.7.3",
     "body-parser": "^1.18.2",
     "circomlib": "^2.0.2",
     "express": "^4.16.2",
     "jquery": "^3.3.1",
+    "node-rdkafka": "^2.12.0",
     "nodemon": "^1.14.12",
     "randexp": "^0.5.3",
     "snarkjs": "^0.4.10",

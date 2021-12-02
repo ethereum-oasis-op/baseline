@@ -7,6 +7,9 @@ const Web3 = require('web3');
 const truffle_connect = require('./connection/app.js');
 const bodyParser = require('body-parser');
 
+const KafkaProducer = require('./messaging/producer.js');
+const KafkaConsumer = require('./messaging/consumer.js');
+
 const { socketConnection } = require('./utils/socket')
 socketConnection(server)
 
@@ -48,9 +51,19 @@ app.post('/verify', async(req, res) => {
   });
 })
 
+app.post('/testMsg', async(req, res) => {
+  const producer = new KafkaProducer();
+  await producer.queue(req.body.message)
+  res.send('msg queued')
+})
 
-server.listen(port, () => {
+
+server.listen(port, async () => {
   truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://ganache-cli:8545"));
+
+  await KafkaConsumer.consume((data) => {
+    console.log('message received ', data)
+  });
 
   console.log("Express Listening at http://localhost:" + port);
 });
