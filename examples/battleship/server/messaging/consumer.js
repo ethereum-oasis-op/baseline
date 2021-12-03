@@ -1,5 +1,5 @@
 const KafkaConfig = require('./config.js');
-
+const eventType = require('./eventType.js');
 let kafkaConfig = new KafkaConfig();
 const consumer = kafkaConfig.consumer();
 
@@ -13,7 +13,7 @@ async function consume(callback) {
   
   }).on('data', async (data) => {
       //do something with the message recieved
-      callback(data)
+      callback(eventType.fromBuffer(data.value))
     }
   )
 }

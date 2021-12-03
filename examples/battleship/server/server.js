@@ -17,7 +17,6 @@ KafkaConsumer.consume(console.log).then(() => {
   console.log('consume err ', err)
 })
 
-
 const { socketConnection } = require('./utils/socket')
 socketConnection(server)
 
@@ -60,7 +59,7 @@ app.post('/verify', async(req, res) => {
 })
 
 app.post('/testMsg', async(req, res) => {
-  producer.queue(req.body.message)
+  await producer.queue(req.body.message)
   res.send('msg queued')
 })
 

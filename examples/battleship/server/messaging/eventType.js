@@ -18,6 +18,13 @@ module.exports = avro.Type.forSchema({
           symbols: ['Battleship'] }
     },
     {
+      name: 'type',
+      type: {
+        type: 'enum',
+        symbols: ['P1', 'P2']
+      }
+    },
+    {
       name: 'name',
       type: 'string',
     }
