@@ -27,6 +27,7 @@
     "avsc": "^5.7.3",
     "body-parser": "^1.18.2",
     "circomlib": "^2.0.2",
+    "circomlibjs": "^0.1.1",
     "express": "^4.16.2",
     "jquery": "^3.3.1",
     "node-rdkafka": "^2.12.0",

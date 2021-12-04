@@ -7,6 +7,8 @@ const Web3 = require('web3');
 const truffle_connect = require('./connection/app.js');
 const bodyParser = require('body-parser');
 
+const { hash } = require('./utils/hash.js')
+
 const KafkaProducer = require('./messaging/producer.js');
 const producer = new KafkaProducer();
 
@@ -63,6 +65,11 @@ app.post('/testMsg', async(req, res) => {
   res.send('msg queued')
 })
 
+
+app.post('/hash', async(req, res) => {
+  const boardHash = await hash(req.body);
+  res.send(boardHash);
+})
 
 server.listen(port, async () => {
   truffle_connect.web3 = new Web3(new Web3.providers.HttpProvider("http://ganache-cli:8545"));
