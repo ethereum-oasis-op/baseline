@@ -56,14 +56,6 @@ app.post('/verifyInputs', async(req, res) => {
   res.send(verifyInputs);
 });
 
-app.post('/verify', async(req, res) => {
-  // TODO: destructure...
-  verifyInputs = await proofVerify.getVerifyProofInputs(req.body.proof, req.body.publicSignals);
-  truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, () => {
-    res.send('verified');
-  });
-})
-
 app.post('/testMsg', async(req, res) => {
   await producer.queue(req.body.message)
   res.send('msg queued')

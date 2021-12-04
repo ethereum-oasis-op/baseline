@@ -38,6 +38,14 @@ router.post('/outcome', async (req, res) => {
   res.sendStatus(200);
 })
 
+router.post('/verify', async(req, res) => {
+  // TODO: destructure...
+  verifyInputs = await proofVerify.getVerifyProofInputs(req.body.proof, req.body.publicSignals);
+  truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, () => {
+    res.send('verified');
+  });
+})
+
 module.exports = {
     joinGame,
     startGame,
