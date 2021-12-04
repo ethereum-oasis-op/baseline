@@ -32,7 +32,90 @@ const workgroupEventType = avro.Type.forSchema({
   ]
 });
 
+const targetEventType = avro.Type.forSchema({
+  type: 'record',
+  fields: [
+    {
+      name: 'X',
+      type: 'string'
+    },
+    {
+      name: 'Y',
+      type: 'string'
+    },
+    {
+      name: 'playerId',
+      type: 'string'
+    },
+    {
+      name: 'gameId',
+      type: 'string'
+    }
+  ]
+});
+
+
+const proofEventType = avro.Type.forSchema({
+  type: "record",
+  fields: [
+    {
+      name: "proof",
+      type: {
+        name: "proof",
+        type: "record",
+        fields: [
+          {
+            name: "pi_a",
+            type: {
+              type: "array",
+              items: "string"
+            }
+          },
+          {
+            name: "pi_b",
+            type: {
+              type: "array",
+              items: {
+                type: "array",
+                items: "string"
+              }
+            }
+          },
+          {
+            name: "pi_c",
+            type: {
+              type: "array",
+              items: "string"
+            }
+          },
+          {
+            name: "protocol",
+            type: "string"
+          },
+          {
+            name: "curve",
+            type: "string"
+          }
+        ]
+      }
+    },
+    {
+      name: "publicSignals",
+      type: {
+        type: "array",
+        items: "string"
+      }
+    },
+    {
+      name: 'playerId',
+      type: 'string'
+    }
+  ]
+});
+
 module.exports = {
   orgEventType,
-  workgroupEventType
+  workgroupEventType,
+  targetEventType,
+  proofEventType
 }

@@ -12,12 +12,7 @@ const { hash } = require('./baseline/utils/hash.js')
 const KafkaProducer = require('./baseline/messaging/producer.js');
 const producer = new KafkaProducer();
 
-const KafkaConsumer = require('./baseline/messaging/consumer.js')
-KafkaConsumer.consume(console.log).then(() => {
-  console.log('consume success')
-}).catch(err => {
-  console.log('consume err ', err)
-})
+
 
 const { socketConnection } = require('./baseline/utils/socket')
 socketConnection(server)
@@ -26,7 +21,15 @@ const proofVerify = require('./baseline/privacy/proof-verify.js')
 
 const { organizationRouter } = require('./baseline/organization')
 const { workgroupRouter } = require('./baseline/workgroup')
+const { battleshipRouter } = require('./baseline/battleship')
 
+
+const KafkaConsumer = require('./baseline/messaging/consumer.js')
+KafkaConsumer.consume(console.log).then(() => {
+  console.log('consume success')
+}).catch(err => {
+  console.log('consume err ', err)
+})
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -35,6 +38,7 @@ app.use('/', express.static('public_static'));
 
 app.use('/organization', organizationRouter)
 app.use('/workgroup', workgroupRouter)
+app.use('/battleship', battleshipRouter)
 
 app.get('/accounts', (req, res) => {
   truffle_connect.start(function (accounts) {
