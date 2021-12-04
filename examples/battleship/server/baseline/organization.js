@@ -14,6 +14,8 @@ const { orgEventType } = require('../messaging/eventType.js')
 const KafkaProducer = require('../messaging/producer.js');
 const producer = new KafkaProducer('orgReg', orgEventType);
 
+const { hash } = require('../utils/hash.js')
+
 router.get('/:id', (req, res) => {
     if (orgRegistry.has(req.params.id)) {
         return res.json({id: req.params.id, name: orgRegistry.get(req.params.id).name, hash: orgRegistry.get(req.params.id).hash})
@@ -40,8 +42,9 @@ router.put('/hash/:id', async (req, res) => {
         res.sendStatus(404)
     }
 
+    const boardHash = await hash(req.body);
     const organization = orgRegistry.get(id)
-    organization.hash = req.body.hash
+    organization.hash = boardHash
     orgRegistry.set(id, organization)
 
     // once organization is ready we can send it to other player
@@ -67,9 +70,25 @@ const insertOrg = (organization) => {
         hash: organization.hash
     })
 }
+
+const updateOrgHash = async (id, hash) => {
+    if (!orgRegistry.has(id)) {
+        console.log('can not update org, org doesnt exists ', id)
+        return
+    }
+
+    const organization = orgRegistry.get(id)
+    organization.hash = hash
+    orgRegistry.set(id, organization)
+
+    // once organization is ready we can send it to other player
+    console.log('sending org reg type ', organization)
+    await producer.queue(organization, orgEventType)
+}
     
 module.exports = {
     organizationRouter: router,
     organizationExists,
-    insertOrg
+    insertOrg,
+    updateOrgHash
 }

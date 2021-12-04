@@ -21,7 +21,11 @@ const orgEventType = avro.Type.forSchema({
     },
     {
       name: 'hash',
-      type: 'string'
+      type: {
+        type: "array",
+        items : "string",
+        default: []
+      }
     }
   ]
 });
