@@ -8,25 +8,24 @@ const avro = require('avsc');
  * @author : Manik Jain
  */
 
-module.exports = avro.Type.forSchema({
+const orgEventType = avro.Type.forSchema({
   type: 'record',
   fields: [
     {
-      name: 'category',
-      type: { 
-          type: 'enum', 
-          symbols: ['Battleship'] }
-    },
-    {
-      name: 'type',
-      type: {
-        type: 'enum',
-        symbols: ['P1', 'P2']
-      }
+      name: 'id',
+      type: 'string'
     },
     {
       name: 'name',
-      type: 'string',
+      type: 'string'
+    },
+    {
+      name: 'hash',
+      type: 'string'
     }
   ]
 });
+
+module.exports = {
+  orgEventType
+}

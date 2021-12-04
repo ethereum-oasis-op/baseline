@@ -33,6 +33,7 @@ services:
       - '3001:3000'
     environment:
       - KAFKA_GROUP='p1-kafka'
+      - KAFKA_BROKER=kafka:9092
     depends_on:
       - kafka
       - ganache-cli
@@ -45,6 +46,7 @@ services:
       - '3002:3000'
     environment:
       - KAFKA_GROUP='p2-kafka'
+      - KAFKA_BROKER=kafka:9092
     depends_on:
       - kafka
       - ganache-cli

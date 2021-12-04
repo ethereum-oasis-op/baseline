@@ -1,19 +1,24 @@
 const KafkaConfig = require('./config.js');
-const eventType = require('./eventType.js');
+const { orgEventType } = require('./eventType.js');
 let kafkaConfig = new KafkaConfig();
 const consumer = kafkaConfig.consumer();
+
+const { insertOrg } = require('../baseline/organization.js')
 
 async function consume(callback) {
   consumer.connect();
   consumer.on('ready', () => {
 
     console.log('consumer ready..')
-    consumer.subscribe(['battleship']);
+    consumer.subscribe(['battleship', 'orgReg']);
     consumer.consume();
   
   }).on('data', async (data) => {
+      if (data.topic === 'orgReg') {
+        insertOrg(orgEventType.fromBuffer(data.value))
+      }
       //do something with the message recieved
-      callback(eventType.fromBuffer(data.value))
+      callback(orgEventType.fromBuffer(data.value))
     }
   )
 }

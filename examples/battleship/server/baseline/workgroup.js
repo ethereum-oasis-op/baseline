@@ -5,26 +5,20 @@
 const express = require('express')
 const router = express.Router()
 
+const { v4: uuidv4 } = require('uuid');
+
 const { organizationExists } = require('./organization')
 
 const { joinGame, startGame } = require('./battleship')
 
-const Randexp = require('randexp')
-const codeRegExp = new Randexp(/([A-Z0-9]){4}/)
-
 let workgroupRegistry = new Map()
 
-router.post('/create', (req, res) => {
+router.post('', (req, res) => {
     if (!req.body.session || !organizationExists(req.body.session)) {
         return res.sendStatus(403)
     }
 
-
-    let id = codeRegExp.gen()
-
-    while (workgroupRegistry.has(id)) {
-        id = codeRegExp.gen()
-    }
+    let id = uuidv4()
     workgroupRegistry.set(id, 0)
 
     joinGame(req.body.session, id)
