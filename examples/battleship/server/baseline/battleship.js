@@ -7,11 +7,8 @@ const workgroup = require('./workgroup')
 const express = require('express')
 const router = express.Router()
 
-const { targetEventType, proofEventType } = require('./messaging/eventType')
+const { targetEventType, proofEventType, orgEventType } = require('./messaging/eventType')
 const KafkaProducer = require('./messaging/producer');
-
-const targetProducer = new KafkaProducer('battleship', targetEventType);
-const proofProducer = new KafkaProducer('proof', proofEventType);
 
 const joinGame = (session, game) => {
   const socket = getSocket(session)
@@ -30,11 +27,13 @@ const startGame = (game) => {
 }
 
 router.post('/target', async (req, res) => {
+  const targetProducer = new KafkaProducer('battleship', targetEventType);
   await targetProducer.queue(req.body);
   res.sendStatus(200)
 })
 
 router.post('/outcome', async (req, res) => {
+  const proofProducer = new KafkaProducer('proof', proofEventType); 
   await proofProducer.queue(req.body);
   res.sendStatus(200);
 })
