@@ -5,6 +5,9 @@ const consumer = kafkaConfig.consumer();
 
 const { insertOrg } = require('../organization.js')
 
+const { getVerifyProofInputs } = require('../privacy/proof-verify')
+const truffle_connect = require('../../connection/app');
+
 async function consume() {
   consumer.connect();
   consumer.on('ready', () => {
@@ -22,7 +25,12 @@ async function consume() {
       case 'proof':
         const proofMessage = proofEventType.fromBuffer(data.value);
         if (proofMessage.playerId === currentPlayerId) {
-          console.log('proof message received ', proofEventType.fromBuffer(data.value))
+          console.log('proof message received ', proofMessage)
+          verifyInputs = await getVerifyProofInputs(proofMessage.proof, proofMessage.publicSignals);
+          truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, () => {
+            // TODO: push information to frontend
+            console.log('verified!')
+          });
         }
         break;
       case 'battleship': 
