@@ -24,11 +24,14 @@ router.get('/:id', (req, res) => {
     res.sendStatus(404)
 })
 
-router.post('', (req, res) => {
+router.post('', async (req, res) => {
     const id = uuidv4()
 
     if (req.body.name) {
-        orgRegistry.set(id, { id, name: req.body.name })
+        let org = { id, name: req.body.name }
+        orgRegistry.set(id, org)
+
+        await producer.queue(org, orgEventType)
 
         return res.json({id: id})
     }
@@ -36,22 +39,22 @@ router.post('', (req, res) => {
     res.sendStatus(400)
 })
 
-router.put('/hash/:id', async (req, res) => {
-    const id = req.params.id
-    if (!orgRegistry.has(id)) {
-        res.sendStatus(404)
-    }
+// router.put('/hash/:id', async (req, res) => {
+//     const id = req.params.id
+//     if (!orgRegistry.has(id)) {
+//         res.sendStatus(404)
+//     }
 
-    const boardHash = await hash(req.body);
-    const organization = orgRegistry.get(id)
-    organization.hash = boardHash
-    orgRegistry.set(id, organization)
+//     const boardHash = await hash(req.body);
+//     const organization = orgRegistry.get(id)
+//     organization.hash = boardHash
+//     orgRegistry.set(id, organization)
 
-    // once organization is ready we can send it to other player
-    console.log('sending org reg type ', organization)
-    await producer.queue(organization, orgEventType)
-    res.sendStatus(200)
-});
+//     // once organization is ready we can send it to other player
+//     console.log('sending org reg type ', organization)
+//     await producer.queue(organization, orgEventType)
+//     res.sendStatus(200)
+// });
 
 const organizationExists = (id) => {
     return orgRegistry.has(id)
@@ -66,29 +69,27 @@ const insertOrg = (organization) => {
     console.log('adding new organization ', organization)
     orgRegistry.set(organization.id, {
         id: organization.id,
-        name: organization.name,
-        hash: organization.hash
+        name: organization.name
     })
 }
 
-const updateOrgHash = async (id, hash) => {
-    if (!orgRegistry.has(id)) {
-        console.log('can not update org, org doesnt exists ', id)
-        return
-    }
+// const updateOrgHash = async (id, hash) => {
+//     if (!orgRegistry.has(id)) {
+//         console.log('can not update org, org doesnt exists ', id)
+//         return
+//     }
 
-    const organization = orgRegistry.get(id)
-    organization.hash = hash
-    orgRegistry.set(id, organization)
+//     const organization = orgRegistry.get(id)
+//     organization.hash = hash
+//     orgRegistry.set(id, organization)
 
-    // once organization is ready we can send it to other player
-    console.log('sending org reg type ', organization)
-    await producer.queue(organization, orgEventType)
-}
+//     // once organization is ready we can send it to other player
+//     console.log('sending org reg type ', organization)
+//     await producer.queue(organization, orgEventType)
+// }
     
 module.exports = {
     organizationRouter: router,
     organizationExists,
-    insertOrg,
-    updateOrgHash
+    insertOrg
 }

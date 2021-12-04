@@ -17,7 +17,7 @@ export const App = () => {
   // const [appState, setAppState] = useState('TEST') -- skips right to game
   // const [appState, setAppState] = useState('TEST')
 
-  const [session, setSession] = useState()
+  const [userID, setUserID] = useState()
 
 
   socket.once('game:init', (id) => {
@@ -32,7 +32,7 @@ export const App = () => {
 
   return (
     <React.Fragment>
-      { appState === SETUP_STATE ? <Setup session={session} setSession={setSession} /> : <div><Game session={session} id={appState}/></div> }
+      { appState === SETUP_STATE ? <Setup userID={userID} setUserID={setUserID} /> : <div><Game userID={userID} id={appState}/></div> }
 
     </React.Fragment>
   )

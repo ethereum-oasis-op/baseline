@@ -1,18 +1,23 @@
-const {messagingServiceFactory, messagingProviderMemory} = require('../baseline/messaging')
-const messagingProvider = messagingServiceFactory(messagingProviderMemory)
 
-const { joinRoom, addListener, sendToRoom } = require('../utils/socket')
+// const { joinRoom, addListener, sendToRoom } = require('../utils/socket')
+const { get } = require('jquery')
+const { getIO, getSocket } = require('../utils/socket')
+const workgroup = require('./workgroup')
 
-const joinGame = (id, game) => {
-    joinRoom(id, game)
-    addListener(id, 'game:move', (workgroup, message) => {
+const joinGame = (session, game) => {
+    const socket = getSocket(session)
+
+    socket.join(game)
+
+    socket.on('game:move', (workgroup, message) => {
         console.log('Received:', msg)
-        messagingProvider.publish(workgroup, message)
     })
 }
 
-const startGame = (id, game) => {
-   sendToRoom(id, game, 'game:init', undefined, true)
+const startGame = (game) => {
+    console.log(`starting game with ID #${game}`)
+    getIO().to(game).emit('game:init')
+    // sendToRoom(session, game, 'game:init', undefined, true)
 }
 
 module.exports = {

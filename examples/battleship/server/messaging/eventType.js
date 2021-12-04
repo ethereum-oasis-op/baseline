@@ -18,9 +18,19 @@ const orgEventType = avro.Type.forSchema({
     {
       name: 'name',
       type: 'string'
+    }
+  ]
+});
+
+const workgroupEventType = avro.Type.forSchema({
+  type: 'record',
+  fields: [
+    {
+      name: 'id',
+      type: 'string'
     },
     {
-      name: 'hash',
+      name: 'players',
       type: {
         type: "array",
         items : "string",
@@ -31,5 +41,6 @@ const orgEventType = avro.Type.forSchema({
 });
 
 module.exports = {
-  orgEventType
+  orgEventType,
+  workgroupEventType
 }

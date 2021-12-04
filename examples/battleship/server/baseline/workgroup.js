@@ -11,43 +11,94 @@ const { organizationExists } = require('./organization')
 
 const { joinGame, startGame } = require('./battleship')
 
+const { workgroupEventType } = require('../messaging/eventType.js')
+const KafkaProducer = require('../messaging/producer.js');
+const producer = new KafkaProducer('workgroupReg', workgroupEventType);
+
+const ID_LENGTH = 4
+
 let workgroupRegistry = new Map()
 
-router.post('', (req, res) => {
-    if (!req.body.session || !organizationExists(req.body.session)) {
+router.post('', async (req, res) => {
+    if (!req.body.session || !organizationExists(req.body.id)) {
         return res.sendStatus(403)
     }
 
-    let id = uuidv4()
-    workgroupRegistry.set(id, 0)
+    let id = uuidv4().slice(0, ID_LENGTH).toUpperCase()
+    while(workgroupRegistry.has(id)) {
+        id = uuidv4().slice(0, ID_LENGTH).toUpperCase()
+    }
+        
+    let workgroup = {
+        id: id,
+        players: [req.body.id]
+    }
+    workgroupRegistry.set(id, workgroup)
+
+    await producer.queue(workgroup, workgroupEventType)
 
     joinGame(req.body.session, id)
 
     res.json({id: id})
 })
     
-router.post('/join/:id', (req, res) => {
-    if (!req.body.session || !organizationExists(req.body.session)) {
+router.post('/join/:id', async (req, res) => {
+    if (!req.body.session || !organizationExists(req.body.id)) {
         return res.sendStatus(403)
     }
 
     const id = req.params.id
 
     if (workgroupRegistry.has(id)) {
-        if (workgroupRegistry.get(id) === 0) {
-            workgroupRegistry.set(id, 1)
+        let workgroup = workgroupRegistry.get(id)
 
-            joinGame(req.body.session, id)
-            startGame(req.body.session, id)
+        if (workgroup.players.length == 1) {
+            if (workgroup.players[0] !== req.body.id) {
+                workgroup = {
+                    id: workgroup.id,
+                    players: [
+                        workgroup.players[0],
+                        req.body.id
+                    ]
+                }
+                workgroupRegistry.set(id, workgroup)
+    
+                await producer.queue(workgroup, workgroupEventType)
+    
+                joinGame(req.body.session, id)
+                startGame(id)
+    
+                return res.json({id: id})
+            }
 
-            return res.json({id: id})
+            return res.status(409).json({ error: 'User in workgroup'})
         }
 
-        return res.sendStatus(409)     // game already begun
+        return res.status(409).json({ error: 'Workgroup full' })
     }
 
     res.sendStatus(404)
 })
+
+const updateWorkgroup = (workgroup) => {
+    if (workgroupRegistry.has(workgroup.id)) {
+        console.log(`updating workgroup with id ${organization.id}`)
+
+        workgroupRegistry.set(workgroup.id, workgroup)
+
+        if (workgroup.players.length === 2) {
+            startGame(workgroup.id)
+        }
+
+        return;
+    }
+
+    console.log('adding new workgroup ', organization)
+    orgRegistry.set(organization.id, {
+        id: organization.id,
+        name: organization.name
+    })
+}
 
 module.exports = {
     workgroupRouter: router

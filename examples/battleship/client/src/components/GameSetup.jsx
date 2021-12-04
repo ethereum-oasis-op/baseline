@@ -4,14 +4,15 @@ import axios from 'axios'
 
 import { Button, FormGroup, FormFeedback, Input, InputGroup, InputGroupText, Container, Row, Col } from 'reactstrap';
 
+import {socket} from '../utils/socket'
 
 import '../styles/gameSetup.css'
 
-export const GameSetup = ({session}) => {
+export const GameSetup = ({id}) => {
   
     const [gameCode, setGameCode] = useState('')
     const [workgroupId, setWorkgroupId] = useState('')
-    const [invalidId, setInvalidId] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
 
     const updateCodeValue = (value) => {
         let upper = value.toUpperCase()
@@ -30,8 +31,9 @@ export const GameSetup = ({session}) => {
     }
 
     const createWorkgroup = () => {
-        axios.post('/workgroup/create', {
-            session: session
+        axios.post('/workgroup', {
+            id: id,
+            session: socket.id
         })
         .then((res) => {
             setWorkgroupId(res.data.id)
@@ -40,13 +42,30 @@ export const GameSetup = ({session}) => {
 
     const joinWorkgroup = () => {
         axios.post(`/workgroup/join/${gameCode}`, {
-            session: session
+            id: id,
+            session: socket.id
         })
-        .then((res) => {
-            setWorkgroupId(res.data.id)
-        })
-        .catch(() => {
-            setInvalidId(gameCode)
+        // .then((res) => {
+        //     setWorkgroupId(res.data.id)
+        // })
+        .catch((error) => {
+            switch(error.response.status) {
+                case 403:
+                    setErrorMessage('Invalid user authentication') 
+                    break
+                case 409:
+                    if (error.response.data.error === 'User in workgroup')
+                        setErrorMessage(`You are already in Workgroup ID #${gameCode}.`)
+                    else if (error.response.data.error === 'Workgroup full')
+                        setErrorMessage(`Workgroup ID #${gameCode} is full.`)
+                    else setErrorMessage(`Something went wrong.`)
+                    break
+                case 404:
+                    setErrorMessage(`Workgroup ID #${gameCode} does not exist.`)
+                    break
+                default:
+                    setErrorMessage('Unexpected error from server')
+            }
         })
     }
 
@@ -82,7 +101,7 @@ export const GameSetup = ({session}) => {
                 </Col>
             </Row>
             <Row>
-                <Col sm='7'>
+                <Col sm='8'>
                     <FormGroup floating>
                         <InputGroup size='lg'>
                             <InputGroupText>#</InputGroupText>
@@ -93,7 +112,7 @@ export const GameSetup = ({session}) => {
                                 type='text'
                                 value={gameCode}
                                 onChange={e => updateCodeValue(e.target.value)}
-                                invalid={invalidId !== ''}
+                                invalid={errorMessage !== ''}
                             />
                             <Button 
                                 color='primary'
@@ -104,7 +123,7 @@ export const GameSetup = ({session}) => {
                                 Join Workgroup
                             </Button>
                             <FormFeedback>
-                                Workgroup ID #{invalidId} is not valid.
+                                {errorMessage}
                             </FormFeedback>
                         </InputGroup>
                     </FormGroup>

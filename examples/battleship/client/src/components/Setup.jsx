@@ -2,23 +2,19 @@ import React from 'react';
 
 import axios from 'axios'
 
-import { socket } from '../utils/socket'
-
 import { Row, Col } from 'reactstrap'
 import { OrgCreation } from './OrgCreation';
 import { GameSetup } from './GameSetup';
 
-const SETUP_ORG_STATE = 'setupOrg'
-const SETUP_WORKGROUP_STATE = 'setupWorkgroup'
 
-export const Setup = ({session, setSession}) => {
+export const Setup = ({userID, setUserID}) => {
 
   const createOrg = (orgName) => {
-    axios.post(`/organization/register/${socket.id}`, {
+    axios.post(`/organization`, {
       name: orgName
     })
     .then((res) => {
-      setSession(res.data.id)
+      setUserID(res.data.id)
     })
     .catch((error) => {
       console.log(error)
@@ -30,10 +26,10 @@ export const Setup = ({session, setSession}) => {
           <Row className="centerCard">
               <Col sm="12" md={{offset: 3, size: 6}}>
                   { 
-                    session === undefined ? 
+                    userID === undefined ? 
                       <OrgCreation createOrg={createOrg} /> 
                     : 
-                      <GameSetup session={session} /> 
+                      <GameSetup id={userID} /> 
                   }
               </Col>
           </Row>
