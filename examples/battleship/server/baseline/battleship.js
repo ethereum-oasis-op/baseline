@@ -1,7 +1,7 @@
 
 // const { joinRoom, addListener, sendToRoom } = require('../utils/socket')
 const { get } = require('jquery')
-const { getIO, getSocket } = require('../utils/socket')
+const { getIO, getSocket } = require('./utils/socket')
 const workgroup = require('./workgroup')
 
 const joinGame = (session, game) => {

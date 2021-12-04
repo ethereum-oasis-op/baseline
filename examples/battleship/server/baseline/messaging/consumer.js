@@ -3,7 +3,7 @@ const { orgEventType } = require('./eventType.js');
 let kafkaConfig = new KafkaConfig();
 const consumer = kafkaConfig.consumer();
 
-const { insertOrg } = require('../baseline/organization.js')
+const { insertOrg } = require('../organization.js')
 
 async function consume(callback) {
   consumer.connect();

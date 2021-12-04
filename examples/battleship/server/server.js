@@ -7,22 +7,22 @@ const Web3 = require('web3');
 const truffle_connect = require('./connection/app.js');
 const bodyParser = require('body-parser');
 
-const { hash } = require('./utils/hash.js')
+const { hash } = require('./baseline/utils/hash.js')
 
-const KafkaProducer = require('./messaging/producer.js');
+const KafkaProducer = require('./baseline/messaging/producer.js');
 const producer = new KafkaProducer();
 
-const KafkaConsumer = require('./messaging/consumer.js')
+const KafkaConsumer = require('./baseline/messaging/consumer.js')
 KafkaConsumer.consume(console.log).then(() => {
   console.log('consume success')
 }).catch(err => {
   console.log('consume err ', err)
 })
 
-const { socketConnection } = require('./utils/socket')
+const { socketConnection } = require('./baseline/utils/socket')
 socketConnection(server)
 
-const proofVerify = require('./privacy/proof-verify.js')
+const proofVerify = require('./baseline/privacy/proof-verify.js')
 
 const { organizationRouter } = require('./baseline/organization')
 const { workgroupRouter } = require('./baseline/workgroup')
