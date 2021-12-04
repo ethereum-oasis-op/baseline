@@ -34,6 +34,7 @@ services:
     environment:
       - KAFKA_GROUP='p1-kafka'
       - KAFKA_BROKER=kafka:9092
+      - PLAYER_ID=P1
     depends_on:
       - kafka
       - ganache-cli
@@ -47,6 +48,7 @@ services:
     environment:
       - KAFKA_GROUP='p2-kafka'
       - KAFKA_BROKER=kafka:9092
+      - PLAYER_ID=P2
     depends_on:
       - kafka
       - ganache-cli

@@ -14,16 +14,23 @@ async function consume() {
     consumer.consume();
   
   }).on('data', async (data) => {
-    console.log('message received ', data)
+    const currentPlayerId = process.env.PLAYER_ID;
     switch(data.topic) {
       case 'orgReg':
         insertOrg(orgEventType.fromBuffer(data.value))
         break;
       case 'proof':
-        console.log('proof message received ', proofEventType.fromBuffer(data.value))
+        const proofMessage = proofEventType.fromBuffer(data.value);
+        if (proofMessage.playerId === currentPlayerId) {
+          console.log('proof message received ', proofEventType.fromBuffer(data.value))
+        }
         break;
       case 'battleship': 
-        console.log('target message received ', targetEventType.fromBuffer(data.value))
+        const targetMessage = targetEventType.fromBuffer(data.value);
+        if (targetMessage.playerId === currentPlayerId) {
+          console.log('target message received ', targetEventType.fromBuffer(data.value))
+          // TODO: push information to frontend, so frontend can know to call /proof endpoint
+        }
         break;
       default:
         console.warn('unsupported topic received ', data.topic)

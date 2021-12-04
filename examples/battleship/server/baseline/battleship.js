@@ -32,7 +32,7 @@ router.post('/target', async (req, res) => {
   res.sendStatus(200)
 })
 
-router.post('/outcome', async (req, res) => {
+router.post('/proof', async (req, res) => {
   const proofProducer = new KafkaProducer('proof', proofEventType); 
   await proofProducer.queue(req.body);
   res.sendStatus(200);
