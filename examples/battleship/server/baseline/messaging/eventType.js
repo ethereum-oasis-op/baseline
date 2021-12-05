@@ -144,6 +144,10 @@ const proofEventType = avro.Type.forSchema({
     {
       name: 'playerId',
       type: 'string'
+    },
+    {
+      name: 'gameId',
+      type: 'string'
     }
   ]
 });
