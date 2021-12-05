@@ -4,6 +4,8 @@ const router = express.Router()
 const { getIO, getSocket } = require('./utils/socket')
 const { hash } = require('./utils/hash')
 
+const { fullProve } = require('./privacy/proof-verify')
+
 let games = new Map()
 
 const { targetEventType, proofEventType, gameEventType } = require('./messaging/eventType')
@@ -86,8 +88,24 @@ router.post('/target', async (req, res) => {
 })
 
 router.post('/proof', async (req, res) => {
+  const inputSignals = {
+    shipX: req.body.shipX,
+    shipY: req.body.shipY,
+    shipO: req.body.shipO,
+    // TODO: is this passed in or fetched from state?
+    shipHash: req.body.shipHash,
+    targetX: req.body.targetX,
+    targetY: req.body.targetY
+  }
+  const { proof, publicSignals } = await fullProve(inputSignals)
+  const proofMsg = {
+    proof,
+    publicSignals,
+    gameId: req.body.gameId,
+    playerId: req.body.playerId
+  }
   const proofProducer = new KafkaProducer('proof', proofEventType); 
-  await proofProducer.queue(req.body);
+  await proofProducer.queue(proofMsg);
   res.sendStatus(200);
 
   handleGameEvent('proof', req.body) // probably remove once kafka consumer/producer issues get sorted out
