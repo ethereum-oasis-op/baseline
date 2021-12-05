@@ -8,7 +8,9 @@ import { PlayerBoard } from './PlayerBoard'
 import { OpponentBoard } from './OpponentBoard';
 
 import { GameInfo } from './GameInfo';
-import { GameLog, LogEntry, PLACE_EVENT, RESULT_EVENT, TARGET_EVENT } from './GameLog';
+import { GameLog, PLACE_EVENT, RESULT_EVENT, TARGET_EVENT } from './GameLog';
+
+import { socket } from '../utils/socket'
 
 import '../styles/game.css'
 
@@ -21,25 +23,31 @@ export const SHIP = 'ship'
 export const HIT = 'hit'
 export const MISS = 'miss'
 
-const SETUP_STATE = 'setup'
-const ACTIVE_STATE = 'you'
-const PASSIVE_STATE = 'opponent'
-const GAMEOVER_STATE = 'game over'
-
 export class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gameState: SETUP_STATE,
+            // gameState: SETUP_STATE,
             playerState: Array(25).fill(EMPTY),
             opponentState: Array(25).fill(EMPTY),
-            game: undefined
+            game: this.props.game,
+            playerNames: [],
+            eventLog: []
         }
 
+        this.playerNum.bind(this)
         this.shipPlaced.bind(this)
         this.opponentShipPlaced.bind(this)
+        this.gameStarted.bind(this)
         this.placeShip.bind(this)
         this.targetSquare.bind(this)
+        this.updateGame.bind(this)
+        this.handleGameEvent.bind(this)
+    }
+
+    playerNum = (id) => {
+        return + (this.state.game !== undefined &&
+            this.state.game.players[0].id !== id)
     }
 
     shipPlaced = () => {
@@ -56,14 +64,32 @@ export class Game extends React.Component {
             .hash
     }
 
+    gameStarted = () => {
+        return this.state.game.players
+            .filter(player => player.hash !== undefined)
+            .length === 2
+    }
+
     async componentDidMount () {
-        await axios.get(`/battleship/${this.props.id}`)
-        .then((res) => {
-        console.log('game', res)
-        })
-        .catch((error) => {
-        console.log(error)
-        })
+        let players = this.state.game.players
+        let playerNames = []
+
+        for (let i = 0; i < 2; i++) {
+            await axios.get(`/organization/${players[i].id}`)
+            .then((res) => {
+                playerNames.push(res.data.name)
+            })
+            .catch(console.log)
+        }
+
+        this.setState({playerNames})
+
+        socket.on('game:update', this.updateGame)
+        socket.on('game:event', this.handleGameEvent)
+    }
+
+    componentWillUnmount() {
+        socket.off('game:update', this.updateGame)
     }
 
     placeShip = async (index, orientation) => {
@@ -74,51 +100,108 @@ export class Game extends React.Component {
             tempBoard[index + (orientation ? BOARD_WIDTH : 1)] = SHIP
             tempBoard[index + (orientation ? 2 * BOARD_WIDTH : 2)] = SHIP
 
-            console.log('send event here')
+            let [x, y] = xyFromIndex(index)
+
+            await axios.put(`/battleship/hash/${this.state.game.id}`, {
+                id: this.props.userID,
+                shipX: x,
+                shipY: y,
+                shipO: orientation
+            })
+            .catch(console.log)
             
-            this.setState({ gameState: ACTIVE_STATE, playerState: tempBoard })
+            this.setState({ playerState: tempBoard })
+        }
+    }
+
+    targetSquare = async (index) => {
+        console.log('send move to opponent')
+        
+        let [x, y] = xyFromIndex(index)
+
+        await axios.post('/battleship/target', {
+            playerId: this.props.userID,
+            gameId: this.state.game.id,
+            x,
+            y
+        })
+        .catch(console.log)
+        
+    }
+
+    updateGame = (game) => {
+        const eventLog = this.state.eventLog
+        
+        for (let i = 0; i < 2; i++) {
+            if (!this.state.game.players[i].hash && game.players[i].hash) {
+                eventLog.push({
+                    player: i,
+                    type: 'place'
+                })
+            }
         }
 
-        console.log(this.state.gameState)
+
+        console.log(game)
+        this.setState({eventLog, game})
     }
 
-    targetSquare = (index) => {
-        console.log('send move to opponent')
-        let hit = Math.floor(Math.random() * 2)   // temporary hit chance
 
-        let tempBoard = this.state.opponentState
+    // .then(_ => {
+    //     const eventLog = this.state.eventLog
+    //     const playerNum = this.playerNum(this.props.userID)
+    //     eventLog.push({
+    //         player: playerNum, 
+    //         type: PLACE_EVENT
+    //     })
+    //     this.setState({eventLog})
+    //     })
 
-        tempBoard[index] = hit === 1 ? HIT : MISS
+    handleGameEvent = (event) => {
+        console.log(event)
 
-        let newEventLog = this.state.events
-        newEventLog.push(LogEntry({player: 0, type: TARGET_EVENT, data: coordFromIndex(index)}))
-        newEventLog.push(LogEntry({player: 0, type: RESULT_EVENT, data: {coord: coordFromIndex(index), result: hit}}))
+        let playerNum = this.playerNum(event.data.playerId)
 
-        this.setState({gameState: ACTIVE_STATE, opponentState: tempBoard, events: newEventLog})
-    }
-
-    recordEvent = (event) => {
+        let logItem = {player: playerNum, type: event.type, data: undefined}
         
+        switch(event.type) {
+            case 'target':
+                logItem.data = coordFromXY(event.data.x, event.data.y)
+                break
+            case 'proof':
+                logItem.data = {
+                    coord: coordFromXY(event.data.x, event.data.y),
+                    result: 0
+                }
+                break
+            default:
+                console.error('Unsupported event of type', event.type, event)
+                break;
+        }
+
+        const eventLog = this.state.eventLog
+        eventLog.push(logItem)
+        this.setState({eventLog})
     }
 
     render() {
         return (
             <Container>
                 <Row>
-                    <h2>Start game with id {this.props.id}</h2>
+                    <h2>Start game with id {this.state.game.id}</h2>
                 </Row>
                 <Row>
                     <Col md={6}>
                         <Row>
-                            <OpponentBoard squares={this.state.opponentState} targeting={this.state.gameState === ACTIVE_STATE} targetSquare={this.targetSquare} />
+                            <OpponentBoard squares={this.state.opponentState} targeting={this.gameStarted()} targetSquare={this.targetSquare} />
                         </Row>
                         <Row className='mt-3'>
                             <PlayerBoard squares={this.state.playerState} shipPlaced={this.shipPlaced()} placeShip={this.placeShip} />
                         </Row>
                     </Col>
                     <Col md={6}>
-                        <GameInfo />
-                        <GameLog events={this.state.events} />
+                        <GameInfo names={this.state.playerNames} />
+                        <GameLog  names={this.state.playerNames} events={this.state.eventLog} />
                     </Col>
                 </Row>
             </Container>
@@ -128,4 +211,12 @@ export class Game extends React.Component {
 
 export const coordFromIndex = (index) => {
     return `${COORDS[Math.floor(index % BOARD_WIDTH)]}${Math.floor(index / BOARD_WIDTH)}`
+}
+
+const coordFromXY = (x, y) => {
+    return `${COORDS[x]}${y}`
+}
+
+const xyFromIndex = (index) => {
+    return [Math.floor(index % BOARD_WIDTH), Math.floor(index / BOARD_WIDTH)]
 }

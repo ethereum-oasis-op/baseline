@@ -9,12 +9,11 @@ import { socket } from './utils/socket'
 import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.css';
 
-const SETUP_STATE = 'setup'
 
 export const App = () => {
-  const [appState, setAppState] = useState(SETUP_STATE)
 
   const [userID, setUserID] = useState()
+  const [game, setGame] = useState()
 
   useEffect(() => {
     socket.on('game:init', gameInitHandler)
@@ -27,16 +26,16 @@ export const App = () => {
     }
   }, []);
 
-  const gameInitHandler = (gameID) => {
-      console.log(gameID)
-      setAppState(gameID)
+  const gameInitHandler = (game) => {
+      console.log('starting game', game.id)
+      setGame(game)
   }
 
 
 
   return (
     <React.Fragment>
-      { appState === SETUP_STATE ? <Setup userID={userID} setUserID={setUserID} /> : <div><Game userID={userID} id={appState}/></div> }
+      { game === undefined ? <Setup userID={userID} setUserID={setUserID} /> : <div><Game userID={userID} game={game}/></div> }
 
     </React.Fragment>
   )

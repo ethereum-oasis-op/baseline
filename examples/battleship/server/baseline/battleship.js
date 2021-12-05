@@ -2,11 +2,16 @@ const express = require('express')
 const router = express.Router()
 
 const { getIO, getSocket } = require('./utils/socket')
+const { hash } = require('./utils/hash')
 
 let games = new Map()
 
-const { targetEventType, proofEventType, orgEventType } = require('./messaging/eventType')
+const { targetEventType, proofEventType, gameEventType } = require('./messaging/eventType')
 const KafkaProducer = require('./messaging/producer');
+
+const userInGame = (id, game) => {
+    return games.has(game) && games.get(game).players.map(player => player.id).includes(id)
+}
 
 const joinGame = (session, game) => {
   const socket = getSocket(session)
@@ -26,10 +31,9 @@ const startGame = (workgroup) => {
         actions: []
     }
 
-    games.set(workgroup.id, game)
 
     console.log(`starting game with ID #${workgroup.id}`)
-    getIO().to(workgroup.id).emit('game:init', game.id)
+    updateGame(game)
 }
 
 router.get('/:id', (req, res) => {
@@ -42,16 +46,51 @@ router.get('/:id', (req, res) => {
     res.sendStatus(404)
 })
 
+
+router.put('/hash/:id', async (req, res) => {
+    const id = req.body.id
+    const gameID = req.params.id
+
+    if (games.has(gameID)) {
+        if (userInGame(id, gameID)) {
+            let game = games.get(gameID)
+
+            const player = game.players.find(player => player.id === id)
+            
+            if (player.hash !== undefined)
+                return res.status(409).send('Player hash already set.')
+
+            const boardHash = await hash(req.body);
+
+            player.hash = boardHash
+
+            updateGame(game) // remove if consumer consumes own messages
+
+            const gameProducer = new KafkaProducer('game', gameEventType);
+            await gameProducer.queue({id: game.id, players: game.players});
+            return res.sendStatus(200)
+        }
+
+        return res.status(403).send('Action not permitted.')
+    }
+
+    res.status(404).send(`Game #${game} does not exist`)
+})
+
 router.post('/target', async (req, res) => {
   const targetProducer = new KafkaProducer('battleship', targetEventType);
   await targetProducer.queue(req.body);
   res.sendStatus(200)
+
+  handleGameEvent('target', req.body) // probably remove once kafka consumer/producer issues get sorted out
 })
 
 router.post('/proof', async (req, res) => {
   const proofProducer = new KafkaProducer('proof', proofEventType); 
   await proofProducer.queue(req.body);
   res.sendStatus(200);
+
+  handleGameEvent('proof', req.body) // probably remove once kafka consumer/producer issues get sorted out
 })
 
 router.post('/verify', async(req, res) => {
@@ -62,9 +101,26 @@ router.post('/verify', async(req, res) => {
   });
 })
 
+const updateGame = (game) => {
+    const gameExisted = games.has(game.id)
+
+    games.set(game.id, game)
+
+    getIO().to(game.id).emit(gameExisted ? 'game:update' : 'game:init', game)
+}
+
+const handleGameEvent = (type, event) => {
+    if (event.gameID === undefined) {
+        console.error(`Game event ${event} does not specify a gameID.`)
+    }
+
+    getIO().to(event.gameId).emit('game:event', {type, data: event})
+}
 
 module.exports = {
     battleshipRouter: router,
     joinGame,
-    startGame
+    startGame,
+    updateGame,
+    handleGameEvent
 }

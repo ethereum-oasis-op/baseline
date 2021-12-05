@@ -81,23 +81,23 @@ router.post('/join/:id', async (req, res) => {
 })
 
 const updateWorkgroup = (workgroup) => {
-    if (workgroupRegistry.has(workgroup.id)) {
-        console.log(`updating workgroup with id ${organization.id}`)
+    console.log(`updating workgroup with id ${workgroup.id}`)
+    workgroupRegistry.set(workgroup.id, workgroup)
 
-        workgroupRegistry.set(workgroup.id, workgroup)
+    // if (workgroupRegistry.has(workgroup.id)) {
+    //     console.log(`updating workgroup with id ${workgroup.id}`)
 
-        if (workgroup.players.length === 2) {
-            startGame(workgroup)
-        }
+    //     workgroupRegistry.set(workgroup.id, workgroup)
 
-        return;
-    }
+    //     if (workgroup.players.length === 2) {
+    //         startGame(workgroup)
+    //     }
 
-    console.log('adding new workgroup ', organization)
-    orgRegistry.set(organization.id, {
-        id: organization.id,
-        name: organization.name
-    })
+    //     return;
+    // }
+
+    // console.log('adding new workgroup ', workgroup)
+    // workgroupRegistry.set(workgroup.id, workgroup)
 }
 
 module.exports = {

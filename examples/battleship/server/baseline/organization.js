@@ -18,7 +18,7 @@ const { hash } = require('./utils/hash.js')
 
 router.get('/:id', (req, res) => {
     if (orgRegistry.has(req.params.id)) {
-        return res.json({id: req.params.id, name: orgRegistry.get(req.params.id).name, hash: orgRegistry.get(req.params.id).hash})
+        return res.json({id: req.params.id, name: orgRegistry.get(req.params.id).name})
     }
 
     res.sendStatus(404)
@@ -38,23 +38,6 @@ router.post('', async (req, res) => {
 
     res.sendStatus(400)
 })
-
-// router.put('/hash/:id', async (req, res) => {
-//     const id = req.params.id
-//     if (!orgRegistry.has(id)) {
-//         res.sendStatus(404)
-//     }
-
-//     const boardHash = await hash(req.body);
-//     const organization = orgRegistry.get(id)
-//     organization.hash = boardHash
-//     orgRegistry.set(id, organization)
-
-//     // once organization is ready we can send it to other player
-//     console.log('sending org reg type ', organization)
-//     await producer.queue(organization, orgEventType)
-//     res.sendStatus(200)
-// });
 
 const organizationExists = (id) => {
     return orgRegistry.has(id)
