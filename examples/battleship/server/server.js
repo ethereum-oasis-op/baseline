@@ -4,30 +4,32 @@ const port = process.env.PORT || 3000;
 const http = require('http')
 const server = http.createServer(app)
 const Web3 = require('web3');
-const truffle_connect = require('./connection/app.js');
+const truffle_connect = require('./connection/truffle_connect.js');
 const bodyParser = require('body-parser');
 
-const { hash } = require('./utils/hash.js')
+const { hash } = require('./baseline/utils/hash.js')
 
-const KafkaProducer = require('./messaging/producer.js');
+const KafkaProducer = require('./baseline/messaging/producer.js');
 const producer = new KafkaProducer();
 
-const KafkaConsumer = require('./messaging/consumer.js')
+
+
+const { socketConnection } = require('./baseline/utils/socket')
+socketConnection(server)
+
+const proofVerify = require('./baseline/privacy/proof-verify.js')
+
+const { organizationRouter } = require('./baseline/organization')
+const { workgroupRouter } = require('./baseline/workgroup')
+const { battleshipRouter } = require('./baseline/battleship')
+
+
+const KafkaConsumer = require('./baseline/messaging/consumer.js')
 KafkaConsumer.consume(console.log).then(() => {
   console.log('consume success')
 }).catch(err => {
   console.log('consume err ', err)
 })
-
-const { socketConnection } = require('./utils/socket')
-socketConnection(server)
-
-const proofVerify = require('./privacy/proof-verify.js')
-
-const { organizationRouter } = require('./baseline/organization')
-const { workgroupRouter } = require('./baseline/workgroup');
-const { battleshipRouter } = require('./baseline/battleship.js');
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -44,6 +46,12 @@ app.get('/accounts', (req, res) => {
   })
 });
 
+app.get('/deploy', async (req, res) => {
+  await truffle_connect.deploy(function () {
+    res.sendStatus(200)
+  })
+});
+
 app.post('/proof', async (req, res) => {
   fullProof = await proofVerify.fullProve(req.body);
   res.send(fullProof);
@@ -53,14 +61,6 @@ app.post('/verifyInputs', async(req, res) => {
   verifyInputs = await proofVerify.getVerifyProofInputs(req.body.proof, req.body.publicSignals);
   res.send(verifyInputs);
 });
-
-app.post('/verify', async(req, res) => {
-  // TODO: destructure...
-  verifyInputs = await proofVerify.getVerifyProofInputs(req.body.proof, req.body.publicSignals);
-  truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, () => {
-    res.send('verified');
-  });
-})
 
 app.post('/testMsg', async(req, res) => {
   await producer.queue(req.body.message)

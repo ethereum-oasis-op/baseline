@@ -10,11 +10,11 @@ const router = express.Router()
 const orgRegistry = new Map()
 const { v4: uuidv4 } = require('uuid');
 
-const { orgEventType } = require('../messaging/eventType.js')
-const KafkaProducer = require('../messaging/producer.js');
+const { orgEventType } = require('./messaging/eventType.js')
+const KafkaProducer = require('./messaging/producer.js');
 const producer = new KafkaProducer('orgReg', orgEventType);
 
-const { hash } = require('../utils/hash.js')
+const { hash } = require('./utils/hash.js')
 
 router.get('/:id', (req, res) => {
     if (orgRegistry.has(req.params.id)) {

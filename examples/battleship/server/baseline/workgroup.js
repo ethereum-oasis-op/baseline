@@ -11,8 +11,8 @@ const { organizationExists } = require('./organization')
 
 const { joinGame, startGame } = require('./battleship')
 
-const { workgroupEventType } = require('../messaging/eventType.js')
-const KafkaProducer = require('../messaging/producer.js');
+const { workgroupEventType } = require('./messaging/eventType.js')
+const KafkaProducer = require('./messaging/producer.js');
 const producer = new KafkaProducer('workgroupReg', workgroupEventType);
 
 const ID_LENGTH = 4

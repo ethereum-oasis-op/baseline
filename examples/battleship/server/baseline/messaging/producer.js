@@ -4,7 +4,9 @@ let kafkaConfig = new KafkaConfig();
 let stream;
 
 class BattleshipMessageProducer {
-  constructor(topic = 'battleship') {
+  eventType;
+  constructor(topic = 'battleship', eventType) {
+    this.eventType = eventType;
     stream = kafkaConfig.producer(topic);
     stream.on('error', (err) => {
         console.error('Error in Kafka stream')
@@ -12,9 +14,9 @@ class BattleshipMessageProducer {
     });
   }
 
-  async queue(message, eventType) {
+  async queue(message) {
     console.log(`Queueing new message....${JSON.stringify(message)}`)
-    const success = await stream.write(eventType.toBuffer(message));
+    const success = await stream.write(this.eventType.toBuffer(message));
     success ? console.log(`message queued (${JSON.stringify(message)})`) : 
         console.log('Too many messages in the queue already..');
   }
