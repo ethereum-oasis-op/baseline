@@ -26,14 +26,14 @@ template Battleship() {
   shipHash[0] === hash.out[0];
   shipHash[1] === hash.out[1];
 
-  // map check, just simple check if target coordinates are in 10x10 matrix range
-  isInRange <-- (targetX >= 0 && targetX <= 9 && targetY >= 0 && targetY <= 9);
+  // map check, just simple check if target coordinates are in 5x5 matrix range
+  isInRange <-- (targetX >= 0 && targetX <= 4 && targetY >= 0 && targetY <= 4);
   isInRange === 1;
 
   // hit check, ship length is 4, and it is just checking based on orientation (0 and 1) if hit is in range of the ship
   // if orientation is 0, x coordinate of the ship is the same, and it is just checking if Y coordinate is between [Y, Y+4]
   // and vice versa for orientantion 1
-  isHit <-- (shipO == 0 && targetX == shipX && targetY >= shipY && targetY <= shipY + 4) || (shipO == 1 && targetY == shipY && targetX >= shipX && targetX <= shipX + 4);
+  isHit <-- (shipO == 0 && targetX == shipX && targetY >= shipY && targetY <= shipY + 3) || (shipO == 1 && targetY == shipY && targetX >= shipX && targetX <= shipX + 3);
 
   out <== isHit;
 }

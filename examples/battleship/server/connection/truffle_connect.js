@@ -1,5 +1,5 @@
 const contract = require('truffle-contract');
-const verifier_artifact = require('../build/contracts/Verifier.json')
+const verifier_artifact = require('./Verifier.json')
 
 var Verifier = contract(verifier_artifact)
 
