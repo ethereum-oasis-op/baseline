@@ -6,7 +6,7 @@ const consumer = kafkaConfig.consumer();
 const { insertOrg } = require('../organization.js')
 
 const { getVerifyProofInputs } = require('../privacy/proof-verify')
-const truffle_connect = require('../../connection/app');
+const truffle_connect = require('../../connection/truffle_connect');
 
 async function consume() {
   consumer.connect();

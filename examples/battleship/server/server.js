@@ -4,7 +4,7 @@ const port = process.env.PORT || 3000;
 const http = require('http')
 const server = http.createServer(app)
 const Web3 = require('web3');
-const truffle_connect = require('./connection/app.js');
+const truffle_connect = require('./connection/truffle_connect.js');
 const bodyParser = require('body-parser');
 
 const { hash } = require('./baseline/utils/hash.js')
@@ -43,6 +43,12 @@ app.use('/battleship', battleshipRouter)
 app.get('/accounts', (req, res) => {
   truffle_connect.start(function (accounts) {
     res.send(accounts);
+  })
+});
+
+app.get('/deploy', async (req, res) => {
+  await truffle_connect.deploy(function () {
+    res.sendStatus(200)
   })
 });
 
