@@ -1,5 +1,7 @@
 import React from 'react';
 
+import axios from 'axios'
+
 import { Container, Row, Col } from 'reactstrap';
 
 import { PlayerBoard } from './PlayerBoard'
@@ -29,32 +31,52 @@ export class Game extends React.Component {
         super(props);
         this.state = {
             gameState: SETUP_STATE,
-            shipPlaced: false,
-            opponentShipPlaced: false,
             playerState: Array(25).fill(EMPTY),
             opponentState: Array(25).fill(EMPTY),
-            events: Array(0)
+            game: undefined
         }
 
+        this.shipPlaced.bind(this)
+        this.opponentShipPlaced.bind(this)
         this.placeShip.bind(this)
         this.targetSquare.bind(this)
     }
 
-    placeShip = (index, orientation) => {
-        if (!this.state.shipPlaced) {
+    shipPlaced = () => {
+        return this.state.game !== undefined && 
+            this.state.game.players
+            .find(player => player.id === this.props.userID )
+            .hash
+    }
+
+    opponentShipPlaced = () => {
+        return this.state.game !== undefined && 
+            this.state.game.players
+            .find(player => player.id !== this.props.userID )
+            .hash
+    }
+
+    async componentDidMount () {
+        await axios.get(`/battleship/${this.props.id}`)
+        .then((res) => {
+        console.log('game', res)
+        })
+        .catch((error) => {
+        console.log(error)
+        })
+    }
+
+    placeShip = async (index, orientation) => {
+        if (!this.shipPlaced()) {
             let tempBoard = this.state.playerState
 
             tempBoard[index] = SHIP
             tempBoard[index + (orientation ? BOARD_WIDTH : 1)] = SHIP
             tempBoard[index + (orientation ? 2 * BOARD_WIDTH : 2)] = SHIP
 
-
-            let newEventLog = this.state.events
-            newEventLog.push(LogEntry({player: 0, type: PLACE_EVENT}))
-
-            console.log('send info here')
+            console.log('send event here')
             
-            this.setState({ gameState: ACTIVE_STATE, shipPlaced: true, playerState: tempBoard })
+            this.setState({ gameState: ACTIVE_STATE, playerState: tempBoard })
         }
 
         console.log(this.state.gameState)
@@ -91,7 +113,7 @@ export class Game extends React.Component {
                             <OpponentBoard squares={this.state.opponentState} targeting={this.state.gameState === ACTIVE_STATE} targetSquare={this.targetSquare} />
                         </Row>
                         <Row className='mt-3'>
-                            <PlayerBoard squares={this.state.playerState} shipPlaced={this.state.shipPlaced} placeShip={this.placeShip} />
+                            <PlayerBoard squares={this.state.playerState} shipPlaced={this.shipPlaced()} placeShip={this.placeShip} />
                         </Row>
                     </Col>
                     <Col md={6}>

@@ -25,7 +25,8 @@ socketConnection(server)
 const proofVerify = require('./privacy/proof-verify.js')
 
 const { organizationRouter } = require('./baseline/organization')
-const { workgroupRouter } = require('./baseline/workgroup')
+const { workgroupRouter } = require('./baseline/workgroup');
+const { battleshipRouter } = require('./baseline/battleship.js');
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,6 +36,7 @@ app.use('/', express.static('public_static'));
 
 app.use('/organization', organizationRouter)
 app.use('/workgroup', workgroupRouter)
+app.use('/battleship', battleshipRouter)
 
 app.get('/accounts', (req, res) => {
   truffle_connect.start(function (accounts) {

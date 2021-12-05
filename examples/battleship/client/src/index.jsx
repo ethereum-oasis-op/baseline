@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Setup } from './components/Setup';
@@ -10,24 +10,28 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './styles/index.css';
 
 const SETUP_STATE = 'setup'
-const GAME_STATE = 'game'
 
 export const App = () => {
   const [appState, setAppState] = useState(SETUP_STATE)
-  // const [appState, setAppState] = useState('TEST') -- skips right to game
-  // const [appState, setAppState] = useState('TEST')
 
   const [userID, setUserID] = useState()
 
+  useEffect(() => {
+    socket.on('game:init', gameInitHandler)
+  
+    socket.on('message', console.log)
 
-  socket.once('game:init', (id) => {
-    console.log(id)
-    setAppState(GAME_STATE)
-  })
+    return () => {
+      socket.off('game:init', gameInitHandler)
+      socket.off('message', console.log)
+    }
+  }, []);
 
-  socket.on('message', (msg) => {
-    console.log(msg)
-  })
+  const gameInitHandler = (gameID) => {
+      console.log(gameID)
+      setAppState(gameID)
+  }
+
 
 
   return (

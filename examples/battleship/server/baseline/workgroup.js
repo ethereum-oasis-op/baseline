@@ -66,7 +66,7 @@ router.post('/join/:id', async (req, res) => {
                 await producer.queue(workgroup, workgroupEventType)
     
                 joinGame(req.body.session, id)
-                startGame(id)
+                startGame(workgroup)
     
                 return res.json({id: id})
             }
@@ -87,7 +87,7 @@ const updateWorkgroup = (workgroup) => {
         workgroupRegistry.set(workgroup.id, workgroup)
 
         if (workgroup.players.length === 2) {
-            startGame(workgroup.id)
+            startGame(workgroup)
         }
 
         return;

@@ -1,8 +1,9 @@
+const express = require('express')
+const router = express.Router()
 
-// const { joinRoom, addListener, sendToRoom } = require('../utils/socket')
-const { get } = require('jquery')
 const { getIO, getSocket } = require('../utils/socket')
-const workgroup = require('./workgroup')
+
+let games = new Map()
 
 const joinGame = (session, game) => {
     const socket = getSocket(session)
@@ -14,13 +15,32 @@ const joinGame = (session, game) => {
     })
 }
 
-const startGame = (game) => {
-    console.log(`starting game with ID #${game}`)
-    getIO().to(game).emit('game:init')
-    // sendToRoom(session, game, 'game:init', undefined, true)
+const startGame = (workgroup) => {
+    
+    let game = {
+        id: workgroup.id,
+        players: workgroup.players.map(id => ({id})),
+        actions: []
+    }
+
+    games.set(workgroup.id, game)
+
+    console.log(`starting game with ID #${workgroup.id}`)
+    getIO().to(workgroup.id).emit('game:init', game.id)
 }
 
+router.get('/:id', (req, res) => {
+    if (games.has(req.params.id)) {
+        let game = games.get(req.params.id)
+        
+        return res.json({game})
+    }
+
+    res.sendStatus(404)
+})
+
 module.exports = {
+    battleshipRouter: router,
     joinGame,
     startGame
 }
