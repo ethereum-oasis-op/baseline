@@ -8,7 +8,8 @@ import { PlayerBoard } from './PlayerBoard'
 import { OpponentBoard } from './OpponentBoard';
 
 import { GameInfo } from './GameInfo';
-import { GameLog, PLACE_EVENT, RESULT_EVENT, TARGET_EVENT } from './GameLog';
+import { GameLog } from './GameLog';
+import { ProofToast } from './ProofToast';
 
 import { socket } from '../utils/socket'
 
@@ -32,7 +33,8 @@ export class Game extends React.Component {
             opponentState: Array(25).fill(EMPTY),
             game: this.props.game,
             playerNames: [],
-            eventLog: []
+            eventLog: [],
+            toasts: ['A3', 'B2']
         }
 
         this.playerNum.bind(this)
@@ -41,8 +43,10 @@ export class Game extends React.Component {
         this.gameStarted.bind(this)
         this.placeShip.bind(this)
         this.targetSquare.bind(this)
+        this.sendResult.bind(this)
         this.updateGame.bind(this)
         this.handleGameEvent.bind(this)
+        this.removeToast.bind(this)
     }
 
     playerNum = (id) => {
@@ -129,6 +133,32 @@ export class Game extends React.Component {
         
     }
 
+    sendResult = async (coord, result) => {
+        console.log('send result')
+
+        const [x, y] = xyFromCoord(coord)
+
+        const index = y * BOARD_WIDTH + x
+
+        const accurate = result === this.state.playerState[index]
+
+        if (accurate) {
+            let event = {type: 'proof', data: {
+                playerId: this.props.userID,
+                gameId: this.state.game.id,
+                x,
+                y,
+                result: result
+            }}
+
+            return this.handleGameEvent(event)
+        }
+        
+        let toasts = this.state.toasts
+        toasts.push(coord)
+        this.setState({coord})
+    }
+
     updateGame = (game) => {
         const eventLog = this.state.eventLog
         
@@ -146,17 +176,6 @@ export class Game extends React.Component {
         this.setState({eventLog, game})
     }
 
-
-    // .then(_ => {
-    //     const eventLog = this.state.eventLog
-    //     const playerNum = this.playerNum(this.props.userID)
-    //     eventLog.push({
-    //         player: playerNum, 
-    //         type: PLACE_EVENT
-    //     })
-    //     this.setState({eventLog})
-    //     })
-
     handleGameEvent = (event) => {
         console.log(event)
 
@@ -171,7 +190,7 @@ export class Game extends React.Component {
             case 'proof':
                 logItem.data = {
                     coord: coordFromXY(event.data.x, event.data.y),
-                    result: 0
+                    result: event.data.result
                 }
                 break
             default:
@@ -184,8 +203,15 @@ export class Game extends React.Component {
         this.setState({eventLog})
     }
 
+    removeToast = (index) => {
+        let toasts = this.state.toasts
+        toasts.splice(index, 1)
+        this.setState({toasts})
+    }
+
     render() {
         return (
+            <>
             <Container>
                 <Row>
                     <h2>Start game with id {this.state.game.id}</h2>
@@ -201,10 +227,16 @@ export class Game extends React.Component {
                     </Col>
                     <Col md={6}>
                         <GameInfo names={this.state.playerNames} />
-                        <GameLog  names={this.state.playerNames} events={this.state.eventLog} />
+                        <GameLog  playerNum={this.playerNum(this.props.userID)} names={this.state.playerNames} events={this.state.eventLog} sendResult={this.sendResult}/>
                     </Col>
                 </Row>
             </Container>
+
+            <div className="position-fixed bottom-0 end-0 p-3" style={{'zIndex': 11}}>
+                {this.state.toasts.map((toast, index) =>
+                    <ProofToast key={index} index={index} toast={toast} removeToast={this.removeToast} />)}
+            </div>
+            </>
         )
     }
 }
@@ -215,6 +247,12 @@ export const coordFromIndex = (index) => {
 
 const coordFromXY = (x, y) => {
     return `${COORDS[x]}${y}`
+}
+
+const xyFromCoord = (coord) => {
+    let x = COORDS.indexOf(coord[0])
+    let y = parseInt(coord[1])
+    return [x, y]
 }
 
 const xyFromIndex = (index) => {

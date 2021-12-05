@@ -1,14 +1,16 @@
 import React from 'react'
 
-import {Card, CardHeader, CardBody, ListGroup, ListGroupItem, List} from 'reactstrap'
+import {Button, Card, CardHeader, CardBody, Row, Col, ListGroup, ListGroupItem} from 'reactstrap'
+
+import { EMPTY, SHIP } from './Game'
 
 import '../styles/log.css'
 
-export const PLACE_EVENT = 'place'
-export const TARGET_EVENT = 'target'
-export const RESULT_EVENT = 'proof'
+const PLACE_EVENT = 'place'
+const TARGET_EVENT = 'target'
+const RESULT_EVENT = 'proof'
 
-export const GameLog = ({names, events}) => {
+export const GameLog = ({playerNum, names, events, sendResult}) => {
     return (
         <Card className='mt-5'>
             <CardHeader>
@@ -23,7 +25,16 @@ export const GameLog = ({names, events}) => {
                             case PLACE_EVENT:
                                 return <ListGroupItem key={index}>{player ? '🚢' : '🛳️'} {names[player]} placed their ship.</ListGroupItem>
                             case TARGET_EVENT:
-                                return <ListGroupItem key={index}>{player ? '🔍' : '🔎'} {names[player]} targeted square {data}.</ListGroupItem>    
+                                return <ListGroupItem key={index}>
+                                    <Row>
+                                    <Col md={8}>{player ? '🔍' : '🔎'} {names[player]} targeted square {data}.</Col>
+                                    {playerNum !== player ? 
+                                    <>
+                                    <Col md={2}><Button color='success' outline onClick={() => sendResult(data, SHIP)}>Hit</Button></Col>
+                                    <Col md={2}><Button color='danger' outline onClick={() => sendResult(data, EMPTY)}>Miss</Button></Col>
+                                    </> : <></>}
+                                    </Row>
+                                    </ListGroupItem>    
                             case RESULT_EVENT:
                                 return <ListGroupItem key={index}>{data.result ? '💥' : '💧'} {data.coord} is a {data.result ? 'hit' : 'miss'}.</ListGroupItem>    
                             default:
@@ -35,17 +46,4 @@ export const GameLog = ({names, events}) => {
             </CardBody>
         </Card>
     )
-}
-
-export const LogEntry = ({player, type, data=undefined}) => {
-    switch(type) {
-        case PLACE_EVENT:
-            return <ListGroupItem>{player ? '🚢' : '🛳️'} {player} placed their ship.</ListGroupItem>
-        case TARGET_EVENT:
-            return <ListGroupItem>{player ? '🔍' : '🔎'} {player} targeted square {data}.</ListGroupItem>    
-        case RESULT_EVENT:
-            return <ListGroupItem>{data.result ? '💥' : '💧'} {data.coord} is a {data.result ? 'hit' : 'miss'}.</ListGroupItem>    
-        default:
-            return <ListGroupItem>{player} attempted an invalid event of type {type} </ListGroupItem>
-    }
 }
