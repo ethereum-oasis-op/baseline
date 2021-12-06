@@ -27,7 +27,6 @@ const joinGame = (session, game) => {
 }
 
 const startGame = (workgroup) => {
-    
     let game = {
         id: workgroup.id,
         players: workgroup.players.map(id => ({id})),
@@ -123,8 +122,7 @@ router.post('/proof', async (req, res) => {
 
 router.post('/verify', async(req, res) => {
   verifyInputs = await getVerifyProofInputs(req.body.proof, req.body.publicSignals);
-  // TODO: address should not be passed in body
-  await truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.public, req.body.address, () => {
+  await truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.public, req.body.gameId, () => {
     res.send('verified');
   });
 })

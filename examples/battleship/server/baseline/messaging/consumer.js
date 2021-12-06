@@ -27,7 +27,7 @@ async function consume() {
         if (proofMessage.playerId === currentPlayerId) {
           console.log('proof message received ', proofMessage)
           verifyInputs = getVerifyProofInputs(proofMessage.proof, proofMessage.publicSignals);
-          truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, () => {
+          truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, proofMessage.gameId, () => {
             // TODO: push information to frontend
             console.log('verified!')
           });

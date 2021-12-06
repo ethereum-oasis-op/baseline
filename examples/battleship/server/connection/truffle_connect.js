@@ -1,6 +1,7 @@
 const contract = require('truffle-contract');
 const shield_artifact = require('./Shield.json')
 const verifier_artifact = require('./Verifier.json')
+const { getShieldAddress } = require('../baseline/workgroup')
 
 const Web3Utils = require('web3-utils');
 
@@ -53,11 +54,13 @@ module.exports = {
       callback(self.accounts);
     });
   },
-  verify: async function(a, b, c, publicInputs, address, callback ) {
+  verify: async function(a, b, c, publicInputs, workgroupId, callback) {
     var self = this;
 
+    const shieldContractAddress = getShieldAddress(workgroupId)
+    console.log('shield address ', shieldContractAddress)
     Shield.setProvider(self.web3.currentProvider);
-    const deployed = await Shield.at(address)
+    const deployed = await Shield.at(shieldContractAddress)
 
     // TODO: verify sha3 method here, for now just hashing public inputs
     const commitment = Web3Utils.sha3(Web3Utils.toHex(publicInputs));

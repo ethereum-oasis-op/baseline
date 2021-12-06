@@ -87,26 +87,35 @@ router.post('/join/:id', async (req, res) => {
 })
 
 const updateWorkgroup = (workgroup) => {
-    console.log(`updating workgroup with id ${workgroup.id}`)
+    if (workgroupRegistry.has(workgroup.id)) {
+        console.log(`updating workgroup with id ${workgroup.id}`)
+
+        workgroupRegistry.set(workgroup.id, workgroup)
+
+        if (workgroup.players.length === 2) {
+            startGame(workgroup)
+        }
+
+        return;
+    }
+
+    console.log('adding new workgroup ', workgroup)
     workgroupRegistry.set(workgroup.id, workgroup)
+}
 
-    // if (workgroupRegistry.has(workgroup.id)) {
-    //     console.log(`updating workgroup with id ${workgroup.id}`)
+const getShieldAddress = (workgroupId) => {
+    const workgroup = workgroupRegistry.get(workgroupId)
 
-    //     workgroupRegistry.set(workgroup.id, workgroup)
+    if (!workgroup) {
+        console.log(`getShieldAddress - workgroup ${workgroupId} not found`)
+        return;
+    }
 
-    //     if (workgroup.players.length === 2) {
-    //         startGame(workgroup)
-    //     }
-
-    //     return;
-    // }
-
-    // console.log('adding new workgroup ', workgroup)
-    // workgroupRegistry.set(workgroup.id, workgroup)
+    return workgroup.shieldContractAddress;
 }
 
 module.exports = {
     workgroupRouter: router,
-    updateWorkgroup
+    updateWorkgroup,
+    getShieldAddress
 }
