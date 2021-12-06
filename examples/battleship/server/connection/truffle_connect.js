@@ -1,7 +1,7 @@
 const contract = require('truffle-contract');
 const shield_artifact = require('./Shield.json')
 const verifier_artifact = require('./Verifier.json')
-const { getShieldAddress } = require('../baseline/workgroup')
+const { getShieldAddress } = require('../baseline/workgroupRegistry')
 
 const Web3Utils = require('web3-utils');
 

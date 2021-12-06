@@ -2,9 +2,9 @@ const KafkaConfig = require('./config.js');
 const { orgEventType, proofEventType, targetEventType, gameEventType, workgroupEventType } = require('./eventType.js');
 let kafkaConfig = new KafkaConfig();
 
-const { insertOrg } = require('../organization')
+const { insertOrg } = require('../organizationRegistry')
 const { updateGame } = require('../battleship')
-const { updateWorkgroup } = require('../workgroup')
+const { updateWorkgroup } = require('../workgroupRegistry')
 
 const { getVerifyProofInputs } = require('../privacy/proof-verify')
 const truffle_connect = require('../../connection/truffle_connect');

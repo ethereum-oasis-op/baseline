@@ -22,6 +22,10 @@ const workgroupEventType = avro.Type.forSchema({
       type: 'string'
     },
     {
+      name: 'shieldContractAddress',
+      type: 'string'
+    },
+    {
       name: 'players',
       type: {
         type: "array",

@@ -7,7 +7,7 @@ const router = express.Router()
 
 const { v4: uuidv4 } = require('uuid');
 
-const { organizationExists } = require('./organization')
+const { organizationExists } = require('./organizationRegistry')
 
 const { joinGame, startGame } = require('./battleship')
 
@@ -16,9 +16,9 @@ const KafkaProducer = require('./messaging/producer.js');
 
 const truffle_connect = require('../connection/truffle_connect')
 
-const ID_LENGTH = 4
+const { workgroupRegistry } = require('./workgroupRegistry')
 
-let workgroupRegistry = new Map()
+const ID_LENGTH = 4
 
 router.post('', async (req, res) => {
     if (!req.body.session || !organizationExists(req.body.id)) {
@@ -86,36 +86,7 @@ router.post('/join/:id', async (req, res) => {
     res.sendStatus(404)
 })
 
-const updateWorkgroup = (workgroup) => {
-    if (workgroupRegistry.has(workgroup.id)) {
-        console.log(`updating workgroup with id ${workgroup.id}`)
-
-        workgroupRegistry.set(workgroup.id, workgroup)
-
-        if (workgroup.players.length === 2) {
-            startGame(workgroup)
-        }
-
-        return;
-    }
-
-    console.log('adding new workgroup ', workgroup)
-    workgroupRegistry.set(workgroup.id, workgroup)
-}
-
-const getShieldAddress = (workgroupId) => {
-    const workgroup = workgroupRegistry.get(workgroupId)
-
-    if (!workgroup) {
-        console.log(`getShieldAddress - workgroup ${workgroupId} not found`)
-        return;
-    }
-
-    return workgroup.shieldContractAddress;
-}
 
 module.exports = {
     workgroupRouter: router,
-    updateWorkgroup,
-    getShieldAddress
 }

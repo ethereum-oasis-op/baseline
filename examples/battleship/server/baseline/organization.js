@@ -7,13 +7,12 @@
 const express = require('express')
 const router = express.Router()
 
-const orgRegistry = new Map()
 const { v4: uuidv4 } = require('uuid');
 
 const { orgEventType } = require('./messaging/eventType.js')
 const KafkaProducer = require('./messaging/producer.js');
 
-const { hash } = require('./utils/hash.js')
+const { orgRegistry } = require('./organizationRegistry')
 
 router.get('/:id', (req, res) => {
     if (orgRegistry.has(req.params.id)) {
@@ -38,41 +37,7 @@ router.post('', async (req, res) => {
 
     res.sendStatus(400)
 })
-
-const organizationExists = (id) => {
-    return orgRegistry.has(id)
-}
-
-const insertOrg = (organization) => {
-    if (orgRegistry.has(organization.id)) {
-        console.log(`organization with id ${organization.id} already exists`)
-        return;
-    }
-
-    console.log('adding new organization ', organization)
-    orgRegistry.set(organization.id, {
-        id: organization.id,
-        name: organization.name
-    })
-}
-
-// const updateOrgHash = async (id, hash) => {
-//     if (!orgRegistry.has(id)) {
-//         console.log('can not update org, org doesnt exists ', id)
-//         return
-//     }
-
-//     const organization = orgRegistry.get(id)
-//     organization.hash = hash
-//     orgRegistry.set(id, organization)
-
-//     // once organization is ready we can send it to other player
-//     console.log('sending org reg type ', organization)
-//     await producer.queue(organization, orgEventType)
-// }
     
 module.exports = {
     organizationRouter: router,
-    organizationExists,
-    insertOrg
 }
