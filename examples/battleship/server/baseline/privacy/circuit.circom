@@ -31,9 +31,9 @@ template Battleship() {
   isInRange === 1;
 
   // hit check, ship length is 4, and it is just checking based on orientation (0 and 1) if hit is in range of the ship
-  // if orientation is 0, x coordinate of the ship is the same, and it is just checking if Y coordinate is between [Y, Y+4]
-  // and vice versa for orientantion 1
-  isHit <-- (shipO == 0 && targetX == shipX && targetY >= shipY && targetY <= shipY + 3) || (shipO == 1 && targetY == shipY && targetX >= shipX && targetX <= shipX + 3);
+  // if orientation is 1, x coordinate of the ship is the same, and it is just checking if Y coordinate is between [Y, Y+4]
+  // and vice versa for orientantion 0
+  isHit <-- (shipO == 1 && targetX == shipX && targetY >= shipY && targetY <= shipY + 3) || (shipO == 0 && targetY == shipY && targetX >= shipX && targetX <= shipX + 3);
 
   out <== isHit;
 }

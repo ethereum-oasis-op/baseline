@@ -28884,12 +28884,12 @@
     "666": {
       "events": {},
       "links": {},
-      "address": "0x915B38a8090ad01C77B3F92a836A8166868Ba38D",
-      "transactionHash": "0x1df14cac53bec9a042c494555f411cca48184ebcc621e3bc282662f46f036dd7"
+      "address": "0xD01754F85607c69D0936213f7C8f6361b75Fd6a7",
+      "transactionHash": "0x0eb019c456ce3402901673805ecb07865d379bfeba5793bfc94f163220b28323"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-05T01:15:50.195Z",
+  "updatedAt": "2021-12-06T00:47:36.203Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
