@@ -1,12 +1,15 @@
 const contract = require('truffle-contract');
+const shield_artifact = require('./Shield.json')
 const verifier_artifact = require('./Verifier.json')
 
+var Shield = contract(shield_artifact)
 var Verifier = contract(verifier_artifact)
 
 module.exports = {
   deploy: async function(callback) {
     var self = this;
     Verifier.setProvider(self.web3.currentProvider);
+    Shield.setProvider(self.web3.currentProvider);
 
     self.web3.eth.getAccounts(async (err, accs) => {
       if (err != null) {
@@ -21,14 +24,15 @@ module.exports = {
       self.accounts = accs;
       self.account = self.accounts[2];
 
-      const myInstance = await Verifier.new({from: self.account, gas: 3000000});
-      // TODO: update workgroup verifier address with myInstance.address
-      return myInstance;
+      const verifierInstance = await Verifier.new({from: self.account, gas: 3000000})
+      const shieldInstance = await Shield.new(verifierInstance.address, 0, {from: self.account, gas: 3000000});
+      // TODO: update workgroup shield address with shieldInstance.address
+      callback(shieldInstance.address);
     })
   },
   start: function(callback) {
     var self = this;
-    Verifier.setProvider(self.web3.currentProvider);
+    Shield.setProvider(self.web3.currentProvider);
 
     self.web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
@@ -47,23 +51,15 @@ module.exports = {
       callback(self.accounts);
     });
   },
-  verify: function(a, b, c, input, callback) {
+  verify: async function(a, b, c, input, address, callback ) {
     var self = this;
 
-    Verifier.setProvider(self.web3.currentProvider);
+    Shield.setProvider(self.web3.currentProvider);
+    const deployed = await Shield.at(address)
 
-    // TODO: find a better way for this, using it now for account init side effect...
-    self.web3.eth.getAccounts(console.log)
-
-    var verifier;
-    Verifier.deployed().then(function(instance) {
-      verifier = instance;
-      return verifier.verifyProof.call(a, b, c, input, { from: self.account })
-    }).then(function(value) {
-        callback(value.valueOf());
-    }).catch(function(e) {
-        console.log(e);
-        callback("Error when verifying proof");
-    });
+    // TODO: replace with proper hash of real data
+    const testCommitment =  self.web3.sha3(self.web3.padRight(self.web3.fromAscii("test1"), 66), { encoding: 'hex' });
+    const res = await deployed.verifyAndPush.call(a, b, c, input, testCommitment, { from: self.account })
+    callback(res)
   },
 }

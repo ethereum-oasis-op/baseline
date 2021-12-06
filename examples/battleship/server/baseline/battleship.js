@@ -4,7 +4,8 @@ const router = express.Router()
 const { getIO, getSocket } = require('./utils/socket')
 const { hash } = require('./utils/hash')
 
-const { fullProve } = require('./privacy/proof-verify')
+const { fullProve, getVerifyProofInputs } = require('./privacy/proof-verify')
+const truffle_connect = require('../connection/truffle_connect')
 
 let games = new Map()
 
@@ -121,9 +122,9 @@ router.post('/proof', async (req, res) => {
 })
 
 router.post('/verify', async(req, res) => {
-  // TODO: destructure...
-  verifyInputs = await proofVerify.getVerifyProofInputs(req.body.proof, req.body.publicSignals);
-  truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, () => {
+  verifyInputs = await getVerifyProofInputs(req.body.proof, req.body.publicSignals);
+  // TODO: address should not be passed in body
+  await truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.public, req.body.address, () => {
     res.send('verified');
   });
 })
