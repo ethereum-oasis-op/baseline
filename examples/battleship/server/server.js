@@ -47,8 +47,8 @@ app.get('/accounts', (req, res) => {
 });
 
 app.get('/deploy', async (req, res) => {
-  await truffle_connect.deploy(function () {
-    res.sendStatus(200)
+  await truffle_connect.deploy(function (address) {
+    res.send(address)
   })
 });
 
