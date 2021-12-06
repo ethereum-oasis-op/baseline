@@ -11,11 +11,12 @@ class KafkaConfig {
   }
 
   consumer() {
-    console.log('group ', process.env.KAFKA_GROUP)
-    return new Kafka.KafkaConsumer({
-        'group.id': process.env.KAFKA_GROUP || 'group',
-        'metadata.broker.list': process.env.KAFKA_BROKER || `localhost:9092`,
-      }, {});
+    return Kafka.KafkaConsumer.createReadStream({
+      'group.id': process.env.KAFKA_GROUP || 'group',
+      'metadata.broker.list': process.env.KAFKA_BROKER || `localhost:9092`,
+    }, {}, {
+      topics: ['battleship', 'orgReg', 'workgroupReg', 'game', 'proof']
+    });
   }
 }
 

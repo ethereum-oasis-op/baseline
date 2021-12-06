@@ -53,15 +53,15 @@ module.exports = {
       callback(self.accounts);
     });
   },
-  verify: async function(a, b, c, input, address, callback ) {
+  verify: async function(a, b, c, publicInputs, address, callback ) {
     var self = this;
 
     Shield.setProvider(self.web3.currentProvider);
     const deployed = await Shield.at(address)
 
     // TODO: verify sha3 method here, for now just hashing public inputs
-    const commitment = Web3Utils.sha3(Web3Utils.toHex(input));
-    const res = await deployed.verifyAndPush.call(a, b, c, input, commitment, { from: self.account })
+    const commitment = Web3Utils.sha3(Web3Utils.toHex(publicInputs));
+    const res = await deployed.verifyAndPush.call(a, b, c, publicInputs, commitment, { from: self.account })
     callback(res)
   },
 }

@@ -12,7 +12,6 @@ const { v4: uuidv4 } = require('uuid');
 
 const { orgEventType } = require('./messaging/eventType.js')
 const KafkaProducer = require('./messaging/producer.js');
-const producer = new KafkaProducer('orgReg', orgEventType);
 
 const { hash } = require('./utils/hash.js')
 
@@ -31,6 +30,7 @@ router.post('', async (req, res) => {
         let org = { id, name: req.body.name }
         orgRegistry.set(id, org)
 
+        const producer = new KafkaProducer('orgReg', orgEventType);
         await producer.queue(org, orgEventType)
 
         return res.json({id: id})

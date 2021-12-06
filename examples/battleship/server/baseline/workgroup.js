@@ -11,9 +11,10 @@ const { organizationExists } = require('./organization')
 
 const { joinGame, startGame } = require('./battleship')
 
-const { workgroupEventType } = require('./messaging/eventType.js')
+const { workgroupEventType, orgEventType } = require('./messaging/eventType.js')
 const KafkaProducer = require('./messaging/producer.js');
-const producer = new KafkaProducer('workgroupReg', workgroupEventType);
+
+const truffle_connect = require('../connection/truffle_connect')
 
 const ID_LENGTH = 4
 
@@ -24,22 +25,26 @@ router.post('', async (req, res) => {
         return res.sendStatus(403)
     }
 
-    let id = uuidv4().slice(0, ID_LENGTH).toUpperCase()
-    while(workgroupRegistry.has(id)) {
-        id = uuidv4().slice(0, ID_LENGTH).toUpperCase()
-    }
+    await truffle_connect.deploy(async function (shieldContractAddress) {
+        let id = uuidv4().slice(0, ID_LENGTH).toUpperCase()
+        while(workgroupRegistry.has(id)) {
+            id = uuidv4().slice(0, ID_LENGTH).toUpperCase()
+        }
         
-    let workgroup = {
-        id: id,
-        players: [req.body.id]
-    }
-    workgroupRegistry.set(id, workgroup)
+        let workgroup = {
+            id: id,
+            players: [req.body.id],
+            shieldContractAddress
+        }
+        workgroupRegistry.set(id, workgroup)
 
-    await producer.queue(workgroup, workgroupEventType)
+        const producer = new KafkaProducer('workgroupReg', workgroupEventType);
+        await producer.queue(workgroup, workgroupEventType)
 
-    joinGame(req.body.session, id)
+        joinGame(req.body.session, id)
 
-    res.json({id: id})
+        res.json({id: id})
+    })
 })
     
 router.post('/join/:id', async (req, res) => {
@@ -63,6 +68,7 @@ router.post('/join/:id', async (req, res) => {
                 }
                 workgroupRegistry.set(id, workgroup)
     
+                const producer = new KafkaProducer('workgroupReg', workgroupEventType);
                 await producer.queue(workgroup, workgroupEventType)
     
                 joinGame(req.body.session, id)
@@ -101,5 +107,6 @@ const updateWorkgroup = (workgroup) => {
 }
 
 module.exports = {
-    workgroupRouter: router
+    workgroupRouter: router,
+    updateWorkgroup
 }

@@ -10,7 +10,6 @@ const bodyParser = require('body-parser');
 const { hash } = require('./baseline/utils/hash.js')
 
 const KafkaProducer = require('./baseline/messaging/producer.js');
-const producer = new KafkaProducer();
 
 
 
@@ -63,6 +62,7 @@ app.post('/verifyInputs', async(req, res) => {
 });
 
 app.post('/testMsg', async(req, res) => {
+  const producer = new KafkaProducer();
   await producer.queue(req.body.message)
   res.send('msg queued')
 })

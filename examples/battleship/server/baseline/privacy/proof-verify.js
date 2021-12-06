@@ -25,7 +25,7 @@ const fullProve = async (inputSignals) => {
   return { proof, publicSignals }
 }
 
-const getVerifyProofInputs = async(proof, publicSignals) => {
+const getVerifyProofInputs = (proof, publicSignals) => {
   let proofStr = utils.stringifyBigInts(proof);
   let publicSignalsStr = utils.stringifyBigInts(publicSignals);
   return {

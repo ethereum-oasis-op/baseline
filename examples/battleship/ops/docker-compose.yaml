@@ -1,11 +1,15 @@
 version: "3"
 services:
   zookeeper:
+    container_name: 'zookeeper'
     image: 'bitnami/zookeeper:latest'
     ports:
       - '2181:2181'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    profiles:
+      - infra
+      - bpi
   kafka:
     image: 'bitnami/kafka:latest'
     container_name: 'kafka'
@@ -19,11 +23,17 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
+    profiles:
+      - infra
+      - bpi
   ganache-cli:
     image: 'trufflesuite/ganache-cli:latest'
     container_name: 'ganache-cli'
     ports:
       - '8545:8545'
+    profiles:
+      - infra
+      - bpi
   p1-bpi:
     build:
       context: ../server
@@ -38,6 +48,8 @@ services:
     depends_on:
       - kafka
       - ganache-cli
+    profiles:
+      - bpi
   p2-bpi:
     build:
       context: ../server
@@ -52,3 +64,5 @@ services:
     depends_on:
       - kafka
       - ganache-cli
+    profiles:
+      - bpi
