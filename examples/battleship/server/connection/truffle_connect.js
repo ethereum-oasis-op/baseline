@@ -2,6 +2,8 @@ const contract = require('truffle-contract');
 const shield_artifact = require('./Shield.json')
 const verifier_artifact = require('./Verifier.json')
 
+const Web3Utils = require('web3-utils');
+
 var Shield = contract(shield_artifact)
 var Verifier = contract(verifier_artifact)
 
@@ -57,9 +59,9 @@ module.exports = {
     Shield.setProvider(self.web3.currentProvider);
     const deployed = await Shield.at(address)
 
-    // TODO: replace with proper hash of real data
-    const testCommitment =  self.web3.sha3(self.web3.padRight(self.web3.fromAscii("test1"), 66), { encoding: 'hex' });
-    const res = await deployed.verifyAndPush.call(a, b, c, input, testCommitment, { from: self.account })
+    // TODO: verify sha3 method here, for now just hashing public inputs
+    const commitment = Web3Utils.sha3(Web3Utils.toHex(input));
+    const res = await deployed.verifyAndPush.call(a, b, c, input, commitment, { from: self.account })
     callback(res)
   },
 }
