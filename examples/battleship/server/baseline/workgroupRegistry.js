@@ -1,3 +1,5 @@
+const { startGame } = require('./battleship')
+
 let workgroupRegistry = new Map()
 
 const updateWorkgroup = (workgroup) => {

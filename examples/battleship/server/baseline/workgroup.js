@@ -61,6 +61,7 @@ router.post('/join/:id', async (req, res) => {
             if (workgroup.players[0] !== req.body.id) {
                 workgroup = {
                     id: workgroup.id,
+                    shieldContractAddress: workgroup.shieldContractAddress,
                     players: [
                         workgroup.players[0],
                         req.body.id
