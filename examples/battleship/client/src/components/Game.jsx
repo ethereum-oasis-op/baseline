@@ -28,13 +28,13 @@ export class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            // gameState: SETUP_STATE,
+            shipPosition: undefined,
             playerState: Array(25).fill(EMPTY),
             opponentState: Array(25).fill(EMPTY),
             game: this.props.game,
             playerNames: [],
             eventLog: [],
-            toasts: ['A3', 'B2']
+            toasts: []
         }
 
         this.playerNum.bind(this)
@@ -110,11 +110,11 @@ export class Game extends React.Component {
                 id: this.props.userID,
                 shipX: x,
                 shipY: y,
-                shipO: orientation
+                shipO: (+ orientation)
             })
             .catch(console.log)
             
-            this.setState({ playerState: tempBoard })
+            this.setState({shipPosition: {x, y, o: + orientation}, playerState: tempBoard })
         }
     }
 
@@ -133,30 +133,35 @@ export class Game extends React.Component {
         
     }
 
-    sendResult = async (coord, result) => {
-        console.log('send result')
+    sendResult = async (coord, result, eventIndex) => {
+        let playerNum = this.playerNum(this.props.userID)
+        let {x, y, o} = this.state.shipPosition
 
-        const [x, y] = xyFromCoord(coord)
+        let [targetX, targetY] = xyFromCoord(coord)
 
-        const index = y * BOARD_WIDTH + x
+        let hit = + (result === SHIP)
 
-        const accurate = result === this.state.playerState[index]
-
-        if (accurate) {
-            let event = {type: 'proof', data: {
-                playerId: this.props.userID,
-                gameId: this.state.game.id,
-                x,
-                y,
-                result: result
-            }}
-
-            return this.handleGameEvent(event)
-        }
-        
-        let toasts = this.state.toasts
-        toasts.push(coord)
-        this.setState({coord})
+        await axios.post('/battleship/proof', {
+            playerId: this.props.userID,
+            gameId: this.state.game.id,
+            shipX: x,
+            shipY: y,
+            shipO: o,
+            shipHash: this.state.game.players[playerNum].hash,
+            targetX,
+            targetY,
+            result:  hit
+        })
+        .then(() => {
+            let events = this.state.eventLog
+            events[eventIndex].data.responded = true
+            this.setState({events})
+        })
+        .catch(_ => {
+            let toasts = this.state.toasts
+            toasts.push({coord: coord, attempt: hit})
+            this.setState({toasts})
+        })
     }
 
     updateGame = (game) => {
@@ -182,16 +187,26 @@ export class Game extends React.Component {
         let playerNum = this.playerNum(event.data.playerId)
 
         let logItem = {player: playerNum, type: event.type, data: undefined}
+        let opponentState = this.state.opponentState
         
         switch(event.type) {
             case 'target':
-                logItem.data = coordFromXY(event.data.x, event.data.y)
-                break
-            case 'proof':
                 logItem.data = {
                     coord: coordFromXY(event.data.x, event.data.y),
-                    result: event.data.result
+                    responded: false
                 }
+                break
+            case 'proof':
+                let result = parseInt(event.data.publicSignals[0])
+                let x = parseInt(event.data.publicSignals[3])
+                let y = parseInt(event.data.publicSignals[4])
+                logItem.data = {
+                    coord: coordFromXY(x, y),
+                    result: result
+                }
+
+                if (event.data.playerId !== this.props.userID)
+                    opponentState[x + y * BOARD_WIDTH] = result ? HIT : MISS
                 break
             default:
                 console.error('Unsupported event of type', event.type, event)

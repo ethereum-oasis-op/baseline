@@ -27,11 +27,11 @@ export const GameLog = ({playerNum, names, events, sendResult}) => {
                             case TARGET_EVENT:
                                 return <ListGroupItem key={index}>
                                     <Row>
-                                    <Col md={8}>{player ? '🔍' : '🔎'} {names[player]} targeted square {data}.</Col>
-                                    {playerNum !== player ? 
+                                    <Col md={8}>{player ? '🔍' : '🔎'} {names[player]} targeted square {data.coord}.</Col>
+                                    {playerNum !== player && !data.responded ? 
                                     <>
-                                    <Col md={2}><Button color='success' outline onClick={() => sendResult(data, SHIP)}>Hit</Button></Col>
-                                    <Col md={2}><Button color='danger' outline onClick={() => sendResult(data, EMPTY)}>Miss</Button></Col>
+                                    <Col md={2}><Button color='success' outline onClick={() => sendResult(data.coord, SHIP, index)}>Hit</Button></Col>
+                                    <Col md={2}><Button color='danger' outline onClick={() => sendResult(data.coord, EMPTY, index)}>Miss</Button></Col>
                                     </> : <></>}
                                     </Row>
                                     </ListGroupItem>    

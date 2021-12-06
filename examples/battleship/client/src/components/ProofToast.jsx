@@ -9,7 +9,7 @@ export const ProofToast = ({index, toast, removeToast}) => {
                 Proof Generation Failed
             </ToastHeader>
             <ToastBody>
-                {toast} should be a hit.
+                {toast.coord} should be a {toast.attempt ? 'miss' : 'hit'}.
             </ToastBody>
         </Toast>
     )

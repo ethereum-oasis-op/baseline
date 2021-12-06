@@ -98,17 +98,26 @@ router.post('/proof', async (req, res) => {
     targetY: req.body.targetY
   }
   const { proof, publicSignals } = await fullProve(inputSignals)
-  const proofMsg = {
-    proof,
-    publicSignals,
-    gameId: req.body.gameId,
-    playerId: req.body.playerId
-  }
-  const proofProducer = new KafkaProducer('proof', proofEventType); 
-  await proofProducer.queue(proofMsg);
-  res.sendStatus(200);
 
-  handleGameEvent('proof', req.body) // probably remove once kafka consumer/producer issues get sorted out
+  console.log(req.body.result, parseInt(publicSignals[0]))
+
+  if (parseInt(publicSignals[0]) === req.body.result) {
+    const proofMsg = {
+        proof,
+        publicSignals,
+        gameId: req.body.gameId,
+        playerId: req.body.playerId
+      }
+      const proofProducer = new KafkaProducer('proof', proofEventType); 
+      await proofProducer.queue(proofMsg);
+      res.sendStatus(200);
+    
+      handleGameEvent('proof', proofMsg) // probably remove once kafka consumer/producer issues get sorted out
+
+      return
+  }
+  
+  res.sendStatus(409)
 })
 
 router.post('/verify', async(req, res) => {
@@ -128,8 +137,8 @@ const updateGame = (game) => {
 }
 
 const handleGameEvent = (type, event) => {
-    if (event.gameID === undefined) {
-        console.error(`Game event ${event} does not specify a gameID.`)
+    if (event.gameId === undefined) {
+        console.error(`Game event ${event} does not specify a gameId.`)
     }
 
     getIO().to(event.gameId).emit('game:event', {type, data: event})
