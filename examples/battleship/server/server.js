@@ -6,11 +6,11 @@ const server = http.createServer(app)
 const Web3 = require('web3');
 const truffle_connect = require('./connection/truffle_connect.js');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const { hash } = require('./baseline/utils/hash.js')
 
 const KafkaProducer = require('./baseline/messaging/producer.js');
-
 
 
 const { socketConnection } = require('./baseline/utils/socket')
@@ -29,6 +29,8 @@ KafkaConsumer.consume(console.log).then(() => {
 }).catch(err => {
   console.log('consume err ', err)
 })
+
+app.use(cors());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

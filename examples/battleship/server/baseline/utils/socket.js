@@ -9,7 +9,7 @@ const getSocket = (id) => {
 }
 
 const socketConnection = (server) => {
-    io = require('socket.io')(server)
+    io = require('socket.io')(server, {cors: {origin: "*"}})
 
     io.on('connection', (socket) => {
         console.log('client connected', socket.id)

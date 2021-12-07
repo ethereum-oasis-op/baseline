@@ -76,7 +76,8 @@ services:
     profiles:
       - frontend
     environment:
-      - PROXY_URL=http://p1-bpi:3000
+      - REACT_APP_PROXY_URL=http://p1-bpi:3000
+      - REACT_APP_SOCKET_URL=http://localhost:3001
   p2-client:
     build:
       context: ../client
@@ -87,4 +88,5 @@ services:
     profiles:
       - frontend
     environment:
-      - PROXY_URL=http://p2-bpi:3000
+      - REACT_APP_PROXY_URL=http://p2-bpi:3000
+      - REACT_APP_SOCKET_URL=http://localhost:3002
