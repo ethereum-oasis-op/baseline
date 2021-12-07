@@ -43,7 +43,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         expect(exchangeOrdersWorkgroup.worksteps[0].name).to.be.equal("WRKSTP1");
     });
 
-    it('Given a prepared workgroup with a workstep, Alice invites Bob, BPI stores the invitation and invitee email and this information is available to in the invitations list', () => {
+    it('Given a prepared workgroup with a workstep, Alice invites Bob, BPI stores the invitation and invitee email and this information is available for querying', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"]);
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
@@ -53,31 +53,28 @@ describe('BPI, Workgroup and Worflow setup', () => {
         aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
         const bobsInvitation = aliceBpi.getInvitationById("BI1");
 
-        expect(aliceBpi.invitations[0]).to.be.equal(bobsInvitation);
+        expect(bobsInvitation.id).to.be.equal("BI1");
         expect(bobsInvitation.name).to.be.equal("BobsInvite");
         expect(bobsInvitation.recipient).to.be.equal("bob@bob.com");
+        expect(bobsInvitation.sender).to.be.equal(aliceBpi.owner);
         expect(bobsInvitation.agreement.productIds).to.be.equal(aliceBpi.agreement.productIds);
     });
 
-    it('Given a sent invitation, Alice queries list of sent invitations, can see Bob invitation details', () => {
+    it('Given a sent invitation, Bob queries list of received invitations, can see invitation details from Alice', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"]);
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
         aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        
+        const bobsInvitations = aliceBpi.getReceivedInvitationsByEmail("bob@bob.com");
 
-        const bobsInvitation = aliceBpi.getInvitationById("BI1");
-
-        expect(aliceBpi.invitations.length).to.be.above(0);
-        expect(bobsInvitation.id).to.be.equal("BI1");
-        expect(bobsInvitation.name).to.be.equal("BobsInvite");
-        expect(bobsInvitation.sender).to.be.equal(aliceBpi.owner);
-        expect(bobsInvitation.recipient).to.be.equal("bob@bob.com");
-    });
-
-    it('Given a sent invitation, Bob queries list of received invitations, can see invitation details from Alice', () => {
-        expect(1).to.be.equal(2);
+        expect(bobsInvitations[0].id).to.be.equal("BI1");
+        expect(bobsInvitations[0].name).to.be.equal("BobsInvite");
+        expect(bobsInvitations[0].recipient).to.be.equal("bob@bob.com");
+        expect(bobsInvitations[0].sender).to.be.equal(aliceBpi.owner);
+        expect(bobsInvitations[0].agreement.productIds).to.be.equal(aliceBpi.agreement.productIds);
     });
 
     it('Given a received invitation, Bob accepts by singing the agreement, Bob is added as a subject to the Bpi, to the collection of workgroup participants and proof is stored in the collection of proofs for the workgroup', () => {

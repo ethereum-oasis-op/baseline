@@ -61,9 +61,12 @@ export class BPI {
     }
 
     getInvitationById(id: string): Invitation {
-        const filtInv = this.invitations.filter(inv => inv.id === id)
+        const filteredInvitations = this.invitations.filter(inv => inv.id === id);
+        return filteredInvitations[0];
+    }
 
-        return filtInv[0];
+    getReceivedInvitationsByEmail(email: string): Invitation[] {
+        return this.invitations.filter(inv => inv.recipient === email);
     }
 
     createProof(input: any) {
