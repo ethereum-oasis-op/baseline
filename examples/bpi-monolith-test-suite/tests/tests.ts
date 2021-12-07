@@ -18,6 +18,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
 
     it('Given freshly instantiated BPI, Alice creates a workgroup, workgroup is added to the BPI and available in the list of workgroups', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
+
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
 
         expect(aliceBpi.workgroups.length).to.be.equal(1);
@@ -31,9 +32,9 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        //This agreement function is not right i think...should here be an order related check???
-        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         orderGroup.addWorkstep(workStep);
+        
         expect(orderGroup.worksteps.length).to.be.equal(1);
         expect(orderGroup.worksteps.length).to.be.above(0);
         expect(orderGroup.worksteps[0]).to.be.equal(workStep);
@@ -46,9 +47,9 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        //This agreement function is not right i think...should here be an order related check???
-        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         orderGroup.addWorkstep(workStep);
+
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
 
         expect(aliceBpi.invitations).not.to.be.empty;
@@ -63,10 +64,10 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        //This agreement function is not right i think...should here be an order related check???
-        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         orderGroup.addWorkstep(workStep);
-        const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+        aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+
         const bobsInvitation = aliceBpi.getInvitationById("BI1");
         
         expect(aliceBpi.invitations.length).to.be.above(0);
@@ -84,14 +85,16 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
+
         //the invitation is signed (so the invitation has a sign method)
         const bobsEnteredData =  inviteBob.sign();
         //signed invitation "triggers" Bpi to create dummy proof and add Bob to orgs and workgrouop participants
         aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
         //Agreement signed?
+        
         expect(aliceBpi.agreement.signature).to.be.true;
         //Bob is added as subject to bpi?
         expect(aliceBpi.getOrganizationById("BO1")).to.not.be.undefined;
@@ -108,14 +111,15 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        workStep.agreementFunction = aliceBpi.agreement.idsMatch;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
         const bobsEnteredData =  inviteBob.sign();
         aliceBpi.signedInviteEvent(inviteBob.id,bobsEnteredData);
         
-        //getinvite
+        
         const invQuedByAlice = aliceBpi.getInvitationById("BI1");
+
         expect(invQuedByAlice).to.be.equal(inviteBob);
         //check if signed
         expect(invQuedByAlice.agreement.signature).to.be.true;
@@ -128,7 +132,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
         const bobsEnteredData =  inviteBob.sign();
@@ -138,7 +142,9 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const businessObject = new Order("0001","Purchase",30);
         //Order is saved in Alices databse of orders
         const aliceOrg = aliceBpi.getOrganizationById("AL1");
-        aliceOrg.orders.push(businessObject);
+        aliceOrg.orders.push(businessObject); // TODO: Ognjen we do not want orders store on the level of bpisubjects, this should be in the agreement if workstep ok
+        // or otherwise as a message
+
         //send request with the order (valid)
         const bpiResponse = aliceBpi.sendOrder(businessObject,orderGroup.id);
 
@@ -162,7 +168,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
         const bobsEnteredData =  inviteBob.sign();
@@ -194,7 +200,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
         const bobsEnteredData =  inviteBob.sign();
@@ -216,7 +222,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"] );
         const orderGroup = aliceBpi.addWorkgroup("AB1","ABOrder",[]);
         const workStep = new Workstep("W1","WRKSTP1");
-        workStep.agreementFunction = aliceBpi.agreement.orderPriceIsGreater;
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         orderGroup.addWorkstep(workStep);
         const inviteBob = aliceBpi.invite("BI1","BobsInvite",aliceBpi.owner,"bob@bob.com",orderGroup.id,aliceBpi.agreement);
         const bobsEnteredData =  inviteBob.sign();

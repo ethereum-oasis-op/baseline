@@ -67,7 +67,7 @@ export class BPI {
     }
 
     createProof(input:any){
-    return Math.random().toString(36).substr(2, 20);
+        return Math.random().toString(36).substr(2, 20);
     }
 
     signedInviteEvent(invId: string, bobsData: [string,string]){
