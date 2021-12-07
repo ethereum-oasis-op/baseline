@@ -9,7 +9,7 @@ Here is a comparison of the reference implementations:
 | Service Type | bri-1 | bri-2 |
 | -------- | ----- | ----------- |
 | Eth. client | `Nethermind` | `commit-mgr` + `mongo` + `ITX` |
-| Key managment |`Provide Vault` | TBD |
+| Key management |`Provide Vault` | TBD |
 | Messenger | `NATS` | TBD |
 
 ## Commitment Manager

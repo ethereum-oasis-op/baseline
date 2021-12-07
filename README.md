@@ -9,7 +9,7 @@
   </p>
   Read the full documentation <a href="https://docs.baseline-protocol.org">here at docs.baseline-protocol.org</a>.
   <p>
-    <em>Join our <a href="https://communityinviter.com/apps/ethereum-baseline/join-us">Slack workspace</a>, <a href="https://discord.gg/NE8AYD7">Discord channel</a>, <a href="https://t.me/baselineprotocol">Telegram channel</a> and follow us on <a href="https://twitter.com/baselineproto">Twitter</a> for Baseline news and updates!</em>
+    <em>Join our <a href="https://communityinviter.com/apps/ethereum-baseline/join-us">Slack workspace</a>, <a href="https://discord.gg/NE8AYD7">Discord channel</a>, <a href="https://t.me/baselineprotocol">Telegram channel</a>, <a href="https://www.youtube.com/channel/UCPkZ73TH69tMBaC111wxHYw">YouTube channel</a>,  and follow us on <a href="https://twitter.com/baselineproto">Twitter</a> for Baseline news and updates!</em>
   </p>
   <br/>
 </div>
@@ -20,6 +20,7 @@ Version 0.1 of the baseline protocol packages has been released! For some backgr
 - [`core/`](https://github.com/ethereum-oasis/baseline/tree/master/core) -- the "core" Baseline Protocol packages
 - [`examples/bri-1`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example) -- the BRI-1 reference implementation.
 One or more "core" baseline protocol packages are needed to baseline-enable applications and systems of record.
+- [`examples/bri-2`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/base-example) -- the experimental BRI-2 reference implementation includes examples of semi functioning dashboard to the baseline protocol.
 
 ## Core Modules & Packages
 | Package | Source Path | Description |
@@ -34,10 +35,17 @@ One or more "core" baseline protocol packages are needed to baseline-enable appl
 ## Architecture
 ![baseline-protocol-architecture](https://user-images.githubusercontent.com/161261/86484557-79504f00-bd24-11ea-8edb-d665cb55db20.png)
 
+
+## Resources
+![Provide Documentation](https://docs.provide.services/)
+![Provide Postman Collections](https://github.com/provideplatform/provide-postman)
+
+
 ## License
 
-All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](LICENSE).
+All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](LICENSE)
 
 ## Contributing
 
 See [our contributing guidelines](CONTRIBUTING.md)
+

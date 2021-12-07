@@ -1,0 +1,22 @@
+- kind: Role
+  name: anonymous
+  specs:
+    permission:
+      - "read:nodes"
+- kind: Role
+  name: guest
+  specs:
+    permission:
+      - "read:*"
+- kind: Role
+  name: signer
+  specs:
+    permission:
+      - "read:*"
+      - "sign:keys"
+      - "sign:ethereum"
+- kind: Role
+  name: admin
+  specs:
+    permission:
+      - "*:*"

@@ -1,0 +1,256 @@
+{
+  "info": {
+    "_postman_id": "43796bd3-33ec-472b-8d88-79b8b4807b46",
+    "name": "zok-api-integration-test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "61153a77-d483-46cd-85a6-80b92973d607",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/graphql"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{API_URL}}/health",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "generate-keys",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "7d670239-5d05-40dd-b799-f9131c28b247",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var req = JSON.parse(request.data);",
+              "var res = JSON.parse(responseBody);",
+              "",
+              "pm.test('should return a valid response', () => {",
+              "    pm.response.to.not.be.error;",
+              "    pm.response.to.be.ok;",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test('should return verificationKey', () => {",
+              "    pm.expect(res.verificationKey).to.exist;",
+              "});",
+              ""
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"filepath\": \"examples/test.zok\"}"
+        },
+        "url": {
+          "raw": "{{API_URL}}/generate-keys",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "generate-keys"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "retrieve verification key",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "adf805e9-abe6-4967-a5c4-3d13d901e714",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var res = JSON.parse(responseBody);",
+              "",
+              "pm.test('should return a valid response', () => {",
+              "    pm.response.to.not.be.error;",
+              "    pm.response.to.be.ok;",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test('should return vk', () => {",
+              "    pm.expect(res.vk).to.exist;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "type": "text",
+            "value": "application/json"
+          },
+          {
+            "key": "body",
+            "value": "test",
+            "type": "text",
+            "disabled": true
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{API_URL}}/vk/test",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "vk/test"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "generate-proof",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "adf805e9-abe6-4967-a5c4-3d13d901e714",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "var res = JSON.parse(responseBody);",
+              "var req = JSON.parse(request.data);",
+              "",
+              "pm.test('should return a valid response', () => {",
+              "    pm.response.to.not.be.error;",
+              "    pm.response.to.be.ok;",
+              "    pm.response.to.be.withBody;",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test('should return docID', () => {",
+              "    pm.expect(res.docID).to.exist;",
+              "});",
+              "",
+              "pm.test('should return proof', () => {",
+              "    pm.expect(res.proof).to.exist;",
+              "});",
+              "",
+              "pm.test('should return inputs', () => {",
+              "    pm.expect(res.inputs).to.exist;",
+              "});",
+              "",
+              "pm.test('should return verificationKeyID', () => {",
+              "    pm.expect(res.verificationKeyID).to.exist;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"docId\": \"test1234\", \n\t\"filename\": \"test\", \n\t\"inputs\": [5, 25]\n}"
+        },
+        "url": {
+          "raw": "{{API_URL}}/generate-proof",
+          "host": [
+            "{{API_URL}}"
+          ],
+          "path": [
+            "generate-proof"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "protocolProfileBehavior": {}
+}

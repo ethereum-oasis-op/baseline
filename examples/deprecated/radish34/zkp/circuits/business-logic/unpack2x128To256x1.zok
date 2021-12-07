@@ -1,0 +1,9 @@
+import "utils/pack/unpack128" as unpack128
+
+// Unpack a field[2] (assumed to be two 128-bit values) into 256 bits:
+// unpack2x128To256x1
+def main(field[2] input)->(field[256]):
+	field[128] left = unpack128(input[0])
+	field[128] right = unpack128(input[1])
+  field[256] output = [...left, ...right]
+  return output

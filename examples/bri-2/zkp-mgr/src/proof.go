@@ -2,12 +2,19 @@ package main
 
 import (
 	"bytes"
+	"context"
+	"errors"
+	"io"
 	"log"
 	"math/big"
+	"os"
+	"time"
 
+	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fp"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/frontend"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 // solidity contract inputs
@@ -51,6 +58,54 @@ func GenerateProof(compiledCircuit frontend.CompiledConstraintSystem, provingKey
 	solidityInput.c[0] = new(big.Int).SetBytes(proofBytes[fpSize*6 : fpSize*7])
 	solidityInput.c[1] = new(big.Int).SetBytes(proofBytes[fpSize*7 : fpSize*8])
 
-	log.Printf("Proof successfully generated")
+	log.Println("Proof successfully generated")
 	return proofBytes, solidityInput, nil
+}
+
+func GetCompiledCircuit(circuitID string) (frontend.CompiledConstraintSystem, groth16.ProvingKey, error) {
+	// Create reader for r1cs file
+	path := "src/circuits/" + circuitID + "/compiled.r1cs"
+	var compiledReader io.Reader
+	compiledReader, err := os.Open(path)
+	if err != nil {
+		errReturn := errors.New("[Read r1cs file] " + err.Error())
+		return nil, nil, errReturn
+	}
+	log.Println("Read from circuit binary file")
+
+	// Decode r1cs binary, store in compiledCircuit
+	compiledCircuit := groth16.NewCS(ecc.BN254)
+	_, err = compiledCircuit.ReadFrom(compiledReader)
+	if err != nil {
+		errReturn := errors.New("[Decode r1cs] " + err.Error())
+		return nil, nil, errReturn
+	}
+	log.Println("Converted circuit binary")
+
+	// Get circuit from db
+	var circuit ZKCircuit
+	collection := dbClient.Database(dbName).Collection(zkCircuitCollection)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	filter := bson.M{"_id": circuitID}
+	err = collection.FindOne(ctx, filter).Decode(&circuit)
+	if err != nil {
+		errReturn := errors.New("[Mongo FindOne] " + err.Error())
+		return nil, nil, errReturn
+	}
+	log.Println("Retrieved circuit metadata from db")
+
+	// Read proving key from disk and convert to groth16.ProvingKey
+	path = "src/circuits/" + circuitID + "/proving.key"
+	var pkReader io.Reader
+	pkReader, err = os.Open(path)
+	provingKey := groth16.NewProvingKey(ecc.BN254)
+	_, err = provingKey.ReadFrom(pkReader)
+	if err != nil {
+		errReturn := errors.New("[Read proving.key file] " + err.Error())
+		return nil, nil, errReturn
+	}
+	log.Println("Successfully read proving.key from file")
+	return compiledCircuit, provingKey, nil
 }
