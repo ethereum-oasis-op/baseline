@@ -6,7 +6,7 @@ export const ProofToast = ({index, toast, removeToast}) => {
     return (
         <Toast fade>
             <ToastHeader icon={<span>🚢</span>} toggle={() => removeToast(index)}>
-                Proof Generation Failed
+                Proof Verification Failed
             </ToastHeader>
             <ToastBody>
                 {toast.coord} should be a {toast.attempt ? 'miss' : 'hit'}.

@@ -55,17 +55,25 @@ export class Game extends React.Component {
     }
 
     shipPlaced = () => {
-        return this.state.game !== undefined && 
-            this.state.game.players
+        if (this.state.game !== undefined) {
+            let player = this.state.game.players
             .find(player => player.id === this.props.userID )
-            .hash
+
+            return player.hash && player.hash.length > 0
+        }
+
+        return false
     }
 
     opponentShipPlaced = () => {
-        return this.state.game !== undefined && 
-            this.state.game.players
+        if (this.state.game !== undefined) {
+            let player = this.state.game.players
             .find(player => player.id !== this.props.userID )
-            .hash
+
+            return player.hash && player.hash.length > 0
+        }
+
+        return false
     }
 
     gameStarted = () => {
@@ -167,17 +175,20 @@ export class Game extends React.Component {
     updateGame = (game) => {
         const eventLog = this.state.eventLog
         
+        console.log(game)
+
         for (let i = 0; i < 2; i++) {
-            if (!this.state.game.players[i].hash && game.players[i].hash) {
-                eventLog.push({
-                    player: i,
-                    type: 'place'
-                })
+            if (!this.state.game.players[i].hash || this.state.game.players[i].hash.length === 0) {
+                if (game.players[i].hash && game.players[i].hash.length > 0) {
+                    eventLog.push({
+                        player: i,
+                        type: 'place'
+                    })
+                }
             }
         }
 
 
-        console.log(game)
         this.setState({eventLog, game})
     }
 
@@ -202,7 +213,9 @@ export class Game extends React.Component {
                 let y = parseInt(event.data.publicSignals[4])
                 logItem.data = {
                     coord: coordFromXY(x, y),
-                    result: result
+                    result: result,
+                    proof: event.data.proof,
+                    publicSignals: event.data.publicSignals
                 }
 
                 if (event.data.playerId !== this.props.userID)

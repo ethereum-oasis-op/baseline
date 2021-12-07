@@ -59,14 +59,14 @@ router.put('/hash/:id', async (req, res) => {
 
             const player = game.players.find(player => player.id === id)
             
-            if (player.hash !== undefined)
+            if (player.hash !== undefined && player.hash > 0)
                 return res.status(409).send('Player hash already set.')
 
             const boardHash = await hash(req.body);
 
             player.hash = boardHash
 
-            updateGame(game) // remove if consumer consumes own messages
+            updateGame(game)
 
             const gameProducer = new KafkaProducer('game', gameEventType);
             await gameProducer.queue({id: game.id, players: game.players});
@@ -83,8 +83,6 @@ router.post('/target', async (req, res) => {
   const targetProducer = new KafkaProducer('battleship', targetEventType);
   await targetProducer.queue(req.body);
   res.sendStatus(200)
-
-  handleGameEvent('target', req.body) // probably remove once kafka consumer/producer issues get sorted out
 })
 
 router.post('/proof', async (req, res) => {
@@ -112,8 +110,6 @@ router.post('/proof', async (req, res) => {
       await proofProducer.queue(proofMsg);
       res.sendStatus(200);
     
-      handleGameEvent('proof', proofMsg) // probably remove once kafka consumer/producer issues get sorted out
-
       return
   }
   

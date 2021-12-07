@@ -3,7 +3,7 @@ const { orgEventType, proofEventType, targetEventType, gameEventType, workgroupE
 let kafkaConfig = new KafkaConfig();
 
 const { insertOrg } = require('../organizationRegistry')
-const { updateGame } = require('../battleship')
+const { updateGame, handleGameEvent } = require('../battleship')
 const { updateWorkgroup } = require('../workgroupRegistry')
 
 const { getVerifyProofInputs } = require('../privacy/proof-verify')
@@ -24,22 +24,16 @@ async function consume() {
         break;
       case 'proof':
         const proofMessage = proofEventType.fromBuffer(data.value);
-        if (proofMessage.playerId === currentPlayerId) {
-          console.log('proof message received ', proofMessage)
-          verifyInputs = getVerifyProofInputs(proofMessage.proof, proofMessage.publicSignals);
-          truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.input, proofMessage.gameId, () => {
-            // TODO: push information to frontend
-            console.log('verified!')
-          });
-        }
+        console.log('proof message received ', proofMessage)
+        handleGameEvent('proof', proofMessage)
         break;
+        
       case 'battleship': 
         const targetMessage = targetEventType.fromBuffer(data.value);
-        if (targetMessage.playerId === currentPlayerId) {
-          console.log('target message received ', targetEventType.fromBuffer(data.value))
-          // TODO: push information to frontend, so frontend can know to call /proof endpoint
-        }
+        console.log('target message received ', targetEventType.fromBuffer(data.value))
+        handleGameEvent('target', targetMessage)
         break;
+
       case 'game':
         const game = gameEventType.fromBuffer(data.value)
         console.log('game message received ', game)

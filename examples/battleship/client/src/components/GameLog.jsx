@@ -36,7 +36,14 @@ export const GameLog = ({playerNum, names, events, sendResult}) => {
                                     </Row>
                                     </ListGroupItem>    
                             case RESULT_EVENT:
-                                return <ListGroupItem key={index}>{data.result ? '💥' : '💧'} {data.coord} is a {data.result ? 'hit' : 'miss'}.</ListGroupItem>    
+                                return <ListGroupItem key={index}>
+                                    <Row>
+                                    <Col md={8}>{data.result ? '💥' : '💧'} {data.coord} is a {data.result ? 'hit' : 'miss'}.</Col>
+                                    <Col md={1}></Col>
+                                    <Col md={2}><Button color='link'>Verify</Button></Col>
+                                    </Row>
+                                    
+                                    </ListGroupItem>    
                             default:
                                 return <ListGroupItem key={index}>{player} attempted an invalid event of type {type} </ListGroupItem>
                         }
