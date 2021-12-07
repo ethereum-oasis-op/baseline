@@ -79,7 +79,7 @@ export class Game extends React.Component {
         let playerNames = []
 
         for (let i = 0; i < 2; i++) {
-            await axios.get(`/organization/${players[i].id}`)
+            await axios.get(`/api/organization/${players[i].id}`)
             .then((res) => {
                 playerNames.push(res.data.name)
             })
@@ -106,7 +106,7 @@ export class Game extends React.Component {
 
             let [x, y] = xyFromIndex(index)
 
-            await axios.put(`/battleship/hash/${this.state.game.id}`, {
+            await axios.put(`/api/battleship/hash/${this.state.game.id}`, {
                 id: this.props.userID,
                 shipX: x,
                 shipY: y,
@@ -123,7 +123,7 @@ export class Game extends React.Component {
         
         let [x, y] = xyFromIndex(index)
 
-        await axios.post('/battleship/target', {
+        await axios.post('/api/battleship/target', {
             playerId: this.props.userID,
             gameId: this.state.game.id,
             x,
@@ -141,7 +141,7 @@ export class Game extends React.Component {
 
         let hit = + (result === SHIP)
 
-        await axios.post('/battleship/proof', {
+        await axios.post('/api/battleship/proof', {
             playerId: this.props.userID,
             gameId: this.state.game.id,
             shipX: x,

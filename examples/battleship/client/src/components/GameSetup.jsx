@@ -31,7 +31,7 @@ export const GameSetup = ({id}) => {
     }
 
     const createWorkgroup = () => {
-        axios.post('/workgroup', {
+        axios.post('/api/workgroup', {
             id: id,
             session: socket.id
         })
@@ -41,7 +41,7 @@ export const GameSetup = ({id}) => {
     }
 
     const joinWorkgroup = () => {
-        axios.post(`/workgroup/join/${gameCode}`, {
+        axios.post(`/api/workgroup/join/${gameCode}`, {
             id: id,
             session: socket.id
         })

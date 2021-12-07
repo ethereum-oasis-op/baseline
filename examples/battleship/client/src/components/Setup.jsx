@@ -10,7 +10,7 @@ import { GameSetup } from './GameSetup';
 export const Setup = ({userID, setUserID}) => {
 
   const createOrg = (orgName) => {
-    axios.post(`/organization`, {
+    axios.post(`/api/organization`, {
       name: orgName
     })
     .then((res) => {

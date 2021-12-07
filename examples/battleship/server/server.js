@@ -35,9 +35,9 @@ app.use(bodyParser.json());
 
 app.use('/', express.static('public_static'));
 
-app.use('/organization', organizationRouter)
-app.use('/workgroup', workgroupRouter)
-app.use('/battleship', battleshipRouter)
+app.use('/api/organization', organizationRouter)
+app.use('/api/workgroup', workgroupRouter)
+app.use('/api/battleship', battleshipRouter)
 
 app.get('/accounts', (req, res) => {
   truffle_connect.start(function (accounts) {

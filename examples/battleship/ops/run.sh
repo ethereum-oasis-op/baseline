@@ -11,3 +11,7 @@ docker exec -it kafka /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstra
 docker exec -it kafka /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1  --partitions 1 --topic proof
 
 docker-compose --profile bpi up -d
+
+docker-compose --profile frontend build
+
+docker-compose --profile frontend up -d

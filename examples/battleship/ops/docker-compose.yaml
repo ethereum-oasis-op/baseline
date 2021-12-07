@@ -66,3 +66,25 @@ services:
       - ganache-cli
     profiles:
       - bpi
+  p1-client:
+    build:
+      context: ../client
+      dockerfile: ../client/Dockerfile
+    container_name: 'p1-client'
+    ports:
+      - '8080:3000'
+    profiles:
+      - frontend
+    environment:
+      - PROXY_URL=http://p1-bpi:3000
+  p2-client:
+    build:
+      context: ../client
+      dockerfile: ../client/Dockerfile
+    container_name: 'p2-client'
+    ports:
+      - '8081:3000'
+    profiles:
+      - frontend
+    environment:
+      - PROXY_URL=http://p2-bpi:3000
