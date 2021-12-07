@@ -1,4 +1,4 @@
-export class Workstep { 
+export class Workstep {
     name: string;
     id: string;
     status: string;
@@ -9,11 +9,11 @@ export class Workstep {
         this.name = name;
     }
 
-    setBusinessLogicToExecute(businessLogicToExecute: any ) {
+    setBusinessLogicToExecute(businessLogicToExecute: any) {
         this.businessLogicToExecute = businessLogicToExecute;
     }
 
-    execute(stateObject: any ) {
+    execute(stateObject: any) {
         return this.businessLogicToExecute(stateObject);
     }
 

@@ -45,7 +45,7 @@ export class BPI {
 
         return workgroup;
     }
-    
+
 
     getWorkgroupById(id: string): Workgroup {
         const workgroups = this.workgroups.filter(workgroup => workgroup.id === id);
@@ -53,24 +53,24 @@ export class BPI {
         return workgroups[0];
     }
 
-    invite(id:string, name:string, sender:BpiSubject, recipient:string, workgroupId: string ,agreement:Agreement):Invitation{
-        const inv = new Invitation(id,name,sender,recipient,workgroupId,agreement);
-        
+    invite(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation {
+        const inv = new Invitation(id, name, sender, recipient, workgroupId, agreement);
+
         this.invitations.push(inv);
         return inv;
     }
 
-    getInvitationById(id:string):Invitation{
-        const filtInv = this.invitations.filter(inv=>inv.id === id)
+    getInvitationById(id: string): Invitation {
+        const filtInv = this.invitations.filter(inv => inv.id === id)
 
         return filtInv[0];
     }
 
-    createProof(input:any){
+    createProof(input: any) {
         return Math.random().toString(36).substr(2, 20);
     }
 
-    signedInviteEvent(invId: string, bobsData: [string,string]){
+    signedInviteEvent(invId: string, bobsData: [string, string]) {
         const invite = this.getInvitationById(invId);
         const bob = new BpiSubject();
         bob.id = bobsData[0];
@@ -81,18 +81,18 @@ export class BPI {
         this.getWorkgroupById(invite.workgroupId).addParticipants(bob);
     }
 
-    verifyProof(proof: string):boolean{
-        if(proof.length > 0) return true;
+    verifyProof(proof: string): boolean {
+        if (proof.length > 0) return true;
         else return false;
     }
 
-    sendOrder(object: any, workgroupId: string):[boolean,string]{
+    sendOrder(object: any, workgroupId: string): [boolean, string] {
         //gets workgroup that is chosen to send the object in
         const workgroup = this.getWorkgroupById(workgroupId);
         //executes the workstep of the workgroup
         const objCheck = workgroup.worksteps[0].execute(object)
         //if valid
-        if(objCheck){
+        if (objCheck) {
             //create some proof and save it
             const proof = this.createProof(object);
             this.agreement.proofs.push(proof);
@@ -100,18 +100,18 @@ export class BPI {
             workgroup.getParticipantsById("BO1").orders.push(object);
             workgroup.getParticipantsById("BO1").proofForActualWorkstep = proof;
             //return proof and status to Alice
-            return [objCheck,proof];
+            return [objCheck, proof];
         }
         //not valid
-        else{
+        else {
             //return error message to Alice
-            return [objCheck,"Error: Message"];
+            return [objCheck, "Error: Message"];
         }
 
     }
 
-    acceptOrder(orderId: string){
-                                                                            //this should be implemented with workgroup participants logic not hardcoded....
+    acceptOrder(orderId: string) {
+        //this should be implemented with workgroup participants logic not hardcoded....
         this.getOrganizationById("BO1").getOrderById(orderId).acceptanceStatus = "accepted";
         //create some proof and save it
         const proof = this.createProof('');                                 // up to discussion 
