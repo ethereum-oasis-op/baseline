@@ -15,12 +15,6 @@ export class Invitation{
         this.sender = sender;
         this.recipient = recipient;
         this.workgroupId = workgroupId;
-        this. agreement = agreement;
+        this.agreement = agreement;
     }
-
-    sign():[string,string]{
-        this.agreement.signature = true;
-        return ["BO1","BobOrganisation"];
-    }
-    
 }

@@ -69,19 +69,26 @@ export class BPI {
         return this.invitations.filter(inv => inv.recipient === email);
     }
 
-    createProof(input: any) {
+    createProof(agreementPreviousState: Agreement, signature: string) {
         return Math.random().toString(36).substr(2, 20);
     }
 
-    signedInviteEvent(invId: string, bobsData: [string, string]) {
-        const invite = this.getInvitationById(invId);
-        const bob = new BpiSubject();
-        bob.id = bobsData[0];
-        bob.name = bobsData[1];
+    signInvitation(invitationId: string, recipientSignature: string, recipientOrgId: string, recipientOrgName: string) {
+        const invitation = this.getInvitationById(invitationId);
 
-        invite.agreement.proofs.push(this.createProof(this.agreement));
-        this.organizations.push(bob);
-        this.getWorkgroupById(invite.workgroupId).addParticipants(bob);
+        // TODO: Verify signature from the recipient, this is just a mock
+        const bobsProof = this.createProof(this.agreement, recipientSignature); 
+
+        const bobSubject = new BpiSubject();
+        bobSubject.id = recipientOrgId;
+        bobSubject.name = recipientOrgName;
+
+        this.organizations.push(bobSubject);
+
+        const workgroup = this.getWorkgroupById(invitation.workgroupId);
+        workgroup.addParticipants(bobSubject);
+
+        this.agreement.proofs.push(bobsProof);
     }
 
     verifyProof(proof: string): boolean {
@@ -97,7 +104,7 @@ export class BPI {
         //if valid
         if (objCheck) {
             //create some proof and save it
-            const proof = this.createProof(object);
+            const proof = this.createProof(object, "TODO: Signature");
             this.agreement.proofs.push(proof);
             //send order and proof to bob.....                              => this should be implemented with workgroup participants logic not hardcoded
             workgroup.getParticipantsById("BO1").orders.push(object);
@@ -117,7 +124,7 @@ export class BPI {
         //this should be implemented with workgroup participants logic not hardcoded....
         this.getOrganizationById("BO1").getOrderById(orderId).acceptanceStatus = "accepted";
         //create some proof and save it
-        const proof = this.createProof('');                                 // up to discussion 
+        const proof = this.createProof(this.agreement, "TODO: Signature");                                 // up to discussion 
         this.agreement.proofs.push(proof);
         this.getOrganizationById("BO1").proofForActualWorkstep = proof;
 
