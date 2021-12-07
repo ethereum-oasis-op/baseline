@@ -1,6 +1,4 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Go Report Card](https://goreportcard.com/badge/github.com/fosgate29/financialcircuit)](https://goreportcard.com/report/github.com/fosgate29/financialcircuit)
-[![CircleCI](https://circleci.com/gh/fosgate29/financialcircuit/tree/development.svg?style=svg)](https://circleci.com/gh/fosgate29/financialcircuit/tree/development)
 
 # Financial Circuit
 
@@ -128,7 +126,3 @@ you need the values below to test the Verifier:
 
 Here is the printscreen of how Remix would show:
 ![Example](./doc/RemixExample.png)
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
