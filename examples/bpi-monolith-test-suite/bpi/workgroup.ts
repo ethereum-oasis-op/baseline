@@ -11,16 +11,23 @@ export class Workgroup {
      constructor(worksteps: Workstep[]) {
           this.worksteps = worksteps;
      }
-     addWorkstep(workstep: Workstep){
+
+     addWorkstep(workstep: Workstep) {
           this.worksteps.push(workstep);
      }
-     addParticipants(bpiSubject:BpiSubject){
-         this.participants.push(bpiSubject);
-     }
-     getParticipantsById(id:string):BpiSubject{
-         const orgs = this.participants.filter(org=>org.id === id);
 
-         return orgs[0];
+     getWorkstepById(workstepId: string) {
+          const worksteps = this.worksteps.filter(wrkstp => wrkstp.id === workstepId);
+          return worksteps[0];
+     }
+
+     addParticipants(bpiSubject: BpiSubject) {
+          this.participants.push(bpiSubject);
+     }
+
+     getParticipantsById(id: string): BpiSubject {
+          const orgs = this.participants.filter(org => org.id === id);
+          return orgs[0];
      }
 }
 

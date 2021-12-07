@@ -1,31 +1,49 @@
-import { Order } from "./order";
+import { Order } from "../domain-objects/order";
 
-export class Agreement{
-
+export class Agreement {
     productIds: string[] = [];
-
-    orders: string[] = [];
-
+    orders: Order[] = [];
     proofs: string[] = [];
-
     signature: boolean = false;
 
+    addOrder(order: Order): boolean {
+        if (!this.isOrder(order)) {
+            return false;
+        }
 
-    isOrder(stateObject: Order ) {
-        //return stateObject["type"] === "Order";
+        if (!this.orderPriceIsGreater(order)) {
+            return false;
+        }
+
+        if (!this.idsMatch()) {
+            return false;
+        }
+
+        // TODO: Produce prooof
+
+        this.orders.push(order);
+        return true;
+    }
+
+    acceptOrder(orderId: string): boolean {
+        // TODO: Add workstep logic
+        return true;
+    }
+
+
+    private isOrder(stateObject: Order): boolean {
         return stateObject.type === "Purchase";
     }
 
-    orderPriceIsGreater(stateObject: Order) {
-        //return stateObject["price"] > 23;
+    private orderPriceIsGreater(stateObject: Order): boolean {
         return stateObject.price > 23;
     }
 
-    idsMatch() {
+    private idsMatch(): boolean {
         return this.idCheck();
     }
 
-    private idCheck(){
+    private idCheck() {
         return true;
     }
 

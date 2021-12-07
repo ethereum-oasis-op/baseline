@@ -1,3 +1,5 @@
+import { Agreement } from "./agreement";
+
 export class Workstep {
     name: string;
     id: string;
@@ -13,8 +15,9 @@ export class Workstep {
         this.businessLogicToExecute = businessLogicToExecute;
     }
 
-    execute(stateObject: any) {
-        return this.businessLogicToExecute(stateObject);
+    execute(currentState: Agreement, stateChangeObject: any) {
+        // TODO: Hack to have the function execute in the context of the agreement object
+        return this.businessLogicToExecute.call(currentState, stateChangeObject);
     }
 
 }

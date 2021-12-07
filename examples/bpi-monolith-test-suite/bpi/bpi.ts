@@ -1,9 +1,9 @@
 import { Agreement } from "./agreement";
 import { BpiSubject } from "./bpiSubject";
 import { Invitation } from "./invitation";
-import { Order } from "./order";
 import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
+import { BpiMessage } from "./bpiMessage";
 
 export class BPI {
     owner: BpiSubject;
@@ -11,6 +11,7 @@ export class BPI {
     workgroups: Workgroup[] = [];
     agreement: Agreement = new Agreement;
     invitations: Invitation[] = [];
+    messages: BpiMessage[] = [];
 
     constructor(id: string, name: string, productIds: string[]) {
         this.owner = this.addOrganization(id, name);
@@ -49,7 +50,6 @@ export class BPI {
 
     getWorkgroupById(id: string): Workgroup {
         const workgroups = this.workgroups.filter(workgroup => workgroup.id === id);
-
         return workgroups[0];
     }
 
@@ -69,15 +69,16 @@ export class BPI {
         return this.invitations.filter(inv => inv.recipient === email);
     }
 
-    createProof(agreementPreviousState: Agreement, signature: string) {
+    createProof(agreementPreviousState: Agreement, proposedChanges: Agreement, signature: string) {
         return Math.random().toString(36).substr(2, 20);
     }
 
     signInvitation(invitationId: string, recipientSignature: string, recipientOrgId: string, recipientOrgName: string) {
         const invitation = this.getInvitationById(invitationId);
 
-        // TODO: Verify signature from the recipient, this is just a mock
-        const bobsProof = this.createProof(this.agreement, recipientSignature); 
+        // TODO: Verify signature from the recipient
+        // TODO: What is the state change on agreement acceptance - status?
+        const bobsProof = this.createProof(this.agreement, this.agreement, recipientSignature); 
 
         const bobSubject = new BpiSubject();
         bobSubject.id = recipientOrgId;
@@ -96,40 +97,34 @@ export class BPI {
         else return false;
     }
 
-    sendOrder(object: any, workgroupId: string): [boolean, string] {
-        //gets workgroup that is chosen to send the object in
-        const workgroup = this.getWorkgroupById(workgroupId);
-        //executes the workstep of the workgroup
-        const objCheck = workgroup.worksteps[0].execute(object)
-        //if valid
-        if (objCheck) {
-            //create some proof and save it
-            const proof = this.createProof(object, "TODO: Signature");
-            this.agreement.proofs.push(proof);
-            //send order and proof to bob.....                              => this should be implemented with workgroup participants logic not hardcoded
-            workgroup.getParticipantsById("BO1").orders.push(object);
-            workgroup.getParticipantsById("BO1").proofForActualWorkstep = proof;
-            //return proof and status to Alice
-            return [objCheck, proof];
-        }
-        //not valid
-        else {
-            //return error message to Alice
-            return [objCheck, "Error: Message"];
-        }
+    sendWorkstepMessage(message: BpiMessage): string {
+        // TODO: Poor man's deep copy - change
+        const originalAgreementState = JSON.parse(JSON.stringify(this.agreement));
 
+        const workgroup = this.getWorkgroupById(message.workgroupId);
+        const workstep = workgroup.getWorkstepById(message.type);
+
+        // If succesfull, this changes the agreement state
+        const workstepResult = workstep.execute(this.agreement, message.payload);
+
+        if (!workstepResult) {
+            return "err: workstep execution failed to satisfy the agreement.";
+        }
+        
+        // TODO: Should this be in the workstep execution
+        const workstepStateChangeProof = this.createProof(originalAgreementState, this.agreement, message.senderSignature);
+        // TODO: Do not change the agreement directly
+        this.agreement.proofs.push(workstepStateChangeProof);
+
+        return workstepStateChangeProof;
     }
 
-    acceptOrder(orderId: string) {
-        //this should be implemented with workgroup participants logic not hardcoded....
-        this.getOrganizationById("BO1").getOrderById(orderId).acceptanceStatus = "accepted";
-        //create some proof and save it
-        const proof = this.createProof(this.agreement, "TODO: Signature");                                 // up to discussion 
-        this.agreement.proofs.push(proof);
-        this.getOrganizationById("BO1").proofForActualWorkstep = proof;
+    sendMessageToCounterParty(message: BpiMessage): void {
+        // TODO: Messaging capability
+        this.messages.push(message);
+    }
 
-        //sending it all to Alice
-        this.getOrganizationById("AL1").getOrderById(orderId).acceptanceStatus = "accepted";
-        this.getOrganizationById("AL1").proofForActualWorkstep = proof;
+    getNewvlyReceivedMessages(subject: BpiSubject): BpiMessage[] {
+        return this.messages.filter(msg => msg.receiver.id == subject.id);
     }
 }
