@@ -111,7 +111,7 @@ export class BPI {
             return "err: workstep execution failed to satisfy the agreement.";
         }
         
-        // TODO: Should this be in the workstep execution
+        // TODO: Should this be in the workstep execution?
         const workstepStateChangeProof = this.createProof(originalAgreementState, this.agreement, message.senderSignature);
         // TODO: Do not change the agreement directly
         this.agreement.proofs.push(workstepStateChangeProof);

@@ -19,8 +19,6 @@ export class Agreement {
             return false;
         }
 
-        // TODO: Produce prooof
-
         this.orders.push(order);
         return true;
     }
