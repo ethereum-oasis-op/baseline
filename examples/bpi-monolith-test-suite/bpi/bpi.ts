@@ -53,7 +53,7 @@ export class BPI {
         return workgroups[0];
     }
 
-    invite(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation {
+    inviteToWorkgroup(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation {
         const inv = new Invitation(id, name, sender, recipient, workgroupId, agreement);
 
         this.invitations.push(inv);

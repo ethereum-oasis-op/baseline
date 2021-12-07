@@ -31,6 +31,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
     it('Given newly created workgroup, Alice creates a workstep, workstep is added to the workgroup and is visible in the list of worksteps for a given workgroup', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"]);
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
+        
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
@@ -42,21 +43,20 @@ describe('BPI, Workgroup and Worflow setup', () => {
         expect(exchangeOrdersWorkgroup.worksteps[0].name).to.be.equal("WRKSTP1");
     });
 
-    it('Given a prepared workgroup, Alice invites Bob, BPI stores the invitation and invitee email and this information is available to Bob through a list of invitations', () => {
+    it('Given a prepared workgroup with a workstep, Alice invites Bob, BPI stores the invitation and invitee email and this information is available to in the invitations list', () => {
         const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"]);
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
 
-        const inviteBob = aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        const bobsInvitation = aliceBpi.getInvitationById("BI1");
 
-        expect(aliceBpi.invitations).not.to.be.empty;
-        expect(aliceBpi.invitations[0]).to.be.equal(aliceBpi.getInvitationById("BI1"));
-        expect(aliceBpi.invitations[0].name).to.be.equal(inviteBob.name);
-        expect(aliceBpi.invitations[0].recipient).to.be.equal(inviteBob.recipient);
-        expect(aliceBpi.invitations[0].agreement.productIds).to.be.equal(inviteBob.agreement.productIds);
-
+        expect(aliceBpi.invitations[0]).to.be.equal(bobsInvitation);
+        expect(bobsInvitation.name).to.be.equal("BobsInvite");
+        expect(bobsInvitation.recipient).to.be.equal("bob@bob.com");
+        expect(bobsInvitation.agreement.productIds).to.be.equal(aliceBpi.agreement.productIds);
     });
 
     it('Given a sent invitation, Alice queries list of sent invitations, can see Bob invitation details', () => {
@@ -65,7 +65,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
 
         const bobsInvitation = aliceBpi.getInvitationById("BI1");
 
@@ -86,7 +86,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        const inviteBob = aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        const inviteBob = aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
 
         //the invitation is signed (so the invitation has a sign method)
         const bobsEnteredData = inviteBob.sign();
@@ -112,7 +112,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.idsMatch);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        const inviteBob = aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        const inviteBob = aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
         const bobsEnteredData = inviteBob.sign();
         aliceBpi.signedInviteEvent(inviteBob.id, bobsEnteredData);
 
@@ -133,7 +133,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        const inviteBob = aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        const inviteBob = aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
         const bobsEnteredData = inviteBob.sign();
         aliceBpi.signedInviteEvent(inviteBob.id, bobsEnteredData);
 
@@ -169,7 +169,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        const inviteBob = aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        const inviteBob = aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
         const bobsEnteredData = inviteBob.sign();
         aliceBpi.signedInviteEvent(inviteBob.id, bobsEnteredData);
 
@@ -201,7 +201,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        const inviteBob = aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        const inviteBob = aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
         const bobsEnteredData = inviteBob.sign();
         aliceBpi.signedInviteEvent(inviteBob.id, bobsEnteredData);
         //Alice creates an order with a given price...that will be checked in the validation process
@@ -223,7 +223,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        const inviteBob = aliceBpi.invite("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
+        const inviteBob = aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
         const bobsEnteredData = inviteBob.sign();
         aliceBpi.signedInviteEvent(inviteBob.id, bobsEnteredData);
         //Alice creates an order with a given price...that will be checked in the validation process
