@@ -27,8 +27,11 @@ const joinGame = (session, game) => {
 }
 
 const startGame = (workgroup) => {
+    console.log(workgroup)
+
     let game = {
         id: workgroup.id,
+        shieldContractAddress: workgroup.shieldContractAddress,
         players: workgroup.players.map(id => ({id})),
         actions: []
     }
@@ -69,7 +72,7 @@ router.put('/hash/:id', async (req, res) => {
             updateGame(game)
 
             const gameProducer = new KafkaProducer('game', gameEventType);
-            await gameProducer.queue({id: game.id, players: game.players});
+            await gameProducer.queue({id: game.id, shieldContractAddress: game.shieldContractAddress, players: game.players});
             return res.sendStatus(200)
         }
 
@@ -117,10 +120,13 @@ router.post('/proof', async (req, res) => {
 })
 
 router.post('/verify', async(req, res) => {
-  verifyInputs = await getVerifyProofInputs(req.body.proof, req.body.publicSignals);
-  await truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.public, req.body.gameId, () => {
-    res.send('verified');
-  });
+    console.log('verify body', req.body.proof)
+    verifyInputs = await getVerifyProofInputs(req.body.proof, req.body.publicSignals);
+    console.log(games.get(req.body.gameId))
+    const shieldAddress = games.get(req.body.gameId).shieldContractAddress
+    await truffle_connect.verify(verifyInputs.a, verifyInputs.b, verifyInputs.c, verifyInputs.public, shieldAddress, () => {
+        res.send('verified');
+    });
 })
 
 const updateGame = (game) => {

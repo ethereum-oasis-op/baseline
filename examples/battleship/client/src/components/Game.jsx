@@ -45,6 +45,7 @@ export class Game extends React.Component {
         this.targetSquare.bind(this)
         this.sendResult.bind(this)
         this.updateGame.bind(this)
+        this.verify.bind(this)
         this.handleGameEvent.bind(this)
         this.removeToast.bind(this)
     }
@@ -192,6 +193,26 @@ export class Game extends React.Component {
         this.setState({eventLog, game})
     }
 
+    verify = async (index, proof, publicSignals) => {
+        let eventLog = this.state.eventLog
+        eventLog[index].data.verification = 'verifying'
+
+        this.setState({eventLog})
+
+        await axios.post('/api/battleship/verify', {
+            playerId: this.props.userID,
+            gameId: this.state.game.id,
+            proof,
+            publicSignals
+        })
+        .then(() => {
+            eventLog[index].data.verification = 'valid'
+        })
+        .catch(console.log)
+
+        this.setState({eventLog})
+    }
+
     handleGameEvent = (event) => {
         console.log(event)
 
@@ -215,7 +236,8 @@ export class Game extends React.Component {
                     coord: coordFromXY(x, y),
                     result: result,
                     proof: event.data.proof,
-                    publicSignals: event.data.publicSignals
+                    publicSignals: event.data.publicSignals,
+                    verification: undefined
                 }
 
                 if (event.data.playerId !== this.props.userID)
@@ -255,7 +277,7 @@ export class Game extends React.Component {
                     </Col>
                     <Col md={6}>
                         <GameInfo names={this.state.playerNames} />
-                        <GameLog  playerNum={this.playerNum(this.props.userID)} names={this.state.playerNames} events={this.state.eventLog} sendResult={this.sendResult}/>
+                        <GameLog  playerNum={this.playerNum(this.props.userID)} names={this.state.playerNames} events={this.state.eventLog} sendResult={this.sendResult} verify={this.verify}/>
                     </Col>
                 </Row>
             </Container>

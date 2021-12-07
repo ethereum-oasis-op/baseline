@@ -1,7 +1,6 @@
 const contract = require('truffle-contract');
 const shield_artifact = require('./Shield.json')
 const verifier_artifact = require('./Verifier.json')
-const { getShieldAddress } = require('../baseline/workgroupRegistry')
 
 const Web3Utils = require('web3-utils');
 
@@ -54,10 +53,10 @@ module.exports = {
       callback(self.accounts);
     });
   },
-  verify: async function(a, b, c, publicInputs, workgroupId, callback) {
+  verify: async function(a, b, c, publicInputs, shieldAddress, callback) {
     var self = this;
 
-    const shieldContractAddress = getShieldAddress(workgroupId)
+    const shieldContractAddress = shieldAddress
     console.log('shield address ', shieldContractAddress)
     Shield.setProvider(self.web3.currentProvider);
     const deployed = await Shield.at(shieldContractAddress)
