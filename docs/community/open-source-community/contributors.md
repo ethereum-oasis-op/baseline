@@ -13,21 +13,21 @@ There are four ways to contribute:
 
 There is one other way to contribute, and it's the most important: **use the work in the Baseline Protocol to improve your own offerings**. The Baseline Protocol is not a product or platform..**the product is YOUR product**.
 
-## Code of Conduct <a href="code-of-conduct" id="code-of-conduct"></a>
+## Code of Conduct <a href="#code-of-conduct" id="code-of-conduct"></a>
 
 Here is the link to the Baseline Protocol code of conduct:
 
 {% embed url="https://github.com/ethereum-oasis/baseline/blob/master/CODE_OF_CONDUCT.md" %}
 
-## Technical Contributors <a href="technical-contributors" id="technical-contributors"></a>
+## Technical Contributors <a href="#technical-contributors" id="technical-contributors"></a>
 
 Technical contributors either are working on architecture or developing code...but even correcting the language of documentation counts as a technical contribution and qualifies you to vote in upcoming [TSC](../community-leaders/#your-technical-steering-committee) elections.
 
 ### BLIPs
 
-As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained on the Baseline Repo or the Baseline-Roadmap Repo, TBD.  Contact the TSC Chair or Community Organizers here for details.
+As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained [here](https://github.com/eea-oasis/baseline-blips/issues).  YOU ARE ENCOURAGED TO SUBMIT IDEAS to the BLIP repo, and we are well-organized to review and act on them in a timely fashion. You never know -- we might decide to raise a grant to pay for your idea to get executed.  It's happened before.  Try it out!
 
-### Issues Organization and Community "Sprints" <a href="issues-organization-and-community-sprints" id="issues-organization-and-community-sprints"></a>
+### Issues Organization and Community "Sprints" <a href="#issues-organization-and-community-sprints" id="issues-organization-and-community-sprints"></a>
 
 Technical tasks are written as Github Issues. Issues will be reviewed, lightly prioritized, and communicated as "hey, help out here!" messaging to the developer community every two weeks. The TSC will periodically review what Issues and communications best succeeded in attracting help.
 
@@ -37,7 +37,7 @@ Most Issues should be attached to an Epic (see below).
 
 A good Task/Issue starts with a Verb: "Implement xyz."
 
-### Submitting a pull request <a href="submitting-a-pull-request" id="submitting-a-pull-request"></a>
+### Submitting a pull request <a href="#submitting-a-pull-request" id="submitting-a-pull-request"></a>
 
 Follow these steps when submitting a pull request:
 
@@ -48,27 +48,27 @@ Follow these steps when submitting a pull request:
 
 Good practice strongly favors committing work frequently and not loading up a long period of work in isolation. Be brave...let others see what you are working on, even if it isn't "ready."
 
-### eCLA and iCLA <a href="ecla-and-icla" id="ecla-and-icla"></a>
+### eCLA and iCLA <a href="#ecla-and-icla" id="ecla-and-icla"></a>
 
 Anyone can do a pull request and commit work to the community. In order for your work to be merged, you will need to sign the eCLA (entity contributor agreement) or iCLA (individual contributor agreement). Here are the details: [https://www.oasis-open.org/resources/projects/cla/projects-entity-cla](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla)​
 
 The iCLA happens automatically when people submit a pull request, or they can access directly by going to [https://cla-assistant.io/ethereum-oasis/baseline](https://cla-assistant.io/ethereum-oasis/baseline)​
 
-### Core Developers and Commit Rules <a href="maintainers-and-commit-rules" id="maintainers-and-commit-rules"></a>
+### Core Developers and Commit Rules <a href="#maintainers-and-commit-rules" id="maintainers-and-commit-rules"></a>
 
 Merging to Master requires review by THREE Core Developers. The TSC seeded the initial set of Core Developers. Now, any active Member can become a Core Developer. Core Developers may add more Core Developers by rough consensus, and the TSC may step in to resolve cases where this process fails.
 
-## Specifications Contributors <a href="specifications-contributors" id="specifications-contributors"></a>
+## Specifications Contributors <a href="#specifications-contributors" id="specifications-contributors"></a>
 
 The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [General Assembly](../community-leaders/specifications-steering-committee.md) is the coordinating body for this work.
 
-### Epics and Stories Organization <a href="epics-and-stories-organization" id="epics-and-stories-organization"></a>
+### Epics and Stories Organization <a href="#epics-and-stories-organization" id="epics-and-stories-organization"></a>
 
 The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/examples/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. (Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).)
 
 Zenhub enables Epics to nest, while Issues don't nest...not really. Therefore, the community will employ the practice of using Issues for engineering Tasks and Epics to contain high level topics, which may have nested within them a set of agile Epics, and in them a set of Stories, and even Stories may have other Stories nested in them. Engineering meets planning where a Story (in the form of a Zenhub Epic) is referenced by an Issue/Task. (This can work very well, but Zenhub's choice in calling Epics, _Epics_ can cause confusion.
 
-### A Good Story <a href="a-good-story" id="a-good-story"></a>
+### A Good Story <a href="#a-good-story" id="a-good-story"></a>
 
 A Zenhub "Epic" used as a high-level container for a grouping of work should be in short topic form -- primarily nouns.
 
