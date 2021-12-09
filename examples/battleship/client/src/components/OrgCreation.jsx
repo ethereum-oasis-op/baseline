@@ -10,7 +10,9 @@ export const OrgCreation = ({createOrg}) => {
     <>
       <h2>Create your organization</h2>
       <p>
-        In order to Baseline you need to create an organization first.
+        Organizations are used in this example as a collective identifier for a Baseline "Subject" and are implementation specific. In a Baseline Process Implementation (BPI), any identifier used relative to a `Subject` can vary depending on the implementers current environment. Examples include users, groups or businesses. 
+
+        In Battleship:Baseline, your organization will be squaring off against another organization in a Baseline `Workgroup.`
       </p>
 
       <FormGroup floating>

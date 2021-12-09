@@ -73,7 +73,7 @@ export const GameSetup = ({id}) => {
       <>
         <h2>Setup Workgroup</h2>
         <p>
-            Now that you've registered an organization it's time to create or join a workgroup. (EXPAND EXPLANATION) 
+        Once an organization has been established, the first step in baselining is setting up the collection of shared resources that will be involved in a specific Workflow or set of Workflows. This is called the Workgroup. In Battleship: Baseline, one initiating party will generate a new `Workgroup`` by creating a `Workgroup` name. Upon successful creation, a `Workgroup` reference ID will be generated and presented and will need to be delivered to the invitee out of band. In a BPI, for example, this can be accomplished by updating an OrgRegistry or interacting with a Decentralized Identifier directory/provider.
         </p>
 
         <Container>
