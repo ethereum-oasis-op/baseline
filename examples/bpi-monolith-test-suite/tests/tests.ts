@@ -122,7 +122,7 @@ describe('Exchanging business objects', () => {
     it('Given verified proof, Alice sends request for the order that is valid, the request is verified against the agreement, the proof and order is sent to Bob', () => {
         const [aliceBpi, exchangeOrdersWorkgroup] = setupOrderExchangeWorkgroupWithACleanAgreementState();
 
-        const orderBusinessObject = new Order("0001", "Purchase", 30);
+        const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
         const orgAlice = aliceBpi.organizations[0];
         const orgBob = aliceBpi.organizations[1];
         const addOrderMessage = new BpiMessage("M1", "W1", orgAlice, orgBob, exchangeOrdersWorkgroup.id, orderBusinessObject);
@@ -153,7 +153,7 @@ describe('Exchanging business objects', () => {
     it('Given newly setup workgroup between Alice and Bob, Alice sends request for the order that is invalid, the request is verified against the agreement, error response is sent back to Alice', () => {
         const [aliceBpi, exchangeOrdersWorkgroup] = setupOrderExchangeWorkgroupWithACleanAgreementState();
 
-        const orderBusinessObject = new Order("0001", "Purchase", 15);
+        const orderBusinessObject = new Order("0001", "Purchase", 15, "555333");
         const orgAlice = aliceBpi.organizations[0];
         const orgBob = aliceBpi.organizations[1];
         const addOrderMessage = new BpiMessage("M1", "W1", orgAlice, orgBob, exchangeOrdersWorkgroup.id, orderBusinessObject);
@@ -185,36 +185,45 @@ describe('Exchanging business objects', () => {
     //     expect(bpiResponseForBob).to.be.true;
     // });
 
-    // it('Given Bob receives a positive result, Bob performs acceptance, the acceptance is returned to Alice', () => {
-    //     const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"]);
-    //     const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
-    //     const workStep = new Workstep("W1", "WRKSTP1");
-    //     workStep.setBusinessLogicToExecute(aliceBpi.agreement.orderPriceIsGreater);
-    //     exchangeOrdersWorkgroup.addWorkstep(workStep);
-    //     const inviteBob = aliceBpi.inviteToWorkgroup("BI1", "BobsInvite", aliceBpi.owner, "bob@bob.com", exchangeOrdersWorkgroup.id, aliceBpi.agreement);
-    //     const bobsEnteredData = inviteBob.sign();
-    //     aliceBpi.signedInviteEvent(inviteBob.id, bobsEnteredData);
-    //     //Alice creates an order with a given price...that will be checked in the validation process
-    //     const businessObject = new Order("0001", "Purchase", 30);
-    //     //Order is saved in Alices databse of orders
-    //     const aliceOrg = aliceBpi.getOrganizationById("AL1");
-    //     aliceOrg.orders.push(businessObject);
-    //     //send request with the order (valid)
-    //     const bpiResponseForAlice = aliceBpi.sendOrder(businessObject, exchangeOrdersWorkgroup.id);
-    //     //bob validates the recieved proof and should recieve a positive result
-    //     const bpiResponseForBob = aliceBpi.verifyProof(aliceBpi.getOrganizationById("BO1").proofForActualWorkstep);
-    //     //bpi registers accept/decline with order id 
-    //     aliceBpi.acceptOrder(businessObject.id);
+    it('Given Bob receives a positive result, Bob performs acceptance, the acceptance is returned to Alice', () => {
+        const [aliceBpi, exchangeOrdersWorkgroup] = setupOrderExchangeWorkgroupWithACleanAgreementState();
+        const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
+        const orgAlice = aliceBpi.organizations[0];
+        const orgBob = aliceBpi.organizations[1];
+        const addOrderMessage = new BpiMessage("M1", "W1", orgAlice, orgBob, exchangeOrdersWorkgroup.id, orderBusinessObject);
 
-    //     //if Bobs order status updated to accepted
-    //     expect(aliceBpi.getOrganizationById("BO1").getOrderById("0001").acceptanceStatus).to.be.equal("accepted");
-    //     //proof to be updated to new one
-    //     expect(aliceBpi.getOrganizationById("BO1").proofForActualWorkstep).to.be.equal(aliceBpi.agreement.proofs[2]);
-    //     //if Alices order status updated to accepted
-    //     expect(aliceBpi.getOrganizationById("AL1").getOrderById("0001").acceptanceStatus).to.be.equal("accepted");
-    //     //proof to be equal to recieved one
-    //     expect(aliceBpi.getOrganizationById("AL1").proofForActualWorkstep).to.be.equal(aliceBpi.agreement.proofs[2]);
-    // });
+        // Alice sends to BPI for agreement update, validation and proof generation
+        let proof = aliceBpi.sendWorkstepMessage(addOrderMessage);
+        addOrderMessage.setExecutionProof(proof);
+
+        // Alice sends request to BPI to message Bob
+        aliceBpi.sendMessageToCounterParty(addOrderMessage);
+
+        // Create workStep2, set workStep's business logic, and add work step to workgroup
+        const workStep = new Workstep("W2", "WRKSTP2");
+        workStep.setBusinessLogicToExecute(aliceBpi.agreement.acceptOrder);
+        exchangeOrdersWorkgroup.addWorkstep(workStep);
+        
+        // Bob sends to BPI for agreement update, vlaidation, and proof generation
+        const acceptOrderMessage = new BpiMessage("M2", "W2", orgBob, orgAlice, exchangeOrdersWorkgroup.id, orderBusinessObject);
+        proof = aliceBpi.sendWorkstepMessage(acceptOrderMessage);
+        acceptOrderMessage.setExecutionProof(proof);
+        
+        // Bob sends request to BPI to message Alice 
+        aliceBpi.sendMessageToCounterParty(acceptOrderMessage);
+        
+        // Alice receives\queries messages and fetches the message from Bob
+        const receivedMessage = aliceBpi.getNewvlyReceivedMessages(orgAlice);
+
+        // Alice verifies the state against the BPI
+        const verificationResult = aliceBpi.verifyProof(receivedMessage[0].executionProof);
+
+        expect(aliceBpi.agreement.orders.length).to.be.equal(1);
+        expect(aliceBpi.agreement.orders[0].acceptanceStatus).to.be.equal("accepted");
+        expect(aliceBpi.agreement.proofs.length).to.be.equal(3);
+        expect(aliceBpi.agreement.proofs[2]).to.be.equal(proof);
+        expect(verificationResult).to.be.true;
+    });
 
     // it('Alice receives Bobs acceptance and proof, Alice validates the proof, Alice recieves a positive result', () => {
     //     expect(1).to.be.equal(2);

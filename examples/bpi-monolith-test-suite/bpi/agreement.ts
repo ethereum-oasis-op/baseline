@@ -15,7 +15,7 @@ export class Agreement {
             return false;
         }
 
-        if (!this.idsMatch()) {
+        if (!this.productIdMatches(order)) {
             return false;
         }
 
@@ -23,11 +23,34 @@ export class Agreement {
         return true;
     }
 
-    acceptOrder(orderId: string): boolean {
+    acceptOrder(order: Order): boolean {
         // TODO: Add workstep logic
+            
+        if (!this.isOrder(order)) {
+            return false;
+        }
+
+        if (!this.orderIdMatches(order)) {
+            return false;
+        }
+
+        if (!this.productIdMatches(order)) {
+            return false;
+        }
+
+        if (!this.orderPriceIsGreater(order)) {
+            return false;
+        }
+
+        if (!this.isPendingState(order)) {
+            return false;
+        }
+
+        // check that previous stat is pending 
+
+        order.setAcceptanceStatus("accepted");
         return true;
     }
-
 
     private isOrder(stateObject: Order): boolean {
         return stateObject.type === "Purchase";
@@ -37,12 +60,18 @@ export class Agreement {
         return stateObject.price > 23;
     }
 
-    private idsMatch(): boolean {
-        return this.idCheck();
+    private orderIdMatches(stateObject: Order): boolean {
+        const orders = this.orders.filter(order => order.id === stateObject.id);
+        return orders.length === 1;
     }
 
-    private idCheck() {
-        return true;
+    private productIdMatches(stateObject: Order): boolean {
+        return this.productIds.includes(stateObject.productId);
+
+    }
+
+    private isPendingState( stateObject: Order ): boolean {
+        return stateObject.acceptanceStatus === "pending";
     }
 
 }
