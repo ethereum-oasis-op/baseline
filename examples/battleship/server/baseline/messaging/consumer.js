@@ -3,18 +3,14 @@ const { orgEventType, proofEventType, targetEventType, gameEventType, workgroupE
 let kafkaConfig = new KafkaConfig();
 
 const { insertOrg } = require('../organizationRegistry')
-const { updateGame, handleGameEvent } = require('../battleship')
+const { updateGame, handleGameEvent } = require('../game')
 const { updateWorkgroup } = require('../workgroupRegistry')
-
-const { getVerifyProofInputs } = require('../privacy/proof-verify')
-const truffle_connect = require('../../connection/truffle_connect');
 
 async function consume() {
   const stream = kafkaConfig.consumer();
 
   stream.on('data', function(data) {
     console.log('message received', data);
-    const currentPlayerId = process.env.PLAYER_ID;
     switch(data.topic) {
       case 'orgReg':
         insertOrg(orgEventType.fromBuffer(data.value))

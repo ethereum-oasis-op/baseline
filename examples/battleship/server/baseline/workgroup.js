@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const { organizationExists } = require('./organizationRegistry')
 
-const { joinGame, startGame } = require('./battleship')
+const { joinGame, startGame } = require('./game')
 
 const { workgroupEventType, orgEventType } = require('./messaging/eventType.js')
 const KafkaProducer = require('./messaging/producer.js');

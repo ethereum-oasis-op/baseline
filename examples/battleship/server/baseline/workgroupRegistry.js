@@ -1,4 +1,4 @@
-const { startGame } = require('./battleship')
+const { startGame } = require('./game')
 
 let workgroupRegistry = new Map()
 
