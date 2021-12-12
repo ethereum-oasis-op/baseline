@@ -13,6 +13,6 @@ $ truffle compile
 
 To run ganache and deploy contracts
 ```
-$ ganache-cli -i 666
+$ ganache-cli -i 123
 $ truffle migrate --network development
 ```

@@ -1,26 +1,3 @@
 # Baseline Battleship Server
 
-Prerequisite
-```
-$ npm install
-$ npm install -g truffle
-$ npm install -g ganache-cli
-```
-
-To compile contracts
-```
-$ truffle compile
-```
-
-To run ganache and deploy contracts
-```
-$ ganache-cli -i 666
-$ truffle migrate --network development
-```
-
-
-To run
-```
-$ npm install
-$ npm start
-```
+To run battleship game navigate to ops folder and execute `run.sh` script. This will bootstrap two front end apps on ports 8080 and 8081, each one targeting its own battleship reference implementation, using kafka for communication and ganache-cli for contracts deployment and interaction.
