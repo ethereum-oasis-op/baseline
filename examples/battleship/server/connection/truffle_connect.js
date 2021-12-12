@@ -1,6 +1,6 @@
 const contract = require('truffle-contract');
-const shield_artifact = require('./Shield.json')
-const verifier_artifact = require('./Verifier.json')
+const shield_artifact = require('../build/contracts/Shield.json')
+const verifier_artifact = require('../build/contracts/Verifier.json')
 
 const Web3Utils = require('web3-utils');
 
@@ -56,12 +56,10 @@ module.exports = {
   verify: async function(a, b, c, publicInputs, shieldAddress, callback) {
     var self = this;
 
-    const shieldContractAddress = shieldAddress
-    console.log('shield address ', shieldContractAddress)
     Shield.setProvider(self.web3.currentProvider);
-    const deployed = await Shield.at(shieldContractAddress)
+    const deployed = await Shield.at(shieldAddress);
 
-    // TODO: verify sha3 method here, for now just hashing public inputs
+    // TODO: for now just hashing public inputs, should we put something else in commitment here?
     const commitment = Web3Utils.sha3(Web3Utils.toHex(publicInputs));
     const res = await deployed.verifyAndPush.call(a, b, c, publicInputs, commitment, { from: self.account })
     callback(res)
