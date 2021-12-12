@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { BOARD_WIDTH, SHIP_LENGTH, SHIP, COORDS, coordFromIndex } from './Game'
+import { BOARD_WIDTH, SHIP_LENGTH, SHIP, coordFromIndex } from './Game'
 
 import '../styles/board.css'
 

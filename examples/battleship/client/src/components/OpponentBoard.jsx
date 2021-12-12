@@ -1,4 +1,4 @@
-import { EMPTY, COORDS, BOARD_WIDTH, coordFromIndex } from './Game'
+import { EMPTY, coordFromIndex } from './Game'
 
 import '../styles/board.css'
 
