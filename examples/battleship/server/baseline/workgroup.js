@@ -1,7 +1,3 @@
-// Currently this file uses an ephemeral in-memory workgroup registry
-// So all clients need to be connected to same node service.
-// Should probably be replaced with something like redis
-
 const express = require('express')
 const router = express.Router()
 

@@ -45,9 +45,6 @@ export const GameSetup = ({id}) => {
             id: id,
             session: socket.id
         })
-        // .then((res) => {
-        //     setWorkgroupId(res.data.id)
-        // })
         .catch((error) => {
             switch(error.response.status) {
                 case 403:

@@ -13,8 +13,6 @@ import { ProofToast } from './ProofToast';
 
 import { socket } from '../utils/socket'
 
-import '../styles/game.css'
-
 export const BOARD_WIDTH = 5;
 export const SHIP_LENGTH = 3;
 export const COORDS = ['A', 'B', 'C', 'D', 'E']
