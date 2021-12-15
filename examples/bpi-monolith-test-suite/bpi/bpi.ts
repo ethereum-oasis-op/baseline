@@ -103,7 +103,7 @@ export class BPI {
     // MESAGGING API
 
     postMessage(message: BpiMessage): string {
-        if (message.type === "INFO") {
+        if (message.type === "INFO") { // Look at [R111] in the standard, seems the type definition is on us. TODO: Move to constants
             this.messagingComponent.sendMessageToCounterParty(message);
             return "";
         } else if (message.type === "STORE") {
