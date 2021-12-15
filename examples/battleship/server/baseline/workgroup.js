@@ -14,6 +14,11 @@ const truffle_connect = require('../connection/truffle_connect')
 
 const { workgroupRegistry } = require('./workgroupRegistry')
 
+/*
+ * We chose to use a truncated ID with only 4 characters for the workgroup ID
+ * as it is unlikely that someone will exhaust all possible 4 character IDs
+ * when using the demo. The length of the ID can be adjusted using the value below.
+ */
 const ID_LENGTH = 4
 
 router.post('', async (req, res) => {
