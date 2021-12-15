@@ -4,6 +4,7 @@ import { Invitation } from "./invitation";
 import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
 import { BpiMessage } from "./bpiMessage";
+import { IMessagingComponent } from "./components/messaging/messaging.interface";
 
 export class BPI {
     owner: BpiSubject;
@@ -11,11 +12,13 @@ export class BPI {
     workgroups: Workgroup[] = [];
     agreement: Agreement = new Agreement;
     invitations: Invitation[] = [];
-    messages: BpiMessage[] = [];
+    messagingComponent: IMessagingComponent;
 
-    constructor(id: string, name: string, productIds: string[]) {
+    constructor(id: string, name: string, productIds: string[], messagingComponent: IMessagingComponent) {
         this.owner = this.addOrganization(id, name);
-        this.agreement.productIds = productIds;
+        this.agreement.productIds = productIds; // TODO: Move this to initialize agrement state or something similar
+
+        this.messagingComponent = messagingComponent;
     }
 
     // Used to register a new organization with the BPI and the external registry
@@ -78,7 +81,7 @@ export class BPI {
 
         // TODO: Verify signature from the recipient
         // TODO: What is the state change on agreement acceptance - status?
-        const bobsProof = this.createProof(this.agreement, this.agreement, recipientSignature); 
+        const bobsProof = this.createProof(this.agreement, this.agreement, recipientSignature);
 
         const bobSubject = new BpiSubject();
         bobSubject.id = recipientOrgId;
@@ -97,12 +100,29 @@ export class BPI {
         else return false;
     }
 
-    sendWorkstepMessage(message: BpiMessage): string {
+    // MESAGGING API
+
+    postMessage(message: BpiMessage): string {
+        if (message.type === "INFO") {
+            this.messagingComponent.sendMessageToCounterParty(message);
+            return "";
+        } else if (message.type === "STORE") {
+            return this.executeWorkstepMessage(message); // TODO: Create transaction out of this message and store in transaction pool for VSM to handle
+        }
+    }
+
+    getMessages(subject: BpiSubject): BpiMessage[] {
+        return this.messagingComponent.getNewvlyReceivedMessages(subject);
+    }
+
+    // MESAGGING API END
+
+    executeWorkstepMessage(message: BpiMessage): string { // TODO: Move to VSM component
         // TODO: Poor man's deep copy - change
         const originalAgreementState = JSON.parse(JSON.stringify(this.agreement));
 
         const workgroup = this.getWorkgroupById(message.workgroupId);
-        const workstep = workgroup.getWorkstepById(message.type);
+        const workstep = workgroup.getWorkstepById(message.workstepId);
 
         // If succesfull, this changes the agreement state
         const workstepResult = workstep.execute(this.agreement, message.payload);
@@ -110,21 +130,12 @@ export class BPI {
         if (!workstepResult) {
             return "err: workstep execution failed to satisfy the agreement.";
         }
-        
+
         // TODO: Should this be in the workstep execution?
         const workstepStateChangeProof = this.createProof(originalAgreementState, this.agreement, message.senderSignature);
         // TODO: Do not change the agreement directly
         this.agreement.proofs.push(workstepStateChangeProof);
 
         return workstepStateChangeProof;
-    }
-
-    sendMessageToCounterParty(message: BpiMessage): void {
-        // TODO: Messaging capability
-        this.messages.push(message);
-    }
-
-    getNewvlyReceivedMessages(subject: BpiSubject): BpiMessage[] {
-        return this.messages.filter(msg => msg.receiver.id == subject.id);
     }
 }

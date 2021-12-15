@@ -6,16 +6,18 @@ export class BpiMessage {
     sender: BpiSubject;
     receiver: BpiSubject;
     workgroupId: string;
+    workstepId: string;
     payload: any;
     senderSignature: string;
     executionProof: string;
 
-    constructor(id: string, type: string, sender: BpiSubject, receiver: BpiSubject, workgroupId: string, payload: any) {
+    constructor(id: string, type: string, sender: BpiSubject, receiver: BpiSubject, workgroupId: string,  workstepId: string, payload: any) {
         this.id = id;
         this.type = type;
         this.sender = sender;
         this.receiver = receiver;
         this.workgroupId = workgroupId;
+        this.workstepId = workstepId;
         this.payload = payload;
     }
 
