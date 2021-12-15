@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <title>JWT input</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- Office JavaScript API -->
+    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+  </head>
+  <body class="bg-dark text-light w-100 h-100">
+    <div
+      id="primary-key-input-dialog"
+      class="card h-100 bg-transparent"
+      style="min-height: 18rem; min-width: 15rem; display: none"
+    >
+      <div class="card-body border-0 bg-transparent">
+        <form>
+          <div class="form-group">
+            <label for="primary-key-txt" class="text">Primary Key Column</label>
+            <input class="form-control" id="primary-key-txt" />
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer card-footer border-0 bg-transparent">
+        <button id="ok-btn" type="button" class="btn btn-primary">OK</button>
+        <button id="close-btn" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </body>
+</html>
