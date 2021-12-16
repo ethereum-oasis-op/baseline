@@ -5,16 +5,21 @@ import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
 import { BpiMessage } from "./bpiMessage";
 import { IMessagingComponent } from "./components/messaging/messaging.interface";
-import { IWorkGroupComponent } from "./components/workgroup/workgroup.interface";
+import { IWorkgroupComponent } from "./components/workgroup/workgroup.interface";
+import { Transaction } from "./transaction";
+import { TransactionPool } from "./transactionPool";
 
 export class BPI {
     owner: BpiSubject;
     organizations: BpiSubject[] = [];
     agreement: Agreement = new Agreement;
     messagingComponent: IMessagingComponent;
-    workgroupComponent: IWorkGroupComponent;
+    workgroupComponent: IWorkgroupComponent;
+    invitations: Invitation[] = [];
+    messages: BpiMessage[] = [];
+    transactionPool: TransactionPool;
 
-    constructor(id: string, name: string, productIds: string[], messagingComponent: IMessagingComponent, workgroupComponent: IWorkGroupComponent) {
+    constructor(id: string, name: string, productIds: string[], messagingComponent: IMessagingComponent, workgroupComponent: IWorkgroupComponent) {
         this.owner = this.addOrganization(id, name);
         this.agreement.productIds = productIds; // TODO: Move this to initialize agrement state or something similar
 
