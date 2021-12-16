@@ -1,36 +1,35 @@
-const { startGame } = require('./game')
+const { startGame } = require('./game');
 
-let workgroupRegistry = new Map()
+let workgroupRegistry = new Map();
 
 const updateWorkgroup = (workgroup) => {
   if (workgroupRegistry.has(workgroup.id)) {
-    console.log(`updating workgroup with id ${workgroup.id}`)
+    console.log(`updating workgroup with id ${workgroup.id}`);
 
-    workgroupRegistry.set(workgroup.id, workgroup)
+    workgroupRegistry.set(workgroup.id, workgroup);
 
     if (workgroup.players.length === 2) {
-      startGame(workgroup)
+      startGame(workgroup);
     }
 
     return;
   }
 
-  console.log('adding new workgroup ', workgroup)
-  workgroupRegistry.set(workgroup.id, workgroup)
+  console.log('adding new workgroup ', workgroup);
+  workgroupRegistry.set(workgroup.id, workgroup);
 }
 
 const getShieldAddress = (workgroupId) => {
-  const workgroup = workgroupRegistry.get(workgroupId)
+  const workgroup = workgroupRegistry.get(workgroupId);
 
   if (!workgroup) {
-    console.log(`getShieldAddress - workgroup ${workgroupId} not found`)
+    console.log(`getShieldAddress - workgroup ${workgroupId} not found`);
     return;
   }
 
   return workgroup.shieldContractAddress;
 }
 
-// TODO: don't export whole registry...
 module.exports = {
   workgroupRegistry,
   updateWorkgroup,

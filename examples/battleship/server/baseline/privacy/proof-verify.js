@@ -2,15 +2,15 @@
 // this is also happening for our circuit at this time, but since circuit_js witness_calculator.js worked, wasm file should be fine
 // using this solution that somebody proposed in comments there until snarkjs bug is fixed
 // when this is fixed we should clean this up and replace with using groth16.fullProve function
-const snarkjs = require('snarkjs')
-const fs = require('fs')
+const snarkjs = require('snarkjs');
+const fs = require('fs');
 const path = require('path');
 const {utils} = require("ffjavascript");
 
-const wc = require('./utils/witness_calculator.js')
-const wasm = path.join(__dirname, 'circuit.wasm')
-const zkey = path.join(__dirname, 'circuit_final.zkey')
-const WITNESS_FILE =  '/tmp/witness'
+const wc = require('./utils/witness_calculator.js');
+const wasm = path.join(__dirname, 'circuit.wasm');
+const zkey = path.join(__dirname, 'circuit_final.zkey');
+const WITNESS_FILE =  '/tmp/witness';
 
 const generateWitness = async (inputs) => {
   const buffer = fs.readFileSync(wasm);

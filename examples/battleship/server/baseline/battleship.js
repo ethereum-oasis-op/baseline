@@ -1,61 +1,58 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-const { hash } = require('./utils/hash')
-
-const { fullProve, getVerifyProofInputs } = require('./privacy/proof-verify')
+const { hash } = require('./utils/hash');
+const { fullProve, getVerifyProofInputs } = require('./privacy/proof-verify');
 const truffle_connect = require('../connection/truffle_connect')
 
 const { targetEventType, proofEventType, gameEventType } = require('./messaging/eventType')
 const KafkaProducer = require('./messaging/producer');
 
-const { games, userInGame, updateGame } = require('./game')
-
+const { games, userInGame, updateGame } = require('./game');
 
 router.get('/:id', (req, res) => {
   if (games.has(req.params.id)) {
-    let game = games.get(req.params.id)
+    let game = games.get(req.params.id);
 
-    return res.json({ game })
+    return res.json({ game });
   }
 
-  res.sendStatus(404)
+  res.sendStatus(404);
 })
 
 router.put('/hash/:id', async (req, res) => {
-  const id = req.body.id
-  const gameID = req.params.id
+  const id = req.body.id;
+  const gameID = req.params.id;
 
   if (games.has(gameID)) {
     if (userInGame(id, gameID)) {
-      let game = games.get(gameID)
+      let game = games.get(gameID);
 
-      const player = game.players.find(player => player.id === id)
+      const player = game.players.find(player => player.id === id);
 
-      if (player.hash !== undefined && player.hash > 0)
-        return res.status(409).send('Player hash already set.')
+      if (player.hash && player.hash > 0) {
+        return res.status(409).send('Player hash already set.');
+      }
 
       const boardHash = await hash(req.body);
-
-      player.hash = boardHash
-
-      updateGame(game)
+      player.hash = boardHash;
+      updateGame(game);
 
       const gameProducer = new KafkaProducer('game', gameEventType);
       await gameProducer.queue({ id: game.id, shieldContractAddress: game.shieldContractAddress, players: game.players });
-      return res.sendStatus(200)
+      return res.sendStatus(200);
     }
 
-    return res.status(403).send('Action not permitted.')
+    return res.status(403).send('Action not permitted.');
   }
 
-  res.status(404).send(`Game #${game} does not exist`)
+  res.status(404).send(`Game #${game} does not exist`);
 })
 
 router.post('/target', async (req, res) => {
   const targetProducer = new KafkaProducer('battleship', targetEventType);
   await targetProducer.queue(req.body);
-  res.sendStatus(200)
+  res.sendStatus(200);
 })
 
 router.post('/proof', async (req, res) => {
@@ -63,14 +60,11 @@ router.post('/proof', async (req, res) => {
     shipX: req.body.shipX,
     shipY: req.body.shipY,
     shipO: req.body.shipO,
-    // TODO: is this passed in or fetched from state?
     shipHash: req.body.shipHash,
     targetX: req.body.targetX,
     targetY: req.body.targetY
   }
   const { proof, publicSignals } = await fullProve(inputSignals)
-
-  console.log(req.body.result, parseInt(publicSignals[0]))
 
   if (parseInt(publicSignals[0]) === req.body.result) {
     const proofMsg = {
@@ -83,10 +77,10 @@ router.post('/proof', async (req, res) => {
     await proofProducer.queue(proofMsg);
     res.sendStatus(200);
 
-    return
+    return;
   }
 
-  res.sendStatus(409)
+  res.sendStatus(409);
 })
 
 router.post('/verify', async (req, res) => {

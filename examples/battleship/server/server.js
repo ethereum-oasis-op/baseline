@@ -8,18 +8,18 @@ const truffle_connect = require('./connection/truffle_connect.js');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const { socketConnection } = require('./baseline/utils/socket')
-socketConnection(server)
+const { socketConnection } = require('./baseline/utils/socket');
+socketConnection(server);
 
-const { organizationRouter } = require('./baseline/organization')
-const { workgroupRouter } = require('./baseline/workgroup')
-const { battleshipRouter } = require('./baseline/battleship')
+const { organizationRouter } = require('./baseline/organization');
+const { workgroupRouter } = require('./baseline/workgroup');
+const { battleshipRouter } = require('./baseline/battleship');
 
-const KafkaConsumer = require('./baseline/messaging/consumer.js')
-KafkaConsumer.consume(console.log).then(() => {
-  console.log('consume success')
+const KafkaConsumer = require('./baseline/messaging/consumer.js');
+KafkaConsumer.consume().then(() => {
+  console.log('consume start successful');
 }).catch(err => {
-  console.log('consume err ', err)
+  console.log('consume start err ', err);
 })
 
 app.use(cors());

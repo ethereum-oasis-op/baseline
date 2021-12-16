@@ -26,32 +26,10 @@ module.exports = {
       self.accounts = accs;
       self.account = self.accounts[2];
 
-      const verifierInstance = await Verifier.new({from: self.account, gas: 3000000})
+      const verifierInstance = await Verifier.new({from: self.account, gas: 3000000});
       const shieldInstance = await Shield.new(verifierInstance.address, 0, {from: self.account, gas: 3000000});
-      // TODO: update workgroup shield address with shieldInstance.address
       callback(shieldInstance.address);
     })
-  },
-  start: function(callback) {
-    var self = this;
-    Shield.setProvider(self.web3.currentProvider);
-
-    self.web3.eth.getAccounts(function(err, accs) {
-      if (err != null) {
-        console.log("There was an error fetching your accounts.", err);
-        callback([])
-        return;
-      }
-
-      if (accs.length == 0) {
-        console.log("Couldn't get any accounts! Make sure your Ethereum client is configured correctly.");
-        return;
-      }
-      self.accounts = accs;
-      self.account = self.accounts[2];
-
-      callback(self.accounts);
-    });
   },
   verify: async function(a, b, c, publicInputs, shieldAddress, callback) {
     var self = this;
@@ -61,7 +39,7 @@ module.exports = {
 
     // TODO: for now just hashing public inputs, should we put something else in commitment here?
     const commitment = Web3Utils.sha3(Web3Utils.toHex(publicInputs));
-    const res = await deployed.verifyAndPush.call(a, b, c, publicInputs, commitment, { from: self.account })
-    callback(res)
+    const res = await deployed.verifyAndPush.call(a, b, c, publicInputs, commitment, { from: self.account });
+    callback(res);
   },
 }
