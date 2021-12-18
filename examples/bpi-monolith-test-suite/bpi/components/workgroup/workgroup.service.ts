@@ -3,9 +3,9 @@ import { BpiSubject } from '../identity/bpiSubject';
 import { Invitation } from './invitation';
 import { Workgroup } from './workgroup';
 import { Workstep } from './workstep';
-import { IWorkGroupComponent } from './workgroup.interface';
+import { IWorkgroupComponent } from './workgroup.interface';
 
-export class MockWorkgroupComponent implements IWorkGroupComponent {
+export class WorkgroupComponent implements IWorkgroupComponent {
     
     workgroups: Workgroup[] = [];
     invitations: Invitation[] = [];

@@ -1,15 +1,15 @@
 import { Agreement } from "../storage/agreement";
 import { Transaction } from "../transactions/transaction";
 import { IStorageComponent } from "../storage/storage.interface";
-import { IWorkGroupComponent } from "../workgroup/workgroup.interface";
+import { IWorkgroupComponent } from "../workgroup/workgroup.interface";
 import { IVirtualStateMachineComponent } from "./vsm.interface";
 
 
 export class VirtualStateMachine implements IVirtualStateMachineComponent {
     storageComponent: IStorageComponent;
-    workgroupComponent: IWorkGroupComponent;
+    workgroupComponent: IWorkgroupComponent;
 
-    constructor(storageComponent: IStorageComponent, workgroupComponent: IWorkGroupComponent) {
+    constructor(storageComponent: IStorageComponent, workgroupComponent: IWorkgroupComponent) {
         this.storageComponent = storageComponent;
         this.workgroupComponent = workgroupComponent;
     }

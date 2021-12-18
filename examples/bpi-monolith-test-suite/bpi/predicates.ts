@@ -1,8 +1,7 @@
 import { OrderAlt } from "./orderalt";
-import sha256 = require( 'crypto-js/sha256' );
-import {isDeepStrictEqual} from 'util'
+import sha256 = require('crypto-js/sha256');
+import { isDeepStrictEqual } from 'util'
 import { MerkleTree } from 'merkletreejs'
-import { networkInterfaces } from "os";
 
 export type input = {
     agreementStateCommitment: Buffer;
@@ -19,30 +18,30 @@ export type placeOrderInput = {
     agreementStateSalt: string
     salt: string
 }
-function verifySig(m: string,s: string,pk: string): boolean{
+function verifySig(m: string, s: string, pk: string): boolean {
     // Mock
-    return s === m+pk;
+    return s === m + pk;
 }
 
 export function placeOrderPredicate(input: input, privateInput: placeOrderInput): Buffer {
     let valid = true;
     // Validate commitments
     let agreementStateCommitment = Buffer.from(sha256(
-        privateInput.agreementStateRoot+
+        privateInput.agreementStateRoot +
         privateInput.agreementStateSalt
-    ).toString(),'hex')
+    ).toString(), 'hex')
     valid &&= isDeepStrictEqual(
         input.agreementStateCommitment,
         agreementStateCommitment
     )
     let orderLeaves = Object.entries(privateInput.order).map(x => sha256(x[1]));
-    let orderRoot = (new MerkleTree(orderLeaves,sha256)).getRoot();
+    let orderRoot = (new MerkleTree(orderLeaves, sha256)).getRoot();
     valid &&= isDeepStrictEqual(
         input.stateObjectCommitment,
         Buffer.from(sha256(
-            orderRoot+
+            orderRoot +
             privateInput.orderSalt
-        ).toString(),'hex')
+        ).toString(), 'hex')
     )
     // Validate private inputs
     let agreementLeaves = [
@@ -51,7 +50,7 @@ export function placeOrderPredicate(input: input, privateInput: placeOrderInput)
         privateInput.productIdsRoot,
         Buffer.from('')
     ]
-    let calculatedAgreementTree = new MerkleTree(agreementLeaves,sha256);
+    let calculatedAgreementTree = new MerkleTree(agreementLeaves, sha256);
     let calculatedAgreementRoot = calculatedAgreementTree.getRoot();
     valid &&= isDeepStrictEqual(
         calculatedAgreementRoot,
@@ -77,16 +76,16 @@ export function placeOrderPredicate(input: input, privateInput: placeOrderInput)
             privateInput.productIdsRoot,
             orderRoot
         ]
-        let newAgreementStateTree = new MerkleTree(leaves,sha256);
+        let newAgreementStateTree = new MerkleTree(leaves, sha256);
         let newAgreementStateRoot = newAgreementStateTree.getRoot();
         let newAgreementStateCommitment = Buffer.from(sha256(
-            newAgreementStateRoot+
+            newAgreementStateRoot +
             privateInput.salt
-        ).toString(),'hex')
+        ).toString(), 'hex')
         return newAgreementStateCommitment
-        
+
     }
-    else{
+    else {
         throw "Invalid proof"
     }
 
