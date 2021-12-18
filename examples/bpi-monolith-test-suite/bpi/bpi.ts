@@ -15,8 +15,6 @@ import { IStorageComponent } from "./components/storage/storage.interface";
 import { StorageComponent } from "./components/storage/storage";
 
 export class BPI {
-    owner: BpiSubject;
-
     identityComponent: IIdentityComponent;
     messagingComponent: IMessagingComponent;
     workgroupComponent: IWorkgroupComponent;
@@ -38,7 +36,8 @@ export class BPI {
         this.storageComponent.setInitialAgreementState(initalAgreement);
 
         this.identityComponent = identityComponent;
-        this.owner = this.identityComponent.addOrganization(id, name);
+        const ownerOrg = this.identityComponent.addOrganization(id, name);
+        this.identityComponent.setOwnerOrganization(ownerOrg);
 
         this.messagingComponent = messagingComponent;
         this.transactionPoolComponent = new TransactionPoolComponent(identityComponent);
@@ -65,7 +64,7 @@ export class BPI {
     }
 
     addWorkgroup(name: string, id: string, worksteps: Workstep[]): Workgroup {
-        return this.workgroupComponent.createWorkgroup(name, id, this.owner, worksteps);
+        return this.workgroupComponent.createWorkgroup(name, id, this.identityComponent.getOwnerOrganization(), worksteps);
     }
 
     getWorkgroupById(id: string): Workgroup {
@@ -84,12 +83,12 @@ export class BPI {
         return this.workgroupComponent.getInvitationById(id);
     }
 
+    // TODO: Should go through the VSM execution process, probably with a special INIT transaction and workstep
     signInvitation(invitationId: string, recipientSignature: string, recipientOrgId: string, recipientOrgName: string) {
         const invitation = this.workgroupComponent.getInvitationById(invitationId);
 
         // TODO: Verify signature from the recipient
         // TODO: What is the state change on agreement acceptance - status?
-        // TODO: Should go through the same workstep process as in VSM
         const latestAgreementState = this.storageComponent.getAgreementState();
         const bobsProof = this.vsmComponent.createProof(latestAgreementState, latestAgreementState, recipientSignature);
 
