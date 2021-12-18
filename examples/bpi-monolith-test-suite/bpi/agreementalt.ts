@@ -1,6 +1,6 @@
 import { OrderAlt } from "./orderalt";
 import { MerkleTree } from 'merkletreejs'
-import * as sha256 from 'crypto-js/sha256';
+import sha256 = require( 'crypto-js/sha256' );
 import { Shield } from "./shield";
 import { Verifier } from "./verifier";
 import { placeOrderPredicate, placeOrderInput} from "./predicates";
@@ -79,7 +79,7 @@ export class AgreementAlt{
             order: order,
             orderSalt: 'salt',
             productIdsRoot: productTree.getRoot(),
-            productIdsProof: productTree.getProof(sha256(order.productId)),
+            productIdsProof: productTree.getProof(sha256(order.productId).toString()),
             buyerPK: this.buyerPK,
             sellerPK: this.sellerPK,
             agreementStateRoot: agreementStateTree.getRoot(),
@@ -101,13 +101,13 @@ export class AgreementAlt{
 
     // Helper: turns current aggreement state into merkle tree object for commitments/ZKP
     merkleizeState(): [MerkleTree,MerkleTree,MerkleTree] {
-        let productLeaves = this.productIds.map(sha256);
+        let productLeaves = this.productIds.map(x => sha256(x[1]));
         let productTree = new MerkleTree(productLeaves, sha256);
         if (this.order === undefined){
             var orderLeaves = [];
         }
         else {
-            var orderLeaves = Object.entries(this.order).map(x => sha256(x[1]));
+            var orderLeaves: any[] = Object.entries(this.order).map(x => sha256(x[1]));
         }
         let orderTree = new MerkleTree(orderLeaves,sha256);
         let leaves = [

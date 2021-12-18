@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { AgreementAlt } from "../bpi/agreementalt";
 import { MerkleTree } from 'merkletreejs'
 import { OrderAlt } from "../bpi/orderalt";
-import * as sha256 from 'crypto-js/sha256';
+import sha256 = require( 'crypto-js/sha256' );
 import { Shield } from "../bpi/shield";
 
 describe('ZK agreement behaviour', () => {
@@ -50,7 +50,7 @@ describe('ZK agreement behaviour', () => {
             order: order,
             orderSalt: 'salt',
             productIdsRoot: productTree.getRoot(),
-            productIdsProof: productTree.getProof(sha256(order.productId)),
+            productIdsProof: productTree.getProof(sha256(order.productId).toString()),
             buyerPK: agreement.buyerPK,
             sellerPK: agreement.sellerPK,
             agreementStateRoot: agreementStateTree.getRoot(),

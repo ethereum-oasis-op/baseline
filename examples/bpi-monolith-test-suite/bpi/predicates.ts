@@ -1,5 +1,5 @@
 import { OrderAlt } from "./orderalt";
-import * as sha256 from 'crypto-js/sha256';
+import sha256 = require( 'crypto-js/sha256' );
 import {isDeepStrictEqual} from 'util'
 import { MerkleTree } from 'merkletreejs'
 import { networkInterfaces } from "os";
@@ -66,7 +66,7 @@ export function placeOrderPredicate(input: input, privateInput: placeOrderInput)
     // Validate order productId
     valid &&= MerkleTree.verify(
         privateInput.productIdsProof,
-        sha256(privateInput.order.productId),
+        sha256(privateInput.order.productId).toString(),
         privateInput.productIdsRoot
     )
     if (valid) {
