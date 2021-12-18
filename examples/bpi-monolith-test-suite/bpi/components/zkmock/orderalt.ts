@@ -1,10 +1,10 @@
-enum Status{
+enum Status {
     Opened,
     Accepted,
     Fulfilled
 }
 export class OrderAlt {
-    
+
     productId: string;
 
     buyerSig: string;
@@ -13,7 +13,7 @@ export class OrderAlt {
 
     status: Status;
 
-    constructor(productId: string, buyerSig){
+    constructor(productId: string, buyerSig: string) {
         this.productId = productId;
         this.buyerSig = buyerSig;
         this.status = Status.Opened;

@@ -11,7 +11,7 @@ export class BpiMessage {
     senderSignature: string;
     executionProof: string;
 
-    constructor(id: string, type: string, sender: BpiSubject, receiver: BpiSubject, workgroupId: string,  workstepId: string, payload: any) {
+    constructor(id: string, type: string, sender: BpiSubject, receiver: BpiSubject, workgroupId: string, workstepId: string, payload: any) {
         this.id = id;
         this.type = type;
         this.sender = sender;

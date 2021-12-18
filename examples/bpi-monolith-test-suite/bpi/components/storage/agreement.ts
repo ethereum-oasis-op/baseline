@@ -25,7 +25,7 @@ export class Agreement {
 
     acceptOrder(order: Order): boolean {
         // TODO: Add workstep logic
-            
+
         if (!this.isOrder(order)) {
             return false;
         }
@@ -70,7 +70,7 @@ export class Agreement {
 
     }
 
-    private isPendingState( stateObject: Order ): boolean {
+    private isPendingState(stateObject: Order): boolean {
         return stateObject.acceptanceStatus === "pending";
     }
 

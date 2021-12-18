@@ -116,13 +116,13 @@ export class BPI {
         } else if (message.type === "STORE") {
             const transaction = this.transactionPoolComponent.convertMessageToTransaction(message);
             const transactionVerificationResult = this.transactionPoolComponent.pushTransaction(transaction);
-            
+
             if (transactionVerificationResult === undefined) {
                 transaction.from.incrementNonce(); // TODO: Move to identity component (and later account)
                 // TODO: In real implementation, vsm would pool the transaction pool for batches
                 return this.vsmComponent.executeTransaction(transaction);
             }
-            
+
             // error message returned send it back to Alice (message has no proof so cannot call verifyProof in tests if transaction invalid)
             else this.messagingComponent.sendMessageToCounterParty(transactionVerificationResult);
         }

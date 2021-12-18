@@ -13,7 +13,7 @@ export class VirtualStateMachine implements IVirtualStateMachineComponent {
         this.storageComponent = storageComponent;
         this.workgroupComponent = workgroupComponent;
     }
-    
+
     executeTransaction(transaction: Transaction): string {
         // TODO: Poor man's deep copy - change
         const latestAgrementState = this.storageComponent.getAgreementState();

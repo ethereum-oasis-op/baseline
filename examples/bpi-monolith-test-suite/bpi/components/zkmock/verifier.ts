@@ -4,19 +4,19 @@ type input = {
     stateObjectCommitment: Buffer;
 }
 type predicate = (
-    input: input, 
+    input: input,
     privateInput: object
-    ) => Buffer;
+) => Buffer;
 
-export class Verifier{
-    
+export class Verifier {
+
     predicate: predicate;
 
-    constructor(predicate: predicate){
+    constructor(predicate: predicate) {
         this.predicate = predicate;
     }
 
-    verifyProof(proof: object, input: input): Buffer{
-        return  this.predicate(input,proof)
+    verifyProof(proof: object, input: input): Buffer {
+        return this.predicate(input, proof)
     }
 }

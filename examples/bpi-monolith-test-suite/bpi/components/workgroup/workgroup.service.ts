@@ -6,7 +6,7 @@ import { Workstep } from './workstep';
 import { IWorkgroupComponent } from './workgroup.interface';
 
 export class WorkgroupComponent implements IWorkgroupComponent {
-    
+
     workgroups: Workgroup[] = [];
     invitations: Invitation[] = [];
 

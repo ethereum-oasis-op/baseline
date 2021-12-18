@@ -4,7 +4,7 @@ import { IMessagingComponent } from "./messaging.interface";
 
 export class MockMessagingComponent implements IMessagingComponent {
     messages: BpiMessage[] = [];
-    
+
     sendMessageToCounterParty(message: BpiMessage): void {
         this.messages.push(message);
     }

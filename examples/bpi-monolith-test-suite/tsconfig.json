@@ -1,9 +1,16 @@
 {
     "compilerOptions": {
-        "lib": ["es6", "dom", "es2017"],
+        "lib": [
+            "es6",
+            "dom",
+            "es2017"
+        ],
         "target": "es5",
         "module": "commonjs",
-        "types": ["mocha", "node"],
+        "types": [
+            "mocha",
+            "node"
+        ],
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
     }
