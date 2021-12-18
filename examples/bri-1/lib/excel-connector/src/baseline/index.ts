@@ -56,23 +56,6 @@ export class Baseline {
       //Set Provide client for sending messages
       this._identClient = identClient;
 
-      /*var data = {};
-      data["Col 1"] = "West";
-
-      const test = {
-        baselineID: "89455b85-6fefc-4aec-a40d-551gggfdfdsffdsfdhgfdfsdffdsgf0b13chdsa6",
-        id: "574733322",
-        type: "general_consistency",
-        payload: {
-          id: "574733322",
-          data: data,
-        },
-      };
-      Excel.run((context: Excel.RequestContext) => {
-        inboundMessage.updateExcelTable(context, test);
-        return context.sync();
-      });*/
-
       //Connect to Nats for receiving messages
       if (!this._natsClient) {
         //PROBLEM
