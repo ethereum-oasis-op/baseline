@@ -24,8 +24,6 @@ export class Agreement {
     }
 
     acceptOrder(order: Order): boolean {
-        // TODO: Add workstep logic
-
         if (!this.isOrder(order)) {
             return false;
         }
