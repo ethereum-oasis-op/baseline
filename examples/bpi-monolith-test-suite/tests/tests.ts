@@ -4,7 +4,7 @@ import { Workstep } from '../bpi/components/workgroup/workstep';
 import { Workgroup } from '../bpi/components/workgroup/workgroup';
 import { BpiMessage } from '../bpi/components/messaging/bpiMessage';
 import { MockMessagingComponent } from '../bpi/components/messaging/messaging';
-import { MockWorkgroupComponent } from '../bpi/components/workgroup/workgroupComp';
+import { MockWorkgroupComponent } from '../bpi/components/workgroup/workgroup.service';
 import { IdentityComponent } from '../bpi/components/identity/identity';
 import { Order } from '../domain-objects/order';
 
