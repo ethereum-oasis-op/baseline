@@ -2,7 +2,7 @@ import { Order } from "../domain-objects/order";
 import { BpiSubject } from "./bpiSubject";
 
 export class Transaction {
-    workflowId: string;
+    workgroupId: string;
     workstepId: string;
     transactionId: string;
     //deterministic nonce? [R258]
@@ -13,8 +13,8 @@ export class Transaction {
     errorMessage: string;
     errorCode: string;
 
-    constructor(workflowId: string, workstepId: string, transactionId: string, from: BpiSubject, to: BpiSubject, stateObject: Order, ownerSignature: string) {
-        this.workflowId = workflowId;
+    constructor(workgroupId: string, workstepId: string, transactionId: string, nonce: number, from: BpiSubject, to: BpiSubject, stateObject: Order, ownerSignature: string) {
+        this.workgroupId = workgroupId;
         this.workstepId = workstepId;
         this.transactionId = transactionId;
         this.from = from;

@@ -13,7 +13,7 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
 
     convertMessageToTransaction(message: BpiMessage): Transaction {
         const senderOrg = this.identityComponent.getOrganizationById(message.sender.id);
-        
+
         const nonceForTransaction = senderOrg.getNonce() + 1;
 
         return new Transaction(message.workgroupId, message.workstepId, message.id, nonceForTransaction, message.sender, message.receiver, message.payload, message.senderSignature);
@@ -21,11 +21,11 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
 
     validateTransaction(transaction: Transaction): BpiMessage {
         let status: boolean = true;
-        const orgAlice = this.identityComponent.getOrganizationById(transaction.from.id);
-        const orgBob = this.identityComponent.getOrganizationById(transaction.to.id);
+        const senderOrg = this.identityComponent.getOrganizationById(transaction.from.id);
+        const recipientOrg = this.identityComponent.getOrganizationById(transaction.to.id);
         //R[262]
         //Todo: verify owners signature in transaction
-        if (transaction.workflowId === "") {
+        if (transaction.workgroupId === "") {
             transaction.errorCode = "0001";
             transaction.errorMessage += "Invalid workflow Id\n";
             status = false;
@@ -35,23 +35,23 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
             transaction.errorMessage += "Invalid workstep Id\n";
             status = false;
         }
-        else if (orgAlice === undefined) {
+        else if (senderOrg === undefined) {
             transaction.errorCode = "0001";
             transaction.errorMessage += "Invalid sender Id\n";
             status = false;
         }
-        else if (orgBob === undefined) {
+        else if (recipientOrg === undefined) {
             transaction.errorCode = "0001";
             transaction.errorMessage += "Invalid reciever Id\n";
             status = false;
         }
-        else if(transaction.nonce !== orgAlice.getNonce()+1){
+        else if (transaction.nonce !== senderOrg.getNonce() + 1) {
             transaction.errorCode = "0001";
             transaction.errorMessage += "Nonce does not match Id\n";
             status = false;
         }
         if (status === false) {
-            const errorMessage = new BpiMessage("ER1", "INFO", transaction.to, transaction.from, transaction.workflowId, transaction.workstepId,[transaction.errorCode,transaction.errorMessage]);
+            const errorMessage = new BpiMessage("ER1", "INFO", transaction.to, transaction.from, transaction.workgroupId, transaction.workstepId, [transaction.errorCode, transaction.errorMessage]);
             return errorMessage;
         }
         else return undefined;
@@ -66,7 +66,7 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
             this.orderTransactions();
             return undefined;
         }
-        else{
+        else {
             return errorMessage;
         }
     }
