@@ -1,4 +1,4 @@
-import { BpiSubject } from "../../bpiSubject";
+import { BpiSubject } from "./bpiSubject";
 import { IIdentityComponent } from "./identity.interface";
 
 export class IdentityComponent implements IIdentityComponent {

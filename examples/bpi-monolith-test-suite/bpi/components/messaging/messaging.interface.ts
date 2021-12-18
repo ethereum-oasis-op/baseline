@@ -1,5 +1,5 @@
-import { BpiMessage } from "../../bpiMessage";
-import { BpiSubject } from "../../bpiSubject";
+import { BpiMessage } from "./bpiMessage";
+import { BpiSubject } from "../identity/bpiSubject";
 
 export interface IMessagingComponent {
     sendMessageToCounterParty(message: BpiMessage): void;

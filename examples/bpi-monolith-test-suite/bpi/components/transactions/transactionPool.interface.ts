@@ -1,5 +1,5 @@
-import { BpiMessage } from "../../bpiMessage";
-import { Transaction } from "../../transaction";
+import { BpiMessage } from "../messaging/bpiMessage";
+import { Transaction } from "./transaction";
 
 export interface ITransactionPoolComponent {
     convertMessageToTransaction(message: BpiMessage): Transaction;

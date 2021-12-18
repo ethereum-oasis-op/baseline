@@ -1,5 +1,5 @@
-import { BpiMessage } from "../../bpiMessage";
-import { BpiSubject } from "../../bpiSubject";
+import { BpiMessage } from "./bpiMessage";
+import { BpiSubject } from "../identity/bpiSubject";
 import { IMessagingComponent } from "./messaging.interface";
 
 export class MockMessagingComponent implements IMessagingComponent {

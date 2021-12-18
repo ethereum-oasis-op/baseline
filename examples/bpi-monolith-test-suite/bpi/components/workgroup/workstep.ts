@@ -1,4 +1,4 @@
-import { Agreement } from "./agreement";
+import { Agreement } from "../storage/agreement";
 
 export class Workstep {
     name: string;

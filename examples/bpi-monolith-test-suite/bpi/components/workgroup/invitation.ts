@@ -1,5 +1,5 @@
-import { Agreement } from "./agreement";
-import { BpiSubject } from "./bpiSubject";
+import { Agreement } from "../storage/agreement";
+import { BpiSubject } from "../identity/bpiSubject";
 
 export class Invitation{
     id: string;

@@ -1,4 +1,4 @@
-import { BpiSubject } from "../../bpiSubject";
+import { BpiSubject } from "./bpiSubject";
 
 export interface IIdentityComponent {
     addOrganization(id: string, name: string): BpiSubject;

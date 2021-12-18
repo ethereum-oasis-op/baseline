@@ -1,5 +1,5 @@
-import { Agreement } from "../../agreement";
-import { Transaction } from "../../transaction";
+import { Agreement } from "../storage/agreement";
+import { Transaction } from "../transactions/transaction";
 import { IStorageComponent } from "../storage/storage.interface";
 import { IWorkGroupComponent } from "../workgroup/workgroup.interface";
 import { IVirtualStateMachineComponent } from "./vsm.interface";

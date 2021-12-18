@@ -1,4 +1,4 @@
-import { BpiSubject } from "./bpiSubject";
+import { BpiSubject } from "../identity/bpiSubject";
 
 export class BpiMessage {
     id: string;

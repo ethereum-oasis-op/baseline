@@ -1,4 +1,4 @@
-import { Agreement } from "../../agreement";
+import { Agreement } from "./agreement";
 import { IStorageComponent } from "./storage.interface";
 
 export class StorageComponent implements IStorageComponent {

@@ -1,40 +1,35 @@
-import { Agreement } from '../../agreement';
-import { BpiSubject } from '../../bpiSubject';
-import { Invitation } from '../../invitation';
-import { Workgroup } from '../../workgroup';
-import { Workstep } from '../../workstep';
-import { IWorkgroupComponent } from './workgroup.interface';
+import { BpiSubject } from "../identity/bpiSubject";
+import { Workstep } from "./workstep";
 
-export class MockWorkgroupComponent implements IWorkgroupComponent {
-    
-    workgroups: Workgroup[] = [];
-    invitations: Invitation[] = [];
+export class Workgroup {
+     id: string;
+     name: string;
+     participants: BpiSubject[] = [];
+     worksteps: Workstep[] = [];
 
-    getWorkgroups(): Workgroup[] { return this.workgroups; }
+     constructor(name: string, id: string, owner: BpiSubject, worksteps: Workstep[], ) {
+          this.name = name;
+          this.id = id;
+          this.worksteps = worksteps;
+          this.participants.push(owner);
+     }
 
-    createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[]): Workgroup {
-        const workgroup = new Workgroup(name, id, owner, worksteps)
-        this.workgroups.push(workgroup);
-        return workgroup;
-    }
+     addWorkstep(workstep: Workstep) {
+          this.worksteps.push(workstep);
+     }
 
-    getWorkgroupById(id: string): Workgroup {
-        const workgroups = this.workgroups.filter(workgroup => workgroup.id === id);
-        return workgroups[0];
-    }
+     getWorkstepById(workstepId: string) {
+          const worksteps = this.worksteps.filter(wrkstp => wrkstp.id === workstepId);
+          return worksteps[0];
+     }
 
-    sendInviteToWorkgroup(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation {
-        const invitation = new Invitation(id, name, sender, recipient, workgroupId, agreement);
-        this.invitations.push(invitation);
-        return invitation;
-    }
+     addParticipants(bpiSubject: BpiSubject) {
+          this.participants.push(bpiSubject);
+     }
 
-    getReceivedInvitationsByEmail(email: string): Invitation[] {
-        return this.invitations.filter(inv => inv.recipient === email);
-    }
-
-    getInvitationById(id: string): Invitation {
-        const filteredInvitations = this.invitations.filter(inv => inv.id === id);
-        return filteredInvitations[0];
-    }
+     getParticipantsById(id: string): BpiSubject {
+          const orgs = this.participants.filter(org => org.id === id);
+          return orgs[0];
+     }
 }
+

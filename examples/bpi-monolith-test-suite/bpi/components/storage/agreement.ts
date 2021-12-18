@@ -1,4 +1,4 @@
-import { Order } from "../domain-objects/order";
+import { Order } from "../../../domain-objects/order";
 
 export class Agreement {
     productIds: string[] = [];

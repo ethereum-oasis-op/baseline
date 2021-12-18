@@ -1,4 +1,4 @@
-import { Agreement } from "../../agreement";
+import { Agreement } from "./agreement";
 
 export interface IStorageComponent {
     setInitialAgreementState(agreement: Agreement): void;

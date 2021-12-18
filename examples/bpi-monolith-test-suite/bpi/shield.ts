@@ -1,4 +1,4 @@
-import { BpiSubject } from "./bpiSubject";
+import { BpiSubject } from "./components/identity/bpiSubject";
 import { Verifier } from "./verifier";
 export class Shield{
 

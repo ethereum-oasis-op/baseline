@@ -1,5 +1,5 @@
-import { Agreement } from "../../agreement";
-import { Transaction } from "../../transaction";
+import { Agreement } from "../storage/agreement";
+import { Transaction } from "../transactions/transaction";
 
 export interface IVirtualStateMachineComponent {
     executeTransaction(transaction: Transaction): string;

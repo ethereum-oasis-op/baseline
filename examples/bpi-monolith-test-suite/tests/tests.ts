@@ -1,12 +1,12 @@
 import { BPI } from '../bpi/bpi';
 import { expect } from 'chai';
-import { Workstep } from '../bpi/workstep';
-import { Order } from '../domain-objects/order';
-import { Workgroup } from '../bpi/workgroup';
-import { BpiMessage } from '../bpi/bpiMessage';
+import { Workstep } from '../bpi/components/workgroup/workstep';
+import { Workgroup } from '../bpi/components/workgroup/workgroup';
+import { BpiMessage } from '../bpi/components/messaging/bpiMessage';
 import { MockMessagingComponent } from '../bpi/components/messaging/messaging';
-import { MockWorkgroupComponent } from '../bpi/components/workgroup/workgroup';
+import { MockWorkgroupComponent } from '../bpi/components/workgroup/workgroupComp';
 import { IdentityComponent } from '../bpi/components/identity/identity';
+import { Order } from '../domain-objects/order';
 
 describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {

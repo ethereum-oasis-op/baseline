@@ -1,5 +1,5 @@
-import { BpiMessage } from "../../bpiMessage";
-import { Transaction } from "../.././transaction";
+import { BpiMessage } from "../messaging/bpiMessage";
+import { Transaction } from "./transaction";
 import { IIdentityComponent } from "../identity/identity.interface";
 import { ITransactionPoolComponent } from "./transactionPool.interface";
 

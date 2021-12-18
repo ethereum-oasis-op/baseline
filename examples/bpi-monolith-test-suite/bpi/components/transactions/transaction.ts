@@ -1,5 +1,5 @@
-import { Order } from "../domain-objects/order";
-import { BpiSubject } from "./bpiSubject";
+import { Order } from "../../../domain-objects/order";
+import { BpiSubject } from "../identity/bpiSubject";
 
 export class Transaction {
     workgroupId: string;

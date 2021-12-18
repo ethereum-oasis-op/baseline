@@ -1,9 +1,9 @@
-import { Agreement } from "./agreement";
-import { BpiSubject } from "./bpiSubject";
-import { Invitation } from "./invitation";
-import { Workgroup } from "./workgroup";
-import { Workstep } from "./workstep";
-import { BpiMessage } from "./bpiMessage";
+import { Agreement } from "./components/storage/agreement";
+import { BpiSubject } from "./components/identity/bpiSubject";
+import { Invitation } from "./components/workgroup/invitation";
+import { Workgroup } from "./components/workgroup/workgroup";
+import { Workstep } from "./components/workgroup/workstep";
+import { BpiMessage } from "./components/messaging/bpiMessage";
 import { TransactionPoolComponent } from "./components/transactions/transactionPool";
 import { IMessagingComponent } from "./components/messaging/messaging.interface";
 import { IWorkgroupComponent } from "./components/workgroup/workgroup.interface";
