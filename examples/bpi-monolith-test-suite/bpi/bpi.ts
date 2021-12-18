@@ -5,20 +5,21 @@ import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
 import { BpiMessage } from "./bpiMessage";
 import { IMessagingComponent } from "./components/messaging/messaging.interface";
+import { IWorkGroupComponent } from "./components/workgroup/workgroup.interface";
 
 export class BPI {
     owner: BpiSubject;
     organizations: BpiSubject[] = [];
-    workgroups: Workgroup[] = [];
     agreement: Agreement = new Agreement;
-    invitations: Invitation[] = [];
     messagingComponent: IMessagingComponent;
+    workgroupComponent: IWorkGroupComponent;
 
-    constructor(id: string, name: string, productIds: string[], messagingComponent: IMessagingComponent) {
+    constructor(id: string, name: string, productIds: string[], messagingComponent: IMessagingComponent, workgroupComponent: IWorkGroupComponent) {
         this.owner = this.addOrganization(id, name);
         this.agreement.productIds = productIds; // TODO: Move this to initialize agrement state or something similar
 
         this.messagingComponent = messagingComponent;
+        this.workgroupComponent = workgroupComponent;
     }
 
     // Used to register a new organization with the BPI and the external registry
@@ -39,37 +40,28 @@ export class BPI {
         return orgs[0];
     }
 
-    addWorkgroup(id: string, name: string, worksteps: Workstep[]): Workgroup {
-        const workgroup = new Workgroup(worksteps);
+    getWorkgroups(): Workgroup[] {
+        return this.workgroupComponent.getWorkgroups();}
 
-        workgroup.id = id;
-        workgroup.name = name;
-        workgroup.participants.push(this.owner);
-        this.workgroups.push(workgroup);
-
-        return workgroup;
+    addWorkgroup(name: string, id: string, worksteps: Workstep[]): Workgroup {
+        return this.workgroupComponent.createWorkgroup(name, id, this.owner, worksteps);
+        
     }
-
 
     getWorkgroupById(id: string): Workgroup {
-        const workgroups = this.workgroups.filter(workgroup => workgroup.id === id);
-        return workgroups[0];
+        return this.workgroupComponent.getWorkgroupById(id);
     }
-
+    
     inviteToWorkgroup(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation {
-        const inv = new Invitation(id, name, sender, recipient, workgroupId, agreement);
-
-        this.invitations.push(inv);
-        return inv;
-    }
-
-    getInvitationById(id: string): Invitation {
-        const filteredInvitations = this.invitations.filter(inv => inv.id === id);
-        return filteredInvitations[0];
+        return this.workgroupComponent.sendInviteToWorkgroup(id, name, sender, recipient, workgroupId, agreement);
     }
 
     getReceivedInvitationsByEmail(email: string): Invitation[] {
-        return this.invitations.filter(inv => inv.recipient === email);
+        return this.workgroupComponent.getReceivedInvitationsByEmail(email);
+    }
+
+    getInvitationById(id: string): Invitation {
+        return this.workgroupComponent.getInvitationById(id);
     }
 
     createProof(agreementPreviousState: Agreement, proposedChanges: Agreement, signature: string) {
@@ -77,7 +69,7 @@ export class BPI {
     }
 
     signInvitation(invitationId: string, recipientSignature: string, recipientOrgId: string, recipientOrgName: string) {
-        const invitation = this.getInvitationById(invitationId);
+        const invitation = this.workgroupComponent.getInvitationById(invitationId);
 
         // TODO: Verify signature from the recipient
         // TODO: What is the state change on agreement acceptance - status?
@@ -89,7 +81,7 @@ export class BPI {
 
         this.organizations.push(bobSubject);
 
-        const workgroup = this.getWorkgroupById(invitation.workgroupId);
+        const workgroup = this.workgroupComponent.getWorkgroupById(invitation.workgroupId);
         workgroup.addParticipants(bobSubject);
 
         this.agreement.proofs.push(bobsProof);
@@ -121,7 +113,7 @@ export class BPI {
         // TODO: Poor man's deep copy - change
         const originalAgreementState = JSON.parse(JSON.stringify(this.agreement));
 
-        const workgroup = this.getWorkgroupById(message.workgroupId);
+        const workgroup = this.workgroupComponent.getWorkgroupById(message.workgroupId);
         const workstep = workgroup.getWorkstepById(message.workstepId);
 
         // If succesfull, this changes the agreement state
