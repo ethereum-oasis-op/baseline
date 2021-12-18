@@ -1,4 +1,3 @@
-import { Agreement } from "./agreement";
 import { BpiSubject } from "./bpiSubject";
 import { Workstep } from "./workstep";
 
