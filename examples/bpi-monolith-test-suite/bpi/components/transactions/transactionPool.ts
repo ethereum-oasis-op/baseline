@@ -63,10 +63,16 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
         const errorMessage = this.validateTransaction(transaction);
         if (errorMessage === undefined) {
             this.transactions.push(transaction);
+            this.orderTransactions();
             return undefined;
         }
         else{
             return errorMessage;
         }
+    }
+
+    orderTransactions(){
+        this.transactions.sort((a, b) => (a.transactionId > b.transactionId) ? 1 : -1);
+        this.transactions.sort((a, b) => (a.nonce > b.nonce) ? 1 : -1);
     }
 }
