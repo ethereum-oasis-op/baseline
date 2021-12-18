@@ -1,9 +1,8 @@
 import { expect } from "chai";
-import { AgreementAlt } from "../bpi/agreementalt";
+import { AgreementAlt } from "../bpi/components/zkmock/agreementalt";
 import { MerkleTree } from 'merkletreejs'
-import { OrderAlt } from "../bpi/orderalt";
+import { OrderAlt } from "../bpi/components/zkmock/orderalt";
 import sha256 = require( 'crypto-js/sha256' );
-import { Shield } from "../bpi/shield";
 
 describe('ZK agreement behaviour', () => {
     it('Bob places a valid order, it is added to the bpi and the committed state reflects the new BPI agreement state.',() => {
