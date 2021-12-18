@@ -4,59 +4,65 @@ import { Invitation } from "./invitation";
 import { Workgroup } from "./workgroup";
 import { Workstep } from "./workstep";
 import { BpiMessage } from "./bpiMessage";
+import { Transaction } from "./transaction";
+import { TransactionPoolComponent } from "./components/transactions/transactionPool";
 import { IMessagingComponent } from "./components/messaging/messaging.interface";
 import { IWorkgroupComponent } from "./components/workgroup/workgroup.interface";
-import { Transaction } from "./transaction";
-import { TransactionPool } from "./transactionPool";
+import { IIdentityComponent } from "./components/identity/identity.interface";
+import { ITransactionPoolComponent } from "./components/transactions/transactionPool.interface";
 
 export class BPI {
     owner: BpiSubject;
-    organizations: BpiSubject[] = [];
+
     agreement: Agreement = new Agreement;
+    transactionPoolComponent: ITransactionPoolComponent;
+    identityComponent: IIdentityComponent;
     messagingComponent: IMessagingComponent;
     workgroupComponent: IWorkgroupComponent;
-    invitations: Invitation[] = [];
-    messages: BpiMessage[] = [];
-    transactionPool: TransactionPool;
 
-    constructor(id: string, name: string, productIds: string[], messagingComponent: IMessagingComponent, workgroupComponent: IWorkgroupComponent) {
-        this.owner = this.addOrganization(id, name);
+    constructor(
+        id: string,
+        name: string,
+        productIds: string[],
+        identityComponent: IIdentityComponent,
+        messagingComponent: IMessagingComponent,
+        workgroupComponent: IWorkgroupComponent) {
+
         this.agreement.productIds = productIds; // TODO: Move this to initialize agrement state or something similar
 
+        this.identityComponent = identityComponent;
+        this.owner = this.identityComponent.addOrganization(id, name);
+
         this.messagingComponent = messagingComponent;
+        this.transactionPoolComponent = new TransactionPoolComponent(identityComponent);
         this.workgroupComponent = workgroupComponent;
     }
 
-    // Used to register a new organization with the BPI and the external registry
+    // IDENTITY API
     addOrganization(id: string, name: string): BpiSubject {
-        const organization = new BpiSubject();
-        organization.id = id;
-        organization.name = name;
-
-        this.organizations.push(organization);
-
-        return organization;
+        return this.identityComponent.addOrganization(id, name);
     }
 
-    // Retrieves the organization/BpiSubject's details 
     getOrganizationById(id: string): BpiSubject {
-        const orgs = this.organizations.filter(org => org.id === id);
-
-        return orgs[0];
+        return this.identityComponent.getOrganizationById(id);
     }
+
+    // IDENTITY API END
+
+    // WORKGROUP API
 
     getWorkgroups(): Workgroup[] {
-        return this.workgroupComponent.getWorkgroups();}
+        return this.workgroupComponent.getWorkgroups();
+    }
 
     addWorkgroup(name: string, id: string, worksteps: Workstep[]): Workgroup {
         return this.workgroupComponent.createWorkgroup(name, id, this.owner, worksteps);
-        
     }
 
     getWorkgroupById(id: string): Workgroup {
         return this.workgroupComponent.getWorkgroupById(id);
     }
-    
+
     inviteToWorkgroup(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation {
         return this.workgroupComponent.sendInviteToWorkgroup(id, name, sender, recipient, workgroupId, agreement);
     }
@@ -69,10 +75,6 @@ export class BPI {
         return this.workgroupComponent.getInvitationById(id);
     }
 
-    createProof(agreementPreviousState: Agreement, proposedChanges: Agreement, signature: string) {
-        return Math.random().toString(36).substr(2, 20);
-    }
-
     signInvitation(invitationId: string, recipientSignature: string, recipientOrgId: string, recipientOrgName: string) {
         const invitation = this.workgroupComponent.getInvitationById(invitationId);
 
@@ -80,16 +82,18 @@ export class BPI {
         // TODO: What is the state change on agreement acceptance - status?
         const bobsProof = this.createProof(this.agreement, this.agreement, recipientSignature);
 
-        const bobSubject = new BpiSubject();
-        bobSubject.id = recipientOrgId;
-        bobSubject.name = recipientOrgName;
-
-        this.organizations.push(bobSubject);
+        const accepteeOrg = this.identityComponent.addOrganization(recipientOrgId, recipientOrgName);
 
         const workgroup = this.workgroupComponent.getWorkgroupById(invitation.workgroupId);
-        workgroup.addParticipants(bobSubject);
+        workgroup.addParticipants(accepteeOrg);
 
         this.agreement.proofs.push(bobsProof);
+    }
+
+    // WORKGROUP API END
+
+    createProof(agreementPreviousState: Agreement, proposedChanges: Agreement, signature: string) {
+        return Math.random().toString(36).substr(2, 20);
     }
 
     verifyProof(proof: string): boolean {
@@ -104,7 +108,17 @@ export class BPI {
             this.messagingComponent.sendMessageToCounterParty(message);
             return "";
         } else if (message.type === "STORE") {
-            return this.executeWorkstepMessage(message); // TODO: Create transaction out of this message and store in transaction pool for VSM to handle
+            const transaction = this.transactionPoolComponent.convertMessageToTransaction(message);
+            const transactionVerificationResult = this.transactionPoolComponent.pushTransaction(transaction);
+            
+            transaction.from.incrementNonce(); // TODO: Move to identity component (and later account)
+            
+            if (transactionVerificationResult === undefined) {
+                return this.executeWorkstepMessage(message); // TODO: Here state machine pulls transaction and executes
+            }
+            
+            // error message returned send it back to Alice (message has no proof so cannot call verifyProof in tests if transaction invalid)
+            else this.messagingComponent.sendMessageToCounterParty(transactionVerificationResult);
         }
     }
 

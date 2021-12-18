@@ -6,10 +6,11 @@ import { Workgroup } from '../bpi/workgroup';
 import { BpiMessage } from '../bpi/bpiMessage';
 import { MockMessagingComponent } from '../bpi/components/messaging/messaging';
 import { MockWorkgroupComponent } from '../bpi/components/workgroup/workgroup';
+import { IdentityComponent } from '../bpi/components/identity/identity';
 
 describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
 
         expect(aliceBpi.owner.id).to.be.equal("AL1");
         expect(aliceBpi.owner.name).to.be.equal("AliceOrganisation");
@@ -20,7 +21,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given freshly instantiated BPI, Alice creates a workgroup, workgroup is added to the BPI and available in the list of workgroups', () => {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
 
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
 
@@ -32,7 +33,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given newly created workgroup, Alice creates a workstep, workstep is added to the workgroup and is visible in the list of worksteps for a given workgroup', () => {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         
         const workStep = new Workstep("W1", "WRKSTP1");
@@ -47,7 +48,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given a prepared workgroup with a workstep, Alice invites Bob, BPI stores the invitation and invitee email and this information is available for querying', () => {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.addOrder);
@@ -64,7 +65,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given a sent invitation, Bob queries list of received invitations, can see invitation details from Alice', () => {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.addOrder);
@@ -81,7 +82,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given a received invitation, Bob accepts by singing the agreement, Bob is added as a subject to the Bpi, to the collection of workgroup participants and proof is stored in the collection of proofs for the workgroup', () => {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.addOrder);
@@ -102,7 +103,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
     });
 
     it('Given accepted invite, Alice queries the list of sent invitations, and can verify the proof aginst the Bpi', () => {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.addOrder);
@@ -124,8 +125,8 @@ describe('Exchanging business objects', () => {
         const [aliceBpi, exchangeOrdersWorkgroup, workstep] = setupOrderExchangeWorkgroupWithACleanAgreementState();
 
         const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
-        const orgAlice = aliceBpi.organizations[0];
-        const orgBob = aliceBpi.organizations[1];
+        const orgAlice = aliceBpi.identityComponent.getOrganizationById("AL1");
+        const orgBob = aliceBpi.identityComponent.getOrganizationById("BO1");
         const addOrderMessage = new BpiMessage("M1", "STORE", orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         // Alice sends to BPI for agreement update, validation and proof generation
@@ -155,8 +156,8 @@ describe('Exchanging business objects', () => {
         const [aliceBpi, exchangeOrdersWorkgroup, workstep] = setupOrderExchangeWorkgroupWithACleanAgreementState();
 
         const orderBusinessObject = new Order("0001", "Purchase", 15, "555333");
-        const orgAlice = aliceBpi.organizations[0];
-        const orgBob = aliceBpi.organizations[1];
+        const orgAlice = aliceBpi.identityComponent.getOrganizationById("AL1");
+        const orgBob = aliceBpi.identityComponent.getOrganizationById("BO1");
         const addOrderMessage = new BpiMessage("M1", "STORE", orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         const proof = aliceBpi.executeWorkstepMessage(addOrderMessage);
@@ -167,9 +168,9 @@ describe('Exchanging business objects', () => {
     it('Given Bob receives a positive result, Bob performs acceptance, the acceptance is returned to Alice', () => {
         const [aliceBpi, exchangeOrdersWorkgroup, workstep] = setupOrderExchangeWorkgroupWithACleanAgreementState();
         const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
-        const orgAlice = aliceBpi.organizations[0];
-        const orgBob = aliceBpi.organizations[1];
-        const addOrderMessage = new BpiMessage("M1", "STORE", orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id,  orderBusinessObject);
+        const orgAlice = aliceBpi.identityComponent.getOrganizationById("AL1");
+        const orgBob = aliceBpi.identityComponent.getOrganizationById("BO1");
+        const addOrderMessage = new BpiMessage("M1", "STORE", orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         // Alice sends to BPI for agreement update, validation and proof generation
         let proof = aliceBpi.postMessage(addOrderMessage);
@@ -205,7 +206,7 @@ describe('Exchanging business objects', () => {
     });
 
     function setupOrderExchangeWorkgroupWithACleanAgreementState(): [BPI, Workgroup, Workstep] {
-        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new MockMessagingComponent(), new MockWorkgroupComponent());
+        const aliceBpi = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new MockWorkgroupComponent());
         const exchangeOrdersWorkgroup = aliceBpi.addWorkgroup("AB1", "ABOrder", []);
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(aliceBpi.agreement.addOrder);
