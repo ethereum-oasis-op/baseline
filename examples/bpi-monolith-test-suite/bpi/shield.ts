@@ -2,7 +2,7 @@ import { BpiSubject } from "./components/identity/bpiSubject";
 import { Verifier } from "./verifier";
 export class Shield{
 
-    verifiers: { [id: string]: Verifier; };
+    verifiers: { [id: string]: Verifier; } = {};
 
     agreementStateCommitment: Buffer;
 
@@ -21,16 +21,14 @@ export class Shield{
             this.verifiers[verifierId] = verifier;
         }
     }
-    executeWorkstep(verifierId: string, stateObjectCommitment: Buffer, privateInputs: Object){
+    executeWorkstep(verifierId: string, stateObjectCommitment: Buffer, privateInputs: Object) : any {
         let proof = privateInputs;
         let input = {
             agreementStateCommitment: this.agreementStateCommitment,
-            stateObjectCommitment: stateObjectCommitment};
-        try{
-            this.agreementStateCommitment 
-                = this.verifiers[verifierId].verifyProof(proof,input);
-        }
-        catch(e){}
+            stateObjectCommitment: stateObjectCommitment
+        };
+        this.agreementStateCommitment = this.verifiers[verifierId].verifyProof(proof,input);
+        return true
     }
     
 }

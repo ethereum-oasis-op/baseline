@@ -1,14 +1,14 @@
 import { OrderAlt } from "./orderalt";
-import sha256 from 'crypto-js/sha256';
+import * as sha256 from 'crypto-js/sha256';
 import {isDeepStrictEqual} from 'util'
 import { MerkleTree } from 'merkletreejs'
 import { networkInterfaces } from "os";
 
-type input = {
+export type input = {
     agreementStateCommitment: Buffer;
     stateObjectCommitment: Buffer;
 }
-type placeOrderInput = {
+export type placeOrderInput = {
     order: OrderAlt,
     orderSalt: string,
     productIdsRoot: Buffer,
@@ -21,26 +21,28 @@ type placeOrderInput = {
 }
 function verifySig(m: string,s: string,pk: string): boolean{
     // Mock
-    return s === pk;
+    return s === m+pk;
 }
+
 export function placeOrderPredicate(input: input, privateInput: placeOrderInput): Buffer {
     let valid = true;
     // Validate commitments
+    let agreementStateCommitment = Buffer.from(sha256(
+        privateInput.agreementStateRoot+
+        privateInput.agreementStateSalt
+    ).toString(),'hex')
     valid &&= isDeepStrictEqual(
         input.agreementStateCommitment,
-        sha256(
-            privateInput.agreementStateRoot,
-            privateInput.agreementStateSalt
-        )
+        agreementStateCommitment
     )
     let orderLeaves = Object.entries(privateInput.order).map(x => sha256(x[1]));
     let orderRoot = (new MerkleTree(orderLeaves,sha256)).getRoot();
     valid &&= isDeepStrictEqual(
         input.stateObjectCommitment,
-        sha256(
-            orderRoot,
-            privateInput.agreementStateSalt
-        )
+        Buffer.from(sha256(
+            orderRoot+
+            privateInput.orderSalt
+        ).toString(),'hex')
     )
     // Validate private inputs
     let agreementLeaves = [
@@ -64,24 +66,28 @@ export function placeOrderPredicate(input: input, privateInput: placeOrderInput)
     // Validate order productId
     valid &&= MerkleTree.verify(
         privateInput.productIdsProof,
-        privateInput.order.productId,
+        sha256(privateInput.order.productId),
         privateInput.productIdsRoot
     )
     if (valid) {
+        // Calculate and return merkle root of new agreement state
         let leaves = [
             privateInput.buyerPK,
             privateInput.sellerPK,
             privateInput.productIdsRoot,
-            orderRoot,
+            orderRoot
         ]
         let newAgreementStateTree = new MerkleTree(leaves,sha256);
         let newAgreementStateRoot = newAgreementStateTree.getRoot();
-        let newAgreementStateCommitment = sha256(
-            newAgreementStateRoot,
+        let newAgreementStateCommitment = Buffer.from(sha256(
+            newAgreementStateRoot+
             privateInput.salt
-        )
-        return Buffer.from(newAgreementStateCommitment.toString())
+        ).toString(),'hex')
+        return newAgreementStateCommitment
         
+    }
+    else{
+        throw "Invalid proof"
     }
 
 

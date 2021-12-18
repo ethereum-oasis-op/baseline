@@ -1,3 +1,4 @@
+
 type input = {
     agreementStateCommitment: Buffer;
     stateObjectCommitment: Buffer;
@@ -16,6 +17,6 @@ export class Verifier{
     }
 
     verifyProof(proof: object, input: input): Buffer{
-        return Buffer.from('')
+        return  this.predicate(input,proof)
     }
 }
