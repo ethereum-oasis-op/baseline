@@ -101,7 +101,7 @@ export class AgreementAlt{
 
     // Helper: turns current aggreement state into merkle tree object for commitments/ZKP
     merkleizeState(): [MerkleTree,MerkleTree,MerkleTree] {
-        let productLeaves = this.productIds.map(x => sha256(x[1]));
+        let productLeaves = this.productIds.map(x => sha256(x));
         let productTree = new MerkleTree(productLeaves, sha256);
         if (this.order === undefined){
             var orderLeaves = [];
