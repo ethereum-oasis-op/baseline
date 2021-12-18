@@ -82,26 +82,3 @@ export class ExcelWorker {
 }
 
 export const excelWorker = new ExcelWorker();
-
-// function test() {
-//   Excel.run((context) => {
-//     const cursheet = context.workbook.worksheets.getActiveWorksheet();
-//     const cellA1_A2 = cursheet.getRange("A1:A3");
-
-//     // const value = new Date(); // identClient.test_ExpiresAt();
-//     const value = identClient?.test_expiresAt;
-//     cellA1_A2.values = [[ value ], [ new Date() ], [ identClient?.isExpired ]];
-//     cellA1_A2.format.autofitColumns();
-
-//     return context.sync();
-//   })
-//   .catch(function(error) {
-//     console.log("Error: " + error);
-//     if (error instanceof OfficeExtension.Error) {
-//       console.log("Debug info: " + JSON.stringify(error.debugInfo));
-//       onError(error.message);
-//     } else {
-//       onError(error);
-//     }
-//   })
-// }
