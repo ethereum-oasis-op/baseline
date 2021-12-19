@@ -17,8 +17,6 @@ export class OutBound {
       let tableName = await excelHandler.getSheetName(context);
       let message = await this.createMessage(context, tableName, changedData);
 
-      //TO SECURE --> JsonSanitizer.sanitize(JSON.stringify(message))
-      console.log(JSON.stringify(message));
       let baselineResponse: BaselineResponse;
 
       let recordExists = await store.keyExists(tableName, [message.payload.id, message.type], "Out");

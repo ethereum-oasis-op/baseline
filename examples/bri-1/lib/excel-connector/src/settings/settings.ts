@@ -128,7 +128,6 @@ class SessionStorageSettings extends StorageSettings {
   }
 }
 
-//TO SECURE --> . https://www.icloud.com/iclouddrive/0pw1tr6bEg2LpkSPYJ5U1awVg#IETSS2014_0029_final-2
 class IndexedDBSettings {
   protected db: IDBDatabase;
   private database: string;

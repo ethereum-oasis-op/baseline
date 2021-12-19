@@ -44,7 +44,6 @@ export class ExcelWorker {
     var completelist = document.getElementById("workgroup-mapping");
     completelist.innerHTML = "";
 
-    //TO SECURE --> innerHTML https://newbedev.com/xss-prevention-and-innerhtml
     completelist.innerHTML += `<button type="button" class="btn btn-primary btn-sm float-right" id="mapping-btn">Mappings</button>`;
   }
 

@@ -4,8 +4,6 @@
 
   // List of extensions which should be recommended for users of this workspace.
   "recommendations": [
-    "msjsdiag.debugger-for-chrome",
-    "msjsdiag.debugger-for-edge",
     "msoffice.microsoft-office-add-in-debugger",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode"
