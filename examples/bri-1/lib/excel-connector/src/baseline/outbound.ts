@@ -21,11 +21,8 @@ export class OutBound {
 
       let recordExists = await store.keyExists(tableName, [message.payload.id, message.type], "Out");
 
-      console.log(recordExists);
-
       if (!recordExists) {
         baselineResponse = await identClient.sendCreateProtocolMessage(message);
-        console.log(baselineResponse);
         await store.setInboundAndOutboundTables(
           tableName,
           [message.payload.id, message.type],
@@ -33,9 +30,7 @@ export class OutBound {
         );
       } else {
         let baselineId = await store.getBaselineId(tableName, [message.payload.id, message.type]);
-        console.log("Baseline ID: " + baselineId);
         baselineResponse = await identClient.sendUpdateProtocolMessage(baselineId, message);
-        console.log("Baseline message : " + baselineResponse);
       }
     } catch {
       this.catchError;
@@ -84,7 +79,6 @@ export class OutBound {
       primaryKeyID.load("values");
       await context.sync();
 
-      console.log(primaryKeyID.values);
       return primaryKeyID.values[0][0].toString();
     } catch {
       this.catchError;
