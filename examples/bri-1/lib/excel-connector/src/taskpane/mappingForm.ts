@@ -40,8 +40,7 @@ export class MappingForm {
         var primaryKeyID = await this.trim(this.primaryKey);
 
         var pkOptions = await this.addOptions(excelSheetColumnNames, model["primary_key"]);
-        //TO SECURE --> innerHTML https://newbedev.com/xss-prevention-and-innerhtml
-        //TO SECURE --> Input validation
+
         mappingForm.innerHTML =
           `<div class="form-group">
 						<label class="font-weight-normal h6" for="` +
@@ -122,8 +121,6 @@ export class MappingForm {
     document.getElementById("mapping-form-header").innerHTML = "Create New Mapping";
 
     var pkOptions = await this.addOptions(this.sheetColumnNames);
-    //TO SECURE --> innerHTML https://newbedev.com/xss-prevention-and-innerhtml
-    //TO SECURE --> Input validation
     mappingForm.innerHTML =
       `<div class="form-group container">
 				<div class="row">
@@ -146,8 +143,6 @@ export class MappingForm {
       var columnID = await this.trim(column.toString());
       var columnDataType = await this.addOptions([this.sheetColumnDataType[index]]);
 
-      //TO SECURE --> innerHTML https://newbedev.com/xss-prevention-and-innerhtml
-      //TO SECURE --> Input validation
       mappingForm.innerHTML +=
         `<div class="form-group container float-right">
 					<div class="row">

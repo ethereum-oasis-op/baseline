@@ -85,7 +85,9 @@ export class Baseline {
     try {
       this._natsClient.subscribe("baseline.>", (msg: ProtocolMessage) => {
         Excel.run((context: Excel.RequestContext) => {
-          inboundMessage.updateExcelTable(context, msg);
+          if (msg.constructor == Object) {
+            inboundMessage.updateExcelTable(context, msg);
+          }
           return context.sync();
         }).catch(this.catchError);
       });

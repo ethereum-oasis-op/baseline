@@ -7,7 +7,6 @@ import { alerts } from "../common/alerts";
 export class Store {
   onDbOpen = false;
 
-  //TODO --> WHEN to open
   async open(): Promise<void> {
     //Open DB and create tables
     this.onDbOpen = await db.open();

@@ -148,11 +148,10 @@ export class ExcelAPI {
     // eslint-disable-next-line no-unused-vars
     var workgroupId = mappingForm.getFormWorkgroupID().toString();
 
-    //TO SECURE --> Validate Inputs (Table Name, Column Names)
-    var mappingTable = $("#mapping-form #table-name").val().toString();
+    var mappingTable = $("#mapping-form #table-name").val().toString().replace(/\//g, "//");
     await store.setTableName(mappingTable, tableName);
 
-    var mappingPrimaryKey = $("#mapping-form #primary-key").val().toString();
+    var mappingPrimaryKey = $("#mapping-form #primary-key").val().toString().replace(/\//g, "//");
     await store.setPrimaryKey(tableName, mappingPrimaryKey);
 
     var fields = [];
@@ -164,7 +163,7 @@ export class ExcelAPI {
         .toString();
       await store.setColumnMapping(tableName, columnName.toString(), columnName.toString());
       var tableColumn = {
-        name: columnName.toString(),
+        name: columnName.toString().replace(/\//g, "//"),
         type: columnType,
       };
 
@@ -190,11 +189,7 @@ export class ExcelAPI {
       models: models,
     };
 
-    console.log(mapping);
-
-    //TO SECURE --> JSON encoding
     await identClient.createWorkgroupMapping(mapping);
-    //TODO: GET Mapping ID and do await store.setTableName(mappingTable, this.tableName) with mapping ID as mappingTable;
   }
 
   async changeButtonColor(): Promise<void> {

@@ -16,8 +16,7 @@ export class InBound {
     var tableName = await excelHandler.getSheetName(context);
 
     var primaryKeyColumnName = await store.getPrimaryKeyField(tableName);
-    //dataColumn - Can be retrieved from the message received or from my own indexed database
-    //TO SECURE --> Validate msg
+
     var dataColumn = Object.keys(msg.payload.data)[0];
     var address;
     var id;
