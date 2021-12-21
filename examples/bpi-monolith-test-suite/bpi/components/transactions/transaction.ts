@@ -5,7 +5,7 @@ export class Transaction {
     workgroupId: string;
     workstepId: string;
     transactionId: string;
-    //deterministic nonce? [R258]
+    nonce: number;
     from: BpiSubject;
     to: BpiSubject;
     stateObject: Order;
@@ -17,6 +17,7 @@ export class Transaction {
         this.workgroupId = workgroupId;
         this.workstepId = workstepId;
         this.transactionId = transactionId;
+        this.nonce = nonce;
         this.from = from;
         this.to = to;
         this.stateObject = stateObject;
