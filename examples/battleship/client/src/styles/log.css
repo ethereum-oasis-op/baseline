@@ -1,0 +1,9 @@
+.list-group-container {
+    max-height: 500px;
+    margin-bottom: 10px;
+    /* overflow: scroll; */
+    -webkit-overflow-scrolling: touch;
+    overflow:auto; 
+    display:flex; 
+    flex-direction:column-reverse;
+}
