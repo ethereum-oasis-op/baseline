@@ -1,7 +1,20 @@
 // eslint-disable-next-line no-unused-vars
-import { ProvideClient, authenticate, authenticateStub, restore, restoreStub } from "../client/provide-client";
+import {
+  ProvideClient,
+  authenticate,
+  authenticateStub,
+  restore,
+  restoreStub,
+} from "../client/provide-client";
 // eslint-disable-next-line no-unused-vars
-import { Application, Mapping, MappingField, MappingModel, Workflow, Workstep } from "@provide/types";
+import {
+  Application,
+  Mapping,
+  MappingField,
+  MappingModel,
+  Workflow,
+  Workstep,
+} from "@provide/types";
 import { alerts, spinnerOff, spinnerOn } from "../common/alerts";
 import { LoginFormData } from "../models/login-form-data";
 import { onError } from "../common/common";
@@ -49,28 +62,30 @@ Office.onReady((info) => {
 
 // eslint-disable-next-line no-unused-vars
 function tryRestoreAutorization() {
-  return Promise.all([store.getRefreshToken(), store.getUser()]).then(([refreshToken, user]) => {
-    if (!refreshToken || !user) {
-      setUiForLogin();
-      spinnerOff();
-      return;
-    }
-
-    const restoreFn = stubAuth ? restoreStub : restore;
-    spinnerOn();
-    return restoreFn(refreshToken, user).then(
-      (client) => {
-        identClient = client;
-        setUiAfterLogin();
-        spinnerOff();
-      },
-      (reason) => {
-        store.removeTokenAndUser();
+  return Promise.all([store.getRefreshToken(), store.getUser()]).then(
+    ([refreshToken, user]) => {
+      if (!refreshToken || !user) {
         setUiForLogin();
-        onError(reason);
+        spinnerOff();
+        return;
       }
-    );
-  });
+
+      const restoreFn = stubAuth ? restoreStub : restore;
+      spinnerOn();
+      return restoreFn(refreshToken, user).then(
+        (client) => {
+          identClient = client;
+          setUiAfterLogin();
+          spinnerOff();
+        },
+        (reason) => {
+          store.removeTokenAndUser();
+          setUiForLogin();
+          onError(reason);
+        }
+      );
+    }
+  );
 }
 
 function initUi() {
@@ -96,7 +111,7 @@ function setUiForLogin() {
 function setUiAfterLogin() {
   $("#sideload-msg").hide();
   let $workUi = $("#workgroup-ui");
-  const userName = (identClient.user || {}).name || "unknow";
+  const userName = (identClient.user || {}).name || "unknown";
   $("#user-name", $workUi).text(userName);
   $("#login-ui").hide();
   $workUi.show();
@@ -113,7 +128,7 @@ function setUiForMapping() {
   $("#sideload-msg").hide();
   $("#login-ui").hide();
   let $workUi = $("#workgroup-ui");
-  const userName = (identClient.user || {}).name || "unknow";
+  const userName = (identClient.user || {}).name || "unknown";
   $("#user-name", $workUi).text(userName);
   $("#workgroup-ui").hide();
   $("#mapping-ui").show();
@@ -129,7 +144,7 @@ function setUiForWorkflows() {
   $("#sideload-msg").hide();
   $("#login-ui").hide();
   let $workUi = $("#workgroup-ui");
-  const userName = (identClient.user || {}).name || "unknow";
+  const userName = (identClient.user || {}).name || "unknown";
   $("#user-name", $workUi).text(userName);
   $("#workgroup-ui").hide();
   $("#workflow-ui").show();
@@ -145,7 +160,7 @@ function setUiForCreateWorkflow() {
   $("#sideload-msg").hide();
   $("#login-ui").hide();
   let $workUi = $("#workgroup-ui");
-  const userName = (identClient.user || {}).name || "unknow";
+  const userName = (identClient.user || {}).name || "unknown";
   $("#user-name", $workUi).text(userName);
   $("#workgroup-ui").hide();
   $("#mapping-ui").hide();
@@ -161,7 +176,7 @@ function setUiForWorksteps() {
   $("#sideload-msg").hide();
   $("#login-ui").hide();
   let $workUi = $("#workgroup-ui");
-  const userName = (identClient.user || {}).name || "unknow";
+  const userName = (identClient.user || {}).name || "unknown";
   $("#user-name", $workUi).text(userName);
   $("#workgroup-ui").hide();
   $("#mapping-ui").hide();
@@ -177,7 +192,7 @@ function setUiForCreateWorkstep() {
   $("#sideload-msg").hide();
   $("#login-ui").hide();
   let $workUi = $("#workgroup-ui");
-  const userName = (identClient.user || {}).name || "unknow";
+  const userName = (identClient.user || {}).name || "unknown";
   $("#user-name", $workUi).text(userName);
   $("#workgroup-ui").hide();
   $("#mapping-ui").hide();
@@ -193,7 +208,7 @@ function setUiForWorkStepDetails() {
   $("#sideload-msg").hide();
   $("#login-ui").hide();
   let $workUi = $("#workgroup-ui");
-  const userName = (identClient.user || {}).name || "unknow";
+  const userName = (identClient.user || {}).name || "unknown";
   $("#user-name", $workUi).text(userName);
   $("#workgroup-ui").hide();
   $("#mapping-ui").hide();
@@ -225,7 +240,11 @@ async function onLogin(): Promise<void> {
       setUiAfterLogin();
 
       const token: TokenStr = identClient.userRefreshToken;
-      const user: User = { id: identClient.user.id, name: identClient.user.name, email: identClient.user.email };
+      const user: User = {
+        id: identClient.user.id,
+        name: identClient.user.name,
+        email: identClient.user.email,
+      };
 
       await store.removeTokenAndUser();
       return store.setTokenAndUser(token, user).then(spinnerOff);
@@ -270,9 +289,16 @@ function onShowMainPage() {
   setUiAfterLogin();
 
   const token: TokenStr = identClient.userRefreshToken;
-  const user: User = { id: identClient.user.id, name: identClient.user.name, email: identClient.user.email };
+  const user: User = {
+    id: identClient.user.id,
+    name: identClient.user.name,
+    email: identClient.user.email,
+  };
 
-  return store.setTokenAndUser(token, user).then(spinnerOff).then(getMyWorkgroups, onError);
+  return store
+    .setTokenAndUser(token, user)
+    .then(spinnerOff)
+    .then(getMyWorkgroups, onError);
 }
 
 function onGetJwtokenDialog() {
@@ -281,10 +307,12 @@ function onGetJwtokenDialog() {
     // showJwtInputDialog({ data: "Test JWT" }).then(
     (jwtInput) => {
       spinnerOn();
-      return identClient.acceptWorkgroupInvitation(jwtInput.jwt, jwtInput.orgId).then(() => {
-        spinnerOff();
-        alerts.success("Invitation completed");
-      }, onError);
+      return identClient
+        .acceptWorkgroupInvitation(jwtInput.jwt, jwtInput.orgId)
+        .then(() => {
+          spinnerOff();
+          alerts.success("Invitation completed");
+        }, onError);
     },
     () => {
       /* NOTE: On cancel - do nothing */
@@ -305,7 +333,9 @@ function getMyWorkgroups(): Promise<void> {
   }, onError);
 }
 
-async function activateWorkgroupButtons(applications: Application[]): Promise<void> {
+async function activateWorkgroupButtons(
+  applications: Application[]
+): Promise<void> {
   applications.map((app) => {
     //Get the buttons elements
     $("#" + app.id).on("click", function () {
@@ -361,7 +391,9 @@ async function activateWorkflowButtons(workflows: Workflow[]): Promise<void> {
   });
 }
 
-async function activateWorkflowCreateButton(workgroupId: string): Promise<void> {
+async function activateWorkflowCreateButton(
+  workgroupId: string
+): Promise<void> {
   $("#create-workflow").on("click", function () {
     createWorkflow(workgroupId);
   });
@@ -489,9 +521,11 @@ async function onSubmitCreateWorkstepForm(): Promise<unknown> {
     },
   };
 
-  return identClient.createWorkstep(currentWorkflowId, params).then(async () => {
-    return await getMyWorksteps(currentWorkflowId).then(spinnerOff);
-  }, onError);
+  return identClient
+    .createWorkstep(currentWorkflowId, params)
+    .then(async () => {
+      return await getMyWorksteps(currentWorkflowId).then(spinnerOff);
+    }, onError);
 }
 
 async function showWorkstepDetails(workstepId: string): Promise<void> {
@@ -500,18 +534,20 @@ async function showWorkstepDetails(workstepId: string): Promise<void> {
     return;
   }
 
-  await identClient.getWorkstepDetails(currentWorkflowId, workstepId).then(async (workstep) => {
-    setUiForWorkStepDetails();
+  await identClient
+    .getWorkstepDetails(currentWorkflowId, workstepId)
+    .then(async (workstep) => {
+      setUiForWorkStepDetails();
 
-    $("#workstep-details-back-btn").on("click", function () {
-      getMyWorksteps(currentWorkgroupId);
+      $("#workstep-details-back-btn").on("click", function () {
+        getMyWorksteps(currentWorkgroupId);
+      });
+
+      //Prepare logout button
+      $("#workstep-details-ui #logout-btn").on("click", onLogout);
+
+      await myWorkstep.showWorkstepDetails(workstep);
     });
-
-    //Prepare logout button
-    $("#workstep-details-ui #logout-btn").on("click", onLogout);
-
-    await myWorkstep.showWorkstepDetails(workstep);
-  });
 }
 async function confirmMappings(appId: string): Promise<void> {
   if (!identClient) {
@@ -546,7 +582,9 @@ function startBaselining(): Promise<void> {
   return excelWorker.startBaselineService(identClient);
 }
 
-async function initializeBaselining(mappingForm: MappingForm): Promise<unknown> {
+async function initializeBaselining(
+  mappingForm: MappingForm
+): Promise<unknown> {
   spinnerOn();
   return excelWorker.createInitialSetup(mappingForm).then(spinnerOff, onError);
 }
