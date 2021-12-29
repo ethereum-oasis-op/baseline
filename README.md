@@ -47,5 +47,8 @@ All code in this repo is released under the CC0 1.0 Universal public domain dedi
 
 ## Contributing
 
+WE ENCOURAGE you to add ideas for the improvement of this work to the -[Baseline Protocol Improvement Proposal Repo](https://github.com/eea-oasis/baseline-blips/issues).
+
 See [our contributing guidelines](CONTRIBUTING.md)
+
 
