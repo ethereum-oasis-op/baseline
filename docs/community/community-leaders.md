@@ -28,6 +28,7 @@ The project governance board \(PGB\) is organized by OASIS and is accountable fo
 | [**Daniel Kochis**](https://www.linkedin.com/in/daniel-kochis-9b42627/) | Chainlink |
 | [**Tracy Kuhrt**](https://www.linkedin.com/in/tracykuhrt/) | Accenture |
 | [**Melanie Marsollier**](https://www.linkedin.com/in/melaniemarsollier/) | Splunk |
+| [**Jan Brezina**](https://www.linkedin.com/in/janbrezinajunior/) | EY |
 
 ### Technical Steering Committee 2020/21 <a id="your-technical-steering-committee"></a>
 

@@ -36,7 +36,7 @@ An initial set of JSON-RPC methods have been defined for inclusion in the specif
 #### Ethereum clients that support baseline JSON-RPC
 
 * [Nethermind](https://github.com/NethermindEth/nethermind) .NET client
-* Any client supported by the [commit-mgr](https://github.com/ethereum-oasis/baseline/tree/master/reference-implementations/bri-2/commit-mgr) service. These include:
+* Any client supported by the [commit-mgr](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/commit-mgr) service. These include:
   * [ganache](https://github.com/trufflesuite/ganache)
   * [besu](https://github.com/hyperledger/besu)
   * [Infura](https://infura.io/docs/ethereum)
@@ -109,6 +109,6 @@ deleteVaultSecret(vaultId: string, secretId: string): Promise<any>;
 The following providers of the Baseline API are available:
 
 * Ethers.js - _example provider; not yet implemented but included here for illustrative purposes_
-* [Provide](https://provide.services) - [BRI-1](../../bri/bri-1/) reference implementation \(see `reference-implementations/bri-1/base-example`\)
+* [Provide](https://provide.services) - [BRI-1](../../bri/bri-1/) reference implementation \(see `examples/bri-1/base-example`\)
 * RPC - generic JSON-RPC provider
 

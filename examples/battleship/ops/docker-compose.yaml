@@ -1,0 +1,92 @@
+version: "3"
+services:
+  zookeeper:
+    container_name: 'zookeeper'
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    profiles:
+      - infra
+      - bpi
+  kafka:
+    image: 'bitnami/kafka:latest'
+    container_name: 'kafka'
+    ports:
+      - '9092:9092'
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    depends_on:
+      - zookeeper
+    profiles:
+      - infra
+      - bpi
+  ganache-cli:
+    image: 'trufflesuite/ganache-cli:latest'
+    container_name: 'ganache-cli'
+    ports:
+      - '8545:8545'
+    profiles:
+      - infra
+      - bpi
+  p1-bpi:
+    build:
+      context: ../server
+      dockerfile: ../server/Dockerfile
+    container_name: 'p1-bpi'
+    ports:
+      - '3001:3000'
+    environment:
+      - KAFKA_GROUP='p1-kafka'
+      - KAFKA_BROKER=kafka:9092
+      - PLAYER_ID=P1
+    depends_on:
+      - kafka
+      - ganache-cli
+    profiles:
+      - bpi
+  p2-bpi:
+    build:
+      context: ../server
+      dockerfile: ../server/Dockerfile
+    container_name: 'p2-bpi'
+    ports:
+      - '3002:3000'
+    environment:
+      - KAFKA_GROUP='p2-kafka'
+      - KAFKA_BROKER=kafka:9092
+      - PLAYER_ID=P2
+    depends_on:
+      - kafka
+      - ganache-cli
+    profiles:
+      - bpi
+  p1-client:
+    build:
+      context: ../client
+      dockerfile: ../client/Dockerfile
+    container_name: 'p1-client'
+    ports:
+      - '8080:3000'
+    profiles:
+      - frontend
+    environment:
+      - REACT_APP_PROXY_URL=http://p1-bpi:3000
+      - REACT_APP_SOCKET_URL=http://localhost:3001
+  p2-client:
+    build:
+      context: ../client
+      dockerfile: ../client/Dockerfile
+    container_name: 'p2-client'
+    ports:
+      - '8081:3000'
+    profiles:
+      - frontend
+    environment:
+      - REACT_APP_PROXY_URL=http://p2-bpi:3000
+      - REACT_APP_SOCKET_URL=http://localhost:3002

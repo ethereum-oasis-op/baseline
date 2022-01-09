@@ -1,0 +1,32 @@
+.board {
+    width: 450px;
+    height: 450px;
+    /* border: 1px solid grey; */
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.board div {
+    width: 20%;
+    height: 20%;
+    background-color: #eee;
+    border: 1px solid black;
+    color: #666;
+}
+
+.board.opponent.targeting .empty:hover {
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.board .ship {
+    background-color: #444;
+}
+
+.board .hit {
+    background-color: red;
+}
+
+.board .miss {
+    background-color: #444;
+}
