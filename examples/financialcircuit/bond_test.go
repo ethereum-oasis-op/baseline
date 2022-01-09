@@ -220,7 +220,6 @@ func TestBondv(t *testing.T) {
 
 		if err != nil {
 			fmt.Println("Test", i, "fails")
-
 		} else {
 
 			//Check with a correct value and it returns NIL

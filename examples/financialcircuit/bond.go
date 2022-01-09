@@ -65,7 +65,13 @@ type bondCircuit struct {
 // this function is called on set up/compile
 func (circuit *bondCircuit) Define(curveID ecc.ID, cs *frontend.ConstraintSystem) error {
 
-	// All quotes should be greater than zero
+	// check if all entries are greater than zero
+	zero := cs.Constant(0)
+	cs.AssertIsLessOrEqual(zero, circuit.QuoteFromCpts[0])
+	cs.AssertIsLessOrEqual(zero, circuit.QuoteFromCpts[1])
+	cs.AssertIsLessOrEqual(zero, circuit.QuoteFromCpts[2])
+
+	// All quotes should not be equal to zero
 	checkZeroCpt1 := cs.IsZero(circuit.QuoteFromCpts[0], curveID)
 	checkZeroCpt2 := cs.IsZero(circuit.QuoteFromCpts[1], curveID)
 	checkZeroCpt3 := cs.IsZero(circuit.QuoteFromCpts[2], curveID)

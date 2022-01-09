@@ -94,7 +94,15 @@ func createTestCases() [16]TestCase {
 func getQuotesValue(bond *Bond, quoteCpt1, quoteCpt2, quoteCpt3, message string) TestCase {
 
 	_quoteCpt1, err := decimal.NewFromString(quoteCpt1)
+	if err != nil {
+		panic(err)
+	}
+
 	_quoteCpt2, err := decimal.NewFromString(quoteCpt2)
+	if err != nil {
+		panic(err)
+	}
+
 	_quoteCpt3, err := decimal.NewFromString(quoteCpt3)
 	if err != nil {
 		panic(err)
@@ -102,6 +110,9 @@ func getQuotesValue(bond *Bond, quoteCpt1, quoteCpt2, quoteCpt3, message string)
 
 	one100 := decimal.NewFromInt(100)
 	bondSize, err := decimal.NewFromString(bond.Size)
+	if err != nil {
+		panic(err)
+	}
 
 	// 93.63 / 100 = 0,9363
 	_quoteCpt1 = _quoteCpt1.Div(one100)
