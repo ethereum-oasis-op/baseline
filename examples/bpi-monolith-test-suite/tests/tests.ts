@@ -13,8 +13,8 @@ describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {
         const bpiInstance = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new WorkgroupComponent());
 
-        expect(bpiInstance.identityComponent.getOwnerOrganization().id).to.be.equal("AL1");
-        expect(bpiInstance.identityComponent.getOwnerOrganization().name).to.be.equal("AliceOrganisation");
+        expect(bpiInstance.identityComponent.getOwnerBpiSubject().id).to.be.equal("AL1");
+        expect(bpiInstance.identityComponent.getOwnerBpiSubject().name).to.be.equal("AliceOrganisation");
         expect(bpiInstance.storageComponent.getAgreementState().productIds.length).to.be.equal(1);
         expect(bpiInstance.storageComponent.getAgreementState().productIds[0]).to.be.equal("555333");
         expect(bpiInstance.storageComponent.getAgreementState().orders).to.be.an("array").that.is.empty;
@@ -55,13 +55,13 @@ describe('BPI, Workgroup and Worflow setup', () => {
         workStep.setBusinessLogicToExecute(bpiInstance.storageComponent.getAgreementState().addOrder);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
 
-        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerOrganization(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
+        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerBpiSubject(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
         const bobsInvitation = bpiInstance.getInvitationById("BI1");
 
         expect(bobsInvitation.id).to.be.equal("BI1");
         expect(bobsInvitation.name).to.be.equal("BobsInvite");
         expect(bobsInvitation.recipient).to.be.equal("bob@bob.com");
-        expect(bobsInvitation.sender).to.be.equal(bpiInstance.identityComponent.getOwnerOrganization());
+        expect(bobsInvitation.sender).to.be.equal(bpiInstance.identityComponent.getOwnerBpiSubject());
         expect(bobsInvitation.agreement.productIds).to.be.equal(bpiInstance.storageComponent.getAgreementState().productIds);
     });
 
@@ -71,14 +71,14 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(bpiInstance.storageComponent.getAgreementState().addOrder);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerOrganization(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
+        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerBpiSubject(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
 
         const bobsInvitations = bpiInstance.getReceivedInvitationsByEmail("bob@bob.com");
 
         expect(bobsInvitations[0].id).to.be.equal("BI1");
         expect(bobsInvitations[0].name).to.be.equal("BobsInvite");
         expect(bobsInvitations[0].recipient).to.be.equal("bob@bob.com");
-        expect(bobsInvitations[0].sender).to.be.equal(bpiInstance.identityComponent.getOwnerOrganization());
+        expect(bobsInvitations[0].sender).to.be.equal(bpiInstance.identityComponent.getOwnerBpiSubject());
         expect(bobsInvitations[0].agreement.productIds).to.be.equal(bpiInstance.storageComponent.getAgreementState().productIds);
     });
 
@@ -88,14 +88,14 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(bpiInstance.storageComponent.getAgreementState().addOrder);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerOrganization(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
+        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerBpiSubject(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
 
         const bobsInvitation = bpiInstance.getReceivedInvitationsByEmail("bob@bob.com");
         //signed invitation "triggers" Bpi to create dummy proof and add Bob to orgs and workgroup participants
         bpiInstance.signInvitation(bobsInvitation[0].id, "bobsSignature", "BO1", "BobOrganisation");
 
         const workgroup = bpiInstance.getWorkgroupById(exchangeOrdersWorkgroup.id);
-        expect(bpiInstance.getOrganizationById("BO1")).to.not.be.undefined;
+        expect(bpiInstance.getBpiSubjectById("BO1")).to.not.be.undefined;
         expect(workgroup.participants.length).to.be.equal(2);
         expect(workgroup.participants[1].id).to.be.equal("BO1");
         expect(workgroup.participants[1].name).to.be.equal("BobOrganisation");
@@ -109,7 +109,7 @@ describe('BPI, Workgroup and Worflow setup', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(bpiInstance.storageComponent.getAgreementState().addOrder);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerOrganization(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
+        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerBpiSubject(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
         const bobsInvitation = bpiInstance.getReceivedInvitationsByEmail("bob@bob.com");
         bpiInstance.signInvitation(bobsInvitation[0].id, "bobsSignature", "BO1", "BobOrganisation");
         const invQuedByAlice = bpiInstance.getInvitationById("BI1");
@@ -126,9 +126,9 @@ describe('Exchanging business objects', () => {
         const [bpiInstance, exchangeOrdersWorkgroup, workstep] = setupOrderExchangeWorkgroupWithACleanAgreementState();
 
         const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
-        const orgAlice = bpiInstance.identityComponent.getOrganizationById("AL1");
-        const orgBob = bpiInstance.identityComponent.getOrganizationById("BO1");
-        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
+        const bpiSubjectAlice = bpiInstance.identityComponent.getBpiSubjectById("AL1");
+        const bpiSubjectBob = bpiInstance.identityComponent.getBpiSubjectById("BO1");
+        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, bpiSubjectAlice, bpiSubjectBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         // Alice sends to BPI for agreement update, validation and proof generation
 
@@ -141,7 +141,7 @@ describe('Exchanging business objects', () => {
 
         // Bob receives\queries messages and fetches the message from Alice
 
-        const receivedMessage = bpiInstance.getMessages(orgBob);
+        const receivedMessage = bpiInstance.getMessages(bpiSubjectBob);
 
         // Bob verifies the state against the BPI
 
@@ -157,9 +157,10 @@ describe('Exchanging business objects', () => {
         const [bpiInstance, exchangeOrdersWorkgroup, workstep] = setupOrderExchangeWorkgroupWithACleanAgreementState();
 
         const orderBusinessObject = new Order("0001", "Purchase", 15, "555333");
-        const orgAlice = bpiInstance.identityComponent.getOrganizationById("AL1");
-        const orgBob = bpiInstance.identityComponent.getOrganizationById("BO1");
-        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
+
+        const bpiSubjectAlice = bpiInstance.identityComponent.getBpiSubjectById("AL1");
+        const bpiSubjectBob = bpiInstance.identityComponent.getBpiSubjectById("BO1");
+        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, bpiSubjectAlice, bpiSubjectBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         const proof = bpiInstance.postMessage(addOrderMessage);
 
@@ -168,10 +169,12 @@ describe('Exchanging business objects', () => {
 
     it('Given Bob receives a positive result, Bob performs acceptance, the acceptance is returned to Alice', () => {
         const [bpiInstance, exchangeOrdersWorkgroup, workstep] = setupOrderExchangeWorkgroupWithACleanAgreementState();
+
         const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
-        const orgAlice = bpiInstance.identityComponent.getOrganizationById("AL1");
-        const orgBob = bpiInstance.identityComponent.getOrganizationById("BO1");
-        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
+
+        const bpiSubjectAlice = bpiInstance.identityComponent.getBpiSubjectById("AL1");
+        const bpiSubjectBob = bpiInstance.identityComponent.getBpiSubjectById("BO1");
+        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, bpiSubjectAlice, bpiSubjectBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         // Alice sends to BPI for agreement update, validation and proof generation
         let proof = bpiInstance.postMessage(addOrderMessage);
@@ -186,7 +189,7 @@ describe('Exchanging business objects', () => {
         exchangeOrdersWorkgroup.addWorkstep(workstep2);
         
         // Bob sends to BPI for agreement update, vlaidation, and proof generation
-        const acceptOrderMessage = new BpiMessage("M2", MESSAGE_TYPE_STORE, orgBob, orgAlice, exchangeOrdersWorkgroup.id, workstep2.id, orderBusinessObject);
+        const acceptOrderMessage = new BpiMessage("M2", MESSAGE_TYPE_STORE, bpiSubjectBob, bpiSubjectAlice, exchangeOrdersWorkgroup.id, workstep2.id, orderBusinessObject);
         proof = bpiInstance.postMessage(acceptOrderMessage);
         acceptOrderMessage.setExecutionProof(proof);
 
@@ -194,7 +197,7 @@ describe('Exchanging business objects', () => {
         bpiInstance.postMessage(orderMessageAccepted);
 
         // Alice receives\queries messages and fetches the message from Bob
-        const receivedMessage = bpiInstance.getMessages(orgAlice);
+        const receivedMessage = bpiInstance.getMessages(bpiSubjectAlice);
 
         // Alice verifies the state against the BPI
         const verificationResult = bpiInstance.verifyProof(receivedMessage[0].executionProof);
@@ -212,7 +215,7 @@ describe('Exchanging business objects', () => {
         const workStep = new Workstep("W1", "WRKSTP1");
         workStep.setBusinessLogicToExecute(bpiInstance.storageComponent.getAgreementState().addOrder);
         exchangeOrdersWorkgroup.addWorkstep(workStep);
-        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerOrganization(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
+        bpiInstance.inviteToWorkgroup("BI1", "BobsInvite", bpiInstance.identityComponent.getOwnerBpiSubject(), "bob@bob.com", exchangeOrdersWorkgroup.id, bpiInstance.storageComponent.getAgreementState());
         const bobsInvitation = bpiInstance.getReceivedInvitationsByEmail("bob@bob.com");
         bpiInstance.signInvitation(bobsInvitation[0].id, "bobsSignature", "BO1", "BobOrganisation");
 

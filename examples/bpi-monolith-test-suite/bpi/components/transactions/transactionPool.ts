@@ -13,17 +13,17 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
     }
 
     convertMessageToTransaction(message: BpiMessage): Transaction {
-        const senderOrg = this.identityComponent.getOrganizationById(message.sender.id);
+        const senderBpiSubject = this.identityComponent.getBpiSubjectById(message.sender.id);
 
-        const nonceForTransaction = senderOrg.getNonce() + 1;
+        const nonceForTransaction = senderBpiSubject.getNonce() + 1;
 
         return new Transaction(message.workgroupId, message.workstepId, message.id, nonceForTransaction, message.sender, message.receiver, message.payload, message.senderSignature);
     }
 
     validateTransaction(transaction: Transaction): BpiMessage {
         let status: boolean = true;
-        const senderOrg = this.identityComponent.getOrganizationById(transaction.from.id);
-        const recipientOrg = this.identityComponent.getOrganizationById(transaction.to.id);
+        const senderBpiSubject = this.identityComponent.getBpiSubjectById(transaction.from.id);
+        const recipientBpiSubject = this.identityComponent.getBpiSubjectById(transaction.to.id);
         //R[262]
         //Todo: verify owners signature in transaction
         if (transaction.workgroupId === "") {
@@ -36,17 +36,17 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
             transaction.errorMessage += "Invalid workstep Id\n";
             status = false;
         }
-        else if (senderOrg === undefined) {
+        else if (senderBpiSubject === undefined) {
             transaction.errorCode = "0001";
             transaction.errorMessage += "Invalid sender Id\n";
             status = false;
         }
-        else if (recipientOrg === undefined) {
+        else if (recipientBpiSubject === undefined) {
             transaction.errorCode = "0001";
             transaction.errorMessage += "Invalid reciever Id\n";
             status = false;
         }
-        else if (transaction.nonce !== senderOrg.getNonce() + 1) {
+        else if (transaction.nonce !== senderBpiSubject.getNonce() + 1) {
             transaction.errorCode = "0001";
             transaction.errorMessage += "Nonce does not match Id\n";
             status = false;

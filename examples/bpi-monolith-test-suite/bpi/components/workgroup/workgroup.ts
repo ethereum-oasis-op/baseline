@@ -28,8 +28,8 @@ export class Workgroup {
      }
 
      getParticipantsById(id: string): BpiSubject {
-          const orgs = this.participants.filter(org => org.id === id);
-          return orgs[0];
+          const bpiSubjects = this.participants.filter(bs => bs.id === id);
+          return bpiSubjects[0];
      }
 }
 

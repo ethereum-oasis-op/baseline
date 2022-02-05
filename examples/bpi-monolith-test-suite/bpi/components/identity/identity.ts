@@ -2,29 +2,29 @@ import { BpiSubject } from "./bpiSubject";
 import { IIdentityComponent } from "./identity.interface";
 
 export class IdentityComponent implements IIdentityComponent {
-    organizations: BpiSubject[] = [];
+    bpiSubjects: BpiSubject[] = [];
     bpiOwner: BpiSubject;
 
-    addOrganization(id: string, name: string): BpiSubject {
-        const organization = new BpiSubject();
-        organization.id = id;
-        organization.name = name;
+    addBpiSubject(id: string, name: string): BpiSubject {
+        const bpiSubject = new BpiSubject();
+        bpiSubject.id = id;
+        bpiSubject.name = name;
 
-        this.organizations.push(organization);
+        this.bpiSubjects.push(bpiSubject);
 
-        return organization;
+        return bpiSubject;
     }
 
-    getOrganizationById(id: string): BpiSubject {
-        const orgs = this.organizations.filter(org => org.id === id);
-        return orgs[0];
+    getBpiSubjectById(id: string): BpiSubject {
+        const bpiSubjects = this.bpiSubjects.filter(bs => bs.id === id);
+        return bpiSubjects[0];
     }
 
-    setOwnerOrganization(org: BpiSubject): void {
-        this.bpiOwner = org;
+    setOwnerBpiSubject(bpiSubject: BpiSubject): void {
+        this.bpiOwner = bpiSubject;
     }
 
-    getOwnerOrganization(): BpiSubject {
+    getOwnerBpiSubject(): BpiSubject {
         return this.bpiOwner;
     }
 }

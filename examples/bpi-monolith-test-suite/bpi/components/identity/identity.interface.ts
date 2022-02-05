@@ -1,8 +1,8 @@
 import { BpiSubject } from "./bpiSubject";
 
 export interface IIdentityComponent {
-    addOrganization(id: string, name: string): BpiSubject;
-    getOrganizationById(id: string): BpiSubject;
-    setOwnerOrganization(org: BpiSubject): void;
-    getOwnerOrganization(): BpiSubject;
+    addBpiSubject(id: string, name: string): BpiSubject;
+    getBpiSubjectById(id: string): BpiSubject;
+    setOwnerBpiSubject(bpiSubject: BpiSubject): void;
+    getOwnerBpiSubject(): BpiSubject;
 }
