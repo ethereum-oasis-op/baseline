@@ -2,6 +2,7 @@ import { BpiMessage } from "../messaging/bpiMessage";
 import { Transaction } from "./transaction";
 import { IIdentityComponent } from "../identity/identity.interface";
 import { ITransactionPoolComponent } from "./transactionPool.interface";
+import { MESSAGE_TYPE_INFO } from "../messaging/messageTypes";
 
 export class TransactionPoolComponent implements ITransactionPoolComponent {
     identityComponent: IIdentityComponent;
@@ -51,7 +52,7 @@ export class TransactionPoolComponent implements ITransactionPoolComponent {
             status = false;
         }
         if (status === false) {
-            const errorMessage = new BpiMessage("ER1", "INFO", transaction.to, transaction.from, transaction.workgroupId, transaction.workstepId, [transaction.errorCode, transaction.errorMessage]);
+            const errorMessage = new BpiMessage("ER1", MESSAGE_TYPE_INFO, transaction.to, transaction.from, transaction.workgroupId, transaction.workstepId, [transaction.errorCode, transaction.errorMessage]);
             return errorMessage;
         }
         else return undefined;

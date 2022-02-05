@@ -7,6 +7,7 @@ import { MockMessagingComponent } from '../bpi/components/messaging/messaging';
 import { WorkgroupComponent } from '../bpi/components/workgroup/workgroup.service';
 import { IdentityComponent } from '../bpi/components/identity/identity';
 import { Order } from '../domain-objects/order';
+import { MESSAGE_TYPE_INFO, MESSAGE_TYPE_STORE } from '../bpi/components/messaging/messageTypes';
 
 describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {
@@ -127,7 +128,7 @@ describe('Exchanging business objects', () => {
         const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
         const orgAlice = bpiInstance.identityComponent.getOrganizationById("AL1");
         const orgBob = bpiInstance.identityComponent.getOrganizationById("BO1");
-        const addOrderMessage = new BpiMessage("M1", "STORE", orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
+        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         // Alice sends to BPI for agreement update, validation and proof generation
 
@@ -158,7 +159,7 @@ describe('Exchanging business objects', () => {
         const orderBusinessObject = new Order("0001", "Purchase", 15, "555333");
         const orgAlice = bpiInstance.identityComponent.getOrganizationById("AL1");
         const orgBob = bpiInstance.identityComponent.getOrganizationById("BO1");
-        const addOrderMessage = new BpiMessage("M1", "STORE", orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
+        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         const proof = bpiInstance.postMessage(addOrderMessage);
 
@@ -170,7 +171,7 @@ describe('Exchanging business objects', () => {
         const orderBusinessObject = new Order("0001", "Purchase", 30, "555333");
         const orgAlice = bpiInstance.identityComponent.getOrganizationById("AL1");
         const orgBob = bpiInstance.identityComponent.getOrganizationById("BO1");
-        const addOrderMessage = new BpiMessage("M1", "STORE", orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
+        const addOrderMessage = new BpiMessage("M1", MESSAGE_TYPE_STORE, orgAlice, orgBob, exchangeOrdersWorkgroup.id, workstep.id, orderBusinessObject);
 
         // Alice sends to BPI for agreement update, validation and proof generation
         let proof = bpiInstance.postMessage(addOrderMessage);
@@ -185,7 +186,7 @@ describe('Exchanging business objects', () => {
         exchangeOrdersWorkgroup.addWorkstep(workstep2);
         
         // Bob sends to BPI for agreement update, vlaidation, and proof generation
-        const acceptOrderMessage = new BpiMessage("M2", "STORE", orgBob, orgAlice, exchangeOrdersWorkgroup.id, workstep2.id, orderBusinessObject);
+        const acceptOrderMessage = new BpiMessage("M2", MESSAGE_TYPE_STORE, orgBob, orgAlice, exchangeOrdersWorkgroup.id, workstep2.id, orderBusinessObject);
         proof = bpiInstance.postMessage(acceptOrderMessage);
         acceptOrderMessage.setExecutionProof(proof);
 
@@ -222,7 +223,7 @@ describe('Exchanging business objects', () => {
         const infoMessage = {} as BpiMessage;
         
         Object.assign(infoMessage, storeMessage);
-        infoMessage.type = "INFO";
+        infoMessage.type = MESSAGE_TYPE_INFO;
 
         return infoMessage;
     }
