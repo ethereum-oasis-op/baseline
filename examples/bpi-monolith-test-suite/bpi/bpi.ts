@@ -13,6 +13,7 @@ import { IVirtualStateMachineComponent } from "./components/vsm/vsm.interface";
 import { VirtualStateMachine } from "./components/vsm/vsm";
 import { IStorageComponent } from "./components/storage/storage.interface";
 import { StorageComponent } from "./components/storage/storage";
+import { MESSAGE_TYPE_INFO, MESSAGE_TYPE_STORE } from "./components/messaging/messageTypes";
 
 export class BPI {
     identityComponent: IIdentityComponent;
@@ -110,10 +111,10 @@ export class BPI {
     // MESAGGING API
 
     postMessage(message: BpiMessage): string {
-        if (message.type === "INFO") { // Look at [R111] in the standard, seems the type definition is on us. TODO: Move to constants
+        if (message.type === MESSAGE_TYPE_INFO) { // Look at [R111] in the standard, seems the type definition is on us. TODO: Move to constants
             this.messagingComponent.sendMessageToCounterParty(message);
             return "";
-        } else if (message.type === "STORE") {
+        } else if (message.type === MESSAGE_TYPE_STORE) {
             const transaction = this.transactionPoolComponent.convertMessageToTransaction(message);
             const transactionVerificationResult = this.transactionPoolComponent.pushTransaction(transaction);
 
