@@ -1,2 +1,2 @@
-export const MESSAGE_TYPE_INFO = "INFO"; // Inform the recipient withouh changing the agreement state (i.e. Invitation)
+export const MESSAGE_TYPE_INFO = "INFO"; // Inform the recipient without changing the agreement state (i.e. Invitation)
 export const MESSAGE_TYPE_STORE = "STORE"; // Change the agreement state and inform the recipient  (i.e. Create Order)
