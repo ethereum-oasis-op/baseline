@@ -37,8 +37,8 @@ export class BPI {
         this.storageComponent.setInitialAgreementState(initalAgreement);
 
         this.identityComponent = identityComponent;
-        const ownerOrg = this.identityComponent.addOrganization(id, name);
-        this.identityComponent.setOwnerOrganization(ownerOrg);
+        const ownerBpiSubject = this.identityComponent.addBpiSubject(id, name);
+        this.identityComponent.setOwnerBpiSubject(ownerBpiSubject);
 
         this.messagingComponent = messagingComponent;
         this.transactionPoolComponent = new TransactionPoolComponent(identityComponent);
@@ -48,12 +48,12 @@ export class BPI {
 
     // IDENTITY API
 
-    addOrganization(id: string, name: string): BpiSubject {
-        return this.identityComponent.addOrganization(id, name);
+    addBpiSubject(id: string, name: string): BpiSubject {
+        return this.identityComponent.addBpiSubject(id, name);
     }
 
-    getOrganizationById(id: string): BpiSubject {
-        return this.identityComponent.getOrganizationById(id);
+    getBpiSubjectById(id: string): BpiSubject {
+        return this.identityComponent.getBpiSubjectById(id);
     }
 
     // IDENTITY API END
@@ -65,7 +65,7 @@ export class BPI {
     }
 
     addWorkgroup(name: string, id: string, worksteps: Workstep[]): Workgroup {
-        return this.workgroupComponent.createWorkgroup(name, id, this.identityComponent.getOwnerOrganization(), worksteps);
+        return this.workgroupComponent.createWorkgroup(name, id, this.identityComponent.getOwnerBpiSubject(), worksteps);
     }
 
     getWorkgroupById(id: string): Workgroup {
@@ -85,7 +85,7 @@ export class BPI {
     }
 
     // TODO: Should go through the VSM execution process, probably with a special INIT transaction and workstep
-    signInvitation(invitationId: string, recipientSignature: string, recipientOrgId: string, recipientOrgName: string) {
+    signInvitation(invitationId: string, recipientSignature: string, recipientBpiSubjectId: string, recipientBpiSubjectName: string) {
         const invitation = this.workgroupComponent.getInvitationById(invitationId);
 
         // TODO: Verify signature from the recipient
@@ -93,10 +93,10 @@ export class BPI {
         const latestAgreementState = this.storageComponent.getAgreementState();
         const bobsProof = this.vsmComponent.createProof(latestAgreementState, latestAgreementState, recipientSignature);
 
-        const accepteeOrg = this.identityComponent.addOrganization(recipientOrgId, recipientOrgName);
+        const accepteeBpiSubject = this.identityComponent.addBpiSubject(recipientBpiSubjectId, recipientBpiSubjectName);
 
         const workgroup = this.workgroupComponent.getWorkgroupById(invitation.workgroupId);
-        workgroup.addParticipants(accepteeOrg);
+        workgroup.addParticipants(accepteeBpiSubject);
 
         latestAgreementState.proofs.push(bobsProof);
     }
