@@ -1,6 +1,6 @@
 # Baseline Protocol
 
-The Baseline Protocol is an open source initiative that combines advances in cryptography, messaging, and blockchain to deliver secure and private business processes at low cost using the public Mainnet for event ordering, data consistency and workflow integrity. The protocol will enable confidential and complex collaboration between enterprises without moving any sensitive data from traditional systems of record. The work is governed by the [Ethereum-Oasis Project](https://github.com/ethereum/oasis-open-project), which is managed by [OASIS](https://oasis-open-projects.org/).
+The Baseline Protocol is an open source initiative that combines advances in cryptography, messaging, and blockchain to deliver secure and private business processes at low cost using the public Mainnet for event ordering, data consistency and workflow integrity. The protocol will enable confidential and complex collaboration between enterprises without moving any sensitive data from traditional systems of record. The work is governed by the [EEA Community Projects], erstwhile [Ethereum-Oasis Project](https://github.com/ethereum/oasis-open-project), which is managed by [OASIS](https://oasis-open-projects.org/).
 
 **The current v0.1 release of the protocol code can be found** [**here**](https://github.com/ethereum-oasis/baseline/releases/tag/v0.1.0)**.**
 
@@ -22,5 +22,11 @@ Eth2 will further extend the range of applications that baselining can serve at 
 
 Some providers of ERP, CRM and other enterprise systems are now seen to be optimizing their products for the protocol, but baselining works without requiring any modification to legacy systems.
 
-Any state machine should be able to "baseline." Permissioned blockchains \(aka DLT\) are state machines. Hyperledger projects like Fabric have Channels, which are, each of them, state machines. Public blockchain networks are also state machines. So...all of these may use the baseline approach. Their question: what will they choose to use as the common frame of reference. 
+Any state machine should be able to "baseline." Permissioned blockchains \(aka DLT\) are state machines. Hyperledger projects like Fabric have Channels, which are, each of them, state machines. Public blockchain networks are also state machines. So...all of these may use the baseline approach. Their question: what will they choose to use as the common frame of reference.
+
+## Current State of the Baseline Protocol
+
+The Baseline Core Version 1.0 has been ratified by the Technical Steering Committee on the 30th of September 2021 via a uninimous vote on a recorded meeting. The standard sraft has been submitted to OASIS for ratification to a standard. The submitted version of the document may be fond here: core/baseline-core-v1.0-psd01.md and the issue related to the approval of the standard may be found at https://github.com/eea-oasis/baseline-standard/issues/77#issue-1012249365
+
+
 

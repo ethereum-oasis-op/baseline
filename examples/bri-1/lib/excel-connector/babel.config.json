@@ -1,0 +1,32 @@
+{
+  "presets": [
+      "@babel/preset-typescript",
+      [
+          "@babel/preset-env",
+          {
+              "useBuiltIns": "entry",
+              "corejs": "3.9.1",
+              "ignoreBrowserslistConfig": true,
+              "targets": {
+                  "node": 8,
+                  "browsers": [
+                      "last 3 versions",
+                      "Explorer >= 11"
+                  ]
+              }
+          }
+      ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-proposal-class-properties",
+      
+      {
+        "loose": true
+      }
+    ],
+    ["@babel/plugin-syntax-top-level-await"]
+  
+  ],
+  "sourceType": "unambiguous"
+}

@@ -20,7 +20,7 @@
   "author": "",
   "license": "CC0 1.0 Universal",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
     "cors": "^2.8.5",

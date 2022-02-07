@@ -12,9 +12,9 @@ The Registrar contract generates the three main contracts on the Mainnet to boot
 
 ## On-Chain Components <a id="on-chain-components"></a>
 
-### orgRegistry Contract <a id="orgregistry-contract"></a>
+### OrgRegistry Contract <a id="orgregistry-contract"></a>
 
-Think of the orgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
+Think of the OrgRegistry Contract as a "rolodex" contacts list. In the future, and in particular when the decentralized identity standard \(DID\) is well established, this can be populated from a global "phone book" of pre-verified organizations..so you know when you add a company to your WorkGroup, you are baselining with the company you think you're working with.
 
 ### Shield Contract <a id="shield-contract"></a>
 
@@ -41,7 +41,7 @@ It has been suggested that the Baseline Protocol community consider looking into
 
 ## ZK Service <a id="zk-service"></a>
 
-zk-SNARK stands for "Zero Knowledge Succinct Non-Interactive Argument of Knowledge", and is a family of privacy tools called zero knowledge proofs \(ZKP\). While other privacy techniques like bulletproofs, ring signatures and stealth addresses, etc. mask the identities of the entities involved in a business transaction, ZKP techniques allow to prove logical statements without divulging any information and yet proving the validity of such proofs. Particularly, zk-SNARKs are mathematical concepts and tools to establish zero knowledge verification of succinct proofs, which convert logical statements to arithmetic circuits, that are then leveraged to generate proofs.
+zk-SNARK stands for "Zero Knowledge Succinct Non-Interactive Argument of Knowledge", and is a family of privacy tools called zero knowledge proofs \(ZKP\). While other privacy techniques like bulletproofs, ring signatures and stealth addresses, etc. mask the identities of the entities involved in a business transaction, ZKP techniques allow proving logical statements without divulging any information and yet proving the validity of such proofs. Particularly, zk-SNARKs are mathematical concepts and tools to establish zero knowledge verification of succinct proofs, which convert logical statements to arithmetic circuits, that are then leveraged to generate proofs.
 
 > Normally zk-SNARKs are used as a way to say "I have a secret" to someone and prove that you indeed have the secret without telling them what the secret is. What the Baseline Protocol uses it for is a little different. It's more like saying to a specific set of counterparties, "We have a secret" and using a machine that we all can access to tell us that we all have the same secret \(or that we do not\) _without_ telling that machine anything that would let someone else with access to it discover anything about the secret...or even that we have one.
 
@@ -69,7 +69,7 @@ In the Radish34 Demo, the team built a simple web-based UI to simulate the user 
 
 In the real world, the user experience is the experience of any number of products.
 
-If you are are in charge of the feature/benefit mix of a product in ERP, CRM, SCM, Core Banking or any other type of system of record, you can use the example in the Radish34 UI section to get ideas for how to integrate with baseline components \(whether they have added to your product's internal services or whether they have been deployed as services in your wider IT environment\) and present baselining benefits to users.
+If you are in charge of the feature/benefit mix of a product in ERP, CRM, SCM, Core Banking or any other type of system of record, you can use the example in the Radish34 UI section to get ideas for how to integrate with baseline components \(whether they have added to your product's internal services or whether they have been deployed as services in your wider IT environment\) and present baselining benefits to users.
 
 ​
 

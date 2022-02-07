@@ -16,7 +16,7 @@ The first step in baselining is setting up the counterparties that will be invol
 
 > #### _A Corporate Phone Book?_
 >
-> _It is possible over time for a single instance of an orgRegistry contract on the Mainnet to become a defacto "phone book" for all baselining counterparties. This would provide a convenient place to look up others and to quickly start private Workflows with them. For this to become a reality, such an orgRegistry would need to include appropriate and effective ways to verify that the entry for any given company is the authentic and correct entry for baselining with that entity. **This is an opportunity for engineers and companies to add functionality to the Baseline Protocol.**_
+> _It is possible over time for a single instance of an OrgRegistry contract on the Mainnet to become a defacto "phone book" for all baselining counterparties. This would provide a convenient place to look up others and to quickly start private Workflows with them. For this to become a reality, such an OrgRegistry would need to include appropriate and effective ways to verify that the entry for any given company is the authentic and correct entry for baselining with that entity. **This is an opportunity for engineers and companies to add functionality to the Baseline Protocol.**_
 
 Next, establish point-to-point connectivity with the counterparties in your Workgroup by:
 

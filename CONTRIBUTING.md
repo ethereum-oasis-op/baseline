@@ -15,9 +15,34 @@ If you want to create a new issue that doesn't exist already, follow the guideli
 Follow these steps when submitting a pull request:
 
 1. Fork this repo into your GitHub account. Read more about forking a repo on Github [here](https://help.github.com/articles/fork-a-repo/).
-1. Create a new branch, based on the `master` branch, with a name that concisely describes what you’re working on (ex. `add-mysql`).
+1. Create a new branch, based on the `main` branch, with a name that concisely describes what you’re working on (ex. `add-mysql`).
 1. Ensure that your changes do not cause any existing tests to fail.
-1. Submit a pull request against the `master` branch.
+1. Submit a pull request against the `main` branch.
+
+## Branch naming and commit messages
+
+### Branch naming
+
+main - main development branch, feature and release branches branched from it, changes only through the PR process.
+
+feature/this-is-a-new-feature-branch - in case no related BLIP exists
+feature/BLIP-9-repo-branch-standards - in case related BLIP exists
+
+bugfix/name-of-the-bug
+
+release/1.0.0 - cut from main when ready
+
+### Rebasing note
+
+After completed work on a feature branch, rebase main before opening a PR. After PR approved rebase again to make sure changes from latest main picked up before merging the PR.
+
+### Commit messages format:
+
+In the commit message, always continue the sentence "This commit does ...". Examples of good commit messages:
+
+"Rename examples folder in the root of the repo to reference-implementations"
+"Add RabbitMQ client as another messaging interface implementation"
+"Bump dependency packages versions to fix potential security issues"
 
 ## Signing the eCLA/iCLA
 

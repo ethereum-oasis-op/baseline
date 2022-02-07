@@ -10,7 +10,7 @@ Additional documentation about the OASIS Open Projects program can be found [her
 
 ## License and Patent Policies <a id="license-and-patent-policies"></a>
 
-All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md).
+All repos in the EEA Community Projects organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md).
 
 In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/open-projects/cla/entity-cla-20210630/) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](https://cla-assistant.io/eea-oasis/managed-open-project) for community contributions. You must [sign the ICLA](https://cla-assistant.io/eea-oasis/managed-open-project) before your pull requests to the baseline repository will be merged. [Check here](https://community.oasis-open.org/s/searchdirectory?id=a233l0000038IIo) to see if your company has signed the ECLA.
 
@@ -32,11 +32,11 @@ Contributions to the open source repo shall be under creative commons public dom
 
 The Baseline Protocol shall be governed by a Technical Steering Committee, with 7, 9 or 11 Members, one of whom will serve as TSC Chair. The initial number of seats for the bootstrapping period \(see below\) shall be 11.
 
-A quorum of two-thirds of the TSC members can conduct any vote required of the TSC during any given meeting. Disputes on whether a matter should be tabled for a different TSC meeting can be presented to the PGB of the Ethereum-OASIS project for a decision. A move to table a matter can be lodged during a TSC meeting, and it shall be tabled and submitted to the PGB with a simple majority vote. If a majority cannot be achieved during the meeting, a minimum of two members that were present at the meeting in question may dispute the matter after the fact to the PGB.
+A quorum of two-thirds of the TSC members can conduct any vote required of the TSC during any given meeting. Disputes on whether a matter should be tabled for a different TSC meeting can be presented to the PGB of EEA Community Projects for a decision. A move to table a matter can be lodged during a TSC meeting, and it shall be tabled and submitted to the PGB with a simple majority vote. If a majority cannot be achieved during the meeting, a minimum of two members that were present at the meeting in question may dispute the matter after the fact to the PGB.
 
 No legal entity \(or set of entities controlled by a single party\) shall hold more than three seats out of eleven \(or two seats out of seven or nine\) on the TSC during any given period.
 
-A TSC member is eligible to lose their seat upon missing two consecutive TSC meetings or three total during a period between elections. Removal is completed by a simple majority vote of the remaining TSC members that are not being considered for removal. The PGB of the Ethereum-OASIS project has the option to consider extenuating circumstances and determine whether or not to remove a member, if the TSC itself cannot come to a determination. After removal, a special election of the vacant seat shall be held among contributors. The seat will be up for re-election at the next regular election cycle.
+A TSC member is eligible to lose their seat upon missing two consecutive TSC meetings or three total during a period between elections. Removal is completed by a simple majority vote of the remaining TSC members that are not being considered for removal. The PGB of EEA Community Projects has the option to consider extenuating circumstances and determine whether or not to remove a member, if the TSC itself cannot come to a determination. After removal, a special election of the vacant seat shall be held among contributors. The seat will be up for re-election at the next regular election cycle.
 
 ### Bootstrapping Period:  <a id="bootstrapping-period"></a>
 
@@ -64,9 +64,9 @@ The TSC shall determine the number of maintainers required to merge a contributi
 
 This document shall be ratified by the PGB before the public launch of the Baseline Protocol. Changes to this document shall require a simple majority of the PGB.
 
-### Details on OASIS and the Open Ethereum Project <a id="details-on-oasis-and-the-open-ethereum-project"></a>
+### Details on OASIS and EEA Community Projects <a id="details-on-oasis-and-eea-community-projects"></a>
 
-Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis/oasis-open-project/blob/master/GOVERNANCE.md​).
+Governance documents for [EEA Community Projects](https://github.com/eea-oasis/managed-open-project/blob/main/GOVERNANCE.md).
 
 ### TSC Rules for Mid-term Member Replacements <a id="replacements"></a>
 

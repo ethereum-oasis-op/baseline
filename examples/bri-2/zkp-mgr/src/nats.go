@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/big"
 	"net/http"
 	"os"
 	"time"
@@ -23,20 +24,29 @@ type circuitCompileMsg struct {
 	circuitType string
 }
 
-type circuitSetupMsg struct {
+type workflowSetupMsg struct {
 	WorkflowId  string
 	ZkCircuitId string
 }
 
-type verifierCompileMsg struct {
-	WorkflowId  string
+type generateProofMsg struct {
+	CommitId  string
 	ZkCircuitId string
+	Witness []WitnessInput
+	ProofSolidityA_0 string
+	ProofSolidityA_1 string
+	ProofSolidityB_0_0 string
+	ProofSolidityB_0_1 string
+	ProofSolidityB_1_0 string
+	ProofSolidityB_1_1 string
+	ProofSolidityC_0 string
+	ProofSolidityC_1 string
+	ProofRawBytes []byte
+	PublicInput string
+	HashValue string
 }
 
-type contractsDeployMsg struct {
-	WorkflowId  string
-	ZkCircuitId string
-}
+var SNARK_SCALAR_FIELD, _ = new(big.Int).SetString("21888242871839275222246405745257275088548364400416034343698204186575808495617", 10)
 
 func InitNats() *nats.Conn {
 	// Get NATS_URL from .env
@@ -119,7 +129,7 @@ func InitNats() *nats.Conn {
 		//      an additinal sbuscription waiting for the Workflow Updated event
 		//      with a sepcific even type or value
 		log.Println("NATS circuit-compile: completed request for workflowId ", msgData.WorkflowId)
-		var setupMsg circuitSetupMsg
+		var setupMsg workflowSetupMsg
 		setupMsg.WorkflowId = msgData.WorkflowId
 		setupMsg.ZkCircuitId = circuitId
 		encodedSetupMsg, _ := json.Marshal(setupMsg)
@@ -130,7 +140,7 @@ func InitNats() *nats.Conn {
 
 	nc.Subscribe("circuit-setup", func(m *nats.Msg) {
 		log.Println("NATS circuit-setup: received new request")
-		var msgData circuitSetupMsg
+		var msgData workflowSetupMsg
 		var workflowUpdates = make(map[string]string)
 		var err error
 
@@ -150,7 +160,7 @@ func InitNats() *nats.Conn {
 		updateWorkflow(msgData.WorkflowId, workflowUpdates)
 
 		// Create new "contracts-compile-verifier" job
-		var compileMsg verifierCompileMsg
+		var compileMsg workflowSetupMsg
 		compileMsg.WorkflowId = msgData.WorkflowId
 		compileMsg.ZkCircuitId = msgData.ZkCircuitId
 		encodedCompileMsg, _ := json.Marshal(compileMsg)
@@ -159,6 +169,62 @@ func InitNats() *nats.Conn {
 		//      in this case it would be circuit-setup-complete event which is what cmpile verifier subsriver would listen for, in addition to it's
 		//      own init event message.
 		nc.Publish("contracts-compile-verifier", encodedCompileMsg)
+	})
+
+	nc.Subscribe("generate-zk-proof", func(m *nats.Msg) {
+		log.Println("NATS generate-zk-proof: received new request")
+		var msgData generateProofMsg
+		var commitUpdates = make(map[string]string)
+		var err error
+
+		json.Unmarshal(m.Data, &msgData)
+		log.Println("NATS generate-zk-proof: processing request for commitId", msgData.CommitId)
+
+		compiledCircuit, provingKey, err := GetCompiledCircuit(msgData.ZkCircuitId)
+		if err != nil {
+			// Save commit status: fail-generate-proof
+			commitUpdates["status"] = "fail-generate-proof"
+			updateWorkflow(msgData.CommitId, commitUpdates)
+			return
+		}
+
+		encodedWitnessHex, err := EncodeWitness(msgData.Witness)
+		if err != nil {
+			commitUpdates["status"] = "fail-generate-proof"
+			updateWorkflow(msgData.CommitId, commitUpdates)
+			return
+		}
+
+		proofRawBytes, proofSolidity, err := GenerateProof(compiledCircuit, provingKey, encodedWitnessHex)
+		if err != nil {
+			commitUpdates["status"] = "fail-generate-proof"
+			updateWorkflow(msgData.CommitId, commitUpdates)
+			return
+		}
+
+		// Create new "proof-generated" job
+		var proofGeneratedMsg generateProofMsg
+		proofGeneratedMsg.CommitId = msgData.CommitId
+		proofGeneratedMsg.ZkCircuitId = msgData.ZkCircuitId
+		proofGeneratedMsg.ProofSolidityA_0 = proofSolidity.a[0].String()
+		proofGeneratedMsg.ProofSolidityA_1 = proofSolidity.a[1].String()
+		proofGeneratedMsg.ProofSolidityB_0_0 = proofSolidity.b[0][0].String()
+		proofGeneratedMsg.ProofSolidityB_0_1 = proofSolidity.b[0][1].String()
+		proofGeneratedMsg.ProofSolidityB_1_0 = proofSolidity.b[1][0].String()
+		proofGeneratedMsg.ProofSolidityB_1_1 = proofSolidity.b[1][1].String()
+		proofGeneratedMsg.ProofSolidityC_0 = proofSolidity.c[0].String()
+		proofGeneratedMsg.ProofSolidityC_1 = proofSolidity.c[1].String()
+		proofGeneratedMsg.ProofRawBytes = proofRawBytes
+		
+		log.Println("msgData.HashValue =", msgData.HashValue)
+		hashValueDecimal, _ := new(big.Int).SetString(strip0x(msgData.HashValue), 16)
+		log.Println("decimal of HashValue =", hashValueDecimal)
+		proofGeneratedMsg.PublicInput = hashValueDecimal.Mod(hashValueDecimal, SNARK_SCALAR_FIELD).String()
+
+		log.Printf("proof-generated NATS message: %+v", proofGeneratedMsg)
+		encodedProofMsg, _ := json.Marshal(proofGeneratedMsg)
+		log.Println("NATS generate-zk-proof: completed job. Adding job to proof-generated queue for commitId", msgData.CommitId)
+		nc.Publish("proof-generated", encodedProofMsg)
 	})
 
 	return nc

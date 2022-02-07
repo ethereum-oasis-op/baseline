@@ -1,10 +1,9 @@
 import { updateTree } from '../merkle-tree';
 import { ITxManager } from '.';
 import { logger } from '../logger';
-import { insertLeaf as insertLeafDb, getLatestLeaf } from "../merkle-tree/leaves";
+import { insertLeaf as insertLeafDb, getLatestLeaf } from '../merkle-tree/leaves';
 
 export class LocalDb implements ITxManager {
-
   constructor(private readonly config: any) {
     this.config = config;
   }
@@ -12,7 +11,9 @@ export class LocalDb implements ITxManager {
   async insertLeaf(
     merkleId: string,
     fromAddress: string,
-    proof: any[],
+    proofA: string[],
+    proofB: string[][],
+    proofC: string[],
     publicInputs: any[],
     newCommitment: string
   ) {
@@ -21,12 +22,12 @@ export class LocalDb implements ITxManager {
     try {
       const latestLeaf = await getLatestLeaf(merkleId);
       let newLeafIndex = 0;
-      if (latestLeaf) newLeafIndex = latestLeaf.leafIndex+1;
+      if (latestLeaf) newLeafIndex = latestLeaf.leafIndex + 1;
 
       const newLeaf = {
         leafIndex: newLeafIndex,
         hash: newCommitment
-      }
+      };
       await insertLeafDb(merkleId, newLeaf);
 
       // Set txHash to new root hash value
