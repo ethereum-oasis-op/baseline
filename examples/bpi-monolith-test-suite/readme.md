@@ -2,9 +2,9 @@
 
 ## Project Description
 
-As a first step in building a standard-based, open-source Baseline Protocol Implementation (BPI), we implemented a set of tests running against a simple mock BPI with well-defined interfaces and component boundaries. This test suite is implemented in such a way that it easy to run for a developer and it should serve as a entry point to get to know the protocol as well as a starting point to build a backlog of small, atomic tasks that can be picked up by core devs towards building a a full-blown open-source BPI.
+As a first step in building a standard-based, open-source Baseline Protocol Implementation (BPI), we implemented a set of tests running against a simple mock BPI with well-defined interfaces and component boundaries. This test suite is implemented in such a way that it easy to run for a developer and it should serve as a entry point to get to know the protocol as well as a starting point to build a backlog of small, atomic tasks that can be picked up by core devs towards building a full-blown, open-source BPI.
 
-BPI monolith is implemented using typescript. Test framework used is Mocha together with chai for assertions.
+BPI monolith is implemented using Typescript. Test framework used is Mocha together with Chai for assertions.
 
 ## Motivation
 
