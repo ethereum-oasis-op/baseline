@@ -31,25 +31,19 @@ To clean up you can run `clean.sh` script.
 ## Technical details: 
 This section breaks down the technical aspects of the Battleship Baseline implementation. 
 
-### Tech stack: 
+### Tech stack
 The team utilized the following technologies 
 
-Component
-Technologies
-Front end
-ReactJS
-Back end
-ExpressJS
-Application Messaging
-Kafka
-Client - server messaging
-Socket.io
-Blockchain
-Ganache 
-Zero Knowledge Proof verifier
-Circom + SnarkJS
+| Component | Technologies |
+|:--|:--|
+| Front end | ReactJS |
+| Back end | ExpressJS |
+| Application Messaging | Kafka |
+| Client - server messaging | Socket.io |
+| Blockchain | Ganache |
+| Zero Knowledge Proof verifier | Circom + SnarkJS |
 
-### How Baselining the battleship was achieved: 
+### How Baselining the battleship was achieved
 
 A common workgroup is created for the players/counterparties, and replicated on both players memory stores using Kafka
 The players or organizations begin the game by joining this common workgroup
@@ -67,7 +61,10 @@ a) HIT : the ship was placed at the coordinates where the other player has place
 b) MISS : the ship was placed in an empty area
 Once verification is successful, new leaf containing hash of turn information is stored in merkle tree
 
-### A Note About Messaging – NATs vs KAFKA: 
+## Demo
+[See the demo here](https://www.youtube.com/watch?v=qyqqu2wNZe8)
+
+## A Note About Messaging – NATs vs KAFKA: 
 
 The official Baseline protocol documentation recommends NATs messaging protocol in order to share the messages across organizations. We have expanded this even further with implementing a Kafka based message provider that can help the exchange of messages in real time. The concept remains the same, the players/counterparties participating in the battleship game will join and subscribe to a common topic created for these players. As and when the players make a move, the information is passed over to the Kafka stream, which is then read for the input message. The idea of using Kafka for this implementation is just to showcase the interoperability of Baseline protocol across different messaging providers like NATs, MQTT, AMQP, etc. One real benefit with Kafka, besides processing bulk messages in no time, is that Kafka can be easily integrated with DIDComm and hence opens up even more possibilities to explore.
 Understanding the Use and Implementation of Zero Knowledge Proofs in the Battleship Baseline Game
@@ -88,9 +85,6 @@ Before baselining transforms the world of industry, developers need to get used 
 
 ## Battleship: Baseline
 ‘Battleship Baseline’ is an implementation of the classic search & destroy strategy guessing game, using the design pattern specified in the Baseline Protocol standard. This implementation is a great way to start baselining. It gives you a simple framework of where and how to baseline information between multiple parties, a complete set of code that works, and a lot of clues on how to extend the code to create new features and for other use cases. 
-
-## Demo
-[See the demo here](https://www.youtube.com/watch?v=qyqqu2wNZe8)
 
 ## The Game
 In ‘Battleship Baseline,’ players are ushered through a (fairly) standard game of Battleship framed entirely within a Baseline Protocol context. [See here](https://en.wikipedia.org/wiki/Battleship_(game)) for more information on the traditional game.
@@ -125,15 +119,7 @@ As we’ve said, Battleship is just a good way to illustrate the essential parts
 
 Take the setting up of the Player workgroup and their grids and battleship locations. For the Battleship implementation, we used simple in-memory services to store information about workgroups, organizations and games. One player creates a workgroup and then using kafka messaging, the workgroup is replicated on other player’s memory stores. Then, both players create organizations, and details of both organizations are stored on both sides. In a real world situation you would usually set up some permanent DBMS.  In our case we can improve by adding a database – say SAP or Mongo, or maybe a redis cache.
 
-
-So to use the Battleship Baseline project to give you a leg up on your own project, do what you would normally do with example code:
-
-[ Libraries to copy
-Parts of the example code that can be modified in ways to, for example, add third parties.
-Tips and tricks from the battleship team…things to watch out for. ]
-
-
-
+### Team Members 
 | Name | LinkedIn |
 |:--|:--|
 |Daven Jones | https://www.linkedin.com/in/daven-jones-00327663/ |
