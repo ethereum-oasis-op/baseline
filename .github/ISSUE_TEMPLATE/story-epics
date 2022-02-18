@@ -1,9 +1,9 @@
-By convention, this community uses Epics (zenhub epics) as two things: 
+By convention, this community uses Epics (zenhub epics) as two things:
 1. Containers/topics (usually a set of  nouns) that can nest inside each other;
 2. User Stories that are contained under a set of topics.
 
-A user story should have the form: 
+A user story should have the form:
 
-As a Persona X, I need Y, so that Z. Example: "As a CISO at a F100 company, I need a B2B integration bus that has an SLA of 9.99999 uptime, so that I can hold someone accountable for service failures."
+As a Persona X, I need Y, so that Z. Example: "As a CISO at a F100 company, I need a B2B integration bus that has an SLA of 99.99999 uptime, so that I can hold someone accountable for service failures."
 
 (The "so that" clause is essential, because it sets the context in a way that gives engineering teams latitude to solve the problem in a variety of ways, not just the prescription in the "I need a" clause.)

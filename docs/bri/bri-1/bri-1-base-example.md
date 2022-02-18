@@ -106,3 +106,8 @@ There are several assertion and checks that have to be carried out, in full and 
   "sub": "invite:alice1597987999175@baseline.local"
 }
 ```
+
+### Accepting the Workgroup Invitation
+
+Alice accepts the invitation and synchronizes with the on- and off-chain state of the workgroup. Following Alice's acceptance of Bob's invitation on behalf of Alice Corp, both organizations have been registered with the on-chain `OrgRegistry` contract; both organizations are running their own local, off-chain copy of the organization registry, workgroup contracts registry and merkle tree database.
+

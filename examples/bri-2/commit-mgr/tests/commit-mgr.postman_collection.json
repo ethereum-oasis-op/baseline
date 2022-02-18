@@ -1,0 +1,414 @@
+{
+	"info": {
+		"_postman_id": "4e0910f7-3652-481c-9375-6caf44a69952",
+		"name": "commit-mgr",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Verifier.sol: eth_sendTransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set('verifier_txhash', pm.response.json().result)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"eth_sendTransaction\",\n  \"params\":[{\n      \"from\": {{sender_address}},\n      \"data\": {{verifier_bytecode}},\n      \"gas\": 2000000\n  }],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verifier.sol: eth_getTransactionReceipt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set('verifier_address', pm.response.json().result.contractAddress)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"eth_getTransactionReceipt\",\n  \"params\":[\"{{verifier_txhash}}\"],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shield.sol: eth_sendTransaction",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set('shield_txhash', pm.response.json().result)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"eth_sendTransaction\",\n  \"params\":[{\n      \"from\": {{sender_address}},\n      \"data\": \"{{shield_bytecode}}\",\n      \"gas\": 2000000\n  }],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Shield.sol: eth_getTransactionReceipt",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set('shield_address', pm.response.json().result.contractAddress)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"eth_getTransactionReceipt\",\n  \"params\":[\"{{shield_txhash}}\"],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_track",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_track\",\n  \"params\":[\"{{shield_address}}\"],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_getTracked",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_getTracked\",\n  \"params\":[],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_insertLeaf",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_insertLeaf\",\n  \"params\":[\n      {{sender_address}},\n      \"{{shield_address}}\",\n      {{proof}},\n      {{public_inputs}},\n      {{leaf_value}}\n    ],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_getLeaf",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_getLeaf\",\n  \"params\":[\n      \"{{shield_address}}\",\n      0\n  ],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_getLeaves",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_getLeaves\",\n  \"params\":[\n      \"{{shield_address}}\",\n      1,\n      2\n  ],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_getRoot",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_getRoot\",\n  \"params\":[\"{{shield_address}}\"],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_getSiblings",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.globals.set('siblings', JSON.stringify(pm.response.json().result))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_getSiblings\",\n  \"params\":[\n      \"{{shield_address}}\",\n      0\n    ],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "baseline_verify",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"jsonrpc\":\"2.0\",\n  \"method\":\"baseline_verify\",\n  \"params\":[\n      \"{{shield_address}}\",\n      {{leaf_value}},\n      {{siblings}}\n    ],\n  \"id\":1\n}"
+				},
+				"url": {
+					"raw": "{{web3_provider_url}}",
+					"host": [
+						"{{web3_provider_url}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "**batch** baseline_getTracked",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n        \"jsonrpc\":\"2.0\",\n        \"method\":\"baseline_getTracked\",\n        \"params\":[],\n        \"id\":1\n    },\n    {\n        \"jsonrpc\":\"2.0\",\n        \"method\":\"baseline_getTracked\",\n        \"params\":[],\n        \"id\":1\n    },\n    {\n        \"jsonrpc\":\"2.0\",\n        \"method\":\"eth_accounts\",\n        \"params\":[],\n        \"id\":1\n    }\n]"
+				},
+				"url": {
+					"raw": "http://localhost:4001/jsonrpc",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "4001",
+					"path": [
+						"jsonrpc"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

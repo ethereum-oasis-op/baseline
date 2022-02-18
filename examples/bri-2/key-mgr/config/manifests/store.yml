@@ -1,0 +1,19 @@
+- kind: HashicorpKeys
+  version: 0.0.1
+  name: keystore
+  specs:
+    mountPoint: quorum
+    address: http://alice-vault:8200
+    namespace: demo
+    token: DevVaultToken
+
+- kind: Ethereum
+  version: 0.0.1
+  name: ethstore
+  specs:
+    keystore: HashicorpKeys
+    specs:
+      mountPoint: quorum
+      address: http://alice-vault:8200
+      token: DevVaultToken
+      namespace: ''

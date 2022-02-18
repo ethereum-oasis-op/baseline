@@ -31,7 +31,7 @@ Most Issues should be attached to an Epic \(see below\).
 
 A good Task/Issue starts with a Verb: "Implement xyz."
 
-### Submitting a pull request
+### Submitting a pull request <a id="submitting-a-pull-request"></a>
 
 Follow these steps when submitting a pull request:
 

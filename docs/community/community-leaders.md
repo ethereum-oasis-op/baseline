@@ -86,9 +86,9 @@ The position is annual and chosen by popular vote of contributors who have had w
 | :--- | :--- |
 | [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) | ConsenSys |
 
-### Maintainer Team
+### Maintainer Team <a id="maintainer-team"></a>
 
-The Maintainers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Master branch of the repo.
+The Maintainers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Main branch of the repo.
 
 Details on how to become a [Maintainer here](members.md).
 

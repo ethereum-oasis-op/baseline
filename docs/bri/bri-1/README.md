@@ -6,13 +6,11 @@ description: Baseline Reference Implementation-1 using the core Provide stack.
 
 ## Overview
 
-This reference implementation of the core interfaces specified in the v1.0 release of the Baseline Protocol is called BRI-1 and has been contributed to the open source community under a public domain CCO-Universal license by individuals and companies including Provide, EY, Nethermind, ConsenSys, and others. It heavily utilizes the core [Provide](https://provide.services) application stack and is compatible with [Shuttle](https://shuttle.provide.services/waitlist), an on-ramp for _baselining_.
+This reference implementation of the core interfaces specified in the v0.1 release of the Baseline Protocol is called BRI-1 and has been contributed to the open source community under a public domain CCO-Universal license by individuals and companies including Provide, EY, Nethermind, ConsenSys, and others. It heavily utilizes the core [Provide](https://provide.services) application stack and is compatible with [Shuttle](https://shuttle.provide.services/waitlist), an on-ramp for _baselining_. [NATS](https://nats.io/) and the [Nethermind](https://nethermind.io/) Ethereum client \(the first client to implement the Baseline Protocol RPC\) are opinionatedly used by default.
 
-The reference implementation is instrumented to run on the Ethereum Ropsten testnet and can be configured to run on many other public or permissioned EVM-based blockchain.
+The reference implementation is instrumented to run on the Ethereum Ropsten testnet and can be configured to run on many other public or permissioned EVM-based blockchains.
 
 The BRI-1 "base" example codebase can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example).
-
-
 
 ## Provide Architecture
 
@@ -70,3 +68,6 @@ This reference implementation provides a complete, robust implementation of the 
 **It is important to note that a subset of the specification can be implemented using the core concepts demonstrated in this reference implementation without depending on the entire Provide stack.**
 
 For example, implementing only NATS as a control plane for dispatching inbound protocol messages is possible using only the `@baseline-protocol/messaging` package. In such a case, the entire protocol as demonstrated within this reference implementation would be far from complete, but protocol messages could be sent and delivered.
+
+## 
+

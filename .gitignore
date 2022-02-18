@@ -102,3 +102,6 @@ docs/generated
 
 # Ignore pycrypto
 pycrypto
+
+# Ignore did git install package
+did

@@ -1,0 +1,18 @@
+logging="INFO"
+data-path="/opt/besu/data"
+genesis-file="/config/genesis.json"
+node-private-key-file="/config/key"
+host-whitelist=["*"]
+discovery-enabled=false
+min-gas-price=0
+
+# rpc
+rpc-http-enabled=true
+rpc-http-api=["WEB3","ETH","NET","ADMIN","CLIQUE"]
+rpc-http-host="0.0.0.0"
+rpc-http-port=8545
+rpc-http-cors-origins=["*"]
+rpc-ws-enabled=true
+rpc-ws-api=["WEB3","ETH","NET","ADMIN","CLIQUE"]
+rpc-ws-host="0.0.0.0"
+rpc-ws-port=8546
