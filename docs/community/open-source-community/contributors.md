@@ -1,6 +1,6 @@
 # Contributors
 
-All work of the Baseline Protocol initiative is maintained publicly on a [github repo](https://github.com/ethereum-oasis/baseline).
+All work of the Baseline Protocol initiative is maintained publicly on a [github repo](https://github.com/ethereum-oasis/baseline). SONAL
 
 You don't need any special access to the [repo](https://github.com/ethereum-oasis/baseline) to get involved and start contributing. Follow these steps to [fork](contributors.md#submitting-a-pull-request) the repo and submit pull requests. Anyone with a Github ID can also create and edit their own Issues, participate in public meetings, and join the various communication and collaboration [channels](./#connecting-with-each-other-directly) that the community maintains.
 
