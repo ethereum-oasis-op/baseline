@@ -5,6 +5,10 @@ import { OrderAlt } from "../bpi/components/zkmock/orderalt";
 import sha256 = require('crypto-js/sha256');
 
 describe('ZK agreement behaviour', () => {
+    it('Go Circuit Integration Test', () => {
+        // Initialize
+    
+    });
     it('Bob places a valid order, it is added to the bpi and the committed state reflects the new BPI agreement state.', () => {
         // Initialize
         const agreement = new AgreementAlt("alice", "bob", ["cup1", "plate2"]);
