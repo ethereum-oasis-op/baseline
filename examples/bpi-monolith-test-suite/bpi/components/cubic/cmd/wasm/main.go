@@ -122,7 +122,11 @@ func makeMerkle(BPK frontend.Variable, SPK frontend.Variable, PIP frontend.Varia
 }
 
 func runcircuit(this js.Value, inputs []js.Value) interface{} {
-
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered in f", r)
+		}
+	}()
 	var zkcircuit Circuit
 	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &zkcircuit)
 	if err != nil {
@@ -133,8 +137,8 @@ func runcircuit(this js.Value, inputs []js.Value) interface{} {
 	pk, vk, err := groth16.Setup(r1cs)
 	assignment := &Circuit{
 		I: Input{
-			AgreementStateCommitment: "14148558618612511066119773842969464723224450289245446087478928843598143811659",
-			StateObjectCommitment:    "3809531659786630799763432231414721345625774896241005522309640398181762968274",
+			AgreementStateCommitment: inputs[0].String(),
+			StateObjectCommitment:    inputs[1].String(),
 		},
 		PI: PrivateInput{
 			Order:          "1",
@@ -160,3 +164,6 @@ func runcircuit(this js.Value, inputs []js.Value) interface{} {
 		return validProof
 	}
 }
+
+// AgreementStateCommitment: "14148558618612511066119773842969464723224450289245446087478928843598143811659",
+// StateObjectCommitment:    "3809531659786630799763432231414721345625774896241005522309640398181762968274",
