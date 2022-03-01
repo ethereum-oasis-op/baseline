@@ -1,6 +1,6 @@
 # Description
 
-<!--- Describe your changes in detail -->
+I am Biswashree Dey and I request to join as a maintainer.
 
 ## Related Issue
 
@@ -28,7 +28,7 @@
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Breaking change (fix or feature that would cause existing functionality to change)
-- [ ] Request to be added as a Code Owner/Maintainer
+- [x] Request to be added as a Code Owner/Maintainer
 
 ## Checklist
 
@@ -40,4 +40,4 @@
 - [ ] I have updated the documentation accordingly.
 - [ ] I have added tests to cover my changes.
 - [ ] All new and existing tests passed.
-- [ ] I commit to abide by the Responsibilities of Code Owners/Maintainers.
+- [x] I commit to abide by the Responsibilities of Code Owners/Maintainers.
