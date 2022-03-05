@@ -1,16 +1,16 @@
 # Google Sheets/Microsoft Dynamics
 
-**⚠️ The "Baseline Microsoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../bri/bri-1/) **as a result of the `v0.1` release.**
+**⚠️ The "Baseline Microsoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../) **as a result of the `v0.1` release.**
 
 ## Baselining Business Process Automation across SAP and Microsoft Dynamics
 
-**George Spasov (Limechain), Vlad Ivanov (Limechain), Kyle Thomas (Provide)**
+**George Spasov \(Limechain\), Vlad Ivanov \(Limechain\), Kyle Thomas \(Provide\)**
 
 May 21, 2020
 
 ## Introduction
 
-The "Baseline Microsoft Dynamics and Google Sheets" shows establishing a common frame of reference on the public Ethereum Mainnet between Mycrosoft Dynamics and Google Sheets. The demo extends the [Radish34 POC](https://docs.baseline-protocol.org/bri/radish34/radish34-explained), showing a procurement process in a supply chain POC.
+The "Baseline Mycrosoft Dynamics and Google Sheets" shows establishing a common frame of reference on the public Ethereum Mainnet between Mycrosoft Dynamics and Google Sheets. The demo extends the [Radish34 POC](https://docs.baseline-protocol.org/bri/radish34/radish34-explained), showing a procurement process in a supply chain POC.
 
 The open-source-available code of the development work continues the positive trend of Baseline demos showcasing the connection between two system with quite different level of sophistication.
 
@@ -33,7 +33,7 @@ The Use-case shown in the demo follows this path:
 * Julia is the supply manager in the "USMF - Contoso Entertainment System USA". She deals with finding and working with suppliers. Contoso uses Microsoft Dynamics 365 to manage all its operations.
 * Todd is the owner of the small niche HDMI manufacturing plant called ACME. Todd is quite happy to manage his plant via good old Google Spreadsheet.
 * Julia is in need of HDMI cables and has found Todd.
-* This demo will show how "Baseline" can help Julia and Todds records stay in sync despite Todd not using a sophisticated system.
+* This demo will show how "Baseline" can help Julia and Todd's records stay in sync despite Todd not using a sophisticated system.
 
 #### RFQ
 
@@ -64,7 +64,7 @@ The proposed architecture and solutions to these challenges are presented in the
 
 ## Architecture Proposal
 
-![Sequence Diagram](https://github.com/ethereum-oasis/baseline/tree/84f1c6c1872fbe4c4247e618575071cbe00380b9/docs/bri/bri-1/bri-1-libraries/images/sequence-diagram.png) The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
+![Sequence Diagram](images/sequence-diagram.png) The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
 
 * Julia D365 - The Microsoft Dynamics ERP environment of Julia
 * Julia Provide Shuttle - The Baseline service of Julia
@@ -77,10 +77,11 @@ The proposed architecture and solutions to these challenges are presented in the
 
 The Microsoft Dynamics ERP component is extension code written that connects to the Provide shuttle environments. It is written in X++ - the native language for Dynamics. It translates the native Dynamics objects to the ones required by the Baseline Service. Also regularly polls the Baseline service for news coming from the network.
 
-![Microsoft Dynamics](https://github.com/ethereum-oasis/baseline/tree/84f1c6c1872fbe4c4247e618575071cbe00380b9/docs/bri/bri-1/bri-1-libraries/images/dynamics.png)
+![Microsoft Dynamics](images/dynamics.png)
 
 ### Google Sheets
 
 The google sheets side is a regular google spreadsheet with an Baseline Add-on installed. Regular repeating cloud tasks are polling new info from the Baseline service and insert it in the correct tables. In addition through the Add-on Todd is able to connect and send data to his Baseline Service.
 
-![Google Sheets](https://github.com/ethereum-oasis/baseline/tree/84f1c6c1872fbe4c4247e618575071cbe00380b9/docs/bri/bri-1/bri-1-libraries/images/sheets.png)
+![Google Sheets](images/sheets.png)
+
