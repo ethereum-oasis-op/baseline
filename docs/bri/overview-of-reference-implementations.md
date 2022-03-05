@@ -1,6 +1,6 @@
 # Overview
 
-The Baseline Protocol is a set of techniques and specifications that can be implemented by any number of products, services and solutions. &#x20;
+The Baseline Protocol is a set of techniques and specifications that can be implemented by any number of products, projects, services and solutions. &#x20;
 
 The baseline initiative's primary mission is to standardize these abstract techniques within the OASIS open standards process. To do that, it's best to start in the crucible of real, functional code. Through the intensive development of a set of core working packages and reference implementations, the team discovers what works and what needs to be specified in the standard.
 
@@ -35,3 +35,9 @@ Details on BRI-1 can be found [here](bri-1/), and the code can be found [here](h
 ### **BRI-2**
 
 &#x20;Baseline Reference Implementation#2 ([BRI-2](bri-2.md)) is the second "baseline reference implementation". The purpose of this project is to show a baseline stack using different services compared to BRI-1, but this stack must still comply with the baseline specificiations, therefore allowing interoperability with other baseline stacks. `bri-2` introduces the `commit-mgr` service to `baseline`. The `commit-mgr` acts as an extension to a web3 provider, which allows a variety of Ethereum clients to become "baseline compatible".
+
+### **Radish34**
+
+Strictly speaking, Radish34, the first demo code that started the Baseline Protocol project in 2019, is not a reference implementation. It is a complete stack written as a proof of concept for a specific story around the use case of purchase orders and discount agreements. This work does not separate the implementation from a set of core, abstract interfaces. But it did allow the open source community to begin the abstraction and generalization process that resulted in the Baseline Protocol v0.1 \(and subsequent\) versions.
+
+Radish34 might be called BRI-0, but for historical purposes, and so as not to confuse people who have "grown up" with Radish34 on their baseline journey, we keep the name.
