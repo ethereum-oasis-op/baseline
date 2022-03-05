@@ -49,7 +49,7 @@
 * [Overview](bri/overview-of-reference-implementations.md)
 * [BRI-1](bri/bri-1/README.md)
   * [Base Example](bri/bri-1/bri-1-base-example.md)
-* [BRI-2](bri/bri-2.md)
+* [BRI-2](bri/bri-2/README.md)
 
 ## Connectors
 
