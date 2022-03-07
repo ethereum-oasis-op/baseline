@@ -43,4 +43,3 @@ Distributed Ledger Technology referred to as Consensus Controlled State Machine 
 ## Does 'baselining' require Ethereum and/or Baseledger ?
 
 While much of the initial work on the standard and the code was done by companies and individuals in the Ethereum development community, any CCMS that conforms to the CCSM specification of the Baseline Protocol Standard can be used in a compliant Baseline Protocol Implementation (BPI).
-
