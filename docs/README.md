@@ -4,7 +4,7 @@
 
 The Baseline Protocol is a framework that enables enterprises to synchronize complex, multiparty, business processes with privacy and without moving data from systems of record.&#x20;
 
-There are many ways to learn more, get involved, get Baselined, and get value out of developing reusable components to ultimately deploying the Baseline Protocol in your own offerings. Find out more [here](./#the-baseline-protocol-reference-implementations).
+There are many ways to learn more, get involved, get Baselined, and get value out of developing reusable components to ultimately deploying the Baseline Protocol in your own offerings. Find out more [here](https://www.baseline-protocol.org).
 
 The work of the community is maintained under a public domain[ license](https://github.com/ethereum-oasis/baseline/blob/master/LICENSE).
 
@@ -12,7 +12,7 @@ The work of the community is maintained under a public domain[ license](https://
 
 ## About the Baseline Protocol
 
-The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020 and launched as an [OASIS](https://oasis-open-projects.org) open source project on March 19, 2020, supported by fourteen founding companies. More companies joined the effort shortly thereafter and continue to do so. In 2021, the Enterprise Ethereum Alliance and OASIS collaborated to establish the Baseline Protocol as an [EEA Community Projects](https://entethalliance.org/eeacommunityprojects/#:\~:text=The%20EEA%20Community%20Projects%2C%20formerly,API%20documentation%20under%20its%20stewardship.). See our list of sponsors and learn how to become a sponsor and benefits [here](https://www.baseline-protocol.org/become-a-sponsor/).
+The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020 and launched as an [OASIS Open Source Project](https://oasis-open-projects.org) on March 19, 2020, supported by fourteen founding companies. More companies joined the effort shortly thereafter and continue to do so. In 2021, the Enterprise Ethereum Alliance and OASIS collaborated to establish the Baseline Protocol as an [EEA Community Projects](https://entethalliance.org/eeacommunityprojects/#:\~:text=The%20EEA%20Community%20Projects%2C%20formerly,API%20documentation%20under%20its%20stewardship.). See our list of sponsors and learn how to become a sponsor and benefits [here](https://www.baseline-protocol.org/become-a-sponsor/).
 
 The Baseline Protocol is the emerging standard for synchronizing state across different systems of record. This applies to traditional corporate systems of record, any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine), and even different blockchains or distributed ledger technologies (DLTs). It is particularly promising as a way to reduce capital expense and other overheads while increasing operational integrity when **automating and synchronizing business processes** across multiple companies.
 
