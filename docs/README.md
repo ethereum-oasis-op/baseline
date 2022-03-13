@@ -4,7 +4,7 @@
 
 The Baseline Protocol is a framework that enables enterprises to synchronize complex, multiparty, business processes with privacy and without moving data from systems of record.&#x20;
 
-There are lots of ways to get informed, get involved, get Baselined, and get value out of developing reusable components, and ultimately deploying the Baseline Protocol in your own offerings. Find out more [here](./#the-baseline-protocol-reference-implementations).
+There are many ways to learn more, get involved, get Baselined, and get value out of developing reusable components to ultimately deploying the Baseline Protocol in your own offerings. Find out more [here](./#the-baseline-protocol-reference-implementations).
 
 The work of the community is maintained under a public domain[ license](https://github.com/ethereum-oasis/baseline/blob/master/LICENSE).
 
