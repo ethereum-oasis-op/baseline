@@ -14,7 +14,7 @@ Being open-source, open-standard means that anyone is free to build any applicat
 
 The Baseline Protocol Standard and source code are available under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [license](https://github.com/eea-oasis/baseline/blob/master/LICENSE).
 
-## I am interested in contributing, where do I start ?
+## I am interested in contributing, where do I start?
 
 Join our open source teams - learn more and sign up [here](https://www.baseline-protocol.org/get-involved/).&#x20;
 
@@ -36,7 +36,7 @@ We recommend starting with BRI-1, this reference implementation of the core inte
 
 Join the [Baseline Core Devs](https://www.baseline-protocol.org/get-involved/) or ping in the [Baseline Slack #devs channel](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) with questions.
 
-## My company is interested in baselining, how to start ?
+## My company is interested in baselining, where do I start?
 
 While 'baselining' as a technique is not restricted to commercial use cases, a Baseline Protocol Implementation (BPI) as specified in the[ Baseline Protocol Standard](broken-reference) requires at least two organizations to come together to synchronize their respective systems of record.
 
@@ -55,3 +55,4 @@ Distributed Ledger Technology referred to as Consensus Controlled State Machine 
 ## Does 'baselining' require Ethereum and/or Baseledger ?
 
 While much of the initial work on the Standard and the code was done by companies and individuals in the Ethereum development community, any CCMS that conforms to the [CCSM specification ](../baseline-protocol-standard/ccsm-specification.md)of the[ Baseline Protocol Standard](broken-reference) can be used in a compliant Baseline Protocol Implementation (BPI).
+
