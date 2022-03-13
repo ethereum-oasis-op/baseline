@@ -1,8 +1,10 @@
 package circuitlib
 
 import (
+	"bytes"
+	"encoding/hex"
 	"fmt"
-	"log"
+	"io"
 
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend"
@@ -31,9 +33,11 @@ type PrivateInput struct {
 }
 
 type Order struct {
-	ProductId frontend.Variable `gnark:","`
-	BuyerSig  frontend.Variable `gnark:","`
+	ProductId frontend.Variable `gnark:",secret"`
+	BuyerSig  frontend.Variable `gnark:",secret"`
 }
+
+var verifyingKey string
 
 func (circuit *Circuit) Define(api frontend.API) error {
 	// mimc, _ := mimc.NewMiMC(api)
@@ -57,39 +61,30 @@ func (circuit *Circuit) Define(api frontend.API) error {
 
 func GenerateProof(ASC, SOC string) (groth16.Proof, string) {
 	var zkcircuit Circuit
+
 	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &zkcircuit)
 	if err != nil {
 		fmt.Println(err)
 		return nil, "Invalid circuit compilation"
 	}
 
-	assignment := &Circuit{
-		I: Input{
-			AgreementStateCommitment: ASC,
-			StateObjectCommitment:    SOC,
-			CalculatedAgreementRoot:  "1",
-		},
-		PI: PrivateInput{
-			O: Order{
-				BuyerSig:  "2",
-				ProductId: "1",
-			},
-			OrderRoot:          "1",
-			OrderSalt:          "1",
-			BuyerPK:            "1",
-			AgreementStateRoot: "1",
-			AgreementStateSalt: "1",
-		},
+	assignment := assign(ASC, SOC)
+
+	witness, err := frontend.NewWitness(assignment, ecc.BN254)
+	if err != nil {
+		fmt.Println(err)
+		return nil, "Invalid Witness"
 	}
 
-	witness, _ := frontend.NewWitness(assignment, ecc.BN254)
-	fmt.Println(witness)
-
-	pk, _, err := groth16.Setup(r1cs)
+	pk, vk, err := groth16.Setup(r1cs)
 	if err != nil {
 		fmt.Println(err)
 		return nil, "Invalid Groth16 setup"
 	}
+
+	buf := new(bytes.Buffer)
+	_, err = vk.(io.WriterTo).WriteTo(buf)
+	verifyingKey = hex.EncodeToString(buf.Bytes())
 
 	proof, err := groth16.Prove(r1cs, pk, witness)
 	if err != nil {
@@ -100,18 +95,38 @@ func GenerateProof(ASC, SOC string) (groth16.Proof, string) {
 	}
 }
 
-func VerifyProof(ASC, SOC string, proof groth16.Proof) string {
-	var zkcircuit Circuit
-	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &zkcircuit)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(ASC)
-	fmt.Println(SOC)
-	fmt.Println(proof)
+func VerifyProof(ASC, SOC string, proof interface{}) string {
+	assignment := assign(ASC, SOC)
 
-	fmt.Println(r1cs)
-	// generating pk, vk
+	witness, _ := frontend.NewWitness(assignment, ecc.BN254)
+	publicWitness, err := witness.Public()
+	if err != nil {
+		fmt.Println(err)
+		return "Invalid Public Witness!"
+	}
+
+	vk, err := hex.DecodeString(verifyingKey)
+	if err != nil {
+		fmt.Println(err)
+		return "Invalid Verifying Key!"
+	}
+
+	_vk, err := DeserializeVerifyingKey(vk)
+	if err != nil {
+		fmt.Println(err)
+		return "Invalid Verifying Key!"
+	}
+
+	err = groth16.Verify(proof.(groth16.Proof), _vk.(groth16.VerifyingKey), publicWitness)
+	if err != nil {
+		fmt.Println(err)
+		return "Invalid verification!"
+	} else {
+		return "Valid Proof"
+	}
+}
+
+func assign(ASC, SOC string) *Circuit {
 	assignment := &Circuit{
 		I: Input{
 			AgreementStateCommitment: ASC,
@@ -131,24 +146,35 @@ func VerifyProof(ASC, SOC string, proof groth16.Proof) string {
 		},
 	}
 
-	witness, _ := frontend.NewWitness(assignment, ecc.BN254)
-	publicWitness, err := witness.Public()
+	return assignment
+}
+
+func DeserializeProof(_prf []byte) (interface{}, error) {
+	var prf interface{}
+	var err error
+
+	prf = groth16.NewProof(ecc.BN254)
+	_, err = prf.(groth16.Proof).ReadFrom(bytes.NewReader(_prf))
+
 	if err != nil {
 		fmt.Println(err)
-		return "Invalid Public Witness!"
+		return nil, err
 	}
 
-	_, vk, err := groth16.Setup(r1cs)
+	return prf, nil
+}
+
+func DeserializeVerifyingKey(_vk []byte) (interface{}, error) {
+	var vk interface{}
+	var err error
+
+	vk = groth16.NewVerifyingKey(ecc.BN254)
+	_, err = vk.(groth16.Proof).ReadFrom(bytes.NewReader(_vk))
+
 	if err != nil {
 		fmt.Println(err)
-		return "Invalid Groth16 setup"
+		return nil, err
 	}
 
-	err = groth16.Verify(proof, vk, publicWitness)
-	if err != nil {
-		fmt.Println(err)
-		return "Invalid verification!"
-	} else {
-		return "Valid Proof"
-	}
+	return vk, nil
 }

@@ -2,15 +2,12 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
+	"encoding/hex"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"zkcircuit/circuitlib"
-
-	"github.com/consensys/gnark-crypto/ecc"
-
-	"github.com/consensys/gnark/backend/groth16"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,9 +17,9 @@ type circuit struct {
 }
 
 type OV struct {
-	ASC string        `json:"ASC"`
-	SOC string        `json:"SOC"`
-	P   groth16.Proof `json:"P"`
+	ASC string `json:"ASC"`
+	SOC string `json:"SOC"`
+	P   string `json:"P"`
 }
 
 type OP struct {
@@ -31,7 +28,7 @@ type OP struct {
 }
 
 var circuits = []circuit{
-	{Name: "cubic"},
+	{Name: "orderCircuit"},
 }
 
 // getCircuits response with a list of all circuits
@@ -44,35 +41,42 @@ func Proof(c *gin.Context) {
 	if err := c.BindJSON(&op); err != nil {
 		return
 	}
-	p, m := circuitlib.GenerateProof(op.ASC, op.SOC)
+
+	prf, m := circuitlib.GenerateProof(op.ASC, op.SOC)
+
 	if m != "" {
-		c.IndentedJSON(http.StatusBadRequest, m)
+		c.IndentedJSON(http.StatusOK, m)
 	} else {
-
-		raw, _ := json.Marshal(p)
-		fmt.Println(string(raw))
-		c.IndentedJSON(http.StatusOK, string(raw))
+		buf := new(bytes.Buffer)
+		_, err := prf.(io.WriterTo).WriteTo(buf)
+		if err != nil {
+			fmt.Println(err)
+		}
+		_prf := hex.EncodeToString(buf.Bytes())
+		c.IndentedJSON(http.StatusOK, _prf)
 	}
-}
-
-type ProveResponse struct {
-	Proof string `json:"proof"`
 }
 
 func Verify(c *gin.Context) {
 	var ov OV
-	// json.Unmarshal(ov.P, &proof)
+
 	if err := c.BindJSON(&ov); err != nil {
 		log.Fatal(err)
 		return
 	}
-	m := circuitlib.VerifyProof(ov.ASC, ov.SOC, ov.P)
-	if m != "" {
-		fmt.Println(m)
-		c.IndentedJSON(http.StatusBadRequest, m)
-	} else {
-		c.IndentedJSON(http.StatusOK, m)
+
+	prf, err := hex.DecodeString(ov.P)
+	if err != nil {
+		fmt.Println(err)
 	}
+
+	_prf, err := circuitlib.DeserializeProof(prf)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	m := circuitlib.VerifyProof(ov.ASC, ov.SOC, _prf)
+	c.IndentedJSON(http.StatusOK, m)
 }
 
 func main() {
@@ -81,19 +85,4 @@ func main() {
 	router.POST("/prove", Proof)
 	router.POST("/verify", Verify)
 	router.Run("localhost:8080")
-}
-
-func decodeProof(proof []byte) (interface{}, error) {
-	var err error
-	var prf interface{}
-
-	prf = groth16.NewProof(ecc.BN254)
-	_, err = prf.(groth16.Proof).ReadFrom(bytes.NewReader(proof))
-
-	if err != nil {
-		// common.Log.Warningf("unable to decode proof; %s", err.Error())
-		return nil, err
-	}
-
-	return prf, nil
 }
