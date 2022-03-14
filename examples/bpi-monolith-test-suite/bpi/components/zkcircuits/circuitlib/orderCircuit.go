@@ -5,11 +5,13 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
+	"zkcircuit/json"
 
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/frontend"
+	"github.com/consensys/gnark/std/hash/mimc"
 )
 
 type Circuit struct {
@@ -40,15 +42,18 @@ type Order struct {
 var verifyingKey string
 
 func (circuit *Circuit) Define(api frontend.API) error {
-	// mimc, _ := mimc.NewMiMC(api)
+	mimc, _ := mimc.NewMiMC(api)
 
 	//Asserts Input AgreementStateCommitment and Derived AgreementStateCommitment are equal
 	sum := api.Add(circuit.PI.AgreementStateRoot, circuit.PI.AgreementStateSalt)
-	api.AssertIsEqual(circuit.I.AgreementStateCommitment, sum)
+	mimc.Write(sum)
+	api.AssertIsEqual(circuit.I.AgreementStateCommitment, mimc.Sum())
 
 	//Asserts Input StateObjectCommitment and Derived StateObjectCommitment are equal
+	mimc.Reset()
 	sum = api.Add(circuit.PI.OrderRoot, circuit.PI.OrderSalt)
-	api.AssertIsEqual(circuit.I.StateObjectCommitment, sum)
+	mimc.Write(sum)
+	api.AssertIsEqual(circuit.I.StateObjectCommitment, mimc.Sum())
 
 	//Asserts CalculatedAgreementRoot and PrivateInput AgreementStateRoot are equal
 	api.AssertIsEqual(circuit.I.CalculatedAgreementRoot, circuit.PI.AgreementStateRoot)
@@ -59,7 +64,7 @@ func (circuit *Circuit) Define(api frontend.API) error {
 	return nil
 }
 
-func GenerateProof(ASC, SOC string) (groth16.Proof, string) {
+func GenerateProof(p json.Input) (groth16.Proof, string) {
 	var zkcircuit Circuit
 
 	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &zkcircuit)
@@ -68,18 +73,17 @@ func GenerateProof(ASC, SOC string) (groth16.Proof, string) {
 		return nil, "Invalid circuit compilation"
 	}
 
-	assignment := assign(ASC, SOC)
-
+	assignment := assign(p)
 	witness, err := frontend.NewWitness(assignment, ecc.BN254)
 	if err != nil {
 		fmt.Println(err)
-		return nil, "Invalid Witness"
+		return nil, "Witness Creation Failed!"
 	}
 
 	pk, vk, err := groth16.Setup(r1cs)
 	if err != nil {
 		fmt.Println(err)
-		return nil, "Invalid Groth16 setup"
+		return nil, "Groth16 Setup Failed!"
 	}
 
 	buf := new(bytes.Buffer)
@@ -89,32 +93,32 @@ func GenerateProof(ASC, SOC string) (groth16.Proof, string) {
 	proof, err := groth16.Prove(r1cs, pk, witness)
 	if err != nil {
 		fmt.Println(err)
-		return nil, "Invalid Proof"
+		return nil, "Proof Creation Failed!"
 	} else {
 		return proof, ""
 	}
 }
 
-func VerifyProof(ASC, SOC string, proof interface{}) string {
-	assignment := assign(ASC, SOC)
+func VerifyProof(v json.Input, proof interface{}) string {
+	assignment := assign(v)
 
 	witness, _ := frontend.NewWitness(assignment, ecc.BN254)
 	publicWitness, err := witness.Public()
 	if err != nil {
 		fmt.Println(err)
-		return "Invalid Public Witness!"
+		return "Witness Creation Failed!"
 	}
 
 	vk, err := hex.DecodeString(verifyingKey)
 	if err != nil {
 		fmt.Println(err)
-		return "Invalid Verifying Key!"
+		return "Verifying Key Decoding Failed!"
 	}
 
 	_vk, err := DeserializeVerifyingKey(vk)
 	if err != nil {
 		fmt.Println(err)
-		return "Invalid Verifying Key!"
+		return "Verifying Key Deserialization Failed!"
 	}
 
 	err = groth16.Verify(proof.(groth16.Proof), _vk.(groth16.VerifyingKey), publicWitness)
@@ -126,26 +130,25 @@ func VerifyProof(ASC, SOC string, proof interface{}) string {
 	}
 }
 
-func assign(ASC, SOC string) *Circuit {
+func assign(p json.Input) *Circuit {
 	assignment := &Circuit{
 		I: Input{
-			AgreementStateCommitment: ASC,
-			StateObjectCommitment:    SOC,
-			CalculatedAgreementRoot:  "1",
+			AgreementStateCommitment: p.AgreementStateCommitment,
+			StateObjectCommitment:    p.StateObjectCommitment,
+			CalculatedAgreementRoot:  p.CalculatedAgreementRoot,
 		},
 		PI: PrivateInput{
 			O: Order{
-				BuyerSig:  "2",
-				ProductId: "1",
+				BuyerSig:  p.BuyerSig,
+				ProductId: p.ProductId,
 			},
-			OrderRoot:          "1",
-			OrderSalt:          "1",
-			BuyerPK:            "1",
-			AgreementStateRoot: "1",
-			AgreementStateSalt: "1",
+			OrderRoot:          p.OrderRoot,
+			OrderSalt:          p.OrderSalt,
+			BuyerPK:            p.BuyerPK,
+			AgreementStateRoot: p.AgreementStateRoot,
+			AgreementStateSalt: p.AgreementStateSalt,
 		},
 	}
-
 	return assignment
 }
 

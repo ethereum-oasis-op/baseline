@@ -8,41 +8,18 @@ import (
 	"log"
 	"net/http"
 	"zkcircuit/circuitlib"
+	"zkcircuit/json"
 
 	"github.com/gin-gonic/gin"
 )
 
-type circuit struct {
-	Name string `json:"Name"`
-}
-
-type OV struct {
-	ASC string `json:"ASC"`
-	SOC string `json:"SOC"`
-	P   string `json:"P"`
-}
-
-type OP struct {
-	ASC string `json:"ASC"`
-	SOC string `json:"SOC"`
-}
-
-var circuits = []circuit{
-	{Name: "orderCircuit"},
-}
-
-// getCircuits response with a list of all circuits
-func getCircuits(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, circuits)
-}
-
 func Proof(c *gin.Context) {
-	var op OP
-	if err := c.BindJSON(&op); err != nil {
+	var p json.Input
+	if err := c.BindJSON(&p); err != nil {
 		return
 	}
 
-	prf, m := circuitlib.GenerateProof(op.ASC, op.SOC)
+	prf, m := circuitlib.GenerateProof(p)
 
 	if m != "" {
 		c.IndentedJSON(http.StatusOK, m)
@@ -58,14 +35,14 @@ func Proof(c *gin.Context) {
 }
 
 func Verify(c *gin.Context) {
-	var ov OV
+	var v json.VerifyInput
 
-	if err := c.BindJSON(&ov); err != nil {
+	if err := c.BindJSON(&v); err != nil {
 		log.Fatal(err)
 		return
 	}
 
-	prf, err := hex.DecodeString(ov.P)
+	prf, err := hex.DecodeString(v.P)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -74,14 +51,12 @@ func Verify(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	m := circuitlib.VerifyProof(ov.ASC, ov.SOC, _prf)
+	m := circuitlib.VerifyProof(v.I, _prf)
 	c.IndentedJSON(http.StatusOK, m)
 }
 
 func main() {
 	router := gin.Default()
-	router.GET("/circuits", getCircuits)
 	router.POST("/prove", Proof)
 	router.POST("/verify", Verify)
 	router.Run("localhost:8080")
