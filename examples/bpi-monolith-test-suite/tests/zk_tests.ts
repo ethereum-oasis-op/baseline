@@ -17,11 +17,13 @@ describe("ZK agreement behaviour", () => {
     });
     it("Deploying the shield of the Agreement State should merkleize it", () => {
       [agreementStateTree, productTree, orderTree] = agreement.merkleizeState();
+
       const agreementStateRoot = agreementStateTree.getRoot();
       const agreementStateCommitment = Buffer.from(
         sha256(agreementStateRoot + "salt").toString(),
         "hex"
       );
+
       expect(agreementStateCommitment).to.be.eql(
         agreement.shield.agreementStateCommitment
       );
@@ -30,9 +32,9 @@ describe("ZK agreement behaviour", () => {
       const productRoot = productTree.getRoot().toString("hex");
       const productLeaf = sha256("cup1");
       const productTreeProof = productTree.getProof(productLeaf);
-      expect(
-        productTree.verify(productTreeProof, productLeaf, productRoot)
-      ).to.be.eql(true);
+
+      expect(productTree.verify(productTreeProof, productLeaf, productRoot)).to
+        .be.true;
     });
     it("Merkleizing the Agreement state should create an empty order merkle tree", () => {
       const orderLeaves = orderTree.getLeaves();
@@ -40,17 +42,19 @@ describe("ZK agreement behaviour", () => {
     });
     it("Merkleizing the Agreement state should create an agreement state merkle tree", () => {
       const agreementStateRoot = agreementStateTree.getRoot().toString("hex");
+
       //AgreementStateTree leaves include buyerPK, sellerPK, productTree root and orderTree root.
       const agreementStateLeaf = agreement.buyerPK;
       const agreementStateTreeProof =
         agreementStateTree.getProof(agreementStateLeaf);
+
       expect(
-        orderTree.verify(
+        agreementStateTree.verify(
           agreementStateTreeProof,
           agreementStateLeaf,
           agreementStateRoot
         )
-      ).to.be.eql(true);
+      ).to.be.true;
     });
   });
   it("Bob places a valid order, it is added to the bpi and the committed state reflects the new BPI agreement state.", () => {
