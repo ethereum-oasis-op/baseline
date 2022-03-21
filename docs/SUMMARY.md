@@ -13,23 +13,23 @@
 
 * [The Baseline Protocol](baseline-protocol/the-baseline-protocol.md)
 * [Architecture](baseline-protocol/architecture.md)
-* [Glossary](baseline-protocol/components.md)
-* [FAQ](baseline-protocol/layer-2-scaling-and-bridges.md)
+* [Components](baseline-protocol/components.md)
+* [Layer 2 Scaling](baseline-protocol/layer-2-scaling-and-bridges.md)
 
 ## The Code <a href="baseline-code" id="baseline-code"></a>
 
 * [Packages](baseline-protocol-code/README.md)
-  * [API](baseline-protocol-code/api-1.md)
-  * [baseline](baseline-protocol-code/api.md)
-  * [Contracts](baseline-protocol-code/contracts.md)
-  * [Messagning](baseline-protocol-code/messaging.md)
-  * [Persistence](baseline-protocol-code/persistence.md)
-  * [Privacy](baseline-protocol-code/privacy.md)
-  * [Types](baseline-protocol-code/types.md)
+  * [API](baseline-protocol-code/packages/api-1.md)
+  * [baseline](baseline-protocol-code/packages/api.md)
+  * [Contracts](baseline-protocol-code/packages/contracts.md)
+  * [Messagning](baseline-protocol-code/packages/messaging.md)
+  * [Persistence](baseline-protocol-code/packages/persistence.md)
+  * [Privacy](baseline-protocol-code/packages/privacy.md)
+  * [Types](baseline-protocol-code/packages/types.md)
 * [The Baseline Process](baseline-protocol-code/baseline-process.md)
 * [Developer Resources](baseline-protocol-code/developer-resources.md)
 
-## The Standard <a href="baseline-protocol" id="baseline-protocol"></a>
+## The Standard <a href="baseline-standard" id="baseline-standard"></a>
 
 * [The Baseline Protocol Standard](baseline-protocol-standard/overview.md)
 * [Standards](baseline-protocol-standard/standards/README.md)
