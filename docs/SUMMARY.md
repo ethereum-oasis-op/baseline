@@ -9,35 +9,22 @@
 * [Glossary](baseline-basics/glossary.md)
 * [FAQ](baseline-basics/faq.md)
 
-## The Protocol <a href="baseline-protocol" id="baseline-protocol"></a>
+## Protocol <a href="baseline-protocol" id="baseline-protocol"></a>
 
 * [The Baseline Protocol](baseline-protocol/the-baseline-protocol.md)
 * [Architecture](baseline-protocol/architecture.md)
 * [Components](baseline-protocol/components.md)
 * [Layer 2 Scaling](baseline-protocol/layer-2-scaling-and-bridges.md)
 
-## The Code <a href="baseline-code" id="baseline-code"></a>
-
-* [Packages](baseline-protocol-code/README.md)
-  * [API](baseline-protocol-code/packages/api-1.md)
-  * [baseline](baseline-protocol-code/packages/api.md)
-  * [Contracts](baseline-protocol-code/packages/contracts.md)
-  * [Messagning](baseline-protocol-code/packages/messaging.md)
-  * [Persistence](baseline-protocol-code/packages/persistence.md)
-  * [Privacy](baseline-protocol-code/packages/privacy.md)
-  * [Types](baseline-protocol-code/packages/types.md)
-* [The Baseline Process](baseline-protocol-code/baseline-process.md)
-* [Developer Resources](baseline-protocol-code/developer-resources.md)
-
-## The Standard <a href="baseline-standard" id="baseline-standard"></a>
+## Standard <a href="baseline-protocol-standard" id="baseline-protocol-standard"></a>
 
 * [The Baseline Protocol Standard](baseline-protocol-standard/overview.md)
-* [Standards](baseline-protocol-standard/standards/README.md)
-  * [Mainnet](baseline-protocol-standard/standards/mainnet.md)
-  * [Mainnet Evolution](baseline-protocol-standard/standards/driving-mainnet-evolution.md)
 * [The Core Specification](baseline-protocol-standard/core-specification.md)
 * [The API Specification](baseline-protocol-standard/api-specification.md)
 * [The CCSM Specification](baseline-protocol-standard/ccsm-specification.md)
+* [Mainnet Standards](baseline-protocol-standard/standards/README.md)
+  * [Mainnet](baseline-protocol-standard/standards/mainnet.md)
+  * [Mainnet Evolution](baseline-protocol-standard/standards/driving-mainnet-evolution.md)
 
 ## Community
 
@@ -48,7 +35,7 @@
   * [Core Developers](community/community-leaders/maintainers.md)
   * [General Assembly](community/community-leaders/specifications-steering-committee.md)
 
-## GOVERNANCE
+## Governance
 
 * [Overview](governance/governance.md)
 * [Project Governance Board](governance/project-governance-board.md)
@@ -66,13 +53,6 @@
   * [Types](baseline-protocol-code/packages/types.md)
 * [Baseline Process](baseline-protocol-code/baseline-process.md)
 * [Developer Resources](baseline-protocol-code/developer-resources.md)
-
-## Standard <a href="baseline-protocol-standard" id="baseline-protocol-standard"></a>
-
-* [Overview](baseline-protocol-standard/overview.md)
-* [CORE Specification](baseline-protocol-standard/core-specification.md)
-* [API Specification](baseline-protocol-standard/api-specification.md)
-* [CCSM Specification](baseline-protocol-standard/ccsm-specification.md)
 
 ## Reference Implementations <a href="bri" id="bri"></a>
 
