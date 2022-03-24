@@ -1,6 +1,8 @@
 import { BpiSubject } from "../identity/bpiSubject";
 import { Workstep } from "./workstep";
 
+let workgroupHashMap = new Map();
+
 export class Workgroup {
      id: string;
      name: string;
@@ -15,7 +17,12 @@ export class Workgroup {
     }
 
      addWorkstep(workstep: Workstep) {
-          this.worksteps.push(workstep);
+          //TODO add logic to only add when ID is unique
+
+          //TODO try to send twice, npm test see what happens
+          workgroupHashMap.set(this.id, workstep);
+          // workgroupHashMap.set(this.id, workstep);
+          // this.worksteps.push(workstep);
      }
 
      getWorkstepById(workstepId: string) {
