@@ -66,5 +66,4 @@ describe('ZK agreement behaviour', () => {
         }
         expect(() => shield.verifiers['placeOrder'].predicate(input, privateInput)).to.throw("Invalid proof")
     });
-
 });
