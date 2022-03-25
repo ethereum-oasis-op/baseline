@@ -22,7 +22,7 @@ export class VirtualStateMachine implements IVirtualStateMachineComponent {
         const workgroup = this.workgroupComponent.getWorkgroupById(transaction.workgroupId);
         const workstep = workgroup.getWorkstepById(transaction.workstepId);
 
-        // If succesfull, this changes the agreement state
+        // If succesful, this changes the agreement state        
         const workstepResult = workstep.execute(latestAgrementState, transaction.stateObject);
 
         if (!workstepResult) {

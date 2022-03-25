@@ -1,28 +1,29 @@
 import { BpiSubject } from "../identity/bpiSubject";
 import { Workstep } from "./workstep";
 
-let workgroupHashMap = new Map();
-
 export class Workgroup {
      id: string;
      name: string;
      participants: BpiSubject[] = [];
      worksteps: Workstep[] = [];
+     workstepids: Set<string> = new Set("");
 
     constructor(name: string, id: string, owner: BpiSubject, worksteps: Workstep[],) {
-        this.name = name;
         this.id = id;
+        this.name = name;
         this.worksteps = worksteps;
         this.participants.push(owner);
     }
 
      addWorkstep(workstep: Workstep) {
-          //TODO add logic to only add when ID is unique
 
-          //TODO try to send twice, npm test see what happens
-          workgroupHashMap.set(this.id, workstep);
-          // workgroupHashMap.set(this.id, workstep);
-          // this.worksteps.push(workstep);
+          //push workstep if ID is not yet in use
+          if(!(this.workstepids.has(workstep.id))) {
+               this.worksteps.push(workstep);
+          }
+
+          //add ID to running set
+          this.workstepids.add(workstep.id);
      }
 
      getWorkstepById(workstepId: string) {

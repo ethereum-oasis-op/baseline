@@ -188,7 +188,7 @@ describe('Exchanging business objects', () => {
         workstep2.setBusinessLogicToExecute(bpiInstance.storageComponent.getAgreementState().acceptOrder);
         exchangeOrdersWorkgroup.addWorkstep(workstep2);
         
-        // Bob sends to BPI for agreement update, vlaidation, and proof generation
+        // Bob sends to BPI for agreement update, validation, and proof generation
         const acceptOrderMessage = new BpiMessage("M2", MESSAGE_TYPE_STORE, bpiSubjectBob, bpiSubjectAlice, exchangeOrdersWorkgroup.id, workstep2.id, orderBusinessObject);
         proof = bpiInstance.postMessage(acceptOrderMessage);
         acceptOrderMessage.setExecutionProof(proof);
