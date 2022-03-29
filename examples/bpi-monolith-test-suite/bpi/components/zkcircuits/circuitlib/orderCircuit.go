@@ -14,7 +14,7 @@ import (
 	"github.com/consensys/gnark/std/hash/mimc"
 )
 
-type Circuit struct {
+type OrderCircuit struct {
 	I  Input
 	PI PrivateInput
 }
@@ -41,19 +41,19 @@ type Order struct {
 
 var verifyingKey string
 
-func (circuit *Circuit) Define(api frontend.API) error {
+func (circuit *OrderCircuit) Define(api frontend.API) error {
 	mimc, _ := mimc.NewMiMC(api)
 
-	//Asserts Input AgreementStateCommitment and Derived AgreementStateCommitment are equal
+	// Asserts Input AgreementStateCommitment and Derived AgreementStateCommitment are equal
 	sum := api.Add(circuit.PI.AgreementStateRoot, circuit.PI.AgreementStateSalt)
 	mimc.Write(sum)
 	api.AssertIsEqual(circuit.I.AgreementStateCommitment, mimc.Sum())
 
-	//Asserts Input StateObjectCommitment and Derived StateObjectCommitment are equal
+	// Asserts Input StateObjectCommitment and Derived StateObjectCommitment are equal
 	mimc.Reset()
 	sum = api.Add(circuit.PI.OrderRoot, circuit.PI.OrderSalt)
 	mimc.Write(sum)
-	api.AssertIsEqual(circuit.I.StateObjectCommitment, mimc.Sum())
+	api.AssertIsEqual(circuit.I.StateObjectCommitment, api.Add(circuit.PI.OrderRoot, circuit.PI.OrderSalt))
 
 	//Asserts CalculatedAgreementRoot and PrivateInput AgreementStateRoot are equal
 	api.AssertIsEqual(circuit.I.CalculatedAgreementRoot, circuit.PI.AgreementStateRoot)
@@ -65,7 +65,7 @@ func (circuit *Circuit) Define(api frontend.API) error {
 }
 
 func GenerateProof(p json.Input) (groth16.Proof, string) {
-	var zkcircuit Circuit
+	var zkcircuit OrderCircuit
 
 	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &zkcircuit)
 	if err != nil {
@@ -130,8 +130,8 @@ func VerifyProof(v json.Input, proof interface{}) string {
 	}
 }
 
-func assign(p json.Input) *Circuit {
-	assignment := &Circuit{
+func assign(p json.Input) *OrderCircuit {
+	assignment := &OrderCircuit{
 		I: Input{
 			AgreementStateCommitment: p.AgreementStateCommitment,
 			StateObjectCommitment:    p.StateObjectCommitment,
