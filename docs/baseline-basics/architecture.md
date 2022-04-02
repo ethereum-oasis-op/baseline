@@ -40,4 +40,4 @@ Presented below is a reference architecture that ensures two or more systems of 
 
 ## Glossary
 
-Check out the [Glossary](glossary.md) for further clarification on terms.
+[Check out the Glossary ](architecture.md#glossary)for further clarification on terms.
