@@ -107,10 +107,11 @@ _Gennaro, Rosario; Gentry, Craig; Parno, Bryan (31 August 2010). Non-Interactive
 
 A process made up of a series of Worksteps between all or a subset of Parties in a given Workgroup.
 
+## Workgroup
+
+A workgroup is a set of Parties, also referred to as BPI Subjects, who are the authorized users of a BPI. The Parties use Workflows to synchronize their systems of record through one or more worksteps in the workflow.
+
 ## **Workstep**
 
 A workstep is characterized by input, the deterministic application of a set of logic rules and data to that input, and the generation of a verifiably deterministic and verifiably correct output.
 
-## Workgroup
-
-A workgroup is a set of Parties, also referred to as BPI Subjects, who are the authorized users of a BPI. The Parties use Workflows to synchronize their systems of record through one or more worksteps in the workflow.
