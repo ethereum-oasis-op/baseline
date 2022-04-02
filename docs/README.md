@@ -1,5 +1,5 @@
 ---
-description: learn more at baseline-protocol.org
+description: Learn more at baseline-protocol.org
 ---
 
 # Welcome
