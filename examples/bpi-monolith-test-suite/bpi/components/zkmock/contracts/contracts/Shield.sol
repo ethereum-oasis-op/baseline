@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.13;
 
-import "./Verifier.sol";
+import "../../../zkcircuits/ordercircuit/order.sol";
 
 contract Shield {
     //add verifier
@@ -21,12 +21,14 @@ contract Shield {
     //insert new leaf into merkle tree
 
     function verifyAndPush(
-        uint256[] memory _proof,
-        uint256[] memory _publicInput,
+        uint256[2] memory a,
+        uint256[2][2] memory b,
+        uint256[2] memory c,
+        uint256[3] memory input,
         bytes32 _newCommitment
-    ) external returns (bool) {
+    ) external returns (bool r) {
         // verify the proof
-        bool result = verifier.verifyProof(_proof, _publicInput);
+        bool result = verifier.verifyProof(a, b, c, input);
         require(
             result,
             "The proof failed verification in the verifier contract"

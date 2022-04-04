@@ -4,8 +4,7 @@
   "description": "Project containing a set of tests describing functionalities of a standard-based BPI, written agains a mock BPI monolith application",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register 'tests/**/*.ts'",
-    "contracts:compile": "node_modules/.bin/truffle compile"
+    "test": "mocha -r ts-node/register 'tests/**/*.ts'"
   },
   "repository": {
     "type": "git",
@@ -35,4 +34,5 @@
     "@types/ffi-napi": "^4.0.5",
     "ffi-napi": "^4.0.3"
   }
-}
+  }
+
