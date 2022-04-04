@@ -18,7 +18,7 @@ Our open source team members are the drivers of the development and adoption of 
 
 > ### Baseline Core Devs
 >
-> Core Devs are the backbone of the Baseline open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of top blockchain developers leading the rise of ubiquitous sync services to state machines everywhere!
+> Core Devs are the backbone of the Baseline open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of developers leading the rise of ubiquitous sync services to state machines everywhere.
 >
 > ### Outreach Team
 >
