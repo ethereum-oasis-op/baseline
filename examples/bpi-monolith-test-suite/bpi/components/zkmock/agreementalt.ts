@@ -122,6 +122,7 @@ export class AgreementAlt {
       orderTree.getRoot(),
     ];
     let agreementStateTree = new MerkleTree(leaves, sha256);
+
     return [agreementStateTree, productTree, orderTree];
   }
   // public for testing
