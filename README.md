@@ -18,7 +18,7 @@ The Baseline Protocol initiative was [announced](https://consensys.net/blog/pres
 
 The work of the community is maintained under a [public domain license](https://github.com/eea-oasis/baseline/blob/main/LICENSE).
 
-**New Contributors to the repository and standard, see** [**contribution guidelines here**](docs/community/open-source-community/contributors.md#code-of-conduct)**.**
+**New Contributors to the repository and standard, see** [**contribution guidelines here**](community/contributors.md#code-of-conduct)**.**
 
 ## The Baseline Protocol Source Code
 

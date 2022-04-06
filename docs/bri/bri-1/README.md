@@ -6,7 +6,7 @@ description: Baseline Reference Implementation-1 using the core Provide stack.
 
 ## Overview
 
-This reference implementation of the core interfaces specified in the v0.1 release of the Baseline Protocol is called BRI-1 and has been contributed to the open source community under a public domain CCO-Universal license by individuals and companies including Provide, EY, Nethermind, ConsenSys, and others. It heavily utilizes the core [Provide](https://provide.services) application stack and is compatible with [Shuttle](https://shuttle.provide.services/waitlist), an on-ramp for _baselining_. [NATS](https://nats.io/) and the [Nethermind](https://nethermind.io/) Ethereum client \(the first client to implement the Baseline Protocol RPC\) are opinionatedly used by default.
+This reference implementation of the core interfaces specified in the v0.1 release of the Baseline Protocol is called BRI-1 and has been contributed to the open source community under a public domain CCO-Universal license by individuals and companies including Provide, EY, Nethermind, ConsenSys, and others. It heavily utilizes the core [Provide](https://provide.services) application stack and is compatible with [Shuttle](https://shuttle.provide.services/waitlist), an on-ramp for _baselining_. [NATS](https://nats.io) and the [Nethermind](https://nethermind.io) Ethereum client (the first client to implement the Baseline Protocol RPC) are opinionatedly used by default.
 
 The reference implementation is instrumented to run on the Ethereum Ropsten testnet and can be configured to run on many other public or permissioned EVM-based blockchains.
 
@@ -16,17 +16,17 @@ The BRI-1 "base" example codebase can be found [here](https://github.com/ethereu
 
 The Provide stack is a containerized microservices architecture written in Golang. The core microservices depend on NATS, NATS streaming, PostgreSQL and Redis. Note that the NATS server component is a [fork](https://github.com/kthomas/nats-server) that supports decentralized, ephemeral bearer authorization using signed JWTs.
 
-![](<../../.gitbook/assets/image (7).png>)
+![](<../../.gitbook/assets/image (6).png>)
 
 ### **Core Microservices**
 
-[**Ident**](https://github.com/provideplatform/ident)****\
-****Identity and authorization services for applications (i.e., workgroups in the context of the Baseline Protocol), organizations and users. Read more about how authorization works [here](./#authorization).
+[**Ident**](https://github.com/provideplatform/ident)\*\*\*\*\
+\*\*\*\*Identity and authorization services for applications (i.e., workgroups in the context of the Baseline Protocol), organizations and users. Read more about how authorization works [here](./#authorization).
 
-****[**Vault**](https://github.com/provideplatform/vault)****\
-****Key management for traditional symmetric and asymmetric encrypt/decrypt and sign/verify operations in addition to support for elliptic curves required for advanced messaging and privacy applications.
+[**Vault**](https://github.com/provideplatform/vault)\
+\*\*\*\*Key management for traditional symmetric and asymmetric encrypt/decrypt and sign/verify operations in addition to support for elliptic curves required for advanced messaging and privacy applications.
 
-****[**NChain**](https://github.com/provideplatform/nchain) \
+\*\*\*\*[**NChain**](https://github.com/provideplatform/nchain)\
 REST API for decentralized application building, and deploying and managing peer-to-peer infrastructure. The service provides daemons for (i) monitoring reachability of network infrastructure and (ii) creating durable, real-time event and analytics streams by subscribing to various networks (i.e., EVM-based block headers and log events).\
 \
 [**Privacy**](https://github.com/provideplatform/privacy)\
@@ -35,16 +35,16 @@ REST API Service that provides zero knowledge proof circuit management (creation
 ### Dependencies
 
 **PostgreSQL**\
-****Each microservice has an isolated database; each service connects to a configured PostgreSQL endpoint with unique credentials. When running the stack locally (i.e., via `docker-compose`), each isolated database runs within a single PostgreSQL container.
+\*\*\*\*Each microservice has an isolated database; each service connects to a configured PostgreSQL endpoint with unique credentials. When running the stack locally (i.e., via `docker-compose`), each isolated database runs within a single PostgreSQL container.
 
 **NATS**\
-****NATS and NATS streaming are used as a fault-tolerant messaging backplane to dispatch and scale idempotent tasks asynchronously. Each NATS subject is configured with a `ttl` for the specific message type which will be published to subscribers of the subject; if no positive acknowledgement has been received for a redelivered message when its `ttl` expires, the message will be negatively acknowledged and dead-lettered.
+\*\*\*\*NATS and NATS streaming are used as a fault-tolerant messaging backplane to dispatch and scale idempotent tasks asynchronously. Each NATS subject is configured with a `ttl` for the specific message type which will be published to subscribers of the subject; if no positive acknowledgement has been received for a redelivered message when its `ttl` expires, the message will be negatively acknowledged and dead-lettered.
 
 **Redis**\
-****Caches frequently-updated and frequently-accessed key/value pairs (i.e., real-time network metrics).
+\*\*\*\*Caches frequently-updated and frequently-accessed key/value pairs (i.e., real-time network metrics).
 
 **Provide CLI**\
-****Command line interface to build and deploy provide services programatically.
+\*\*\*\*Command line interface to build and deploy provide services programatically.
 
 ### Authorization
 
@@ -53,7 +53,7 @@ Each microservice requires the presence of a `bearer` API token to authorize mos
 ## BRI-1 Reference Architecture
 
 **Baseline Proxy**\
-****An Integration middleware for baselining systems of record is implemented in the form of the baseline proxy which is fetched and deployed directly from the provide-cli. BRI-1 makes use of the the [baseline proxy](https://docs.provide.services/api/quickstart/baseline/product-middleware-integration) image to complete the setup of a generalized baseline ecosystem that is fully compliant with the Baseline standard.
+\*\*\*\*An Integration middleware for baselining systems of record is implemented in the form of the baseline proxy which is fetched and deployed directly from the provide-cli. BRI-1 makes use of the the [baseline proxy](https://docs.provide.services/api/quickstart/baseline/product-middleware-integration) image to complete the setup of a generalized baseline ecosystem that is fully compliant with the Baseline standard.
 
 This implementation of the Baseline Protocol leverages the Provide stack for security (i.e., authn and authz), managing key material, signing transactions, subsidizing transaction fees (i.e., if a gas/subsidy faucet is configured at runtime), etc. The various APIs in the core Provide microservices fully implement the interfaces defined in the Baseline Protocol specification (i.e., `IRegistry` and `IVault` interfaces).
 
@@ -69,5 +69,4 @@ This reference implementation provides a complete, robust implementation of the 
 
 For example, implementing only NATS as a control plane for dispatching inbound protocol messages is possible using only the `@baseline-protocol/messaging` package. In such a case, the entire protocol as demonstrated within this reference implementation would be far from complete, but protocol messages could be sent and delivered.
 
-## 
-
+##

@@ -28,11 +28,11 @@
 
 ## Community
 
-* [Open Source Community](docs/community/open-source-community/README.md)
-  * [Contributors](docs/community/open-source-community/contributors.md)
-  * [Members](docs/community/open-source-community/members.md)
+* [Open Source Community](community/open-source-community.md)
+* [Contributors](community/contributors.md)
+* [General Members](community/members.md)
+* [Technical Contributors](community/maintainers.md)
 * [Community Leaders](docs/community/community-leaders/README.md)
-  * [Core Developers](docs/community/community-leaders/maintainers.md)
   * [General Assembly](docs/community/community-leaders/specifications-steering-committee.md)
 
 ## Governance

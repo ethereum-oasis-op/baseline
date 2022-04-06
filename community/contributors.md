@@ -2,14 +2,14 @@
 
 All work of the Baseline Protocol initiative is maintained publicly on a [github repo](https://github.com/ethereum-oasis/baseline).
 
-You don't need any special access to the [repo](https://github.com/ethereum-oasis/baseline) to get involved and start contributing. Follow these steps to [fork](contributors.md#submitting-a-pull-request) the repo and submit pull requests. Anyone with a Github ID can also create and edit their own Issues, participate in public meetings, and join the various communication and collaboration [channels](./#connecting-with-each-other-directly) that the community maintains.
+You don't need any special access to the [repo](https://github.com/ethereum-oasis/baseline) to get involved and start contributing. Follow these steps to [fork](contributors.md#submitting-a-pull-request) the repo and submit pull requests. Anyone with a Github ID can also create and edit their own Issues, participate in public meetings, and join the various communication and collaboration [channels](open-source-community.md#connecting-with-each-other-directly) that the community maintains.
 
 There are four ways to contribute:
 
 * Write code (Architecture, Spikes, Issues, Tasks)
 * Write specifications (Epics, Stories, Prioritizations, Use Cases)
 * Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders -- Join the [communications team](https://ethereum-baseline.slack.com/archives/C011NCZ2ES1) on Slack
-* Help prioritize work and develop incentives to get it done by joining the [General Assembly](../community-leaders/specifications-steering-committee.md) or becoming a [Core Develope](../community-leaders/maintainers.md)r or [TSC](../../governance/technical-steering-committee.md) Member.
+* Help prioritize work and develop incentives to get it done by joining the [General Assembly](../docs/community/community-leaders/specifications-steering-committee.md) or becoming a [Core Develope](maintainers.md)r or [TSC](../docs/governance/technical-steering-committee.md) Member.
 
 There is one other way to contribute, and it's the most important: **use the work in the Baseline Protocol to improve your own offerings**. The Baseline Protocol is not a product or platform..**the product is YOUR product**.
 
@@ -21,11 +21,11 @@ Here is the link to the Baseline Protocol code of conduct:
 
 ## Technical Contributors <a href="#technical-contributors" id="technical-contributors"></a>
 
-Technical contributors either are working on architecture or developing code...but even correcting the language of documentation counts as a technical contribution and qualifies you to vote in upcoming [TSC](../community-leaders/#your-technical-steering-committee) elections.
+Technical contributors either are working on architecture or developing code...but even correcting the language of documentation counts as a technical contribution and qualifies you to vote in upcoming [TSC](../docs/community/community-leaders/#your-technical-steering-committee) elections.
 
 ### BLIPs
 
-As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained [here](https://github.com/eea-oasis/baseline-blips/issues).  YOU ARE ENCOURAGED TO SUBMIT IDEAS to the BLIP repo, and we are well-organized to review and act on them in a timely fashion. You never know -- we might decide to raise a grant to pay for your idea to get executed.  It's happened before.  Try it out!
+As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained [here](https://github.com/eea-oasis/baseline-blips/issues). YOU ARE ENCOURAGED TO SUBMIT IDEAS to the BLIP repo, and we are well-organized to review and act on them in a timely fashion. You never know -- we might decide to raise a grant to pay for your idea to get executed. It's happened before. Try it out!
 
 ### Issues Organization and Community "Sprints" <a href="#issues-organization-and-community-sprints" id="issues-organization-and-community-sprints"></a>
 
@@ -60,7 +60,7 @@ Merging to Master requires review by THREE Core Developers. The TSC seeded the i
 
 ## Specifications Contributors <a href="#specifications-contributors" id="specifications-contributors"></a>
 
-The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [General Assembly](../community-leaders/specifications-steering-committee.md) is the coordinating body for this work.
+The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [General Assembly](../docs/community/community-leaders/specifications-steering-committee.md) is the coordinating body for this work.
 
 ### Epics and Stories Organization <a href="#epics-and-stories-organization" id="epics-and-stories-organization"></a>
 
