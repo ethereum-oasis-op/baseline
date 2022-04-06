@@ -1,0 +1,9 @@
+# This is a comment.
+# Each line is a file pattern followed by one or more owners.
+# Source https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+
+# These owners will be the default owners for everything in
+# the repo. Unless a later match takes precedence,
+# the following owers will be requested for
+# review when someone opens a pull request.
+*       @skarred14 @bitwiseguy @kthomas @ognjenkurtic @rfisch @therecanonlybeone1969 @fosgate29 @Manik-Jain @skosito

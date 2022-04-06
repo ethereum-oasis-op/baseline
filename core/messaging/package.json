@@ -1,0 +1,47 @@
+{
+  "name": "@baseline-protocol/messaging",
+  "version": "0.1.0",
+  "description": "Baseline core messaging",
+  "license": "CC0 1.0 Universal",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "unpkg": "./dist/umd/index.min.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build:cjs": "./node_modules/.bin/tsc -p tsconfig.cjs.json",
+    "build:umd": "webpack",
+    "build": "yarn clean && yarn build:cjs && yarn build:umd",
+    "clean": "rm -rf ./dist",
+    "geth:start": "npm run geth:stop 2&>/dev/null && docker run -td -p 8546:8546 ethereum/client-go --shh --ws --wsaddr 0.0.0.0 --wsorigins '*' --wsapi=web3,shh,net --testnet --nodiscover --maxpeers 0 && sleep 2",
+    "geth:stop": "docker stop $(docker ps | grep ethereum/client-go | sed 's/ .*//') || true",
+    "nats:start": "npm run nats:stop 2&>/dev/null && docker run -td -p 4221:4221 -p 4222:4222 provide/nats-server -p 4222 -DV && sleep 2",
+    "nats:stop": "docker stop $(docker ps | grep provide/nats-server | sed 's/ .*//') || true",
+    "test": "npm run test:startup && $(./node_modules/.bin/jest --verbose --color --passWithNoTests || npm run test:teardown) || npm run test:teardown",
+    "test:startup": "npm run nats:start && npm run geth:start",
+    "test:teardown": "npm run nats:stop && npm run geth:stop"
+  },
+  "dependencies": {
+    "ts-natsutil": "^1.1.0",
+    "web3": "^1.2.6",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/jsonwebtoken": "^8.3.4",
+    "@types/node": "^12.12.37",
+    "elliptic": "^6.5.3",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "ts-loader": "^6.0.4",
+    "tslint": "5.20.1",
+    "tslint-config-airbnb": "5.11.2",
+    "tslint-config-prettier": "1.18.0",
+    "tslint-plugin-prettier": "2.0.1",
+    "typescript": "^3.5.2",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.1.2",
+    "webpack-node-externals": "^1.7.2"
+  }
+}

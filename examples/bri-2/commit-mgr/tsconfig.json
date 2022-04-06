@@ -1,0 +1,17 @@
+{
+	"include": ["src/**/*"],
+	"compilerOptions": {
+		"target": "es6",
+		"module": "commonjs",
+		"allowJs": true,
+		"baseUrl": ".",
+		"esModuleInterop": true,
+		"moduleResolution": "node",
+		"noImplicitAny": false,
+		"outDir": "dist",
+		"rootDir": "src",
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"typeRoots": ["./node_modules/@types"]
+	}
+}

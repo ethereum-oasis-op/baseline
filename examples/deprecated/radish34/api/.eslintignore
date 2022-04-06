@@ -1,0 +1,4 @@
+dist/*
+build/*
+src/__tests__
+src/test

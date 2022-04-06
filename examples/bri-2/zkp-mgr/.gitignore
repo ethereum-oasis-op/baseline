@@ -1,0 +1,14 @@
+.DS_Store
+
+# Logs
+logs
+
+# dotenv environment variables file
+.env
+
+# Directories named after circuit UUIDs
+src/circuits/*-*/*
+
+# Temp circuit files
+src/circuits/circuit.go
+src/circuits/circuit.r1cs

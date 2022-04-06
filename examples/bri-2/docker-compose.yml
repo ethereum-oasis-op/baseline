@@ -1,0 +1,289 @@
+version: '3.7'
+
+x-default-variables: &default-variables
+  KEY_MANAGER_URL: ${KEY_MANAGER_URL-http://key-manager:8081}
+  KEY_MANAGER_METRICS_URL: ${KEY_MANAGER_URL-http://key-manager:8082}
+  VAULT_ADDR: ${VAULT_ADDR-http://hashicorp:8200}
+  LOG_LEVEL: ${LOG_LEVEL-debug}
+  LOG_FORMAT: ${LOG_FORMAT-}
+  LOG_TIMESTAMP: ${LOG_TIMESTAMP-true}
+
+x-key-manager-default-variables: &key-manager-default-variables
+  LOG_LEVEL: ${LOG_LEVEL-INFO}
+  LOG_FORMAT: ${LOG_FORMAT-text}
+  HTTP_PORT: ${HTTP_PORT-8080}
+  HTTP_HOST: ${HTTP_HOST-0.0.0.0}
+  HEALTH_PORT: ${HEALTH_PORT-8081}
+  DB_TLS_SSLMODE: ${DB_TLS_SSLMODE-disable}
+  DB_TLS_CERT: ${DB_TLS_CERT-}
+  DB_TLS_KEY: ${DB_TLS_KEY-}
+  DB_TLS_CA: ${DB_TLS_CA-}
+  DB_HOST: ${DB_HOST-postgres}
+  DB_PORT: ${DB_PORT-}
+  DB_DATABASE: ${DB_DATABASE-}
+  DB_POOLSIZE: ${DB_POOLSIZE-}
+  DB_POOL_TIMEOUT: ${DB_POOL_TIMEOUT-}
+  AUTH_OIDC_CA_CERT: ${AUTH_OIDC_CA_CERT-}
+  AUTH_OIDC_ISSUER_URL: ${AUTH_OIDC_ISSUER_URL-}
+  HTTPS_ENABLED: ${HTTPS_ENABLED-}
+  HTTPS_SERVER_KEY: ${HTTPS_SERVER_KEY-}
+  HTTPS_SERVER_CERT: ${HTTPS_SERVER_CERT-}
+  AUTH_TLS_CA: ${AUTH_TLS_CA-}
+  AUTH_API_KEY_FILE: ${AUTH_API_KEY_FILE-}
+
+services:
+  # shared containers
+
+  ganache:
+    container_name: ganache
+    #image: trufflesuite/ganache-cli:v6.6.0
+    image: trufflesuite/ganache-cli:latest
+    command: ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat' --defaultBalanceEther 10000 --account="0x8f2a55949038a9610f50fb23b5883af3b4ecb3c3bb792cbcefbd1542c692be63, 1000000000000000000000" --account="0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3, 1000000000000000000000" --account="0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f, 1000000000000000000000" --networkId '101010' --gasLimit 10000000 --allowUnlimitedContractSize --noVMErrorsOnRPCResponse
+    ports:
+      - 8545:8545
+      - 8546:8546
+    networks:
+      - alice
+    volumes:
+      - ./scripts/ganache_health.sh:/app/health-check.sh:delegated
+    healthcheck:
+      test: ['CMD', 'sh', 'health-check.sh']
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # alice
+
+  alice-nats-server:
+    hostname: alice-nats-server
+    container_name: alice-nats-server
+    image: nats
+    ports:
+      - 8222:8222
+      - 4222:4222
+    networks:
+      - alice
+
+  # alice-besu:
+  #   container_name: alice-besu
+  #   image: hyperledger/besu:latest
+  #   command: "--config-file=/config/config.toml"
+  #   environment:
+  #     - LOG4J_CONFIGURATION_FILE=/config/log-config.xml
+  #   volumes:
+  #     - ./besu/config.toml:/config/config.toml
+  #     - ./besu/genesis.json:/config/genesis.json
+  #     - ./besu/key:/config/key
+  #     - ./besu/log-config.xml:/config/log-config.xml
+  #   ports:
+  #     - 8545:8545
+  #     - 8546:8546
+  #   networks:
+  #     - alice
+
+  alice-mongo:
+    container_name: alice-mongo
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_ROOT_DATABASE: root-db
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d:ro
+      - alice-mongo:/data/db
+      - ./scripts/mongo_health.sh:/health-check.sh:delegated
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      - alice
+    ports:
+      - 27117:27017
+    healthcheck:
+      test: ['CMD', 'sh', 'health-check.sh']
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  alice-commit-mgr:
+    hostname: alice-commit-mgr
+    container_name: alice-commit-mgr
+    depends_on:
+      - alice-mongo
+      - alice-nats-server
+    build:
+      context: ./commit-mgr
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./commit-mgr/.env
+    environment:
+      - DATABASE_HOST=alice-mongo:27017
+      - NATS_URL=nats://alice-nats-server:4222
+      - ZKP_MGR_URL=http://alice-zkp-mgr:8080
+      - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
+      - KEY_MGR_URL=http://alice-key-manager:8081
+      - SIGNING_SERVICE=ethers
+      - ETH_CLIENT_TYPE=ganache
+      - ETH_CLIENT_WS=ws://ganache:8545
+      - ETH_CLIENT_HTTP=http://ganache:8545
+      - WALLET_PRIVATE_KEY=0xae6ae8e5ccbfb04590405997ee2d52d2b330726137b875053c36d94e974d162f
+      - WALLET_PUBLIC_KEY=0xf17f52151EbEF6C7334FAD080c5704D77216b732
+    networks:
+      - alice
+    ports:
+      - 4001:4001
+    volumes:
+      - ./contracts:/app/src/contracts
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:4001/status']
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  alice-workflow-mgr:
+    hostname: alice-workflow-mgr
+    container_name: alice-workflow-mgr
+    depends_on:
+      - alice-mongo
+      - alice-nats-server
+    build:
+      context: ./workflow-mgr
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./workflow-mgr/.env
+    environment:
+      - DATABASE_HOST=alice-mongo:27017
+      - COMMIT_MGR_URL=http://alice-commit-mgr:4001
+      - ZKP_MGR_URL=http://alice-zkp-mgr:8080
+      - NATS_URL=nats://alice-nats-server:4222
+    networks:
+      - alice
+    ports:
+      - 5001:5001
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:5001/status']
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  alice-zkp-mgr:
+    hostname: alice-zkp-mgr
+    container_name: alice-zkp-mgr
+    depends_on:
+      - alice-mongo
+      - alice-nats-server
+    build:
+      context: ./zkp-mgr
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./zkp-mgr/.env
+    environment:
+      - DATABASE_HOST=alice-mongo:27017
+      - WORKFLOW_MGR_URL=http://alice-workflow-mgr:5001
+      - NATS_URL=nats://alice-nats-server:4222
+    networks:
+      - alice
+    ports:
+      - 8090:8080
+    volumes:
+      - alice-zkp-circuits:/root/src/circuits
+      #- alice-zkp-circuits:./zkp-mgr/src/circuits:/root/src/circuits
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:8080/status']
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Codefi Orchestrate Services
+
+  postgres:
+    container_name: alice-vault-db
+    image: postgres:13.4-alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data-api:/var/lib/postgresql/data
+    ports:
+      - 5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 1s
+      timeout: 1s
+      retries: 5
+    restart: 'on-failure'
+    networks:
+      - alice
+
+  migration:
+    image: consensys/quorum-key-manager:latest
+    environment:
+      <<: *key-manager-default-variables
+    command: migrate up
+    restart: 'on-failure'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - alice
+
+  key-manager:
+    container_name: alice-key-mgr
+    image: consensys/quorum-key-manager:latest
+    environment:
+      <<: *key-manager-default-variables
+      MANIFEST_PATH: ${MANIFEST_PATH-/manifests}
+    ports:
+      - 8080:8080 # API port
+      - 8081:8081 # health-check port
+    depends_on:
+      - migration
+    command: run
+    volumes:
+      - ${HOST_MANIFEST_PATH-./key-mgr/config/manifests}:/manifests:ro
+    restart: 'on-failure'
+    networks:
+      - alice
+
+  hashicorp:
+    container_name: alice-vault
+    image: library/vault:1.8.2
+    tty: true
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./key-mgr/hashicorp/plugins/quorum-hashicorp-vault-plugin:/vault/plugins/quorum-hashicorp-vault-plugin
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: ${VAULT_TOKEN-DevVaultToken}
+    entrypoint: vault server -dev -dev-plugin-dir=/vault/plugins/ -dev-listen-address="0.0.0.0:8200" -log-level=trace
+    ports:
+      - 8200:8200
+    networks:
+      - alice
+
+  hashicorp-init:
+    build: ./key-mgr/hashicorp
+    environment:
+      VAULT_ADDR: http://alice-vault:8200
+      VAULT_TOKEN: ${VAULT_TOKEN-DevVaultToken}
+    restart: 'no'
+    depends_on:
+      - hashicorp
+    volumes:
+      - ./key-mgr/hashicorp/init-dev.sh:/init.sh
+    command: sh ./init.sh
+    networks:
+      - alice
+
+networks:
+  alice:
+
+volumes:
+  alice-mongo:
+  alice-zkp-circuits:
+  db-data-api:
+    driver: local
