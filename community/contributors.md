@@ -1,16 +1,16 @@
 ---
 description: >-
   Anyone can contribute to the Baseline Protocol by making technical,
-  specification, or other contributions
+  specification related, or other contributions
 ---
 
 # Contributors
 
-All technical and standards-related work of the Baseline Protocol initiative is maintained publicly on the [**github repo**](https://github.com/ethereum-oasis/baseline)**,** with [community member](open-source-community.md) work in Google Drives managed by admins.
+All technical and standards-related work of the Baseline Protocol initiative is maintained publicly on the [**github repo**](https://github.com/ethereum-oasis/baseline) **** and [**open source team**](open-source-community.md) work is managed in Google Drives by community managers. [**Sign up to join** the teams](open-source-community.md) or **email at baseline-team@oasis-open.org** for access to the open source team work.&#x20;
 
-Anyone can get involved and start contributing. Follow these steps to [fork](contributors.md#submitting-a-pull-request) the repo and submit pull requests. Anyone with a Github ID can also create and edit their own Issues, participate in public meetings, and join the various communication and collaboration [channels](open-source-community.md#connecting-with-each-other-directly) that the community maintains.
+Anyone can get involved and start contributing by joining the open source teams, taking on work, proposing grant work, or even directly submitting an issue or PR to the repository.
 
-There are four ways to contribute:
+There are four main ways to contribute:
 
 * Write code (Architecture, Spikes, Issues, Tasks)
 * Write specifications (Epics, Stories, Prioritizations, Use Cases)

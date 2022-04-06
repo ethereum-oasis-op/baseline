@@ -1,3 +1,7 @@
+---
+description: TO DO
+---
+
 # Community Leaders
 
 Over 500 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th and 19th, 2020. Over 300 of them also signed in as group members. The members represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.

@@ -1,6 +1,6 @@
 # Technical Steering Committee
 
-The core of the day-to-day work of the Baseline Protocol community is managed by [members](../../community/members.md) and [core developers](broken-reference). The Technical Steering Committee (TSC) is here mainly to ensure the smooth running of the core developer team and to be accountable to the Ethereum-Oasis [Project Governance Board](project-governance-board.md) (and to the community at large).
+The core of the day-to-day work of the Baseline Protocol community is managed by [members](../../community/members.md) and [core developers](../../community/maintainers.md). The Technical Steering Committee (TSC) is here mainly to ensure the smooth running of the core developer team and to be accountable to the Ethereum-Oasis [Project Governance Board](project-governance-board.md) (and to the community at large).
 
 While it is up to any contributor what one works on, the TSC helps core developers and members by organizing planning and review sessions, roadmapping, and highlighting engineering tasks as high-priority for any given period.
 
