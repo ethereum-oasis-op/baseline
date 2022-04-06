@@ -1,4 +1,4 @@
-# The CCSM Specification
+# CCSM Specification
 
 ## CCSM Specification Overview
 

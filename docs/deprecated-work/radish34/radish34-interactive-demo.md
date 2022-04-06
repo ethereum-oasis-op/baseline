@@ -1,26 +1,26 @@
 # Interactive Demo - DEPRECATED
 
-You can build and run your own functioning instance of the [**Radish34 proof of concept here**](broken-reference/).
+You can build and run your own functioning instance of the [**Radish34 proof of concept here**](broken-reference).
 
 But if you want to see what it might be like for a group of companies to use the Baseline Protocol in a wider set of supply chain operations, here is an [interactive visualization](https://www.figma.com/proto/XQ9sIPu0FeoNSojX8YQtmz/Radish34?node-id=759%3A13805\&viewport=150%2C167%2C0.05065051466226578\&scaling=min-zoom):
 
 ![](https://gblobscdn.gitbook.com/assets%2F-M2ZgeO6\_fLS5V\_kJ073%2F-M2cf67sM26\_7aKsBoY6%2F-M2cfRzP6C9IL1jP2BwY%2Fimage.png?alt=media\&token=f26d8b66-2fa1-449d-b6de-ea55110d32cf)
 
-## Demo Workflow <a href="#demo-workflow" id="demo-workflow"></a>
+## Demo Workflow <a href="demo-workflow" id="demo-workflow"></a>
 
 In the supply chain story we staged in this application the user can play the role of Buyer who wants to place an order with Suppliers for X number of widgets. They also can play the role of Supplier who works with the Buyer to fulfill their purchasing needs.
 
 The story begins with the Buyer creating a Request for Proposals and sending it to several suppliers, getting proposals back, selecting one proposal, and then Baselining the MSA contract between the Buyer and Supplier.
 
-### Setup <a href="#setup" id="setup"></a>
+### Setup <a href="setup" id="setup"></a>
 
 Ahead of playing through the story there are a few setup tasks to make the whole prototype demo experience work. You first need to run the setup process in the development environment to make sure you configure your demo environment.
 
-### A supply chain story <a href="#a-supply-chain-story" id="a-supply-chain-story"></a>
+### A supply chain story <a href="a-supply-chain-story" id="a-supply-chain-story"></a>
 
 We broke down the supply chain procurement process into two phases; Contracting and Ongoing. The Radish demo only captures key parts of the contracting phase at this point in development. Supporting the ongoing phase of procurement will come very soon.
 
-### Contracting Phase <a href="#contracting-phase" id="contracting-phase"></a>
+### Contracting Phase <a href="contracting-phase" id="contracting-phase"></a>
 
 **Buyer context**: My R\&D department has given me a request for a new part X for our product Y. I need to find two domestic suppliers for this part who can fulfill my expected 12 month volume.
 
@@ -43,7 +43,7 @@ We broke down the supply chain procurement process into two phases; Contracting 
 7. I am notified when buyer signs.
 8. Done contracting phase.
 
-### Ongoing Phase <a href="#ongoing-phase" id="ongoing-phase"></a>
+### Ongoing Phase <a href="ongoing-phase" id="ongoing-phase"></a>
 
 **Buyer  context:** We have an MSA with two suppliers for part X. It's now time to order the part so we can have the inventory we need to begin manufacturing.
 

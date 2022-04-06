@@ -25,7 +25,7 @@ Technical contributors either are working on architecture or developing code...b
 
 ### BLIPs
 
-As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained [here](https://github.com/eea-oasis/baseline-blips/issues). YOU ARE ENCOURAGED TO SUBMIT IDEAS to the BLIP repo, and we are well-organized to review and act on them in a timely fashion. You never know -- we might decide to raise a grant to pay for your idea to get executed. It's happened before. Try it out!
+As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained [here](https://github.com/eea-oasis/baseline-blips/issues).  YOU ARE ENCOURAGED TO SUBMIT IDEAS to the BLIP repo, and we are well-organized to review and act on them in a timely fashion. You never know -- we might decide to raise a grant to pay for your idea to get executed.  It's happened before.  Try it out!
 
 ### Issues Organization and Community "Sprints" <a href="#issues-organization-and-community-sprints" id="issues-organization-and-community-sprints"></a>
 

@@ -1,10 +1,10 @@
 # Google Sheets/Microsoft Dynamics
 
-**⚠️ The "Baseline Microsoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../../) **as a result of the `v0.1` release.**
+**⚠️ The "Baseline Microsoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../) **as a result of the `v0.1` release.**
 
 ## Baselining Business Process Automation across SAP and Microsoft Dynamics
 
-**George Spasov (Limechain), Vlad Ivanov (Limechain), Kyle Thomas (Provide)**
+**George Spasov \(Limechain\), Vlad Ivanov \(Limechain\), Kyle Thomas \(Provide\)**
 
 May 21, 2020
 
@@ -84,3 +84,4 @@ The Microsoft Dynamics ERP component is extension code written that connects to 
 The google sheets side is a regular google spreadsheet with an Baseline Add-on installed. Regular repeating cloud tasks are polling new info from the Baseline service and insert it in the correct tables. In addition through the Add-on Todd is able to connect and send data to his Baseline Service.
 
 ![Google Sheets](images/sheets.png)
+

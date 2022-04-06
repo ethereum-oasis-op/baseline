@@ -1,8 +1,6 @@
----
-description: 'The draft of the CORE specification document is available on Github: here.'
----
-
 # The Core Specification
+
+The draft of the CORE specification document is available on [Github here](https://github.com/eea-oasis/baseline-standard/tree/main/core).
 
 ## CORE Specification Overview
 

@@ -1,6 +1,6 @@
 # General Assembly
 
-The General Assembly is a regular meeting of community members.
+The General Assembly is a regular meeting of community members.&#x20;
 
 Meeting signups are maintained on the "Join the Community" page on https://baseline-protocol.org.
 
@@ -10,7 +10,7 @@ Meeting signups are maintained on the "Join the Community" page on https://basel
 
 The group meets monthly (or biweekly, as needed) and is convened by the [TSC](../../governance/technical-steering-committee.md) Chair. From an [OASIS](https://oasis-open-projects.org) governance perspective, the General Assembly is considered a subcomittee of the TSC, but in practice, the General Assembly and TSC have coequal roles in the community.
 
-### Project Leadership <a href="#project-leadership" id="project-leadership"></a>
+### Project Leadership <a href="project-leadership" id="project-leadership"></a>
 
 Baseline Community Projects are the General Assembly's way of managing specific objectives for the baseline protocol initiative. General Assembly members commit themselves to one or more of these.
 
@@ -20,7 +20,7 @@ While others may do the development and task-work, a General Assembly member com
 
 General Assembly Members also keep the community of project stakeholders regularly informed of status. This includes cases where milestones aren't being met or when a project should be shut down and the learning recycled into another project.
 
-### Projects in Zenhub and General Assembly Member Permissions <a href="#projects-in-zenhub-and-ssc-member-permissions" id="projects-in-zenhub-and-ssc-member-permissions"></a>
+### Projects in Zenhub and General Assembly Member Permissions <a href="projects-in-zenhub-and-ssc-member-permissions" id="projects-in-zenhub-and-ssc-member-permissions"></a>
 
 Here's a snapshot of the project roadmap in the baseline protocol's [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) dashboard:
 
@@ -30,7 +30,7 @@ Projects can be technical, strategic, or organizational. For example, a technica
 
 General Assembly Members have Github write permission, which gives them the ability to add and edit Projects, Epics and Issues, and to assign (and be assigned) work to specific Contributors.
 
-## How to Join the General Assembly <a href="#how-to-join-the-ssc" id="how-to-join-the-ssc"></a>
+## How to Join the General Assembly <a href="how-to-join-the-ssc" id="how-to-join-the-ssc"></a>
 
 Unlike the TSC, which is fixed at eleven elected members, the size of the General Assembly is flexible. To balance openness and inclusiveness with the need to keep the team manageable and accountable, there is a single rule that determines membership: **Accountability for Active Projects**.
 
@@ -43,7 +43,7 @@ You will receive back an invitation to either a special session of the General A
 
 General Assembly Members will be added to the Github Org, have Read access to the main [Baseline Protocol repo](https://github.com/ethereum-oasis/baseline) and Write access to the [Roadmap repo](https://github.com/ethereum-oasis/baseline-roadmap).
 
-## New General Assembly Member Quickstart <a href="#new-ssc-member-quickstart" id="new-ssc-member-quickstart"></a>
+## New General Assembly Member Quickstart <a href="new-ssc-member-quickstart" id="new-ssc-member-quickstart"></a>
 
 Within 24 hours of approval as a new General Assembly Member, you will be sent an email with instructions on how to get permissions to the various tools you now have at your disposal, including:
 
@@ -53,13 +53,13 @@ Within 24 hours of approval as a new General Assembly Member, you will be sent a
 
 > To prepare for a great start to your time on the General Assembly, review the existing projects and top-level epics. Then get an idea where you want to focus your attention, and if it isn't represented in the dashboard, consider adding a Project or talk with other General Assembly members about it.
 
-## Other General Assembly Member Governance Details <a href="#other-ssc-member-governance-details" id="other-ssc-member-governance-details"></a>
+## Other General Assembly Member Governance Details <a href="other-ssc-member-governance-details" id="other-ssc-member-governance-details"></a>
 
-### Ending a General Assemby Membership <a href="#ending-an-ssc-membership" id="ending-an-ssc-membership"></a>
+### Ending a General Assemby Membership <a href="ending-an-ssc-membership" id="ending-an-ssc-membership"></a>
 
 Just as getting into the General Assembly is about stepping up to lead on a project, leaving the General Assembly would be a natural process of ending those projects or cycling off leading them. The General Assembly will periodically do a house-cleaning segment in the regular meeting to achieve loose consensus on whether any projects require pruning.
 
-### Rough Meeting Agenda <a href="#rough-meeting-agenda" id="rough-meeting-agenda"></a>
+### Rough Meeting Agenda <a href="rough-meeting-agenda" id="rough-meeting-agenda"></a>
 
 General Assembly Meetings have these standard agenda items:
 

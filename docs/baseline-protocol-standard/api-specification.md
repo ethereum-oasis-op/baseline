@@ -1,4 +1,4 @@
-# The API Specification
+# API Specification
 
 ## API Specification Overview
 
@@ -16,6 +16,6 @@ For more information about the above, please refer to the Packages section : [he
 
 ## API Specification Document
 
-The draft of the API specification document is available on Github: _**Forthcoming**_
+The draft of the API specification document is available on Github:  _**Forthcoming**_
 
 The Swagger API is available [here](https://app.swaggerhub.com/apis-docs/prvd/Baseline-Core/v1.0.0).

@@ -20,17 +20,18 @@ Run the local test suite with `npm test`.
 
 An initial set of JSON-RPC methods have been defined for inclusion in the specification. These methods allow easy interaction with on-chain shield contracts (which contain merkle-tree fragments) and maintain full merkle-trees (along with metadata) in local off-chain storage.
 
-| Method                   | Params                                       | Description                                                                  |
-| ------------------------ | -------------------------------------------- | ---------------------------------------------------------------------------- |
-| `baseline_getCommit`     | address, commitIndex                         | Retrieve a single commit from a tree at the given shield contract address    |
-| `baseline_getCommits`    | address, startIndex, count                   | Retrieve multiple commits from a tree at the given shield contract address   |
-| `baseline_getRoot`       | address                                      | Retrieve the root of a tree at the given shield contract address             |
-| `baseline_getProof`      | address, commitIndex                         | Retrieve the membership proof for the given commit index                     |
-| `baseline_getTracked`    |                                              | Retrieve a list of the shield contract addresses being tracked and persisted |
-| `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address        |
-| `baseline_track`         | address                                      | Initialize a merkle tree database for the given shield contract address      |
-| `baseline_untrack`       | address                                      | Remove event listeners for a given shield contract address                   |
-| `baseline_verify`        | address, value, siblings                     | Verify a proof for a given root and commit value                             |
+| Method | Params | Description |
+| -------- | ----- | ----------- |
+| `baseline_getCommit` | address, commitIndex | Retrieve a single commit from a tree at the given shield contract address |
+| `baseline_getCommits` | address, startIndex, count | Retrieve multiple commits from a tree at the given shield contract address |
+| `baseline_getRoot` | address | Retrieve the root of a tree at the given shield contract address |
+| `baseline_getProof` | address, commitIndex | Retrieve the membership proof for the given commit index |
+| `baseline_getTracked` | | Retrieve a list of the shield contract addresses being tracked and persisted |
+| `baseline_verifyAndPush` | sender, address, proof, publicInputs, commit | Inserts a single commit in a tree for a given shield contract address |
+| `baseline_track` | address | Initialize a merkle tree database for the given shield contract address |
+| `baseline_untrack` | address | Remove event listeners for a given shield contract address |
+| `baseline_verify` | address, value, siblings | Verify a proof for a given root and commit value |
+
 
 #### Ethereum clients that support baseline JSON-RPC
 
@@ -45,7 +46,7 @@ An initial set of JSON-RPC methods have been defined for inclusion in the specif
 
 **IBaselineRPC**
 
-```
+```text
 getCommit(address: string, index: number): Promise<MerkleTreeNode>;
 getCommits(address: string, startIndex: number, count: number): Promise<MerkleTreeNode[]>;
 getRoot(address: string): Promise<string>;
@@ -59,7 +60,7 @@ verify(address: string, root: string, commit: string, siblingPath: MerkleTreeNod
 
 **IRegistry**
 
-```
+```text
 // workgroups
 createWorkgroup(params: object): Promise<any>;
 updateWorkgroup(workgroupId: string, params: object): Promise<any>;
@@ -88,7 +89,7 @@ inviteOrganizationUser(organizationId: string, params: object): Promise<any>;
 
 **IVault**
 
-```
+```text
 createVault(params: object): Promise<any>;
 fetchVaults(params: object): Promise<any>;
 fetchVaultKeys(vaultId: string, params: object): Promise<any>;
@@ -108,5 +109,5 @@ deleteVaultSecret(vaultId: string, secretId: string): Promise<any>;
 The following providers of the Baseline API are available:
 
 * Ethers.js - _example provider; not yet implemented but included here for illustrative purposes_
-* [Provide](https://provide.services) - [BRI-1](../../bri/bri-1/) reference implementation (see `examples/bri-1/base-example`)
+* [Provide](https://provide.services) - [BRI-1](../../bri/bri-1/) reference implementation \(see `examples/bri-1/base-example`\)
 * RPC - generic JSON-RPC provider

@@ -20,7 +20,7 @@ Checkout the bri-1-privacy branch:
 git checkout bri-1-privacy
 ```
 
-Once checked out, navigate to the /examples/bri-1/base-examples folder.
+Once checked out, navigate to the /examples/bri-1/base-examples folder.&#x20;
 
 ### Running Locally
 
@@ -43,24 +43,24 @@ The reference implementation illustrates Alice & Bob, respective owners of Alice
 
 The following high-level architecture diagram illustrates how the concepts discussed in previous sections (i.e., the Provide and Baseline Protocol architecture sections) fit together in the context of two organizations deploying the Baseline Protocol using Provide as a common technology stack and their own cloud infrastructure vendors (i.e., AWS and Azure). The reference implementation deploys these same two distinct stacks to your local machine using docker-compose when running the test suite
 
-![This reference implementation supports cloud-agnostic experiments out-of-the-box.](<../../.gitbook/assets/image (4).png>)
+![This reference implementation supports cloud-agnostic experiments out-of-the-box.](<../../.gitbook/assets/image (5).png>)
 
 There are several assertion and checks that have to be carried out, in full and in a specific order to ensure that the base example can run and fully demonstrate the functionality and potential of the Baseline protocol, leveraged by the Provide stack. Subsequent sections illustrate the necessary components and their outputs as well as the rationale for their importance.
 
 **Workgroup assertions**\
-\*\*\*\*All on-chain artifacts existence and accessibility will be asserted, this includes the ERC1820 contract, the organization registry, workgroup shield, workflow circuit verifier contract, and the circuit identifier. We will also assert we have established a connection with NATS, and that there is an active subscription to the baseline.proxy subject.
+****All on-chain artifacts existence and accessibility will be asserted, this includes the ERC1820 contract, the organization registry, workgroup shield, workflow circuit verifier contract, and the circuit identifier. We will also assert we have established a connection with NATS, and that there is an active subscription to the  baseline.proxy subject.
 
 **Vault assertions**\
-\*\*\*\*The user will be able to register its corporation in the local registry and the on-chain registry using the default secp256k1 address. We will the ensure all vault related services are fully functional. We will assert a default vault for the organization has been created as well as a set of key pairs for the organization for babyJubJub, secp256k1, and finally ensure the secp256k1 key pair can resolve as the organization address.
+****The user will be able to register its corporation in the local registry and the on-chain registry using the default secp256k1 address. We will the ensure all vault related services are fully functional. We will assert a default vault for the organization has been created as well as a set of key pairs for the organization for babyJubJub, secp256k1, and finally ensure the secp256k1 key pair can resolve as the organization address.
 
 **Messaging assertions**\
-\*\*\*\*We will also assert we have established a connection with NATS, and that there is an active subscription to the baseline.proxy subject.
+****We will also assert we have established a connection with NATS, and that there is an active subscription to the  baseline.proxy subject.&#x20;
 
 **SNARK assertions**\
-\*\*\*\*TBD
+****TBD
 
 **Decoded workgroup Invitation**\
-\*\*\*\*The following JSON object represents the decoded invitation JWT signed by Bob Corp and delivered to Alice. The invitation has everything Alice needs to join Bob's new Baseline workgroup, register Alice Corp with the on-chain `OrgRegistry` contract and use the protocol to synchronize her local Provide stack.
+****The following JSON object represents the decoded invitation JWT signed by Bob Corp and delivered to Alice. The invitation has everything Alice needs to join Bob's new Baseline workgroup, register Alice Corp with the on-chain `OrgRegistry` contract and use the protocol to synchronize her local Provide stack.
 
 ```
 {

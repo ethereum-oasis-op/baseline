@@ -2,7 +2,7 @@
 
 ## @baseline-protocol/baseline
 
-The core baseline package provides unified access to internal integration middleware interfaces for systems of record.
+The core baseline package provides unified access to internal integration middleware interfaces for systems of record. &#x20;
 
 ### Installation
 

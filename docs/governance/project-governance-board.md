@@ -1,6 +1,6 @@
 # Project Governance Board
 
-### Project Governance Board <a href="#your-project-governance-board" id="your-project-governance-board"></a>
+### Project Governance Board <a href="your-project-governance-board" id="your-project-governance-board"></a>
 
 The project governance board (PGB) is organized by OASIS and is accountable for ensuring the balance and integrity of the Ethereum-Oasis initiatives, such as the Baseline Protocol.
 

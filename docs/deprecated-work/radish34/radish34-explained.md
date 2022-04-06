@@ -1,8 +1,8 @@
 # Radish34 Explained - DEPRECATED
 
-**With the release of Baseline Protocol v0.1, much of the original Radish34 proof of concept has been altered, abstracted, generalized or deprecated. We include the work here for legacy and so that the history of the protocol can continue to be examined in the future. Also, the use case described below continues to be a good explanation of a use case that can benefit from \_baselining**\_**.**
+**With the release of Baseline Protocol v0.1, much of the original Radish34 proof of concept has been altered, abstracted, generalized or deprecated. We include the work here for legacy and so that the history of the protocol can continue to be examined in the future. Also, the use case described below continues to be a good explanation of a use case that can benefit from **_**baselining**_**.**
 
-Radish34 is the result of a 2019 joint development effort to build a supply chain POC. The work led to the Baseline Protocol, a way for enterprises to use the Mainnet as middleware without compromising corporate information security practices. Radish34 remains the best way to show the general baseline approach in a specific example. You can build and run the proof of concept [here](broken-reference/). And you can see how a set of companies would integrate their supply chain management systems in this [interactive demo](radish34-interactive-demo.md).
+Radish34 is the result of a 2019 joint development effort to build a supply chain POC. The work led to the Baseline Protocol, a way for enterprises to use the Mainnet as middleware without compromising corporate information security practices. Radish34 remains the best way to show the general baseline approach in a specific example. You can build and run the proof of concept [here](broken-reference). And you can see how a set of companies would integrate their supply chain management systems in this [interactive demo](radish34-interactive-demo.md).
 
 ## The Procurement Use Case
 

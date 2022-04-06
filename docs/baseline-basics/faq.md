@@ -19,7 +19,9 @@ The Baseline Protocol Standard and source code are available under the CC0 1.0 U
 Join our open source teams - learn more and sign up [here](https://www.baseline-protocol.org/get-involved/).&#x20;
 
 * _**Baseline Core Devs:**  Baseline Core Devs_ are the backbone of the Baseline Protocol open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of top blockchain developers leading the rise of ubiquitous sync services to state machines everywhere!
-* **Outreach Team**: Outreach members communicate, advocate, and educate the world on the advantages of using and contributing to the protocol. Several working groups create enablement materials, devise industry-specific use cases, and document the significant work being done in the community.
+*   **Outreach Team**: Outreach members communicate, advocate, and educate the world on the advantages of using and contributing to the protocol. Several working groups create enablement materials, devise industry-specific use cases, and document the significant work being done in the community.
+
+
 * **Standards Team**: Members of the team work to define and contribute to the specifications of baseline compliance. The[ Standards ](broken-reference)is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
 
 ## I want to build with the Baseline Protocol, where do I start?

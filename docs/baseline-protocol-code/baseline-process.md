@@ -1,12 +1,12 @@
 # Baseline Process
 
-## Local System of Record <a href="#local-system-of-record" id="local-system-of-record"></a>
+## Local System of Record <a href="local-system-of-record" id="local-system-of-record"></a>
 
 Parties store data in local systems of record (Mongo, Oracle, SAP, etc). Components involved in the baseline process are given CRUD access to this and conduct a series of operations to serialize records (including any associated business logic), send those records to counterparties, receive the records, sign them, generate proofs, and store these proofs to a Merkle Tree on the Mainnet.
 
 Connectors for various systems can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/lib).
 
-## Setting up the Workgroup <a href="#setting-up-the-workgroup-and-sending-messages-to-counterparties" id="setting-up-the-workgroup-and-sending-messages-to-counterparties"></a>
+## Setting up the Workgroup <a href="setting-up-the-workgroup-and-sending-messages-to-counterparties" id="setting-up-the-workgroup-and-sending-messages-to-counterparties"></a>
 
 The first step in baselining is setting up the counterparties that will be involved in a specific Workflow or set of Workflows. This is called the Workgroup. One initiating party will set this up by either:
 
@@ -14,7 +14,7 @@ The first step in baselining is setting up the counterparties that will be invol
 * Selecting existing entries on a universal OrgRegistry;
 * Creating a new OrgRegistry and adding entries to it.
 
-> #### _A Corporate Phone Book?_
+> ### _A Corporate Phone Book?_
 >
 > _It is possible over time for a single instance of an orgRegistry contract on the Mainnet to become a defacto "phone book" for all baselining counterparties. This would provide a convenient place to look up others and to quickly start private Workflows with them. For this to become a reality, such an orgRegistry would need to include appropriate and effective ways to verify that the entry for any given company is the authentic and correct entry for baselining with that entity. **This is an opportunity for engineers and companies to add functionality to the Baseline Protocol.**_
 

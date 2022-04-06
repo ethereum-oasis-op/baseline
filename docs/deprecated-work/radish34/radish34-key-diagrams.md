@@ -2,7 +2,7 @@
 
 Here are a few visualizations of how the Radish34 POC functions.
 
-### Representational Radish34 Workflow <a href="#representational-radish34-workflow" id="representational-radish34-workflow"></a>
+### Representational Radish34 Workflow <a href="representational-radish34-workflow" id="representational-radish34-workflow"></a>
 
 The figure below depicts a representational workflow, for the process of creating an MSA (Master Service Agreement). Refer to the Radish34 Workflow explainer, for a detailed context of the process below. This process is chosen as it addresses key interactions of the Radish34 API (built as a single tenant) with the backend microservices: ZKP, and Messenger. In addition, this process also demonstrates all the system interactions (functional view) of a procurement process (MSA) that are designed and implemented in the overall stack.
 
@@ -15,13 +15,13 @@ Below is a summary of the MSA workflow broken down by steps, and each step can b
 
 ![Radish34 MSA Workflow](https://gblobscdn.gitbook.com/assets%2F-M2ZgeO6\_fLS5V\_kJ073%2F-M2dJ4RIebxDTiCtVXzv%2F-M2dLtYG6QDphLzHNyJR%2Fimage.png?alt=media\&token=e45346e4-f223-443b-9701-3027c4be16d2)
 
-### Radish34 as an instantiation of Baseline <a href="#radish34-as-an-instantiation-of-baseline" id="radish34-as-an-instantiation-of-baseline"></a>
+### Radish34 as an instantiation of Baseline <a href="radish34-as-an-instantiation-of-baseline" id="radish34-as-an-instantiation-of-baseline"></a>
 
 The figure below depicts Baseline as a set of microservices that are enabled using Baseline protocol. Radish34 is an instance of Baseline built for the procurement use case. Baseline has been formulated based on core design and product principles that are directional for Radish34 and any other customization of the Baseline protocol. Also shown is a sample instantiation of a hosted (assumed Microsoft Azure Services) application of a Baseline protocol.
 
 ![Baseline => Radish34](https://gblobscdn.gitbook.com/assets%2F-M2ZgeO6\_fLS5V\_kJ073%2F-M2dJ4RIebxDTiCtVXzv%2F-M2dLbyPYQDMMqa\_nWto%2Fimage.png?alt=media\&token=ac1c7050-e9f1-4e6d-828d-d1568d5a1167)
 
-### Radish34 Functional Architecture <a href="#radish34-functional-architecture" id="radish34-functional-architecture"></a>
+### Radish34 Functional Architecture <a href="radish34-functional-architecture" id="radish34-functional-architecture"></a>
 
 The figure shows the various components of the Radish34 system. In line with the design and extensibility aspects set up in the Baseline protocol, the system architecture below also contains the components that can be replaced or modified for other similar use cases. Across the different services/integrations listed below, light green represents the components that can be replaced/modified and the darker ones represent the components that can be re-used for further customizations for similar use cases.
 
@@ -41,4 +41,4 @@ Additional integrations:
 
 ​
 
-## ​ <a href="#undefined" id="undefined"></a>
+## ​ <a href="undefined" id="undefined"></a>

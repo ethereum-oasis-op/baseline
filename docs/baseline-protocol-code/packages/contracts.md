@@ -2,7 +2,7 @@
 
 ## @baseline-protocol/ccsm
 
-The Baseline core CCSM package provides interfaces for general interaction with an underlying mainnet or layer-2 distributed solution.
+The Baseline core CCSM package provides interfaces for general interaction with an underlying mainnet or layer-2 distributed solution.&#x20;
 
 ### Installation
 
@@ -22,7 +22,7 @@ Each organization registered within the `OrgRegistry` first generates a `secp256
 
 Note that an organization may not update its `address`.
 
-```
+```text
 struct Org {
     address orgAddress;
     bytes32 name;
@@ -64,3 +64,4 @@ event UpdateOrg(
     bytes _metadata
 );
 ```
+
