@@ -4,7 +4,7 @@
 
 Once you've done some work as a Member, you may wish to become a **Core developer** and have a direct hand in deciding what work is merged to the Main/Master Branch to become official Baseline Protocol technology and specifications.
 
-Here's a list of [current Core Developers](../docs/community/community-leaders/#maintainer-team).
+Here's a list of [current Core Developers](community-leaders.md#maintainer-team).
 
 ### What do core developers do? <a href="#what-do-maintainers-do" id="what-do-maintainers-do"></a>
 

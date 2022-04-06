@@ -47,7 +47,7 @@ In an openly governed, open source project, leadership is organic. Anyone intere
 
 > The way to lead is to start something, help something, fix something...even spellcheck something! The way to lead is to get others to amplify what you are doing (best done by listening deeply to others first). The way to lead is to serve your own (and your company's) enlightened self interest. You should be able to directly    draw a straight line from your time on this work to real impact for the adoption of this standard.
 
-Information on our groups of elected and voluntary community leaders can be [**found here**](../docs/community/community-leaders/)**.**
+Information on our groups of elected and voluntary community leaders can be [**found here**](community-leaders.md)**.**
 
 ## Meetings <a href="#meetings-and-meetups" id="meetings-and-meetups"></a>
 
@@ -61,11 +61,11 @@ The Baseline Protocol community hosts a weekly[ Baseline Show through Youtube](h
 
 #### General Assembly <a href="#specifications-steering-committee" id="specifications-steering-committee"></a>
 
-The [General Assembly](../docs/community/community-leaders/specifications-steering-committee.md) takes place once a month (typically the first Wednesday) to discuss updates from across the community or adjacent projects. The General Assembly is streamed to the weekly[ **Baseline Show through YouTube**](https://youtube.com/playlist?list=PLxmhMSa49Q1BTD\_-KrpuLIe8P2J1UR19W) and anyone can join the live Zoom call by **emailing baseline-team@oasis-open.org** to be added to the invite.&#x20;
+The General Assembly is a monthly (typically the first Wednesday) community wide meeting to discuss updates from across the community or adjacent projects. The General Assembly is streamed to the weekly[ **Baseline Show through YouTube**](https://youtube.com/playlist?list=PLxmhMSa49Q1BTD\_-KrpuLIe8P2J1UR19W) and anyone can join the live Zoom call by **emailing baseline-team@oasis-open.org** to be added to the invite.&#x20;
 
 #### Technical Steering Committee <a href="#technical-steering-committee" id="technical-steering-committee"></a>
 
-The [**TSC**](../docs/community/community-leaders/#your-technical-steering-committee) meets 1-2 times a month to discuss open items, review grant work, assess the roadmap, and more. TSC meetings are private to the elected members for that term, although other members can request an invitation to discuss a specific matter by messaging one of the [**TSC Co-Chairs**](../docs/governance/technical-steering-committee.md) on [**Slack**](open-source-community.md#resources).
+The [**TSC**](community-leaders.md#your-technical-steering-committee) meets 1-2 times a month to discuss open items, review grant work, assess the roadmap, and more. TSC meetings are private to the elected members for that term, although other members can request an invitation to discuss a specific matter by messaging one of the [**TSC Co-Chairs**](../docs/governance/technical-steering-committee.md) on [**Slack**](open-source-community.md#resources).
 
 ## Communications  <a href="#communications-connecting-with-each-other-directly" id="communications-connecting-with-each-other-directly"></a>
 

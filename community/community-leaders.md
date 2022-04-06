@@ -36,7 +36,7 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 | [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/)\*\* \*\*-- Co-Chair | Golden Next Ventures            |
 | [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)                     | Unibright                       |
 | [**Mehran Shakeri**](https://www.linkedin.com/in/mehran-shakeri-8833b347/)         | SAP                             |
-| [**Luiz Soares**](./#your-project-governance-board)\*\*\*\*                        | WhitePrompt                     |
+| [**Luiz Soares**](community-leaders.md#your-project-governance-board)\*\*\*\*      | WhitePrompt                     |
 | [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/)  | EY                              |
 | [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)                         | Microsoft                       |
 | [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)                        | Provide                         |
@@ -47,7 +47,7 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 
 The Core Developers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Main branch of the repo.
 
-Details on how to become a [Core Developer here](../../../community/maintainers.md).
+Details on how to become a [Core Developer here](maintainers.md).
 
 | Maintainer (with link to Github ID)                                                           | Company                             |
 | --------------------------------------------------------------------------------------------- | ----------------------------------- |

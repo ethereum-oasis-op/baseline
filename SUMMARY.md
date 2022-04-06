@@ -32,8 +32,7 @@
 * [Contributors](community/contributors.md)
 * [General Members](community/members.md)
 * [Technical Contributors](community/maintainers.md)
-* [Community Leaders](docs/community/community-leaders/README.md)
-  * [General Assembly](docs/community/community-leaders/specifications-steering-committee.md)
+* [Community Leaders](community/community-leaders.md)
 
 ## Governance
 

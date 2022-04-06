@@ -9,7 +9,7 @@ There are four ways to contribute:
 * Write code (Architecture, Spikes, Issues, Tasks)
 * Write specifications (Epics, Stories, Prioritizations, Use Cases)
 * Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders -- Join the [communications team](https://ethereum-baseline.slack.com/archives/C011NCZ2ES1) on Slack
-* Help prioritize work and develop incentives to get it done by joining the [General Assembly](../docs/community/community-leaders/specifications-steering-committee.md) or becoming a [Core Develope](maintainers.md)r or [TSC](../docs/governance/technical-steering-committee.md) Member.
+* Help prioritize work and develop incentives to get it done by joining our [open source community teams](open-source-community.md#teams)
 
 There is one other way to contribute, and it's the most important: **use the work in the Baseline Protocol to improve your own offerings**. The Baseline Protocol is not a product or platform..**the product is YOUR product**.
 
@@ -21,7 +21,7 @@ Here is the link to the Baseline Protocol code of conduct:
 
 ## Technical Contributors <a href="#technical-contributors" id="technical-contributors"></a>
 
-Technical contributors either are working on architecture or developing code...but even correcting the language of documentation counts as a technical contribution and qualifies you to vote in upcoming [TSC](../docs/community/community-leaders/#your-technical-steering-committee) elections.
+Technical contributors either are working on architecture or developing code...but even correcting the language of documentation counts as a technical contribution and qualifies you to vote in upcoming [TSC](community-leaders.md#your-technical-steering-committee) elections.
 
 ### BLIPs
 
@@ -60,7 +60,7 @@ Merging to Master requires review by THREE Core Developers. The TSC seeded the i
 
 ## Specifications Contributors <a href="#specifications-contributors" id="specifications-contributors"></a>
 
-The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [General Assembly](../docs/community/community-leaders/specifications-steering-committee.md) is the coordinating body for this work.
+The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [General Assembly](broken-reference) is the coordinating body for this work.
 
 ### Epics and Stories Organization <a href="#epics-and-stories-organization" id="epics-and-stories-organization"></a>
 
