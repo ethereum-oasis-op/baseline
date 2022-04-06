@@ -1,4 +1,6 @@
-# API Specification
+# The API Specification
+
+**The draft of the API specification document is available on** [**Github here**](https://github.com/eea-oasis/baseline-standard/tree/main/api)**.**
 
 ## API Specification Overview
 
@@ -12,10 +14,5 @@ The API Specification describes the Baseline programming interface and expected 
 | Registry | Interfaces for the organization registry                                                                                  |
 | Vault    | Tools and methods for managing digital authentication credentials for User, Organization and Workgroup instances          |
 
-For more information about the above, please refer to the Packages section : [here](../baseline-protocol-code/packages/) .
+For more information about the above, please refer to the Packages section: [here](../baseline-protocol-code/packages/) .
 
-## API Specification Document
-
-The draft of the API specification document is available on Github:  _**Forthcoming**_
-
-The Swagger API is available [here](https://app.swaggerhub.com/apis-docs/prvd/Baseline-Core/v1.0.0).
