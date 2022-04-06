@@ -47,7 +47,7 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 
 The Core Developers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Main branch of the repo.
 
-Details on how to become a [Core Developer here](maintainers.md).
+Details on how to become a [Core Developer here](broken-reference).
 
 | Maintainer (with link to Github ID)                                                           | Company                             |
 | --------------------------------------------------------------------------------------------- | ----------------------------------- |

@@ -46,7 +46,7 @@ Any member may request a confidential review of another member to determine whet
 
 Once you are a member, you can:
 
-1. Become a [Core Developer ](maintainers.md)responsible for governing the contributions that get merged to the official master branch;
+1. Become a [Core Developer ](broken-reference)responsible for governing the contributions that get merged to the official master branch;
 2. Get elected to the [Technical Steering Committee](../docs/governance/technical-steering-committee.md), accountable for architecture and governance of the core developers;
 3. Join the [General Assembly](broken-reference) accountable for proposing, prioritizing, and promoting Baseline Protocol projects.
 4. Or, just write awesome code, specifications, docs and communications.

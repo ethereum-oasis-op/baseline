@@ -30,9 +30,8 @@
 
 * [Open Source Community](community/open-source-community.md)
 * [Contributors](community/contributors.md)
-* [General Members](community/members.md)
-* [Technical Contributors](community/maintainers.md)
 * [Community Leaders](community/community-leaders.md)
+* [General Members](community/members.md)
 
 ## Governance
 
