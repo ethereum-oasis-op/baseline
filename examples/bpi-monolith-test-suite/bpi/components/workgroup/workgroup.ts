@@ -6,7 +6,8 @@ export class Workgroup {
      name: string;
      participants: BpiSubject[] = [];
      worksteps: Workstep[] = [];
-     workstepids: Set<string> = new Set("");
+     // Set used to store IDs and ensure each ID can only be used once
+     workstepIds: Set<string> = new Set("");
 
     constructor(name: string, id: string, owner: BpiSubject, worksteps: Workstep[],) {
         this.id = id;
@@ -18,12 +19,12 @@ export class Workgroup {
      addWorkstep(workstep: Workstep) {
 
           //push workstep if ID is not yet in use
-          if(!(this.workstepids.has(workstep.id))) {
+          if(!this.workstepIds.has(workstep.id)) {
                this.worksteps.push(workstep);
           }
 
           //add ID to running set
-          this.workstepids.add(workstep.id);
+          this.workstepIds.add(workstep.id);
      }
 
      getWorkstepById(workstepId: string) {

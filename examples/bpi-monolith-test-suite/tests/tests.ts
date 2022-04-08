@@ -12,7 +12,7 @@ import { MESSAGE_TYPE_INFO, MESSAGE_TYPE_STORE } from '../bpi/components/messagi
 describe('BPI, Workgroup and Worflow setup', () => {
     it('Given beggining of time, Alice initiates a new BPI with her organization as owner and an inital agreement state object, BPI created with inherent owner and a global agreement', () => {
         const bpiInstance = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new WorkgroupComponent());
-        
+
         expect(bpiInstance.identityComponent.getOwnerBpiSubject().id).to.be.equal("AL1");
         expect(bpiInstance.identityComponent.getOwnerBpiSubject().name).to.be.equal("AliceOrganisation");
         expect(bpiInstance.storageComponent.getAgreementState().productIds.length).to.be.equal(1);
