@@ -13,6 +13,8 @@ The Radish34 demo uses Whisper, which comes with standard Geth nodes. However, i
 
 It has been suggested that the Baseline Protocol community consider looking into the [Corda Flows](https://github.com/corda/corda) open source repository as an example of a potential design pattern that would suit baselining. If so, an effort to implement such a pattern in an Ethereum client such as Hyperledger Besu could be a way forward.
 
+## Zero Knowledge Service \(Zokrates and zkSnark related improvements\)
+
 While the baseline approach isn't solely about zero knowledge techniques, it uses them to ensure that all parties store the same data in their respective systems of record, execute business rules consistently, and enforce the correctness of Workflow Steps.
 
 One aspect of this is Zokrates, a domain specific language \(DSL\) for taking logical functions and turning them into the "addition, subtraction, multiplication" math required by zero knowledge proofs. Zokrates is an open source project maintained by \[ \]. From the perspective of the enterprise, it has the disadvantage of being distributed under a \[ \] license, not Apache2 or MIT.
