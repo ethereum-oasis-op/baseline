@@ -29,7 +29,7 @@ export class Workgroup {
 
      getWorkstepById(workstepId: string) {
           const worksteps = this.worksteps.filter(wrkstp => wrkstp.id === workstepId);
-          return worksteps[0];
+          return worksteps.length > 0 && worksteps[0]
      }
 
      addParticipants(bpiSubject: BpiSubject) {
