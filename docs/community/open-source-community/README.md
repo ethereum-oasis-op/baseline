@@ -4,35 +4,35 @@ description: The Baseline Protocol community is governed as an open source proje
 
 # Open Source Community
 
-The number of active companies and individuals contributing to the work and using it in products and enterprise solutions is rapidly growing.&#x20;
+The number of active companies and individuals contributing to the work and using it in products and enterprise solutions is rapidly growing.
 
-Our open source team members are the drivers of the development and adoption of the Baseline Protocol. The work is active and always open to new contributors.&#x20;
+Our open source team members are the drivers of the development and adoption of the Baseline Protocol. The work is active and always open to new contributors.
 
 ### **Resources**
 
-* ****[**Get Involved**](https://www.baseline-protocol.org/get-involved/)**-** sign up and get involved in our open source teams&#x20;
+* [**Get Involved**](https://www.baseline-protocol.org/get-involved/)**-** sign up and get involved in our open source teams
 * [**Community Member Starter Kit**](https://www.baseline-protocol.org/resources/)**-** understand how you can contribute as a community member and how the open source community operates
 * [**Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ)**-** join our community Slack and say hello
 
 ## **Teams**
 
-> ### Baseline Core Devs
+> #### Baseline Core Devs
 >
 > Core Devs are the backbone of the Baseline open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of developers leading the rise of ubiquitous sync services to state machines everywhere.
 >
-> ### Outreach Team
+> #### Outreach Team
 >
 > Outreach members communicate, advocate, and educate the world on the advantages of using and contributing to the protocol. Several working groups create enablement materials, devise industry-specific use cases, and document the significant work being done in the community.
 >
-> ### Standards Team
+> #### Standards Team
 >
-> Members of the standards team work to define and contribute to the specifications of baseline compliance. The [Standards](broken-reference) is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
+> Members of the standards team work to define and contribute to the specifications of baseline compliance. The [Standards](broken-reference/) is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
 
 ## **Leadership** <a href="#leadership" id="leadership"></a>
 
-In an openly governed, open source project, leadership is organic. Anyone interested in following the governance and leading efforts across the various teams and focuses, can become a prominent leader in the community.&#x20;
+In an openly governed, open source project, leadership is organic. Anyone interested in following the governance and leading efforts across the various teams and focuses, can become a prominent leader in the community.
 
-> The way to lead is to start something, help something, fix something...even spellcheck something! The way to lead is to get others to amplify what you are doing (best done by listening deeply to others first). The way to lead is to serve your own (and your company's) enlightened self interest. You should be able to directly    draw a straight line from your time on this work to real impact for the adoption of this standard.
+> The way to lead is to start something, help something, fix something...even spellcheck something! The way to lead is to get others to amplify what you are doing (best done by listening deeply to others first). The way to lead is to serve your own (and your company's) enlightened self interest. You should be able to directly draw a straight line from your time on this work to real impact for the adoption of this standard.
 
 **Information on our groups of elected and voluntary community leaders can be** [**found here**](../community-leaders/)**.**
 
