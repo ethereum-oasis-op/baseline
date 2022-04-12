@@ -48,12 +48,6 @@ Below are the things to know about how to get involved and work with the team.
 
 There are regular meetings of the TSC, General Assembly, Core Developers and other groups. These are typically listed [**here**](https://lists.oasis-open-projects.org/g/baseline/calendar). If the times we have don't work for your timezone, we can do 1-1's or make changes to the schedule.
 
-#### Onboarding: Help Getting Started <a href="#onboarding-help-getting-started" id="onboarding-help-getting-started"></a>
-
-It's critical that new contributors have a good idea about what the focal points of the community are and where one can make a real impact. It's hard to beat having a real conversation about how to get started in an intimate setting where you can ask questions and get immediate answers.
-
-We will hold Onboarding office hours once a week. Watch the [**Calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for details or inquire on one of the [communication channels](./#communications-connecting-with-each-other-directly) below. Sessions and other learning material will be posted on our [YouTube Channel](https://www.youtube.com/playlist?list=PLxmhMSa49Q1CVwTdcUNeoqoME6GRwtSTA) and on [Medium](https://medium.com/baselineprotocol).
-
 #### Technical Steering Committee <a href="#technical-steering-committee" id="technical-steering-committee"></a>
 
 The [TSC](../community-leaders/#your-technical-steering-committee) meets typically once a month to review progress. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](../community-leaders/#your-provisional-chair).
@@ -63,6 +57,12 @@ The [TSC](../community-leaders/#your-technical-steering-committee) meets typical
 The [General Assembly](../community-leaders/specifications-steering-committee.md) meets typically once a month to review roadmaps and set high-level priorities. Members of the General Assembly receive invitations, and you can join any meeting by sending a message to the [TSC Chair](../community-leaders/#your-provisional-chair).
 
 ### Communications: Connecting with Each Other Directly <a href="#communications-connecting-with-each-other-directly" id="communications-connecting-with-each-other-directly"></a>
+
+#### Onboarding: Help Getting Started <a href="#onboarding-help-getting-started" id="onboarding-help-getting-started"></a>
+
+It's critical that new contributors have a good idea about what the focal points of the community are and where one can make a real impact. It's hard to beat having a real conversation about how to get started in an intimate setting where you can ask questions and get immediate answers.
+
+We will hold Onboarding office hours once a week. Watch the [**Calendar**](https://lists.oasis-open-projects.org/g/baseline/calendar) for details or inquire on one of the [communication channels](./#communications-connecting-with-each-other-directly) below. Sessions and other learning material will be posted on our [YouTube Channel](https://www.youtube.com/playlist?list=PLxmhMSa49Q1CVwTdcUNeoqoME6GRwtSTA) and on [Medium](https://medium.com/baselineprotocol).
 
 #### Slack / Discord / Telegram <a href="#slack-discourse-telegram" id="slack-discourse-telegram"></a>
 
