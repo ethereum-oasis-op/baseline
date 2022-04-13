@@ -14,7 +14,7 @@ description: Baseline Reference Implementation-2
 
 The purple/orange blocks in the following diagram have been built. The green blocks are proposed services to be added and interact with the exisiting services.
 
-![BRI-2 Architecture](<../.gitbook/assets/bri-2-stack (2).png>)
+![BRI-2 Architecture](../../.gitbook/assets/bri-2-stack2.png)
 
 ## BRI-1 and BRI-2 comparison
 
@@ -61,7 +61,7 @@ POST http://localhost:5001/workflows?type=signature
 
 This request should initiate the following sequence of events. The sequencing of steps is accomplished by using NATS as a job queuing service. If successful, steps 1-8 will be completed and the workflow object will have a ZkCircuitId, Shield contract address, Verifier address, and a status of `success-track-shield`.
 
-![](../.gitbook/assets/workflow-setup.png)
+![](../../.gitbook/assets/workflow-setup.png)
 
 ### Run `dashboard` front-end
 
