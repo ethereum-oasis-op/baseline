@@ -48,9 +48,10 @@
   * [Baseline](baseline-protocol-code/packages/baseline.md)
   * [CCSM](baseline-protocol-code/packages/contracts.md)
   * [Identity](baseline-protocol-code/packages/identity.md)
-  * [Privacy](baseline-protocol-code/packages/privacy.md)
   * [Messaging](baseline-protocol-code/packages/messaging.md)
+  * [Privacy](baseline-protocol-code/packages/privacy.md)
   * [Types](baseline-protocol-code/packages/types.md)
+  * [Vaults](baseline-protocol-code/packages/vaults.md)
 * [Baseline Process](baseline-protocol-code/baseline-process.md)
 * [Developer Resources](baseline-protocol-code/developer-resources.md)
 
