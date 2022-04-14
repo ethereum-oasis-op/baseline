@@ -45,7 +45,7 @@
 
 * [Packages](baseline-protocol-code/packages/README.md)
   <!-- * [API](baseline-protocol-code/packages/api-1.md) -->
-  * [Baseline](baseline-protocol-code/packages/api.md)
+  * [Baseline](baseline-protocol-code/packages/baseline.md)
   * [CCSM](baseline-protocol-code/packages/contracts.md)
   * [Identity](baseline-protocol-code/packages/identity.md)
   * [Privacy](baseline-protocol-code/packages/privacy.md)
