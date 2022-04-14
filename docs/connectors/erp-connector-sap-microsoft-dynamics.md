@@ -23,7 +23,7 @@ You can find all the details on the Baseline Protocol [here](../baseline-protoco
 
 ## Challenges and Scope of Work
 
-The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](https://docs.baseline-protocol.org/baseline-protocol/the-baseline-protocol) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
+The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](../baseline-protocol/the-baseline-protocol.md) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
 
 The Use-case shown in the demo follows this path:
 

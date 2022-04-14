@@ -64,7 +64,7 @@ The proposed architecture and solutions to these challenges are presented in the
 
 ## Architecture Proposal
 
-![Sequence Diagram](images/sequence-diagram.png) The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
+![Sequence Diagram](../.gitbook/assets/sequence-diagram.png) The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
 
 * Julia D365 - The Microsoft Dynamics ERP environment of Julia
 * Julia Provide Shuttle - The Baseline service of Julia
@@ -77,10 +77,10 @@ The proposed architecture and solutions to these challenges are presented in the
 
 The Microsoft Dynamics ERP component is extension code written that connects to the Provide shuttle environments. It is written in X++ - the native language for Dynamics. It translates the native Dynamics objects to the ones required by the Baseline Service. Also regularly polls the Baseline service for news coming from the network.
 
-![Microsoft Dynamics](images/dynamics.png)
+![Microsoft Dynamics](../.gitbook/assets/dynamics.png)
 
 ### Google Sheets
 
 The google sheets side is a regular google spreadsheet with an Baseline Add-on installed. Regular repeating cloud tasks are polling new info from the Baseline service and insert it in the correct tables. In addition through the Add-on Todd is able to connect and send data to his Baseline Service.
 
-![Google Sheets](images/sheets.png)
+![Google Sheets](../.gitbook/assets/sheets.png)
