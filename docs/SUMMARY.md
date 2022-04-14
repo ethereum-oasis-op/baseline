@@ -44,7 +44,7 @@
 ## Source Code <a href="baseline-protocol-code" id="baseline-protocol-code"></a>
 
 * [Packages](baseline-protocol-code/packages/README.md)
-  * [API](baseline-protocol-code/packages/api-1.md)
+  <!-- * [API](baseline-protocol-code/packages/api-1.md) -->
   * [Baseline](baseline-protocol-code/packages/api.md)
   * [CCSM](baseline-protocol-code/packages/contracts.md)
   * [Identity](baseline-protocol-code/packages/persistence.md)
