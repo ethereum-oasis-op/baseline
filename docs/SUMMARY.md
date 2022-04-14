@@ -47,7 +47,7 @@
   <!-- * [API](baseline-protocol-code/packages/api-1.md) -->
   * [Baseline](baseline-protocol-code/packages/api.md)
   * [CCSM](baseline-protocol-code/packages/contracts.md)
-  * [Identity](baseline-protocol-code/packages/persistence.md)
+  * [Identity](baseline-protocol-code/packages/identity.md)
   * [Privacy](baseline-protocol-code/packages/privacy.md)
   * [Vault](baseline-protocol-code/packages/messaging.md)
   * [Types](baseline-protocol-code/packages/types.md)
