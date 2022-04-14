@@ -9,7 +9,7 @@ May 21, 2020
 
 ## Introduction
 
-The "Baseline-SAP-Dynamics Demo" shows a setup of different Enterprise Resource Planning Systems ("ERPs") using the Baseline Protocol to establish a common frame of reference on the public Ethereum Mainnet. The demo extends the [Radish34 POC](https://docs.baseline-protocol.org/bri/radish34/radish34-explained), showing a procurement process in a supply chain POC.
+The "Baseline-SAP-Dynamics Demo" shows a setup of different Enterprise Resource Planning Systems ("ERPs") using the Baseline Protocol to establish a common frame of reference on the public Ethereum Mainnet. The demo extends the [Radish34 POC](../deprecated-work/radish34/radish34-explained.md), showing a procurement process in a supply chain POC.
 
 The open-source-available code of the development work on this demo evolved out of a Hackathon of the EEA Eminent Integration Taskforce members Unibright and Provide and is being made available alongside the Radish34 example.
 
