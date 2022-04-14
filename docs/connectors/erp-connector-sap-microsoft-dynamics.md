@@ -19,7 +19,7 @@ The Baseline Protocol is an approach to using the public Mainnet as a common fra
 
 The approach is designed to appeal to security and performance-minded technology officers.
 
-You can find all the details on the Baseline Protocol [here](https://docs.baseline-protocol.org/baseline-protocol/protocol).
+You can find all the details on the Baseline Protocol [here](../baseline-protocol/the-baseline-protocol.md).
 
 ## Challenges and Scope of Work
 
