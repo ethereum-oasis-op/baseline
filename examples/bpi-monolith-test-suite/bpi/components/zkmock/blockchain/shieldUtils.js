@@ -1,22 +1,10 @@
-//Define ZK circuit
-//Compile ZK circuit
-//[pk, vk] = setupZKCircuit()
-//Deploy Verifier.sol
-//constructor(vk)
-//verify(proof, publicInput)
-//verifyCircuit(proof, publicInput, this.vk) --> call the verifier contract deployed by gnark
-//Deploy MerkleTree.sol
-//constructor()
-//insertNewLeaf()
-//Deploy Shield.sol
-//contructor()/
-//if(verify(proof, publicInput) == true)
-//insert new leaf into merkle tree (//getLeaves, getRoot) --> byte32 root = getRoot()
 
-import { connectToBlockchain, compileContract, deployContract, getDeployedShieldContract } from "./lib/blockchain.js"
+import { connectToBlockchain, compileContract, deployContract, getDeployedShieldContract } from "./blockchain.js"
 import { fs } from "fs";
 
-export const deployShield = () => {
+const URL = "https://localhost:8080"
+
+export const deployShield = async() => {
 
 var web3 = await connectToBlockchain();
 
@@ -41,11 +29,7 @@ fs.writeFile("./contracts/Shield.json", compiledShieldContract, err => {
 
 }
 
-export const verifyAndAddNewLeaf = async(uint256[2] memory a,
-        uint256[2][2] memory b,
-        uint256[2] memory c,
-        uint256[3] memory input,
-        bytes32 _newCommitment) => {
+export const verifyAndAddNewLeaf = async(a, b, c, input, _newCommitment) => {
 
 	var web3 = await connectToBlockchain();
 
@@ -54,8 +38,21 @@ export const verifyAndAddNewLeaf = async(uint256[2] memory a,
 	var shieldContractAbi = shieldContract.abi;
 	var shield = new web3.eth.Contract(shieldContractAbi, web3.eth.defaultAccount);
 
+	//TODO: Convert input -> bytes32
+
 	//Call the verify method and add new leaf to Merkle tree
 	var verified = await shield.methods.verifyAndPush(a, b, c, input, _newCommitment);
 
 	return verified;
+}
+
+export const getProof = async() => {
+	const response = await fetch(URL, {
+		method: 'POST',
+		headers: {
+		  'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({})
+	      });
+	return response.json();
 }
