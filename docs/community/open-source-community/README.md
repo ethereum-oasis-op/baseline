@@ -26,7 +26,7 @@ Our open source team members are the drivers of the development and adoption of 
 >
 > **Standards Team**
 >
-> Members of the standards team work to define and contribute to the specifications of baseline compliance. The [Standards](open-source-community/broken-reference/) is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
+> Members of the standards team work to define and contribute to the specifications of baseline compliance. The [Standards](broken-reference/) is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
 
 ## **Leadership** <a href="#leadership" id="leadership"></a>
 
@@ -34,13 +34,13 @@ In an openly governed, open source project, leadership is organic. Anyone intere
 
 > The way to lead is to start something, help something, fix something...even spellcheck something! The way to lead is to get others to amplify what you are doing (best done by listening deeply to others first). The way to lead is to serve your own (and your company's) enlightened self interest. You should be able to directly draw a straight line from your time on this work to real impact for the adoption of this standard.
 
-**Information on our groups of elected and voluntary community leaders can be** [**found here**](community-leaders.md)**.**
+**Information on our groups of elected and voluntary community leaders can be** [**found here**](../community-leaders/)**.**
 
 ## Working Together <a href="#working-together" id="working-together"></a>
 
 Anyone can join the Baseline Protocol communication channels (see below), and anyone with a Github ID can view the [roadmap](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) (don't forget to log in with github id), fork the [repo](https://github.com/ethereum-oasis), and submit pull requests to contribute to the work.
 
-You can also become a regular [**Member**](members.md) of the initiative, which will allow you to manage Issues and push directly to most repo branches (other than Master). Members who step up to be accountable for projects can become [**General Assembly**](broken-reference) members. Members who take on responsibility for maintaining the integrity of the work and merging contributions to the master branch of the repo can become [**Core Developers**](maintainers.md). And finally, contributors can nominate and vote-in members to be on the governing [**Technical Steering Committee**](../governance/technical-steering-committee.md) (TSC) annually.
+You can also become a regular [**Member**](members.md) of the initiative, which will allow you to manage Issues and push directly to most repo branches (other than Master). Members who step up to be accountable for projects can become [**General Assembly**](broken-reference) members. Members who take on responsibility for maintaining the integrity of the work and merging contributions to the master branch of the repo can become [**Core Developers**](../community-leaders/maintainers.md). And finally, contributors can nominate and vote-in members to be on the governing [**Technical Steering Committee**](../../governance/technical-steering-committee.md) (TSC) annually.
 
 Below are the things to know about how to get involved and work with the team.
 
@@ -50,11 +50,11 @@ There are regular meetings of the TSC, General Assembly, Core Developers and oth
 
 #### Technical Steering Committee <a href="#technical-steering-committee" id="technical-steering-committee"></a>
 
-The [TSC](community-leaders.md#your-technical-steering-committee) meets 1-2 times a month to discuss open items, manage grant work, address progress on the roadmap, and more. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
+The [TSC](../community-leaders/#your-technical-steering-committee) meets 1-2 times a month to discuss open items, manage grant work, address progress on the roadmap, and more. Members of the TSC receive invitations and you can rsvp to join any meeting by sending a message to the [TSC Chair](../community-leaders/#your-provisional-chair).
 
 #### General Assembly <a href="#specifications-steering-committee" id="specifications-steering-committee"></a>
 
-The [General Assembly](broken-reference) meets typically once a month to review roadmaps and set high-level priorities. Members of the General Assembly receive invitations, and you can join any meeting by sending a message to the [TSC Chair](community-leaders.md#your-provisional-chair).
+The [General Assembly](broken-reference) meets typically once a month to review roadmaps and set high-level priorities. Members of the General Assembly receive invitations, and you can join any meeting by sending a message to the [TSC Chair](../community-leaders/#your-provisional-chair).
 
 ### Communications: Connecting with Each Other Directly <a href="#communications-connecting-with-each-other-directly" id="communications-connecting-with-each-other-directly"></a>
 
@@ -76,7 +76,7 @@ While most communication seems to go through the Slack/Discord/Telegram channel,
 
 #### Blogs <a href="#medium" id="medium"></a>
 
-The Baseline Protocol initiative uses Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol). Reach out on Slack to the [TSC Chair](community-leaders.md#your-provisional-chair), OASIS team or members of the steering committees, if you want to be a writer or editor.
+The Baseline Protocol initiative uses Medium to post blogs. Here is the [**publication**](https://medium.com/baselineprotocol). Reach out on Slack to the [TSC Chair](../community-leaders/#your-provisional-chair), OASIS team or members of the steering committees, if you want to be a writer or editor.
 
 #### LinkedIn / Twitter
 

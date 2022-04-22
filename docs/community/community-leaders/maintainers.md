@@ -4,7 +4,7 @@
 
 Once you've done some work as a Member, you may wish to become a **Core developer** and have a direct hand in deciding what work is merged to the Main/Master Branch to become official Baseline Protocol technology and specifications.
 
-Here's a list of [current Core Developers](community-leaders.md#maintainer-team).
+Here's a list of [current Core Developers](./#maintainer-team).
 
 ### What do core developers do? <a href="#what-do-maintainers-do" id="what-do-maintainers-do"></a>
 
@@ -74,4 +74,4 @@ Any of the following ways:
 * You are disruptive to the general process of maintaining the project, meetings, discussions, issues, or other.
 * You notify the other core developers you would like to relinquish your core developer status.
 
-Two-thirds of all current core developers constitute a quorum for a meeting involving a question of removal. A simple majority vote from core developers attending the meeting is required to remove a core developer, but the TSC may be brought in to arbitrate if the core developer to be removed or any other core developer wishes to dispute the action. (See [Governance](../governance/governance.md#charter-baseline-open-source-project-governance) for details.)
+Two-thirds of all current core developers constitute a quorum for a meeting involving a question of removal. A simple majority vote from core developers attending the meeting is required to remove a core developer, but the TSC may be brought in to arbitrate if the core developer to be removed or any other core developer wishes to dispute the action. (See [Governance](../../governance/governance.md#charter-baseline-open-source-project-governance) for details.)
