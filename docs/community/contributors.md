@@ -2,14 +2,14 @@
 
 All work of the Baseline Protocol initiative is maintained publicly on a [github repo](https://github.com/ethereum-oasis/baseline).
 
-You don't need any special access to the [repo](https://github.com/ethereum-oasis/baseline) to get involved and start contributing. Follow these steps to [fork](contributors.md#submitting-a-pull-request) the repo and submit pull requests. Anyone with a Github ID can also create and edit their own Issues, participate in public meetings, and join the various communication and collaboration [channels](./#connecting-with-each-other-directly) that the community maintains.
+You don't need any special access to the [repo](https://github.com/ethereum-oasis/baseline) to get involved and start contributing. Follow these steps to [fork](contributors.md#submitting-a-pull-request) the repo and submit pull requests. Anyone with a Github ID can also create and edit their own Issues, participate in public meetings, and join the various communication and collaboration [channels](open-source-community.md#connecting-with-each-other-directly) that the community maintains.
 
 There are four ways to contribute:
 
 * Write code (Architecture, Spikes, Issues, Tasks)
 * Write specifications (Epics, Stories, Prioritizations, Use Cases)
 * Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders -- Join the [communications team](https://ethereum-baseline.slack.com/archives/C011NCZ2ES1) on Slack
-* Help prioritize work and develop incentives to get it done by joining the [General Assembly](broken-reference) or becoming a [Core Develope](../community-leaders/maintainers.md)r or [TSC](../../governance/technical-steering-committee.md) Member.
+* Help prioritize work and develop incentives to get it done by joining the [General Assembly](broken-reference) or becoming a [Core Develope](maintainers.md)r or [TSC](../governance/technical-steering-committee.md) Member.
 
 There is one other way to contribute, and it's the most important: **use the work in the Baseline Protocol to improve your own offerings**. The Baseline Protocol is not a product or platform..**the product is YOUR product**.
 
@@ -21,7 +21,7 @@ Here is the link to the Baseline Protocol code of conduct:
 
 ## Technical Contributors <a href="#technical-contributors" id="technical-contributors"></a>
 
-Technical contributors either are working on architecture or developing code...but even correcting the language of documentation counts as a technical contribution and qualifies you to vote in upcoming [TSC](../community-leaders/#your-technical-steering-committee) elections.
+Technical contributors either are working on architecture or developing code...but even correcting the language of documentation counts as a technical contribution and qualifies you to vote in upcoming [TSC](community-leaders.md#your-technical-steering-committee) elections.
 
 ### BLIPs
 

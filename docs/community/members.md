@@ -1,6 +1,6 @@
 # Members
 
-Anyone with a github ID can be a [Contributor](contributors.md) to the Baseline Protocol, but you can also become a **Member** of our Github Organization, which will allow you to get invitations to key meetings, be assigned to Issues, and vote for Technical Steering Committee members (provided you make at least one contribution that is successfully merged to master within the [voting period](../../governance/governance.md#steady-state-periods)).
+Anyone with a github ID can be a [Contributor](contributors.md) to the Baseline Protocol, but you can also become a **Member** of our Github Organization, which will allow you to get invitations to key meetings, be assigned to Issues, and vote for Technical Steering Committee members (provided you make at least one contribution that is successfully merged to master within the [voting period](../governance/governance.md#steady-state-periods)).
 
 ## What it means to be a Member <a href="#what-it-means-to-be-a-member" id="what-it-means-to-be-a-member"></a>
 
@@ -14,7 +14,7 @@ It's a good idea to become a member if you are making regular contributions and 
 
 Joining the Baseline Protocol as a Member is easy.
 
-**Technical contributors** should contribute at least one [**pull request**](contributors.md#submitting-a-pull-request). Then, use the #github-membership-requests [**Slack Channel**](https://ethereum-baseline.slack.com/archives/C011XCW8T3Q) to post your github ID, name and company (optional) and a coordinator will ensure that you are added as a member within 24 hours or less. If you do not receive a response in that time, use one of our [chat channels](./#slack-discourse-telegram) to contact the [TSC Chair](../community-leaders/#your-provisional-chair) and/or any member of the [TSC](../community-leaders/#your-technical-steering-committee) to expedite.
+**Technical contributors** should contribute at least one [**pull request**](contributors.md#submitting-a-pull-request). Then, use the #github-membership-requests [**Slack Channel**](https://ethereum-baseline.slack.com/archives/C011XCW8T3Q) to post your github ID, name and company (optional) and a coordinator will ensure that you are added as a member within 24 hours or less. If you do not receive a response in that time, use one of our [chat channels](open-source-community.md#slack-discourse-telegram) to contact the [TSC Chair](community-leaders.md#your-provisional-chair) and/or any member of the [TSC](community-leaders.md#your-technical-steering-committee) to expedite.
 
 To be a Member, you must of course sign the [**eCLA/iCLA**](contributors.md#ecla-and-icla). This is essential, because you have Write access to the repo, and OASIS governance requires that content be contributed under those agreements.
 
@@ -40,13 +40,13 @@ Of course, all members must respect and adhere to the community's [code of condu
 
 ## Removal <a href="#removal" id="removal"></a>
 
-Any member may request a confidential review of another member to determine whether that member should be removed by contacting any [TSC Member](../community-leaders/#your-technical-steering-committee). TSC Members and any others engaged for such a review are expected to act with the highest professionalism, work in strict confidence, and keep the identity of the requesting member confidential.
+Any member may request a confidential review of another member to determine whether that member should be removed by contacting any [TSC Member](community-leaders.md#your-technical-steering-committee). TSC Members and any others engaged for such a review are expected to act with the highest professionalism, work in strict confidence, and keep the identity of the requesting member confidential.
 
 ## Beyond General Membership <a href="#beyond-general-membership" id="beyond-general-membership"></a>
 
 Once you are a member, you can:
 
-1. Become a [Core Developer ](../community-leaders/maintainers.md)responsible for governing the contributions that get merged to the official master branch;
-2. Get elected to the [Technical Steering Committee](../../governance/technical-steering-committee.md), accountable for architecture and governance of the core developers;
+1. Become a [Core Developer ](maintainers.md)responsible for governing the contributions that get merged to the official master branch;
+2. Get elected to the [Technical Steering Committee](../governance/technical-steering-committee.md), accountable for architecture and governance of the core developers;
 3. Join the [General Assembly](broken-reference) accountable for proposing, prioritizing, and promoting Baseline Protocol projects.
 4. Or, just write awesome code, specifications, docs and communications.
