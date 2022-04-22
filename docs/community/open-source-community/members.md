@@ -42,11 +42,4 @@ Of course, all members must respect and adhere to the community's [code of condu
 
 Any member may request a confidential review of another member to determine whether that member should be removed by contacting any [TSC Member](../community-leaders/#your-technical-steering-committee). TSC Members and any others engaged for such a review are expected to act with the highest professionalism, work in strict confidence, and keep the identity of the requesting member confidential.
 
-## Beyond General Membership <a href="#beyond-general-membership" id="beyond-general-membership"></a>
-
-Once you are a member, you can:
-
-1. Become a [Core Developer ](../community-leaders/maintainers.md)responsible for governing the contributions that get merged to the official master branch;
-2. Get elected to the [Technical Steering Committee](../../governance/technical-steering-committee.md), accountable for architecture and governance of the core developers;
-3. Join the [General Assembly](broken-reference) accountable for proposing, prioritizing, and promoting Baseline Protocol projects.
-4. Or, just write awesome code, specifications, docs and communications.
+## &#x20;<a href="#beyond-general-membership" id="beyond-general-membership"></a>
