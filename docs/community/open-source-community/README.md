@@ -16,15 +16,15 @@ Our open source team members are the drivers of the development and adoption of 
 
 ## **Teams**
 
-> #### Baseline Core Devs
+> **Baseline Core Devs**
 >
 > Core Devs are the backbone of the Baseline open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of developers leading the rise of ubiquitous sync services to state machines everywhere.
 >
-> #### Outreach Team
+> **Outreach Team**
 >
 > Outreach members communicate, advocate, and educate the world on the advantages of using and contributing to the protocol. Several working groups create enablement materials, devise industry-specific use cases, and document the significant work being done in the community.
 >
-> #### Standards Team
+> **Standards Team**
 >
 > Members of the standards team work to define and contribute to the specifications of baseline compliance. The [Standards](broken-reference/) is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
 
@@ -40,7 +40,7 @@ In an openly governed, open source project, leadership is organic. Anyone intere
 
 Anyone can join the Baseline Protocol communication channels (see below), and anyone with a Github ID can view the [roadmap](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) (don't forget to log in with github id), fork the [repo](https://github.com/ethereum-oasis), and submit pull requests to contribute to the work.
 
-You can also become a regular [**Member**](members.md) of the initiative, which will allow you to manage Issues and push directly to most repo branches (other than Master). Members who step up to be accountable for projects can become [**General Assembly**](../community-leaders/specifications-steering-committee.md) members. Members who take on responsibility for maintaining the integrity of the work and merging contributions to the master branch of the repo can become [**Core Developers**](../community-leaders/maintainers.md). And finally, contributors can nominate and vote-in members to be on the governing [**Technical Steering Committee**](../../governance/technical-steering-committee.md) (TSC) annually.
+You can also become a regular [**Member**](members.md) of the initiative, which will allow you to manage Issues and push directly to most repo branches (other than Master). Members who step up to be accountable for projects can become [**General Assembly**](broken-reference) members. Members who take on responsibility for maintaining the integrity of the work and merging contributions to the master branch of the repo can become [**Core Developers**](../community-leaders/maintainers.md). And finally, contributors can nominate and vote-in members to be on the governing [**Technical Steering Committee**](../../governance/technical-steering-committee.md) (TSC) annually.
 
 Below are the things to know about how to get involved and work with the team.
 
@@ -54,7 +54,7 @@ The [TSC](../community-leaders/#your-technical-steering-committee) meets typical
 
 #### General Assembly <a href="#specifications-steering-committee" id="specifications-steering-committee"></a>
 
-The [General Assembly](../community-leaders/specifications-steering-committee.md) meets typically once a month to review roadmaps and set high-level priorities. Members of the General Assembly receive invitations, and you can join any meeting by sending a message to the [TSC Chair](../community-leaders/#your-provisional-chair).
+The [General Assembly](broken-reference) meets typically once a month to review roadmaps and set high-level priorities. Members of the General Assembly receive invitations, and you can join any meeting by sending a message to the [TSC Chair](../community-leaders/#your-provisional-chair).
 
 ### Communications: Connecting with Each Other Directly <a href="#communications-connecting-with-each-other-directly" id="communications-connecting-with-each-other-directly"></a>
 

@@ -43,7 +43,7 @@ The reference implementation illustrates Alice & Bob, respective owners of Alice
 
 The following high-level architecture diagram illustrates how the concepts discussed in previous sections (i.e., the Provide and Baseline Protocol architecture sections) fit together in the context of two organizations deploying the Baseline Protocol using Provide as a common technology stack and their own cloud infrastructure vendors (i.e., AWS and Azure). The reference implementation deploys these same two distinct stacks to your local machine using docker-compose when running the test suite
 
-![This reference implementation supports cloud-agnostic experiments out-of-the-box.](<../../.gitbook/assets/image (4).png>)
+![This reference implementation supports cloud-agnostic experiments out-of-the-box.](<../../.gitbook/assets/image (5).png>)
 
 There are several assertion and checks that have to be carried out, in full and in a specific order to ensure that the base example can run and fully demonstrate the functionality and potential of the Baseline protocol, leveraged by the Provide stack. Subsequent sections illustrate the necessary components and their outputs as well as the rationale for their importance.
 

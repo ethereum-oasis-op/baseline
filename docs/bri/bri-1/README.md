@@ -16,7 +16,7 @@ The BRI-1 "base" example codebase can be found [here](https://github.com/ethereu
 
 The Provide stack is a containerized microservices architecture written in Golang. The core microservices depend on NATS, NATS streaming, PostgreSQL and Redis. Note that the NATS server component is a [fork](https://github.com/kthomas/nats-server) that supports decentralized, ephemeral bearer authorization using signed JWTs.
 
-![](<../../.gitbook/assets/image (6).png>)
+![](<../../.gitbook/assets/image (7).png>)
 
 ### **Core Microservices**
 
