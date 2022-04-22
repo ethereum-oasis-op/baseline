@@ -37,8 +37,6 @@
 ## Governance
 
 * [Overview](governance/governance.md)
-* [Project Governance Board](governance/project-governance-board.md)
-* [Technical Steering Committee](governance/technical-steering-committee.md)
 
 ## Source Code <a href="#baseline-protocol-code" id="baseline-protocol-code"></a>
 

@@ -9,7 +9,7 @@ There are four ways to contribute:
 * Write code (Architecture, Spikes, Issues, Tasks)
 * Write specifications (Epics, Stories, Prioritizations, Use Cases)
 * Write content and communicate it to more potential contributors, developers and product owners, and other stakeholders -- Join the [communications team](https://ethereum-baseline.slack.com/archives/C011NCZ2ES1) on Slack
-* Help prioritize work and develop incentives to get it done by joining the [General Assembly](broken-reference) or becoming a [Core Develope](../community-leaders/maintainers.md)r or [TSC](../../governance/technical-steering-committee.md) Member.
+* Help prioritize work and develop incentives to get it done by joining the [General Assembly](broken-reference) or becoming a [Core Develope](../community-leaders/maintainers.md)r or [TSC](broken-reference) Member.
 
 There is one other way to contribute, and it's the most important: **use the work in the Baseline Protocol to improve your own offerings**. The Baseline Protocol is not a product or platform..**the product is YOUR product**.
 
