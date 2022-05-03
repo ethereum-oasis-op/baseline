@@ -29,7 +29,6 @@
 ## Community
 
 * [Open Source Community](community/open-source-community/README.md)
-* [Members](community/open-source-community/members.md)
 * [Contributors](community/open-source-community/contributors.md)
 * [Technical Members](community/community-leaders/maintainers.md)
 * [Community Leaders](community/community-leaders/README.md)
