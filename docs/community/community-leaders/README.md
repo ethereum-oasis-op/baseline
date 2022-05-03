@@ -1,6 +1,6 @@
 ---
 description: >-
-  People listed here, appearing on community videos or in the GitHub repos
+  People listed here, appearing on community videos, or in the GitHub repos
   should be assumed to be representing themselves, and not necessarily the
   companies they work for.
 ---
@@ -17,11 +17,11 @@ In an openly governed, open source project, leadership is organic. Anyone intere
 
 The Project Governance Board (PBG) serves as a cross-section of the community, with a representative from each sponsor organization, organized by OASIS.
 
-Representing nonprofit organizations, multinational companies, leading startups, and the stakeholder community at-large, the PGB is accountable for ensuring the balance and integrity of the Baseline Protocol. The list of PGB members can be[ found here](https://eea-oasis.github.io/managed-open-project/).
+Representing nonprofit organizations, multinational companies, leading startups, and the stakeholder community at-large, the PGB is accountable for ensuring the balance and integrity of the Baseline Protocol. The list of PGB members can be[ **found here**](https://eea-oasis.github.io/managed-open-project/).
 
 ## Technical Steering Committee 2021/22 <a href="#your-technical-steering-committee" id="your-technical-steering-committee"></a>
 
-The Technical Steering Committee (TSC) is accountable to the Project Governance Board for managing conflicts and the Baseline Core Dev self-organization. The TSC is elected annually by the community through an election process organized by OASIS.
+The Technical Steering Committee (TSC) is accountable to the [Project Governance Board ](./#your-project-governance-board)for managing conflicts and the Baseline Core Dev self-organization. The TSC is elected annually by the community through an election process organized by OASIS.
 
 The group is responsible for reviewing and approving proper use of the grant funds, to ensure funds are allocated to valuable and appropriate work. The TSC meets regularly to set technical roadmaps and ensure progress of the community toward the ubiquitous implementation of the Baseline Protocol.
 
@@ -43,7 +43,9 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 
 ## Standards Team
 
-The standards team worked through most of 2021 to develop a world-class, technical specification for implementers of the Baseline Protocol specification. The draft is being shepherded through the OASIS process of review and amendments, culminating in becoming an official [OASIS standard](https://www.oasis-open.org/standards/). This team deserves high recognition from the community for its hard-toiling service and commitment to the Baseline Protocol.
+The standards team worked through most of 2021 to develop a world-class, technical specification for implementers of the [Baseline Protocol specification](broken-reference). The draft is being shepherded through the OASIS process of review and amendments, culminating in becoming an official [OASIS standard](https://www.oasis-open.org/standards/).&#x20;
+
+This team deserves high recognition from the community for its hard-toiling service and commitment to the Baseline Protocol.
 
 | Member         | Company            |
 | -------------- | ------------------ |
@@ -54,7 +56,7 @@ The standards team worked through most of 2021 to develop a world-class, technic
 
 ### Community Organizers <a href="#your-technical-steering-committee" id="your-technical-steering-committee"></a>
 
-OASIS employs key personnel that support all the open standards and open source projects under its domain, the Enterprise Ethereum Alliance maintains a team that also supports EEA Community Projects such as the Baseline Protocol, and finally, members such as ConsenSys Mesh have assigned key personnel specifically to support the community.
+OASIS employs key personnel that support all the open standards and open source projects under its domain, the Enterprise Ethereum Alliance maintains a team that supports EEA Community Projects such as the Baseline Protocol, and finally, member organizations such as ConsenSys Mesh have assigned key personnel specifically to manage the community.
 
 | Name             | Organization   |
 | ---------------- | -------------- |
