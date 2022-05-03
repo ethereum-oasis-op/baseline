@@ -1,8 +1,7 @@
 ---
 description: >-
-  The Baseline Core Developers, Maintainers, and Technical Steering Committee
-  members are the drivers of the further development and implementation of the
-  protocol
+  The Baseline Core Developers and Maintainers are the drivers of the further
+  development and implementation of the protocol
 ---
 
 # Technical Members
@@ -10,6 +9,10 @@ description: >-
 ## Baseline Core Developers <a href="#maintainers" id="maintainers"></a>
 
 Anyone is welcome to join the Baseline Core Developers to develop technical advancements or even just engage in technical discussions that take place.&#x20;
+
+### How to become a Baseline Core Developer? <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
+
+****[**Sign up to join the Baseline Core Developers here**](https://www.baseline-protocol.org/get-involved/) **** to receive the calendar invites and access to the Google Drive resources.
 
 ### What do Baseline Core Developers do? <a href="#what-do-maintainers-do" id="what-do-maintainers-do"></a>
 
@@ -22,10 +25,6 @@ Core developers are people who take an active role in advancing the Baseline Pro
 * Presenting the project and key technologies to the public (in-person, webinar, videos, articles, etc.)
 * Identify technical resources needed for further implementation of the protocol (developer onboarding materials, tutorials, etc.)
 * Working on and leading community efforts that drive adoption of the protocol
-
-### How to become a Baseline Core Developer? <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
-
-****[**Sign up to join the Baseline Core Developers here**](https://www.baseline-protocol.org/get-involved/) **** to receive the calendar invites and access to the Google Drive resources.
 
 ## Baseline Maintainers  <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
 
@@ -54,7 +53,7 @@ To retain Maintainer permissions and status, Baseline Maintainers are required t
 * Be welcoming to others in the community who are using or interested in the protocol
 * Contribute in ways that substantially improve the quality of the project and the experience of people who use it
 
-### How to stop being a Baseline Core Developer or Maintainer? <a href="#how-to-stop-being-a-maintainer" id="how-to-stop-being-a-maintainer"></a>
+## How to stop being a Baseline Core Developer or Maintainer? <a href="#how-to-stop-being-a-maintainer" id="how-to-stop-being-a-maintainer"></a>
 
 Any of the following ways:
 
