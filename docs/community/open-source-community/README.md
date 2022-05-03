@@ -18,6 +18,8 @@ Our open source team members are the drivers of the development and adoption of 
 
 The Baseline Protocol community has 3 main teams with several workgroups within each. We encourage everyone interested in accelerating or learning more about the Baseline Protocol to join our open source teams!
 
+Each time is self organized and managed, full details on the team management can be found in the corresponding repositories and Google drives.
+
 ### Baseline Core Devs
 
 Core Devs are the backbone of the Baseline open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of developers leading the rise of ubiquitous sync services to state machines everywhere.
