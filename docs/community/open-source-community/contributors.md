@@ -4,9 +4,13 @@ description: >-
   required to
 ---
 
-# Contributors
+# Contributing
 
-All work of the Baseline Protocol initiative is maintained publicly on a [**Github repository.**](https://github.com/eea-oasis/baseline) Anyone with a Github ID can fork the repo, submit an issue, submit a PR, or participate in the further development of the work.
+All work of the Baseline Protocol initiative is maintained publicly on a [**Github repository.**](https://github.com/eea-oasis/baseline)&#x20;
+
+Full governance for contributing can be[ **found here.** ](https://github.com/eea-oasis/baseline/blob/main/CONTRIBUTING.md)****
+
+Anyone with a Github ID can fork the repo, submit an issue, submit a PR, or participate in the further development of the work.
 
 There are many ways to contribute, including&#x20;
 
