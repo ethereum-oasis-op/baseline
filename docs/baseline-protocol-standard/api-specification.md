@@ -1,6 +1,6 @@
 # The API Specification
 
-**The draft of the API specification document is available on** [**Github here**](https://github.com/eea-oasis/baseline-standard/tree/main/api)**.**
+The API specification document is available on [Github here](https://github.com/eea-oasis/baseline-standard/tree/main/api).
 
 ## API Specification Overview
 
@@ -15,4 +15,3 @@ The API Specification describes the Baseline programming interface and expected 
 | Vault    | Tools and methods for managing digital authentication credentials for User, Organization and Workgroup instances          |
 
 For more information about the above, please refer to the Packages section: [here](../baseline-protocol-code/packages/) .
-
