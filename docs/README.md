@@ -38,7 +38,7 @@ The Baseline Protocol Standard contains three specifications - [CORE](https://gi
 
 A growing number of [Reference Implementations](bri/overview-of-reference-implementations.md) and demos can be [found here ](https://github.com/ethereum-oasis/baseline/tree/master/examples)to help you understand baselining and give you ideas for your implementation needs.
 
-The first complete reference implementation, [**BRI-1**](bri/bri-1/) \*\*\*\* has been developed by individuals and community leaders including Provide, EY, Nethermind, ConsenSys Mesh, and others.
+The first complete reference implementation, [**BRI-1**](bri/bri-1/) has been developed by individuals and community leaders including Provide, EY, Nethermind, ConsenSys Mesh, and others.
 
 Today there are demos, prototypes, and production systems being developed in more places than can be tracked, and some have been submitted as public domain contributions to the community.
 
