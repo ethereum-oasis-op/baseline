@@ -8,7 +8,7 @@ description: Learn more at baseline-protocol.org
 
 The Baseline Protocol is a standard that enables enterprises to synchronize complex, multiparty, business processes with privacy and without moving data from systems of record.
 
-There are many ways to[ **learn more**](https://www.baseline-protocol.org)**,** [**get involved**](https://www.baseline-protocol.org/get-involved/)**,** [**get 'Baselined'**](https://www.baseline-protocol.org/get-baselined/), and get value out of developing reusable components to ultimately deploy the [Baseline Protocol standard](./#the-baseline-protocol-standard) in your own offerings.
+There are many ways to[ learn more](https://www.baseline-protocol.org), [get involved](https://www.baseline-protocol.org/get-involved/), [get 'Baselined'](https://www.baseline-protocol.org/get-baselined/), and get value out of developing reusable components to ultimately deploy the [Baseline Protocol standard](./#the-baseline-protocol-standard) in your own offerings.
 
 ## About the Baseline Protocol
 
