@@ -30,13 +30,7 @@ export class AgreementAlt {
   public deployShield(): void {
     let [agreementStateTree, ,] = this.merkleizeState();
     let agreementStateRoot = agreementStateTree.getRoot();
-    let agreementStateCommitment = Buffer.from(
-      sha256(agreementStateRoot + "salt").toString(),
-      "hex"
-    );
-    this.shield = new Shield("shield", agreementStateCommitment, this.sellerPK);
-    let placeOrderVerifier = new Verifier(placeOrderPredicate);
-    this.shield.addVerifier("placeOrder", placeOrderVerifier, this.sellerPK);
+    this.shield = new Shield(agreementStateRoot);
   }
 
   private verifySig(m: string, s: string, pk: string): boolean {
@@ -50,7 +44,7 @@ export class AgreementAlt {
   // (note: this data is our (obviously not ZK) proof)
   // - Calls shield contract to verify proof of order commitment validity
   // (note: aggreement state is recorded on-chain so only state object commitment and "proof" are sent)
-  placeOrder(order: OrderAlt): boolean {
+  async placeOrder(order: OrderAlt): Promise<boolean> {
     // Check order against BPI Agreement state
     if (this.shield === undefined) {
       throw "shield undefined";
@@ -70,30 +64,10 @@ export class AgreementAlt {
     if (!idValid) {
       throw "invalid productid";
     }
-    //  Gen
-    let [agreementStateTree, productTree, _]: [
-      MerkleTree,
-      MerkleTree,
-      MerkleTree
-    ] = this.merkleizeState();
-    // private inputs contain all information to validate new state object and calculate new agreement root
-    let privateInputs = {
-      order: order,
-      orderSalt: "salt",
-      productIdsRoot: productTree.getRoot(),
-      productIdsProof: productTree.getProof(sha256(order.productId).toString()),
-      buyerPK: this.buyerPK,
-      sellerPK: this.sellerPK,
-      agreementStateRoot: agreementStateTree.getRoot(),
-      agreementStateSalt: "salt",
-      salt: "salt",
-    };
     // Generate order commitment
     let orderCommitment = this.genOrderCommitment(order);
     // Verify "proof" on-chain
-    if (
-      this.shield.executeWorkstep("placeOrder", orderCommitment, privateInputs)
-    ) {
+    if (await this.shield.executeWorkstep(orderCommitment)) {
       this.order = order;
       return true;
     }
@@ -130,10 +104,7 @@ export class AgreementAlt {
     let orderLeaves = Object.entries(order).map((x) => sha256(x[1]));
     let orderTree = new MerkleTree(orderLeaves, sha256);
     let orderRoot = orderTree.getRoot();
-    let orderCommitment = Buffer.from(
-      sha256(orderRoot + "salt").toString(),
-      "hex"
-    );
-    return orderCommitment;
+
+    return orderRoot;
   }
 }

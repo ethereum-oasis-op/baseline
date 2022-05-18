@@ -2,7 +2,7 @@ import {
   deployShield,
   verifyAndAddNewLeaf,
   getProof,
-} from "./blockchain/shieldUtils.js";
+} from "./blockchain/shieldUtils";
 
 export class Shield {
   agreementStateCommitment;
@@ -12,8 +12,8 @@ export class Shield {
     deployShield();
   }
 
-  executeWorkstep(stateObjectCommitment: Buffer): any {
-    var proof = getProof();
+  async executeWorkstep(stateObjectCommitment: Buffer): Promise<any> {
+    var proof = await getProof();
     var a = proof["Ar"];
     var b = proof["Bs"];
     var c = proof["Krs"];
