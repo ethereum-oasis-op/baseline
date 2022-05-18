@@ -1,11 +1,8 @@
 import { solc } from "solc";
 import { fs } from "fs";
 import { Web3 } from "web3";
-import { dotenv } from "dotenv";
 
-dotenv.config();
-
-export const connectToBlockchain = async() => {
+export const connectToBlockchain = async () => {
   if (typeof web3 === "undefined") {
     var web3 = new Web3(new Web3.givenProvider());
   } else {
@@ -15,11 +12,11 @@ export const connectToBlockchain = async() => {
   }
 
   web3.eth.defaultAccount = web3.eth.accounts[0];
-  
+
   return web3;
 };
 
-export const compileContract = async(contractName, _contractPath) => {
+export const compileContract = async (contractName, _contractPath) => {
   const contractPath = _contractPath;
   const contractSourceCode = fs.readFileSync(contractPath, "utf8");
 
@@ -77,10 +74,9 @@ export const deployContract = async (compiledContract, address, params) => {
   return txHash;*/
 };
 
-export const getDeployedShieldContract = async() => {
-
+export const getDeployedShieldContract = async () => {
   //Read the compiled Shield.json file
-  var rawShieldData = fs.readFileSync('../contracts/Shield.json');
+  var rawShieldData = fs.readFileSync("../contracts/Shield.json");
   var shieldContract = JSON.parse(rawShieldData);
   return shieldContract;
-}
+};
