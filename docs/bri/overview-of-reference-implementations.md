@@ -1,3 +1,10 @@
+---
+description: >-
+  Reference Implementations are key examples of a Baseline Protocol
+  Implementation, and can vary widely in the underlying stack used to
+  synchronize systems of record.
+---
+
 # Overview
 
 The Baseline Protocol is a set of techniques and specifications that can be implemented by any number of products, projects, services and solutions.

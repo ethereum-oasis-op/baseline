@@ -64,7 +64,9 @@ The proposed architecture and solutions to these challenges are presented in the
 
 ## Architecture Proposal
 
-![Sequence Diagram](../../examples/bri-1/lib/google-sheets-connector/images/sequence-diagram.png) The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
+&#x20;The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
+
+![](../../examples/bri-1/lib/google-sheets-connector/images/sequence-diagram.png)
 
 * Julia D365 - The Microsoft Dynamics ERP environment of Julia
 * Julia Provide Shuttle - The Baseline service of Julia
