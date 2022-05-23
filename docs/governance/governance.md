@@ -18,7 +18,7 @@ In order to ensure clean IPR that allows the Baseline Protocol to remain an open
 
 ## **Charter: Baseline Open Source Project Governance** <a href="#charter-baseline-open-source-project-governance" id="charter-baseline-open-source-project-governance"></a>
 
-**Ratified on March 18, 2020 by the** [**PGB**](../../community/community-leaders.md#your-project-governance-board)**.**
+**Ratified on March 18, 2020 by the** [**Project Governance Board**](https://eea-oasis.github.io/managed-open-project/)**.**
 
 The Baseline Protocol shall be a project within the Ethereum-Oasis project of [OASIS](https://www.oasis-open.org) through at least May 31, 2020. The Project Governing Board (PGB) of the Ethereum-OASIS project, which was established in 2019 and is currently supported by the EEA and the Ethereum Foundation (EF), currently consists of Dan Burnett (ConsenSys), Tas Dienes (EF), and Chaals Neville (EEA) – supported by Jory Burson (OASIS). The Baseline Project shall be supported under the existing contract with OASIS and shall require no additional fees than those already paid by EEA/EF and the parties to the Open Ethereum Project until May 31, 2020. Negotiation to continue the Baseline Project with OASIS shall be conducted between March and May 2020.
 

@@ -10,7 +10,7 @@ The CORE specification describes the minimal set of business and technical prere
 
 ### Design and Architecture
 
-This section provides definitions, key concepts, and overviews of the components of a Baseline Protocol Implementation compliant with the requirements of the specification. It provide implementers with guidance to be able to build and operate implementations of the Baseline Protocol not only in an informal context but also in a very formal, highly regulated context.
+This section provides definitions, key concepts, and overviews of the components of a Baseline Protocol Implementation compliant with the requirements of the specification. It provides implementers with guidance to be able to build and operate implementations of the Baseline Protocol not only in an informal context but also in a very formal, highly regulated context.
 
 ### Identifiers, Identity and Credential Management
 

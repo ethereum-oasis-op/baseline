@@ -1,6 +1,6 @@
 # The CCSM Specification
 
-**The draft of the CCSM specification document is available on Github** [**here**](https://github.com/eea-oasis/baseline-standard/blob/main/DLT/baseline-dlt-v1.0-psd01.md)**.**
+**The CCSM specification document is available on Github** [**here**](https://github.com/eea-oasis/baseline-standard/tree/main/ccsm)**.**
 
 ## CCSM Specification Overview
 

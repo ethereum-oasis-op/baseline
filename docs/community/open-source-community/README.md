@@ -30,7 +30,7 @@ Outreach members communicate, advocate, and educate the world on the advantages 
 
 ### **Standards Team**
 
-Members of the standards team work to define and contribute to the specifications of baseline compliance. The [Standards](broken-reference/) is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
+Members of the standards team work to define and contribute to the specifications of baseline compliance. The [Standard](https://github.com/eea-oasis/baseline-standard) is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
 
 ## Meetings and Meetups <a href="#meetings-and-meetups" id="meetings-and-meetups"></a>
 

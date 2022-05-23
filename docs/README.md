@@ -12,19 +12,19 @@ There are many resources that provide the opportunity to[ learn more](https://ww
 
 ## About the Baseline Protocol
 
-The Baseline Protocol is the emerging standard for state synchronization across different systems of record. This standard can be applied to traditional corporate systems of record and utilize any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine) including different blockchains or distributed ledger technologies (DLTs). It is particularly beneficial as a way to reduce capital expense and other overheads, while increasing operational integrity and information security when **automating and synchronizing business processes** across multiple companies.
+The Baseline Protocol is the emerging standard for state synchronization across different systems of record. This standard can be applied to traditional corporate systems of record and utilize any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine), including different blockchains or distributed ledger technologies (DLTs). It is particularly beneficial as a way to reduce capital expense and other overheads, while increasing operational integrity and information security when **automating and synchronizing business processes** across multiple companies.
 
 The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020, and launched as an [OASIS Open Source Project](https://oasis-open-projects.org) on March 19, 2020, supported by fourteen founding companies. More companies joined the effort shortly thereafter and continue to do so. In 2021, the Enterprise Ethereum Alliance and OASIS collaborated to establish the Baseline Protocol as an [EEA Community Project](https://entethalliance.org/eeacommunityprojects/). There are many notable, industry leading, companies sponsoring the Baseline Protocol, [see the list of sponsors](https://www.baseline-protocol.org/become-a-sponsor/) and learn how to become a sponsor and benefits [here](https://www.baseline-protocol.org/become-a-sponsor/).
 
 The work of the community is maintained under a [public domain license](https://github.com/eea-oasis/baseline/blob/main/LICENSE).
 
-**New Contributors to the repository and standard, see** [**contribution guidelines here**](community/open-source-community/contributors.md#code-of-conduct)**.**
+**For new Contributors to the repository and standard, see** [**contribution guidelines here**](community/open-source-community/contributors.md#code-of-conduct)**.**
 
 ## The Baseline Protocol Source Code
 
 Version 1.0 of the Baseline Protocol has been released. It is composed of a set of 6 core packages that are open-sourced, under the [CC0 1.0 Universal public domain](https://github.com/eea-oasis/baseline/blob/main/LICENSE) dedication.
 
-You can reference the source code **** [**here** ](broken-reference/)and explore information regarding the 6 core packages contained in the docs [**here**](baseline-protocol-code/packages/)**.**
+You can reference the source code **** [**here**](https://github.com/eea-oasis/baseline) and explore information regarding the 6 core packages contained in the docs [**here**](baseline-protocol-code/packages/)**.**
 
 ## The Baseline Protocol Standard
 
@@ -32,7 +32,7 @@ The [Baseline Protocol Specifications ](https://github.com/eea-oasis/baseline-st
 
 The Baseline Protocol Standard contains three specifications - [CORE](https://github.com/eea-oasis/baseline-standard/tree/main/core), [API](https://github.com/eea-oasis/baseline-standard/tree/main/api), and [CCSM](https://github.com/eea-oasis/baseline-standard/tree/main/ccsm). All three specifications come together to provide the requirements of a standard compliant Baseline Protocol Implementation (BPI).
 
-**Find full details on the** [**Baseline Protocol Standard here**](broken-reference/)**.**
+**Find full details on the** [**Baseline Protocol Standard here**](https://github.com/eea-oasis/baseline-standard)**.**
 
 ## The Baseline Protocol Reference Implementations
 

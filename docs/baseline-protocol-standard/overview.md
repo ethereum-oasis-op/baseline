@@ -1,8 +1,8 @@
 # The Baseline Protocol Standard
 
-The Baseline Protocol Standard will be a set of three specifications - CORE, API and CCSM that together, provide the requirements of a compliant Baseline Protocol Implementation (BPI).&#x20;
+The Baseline Protocol Standard will be a set of three specifications - CORE, API and CCSM that together, provide the requirements of a compliant Baseline Protocol Implementation (BPI).
 
-The v1.0 specifications are in draft status by [Oasis](https://www.oasis-open.org) for ratification as an official[ Oasis Standard](https://www.oasis-open.org/standards/), the draft standard is available on [Github here](https://github.com/eea-oasis/baseline-standard).
+The v1.0 specifications are in draft status by [Oasis](https://www.oasis-open.org) for ratification as an official[ Oasis Standard](https://www.oasis-open.org/standards/), the draft standard is available on Github [here](https://github.com/eea-oasis/baseline-standard).
 
 ## CORE Specification
 

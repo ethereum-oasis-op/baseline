@@ -1,7 +1,7 @@
 ---
 description: >-
   Reference Implementations are key examples of a Baseline Protocol
-  Implementation, and can vary widely in the underlying stack used to
+  Implementation, and can vary in approach for using the core interfaces to
   synchronize systems of record.
 ---
 

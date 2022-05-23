@@ -29,7 +29,6 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 
 | Name                                                                              | Company                         |
 | --------------------------------------------------------------------------------- | ------------------------------- |
-| [**Ryan Fisch**](https://www.linkedin.com/in/ryanfisch/)                          | End-Labs                        |
 | [**Dr. Andreas Freund**](https://www.linkedin.com/in/afconsultant/)               | ZK & L2 Leader, EEA L2 WG Chair |
 | [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/) **--** Co-Chair    | Golden Next Ventures            |
 | [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)                    | Unibright                       |

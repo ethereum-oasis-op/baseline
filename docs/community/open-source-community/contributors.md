@@ -1,7 +1,7 @@
 ---
 description: >-
-  Contributors to the Baseline Protocol can contribute in various ways and are
-  required to
+  Contributors to the Baseline Protocol can contribute in various ways listed
+  below:
 ---
 
 # Contributing
@@ -32,7 +32,7 @@ Technical contributors are the[ **Technical Members**](../community-leaders/main
 
 ### BLIPs
 
-As of October 1, 2021, the Baseline Protocol organizes using[ **Baseline Improvement Proposals (BLIPs)**](https://github.com/eea-oasis/baseline-blips), which are managed similarly to [**Ethereum Improvement Proposals (EIPs)**](https://eips.ethereum.org)**.**  Everyone is encouraged to submit a BLIP for an idea related to the further development or enhancement of the protocol. BLIPs can be worked on by the Baseline Core Developers or anyone interested, and even be funded through the[ **grant fund**](https://github.com/eea-oasis/baseline-grants) if requested and approved.&#x20;
+As of October 1, 2021, the Baseline Protocol organizes using[ **Baseline Improvement Proposals (BLIPs)**](https://github.com/eea-oasis/baseline-blips), which are managed similarly to [**Ethereum Improvement Proposals (EIPs)**](https://eips.ethereum.org/)**.**  Everyone is encouraged to submit a BLIP for an idea related to the further development or enhancement of the protocol. BLIPs can be worked on by the Baseline Core Developers or anyone interested, and even be funded through the[ **grant fund**](https://github.com/eea-oasis/baseline-grants) if requested and approved.&#x20;
 
 ### Work Item Management <a href="#issues-organization-and-community-sprints" id="issues-organization-and-community-sprints"></a>
 
@@ -57,7 +57,7 @@ The iCLA happens automatically when people submit a pull request, or they can ac
 
 ### Core Developers and Commit Rules <a href="#maintainers-and-commit-rules" id="maintainers-and-commit-rules"></a>
 
-Merging to Main requires review by THREE [**Baseline Maintainers**](contributors.md#technical-contributors). Active Baseline Core Developers may request to become Baseline Maintainers, and the TSC may step in to resolve any requests with conflicts.
+Merging into Main requires review by **three** [**Baseline Maintainers**](contributors.md#technical-contributors). Active Baseline Core Developers may request to become Baseline Maintainers, and the TSC may step in to resolve any requests with conflicts.
 
 ## ​Vote in the TSC Election
 

@@ -12,7 +12,7 @@ Anyone is welcome to join the Baseline Core Developers to develop technical adva
 
 ### How to become a Baseline Core Developer? <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
 
-****[**Sign up to join the Baseline Core Developers here**](https://www.baseline-protocol.org/get-involved/) **** to receive the calendar invites and access to the Google Drive resources.
+Sign up to join the Baseline Core Developers[ **here**](https://www.baseline-protocol.org/get-involved/) **** to receive the calendar invites and access to the Google Drive resources.
 
 ### What do Baseline Core Developers do? <a href="#what-do-maintainers-do" id="what-do-maintainers-do"></a>
 
@@ -20,7 +20,7 @@ Core developers are people who take an active role in advancing the Baseline Pro
 
 * Submitting or working on [**Baseline Improvement Proposals (BLIPs)** ](https://github.com/eea-oasis/baseline-blips)****
 * Contributing code or contributing to specification work in the form of PRs that are linked to open and prioritized issues
-* Developing items on the [**Baseline Protocol Roadmap** ](https://github.com/eea-oasis/baseline-blips)to achieve high priority items&#x20;
+* Developing items on the [**Baseline Protocol Roadmap** ](https://github.com/eea-oasis/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf)to achieve high priority items&#x20;
 * Setting up and supporting infrastructure (running demos, CI systems, community projects, etc.) that further the Baseline Protocol
 * Presenting the project and key technologies to the public (in-person, webinar, videos, articles, etc.)
 * Identify technical resources needed for further implementation of the protocol (developer onboarding materials, tutorials, etc.)
@@ -35,16 +35,16 @@ Baseline Protocol Maintainers are Baseline Core Developers with advanced Github 
 A Baseline Core Developer can become a Baseline Maintainer by doing the following
 
 * Being an active Baseline Core Developer by actively attending the bi-weekly meetings
-* Making a contribution to the Baseline Protocol through [**BLIP work**](https://github.com/eea-oasis/baseline-blips), [**progressing the roadmap**](https://github.com/eea-oasis/baseline), or other efforts
-* Then completing the [**Pull\_Request\_Template** ](https://github.com/eea-oasis/baseline/tree/main/.github)in its entirety to add users Github ID to the [**Code Owners file** ](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS)****
-* The current Maintainers (listed Code Owners) will be assigned to review the Pull Request, and the PR will be merged once 2 Maintainers approve the request
+* Making a contribution to the Baseline Protocol through [**BLIP work**](https://github.com/eea-oasis/baseline-blips), [**progressing the roadmap**](https://github.com/eea-oasis/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf), or other efforts
+* Then completing the [**Pull\_Request\_Template** ](https://github.com/eea-oasis/baseline/blob/main/.github/PULL\_REQUEST\_TEMPLATE.md)in its entirety to add users Github ID to the [**Code Owners file** ](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS)****
+* The current Maintainers (listed Code Owners) will be assigned to review the Pull Request, and the PR will be merged once **two** Maintainers approve the request
 * If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC
 
 ### What is expected of Baseline Maintainers? <a href="#what-is-expected-of-maintainers" id="what-is-expected-of-maintainers"></a>
 
-To retain Maintainer permissions and status, Baseline Maintainers are required to comply with the following
+To retain Maintainer permissions and status, Baseline Maintainers are required to comply with the following:
 
-* **Attendance Policy:** mandatory notification to [**'maintainer' Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) group or a community leader if unable to attend. If a Maintainer misses 3 consecutive meetings without prior notice, a community leader will contact the Maintainer to discuss commitment to group
+* **Attendance Policy:** mandatory notification to [**'maintainer' Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) group or a community leader if unable to attend. If a Maintainer misses **three** consecutive meetings without prior notice, a community leader will contact the Maintainer to discuss commitment to group
 * Show commitment over time by timely review of Pull Requests
 * Follow branch, PR, code, project style, and testing guidelines
 * Be reliable in completing issues to which they have been assigned
