@@ -42,7 +42,11 @@ type Order struct {
 var verifyingKey string
 
 func (circuit *OrderCircuit) Define(api frontend.API) error {
-	mimc, _ := mimc.NewMiMC(api)
+	mimc, err := mimc.NewMiMC(api)
+	if err != nil {
+		fmt.Println(err, "New MiMC instantiation failed")
+		return nil
+	}
 
 	// Asserts Input AgreementStateCommitment and Derived AgreementStateCommitment are equal
 	sum := api.Add(circuit.PI.AgreementStateRoot, circuit.PI.AgreementStateSalt)
@@ -53,7 +57,7 @@ func (circuit *OrderCircuit) Define(api frontend.API) error {
 	mimc.Reset()
 	sum = api.Add(circuit.PI.OrderRoot, circuit.PI.OrderSalt)
 	mimc.Write(sum)
-	api.AssertIsEqual(circuit.I.StateObjectCommitment, api.Add(circuit.PI.OrderRoot, circuit.PI.OrderSalt))
+	api.AssertIsEqual(circuit.I.StateObjectCommitment, mimc.Sum())
 
 	//Asserts CalculatedAgreementRoot and PrivateInput AgreementStateRoot are equal
 	api.AssertIsEqual(circuit.I.CalculatedAgreementRoot, circuit.PI.AgreementStateRoot)
@@ -73,7 +77,7 @@ func GenerateProof(p json.Input) (groth16.Proof, string) {
 		return nil, "Invalid circuit compilation"
 	}
 
-	assignment := assign(p)
+	assignment := assignCircuitInputs(p)
 	witness, err := frontend.NewWitness(assignment, ecc.BN254)
 	if err != nil {
 		fmt.Println(err)
@@ -100,7 +104,7 @@ func GenerateProof(p json.Input) (groth16.Proof, string) {
 }
 
 func VerifyProof(v json.Input, proof interface{}) string {
-	assignment := assign(v)
+	assignment := assignCircuitInputs(v)
 
 	witness, _ := frontend.NewWitness(assignment, ecc.BN254)
 	publicWitness, err := witness.Public()
@@ -130,7 +134,7 @@ func VerifyProof(v json.Input, proof interface{}) string {
 	}
 }
 
-func assign(p json.Input) *OrderCircuit {
+func assignCircuitInputs(p json.Input) *OrderCircuit {
 	assignment := &OrderCircuit{
 		I: Input{
 			AgreementStateCommitment: p.AgreementStateCommitment,
