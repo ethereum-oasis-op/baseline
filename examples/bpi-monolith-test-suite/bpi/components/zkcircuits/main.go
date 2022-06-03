@@ -14,15 +14,17 @@ import (
 )
 
 func Proof(c *gin.Context) {
-	var p json.Input
+	var p json.OrderCircuitInput
 	if err := c.BindJSON(&p); err != nil {
+		log.Fatal(err)
 		return
 	}
 
-	prf, m := circuitlib.GenerateProof(p)
+	prf, err := circuitlib.GenerateProof(p)
 
-	if m != "" {
-		c.IndentedJSON(http.StatusOK, m)
+	if err != nil {
+		fmt.Println(err)
+		c.IndentedJSON(http.StatusInternalServerError, err)
 	} else {
 		buf := new(bytes.Buffer)
 		_, err := prf.(io.WriterTo).WriteTo(buf)
@@ -51,8 +53,14 @@ func Verify(c *gin.Context) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	m := circuitlib.VerifyProof(v.I, _prf)
-	c.IndentedJSON(http.StatusOK, m)
+
+	err = circuitlib.VerifyProof(v.I, _prf)
+	if err != nil {
+		fmt.Println(err)
+		c.IndentedJSON(http.StatusInternalServerError, err)
+	} else {
+		c.IndentedJSON(http.StatusOK, "Valid Proof")
+	}
 }
 
 func main() {

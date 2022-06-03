@@ -51,13 +51,15 @@ func (circuit *OrderCircuit) Define(api frontend.API) error {
 	// Asserts Input AgreementStateCommitment and Derived AgreementStateCommitment are equal
 	sum := api.Add(circuit.PI.AgreementStateRoot, circuit.PI.AgreementStateSalt)
 	mimc.Write(sum)
-	api.AssertIsEqual(circuit.I.AgreementStateCommitment, mimc.Sum())
+	// api.AssertIsEqual(circuit.I.AgreementStateCommitment, mimc.Sum())
+	api.AssertIsEqual(circuit.I.AgreementStateCommitment, sum)
 
 	// Asserts Input StateObjectCommitment and Derived StateObjectCommitment are equal
 	mimc.Reset()
 	sum = api.Add(circuit.PI.OrderRoot, circuit.PI.OrderSalt)
 	mimc.Write(sum)
-	api.AssertIsEqual(circuit.I.StateObjectCommitment, mimc.Sum())
+	// api.AssertIsEqual(circuit.I.StateObjectCommitment, mimc.Sum())
+	api.AssertIsEqual(circuit.I.StateObjectCommitment, sum)
 
 	//Asserts CalculatedAgreementRoot and PrivateInput AgreementStateRoot are equal
 	api.AssertIsEqual(circuit.I.CalculatedAgreementRoot, circuit.PI.AgreementStateRoot)
@@ -68,73 +70,68 @@ func (circuit *OrderCircuit) Define(api frontend.API) error {
 	return nil
 }
 
-func GenerateProof(p json.Input) (groth16.Proof, string) {
+func GenerateProof(p json.OrderCircuitInput) (groth16.Proof, error) {
 	var zkcircuit OrderCircuit
 
 	r1cs, err := frontend.Compile(ecc.BN254, backend.GROTH16, &zkcircuit)
 	if err != nil {
-		fmt.Println(err)
-		return nil, "Invalid circuit compilation"
+		return nil, err
 	}
 
 	assignment := assignCircuitInputs(p)
 	witness, err := frontend.NewWitness(assignment, ecc.BN254)
 	if err != nil {
-		fmt.Println(err)
-		return nil, "Witness Creation Failed!"
+		return nil, err
 	}
 
 	pk, vk, err := groth16.Setup(r1cs)
 	if err != nil {
-		fmt.Println(err)
-		return nil, "Groth16 Setup Failed!"
+		return nil, err
 	}
 
 	buf := new(bytes.Buffer)
 	_, err = vk.(io.WriterTo).WriteTo(buf)
+	if err != nil {
+		return nil, err
+	}
 	verifyingKey = hex.EncodeToString(buf.Bytes())
 
 	proof, err := groth16.Prove(r1cs, pk, witness)
 	if err != nil {
-		fmt.Println(err)
-		return nil, "Proof Creation Failed!"
+		return nil, err
 	} else {
-		return proof, ""
+		return proof, nil
 	}
 }
 
-func VerifyProof(v json.Input, proof interface{}) string {
+func VerifyProof(v json.OrderCircuitInput, proof interface{}) error {
 	assignment := assignCircuitInputs(v)
 
 	witness, _ := frontend.NewWitness(assignment, ecc.BN254)
 	publicWitness, err := witness.Public()
 	if err != nil {
-		fmt.Println(err)
-		return "Witness Creation Failed!"
+		return err
 	}
 
 	vk, err := hex.DecodeString(verifyingKey)
 	if err != nil {
-		fmt.Println(err)
-		return "Verifying Key Decoding Failed!"
+		return err
 	}
 
 	_vk, err := DeserializeVerifyingKey(vk)
 	if err != nil {
-		fmt.Println(err)
-		return "Verifying Key Deserialization Failed!"
+		return err
 	}
 
 	err = groth16.Verify(proof.(groth16.Proof), _vk.(groth16.VerifyingKey), publicWitness)
 	if err != nil {
-		fmt.Println(err)
-		return "Invalid verification!"
+		return err
 	} else {
-		return "Valid Proof"
+		return nil
 	}
 }
 
-func assignCircuitInputs(p json.Input) *OrderCircuit {
+func assignCircuitInputs(p json.OrderCircuitInput) *OrderCircuit {
 	assignment := &OrderCircuit{
 		I: Input{
 			AgreementStateCommitment: p.AgreementStateCommitment,
