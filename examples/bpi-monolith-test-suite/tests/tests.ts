@@ -48,6 +48,23 @@ describe('BPI, Workgroup and Worflow setup', () => {
         expect(exchangeOrdersWorkgroup.worksteps[0].name).to.be.equal("WRKSTP1");
     });
 
+    it('Given newly created workgroup, Alice creates a workstep with a non-unique ID, workstep is not added, ID already in use error thrown', () => {
+        const bpiInstance = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new WorkgroupComponent());
+        const exchangeOrdersWorkgroup = bpiInstance.addWorkgroup("AB1", "ABOrder", []);
+
+        const workStep = new Workstep("W1", "WRKSTP1");
+        const workStep2 = new Workstep("W1", "WRKSTP2");
+        exchangeOrdersWorkgroup.addWorkstep(workStep);
+
+        expect(exchangeOrdersWorkgroup.worksteps.length).to.be.equal(1);
+        expect(exchangeOrdersWorkgroup.worksteps.length).to.be.above(0);
+        expect(exchangeOrdersWorkgroup.worksteps[0]).to.be.equal(workStep);
+        expect(exchangeOrdersWorkgroup.worksteps[0].id).to.be.equal("W1");
+        expect(exchangeOrdersWorkgroup.worksteps[0].name).to.be.equal("WRKSTP1");
+        expect(exchangeOrdersWorkgroup.worksteps[1]).to.be.an('undefined');
+        expect(() => exchangeOrdersWorkgroup.addWorkstep(workStep2)).to.throw(TypeError, 'in use');
+    });
+
     it('Given a prepared workgroup with a workstep, Alice invites Bob, BPI stores the invitation and invitee email and this information is available for querying', () => {
         const bpiInstance = new BPI("AL1", "AliceOrganisation", ["555333"], new IdentityComponent(), new MockMessagingComponent(), new WorkgroupComponent());
         const exchangeOrdersWorkgroup = bpiInstance.addWorkgroup("AB1", "ABOrder", []);
