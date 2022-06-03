@@ -51,15 +51,13 @@ func (circuit *OrderCircuit) Define(api frontend.API) error {
 	// Asserts Input AgreementStateCommitment and Derived AgreementStateCommitment are equal
 	sum := api.Add(circuit.PI.AgreementStateRoot, circuit.PI.AgreementStateSalt)
 	mimc.Write(sum)
-	// api.AssertIsEqual(circuit.I.AgreementStateCommitment, mimc.Sum())
-	api.AssertIsEqual(circuit.I.AgreementStateCommitment, sum)
+	api.AssertIsEqual(circuit.I.AgreementStateCommitment, mimc.Sum())
 
 	// Asserts Input StateObjectCommitment and Derived StateObjectCommitment are equal
 	mimc.Reset()
 	sum = api.Add(circuit.PI.OrderRoot, circuit.PI.OrderSalt)
 	mimc.Write(sum)
-	// api.AssertIsEqual(circuit.I.StateObjectCommitment, mimc.Sum())
-	api.AssertIsEqual(circuit.I.StateObjectCommitment, sum)
+	api.AssertIsEqual(circuit.I.StateObjectCommitment, mimc.Sum())
 
 	//Asserts CalculatedAgreementRoot and PrivateInput AgreementStateRoot are equal
 	api.AssertIsEqual(circuit.I.CalculatedAgreementRoot, circuit.PI.AgreementStateRoot)
