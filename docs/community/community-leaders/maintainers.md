@@ -55,12 +55,13 @@ To retain Maintainer permissions and status, Baseline Maintainers are required t
 
 ## How to stop being a Baseline Core Developer or Maintainer? <a href="#how-to-stop-being-a-maintainer" id="how-to-stop-being-a-maintainer"></a>
 
-Any of the following ways:
+To step away from being a Baseline Core Developer, you can notify the other core developers you would like to relinquish your core developer status.
 
-* You notify the other core developers or community leaders you would like to relinquish your core developer status
-* You stop reviewing PR's, responding to messages, answering emails, and/or generally ghost the project
-* You are disrespectful towards anyone in the community and/or involved in the project
-* You are disruptive to the general process of maintaining the project, meetings, discussions, issues, or other
+What can take away your Core Dev status?
+
+* You stop reviewing PR's, responding to messages, answering emails, and/or generally ghost the project.
+* You are disrespectful towards anyone in the community and/or involved in the project.
+* You are disruptive to the general process of maintaining the project, meetings, discussions, issues, or other.
 
 Two-thirds of all current Maintainers constitute a quorum for a meeting involving a question of removal. A simple majority vote from Maintainers is required to remove a Baseline Core Dev, but the TSC may be brought in to arbitrate if the Baseline Core Developer to be removed or any other Baseline Core Developer wishes to dispute the action. See [**Governance**](../../governance/governance.md#charter-baseline-open-source-project-governance) **** for details.
 
