@@ -1,11 +1,11 @@
 package json
 
 type VerifyInput struct {
-	I Input  `json:"I"`
-	P string `json:"P"`
+	I OrderCircuitInput `json:"I"`
+	P string            `json:"P"`
 }
 
-type Input struct {
+type OrderCircuitInput struct {
 	AgreementStateCommitment string `json:"AgreementStateCommitment"`
 	StateObjectCommitment    string `json:"StateObjectCommitment"`
 	CalculatedAgreementRoot  string `json:"CalculatedAgreementRoot"`

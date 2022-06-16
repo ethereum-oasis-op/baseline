@@ -1,15 +1,23 @@
-import {
-  deployShield,
-  verifyAndAddNewLeaf,
-  getProof,
-} from "./blockchain/shieldUtils";
+import { Verifier } from "./verifier";
+import { getProof, verifyAndAddNewLeaf } from "./blockchain/shieldUtils";
 
 export class Shield {
-  agreementStateCommitment;
+  verifiers: { [id: string]: Verifier } = {};
+  agreementStateCommitment: Buffer;
+  id: string;
+  owner: string;
 
-  constructor(_agreementStateCommitment) {
-    this.agreementStateCommitment = _agreementStateCommitment;
-    deployShield();
+  constructor(id: string, initState: Buffer, owner: string) {
+    this.id = id;
+    this.agreementStateCommitment = initState;
+    this.owner = owner;
+  }
+
+  addVerifier(verifierId: string, verifier: Verifier, callingAddress: string) {
+    if (callingAddress === this.owner) {
+      // In practice contract would inherit from owned, calling address would be msg.sender
+      this.verifiers[verifierId] = verifier;
+    }
   }
 
   async executeWorkstep(stateObjectCommitment: Buffer): Promise<any> {
@@ -19,7 +27,7 @@ export class Shield {
       stateObjectCommitment: stateObjectCommitment,
     };
     var executionStatus = verifyAndAddNewLeaf(
-     proof,
+      proof,
       input,
       stateObjectCommitment
     );
