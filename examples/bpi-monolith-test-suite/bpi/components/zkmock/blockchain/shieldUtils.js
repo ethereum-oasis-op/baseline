@@ -3,7 +3,7 @@ import {
   compileContract,
   deployContract,
   getDeployedShieldContractABI,
-  getDeployedShieldContractAddress
+  getDeployedShieldContractAddress,
 } from "./blockchain";
 import { fs } from "fs";
 
@@ -48,8 +48,8 @@ export const deployShield = async () => {
 
   //Store the address of deployed Shield contract
   var shieldAddress = JSON.parse({
-    "shieldAddress" : deployedShieldContract.options.address
-  })
+    shieldAddress: deployedShieldContract.options.address,
+  });
   fs.writeFile("./contracts/ShieldAddress.json", shieldAddress, (err) => {
     if (err) {
       console.error(err);
@@ -57,27 +57,20 @@ export const deployShield = async () => {
     }
     //file written successfully
   });
-
 };
 
-export const verifyAndAddNewLeaf = async (
-  proof,
-  input,
-  _newCommitment
-) => {
+export const verifyAndAddNewLeaf = async (proof, input, _newCommitment) => {
   var web3 = await connectToBlockchain();
 
   //Connect to deployed Shield Contract
   var shieldContractABI = (await getDeployedShieldContractABI()).abi;
   var shieldContractAddress = await getDeployedShieldContractAddress();
-  var shield = new web3.eth.Contract(
-    shieldContractABI
-  );
+  var shield = new web3.eth.Contract(shieldContractABI, shieldContractAddress);
 
   //Groth16 Proof variables
   var ar = proof["Ar"];
-  var krs = proof["Krs"]
-  var bs = proof["Bs"]
+  var krs = proof["Krs"];
+  var bs = proof["Bs"];
 
   var a = [ar["X"], ar["Y"]];
   var b = [
