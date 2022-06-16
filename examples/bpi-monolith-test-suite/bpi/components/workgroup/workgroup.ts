@@ -6,21 +6,37 @@ export class Workgroup {
      name: string;
      participants: BpiSubject[] = [];
      worksteps: Workstep[] = [];
+     // Set used to store IDs and ensure each ID can only be used once
+     workstepIds: Set<string> = new Set("");
 
     constructor(name: string, id: string, owner: BpiSubject, worksteps: Workstep[],) {
-        this.name = name;
         this.id = id;
+        this.name = name;
         this.worksteps = worksteps;
         this.participants.push(owner);
+     
+        worksteps.forEach(function (step) {
+               this.addWorkstep(step);
+        });
     }
 
      addWorkstep(workstep: Workstep) {
-          this.worksteps.push(workstep);
+
+          //push workstep if ID is not yet in use
+          if(!this.workstepIds.has(workstep.id)) {
+               this.worksteps.push(workstep);
+          }
+          else {
+               throw new TypeError("Workstep ID is already in use");
+          }
+
+          //add ID to running set
+          this.workstepIds.add(workstep.id);
      }
 
      getWorkstepById(workstepId: string) {
           const worksteps = this.worksteps.filter(wrkstp => wrkstp.id === workstepId);
-          return worksteps[0];
+          return worksteps.length > 0 && worksteps[0]
      }
 
      addParticipants(bpiSubject: BpiSubject) {
@@ -32,4 +48,3 @@ export class Workgroup {
           return bpiSubjects[0];
      }
 }
-
