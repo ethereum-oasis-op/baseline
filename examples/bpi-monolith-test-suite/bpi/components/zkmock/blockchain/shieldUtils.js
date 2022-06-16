@@ -2,7 +2,8 @@ import {
   connectToBlockchain,
   compileContract,
   deployContract,
-  getDeployedShieldContract,
+  getDeployedShieldContractABI,
+  getDeployedShieldContractAddress
 } from "./blockchain";
 import { fs } from "fs";
 
@@ -16,7 +17,7 @@ export const deployShield = async () => {
     "../../zkcircuits/ordercircuit/order.sol"
   );
   var compiledVerifierContract = compileContract(
-    "Verifier",
+    "Verifier.sol",
     verifierContractAbsolutePath
   );
   var deployedVerifierContract = deployContract(
@@ -27,13 +28,13 @@ export const deployShield = async () => {
   //compile and deploy Shield contract
   var shieldContractAbsolutePath = path.resolve("./contracts/Shield.sol");
   var compiledShieldContract = compileContract(
-    "Shield",
-    shieldContractAbsolutePath,
-    [deployedVerifierContract.options.address]
+    "Shield.sol",
+    shieldContractAbsolutePath
   );
   var deployedShieldContract = deployContract(
     compiledShieldContract,
-    web3.eth.defaultAccount
+    web3.eth.defaultAccount,
+    [deployedVerifierContract.options.address]
   );
 
   //Store the compiled Shield contract to access it later.
@@ -44,20 +45,46 @@ export const deployShield = async () => {
     }
     //file written successfully
   });
+
+  //Store the address of deployed Shield contract
+  var shieldAddress = JSON.parse({
+    "shieldAddress" : deployedShieldContract.options.address
+  })
+  fs.writeFile("./contracts/ShieldAddress.json", shieldAddress, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    //file written successfully
+  });
+
 };
 
-export const verifyAndAddNewLeaf = async (a, b, c, input, _newCommitment) => {
+export const verifyAndAddNewLeaf = async (
+  proof,
+  input,
+  _newCommitment
+) => {
   var web3 = await connectToBlockchain();
 
   //Connect to deployed Shield Contract
-  var shieldContract = await getDeployedShieldContract();
-  var shieldContractAbi = shieldContract.abi;
+  var shieldContractABI = (await getDeployedShieldContractABI()).abi;
+  var shieldContractAddress = await getDeployedShieldContractAddress();
   var shield = new web3.eth.Contract(
-    shieldContractAbi,
-    web3.eth.defaultAccount
+    shieldContractABI
   );
 
-  //TODO: Convert input -> bytes32
+  //Groth16 Proof variables
+  var ar = proof["Ar"];
+  var krs = proof["Krs"]
+  var bs = proof["Bs"]
+
+  var a = [ar["X"], ar["Y"]];
+  var b = [
+    [bs["X"]["A0"], bs["X"]["A1"]],
+    [bs["Y"]["A0"], bs["Y"]["A1"]],
+  ];
+  var c = [krs["X"], krs["Y"]];
 
   //Call the verify method and add new leaf to Merkle tree
   var verified = await shield.methods.verifyAndPush(

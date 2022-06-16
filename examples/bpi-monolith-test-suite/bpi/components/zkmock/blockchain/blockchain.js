@@ -16,14 +16,13 @@ export const connectToBlockchain = async () => {
   return web3;
 };
 
-export const compileContract = async (contractName, _contractPath) => {
-  const contractPath = _contractPath;
+export const compileContract = async (contractFileName, contractPath) => {
   const contractSourceCode = fs.readFileSync(contractPath, "utf8");
 
   const input = {
     language: "Solidity",
     sources: {
-      "test.sol": {
+      [contractFileName]: {
         content: contractSourceCode,
       },
     },
@@ -39,7 +38,8 @@ export const compileContract = async (contractName, _contractPath) => {
   const inputString = JSON.stringify(input);
   const output = solc.compile(inputString);
   const outputJSON = JSON.parse(output);
-  const compiledContract = outputJSON.contracts["test.sol"][contractName];
+  const contractName = contractFileName.replace(".sol", "");
+  const compiledContract = outputJSON.contracts[contractFileName][contractName];
   return compiledContract;
 };
 
@@ -74,9 +74,16 @@ export const deployContract = async (compiledContract, address, params) => {
   return txHash;*/
 };
 
-export const getDeployedShieldContract = async () => {
+export const getDeployedShieldContractABI = async () => {
   //Read the compiled Shield.json file
   var rawShieldData = fs.readFileSync("../contracts/Shield.json");
   var shieldContract = JSON.parse(rawShieldData);
   return shieldContract;
 };
+
+export const getDeployedShieldContractAddress = async () => {
+  //Read the compiled ShieldAddress.json file
+  var shieldAddressJSON = fs.readFileSync("../contracts/ShieldAddress.json");
+  var shieldAddress = (JSON.parse(shieldAddressJSON))["shieldAddress"];
+  return shieldAddress;
+}

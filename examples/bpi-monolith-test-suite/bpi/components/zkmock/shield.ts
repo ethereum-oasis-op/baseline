@@ -14,17 +14,12 @@ export class Shield {
 
   async executeWorkstep(stateObjectCommitment: Buffer): Promise<any> {
     var proof = await getProof();
-    var a = proof["Ar"];
-    var b = proof["Bs"];
-    var c = proof["Krs"];
     var input = {
       agreementStateCommitment: this.agreementStateCommitment,
       stateObjectCommitment: stateObjectCommitment,
     };
     var executionStatus = verifyAndAddNewLeaf(
-      a,
-      b,
-      c,
+     proof,
       input,
       stateObjectCommitment
     );
