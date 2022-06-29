@@ -42,6 +42,10 @@ The first complete reference implementation, [**BRI-1**](docs/bri/bri-1/) **** h
 
 Today there are demos, prototypes, and production systems being developed in more places than can be tracked, and some have been submitted as public domain contributions to the community.
 
+### PRVD OASIS
+
+The source code for the BRI-1 reference implementation has been donated by Provide to OASIS to form the [PRVD OASIS Open Project](https://prvd-oasis.org). You can view the GitHub organization [here](https://github.com/prvd-oasis).
+
 ### Baseledger
 
 The [Baseline Protocol standard ](broken-reference)does not stipulate the use of any particular state machine as the common frame of reference, where baseline proofs are deposited and managed in a baselined workgroup. However, Baseledger is the first public Layer-2 implementation of this service, details can be [found here](https://baseledger.net).
