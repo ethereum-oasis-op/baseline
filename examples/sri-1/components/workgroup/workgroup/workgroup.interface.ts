@@ -1,4 +1,4 @@
-import { Workstep } from '../../workstep';
+import { Workstep } from '../workstep';
 import { BpiSubject } from '../identity/bpiSubject';
 
 export interface IWorkgroup {

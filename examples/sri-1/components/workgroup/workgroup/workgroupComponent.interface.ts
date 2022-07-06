@@ -1,4 +1,4 @@
-import { Workstep } from '../../workstep';
+import { Workstep } from '../workstep';
 import { Workgroup } from './workgroup';
 import { BpiSubject } from '../identity/bpiSubject';
 import { Agreement } from '../storage/agreement';
