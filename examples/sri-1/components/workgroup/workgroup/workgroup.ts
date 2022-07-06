@@ -1,4 +1,4 @@
-import { Workstep } from '../../workstep';
+import { Workstep } from '../workstep';
 import { BpiSubject } from '../identity/bpiSubject';
 import { IWorkgroup } from './workgroup.interface';
 
@@ -12,7 +12,7 @@ export class Workgroup implements IWorkgroup {
     worksteps: Workstep[] = [];
     workflow: Workstep[] = [];
 
-    constructor(...) {
+    constructor(id: string, name: string, participants: BpiSubject[],  ) {
 
     }
     addParticipants(bpiSubject: BpiSubject){
