@@ -33,7 +33,7 @@
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "8.5.1",
     "loglevel": "^1.6.8",
-    "provide-js": "^1.6.11",
+    "provide-js": "^1.9.3",
     "solc": "^0.8.0",
     "uuidv4": "^6.2.11",
     "zokrates-js": "1.0.25"

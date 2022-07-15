@@ -37,7 +37,7 @@
     "jsonwebtoken": "8.5.1",
     "native-file-system-adapter": "^2.0.1",
     "node-esapi": "^0.0.1",
-    "provide-js": "^1.6.19",
+    "provide-js": "^1.9.3",
     "regenerator-runtime": "^0.13.7",
     "uuid-validate": "0.0.3"
   },
