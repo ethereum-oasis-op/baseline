@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "Baseline Reference Implementation-1 using the core Provide stack",
   "license": "CC0 1.0 Universal",
+  "engines": {
+    "node": ">=17"
+  },
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "unpkg": "./dist/umd/index.min.js",
