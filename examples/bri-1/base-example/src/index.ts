@@ -1,9 +1,9 @@
 import { IBaselineRPC, IBlockchainService, IRegistry, IVault, MerkleTreeNode, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
 import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
-import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceProvide, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
-import { ICircuitProver, ICircuitRegistry, ICircuitVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
+import { zkSnarkProverProviderServiceFactory, zkSnarkProverProviderServiceProvide, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
+import { IProverProver, IProverRegistry, IProverVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
 import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
-import { Application as Workgroup, Circuit, Invite, Vault as ProvideVault, Object as BaselineObject, Organization, Token, Key as VaultKey } from '@provide/types';
+import { Application as Workgroup, Prover, Invite, Vault as ProvideVault, Object as BaselineObject, Organization, Token, Key as VaultKey } from '@provide/types';
 import { Baseline, Capabilities, Ident, NChain, Vault, baselineClientFactory, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
@@ -42,7 +42,7 @@ export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000
 export class ParticipantStack {
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
   private baselineProxy?: Baseline;
-  private baselineCircuit?: Circuit;
+  private baselineProver?: Prover;
   private baselineMerkleTree?:any;
   private baselineConfig?: any;
   private babyJubJub?: VaultKey;
@@ -57,7 +57,7 @@ export class ParticipantStack {
   private protocolSubscriptions: any[] = [];
   private capabilities?: Capabilities;
   private contracts: any;
-  private privacy?: ICircuitRegistry & ICircuitProver & ICircuitVerifier;
+  private privacy?: IProverRegistry & IProverProver & IProverVerifier;
 
   private org?: any;
   private workgroup?: any;
@@ -78,11 +78,11 @@ export class ParticipantStack {
 
     this.baseline = await baselineServiceFactory(baselineProviderProvide, this.baselineConfig);
     this.nats = await messagingServiceFactory(messagingProviderNats, this.natsConfig);
-    this.privacy = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceProvide, {
+    this.privacy = await zkSnarkProverProviderServiceFactory(zkSnarkProverProviderServiceProvide, {
       token: this.baselineConfig?.token,
       privacyApiScheme: this.baselineConfig?.privacyApiScheme,
       privacyApiHost: this.baselineConfig?.privacyApiHost,
-    }) as unknown as ICircuitRegistry & ICircuitProver & ICircuitVerifier; // HACK
+    }) as unknown as IProverRegistry & IProverProver & IProverVerifier; // HACK
 
     if (this.natsConfig?.natsBearerTokens) {
       this.natsBearerTokens = this.natsConfig.natsBearerTokens;
@@ -110,8 +110,8 @@ export class ParticipantStack {
     this.initialized = true;
   }
 
-  getBaselineCircuit(): Circuit | undefined {
-    return this.baselineCircuit;
+  getBaselineProver(): Prover | undefined {
+    return this.baselineProver;
   }
 
   getBaselineConfig(): any | undefined {
@@ -189,26 +189,26 @@ export class ParticipantStack {
       this.workgroupCounterparties.push(payload.address);
       this.natsBearerTokens[messagingEndpoint] = payload.authorized_bearer_token;
 
-      const circuit = JSON.parse(JSON.stringify(this.baselineCircuit));
-      circuit.proving_scheme = circuit.provingScheme;
-      circuit.verifier_contract = circuit.verifierContract;
-      delete circuit.verifierContract;
-      delete circuit.createdAt; 
-      delete circuit.vaultId;
-      delete circuit.provingScheme;
-      delete circuit.provingKeyId;
-      delete circuit.verifyingKeyId;
-      delete circuit.status;
+      const prover = JSON.parse(JSON.stringify(this.baselineProver));
+      prover.proving_scheme = prover.provingScheme;
+      prover.verifier_contract = prover.verifierContract;
+      delete prover.verifierContract;
+      delete prover.createdAt; 
+      delete prover.vaultId;
+      delete prover.provingScheme;
+      delete prover.provingKeyId;
+      delete prover.verifyingKeyId;
+      delete prover.status;
 
-      // sync circuit artifacts
+      // sync prover artifacts
       this.sendProtocolMessage(payload.address, Opcode.Sync, {
-        type: 'circuit',
-        payload: circuit,
+        type: 'prover',
+        payload: prover,
       });
     } else if (msg.opcode === Opcode.Sync) {
       const payload = JSON.parse(msg.payload.toString());
-      if (payload.type === 'circuit') {
-        this.baselineCircuit = await this.privacy?.deploy(payload.payload) as Circuit;
+      if (payload.type === 'prover') {
+        this.baselineProver = await this.privacy?.deploy(payload.payload) as Prover;
       }
     }
   }
@@ -566,8 +566,8 @@ export class ParticipantStack {
     }, 100, 5000);
   }
 
-  async requireCircuit(circuitId: string): Promise<Circuit> {
-    let circuit: Circuit | undefined = undefined;
+  async requireProver(proverId: string): Promise<Prover> {
+    let prover: Prover | undefined = undefined;
     const orgToken = await this.createOrgToken();
     const tkn = orgToken.accessToken || orgToken.token;
 
@@ -575,8 +575,8 @@ export class ParticipantStack {
     const promises = [] as any;
     promises.push(new Promise<void>((resolve, reject) => {
       interval = setInterval(async () => {
-        circuit = await this.privacy?.fetchCircuit(circuitId) as Circuit;
-        if (circuit && circuit.verifierContract && circuit.verifierContract['source']) {
+        prover = await this.privacy?.fetchProver(proverId) as Prover;
+        if (prover && prover.verifierContract && prover.verifierContract['source']) {
           resolve();
         }
       }, 2500);
@@ -586,7 +586,7 @@ export class ParticipantStack {
     clearInterval(interval);
     interval = null;
 
-    return circuit!;
+    return prover!;
   }
 
   async fetchVaults(): Promise<ProvideVault[]> {
@@ -658,19 +658,19 @@ export class ParticipantStack {
     return (await vault.fetchVaultSecret(vaultId, secretId));
   }
 
-  async deployBaselineCircuit(): Promise<Circuit> {
+  async deployBaselineProver(): Promise<Prover> {
     // perform trusted setup and deploy verifier/shield contract
-    const circuit = await this.privacy?.deploy({
+    const prover = await this.privacy?.deploy({
       identifier: 'purchase_order',
       proving_scheme: 'groth16',
       curve: 'BN254',
       provider: 'gnark',
-      name: 'my 1337 circuit',
-    }) as Circuit;
+      name: 'my 1337 prover',
+    }) as Prover;
 
-    this.baselineCircuit = await this.requireCircuit(circuit.id!);
-    this.workflowIdentifier = this.baselineCircuit?.id;
-    const content = this.baselineCircuit?.verifierContract!['source'].replace(/\^0.5.0/g, '^0.7.3').replace(/view/g, '').replace(/gas,/g, 'gas(),').replace(/\\n/g, /\n/).replace(/uint256\[0\]/g, 'uint256[]')
+    this.baselineProver = await this.requireProver(prover.id!);
+    this.workflowIdentifier = this.baselineProver?.id;
+    const content = this.baselineProver?.verifierContract!['source'].replace(/\^0.5.0/g, '^0.7.3').replace(/view/g, '').replace(/gas,/g, 'gas(),').replace(/\\n/g, /\n/).replace(/uint256\[0\]/g, 'uint256[]')
     const input = {
       'language': 'Solidity',
       'settings': {
@@ -697,7 +697,7 @@ export class ParticipantStack {
     await this.requireWorkgroupContract('verifier');
     await this.deployWorkgroupShieldContract();
 
-    return this.baselineCircuit;
+    return this.baselineProver;
   }
 
   async deployWorkgroupContract(name: string, type: string, params: any, arvg?: any[]): Promise<any> {
@@ -742,12 +742,12 @@ export class ParticipantStack {
   async deployWorkgroupShieldContract(): Promise<any> {
     const verifierContract = await this.requireWorkgroupContract('verifier');
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
-    const contractParams = registryContracts[3]; // "shuttle circuit" factory contract
+    const contractParams = registryContracts[3]; // "shuttle prover" factory contract
 
     const argv = ['MerkleTreeSHA Shield', verifierContract.address, 32];
 
     // deploy EYBlockchain's MerkleTreeSHA contract (see https://github.com/EYBlockchain/timber)
-    await this.deployWorkgroupContract('ShuttleCircuit', 'circuit', contractParams, argv);
+    await this.deployWorkgroupContract('ShuttleProver', 'prover', contractParams, argv);
     const shieldContract = await this.requireWorkgroupContract('shield');
 
     return shieldContract.address;

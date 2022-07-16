@@ -44,13 +44,13 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
         assert(shield.address, 'should have a reference to the on-chain workgroup shield contract address');
       });
 
-      it('should have a local reference to the on-chain workflow circuit verifier contract', async () => {
-        assert(verifier, 'workflow circuit verifier contract should not be null');
-        assert(verifier.address, 'should have a reference to the on-chain workflow circuit verifier contract address');
+      it('should have a local reference to the on-chain workflow prover verifier contract', async () => {
+        assert(verifier, 'workflow prover verifier contract should not be null');
+        assert(verifier.address, 'should have a reference to the on-chain workflow prover verifier contract address');
       });
 
-      it('should have a local reference to the workflow circuit identifier', async () => {
-        assert(workflowIdentifier, 'workflow circuit identifier should not be null');
+      it('should have a local reference to the workflow prover identifier', async () => {
+        assert(workflowIdentifier, 'workflow prover identifier should not be null');
       });
     });
 
@@ -137,57 +137,57 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
     });
 
     describe('workflow privacy', () => {
-      let circuit;
+      let prover;
 
-      describe('zkSNARK circuits', () => {
+      describe('zkSNARK provers', () => {
         describe('synchronization', () => {
           before(async () => {
             // We need to Wait for the Sync
             await tryTimes(async () => {
-                if (getApp().getBaselineCircuit() === undefined) {
+                if (getApp().getBaselineProver() === undefined) {
                   throw new Error();
                 }else{
                   return true;
                 }
               }, 100, 5000);
-            circuit = getApp().getBaselineCircuit();
-            assert(circuit, 'setup artifacts should not be null');
+            prover = getApp().getBaselineProver();
+            assert(prover, 'setup artifacts should not be null');
           });
 
-          it('should have a copy of the unique identifier for the circuit', async () => {
-            assert(circuit.id, 'identifier should not be null');
+          it('should have a copy of the unique identifier for the prover', async () => {
+            assert(prover.id, 'identifier should not be null');
           });
 
           it('should have a copy of the proving key id', async () => {
-            assert(circuit.provingKeyId, 'proving key id should not be null');
+            assert(prover.provingKeyId, 'proving key id should not be null');
           });
 
           it('should have a copy of the verifying key id', async () => {
-            assert(circuit.verifyingKeyId, 'verifying key id should not be null');
+            assert(prover.verifyingKeyId, 'verifying key id should not be null');
           });
 
           it('should have a copy of the raw verifier source code', async () => {
-            assert(circuit.verifierContract, 'verifier contract should not be null');
-            assert(circuit.verifierContract.source, 'verifier source should not be null');
+            assert(prover.verifierContract, 'verifier contract should not be null');
+            assert(prover.verifierContract.source, 'verifier source should not be null');
           });
 
-          it('should store a reference to the workflow circuit identifier', async () => {
-            assert(getApp().getWorkflowIdentifier() === circuit.id, 'workflow circuit identifier should have a reference');
+          it('should store a reference to the workflow prover identifier', async () => {
+            assert(getApp().getWorkflowIdentifier() === prover.id, 'workflow prover identifier should have a reference');
           });
 
-          it('should have a copy of the compiled circuit r1cs', async () => {
-            assert(circuit.artifacts, 'circuit artifacts should not be null');
-            assert(circuit.artifacts.binary, 'circuit r1cs artifact should not be null');
+          it('should have a copy of the compiled prover r1cs', async () => {
+            assert(prover.artifacts, 'prover artifacts should not be null');
+            assert(prover.artifacts.binary, 'prover r1cs artifact should not be null');
           });
 
           it('should have a copy of the keypair for proving and verification', async () => {
-            assert(circuit.artifacts, 'circuit artifacts should not be null');
-            assert(circuit.artifacts.proving_key, 'proving key artifact should not be null');
-            assert(circuit.artifacts.verifying_key, 'verifying key artifact should not be null');
+            assert(prover.artifacts, 'prover artifacts should not be null');
+            assert(prover.artifacts.proving_key, 'proving key artifact should not be null');
+            assert(prover.artifacts.verifying_key, 'verifying key artifact should not be null');
           });
 
-          // it('should have a copy of the ABI of the compiled circuit', async () => {
-          //   assert(circuit.abi, 'artifacts should contain the abi');
+          // it('should have a copy of the ABI of the compiled prover', async () => {
+          //   assert(prover.abi, 'artifacts should contain the abi');
           // });
 
           describe('on-chain artifacts', () => {
@@ -204,9 +204,9 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
               assert(shield.address, 'workgroup shield contract should have been deployed');
             });
 
-            it('should reference the deposited circuit verifier on-chain', async () => {
-              assert(verifier, 'workflow circuit verifier contract should not be null');
-              assert(verifier.address, 'workflow circuit verifier contract should have been deployed');
+            it('should reference the deposited prover verifier on-chain', async () => {
+              assert(verifier, 'workflow prover verifier contract should not be null');
+              assert(verifier.address, 'workflow prover verifier contract should have been deployed');
             });
           });
         });
@@ -287,49 +287,49 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => Par
   });
 
   describe('workflow privacy', () => {
-    let circuit;
+    let prover;
 
-    describe('zkSNARK circuits', () => {
+    describe('zkSNARK provers', () => {
       describe('provisioning', () => {
         before(async () => {
-          circuit = await getApp().deployBaselineCircuit();
-          assert(circuit, 'setup artifacts should not be null');
+          prover = await getApp().deployBaselineProver();
+          assert(prover, 'setup artifacts should not be null');
         });
 
-        it('should output a unique identifier for the circuit', async () => {
-          assert(circuit.id, 'identifier should not be null');
+        it('should output a unique identifier for the prover', async () => {
+          assert(prover.id, 'identifier should not be null');
         });
 
         it('should output the proving key id', async () => {
-          assert(circuit.provingKeyId, 'proving key id should not be null');
+          assert(prover.provingKeyId, 'proving key id should not be null');
         });
 
         it('should output the verifying key id', async () => {
-          assert(circuit.verifyingKeyId, 'verifying key id should not be null');
+          assert(prover.verifyingKeyId, 'verifying key id should not be null');
         });
 
         it('should output the raw verifier source code', async () => {
-          assert(circuit.verifierContract, 'verifier contract should not be null');
-          assert(circuit.verifierContract.source, 'verifier source should not be null');
+          assert(prover.verifierContract, 'verifier contract should not be null');
+          assert(prover.verifierContract.source, 'verifier source should not be null');
         });
 
-        it('should store a reference to the workflow circuit identifier', async () => {
-          assert(getApp().getWorkflowIdentifier() === circuit.id, 'workflow circuit identifier should have a reference');
+        it('should store a reference to the workflow prover identifier', async () => {
+          assert(getApp().getWorkflowIdentifier() === prover.id, 'workflow prover identifier should have a reference');
         });
 
-        it('should output the compiled circuit r1cs', async () => {
-          assert(circuit.artifacts, 'circuit artifacts should not be null');
-          assert(circuit.artifacts.binary, 'circuit r1cs artifact should not be null');
+        it('should output the compiled prover r1cs', async () => {
+          assert(prover.artifacts, 'prover artifacts should not be null');
+          assert(prover.artifacts.binary, 'prover r1cs artifact should not be null');
         });
 
         it('should output the keypair for proving and verification', async () => {
-          assert(circuit.artifacts, 'circuit artifacts should not be null');
-          assert(circuit.artifacts.proving_key, 'proving key artifact should not be null');
-          assert(circuit.artifacts.verifying_key, 'verifying key artifact should not be null');
+          assert(prover.artifacts, 'prover artifacts should not be null');
+          assert(prover.artifacts.proving_key, 'proving key artifact should not be null');
+          assert(prover.artifacts.verifying_key, 'verifying key artifact should not be null');
         });
 
-        // it('should output the ABI of the compiled circuit', async () => {
-        //   assert(circuit.abi, 'artifacts should contain the abi');
+        // it('should output the ABI of the compiled prover', async () => {
+        //   assert(prover.abi, 'artifacts should contain the abi');
         // });
 
         describe('on-chain artifacts', () => {
@@ -345,9 +345,9 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => Par
             assert(shield, 'workgroup shield contract should not be null');
             assert(shield.address, 'workgroup shield contract should have been deployed');
           });
-          it('should deposit the circuit verifier on-chain', async () => {
-            assert(verifier, 'workflow circuit verifier contract should not be null');
-            assert(verifier.address, 'workflow circuit verifier contract should have been deployed');
+          it('should deposit the prover verifier on-chain', async () => {
+            assert(verifier, 'workflow prover verifier contract should not be null');
+            assert(verifier.address, 'workflow prover verifier contract should have been deployed');
           });
         });
       });

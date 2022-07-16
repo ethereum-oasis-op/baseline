@@ -12,5 +12,5 @@ One or more "core" baseline protocol packages are needed to baseline-enable appl
 | `@baseline-protocol/contracts` | `core/contracts` | Solidity contracts packaged as a Truffle project; includes ERC1820/organization registry |
 | `@baseline-protocol/messaging` | `core/messaging` | Core messaging package with protocol-agnostic p2p interface with NATS and Whisper implementations |
 | `@baseline-protocol/persistence` | `core/persistence` | Persistence package; this is a placeholder for system of record integration standards (see ERP connector projects under `examples/bri-1/lib`) |
-| `@baseline-protocol/privacy` | `core/privacy` | Core privacy package initially exposing a zkSnark circuit provider factory; designed to support future privacy implementations |
+| `@baseline-protocol/privacy` | `core/privacy` | Core privacy package initially exposing a zkSnark prover provider factory; designed to support future privacy implementations |
 | `@baseline-protocol/types` | `core/types` | Core reuseable type definitions; also provides protocol message marshaling/unmarshaling utilities |

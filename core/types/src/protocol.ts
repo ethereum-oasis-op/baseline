@@ -16,7 +16,7 @@ export type Message = {
   sender: string; // up to 336 bits
   recipient: string; // up to 336 bits
   shield: string; // up to 336 bits
-  identifier: string; // up to 288 bits (i.e., UUIDv4 circuit/workflow identifier)
+  identifier: string; // up to 288 bits (i.e., UUIDv4 prover/workflow identifier)
   signature: string; // 512 bits
   type: PayloadType; // 1 bit
   payload: Buffer; // arbitrary length

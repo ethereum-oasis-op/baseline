@@ -2,7 +2,7 @@ import { assert } from 'chai';
 import { readFileSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 
-const defaultCircuitEntrypoint = 'main';
+const defaultProverEntrypoint = 'main';
 
 const readBuffer = (buffer) => {
   const uint8arr = new Uint8Array(buffer.length);
@@ -14,51 +14,51 @@ const readBuffer = (buffer) => {
   return uint8arr;
 }
 
-const trustedSetupArtifacts = (circuitName) => {
-  const pkBuffer = readFileSync(`./test/artifacts/${circuitName}_Pk.key`);
+const trustedSetupArtifacts = (proverName) => {
+  const pkBuffer = readFileSync(`./test/artifacts/${proverName}_Pk.key`);
   const pkArray = readBuffer(pkBuffer);
   return {
     identifier: uuid(),
     keypair: {
-      vk: readFileSync(`./test/artifacts/${circuitName}_Vk.key`).toString(),
+      vk: readFileSync(`./test/artifacts/${proverName}_Vk.key`).toString(),
       pk: pkArray, // FIXME-- make sure to marshal Buffer to uint8 array!
     },
-    verifierSource: readFileSync(`./test/artifacts/${circuitName}_Verifier.sol`).toString()
+    verifierSource: readFileSync(`./test/artifacts/${proverName}_Verifier.sol`).toString()
   };
 };
 
-const circuitArtifacts = (circuitName) => {
-  const compiledOutBuffer = readFileSync(`./test/artifacts/${circuitName}_out`);
+const proverArtifacts = (proverName) => {
+  const compiledOutBuffer = readFileSync(`./test/artifacts/${proverName}_out`);
   const compiledOutArray = readBuffer(compiledOutBuffer);
   return {
     program: compiledOutArray,
-    abi: readFileSync(`./test/artifacts/${circuitName}_Abi.json`).toString(),
+    abi: readFileSync(`./test/artifacts/${proverName}_Abi.json`).toString(),
   };
 };
 
-export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs) => {
-  describe(`circuit: ${sourcePath}`, () => {
+export const shouldBehaveLikeZKSnarkProver = (provider, sourcePath, witnessArgs) => {
+  describe(`prover: ${sourcePath}`, () => {
     let source;
     before(() => {
       source = readFileSync(sourcePath).toString();
 
-      assert(source, 'circuit source should not be null');
-      assert(source.length > 0, `circuit source not read from path ${sourcePath}`);
+      assert(source, 'prover source should not be null');
+      assert(source.length > 0, `prover source not read from path ${sourcePath}`);
     });
 
     describe('compile', () => {
       let artifacts;
 
       before(async () => {
-        artifacts = await provider.compile(source, defaultCircuitEntrypoint);
+        artifacts = await provider.compile(source, defaultProverEntrypoint);
         assert(artifacts, 'compiled artifact not returned');
       });
 
-      it('should have output the compiled circuit', async () => {
-        assert(artifacts.program, 'artifact should contain the compiled circuit');
+      it('should have output the compiled prover', async () => {
+        assert(artifacts.program, 'artifact should contain the compiled prover');
       });
 
-      it('should have output the ABI of the compiled circuit', async () => {
+      it('should have output the ABI of the compiled prover', async () => {
         assert(artifacts.abi, 'artifact should contain the abi');
       });
 
@@ -70,7 +70,7 @@ export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs
           assert(setupArtifacts, 'setup artifacts not returned');
         });
 
-        it('should have output a unique identifier for the circuit', async () => {
+        it('should have output a unique identifier for the prover', async () => {
           assert(setupArtifacts.identifier, 'identifier should not be null');
         });
 
@@ -94,7 +94,7 @@ export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs
             assert(witness.witness, 'computed value did not contain witness');
           });
 
-          it('should return the circuit retval', async () => {
+          it('should return the prover retval', async () => {
             assert(witness.output, 'computed value did not contain retval');
           });
 
@@ -148,20 +148,20 @@ export const shouldBehaveLikeZKSnarkCircuit = (provider, sourcePath, witnessArgs
   });
 };
 
-export const shouldOperateOnPresetZkSnarkCircuit = (provider, circuitName, witnessArgs) => {
-  describe(`circuit: ${circuitName}`, () => {
+export const shouldOperateOnPresetZkSnarkProver = (provider, proverName, witnessArgs) => {
+  describe(`prover: ${proverName}`, () => {
 
     describe('trusted setup', () => {
       let setupArtifacts;
       let artifacts;
 
       before(async () => {
-        setupArtifacts = trustedSetupArtifacts(circuitName);
-        artifacts = circuitArtifacts(circuitName);
+        setupArtifacts = trustedSetupArtifacts(proverName);
+        artifacts = proverArtifacts(proverName);
         assert(setupArtifacts, 'setup artifacts not returned');
       });
 
-      it('should have output a unique identifier for the circuit', async () => {
+      it('should have output a unique identifier for the prover', async () => {
         assert(setupArtifacts.identifier, 'identifier should not be null');
       });
 
@@ -185,7 +185,7 @@ export const shouldOperateOnPresetZkSnarkCircuit = (provider, circuitName, witne
           assert(witness.witness, 'computed value did not contain witness');
         });
 
-        it('should return the circuit retval', async () => {
+        it('should return the prover retval', async () => {
           assert(witness.output, 'computed value did not contain retval');
         });
 

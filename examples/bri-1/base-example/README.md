@@ -85,7 +85,7 @@ The following high-level architecture diagram illustrates how the concepts discu
 
 ### Initiating the Workgroup
 
-Bob is designated as the initiator of the workgroup and the end-to-end test suite makes assertions as Bob Corp deploys the ERC1820 organization registry contract to the Ropsten testnet, compiles and performs the trusted setup of a zero-knowledge circuit to govern an initial business process among workgroup participants and invites Alice to join the workgroup.
+Bob is designated as the initiator of the workgroup and the end-to-end test suite makes assertions as Bob Corp deploys the ERC1820 organization registry contract to the Ropsten testnet, compiles and performs the trusted setup of a zero-knowledge prover to govern an initial business process among workgroup participants and invites Alice to join the workgroup.
 
 ### Decoded Workgroup Invitation JWT
 

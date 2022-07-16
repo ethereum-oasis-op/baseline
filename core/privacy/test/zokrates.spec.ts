@@ -1,7 +1,7 @@
-import { shouldBehaveLikeZKSnarkCircuit } from './shared';
-import { zkSnarkCircuitProviderServiceFactory, zkSnarkCircuitProviderServiceZokrates } from '../src/index';
+import { shouldBehaveLikeZKSnarkProver } from './shared';
+import { zkSnarkProverProviderServiceFactory, zkSnarkProverProviderServiceZokrates } from '../src/index';
 
-const noopAgreementCircuitPath = '../../lib/circuits/noopAgreement.zok';
+const noopAgreementProverPath = '../../lib/circuits/noopAgreement.zok';
 const createAgreementPath = '../../lib/circuits/createAgreement.zok';
 const createAgreementOwnedPath = '../../lib/circuits/createAgreementOwned.zok';
 const signAgreementPath = '../../lib/circuits/signAgreement.zok';
@@ -11,14 +11,14 @@ let provider;
 
 describe('when the underlying zokrates provider is available', () => {
   beforeEach(async () => {
-    provider = await zkSnarkCircuitProviderServiceFactory(zkSnarkCircuitProviderServiceZokrates);
+    provider = await zkSnarkProverProviderServiceFactory(zkSnarkProverProviderServiceZokrates);
   });
 
-  it('runs the noopAgreement circuit lifecycle successfully', () => {
-    shouldBehaveLikeZKSnarkCircuit(provider, noopAgreementCircuitPath, ['2']);
+  it('runs the noopAgreement prover lifecycle successfully', () => {
+    shouldBehaveLikeZKSnarkProver(provider, noopAgreementProverPath, ['2']);
   });
 
-  it('runs the createAgreement circuit lifecycle successfully', () => {
+  it('runs the createAgreement prover lifecycle successfully', () => {
     const args = [
       '1',
       {
@@ -31,15 +31,15 @@ describe('when the underlying zokrates provider is available', () => {
         agreementUrl: '9',
       }
     ];
-    shouldBehaveLikeZKSnarkCircuit(provider, createAgreementPath, args);
+    shouldBehaveLikeZKSnarkProver(provider, createAgreementPath, args);
   });
 
-  it('runs the proof of ownership circuit lifecycle successfully', () => {
+  it('runs the proof of ownership prover lifecycle successfully', () => {
     const args = [['1', '2'], '3'];
-    shouldBehaveLikeZKSnarkCircuit(provider, proofOfOwnershipPath, args);
+    shouldBehaveLikeZKSnarkProver(provider, proofOfOwnershipPath, args);
   });
 
-  it('runs the createAgreementOwned circuit lifecycle successfully', () => {
+  it('runs the createAgreementOwned prover lifecycle successfully', () => {
     const args = [
       '1',
       ['2', '3'],
@@ -54,11 +54,11 @@ describe('when the underlying zokrates provider is available', () => {
       },
       '12'
     ];
-    shouldBehaveLikeZKSnarkCircuit(provider, createAgreementOwnedPath, args);
+    shouldBehaveLikeZKSnarkProver(provider, createAgreementOwnedPath, args);
   });
 
   // To be: The below test when run fails with JS heap out of memory
-  /* it('runs the signAgreement circuit lifecycle successfully', () => {
+  /* it('runs the signAgreement prover lifecycle successfully', () => {
     const args = [
       {
         hash: ['1', '2', '3', '4', '5', '6', '7', '8'],
@@ -69,6 +69,6 @@ describe('when the underlying zokrates provider is available', () => {
         S: '13',
       }
     ];
-    shouldBehaveLikeZKSnarkCircuit(provider, signAgreementPath, args);
+    shouldBehaveLikeZKSnarkProver(provider, signAgreementPath, args);
   }); */
 });

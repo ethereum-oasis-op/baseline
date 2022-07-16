@@ -12,14 +12,14 @@ You can build the package locally with `npm run build`.
 
 ## Interfaces
 
-__IZKSnarkCircuitProvider__
+__IZKSnarkProverProvider__
 
 ```
 compile(source: string, location: string): Promise<any>;
 computeWitness(artifacts: any, args: any[]): Promise<any>;
 exportVerifier(verifyingKey): Promise<string>;
-generateProof(circuit, witness, provingKey): Promise<string>;
-setup(circuit): Promise<any>;
+generateProof(prover, witness, provingKey): Promise<string>;
+setup(prover): Promise<any>;
 ```
 
 ## Supported Frontends

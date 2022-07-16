@@ -1,5 +1,5 @@
 import { initialize, ResolveCallback, ZoKratesProvider, VerificationKey } from 'zokrates-js/node';
-import { IZKSnarkCircuitProvider, IZKSnarkCompilationArtifacts, IZKSnarkWitnessComputation, IZKSnarkTrustedSetupArtifacts } from '.';
+import { IZKSnarkProverProvider, IZKSnarkCompilationArtifacts, IZKSnarkWitnessComputation, IZKSnarkTrustedSetupArtifacts } from '.';
 import { readFileSync } from 'fs';
 import { v4 as uuid } from 'uuid';
 
@@ -14,7 +14,7 @@ const defaultImportResolver = (location, path) => {
   };
 };
 
-export class ZoKratesService implements IZKSnarkCircuitProvider {
+export class ZoKratesService implements IZKSnarkProverProvider {
 
   private importResolver: ResolveCallback;
   private zokrates: ZoKratesProvider;
@@ -39,8 +39,8 @@ export class ZoKratesService implements IZKSnarkCircuitProvider {
     return this.zokrates.exportSolidityVerifier(verifyingKey, "v2");
   }
 
-  async generateProof(circuit: any, witness: string, provingKey: any): Promise<any> {
-    return this.zokrates.generateProof(circuit, witness, provingKey);
+  async generateProof(prover: any, witness: string, provingKey: any): Promise<any> {
+    return this.zokrates.generateProof(prover, witness, provingKey);
   }
 
   async setup(artifacts: IZKSnarkCompilationArtifacts): Promise<IZKSnarkTrustedSetupArtifacts> {

@@ -1,4 +1,4 @@
-import { Circuit, Commitment } from './privacy';
+import { Prover, Commitment } from './privacy';
 
 export type Participant = {
   address: string; // public address of the participant
@@ -27,11 +27,11 @@ export type Workgroup = {
 }
 
 export type Workflow = {
-  circuit: Circuit; // reference to the underlying circuit
+  prover: Prover; // reference to the underlying prover
   commitments: Commitment[]; // commitments[0] is latest commitment (new commitments are prepended to array)
   participants: Participant[]; // subset of parties in a workgroup
 
-  identifier: string; // workflow identifier; should match circuit.id
+  identifier: string; // workflow identifier; should match prover.id
   shield: string; // shield contract address
 
   persistence: { [key: string]: Model }; // map of model name to model representing the underlying domain model and its local persistent store (i.e. system of record)

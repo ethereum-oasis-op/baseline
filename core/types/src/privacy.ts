@@ -1,4 +1,4 @@
-export type Circuit = {
+export type Prover = {
   id: string;
   name: string;
   description?: string;
