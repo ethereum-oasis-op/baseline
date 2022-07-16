@@ -619,12 +619,19 @@ export class ParticipantStack {
       tkn = orgToken.accessToken || orgToken.token;
     }
 
+    const vaultInstance = Vault.clientFactory(
+      tkn!,
+      this.baselineConfig.vaultApiScheme!,
+      this.baselineConfig.vaultApiHost!,
+    );
+
+    await vaultInstance.createVault({
+                    name       : `${this.org.name} Vault`,
+                    description: `${this.org.name} vault instance`,
+                  });
+
     return await tryTimes(async () => {
-      const vaults = await Vault.clientFactory(
-        tkn!,
-        this.baselineConfig.vaultApiScheme!,
-        this.baselineConfig.vaultApiHost!,
-      ).fetchVaults({});
+      const vaults = await vaultInstance.fetchVaults({});
       if (vaults && vaults.results.length > 0) {
         return vaults.results[0];
       }
