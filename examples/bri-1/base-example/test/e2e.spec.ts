@@ -149,7 +149,7 @@ describe('Baseline', () => {
     await bobApp.disconnect();
     await aliceApp.disconnect();
   })
-  
+
   describe('workgroup', () => {
     describe('creation', () => {
       before(async () => {
@@ -231,6 +231,8 @@ describe('Baseline', () => {
 
         describe('create a work step', () => {
           before(async () => {
+            // TODO: Ensure ParticipantStack.org was assigned.
+
             await bobApp.requireBaselineStack();
 
             workstepId = String(uuid())

@@ -29,7 +29,7 @@ export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000
   for (let index = 0; index < times; index++) {
     try {
       return await prom()
-    } catch (err) { 
+    } catch (err) {
       errors.push(err);
     }
     await sleep(wait);
@@ -193,7 +193,7 @@ export class ParticipantStack {
       prover.proving_scheme = prover.provingScheme;
       prover.verifier_contract = prover.verifierContract;
       delete prover.verifierContract;
-      delete prover.createdAt; 
+      delete prover.createdAt;
       delete prover.vaultId;
       delete prover.provingScheme;
       delete prover.provingKeyId;
@@ -287,6 +287,7 @@ export class ParticipantStack {
 
     const messagingEndpoint = await this.resolveMessagingEndpoint(counterpartyAddr);
     this.natsBearerTokens[messagingEndpoint] = invite.prvd.data.params.authorized_bearer_token;
+    // TODO: Update workflow identifier resolution
     this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
 
     await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => { });
@@ -531,7 +532,7 @@ export class ParticipantStack {
     if (!token) {
       const orgToken = await this.createOrgToken();
       token = orgToken.accessToken || orgToken.token;
-    } 
+    }
     return await tryTimes(async () => {
       const status = await Baseline.fetchStatus(
         this.baselineConfig.baselineApiScheme!,
@@ -548,7 +549,7 @@ export class ParticipantStack {
     if (!token) {
       const orgToken = await this.createOrgToken();
       token = orgToken.accessToken || orgToken.token;
-    } 
+    }
 
     return await tryTimes(async () => {
       const status = await Ident.fetchStatus(
@@ -766,6 +767,7 @@ export class ParticipantStack {
       email: email,
       permissions: 0,
       params: {
+        // TODO: Update address resolutions.
         erc1820_registry_contract_address: this.contracts['erc1820-registry'].address,
         invitor_organization_address: await this.resolveOrganizationAddress(),
         authorized_bearer_token: await this.vendNatsAuthorization(),
@@ -902,7 +904,7 @@ export class ParticipantStack {
 		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
-    
+
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
