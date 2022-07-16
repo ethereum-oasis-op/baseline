@@ -213,12 +213,8 @@ export class ParticipantStack {
     }
   }
 
-  async createBaselineObject(params: object): Promise<BaselineObject> {
-    return (await this.baselineProxy?.createObject(params)) as BaselineObject;
-  }
-
-  async updateBaselineObject(id: string, params: object): Promise<BaselineObject> {
-    return (await this.baselineProxy?.updateObject(id, params)) as BaselineObject;
+  async sendBaselineProtocolMessage(params: object): Promise<BaselineObject> {
+    return (await this.baselineProxy?.sendProtocolMessage(params)) as BaselineObject;
   }
 
   async getMerkleRoot(): Promise<String> {

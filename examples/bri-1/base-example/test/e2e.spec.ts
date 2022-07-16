@@ -236,7 +236,7 @@ describe('Baseline', () => {
             workstepId = String(uuid())
             const recipient = await aliceApp.resolveOrganizationAddress();
 
-            await bobApp.createBaselineObject({
+            await bobApp.sendBaselineProtocolMessage({
               "id": workstepId,
               "payload": {
                 "proof": "8d8f7498db7aee910428c737d8427ac4add98353f981ca70db07697a091d8c23972b55b0b20fc0eebc1ac6c2ae427d783291c7fcb2e3f7417d279fea78ce1eac2d2293e53579abbef4960a1e290bd023e2999d8ff423d01080d449ce5d14ca89c94e277e8e0bb14fb91a0b71129920ae4411e77685287611f4d2aaf66b8fc5dc",
@@ -265,8 +265,8 @@ describe('Baseline', () => {
 
         // describe('update a work step', () => {
         //   before(async () => {
-        //     await aliceApp.updateBaselineObject(workstepId,{
-        //       id: 'uuidv4()',
+        //     await aliceApp.sendBaselineProtocolMessage({
+        //       id: workstepId,
         //       name: 'hello world',
         //       url: 'proto://deep/link/to/doc',
         //       rfp_id: uuid(),
