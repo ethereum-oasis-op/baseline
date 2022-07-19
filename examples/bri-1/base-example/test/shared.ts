@@ -109,10 +109,9 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
         address = keys && keys.length >= 3 ? keys[2].address : null;
       });
 
-      // TODO: Create first vault manually, it is no longer automatic
-      it('should create a default vault for the organization', async () => {
-        const vaults = await getApp().fetchVaults();
-        assert(vaults.length === 1, 'default vault not created');
+      it('should create a vault for the organization', async () => {
+        const vault = await getApp().requireVault();
+        assert(vault, 'vault not created');
       });
 
       it('should create a set of keypairs for the organization', async () => {
