@@ -22,8 +22,8 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
       let workflowIdentifier;
 
       before(async () => {
-        erc1820Registry = await getApp().requireWorkgroupContract('erc1820-registry');
-        orgRegistry = await getApp().requireWorkgroupContract('organization-registry');
+        erc1820Registry = await getApp().requireRegistryContract('erc1820-registry');
+        orgRegistry = await getApp().requireRegistryContract('organization-registry');
         shield = getApp().getWorkgroupContract('shield');
         verifier = getApp().getWorkgroupContract('verifier');
         workflowIdentifier = getApp().getWorkflowIdentifier();
@@ -373,11 +373,11 @@ export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (getApp: () => Par
 
   describe('workgroup', () => {
     let workgroup;
-    let workgroupToken;
+    // let workgroupToken;
 
     before(async () => {
       workgroup = getApp().getWorkgroup();
-      workgroupToken = getApp().getWorkgroupToken();
+      // workgroupToken = getApp().getWorkgroupToken();
     });
 
     it('should persist the workgroup in the local registry', async () => {
@@ -385,8 +385,10 @@ export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (getApp: () => Par
       assert(workgroup.id, 'workgroup id should not be null');
     });
 
+/*
     it('should authorize a bearer token for the workgroup', async () => {
       assert(workgroupToken, 'workgroup token should not be null');
     });
+*/
   });
 };

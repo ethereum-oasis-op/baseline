@@ -49,7 +49,7 @@ export const authenticateUser = async (identHost, email, password) => {
   return auth;
 };
 
-export const baselineAppFactory = async (
+export const bpiFactory = async (
   userAccessToken,
   userRefreshToken,
   orgName,

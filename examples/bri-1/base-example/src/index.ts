@@ -60,9 +60,11 @@ export class ParticipantStack {
   private privacy?: IProverRegistry & IProverProver & IProverVerifier;
 
   private org?: any;
+  private orgAccessToken?: string;
+  private orgRefreshToken?: string;
   private workgroup?: any;
   private workgroupCounterparties: string[] = [];
-  private workgroupToken?: any; // workgroup bearer token; used for automated setup
+  // private workgroupToken?: any; // workgroup bearer token; used for automated setup
   private workflowIdentifier?: string; // workflow identifier; specific to the workgroup
   private workflowRecords: { [key: string]: any } = {}; // in-memory system of record
 
@@ -97,9 +99,9 @@ export class ParticipantStack {
     this.contracts = {};
     this.startProtocolSubscriptions();
 
-    if (this.baselineConfig.initiator) {
+    if (this.baselineConfig.operator) {
       if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
-        await this.setWorkgroup(this.baselineConfig.workgroup, this.baselineConfig.workgroupToken);
+        await this.setWorkgroup(this.baselineConfig.workgroup);
       } else if (this.baselineConfig.workgroupName) {
         await this.createWorkgroup(this.baselineConfig.workgroupName);
       }
@@ -158,9 +160,11 @@ export class ParticipantStack {
     return this.workgroup;
   }
 
+/*
   getWorkgroupToken(): any {
     return this.workgroupToken;
   }
+*/
 
   getWorkgroupContract(type: string): any {
     return this.contracts[type];
@@ -224,7 +228,7 @@ export class ParticipantStack {
 
   // HACK!! workgroup/contracts should be synced via protocol
   async acceptWorkgroupInvite(inviteToken: string, contracts: any): Promise<void> {
-    if (this.workgroup || this.workgroupToken || this.org || this.baselineConfig.initiator) {
+    if (this.workgroup || this.orgAccessToken || this.org || this.baselineConfig.initiator) {
       return Promise.reject('failed to accept workgroup invite');
     }
 
@@ -272,7 +276,7 @@ export class ParticipantStack {
     };
 
     const nchain = nchainClientFactory(
-      this.workgroupToken,
+      this.orgAccessToken!,
       this.baselineConfig?.nchainApiScheme,
       this.baselineConfig?.nchainApiHost,
     );
@@ -301,7 +305,8 @@ export class ParticipantStack {
   }
 
   async resolveMessagingEndpoint(addr: string): Promise<string> {
-    const org = await this.fetchOrganization(addr);
+    const orgRegistryContract = await this.fetchOrganizationContract();
+    const org = await this.fetchOrganization(addr, orgRegistryContract);
     if (!org) {
       return Promise.reject(`organization not resolved: ${addr}`);
     }
@@ -379,8 +384,8 @@ export class ParticipantStack {
       network_id: this.baselineConfig?.networkId,
     });
 
-    const tokenResp = await this.createWorkgroupToken();
-    this.workgroupToken = tokenResp.accessToken || tokenResp.token;
+    // const tokenResp = await this.createWorkgroupToken();
+    // this.workgroupToken = tokenResp.accessToken || tokenResp.token;
 
     if (this.baselineConfig.initiator) {
       await this.initWorkgroup();
@@ -401,17 +406,17 @@ export class ParticipantStack {
     const contractParams = registryContracts[2]; // "shuttle" launch contract
     // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
 
-    await this.deployWorkgroupContract('Shuttle', 'registry', contractParams);
-    await this.requireWorkgroupContract('organization-registry');
+    await this.deployRegistryContract('Shuttle', 'registry', contractParams);
+    await this.requireRegistryContract('organization-registry');
   }
 
   async registerWorkgroupOrganization(): Promise<Organization> {
-    if (!this.workgroup || !this.workgroupToken || !this.org) {
+    if (!this.workgroup || !this.orgAccessToken || !this.org) {
       return Promise.reject('failed to register workgroup organization');
     }
 
     return (await Ident.clientFactory(
-      this.workgroupToken,
+      this.orgAccessToken!,
       this.baselineConfig?.identApiScheme,
       this.baselineConfig?.identApiHost,
     )).createApplicationOrganization(this.workgroup.id, {
@@ -419,24 +424,24 @@ export class ParticipantStack {
     });
   }
 
-  async setWorkgroup(workgroup: any, workgroupToken: any): Promise<void> {
-    if (!workgroup || !workgroupToken || !this.workgroup || this.workgroupToken) {
+  async setWorkgroup(workgroup: any): Promise<void> {
+    if (!workgroup) {
       return Promise.reject('failed to set workgroup');
     }
 
     this.workgroup = workgroup;
-    this.workgroupToken = workgroupToken;
+    // this.workgroupToken = workgroupToken;
 
     return this.initWorkgroup();
   }
 
   async fetchWorkgroupOrganizations(): Promise<Organization[]> {
-    if (!this.workgroup || !this.workgroupToken) {
+    if (!this.workgroup || !this.orgAccessToken) {
       return Promise.reject('failed to fetch workgroup organizations');
     }
 
     return (await Ident.clientFactory(
-      this.workgroupToken,
+      this.orgAccessToken!,
       this.baselineConfig?.identApiScheme,
       this.baselineConfig?.identApiHost,
     ).fetchApplicationOrganizations(this.workgroup.id, {})).results;
@@ -489,11 +494,48 @@ export class ParticipantStack {
     return Promise.reject('failed to resolve organization address');
   }
 
-  async fetchOrganization(address: string): Promise<Organization> {
-    const orgRegistryContract = await this.requireWorkgroupContract('organization-registry');
+  async fetchOrganizationContract(): Promise<Organization> {
+    return await tryTimes(async () => {
+      const orgRegistryContract = await this.requireRegistryContract('organization-registry');
+      if (orgRegistryContract) {
+        return orgRegistryContract;
+      }
+
+      throw new Error();
+    })
+  }
+
+  async fetchOrganization(address: string, orgRegistryContract: any): Promise<Organization> {
+    const subjectAccountParams = {
+      metadata: {
+        organization_id: this.org.id,
+        organization_address: address,
+        organization_refresh_token: this.orgRefreshToken,
+        workgroup_id: this.workgroup.id,
+        registry_contract_address: orgRegistryContract.address,
+        network_id: this.workgroup.networkId,
+        // l2_network_id: this.config.networks.layer2.id,
+      },
+    };
+
+    console.log('subjectAccountParams', subjectAccountParams);
+
+    const baseline = Baseline.clientFactory(
+      this.orgAccessToken!,
+      this.baselineConfig?.baselineApiScheme,
+      this.baselineConfig?.baselineApiHost,
+      this.baselineConfig?.baselineApiPath,
+    );
+
+    try {
+      const subjectAccount = await baseline.createSubjectAccount(this.org.id, subjectAccountParams);
+      console.log('subjectAccount', subjectAccount);
+    } catch (error) {
+      console.log('error on createSubjectAccount', error);
+    }
 
     const nchain = nchainClientFactory(
-      this.workgroupToken,
+      this.orgAccessToken!,
       this.baselineConfig?.nchainApiScheme,
       this.baselineConfig?.nchainApiHost,
     );
@@ -501,9 +543,12 @@ export class ParticipantStack {
     const signerResp = (await nchain.createAccount({
       network_id: this.baselineConfig?.networkId,
     }));
+    console.log('signerResp', signerResp);
+
+    console.log('address', address);
 
     const resp = await NChain.clientFactory(
-      this.workgroupToken,
+      this.orgAccessToken!,
       this.baselineConfig?.nchainApiScheme,
       this.baselineConfig?.nchainApiHost,
     ).executeContract(orgRegistryContract.id, {
@@ -512,6 +557,7 @@ export class ParticipantStack {
       value: 0,
       account_id: signerResp['id'],
     });
+    console.log('resp', resp);
 
     if (resp && resp['response'] && resp['response'][0] !== '0x0000000000000000000000000000000000000000') {
       const org = {} as Organization;
@@ -534,10 +580,12 @@ export class ParticipantStack {
       token = orgToken.accessToken || orgToken.token;
     }
     return await tryTimes(async () => {
+      console.log('tyring');
       const status = await Baseline.fetchStatus(
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
       );
+      console.log(status);
       if (status != null) {
         return true;
       }
@@ -545,12 +593,7 @@ export class ParticipantStack {
     }, 100, 5000);
   }
 
-  async requireIdent(token?: string): Promise<boolean> {
-    if (!token) {
-      const orgToken = await this.createOrgToken();
-      token = orgToken.accessToken || orgToken.token;
-    }
-
+  async requireIdent(): Promise<boolean> {
     return await tryTimes(async () => {
       const status = await Ident.fetchStatus(
         this.baselineConfig.identApiScheme!,
@@ -697,15 +740,15 @@ export class ParticipantStack {
     }
 
     const contractParams = compilerOutput.contracts['verifier.sol']['Verifier'];
-    await this.deployWorkgroupContract('Verifier', 'verifier', contractParams);
-    await this.requireWorkgroupContract('verifier');
+    await this.deployRegistryContract('Verifier', 'verifier', contractParams);
+    await this.requireRegistryContract('verifier');
     await this.deployWorkgroupShieldContract();
 
     return this.baselineProver;
   }
 
-  async deployWorkgroupContract(name: string, type: string, params: any, arvg?: any[]): Promise<any> {
-    if (!this.workgroupToken) {
+  async deployRegistryContract(name: string, type: string, params: any, arvg?: any[]): Promise<any> {
+    if (!this.orgAccessToken) {
       return Promise.reject('failed to deploy workgroup contract');
     }
 
@@ -714,7 +757,7 @@ export class ParticipantStack {
     }
 
     const nchain = nchainClientFactory(
-      this.workgroupToken,
+      this.orgAccessToken!,
       this.baselineConfig?.nchainApiScheme,
       this.baselineConfig?.nchainApiHost,
     );
@@ -744,15 +787,15 @@ export class ParticipantStack {
   }
 
   async deployWorkgroupShieldContract(): Promise<any> {
-    const verifierContract = await this.requireWorkgroupContract('verifier');
+    const verifierContract = await this.requireRegistryContract('verifier');
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
     const contractParams = registryContracts[3]; // "shuttle prover" factory contract
 
     const argv = ['MerkleTreeSHA Shield', verifierContract.address, 32];
 
     // deploy EYBlockchain's MerkleTreeSHA contract (see https://github.com/EYBlockchain/timber)
-    await this.deployWorkgroupContract('ShuttleProver', 'prover', contractParams, argv);
-    const shieldContract = await this.requireWorkgroupContract('shield');
+    await this.deployRegistryContract('ShuttleProver', 'prover', contractParams, argv);
+    const shieldContract = await this.requireRegistryContract('shield');
 
     return shieldContract.address;
   }
@@ -789,14 +832,14 @@ export class ParticipantStack {
   }
 
   async requireOrganization(address: string): Promise<Organization> {
-    return await tryTimes(async () => {
-      const org = await this.fetchOrganization(address);
-      if (org && org['address'].toLowerCase() === address.toLowerCase()) {
-        return org;
-      }
+    const orgRegistryContract = await this.fetchOrganizationContract();
+    const org = await this.fetchOrganization(address, orgRegistryContract);
+    console.log('org', org);
+    if (org && org['address'].toLowerCase() === address.toLowerCase()) {
+      return org;
+    }
 
-      throw new Error();
-    })
+    throw new Error();
   }
 
   async requireWorkgroup(): Promise<void> {
@@ -808,13 +851,13 @@ export class ParticipantStack {
     })
   }
 
-  async requireWorkgroupContract(type: string): Promise<any> {
+  async requireRegistryContract(type: string): Promise<any> {
     return await tryTimes(() => this.resolveWorkgroupContract(type))
   }
 
   async resolveWorkgroupContract(type: string): Promise<any> {
     const nchain = nchainClientFactory(
-      this.workgroupToken,
+      this.orgAccessToken!,
       this.baselineConfig?.nchainApiScheme,
       this.baselineConfig?.nchainApiHost,
     );
@@ -856,18 +899,20 @@ export class ParticipantStack {
   }
 
   async deployBaselineStack(): Promise<any> {
-    const orgToken = await this.createOrgToken();
-    const tkn = orgToken.accessToken || orgToken.token;
+    const orgToken = await this.createOrgRefreshToken();
+    this.orgAccessToken = orgToken.accessToken!;
+    this.orgRefreshToken = orgToken.refreshToken!;
 
-    const orgRefreshToken = await this.createOrgRefreshToken();
-    const registryContract = await this.requireWorkgroupContract('organization-registry');
+    console.log('deployBaselineStack() this.orgAccessToken', this.orgAccessToken);
+    console.log('deployBaselineStack() this.orgRefreshToken', this.orgRefreshToken);
+    const registryContract = await this.requireRegistryContract('organization-registry');
 
     this.baselineProxy = baselineClientFactory(
-      tkn!,
+      this.orgAccessToken!,
       this.baselineConfig?.baselineApiScheme,
       this.baselineConfig?.baselineApiHost
     );
-    const orgAddress= await this.resolveOrganizationAddress()
+    const orgAddress = await this.resolveOrganizationAddress();
 
     // Generate config file
     const tokenResp = await this.createWorkgroupToken();
@@ -876,12 +921,13 @@ export class ParticipantStack {
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
     await this.requireIdent();
     var name = this.baselineConfig?.orgName.split(' ')
-    const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${orgRefreshToken.refreshToken}`
+    const runenv = `LOG_LEVEL=TRACE IDENT_API_HOST=${this.baselineConfig?.identApiHost} IDENT_API_SCHEME=${this.baselineConfig?.identApiScheme} NCHAIN_API_HOST=${this.baselineConfig?.nchainApiHost} NCHAIN_API_SCHEME=${this.baselineConfig?.nchainApiScheme} VAULT_API_HOST=${this.baselineConfig?.vaultApiHost} VAULT_API_SCHEME=${this.baselineConfig?.vaultApiScheme} PROVIDE_ORGANIZATION_REFRESH_TOKEN=${this.orgRefreshToken}`
     var runcmd = ` prvd baseline stack start`
     runcmd += ` --api-endpoint="${this.baselineConfig?.baselineApiScheme}://${this.baselineConfig?.baselineApiHost}"`
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
 		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
+		runcmd += ` --jwt-signer-public-key="${this.baselineConfig?.natsPublicKey}"`
     runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
@@ -892,7 +938,7 @@ export class ParticipantStack {
 		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
 		runcmd += ` --organization="${this.org.id}"`,
     runcmd += ` --organization-address="${orgAddress}"`
-    runcmd += ` --organization-refresh-token="${orgRefreshToken.refreshToken}"`
+    runcmd += ` --organization-refresh-token="${this.orgRefreshToken}"`
     runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
     runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
 		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
@@ -901,11 +947,13 @@ export class ParticipantStack {
     runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
     runcmd += ` --sor="ephemeral"`
     runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
-		runcmd += ` --vault-refresh-token="${orgRefreshToken.refreshToken}"`
+		runcmd += ` --vault-refresh-token="${this.orgRefreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
 		runcmd += ` --workgroup="${this.workgroup?.id}"`
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
+
+    console.log('runenv+runcmd', runenv+runcmd);
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     console.log(`shelled out to start baseline protocol instance (BPI) containers; child: ${child}`)

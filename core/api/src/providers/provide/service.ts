@@ -33,6 +33,10 @@ export class Provide implements IBaselineRPC, IBlockchainService, IRegistry, IVa
 
   // BaselineRPC impl
 
+  async createSubjectAccount(id: string, subjectAccountParams): Promise<any> {
+    return await this.rpc.call('baseline_createSubjectAccount', [id, subjectAccountParams]);
+  }
+
   async getCommit(address: string, index: number): Promise<Commitment> {
     return await this.rpc.call('baseline_getCommit', [address, index]);
   }
