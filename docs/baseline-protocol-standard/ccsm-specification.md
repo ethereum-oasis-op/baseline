@@ -1,4 +1,6 @@
-# CCSM Specification
+# The CCSM Specification
+
+**The CCSM specification document is available on Github** [**here**](https://github.com/eea-oasis/baseline-standard/tree/main/ccsm)**.**
 
 ## CCSM Specification Overview
 
@@ -39,7 +41,3 @@ Data integrity over time, in other words the inability to alter data once it has
 ### Integration to External Applications
 
 Depending on the CCSM employed in the implementation of a BPI, the security requirements around integration need to be fulfilled either by the CCSM itself used for the implementation or, alternatively by the CCSM Abstraction Layer.
-
-## CCSM Specification Document
-
-The draft of the CCSM specification document is available on Github: [here](https://github.com/eea-oasis/baseline-standard/blob/main/DLT/baseline-dlt-v1.0-psd01.md).

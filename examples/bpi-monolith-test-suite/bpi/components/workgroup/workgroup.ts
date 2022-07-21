@@ -14,6 +14,10 @@ export class Workgroup {
         this.name = name;
         this.worksteps = worksteps;
         this.participants.push(owner);
+     
+        worksteps.forEach(function (step) {
+               this.addWorkstep(step);
+        });
     }
 
      addWorkstep(workstep: Workstep) {
@@ -21,6 +25,9 @@ export class Workgroup {
           //push workstep if ID is not yet in use
           if(!this.workstepIds.has(workstep.id)) {
                this.worksteps.push(workstep);
+          }
+          else {
+               throw new TypeError("Workstep ID is already in use");
           }
 
           //add ID to running set
@@ -41,4 +48,3 @@ export class Workgroup {
           return bpiSubjects[0];
      }
 }
-

@@ -1,54 +1,51 @@
-# Baseline Protocol
+---
+description: Learn more at baseline-protocol.org
+---
 
-<div align="center">
-  <img alt="Baseline" src="docs/assets/baseline-logo/Web/examples/PNGs/horizontal/baselineHorizontal-Logo-FullColor.png" />
-  <p>
-    Combining advances in cryptography, messaging, and blockchain to execute
-    <br/>
-    secure and private business processes via the public Ethereum Mainnet.
-  </p>
-  Read the full documentation <a href="https://docs.baseline-protocol.org">here at docs.baseline-protocol.org</a>.
-  <p>
-    <em>Join our <a href="https://communityinviter.com/apps/ethereum-baseline/join-us">Slack workspace</a>, <a href="https://discord.gg/NE8AYD7">Discord channel</a>, <a href="https://t.me/baselineprotocol">Telegram channel</a>, <a href="https://www.youtube.com/channel/UCPkZ73TH69tMBaC111wxHYw">YouTube channel</a>,  and follow us on <a href="https://twitter.com/baselineproto">Twitter</a> for Baseline news and updates!</em>
-  </p>
-  <br/>
-</div>
+# Welcome
 
-## Baseline Protocol Release `v0.1.0`
+## Welcome to the Baseline Protocol Community
 
-Version 0.1 of the baseline protocol packages has been released! For some background information, check out [this section](https://docs.baseline-protocol.org/baseline-protocol/the-baseline-protocol) of our docs. There are two entrypoints where you can get involved in the codebase:
-- [`core/`](https://github.com/ethereum-oasis/baseline/tree/master/core) -- the "core" Baseline Protocol packages
-- [`examples/bri-1`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-1/base-example) -- the BRI-1 reference implementation.
-One or more "core" baseline protocol packages are needed to baseline-enable applications and systems of record.
-- [`examples/bri-2`](https://github.com/ethereum-oasis/baseline/tree/master/examples/bri-2/base-example) -- the experimental BRI-2 reference implementation includes examples of semi functioning dashboard to the baseline protocol.
+The Baseline Protocol is a standard that enables enterprises to synchronize complex, multiparty, business processes with privacy and without moving data from systems of record.&#x20;
 
-## Core Modules & Packages
-| Package | Source Path | Description |
-| -------- | ----- | ----------- |
-| `@baseline-protocol/api` | `core/api` | Core *baseline* API package providing unified access to the `baseline` JSON-RPC module and blockchain, registry and key management interfaces |
-| `@baseline-protocol/contracts` | `core/contracts` | Solidity contracts packaged as a Truffle project; includes ERC1820/organization registry |
-| `@baseline-protocol/messaging` | `core/messaging` | Core messaging package with protocol-agnostic p2p interface with NATS and Whisper implementations |
-| `@baseline-protocol/persistence` | `core/persistence` | Persistence package; this is a placeholder for system of record integration standards (see ERP connector projects under `examples/`) |
-| `@baseline-protocol/privacy` | `core/privacy` | Core privacy package initially exposing a zkSnark circuit provider factory; designed to support future privacy implementations |
-| `@baseline-protocol/types` | `core/types` | Core reuseable type definitions; also provides a convenience wrapper around interacting with `lib/` assets (i.e. circuits) |
+There are many ways to[ **learn more**](https://www.baseline-protocol.org)**,** [**get involved**](https://www.baseline-protocol.org/get-involved/)**,** [**get 'Baselined'**](https://www.baseline-protocol.org/get-baselined/), and get value out of developing reusable components to ultimately deploy the [Baseline Protocol standard](./#the-baseline-protocol-standard) in your own offerings.&#x20;
 
-## Architecture
-![baseline-protocol-architecture](https://user-images.githubusercontent.com/161261/86484557-79504f00-bd24-11ea-8edb-d665cb55db20.png)
+## About the Baseline Protocol
 
+The Baseline Protocol is the emerging standard for state synchronization across different systems of record. This applies to traditional corporate systems of record, any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine), and even different blockchains or distributed ledger technologies (DLTs). It is particularly beneficial as a way to reduce capital expense and other overheads, while increasing operational integrity and information security when **automating and synchronizing business processes** across multiple companies.
 
-## Resources
-![Provide Documentation](https://docs.provide.services/)
-![Provide Postman Collections](https://github.com/provideplatform/provide-postman)
+The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020, and launched as an [OASIS Open Source Project](https://oasis-open-projects.org) on March 19, 2020, supported by fourteen founding companies. More companies joined the effort shortly thereafter and continue to do so. In 2021, the Enterprise Ethereum Alliance and OASIS collaborated to establish the Baseline Protocol as an [EEA Community Project](https://entethalliance.org/eeacommunityprojects/#:\~:text=The%20EEA%20Community%20Projects%2C%20formerly,API%20documentation%20under%20its%20stewardship.). There are many notable, industry leading, companies sponsoring the Baseline Protocol, [see the list of sponsors](https://www.baseline-protocol.org/become-a-sponsor/) and learn how to become a sponsor and benefits [here](https://www.baseline-protocol.org/become-a-sponsor/).
 
+The work of the community is maintained under a [public domain license](https://github.com/eea-oasis/baseline/blob/main/LICENSE).
 
-## License
+**New Contributors to the repository and standard, see** [**contribution guidelines here**](community/contributors.md#code-of-conduct)**.**
 
-All code in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](LICENSE)
+## The Baseline Protocol Source Code
 
-## Contributing
+Version 1.0 of the Baseline Protocol has been released. It is composed of a set of 6 core packages that are open-sourced, under the [CC0 1.0 Universal public domain](https://github.com/eea-oasis/baseline/blob/main/LICENSE) dedication.&#x20;
 
-WE ENCOURAGE you to add ideas for the improvement of this work to the -[Baseline Protocol Improvement Proposal Repo](https://github.com/eea-oasis/baseline-blips/issues).
+**You can find more about the** [**source code** ](broken-reference)****[**here**](docs/baseline-protocol-code/packages/)**.**
 
-See [our contributing guidelines](CONTRIBUTING.md)
+## The Baseline Protocol Standard
 
+The [Baseline Protocol Specifications ](https://github.com/eea-oasis/baseline-standard)were completed in September 2021 and is undergoing ratification to become an [OASIS Open Standard](https://www.oasis-open.org/standards/), available under the [CC0 1.0 Universal public domain](https://github.com/eea-oasis/baseline/blob/main/LICENSE) dedication.
 
+The Baseline Protocol Standard contains three specifications - [CORE](https://github.com/eea-oasis/baseline-standard/tree/main/core), [API](https://github.com/eea-oasis/baseline-standard/tree/main/api), and [CCSM](https://github.com/eea-oasis/baseline-standard/tree/main/ccsm), that provide the requirements of a compliant Baseline Protocol Implementation (BPI).
+
+**Find full details on the** [**Baseline Protocol Standard here**](broken-reference)**.**
+
+## The Baseline Protocol Reference Implementations
+
+A growing number of [Reference Implementations](docs/bri/overview-of-reference-implementations.md) and demos can be [found here ](https://github.com/ethereum-oasis/baseline/tree/master/examples)to help you understand baselining and give you ideas for your implementation needs.
+
+The first complete reference implementation, [**BRI-1**](docs/bri/bri-1/) **** has been developed by individuals and community leaders including Provide, EY, Nethermind, ConsenSys Mesh, and others.
+
+Today there are demos, prototypes, and production systems being developed in more places than can be tracked, and some have been submitted as public domain contributions to the community.
+
+### PRVD OASIS
+
+The source code for the BRI-1 reference implementation has been donated by Provide to OASIS to form the [PRVD OASIS Open Project](https://prvd-oasis.org). You can view the GitHub organization [here](https://github.com/prvd-oasis).
+
+### Baseledger
+
+The [Baseline Protocol standard ](broken-reference)does not stipulate the use of any particular state machine as the common frame of reference, where baseline proofs are deposited and managed in a baselined workgroup. However, Baseledger is the first public Layer-2 implementation of this service, details can be [found here](https://baseledger.net).

@@ -1,16 +1,16 @@
 # Google Sheets/Microsoft Dynamics
 
-**⚠️ The "Baseline Microsoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../) **as a result of the `v0.1` release.**
+**⚠️ The "Baseline Microsoft Dynamics and Google Sheets" initiative is being integrated with** [**this new reference implementation**](../../) **as a result of the `v0.1` release.**
 
 ## Baselining Business Process Automation across SAP and Microsoft Dynamics
 
-**George Spasov \(Limechain\), Vlad Ivanov \(Limechain\), Kyle Thomas \(Provide\)**
+**George Spasov (Limechain), Vlad Ivanov (Limechain), Kyle Thomas (Provide)**
 
 May 21, 2020
 
 ## Introduction
 
-The "Baseline Mycrosoft Dynamics and Google Sheets" shows establishing a common frame of reference on the public Ethereum Mainnet between Mycrosoft Dynamics and Google Sheets. The demo extends the [Radish34 POC](https://docs.baseline-protocol.org/bri/radish34/radish34-explained), showing a procurement process in a supply chain POC.
+The "Baseline Mycrosoft Dynamics and Google Sheets" shows establishing a common frame of reference on the public Ethereum Mainnet between Mycrosoft Dynamics and Google Sheets. The demo extends the [Radish34 POC](../deprecated-work/radish34/radish34-explained.md), showing a procurement process in a supply chain POC.
 
 The open-source-available code of the development work continues the positive trend of Baseline demos showcasing the connection between two system with quite different level of sophistication.
 
@@ -20,7 +20,7 @@ The Baseline Protocol is an approach to using the public Mainnet as a common fra
 
 The approach is designed to appeal to security and performance-minded technology officers.
 
-You can find all the details on the Baseline Protocol [here](https://docs.baseline-protocol.org/baseline-protocol/protocol).
+You can find all the details on the Baseline Protocol [here](../baseline-protocol/the-baseline-protocol.md).
 
 ## Challenges and Scope of Work
 
@@ -64,7 +64,9 @@ The proposed architecture and solutions to these challenges are presented in the
 
 ## Architecture Proposal
 
-![Sequence Diagram](images/sequence-diagram.png) The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
+&#x20;The diagram above outlines the major architectural components. The following sections will give you an more in-depth overview of these components.
+
+![](../../examples/bri-1/lib/google-sheets-connector/images/sequence-diagram.png)
 
 * Julia D365 - The Microsoft Dynamics ERP environment of Julia
 * Julia Provide Shuttle - The Baseline service of Julia
@@ -77,11 +79,10 @@ The proposed architecture and solutions to these challenges are presented in the
 
 The Microsoft Dynamics ERP component is extension code written that connects to the Provide shuttle environments. It is written in X++ - the native language for Dynamics. It translates the native Dynamics objects to the ones required by the Baseline Service. Also regularly polls the Baseline service for news coming from the network.
 
-![Microsoft Dynamics](images/dynamics.png)
+![Microsoft Dynamics](../../examples/bri-1/lib/google-sheets-connector/images/dynamics.png)
 
 ### Google Sheets
 
 The google sheets side is a regular google spreadsheet with an Baseline Add-on installed. Regular repeating cloud tasks are polling new info from the Baseline service and insert it in the correct tables. In addition through the Add-on Todd is able to connect and send data to his Baseline Service.
 
-![Google Sheets](images/sheets.png)
-
+![Google Sheets](../../examples/bri-1/lib/google-sheets-connector/images/sheets.png)

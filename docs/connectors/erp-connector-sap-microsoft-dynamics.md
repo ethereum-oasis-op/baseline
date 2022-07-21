@@ -9,7 +9,7 @@ May 21, 2020
 
 ## Introduction
 
-The "Baseline-SAP-Dynamics Demo" shows a setup of different Enterprise Resource Planning Systems ("ERPs") using the Baseline Protocol to establish a common frame of reference on the public Ethereum Mainnet. The demo extends the [Radish34 POC](https://docs.baseline-protocol.org/bri/radish34/radish34-explained), showing a procurement process in a supply chain POC.
+The "Baseline-SAP-Dynamics Demo" shows a setup of different Enterprise Resource Planning Systems ("ERPs") using the Baseline Protocol to establish a common frame of reference on the public Ethereum Mainnet. The demo extends the [Radish34 POC](../deprecated-work/radish34/radish34-explained.md), showing a procurement process in a supply chain POC.
 
 The open-source-available code of the development work on this demo evolved out of a Hackathon of the EEA Eminent Integration Taskforce members Unibright and Provide and is being made available alongside the Radish34 example.
 
@@ -19,11 +19,11 @@ The Baseline Protocol is an approach to using the public Mainnet as a common fra
 
 The approach is designed to appeal to security and performance-minded technology officers.
 
-You can find all the details on the Baseline Protocol [here](https://docs.baseline-protocol.org/baseline-protocol/protocol).
+You can find all the details on the Baseline Protocol [here](../baseline-protocol/the-baseline-protocol.md).
 
 ## Challenges and Scope of Work
 
-The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](https://docs.baseline-protocol.org/baseline-protocol/the-baseline-protocol) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
+The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](../baseline-protocol/the-baseline-protocol.md) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
 
 The Use-case shown in the demo follows this path:
 
@@ -50,8 +50,8 @@ Baseline itself is a microservice architecture, where the different components o
 
 The architecture proposal of this demo builds upon the existing microservices, and adds layers to extract communication and integration with baseline towards an external system.
 
-![Shuttle Microservice Containers](https://github.com/ethereum-oasis/baseline/tree/5efb0a43596f1f4d7ba0625381c112e3f9b4b2c9/docs/bri/bri-1/bri-1-libraries/docs/images/image5.png)\
-**Microservice container environment for a participant in a baselined business process.**\</sup>
+![Shuttle Microservice Containers](../../examples\bri-1\lib\erp-connector-proxy\docs\images\image6.png)\
+**Microservice container environment for a participant in a baselined business process.**
 
 **Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis/baseline/tree/init-core) in GitHub, including several key fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment) and enhancements (i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements).
 

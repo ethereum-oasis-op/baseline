@@ -1,80 +1,80 @@
-# Core Developers
+---
+description: >-
+  The Baseline Core Developers and Maintainers are the drivers of the further
+  development and implementation of the protocol
+---
 
-## Core Developers <a href="maintainers" id="maintainers"></a>
+# Technical Members
 
-Once you've done some work as a Member, you may wish to become a **Core developer** and have a direct hand in deciding what work is merged to the Main/Master Branch to become official Baseline Protocol technology and specifications.
+## Baseline Core Developers <a href="#maintainers" id="maintainers"></a>
 
-Here's a list of [current Core Developers](./#maintainer-team).
+Anyone is welcome to join the Baseline Core Developers to develop technical advancements or even just engage in technical discussions that take place.&#x20;
 
-### What do core developers do? <a href="what-do-maintainers-do" id="what-do-maintainers-do"></a>
+### How to become a Baseline Core Developer? <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
+
+Sign up to join the Baseline Core Developers[ **here**](https://www.baseline-protocol.org/get-involved/) **** to receive the calendar invites and access to the Google Drive resources.
+
+### What do Baseline Core Developers do? <a href="#what-do-maintainers-do" id="what-do-maintainers-do"></a>
 
 Core developers are people who take an active role in advancing the Baseline Protocol and/or related projects. They are primarily responsible for:
 
+* Submitting or working on [**Baseline Improvement Proposals (BLIPs)** ](https://github.com/eea-oasis/baseline-blips)****
 * Contributing code or contributing to specification work in the form of PRs that are linked to open and prioritized issues
-* Reviewing and merging PRs into the master branch
-* Cutting, testing, and releasing new versions of the related Baseline projects
-* Working with the TSC and General Assembly to advance the Baseline Protocol
+* Developing items on the [**Baseline Protocol Roadmap** ](https://github.com/eea-oasis/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf)to achieve high priority items&#x20;
+* Setting up and supporting infrastructure (running demos, CI systems, community projects, etc.) that further the Baseline Protocol
+* Presenting the project and key technologies to the public (in-person, webinar, videos, articles, etc.)
+* Identify technical resources needed for further implementation of the protocol (developer onboarding materials, tutorials, etc.)
+* Working on and leading community efforts that drive adoption of the protocol
 
-They can/should also contribute in the following ways:
+## Baseline Maintainers  <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
 
-* Writing epics and issues to guide development
-* Setting up and supporting infrastructure (running demos, CI systems, community projects, etc...) that further Baseline
-* Working with the community to help with adoption
-* Presenting the project and key technologies to the public (in-person, webinar, videos, articles, etc...)
+Baseline Protocol Maintainers are Baseline Core Developers with advanced Github repository permissions, requiring compliance with governance for such permissions.&#x20;
 
-## How to become a core developer? <a href="how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
+### How to become a Baseline Maintainer? <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
 
-There are two ways to become a core developer: You are asked by a current core developer, or you make request to an existing core developer to become one.&#x20;
+A Baseline Core Developer can become a Baseline Maintainer by doing the following
 
-With either path you become a "provisional core developer". As such you will need to show consistent contributions of code and/or specifications to the project. This can be in the form of pull requests that get merged into master. Or it can be in the form of technical specification, system architecture and related artifacts that guide the development activities of others.
+* Being an active Baseline Core Developer by actively attending the bi-weekly meetings
+* Making a contribution to the Baseline Protocol through [**BLIP work**](https://github.com/eea-oasis/baseline-blips), [**progressing the roadmap**](https://github.com/eea-oasis/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf), or other efforts
+* Then completing the [**Pull\_Request\_Template** ](https://github.com/eea-oasis/baseline/blob/main/.github/PULL\_REQUEST\_TEMPLATE.md)in its entirety to add users Github ID to the [**Code Owners file** ](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS)****
+* The current Maintainers (listed Code Owners) will be assigned to review the Pull Request, and the PR will be merged once **two** Maintainers approve the request
+* If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC
 
-All provisional core developers that focus on code development (over standards) must meet with the existing core developers and demonstrate they are capable of the following:
+### What is expected of Baseline Maintainers? <a href="#what-is-expected-of-maintainers" id="what-is-expected-of-maintainers"></a>
 
-* Running the project locally
-* Using the testing framework
-* Explaining the components of the system architecture
-* Walking through the code and explain the baseline process
+To retain Maintainer permissions and status, Baseline Maintainers are required to comply with the following:
 
-Once the provisional core developer demonstrates their capabilities, the existing core developers will vote during the next scheduled core developer meeting to give the prospect full core developer status. Members must vote with 2/3rds majority to add a core developer. Voting that results in a tie or potentially other issue will be brought to the TSC for review.
+* **Attendance Policy:** mandatory notification to [**'maintainer' Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) group or a community leader if unable to attend. If a Maintainer misses **three** consecutive meetings without prior notice, a community leader will contact the Maintainer to discuss commitment to group
+* Show commitment over time by timely review of Pull Requests
+* Follow branch, PR, code, project style, and testing guidelines
+* Be reliable in completing issues to which they have been assigned
+* Demonstrate competency in software development or specification writing
+* Have a high degree of understanding of the project architecture
+* Be welcoming to others in the community who are using or interested in the protocol
+* Contribute in ways that substantially improve the quality of the project and the experience of people who use it
 
-## What is expected of core developers? <a href="what-is-expected-of-maintainers" id="what-is-expected-of-maintainers"></a>
+## How to stop being a Baseline Core Developer or Maintainer? <a href="#how-to-stop-being-a-maintainer" id="how-to-stop-being-a-maintainer"></a>
 
-In general, a core developer needs to:
+To step away from being a Baseline Core Developer, you can notify the other core developers you would like to relinquish your core developer status.
 
-* be an expert in one or more fields related to the project
-* be an expert in finding and engaging the advice of other experts
-* show commitment over time with multiple PRs merged
-* be reliable in completing issues to which they have been assigned
-* attend the weekly core developers meetings (with occasional absences allowed)
-* demonstrate competency in software development or specification writing
-* follow the project style and testing guidelines
-* have a high degree of understanding of the project architecture
-* be welcoming to others in the community who are using the project
-* contribute in ways that substantially improve the quality of the project and the experience of people who use it
-* follow branch, PR, and code style conventions
-
-## How core developers organize? <a href="how-maintainers-organize" id="how-maintainers-organize"></a>
-
-### Slack <a href="slack" id="slack"></a>
-
-Core Developers meet and discuss issues virtually via the #maintainers slack room in the [baseline slack](https://ethereum-baseline.slack.com).
-
-### Regular Meetings <a href="weekly-meetings" id="weekly-meetings"></a>
-
-There are weekly _Core Developers meetings_ where members can discuss plans and issues related to the project, updates, release planning, and other related topics. Anyone may attend these meetings, but the primary participants are core developers. Core developers are required to produce meeting summaries and document decisions.&#x20;
-
-Meeting signups are maintained on the "Join the Community" page on https://baseline-protocol.org.
-
-## How to stop being a core developer? <a href="how-to-stop-being-a-maintainer" id="how-to-stop-being-a-maintainer"></a>
-
-Any of the following ways:
+What can take away your Core Dev status?
 
 * You stop reviewing PR's, responding to messages, answering emails, and/or generally ghost the project.
 * You are disrespectful towards anyone in the community and/or involved in the project.
 * You are disruptive to the general process of maintaining the project, meetings, discussions, issues, or other.
-* You notify the other core developers  you would like to relinquish your core developer status.
 
-Two-thirds of all current core developers constitute a quorum for a meeting involving a question of removal. A simple majority vote from core developers attending the meeting is required to remove a core developer, but the TSC may be brought in to arbitrate if the core developer to be removed or any other core developer wishes to dispute the action. (See [Governance](../../governance/governance.md#charter-baseline-open-source-project-governance) for details.)
+Two-thirds of all current Maintainers constitute a quorum for a meeting involving a question of removal. A simple majority vote from Maintainers is required to remove a Baseline Core Dev, but the TSC may be brought in to arbitrate if the Baseline Core Developer to be removed or any other Baseline Core Developer wishes to dispute the action. See [**Governance**](../../governance/governance.md#charter-baseline-open-source-project-governance) **** for details.
 
-|   |
-| - |
+## How do Baseline Core Developers organize? <a href="#how-maintainers-organize" id="how-maintainers-organize"></a>
+
+### Slack Channels <a href="#slack" id="slack"></a>
+
+The Baseline Core Developers talk in the [**'05-bl-core-devs' channel in Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) **** to discuss updates, questions, concerns, or ideas between meetings.&#x20;
+
+The Baseline Maintainers use a private 'maintainers' channel in Slack that members with Maintainer status are added to.
+
+### Baseline Core Developer Meetings <a href="#weekly-meetings" id="weekly-meetings"></a>
+
+There are bi-weekly Baseline Core Developer _meetings_ where members can new or open [**Baseline Improvement Proposals (BLIPs)**](https://github.com/eea-oasis/baseline-blips), open repo issues and pull requests, roadmap items grant projects, and more.&#x20;
+
+Members with Maintainer status are required to join Baseline Core Developer meetings, as outlined in the terms above.
