@@ -280,8 +280,8 @@ export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => Par
       assert(cfg, 'config should not be null');
     });
 
-    it('should indicate that this instance is the workgroup initiator', async () => {
-      assert(cfg.initiator === true, 'config should indicate this instance is the workgroup initiator');
+    it('should indicate that this instance is the workgroup operator', async () => {
+      assert(cfg.operator === true, 'config should indicate this instance is the workgroup operator');
     });
   });
 
@@ -366,8 +366,8 @@ export const shouldBehaveLikeAnInvitedWorkgroupOrganization = (getApp: () => Par
       assert(cfg, 'config should not be null');
     });
 
-    it('should indicate that this instance is not the workgroup initiator', async () => {
-      assert(cfg.initiator === false, 'config should indicate this instance is not the workgroup initiator');
+    it('should indicate that this instance is not the workgroup operator', async () => {
+      assert(cfg.operator === false, 'config should indicate this instance is not the workgroup operator');
     });
   });
 

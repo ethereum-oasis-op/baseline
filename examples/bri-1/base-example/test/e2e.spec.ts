@@ -93,7 +93,7 @@ describe('Baseline', () => {
       aliceDomain,
       false,
       'localhost:8085',
-      'nats://localhost:4222',
+      'nats://localhost:4224',
       natsPrivateKey,
       natsPublicKey,
       'localhost:8086',
@@ -193,7 +193,7 @@ describe('Baseline', () => {
         // assert(workgroupToken, 'workgroup token should not be null');
       });
 
-      describe('workgroup initiator', () => {
+      describe('workgroup operator', () => {
         describe(`baseline stack for "${bobCorpName}"`, shouldCreateBaselineStack(() => bobBPI))
         describe(`initial workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAnInitialWorkgroupOrganization(() => bobBPI));
         describe(`workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupOrganization(() => bobBPI));

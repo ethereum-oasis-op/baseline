@@ -99,6 +99,8 @@ export class ParticipantStack {
     this.contracts = {};
     this.startProtocolSubscriptions();
 
+    await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+
     if (this.baselineConfig.operator) {
       if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
         await this.setWorkgroup(this.baselineConfig.workgroup);
@@ -106,8 +108,12 @@ export class ParticipantStack {
         await this.createWorkgroup(this.baselineConfig.workgroupName);
       }
 
-      await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
     }
+
+    await this.registerWorkgroupOrganization();
+    await this.requireIdent();
+    await this.deployBaselineStack();
+    await this.requireBaselineStack();
 
     this.initialized = true;
   }
@@ -228,7 +234,7 @@ export class ParticipantStack {
 
   // HACK!! workgroup/contracts should be synced via protocol
   async acceptWorkgroupInvite(inviteToken: string, contracts: any): Promise<void> {
-    if (this.workgroup || this.orgAccessToken || this.org || this.baselineConfig.initiator) {
+    if (this.workgroup || this.orgAccessToken || this.org || this.baselineConfig.operator) {
       return Promise.reject('failed to accept workgroup invite');
     }
 
@@ -275,6 +281,8 @@ export class ParticipantStack {
       },
     };
 
+    await this.requireOrgTokens();
+
     const nchain = nchainClientFactory(
       this.orgAccessToken!,
       this.baselineConfig?.nchainApiScheme,
@@ -296,6 +304,10 @@ export class ParticipantStack {
 
     await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => { });
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+    await this.registerWorkgroupOrganization();
+    await this.requireIdent();
+    await this.deployBaselineStack();
+    await this.requireBaselineStack();
     await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
       address: await this.resolveOrganizationAddress(),
@@ -387,7 +399,7 @@ export class ParticipantStack {
     // const tokenResp = await this.createWorkgroupToken();
     // this.workgroupToken = tokenResp.accessToken || tokenResp.token;
 
-    if (this.baselineConfig.initiator) {
+    if (this.baselineConfig.operator) {
       await this.initWorkgroup();
     }
 
@@ -411,9 +423,11 @@ export class ParticipantStack {
   }
 
   async registerWorkgroupOrganization(): Promise<Organization> {
-    if (!this.workgroup || !this.orgAccessToken || !this.org) {
+    if (!this.workgroup || !this.org) {
       return Promise.reject('failed to register workgroup organization');
     }
+
+    await this.requireOrgTokens();
 
     return (await Ident.clientFactory(
       this.orgAccessToken!,
@@ -436,9 +450,11 @@ export class ParticipantStack {
   }
 
   async fetchWorkgroupOrganizations(): Promise<Organization[]> {
-    if (!this.workgroup || !this.orgAccessToken) {
+    if (!this.workgroup) {
       return Promise.reject('failed to fetch workgroup organizations');
     }
+
+    await this.requireOrgTokens();
 
     return (await Ident.clientFactory(
       this.orgAccessToken!,
@@ -455,6 +471,17 @@ export class ParticipantStack {
     ).createToken({
       organization_id: this.org.id,
     });
+  }
+
+  async requireOrgTokens(): Promise<void> {
+    if (!this.orgAccessToken || !this.orgRefreshToken) {
+      const orgToken = await this.createOrgRefreshToken();
+      this.orgAccessToken = orgToken.accessToken!;
+      this.orgRefreshToken = orgToken.refreshToken!;
+
+      console.log('deployBaselineStack() this.orgAccessToken', this.orgAccessToken);
+      console.log('deployBaselineStack() this.orgRefreshToken', this.orgRefreshToken);
+    }
   }
 
   async createOrgRefreshToken(): Promise<Token> {
@@ -519,6 +546,8 @@ export class ParticipantStack {
     };
 
     console.log('subjectAccountParams', subjectAccountParams);
+
+    await this.requireOrgTokens();
 
     const baseline = Baseline.clientFactory(
       this.orgAccessToken!,
@@ -748,9 +777,7 @@ export class ParticipantStack {
   }
 
   async deployRegistryContract(name: string, type: string, params: any, arvg?: any[]): Promise<any> {
-    if (!this.orgAccessToken) {
-      return Promise.reject('failed to deploy workgroup contract');
-    }
+    await this.requireOrgTokens();
 
     if (!params.bytecode && params.evm) { // HACK
       params.bytecode = `0x${params.evm.bytecode.object}`;
@@ -856,6 +883,8 @@ export class ParticipantStack {
   }
 
   async resolveWorkgroupContract(type: string): Promise<any> {
+    await this.requireOrgTokens();
+
     const nchain = nchainClientFactory(
       this.orgAccessToken!,
       this.baselineConfig?.nchainApiScheme,
@@ -889,23 +918,15 @@ export class ParticipantStack {
       await this.createVaultKey(vault.id!, 'secp256k1');
       this.hdwallet = await this.createVaultKey(vault.id!, 'BIP39');
       await this.createVaultKey(vault.id!, 'RSA-4096');
-      await this.registerWorkgroupOrganization();
-      await this.requireIdent();
-      await this.deployBaselineStack();
-      await this.requireBaselineStack();
     }
 
     return this.org;
   }
 
   async deployBaselineStack(): Promise<any> {
-    const orgToken = await this.createOrgRefreshToken();
-    this.orgAccessToken = orgToken.accessToken!;
-    this.orgRefreshToken = orgToken.refreshToken!;
-
-    console.log('deployBaselineStack() this.orgAccessToken', this.orgAccessToken);
-    console.log('deployBaselineStack() this.orgRefreshToken', this.orgRefreshToken);
     const registryContract = await this.requireRegistryContract('organization-registry');
+
+    await this.requireOrgTokens();
 
     this.baselineProxy = baselineClientFactory(
       this.orgAccessToken!,
