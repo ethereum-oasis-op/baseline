@@ -142,8 +142,12 @@ describe('Baseline', () => {
       'forest step weird object extend boat ball unit canoe pull render monkey drink monitor behind supply brush frown alone rural minute level host clock',
     );
 
+    console.log('start init Bob');
     await bobBPI.init();
+    console.log('end init Bob');
+    console.log('start init Alice');
     await aliceBPI.init();
+    console.log('end init Alice');
   });
 
   after('close connections',async () =>{

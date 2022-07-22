@@ -98,22 +98,32 @@ export class ParticipantStack {
 
     this.contracts = {};
     this.startProtocolSubscriptions();
+    console.log('started protocol subscriptions');
 
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
+    console.log('registered organization');
 
     if (this.baselineConfig.operator) {
       if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
         await this.setWorkgroup(this.baselineConfig.workgroup);
+        console.log('workgroup set');
       } else if (this.baselineConfig.workgroupName) {
+        console.log('creating workgroup');
         await this.createWorkgroup(this.baselineConfig.workgroupName);
+        console.log('created workgroup');
       }
 
     }
 
     await this.registerWorkgroupOrganization();
+    console.log('registered workgroup organization');
     await this.requireIdent();
+    console.log('connected to Ident');
+    console.log('deploying baseline stack');
     await this.deployBaselineStack();
+    console.log('deployed baseline stack');
     await this.requireBaselineStack();
+    console.log('connected to baseline stack');
 
     this.initialized = true;
   }
@@ -411,12 +421,16 @@ export class ParticipantStack {
       return Promise.reject('failed to init workgroup');
     }
 
+    console.log('init workgroup');
+
     this.capabilities = capabilitiesFactory();
     await this.requireCapabilities();
 
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
     const contractParams = registryContracts[2]; // "shuttle" launch contract
     // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
+
+    console.log('deploying registry contract');
 
     await this.deployRegistryContract('Shuttle', 'registry', contractParams);
     await this.requireRegistryContract('organization-registry');
@@ -479,8 +493,8 @@ export class ParticipantStack {
       this.orgAccessToken = orgToken.accessToken!;
       this.orgRefreshToken = orgToken.refreshToken!;
 
-      console.log('deployBaselineStack() this.orgAccessToken', this.orgAccessToken);
-      console.log('deployBaselineStack() this.orgRefreshToken', this.orgRefreshToken);
+      console.log('orgAccessToken', this.orgAccessToken);
+      console.log('orgRefreshToken', this.orgRefreshToken);
     }
   }
 
@@ -793,6 +807,9 @@ export class ParticipantStack {
       network_id: this.baselineConfig?.networkId,
     }));
 
+    console.log('created signing account');
+    console.log('creating contract');
+
     const resp = await nchain.createContract({
       address: '0x',
       params: {
@@ -810,6 +827,7 @@ export class ParticipantStack {
         compiled_artifact: params,
       };
     }
+    console.log('created contract');
     return resp;
   }
 
@@ -891,13 +909,18 @@ export class ParticipantStack {
       this.baselineConfig?.nchainApiHost,
     );
 
+    console.log('fetching contract details');
+
     const contracts = await nchain.fetchContracts({
       type: type,
     });
 
+    console.log('contracts', contracts);
+
     if (contracts && contracts.results.length === 1 && contracts.results[0]['address'] !== '0x') {
       const contract = await nchain.fetchContractDetails(contracts.results[0].id!);
       this.contracts[type] = contract;
+      console.log('fetched contract details');
       return Promise.resolve(contract);
     }
     return Promise.reject();
