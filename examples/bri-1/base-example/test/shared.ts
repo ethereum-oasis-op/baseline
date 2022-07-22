@@ -265,7 +265,7 @@ export const shouldCreateBaselineStack = (getApp: () => ParticipantStack) => () 
   })
 }
 
-export const shouldBehaveLikeAnInitialWorkgroupOrganization = (getApp: () => ParticipantStack) => () => {
+export const shouldBehaveLikeWorkgroupOperator = (getApp: () => ParticipantStack) => () => {
   describe('baseline config', () => {
     let cfg;
     var org

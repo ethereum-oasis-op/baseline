@@ -3,7 +3,7 @@ import { assert, expect } from 'chai';
 import { ParticipantStack } from '../src';
 import {
   shouldBehaveLikeAWorkgroupOrganization,
-  shouldBehaveLikeAnInitialWorkgroupOrganization,
+  shouldBehaveLikeWorkgroupOperator,
   shouldBehaveLikeAnInvitedWorkgroupOrganization,
   shouldBehaveLikeAWorkgroupCounterpartyOrganization,
   shouldCreateBaselineStack,
@@ -195,7 +195,7 @@ describe('Baseline', () => {
 
       describe('workgroup operator', () => {
         describe(`baseline stack for "${bobCorpName}"`, shouldCreateBaselineStack(() => bobBPI))
-        describe(`initial workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAnInitialWorkgroupOrganization(() => bobBPI));
+        describe(`workgroup operator: "${bobCorpName}"`, shouldBehaveLikeWorkgroupOperator(() => bobBPI));
         describe(`workgroup organization: "${bobCorpName}"`, shouldBehaveLikeAWorkgroupOrganization(() => bobBPI));
       });
 
