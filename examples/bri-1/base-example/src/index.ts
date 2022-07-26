@@ -115,8 +115,10 @@ export class ParticipantStack {
 
     }
 
+/*
     await this.registerWorkgroupOrganization();
     console.log('registered workgroup organization');
+*/
     await this.requireIdent();
     console.log('connected to Ident');
     console.log('deploying baseline stack');
@@ -509,6 +511,7 @@ export class ParticipantStack {
     });
   }
 
+/*
   async createWorkgroupToken(): Promise<Token> {
     return await Ident.clientFactory(
       this.baselineConfig?.token,
@@ -518,6 +521,7 @@ export class ParticipantStack {
       application_id: this.workgroup.id,
     });
   }
+*/
 
   async resolveOrganizationAddress(): Promise<string> {
     const keys = await this.fetchKeys();
@@ -623,7 +627,7 @@ export class ParticipantStack {
       token = orgToken.accessToken || orgToken.token;
     }
     return await tryTimes(async () => {
-      console.log('tyring');
+      console.log('checking BPI status');
       const status = await Baseline.fetchStatus(
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
@@ -959,8 +963,7 @@ export class ParticipantStack {
     const orgAddress = await this.resolveOrganizationAddress();
 
     // Generate config file
-    const tokenResp = await this.createWorkgroupToken();
-    const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${tokenResp.token}\n`;
+    const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${this.orgRefreshToken}\n`;
     const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
     await this.requireIdent();
