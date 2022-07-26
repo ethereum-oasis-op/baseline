@@ -103,6 +103,8 @@ export class ParticipantStack {
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
     console.log('registered organization');
 
+    await this.requireOrgTokens();
+
     if (this.baselineConfig.operator) {
       if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
         await this.setWorkgroup(this.baselineConfig.workgroup);
@@ -400,10 +402,11 @@ export class ParticipantStack {
       return Promise.reject(`workgroup not created; instance is associated with workgroup: ${this.workgroup.name}`);
     }
 
-    this.workgroup = await this.baseline?.createWorkgroup({
-      config: {
-        baselined: true,
-      },
+    this.workgroup = await Ident.clientFactory(
+      this.orgAccessToken!,
+      this.baselineConfig?.identApiScheme,
+      this.baselineConfig?.identApiHost,
+    ).createApplication({
       name: name,
       network_id: this.baselineConfig?.networkId,
     });
@@ -963,7 +966,7 @@ export class ParticipantStack {
     const orgAddress = await this.resolveOrganizationAddress();
 
     // Generate config file
-    const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.workgroup.id}:\n  api-token: ${this.orgRefreshToken}\n`;
+    const configurationFileContents = `access-token: ${this.baselineConfig?.userAccessToken}\nrefresh-token: ${this.baselineConfig?.userRefreshToken}\n${this.org.id}:\n  refresh-token: ${this.orgRefreshToken}\n`;
     const provideConfigFileName=`${process.cwd()}/.prvd-${this.baselineConfig?.orgName.replace(/\s+/g, '')}-cli.yaml`;
     fs.writeFileSync(provideConfigFileName, configurationFileContents);
     await this.requireIdent();
@@ -974,7 +977,7 @@ export class ParticipantStack {
     runcmd += ` --config="${provideConfigFileName}"`
     runcmd += ` --ident-host="${this.baselineConfig?.identApiHost}"`
 		runcmd += ` --ident-scheme="${this.baselineConfig?.identApiScheme}"`
-		runcmd += ` --jwt-signer-public-key="${this.baselineConfig?.natsPublicKey}"`
+		runcmd += ` --jwt-signer-public-key="${this.natsConfig?.publicKey.replaceAll('\n', '\\n')}"`
     runcmd += ` --messaging-endpoint="nats://localhost:${this.baselineConfig?.baselineMessagingPort}"`
     runcmd += ` --name="${this.baselineConfig?.orgName.replace(/\s+/g, '')}"`
     runcmd += ` --nats-auth-token="${this.natsConfig?.bearerToken}"`
