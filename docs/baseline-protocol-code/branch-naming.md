@@ -6,19 +6,18 @@
 
 ## Feature
 
-*feature/XYZ-this-is-a-new-feature-branch* - related issue XYZ.
+*feature/XYZ-this-is-a-new-feature-branch* - related issue with number id XYZ.
 
 *feature/BLIP-#-repo-branch-standards* - related BLIP-#.
 
 ## Bugs
 
-*bugfix/XYZ-name-of-the-bug* - related issue XYZ.
-
+*bugfix/XYZ-name-of-the-bug* - related issue with number id XYZ.
 ## Hotfix
 
 Hotfix is branched from the release branch.
 
-*hotfix/XYZ-this-is-a-hotfix* - related issue XYZ.
+*hotfix/XYZ-this-is-a-hotfix* - related issue with number id XYZ.
 
 ## Release
 
