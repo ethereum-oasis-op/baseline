@@ -2,22 +2,26 @@
 
 ## Main
 
-*main* - main development branch, feature and release branches branched from it, changes only through the PR process.
+*main* - main development branch, feature, bugfix and release branches branched from it. Changes only through the PR process.
 
 ## Feature
 
-*feature/XYZ-this-is-a-new-feature-branch* - in case related issue XYZ exists
+*feature/XYZ-this-is-a-new-feature-branch* - related issue XYZ.
 
-*feature/BLIP-#-repo-branch-standards* - in case related BLIP-# exists
-
-*feature/this-is-a-new-feature-branch* - in case no related item exists
+*feature/BLIP-#-repo-branch-standards* - related BLIP-#.
 
 ## Bugs
 
-*bugfix/name-of-the-bug*
+*bugfix/XYZ-name-of-the-bug* - related issue XYZ.
+
+## Hotfix
+
+Hotfix is branched from the release branch.
+
+*hotfix/XYZ-this-is-a-hotfix* - related issue XYZ.
 
 ## Release
 
-Git flow for releases is work in progress, will be added here eventually
+Git flow for releases is work in progress, will be added here eventually.
 
 *release/1.0.0* - cut from main when ready
