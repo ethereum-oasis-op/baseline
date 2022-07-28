@@ -955,7 +955,9 @@ export class ParticipantStack {
   }
 
   async deployBaselineStack(): Promise<any> {
-    const registryContract = await this.requireRegistryContract('organization-registry');
+    const registryContract = this.baselineConfig.operator
+      ? await this.requireRegistryContract('organization-registry')
+      : null;
 
     await this.requireOrgTokens();
 
@@ -993,14 +995,14 @@ export class ParticipantStack {
     runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
     runcmd += ` --privacy-host="${this.baselineConfig?.privacyApiHost}"`
 		runcmd += ` --privacy-scheme="${this.baselineConfig?.privacyApiScheme}"`
-		runcmd += ` --registry-contract-address="${registryContract.address}"`
+		if (this.baselineConfig.operator) runcmd += ` --registry-contract-address="${registryContract.address}"`
     runcmd += ` --redis-hostname=${name[0]}-redis`
     runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
     runcmd += ` --sor="ephemeral"`
     runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
 		runcmd += ` --vault-refresh-token="${this.orgRefreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
-		runcmd += ` --workgroup="${this.workgroup?.id}"`
+    if (this.baselineConfig.operator) runcmd += ` --workgroup="${this.workgroup?.id}"`
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
