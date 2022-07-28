@@ -631,12 +631,13 @@ export class ParticipantStack {
     }
     return await tryTimes(async () => {
       console.log('checking BPI status');
-      const status = await Baseline.fetchStatus(
+      const status = await Baseline.clientFactory(
+        this.orgAccessToken!,
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
-      );
+      ).status();
       console.log(status);
-      if (status != null) {
+      if (status === 204) {
         return true;
       }
       throw new Error();
