@@ -18,6 +18,6 @@
 
 ## Release
 
-Git flow for releases is work in progress, will be added her eeventually
+Git flow for releases is work in progress, will be added here eventually
 
 *release/1.0.0* - cut from main when ready
