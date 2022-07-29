@@ -28,7 +28,7 @@ npm start
 - [x] User Authentication API
 - [x] Fetch user via ID API
 - [x] User Set Time Availability API
-- [x] Schedule Appointment API
+- [ ] Schedule Appointment API
 
 ### Privacy Tasks
 
