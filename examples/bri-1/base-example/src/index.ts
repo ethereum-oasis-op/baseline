@@ -72,6 +72,7 @@ export class ParticipantStack {
   private org?: any;
   private orgAccessToken?: string;
   private orgRefreshToken?: string;
+  private subjectAccount?: SubjectAccount;
   private workgroup?: any;
   private workgroupCounterparties: string[] = [];
   // private workgroupToken?: any; // workgroup bearer token; used for automated setup
@@ -138,6 +139,10 @@ export class ParticipantStack {
     console.log('deployed baseline stack');
     await this.requireBaselineStack();
     console.log('connected to baseline stack');
+
+    if (this.baselineConfig.operator) {
+      this.subjectAccount = await this.createSubjectAccount(await this.fetchOrganizationContract());
+    }
 
     this.initialized = true;
   }
@@ -332,7 +337,7 @@ export class ParticipantStack {
     await this.requireIdent();
     await this.deployBaselineStack();
     await this.requireBaselineStack();
-    await this.createSubjectAccount(await this.fetchOrganizationContract());
+    this.subjectAccount = await this.createSubjectAccount(await this.fetchOrganizationContract());
     await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
       address: await this.resolveOrganizationAddress(),
@@ -508,9 +513,6 @@ export class ParticipantStack {
       const orgToken = await this.createOrgRefreshToken();
       this.orgAccessToken = orgToken.accessToken!;
       this.orgRefreshToken = orgToken.refreshToken!;
-
-      console.log('orgAccessToken', this.orgAccessToken);
-      console.log('orgRefreshToken', this.orgRefreshToken);
     }
   }
 
@@ -568,7 +570,7 @@ export class ParticipantStack {
     const subjectAccountParams = {
       metadata: {
         organization_id: this.org.id,
-        organization_address: this.org.address,
+        organization_address: await this.resolveOrganizationAddress(),
         organization_domain: 'org.local',
         organization_refresh_token: this.orgRefreshToken,
         workgroup_id: this.workgroup.id,
@@ -915,6 +917,15 @@ export class ParticipantStack {
     throw new Error();
   }
 
+  async requireSubjectAccount(): Promise<SubjectAccount> {
+    return await tryTimes(async () => {
+      if (this.subjectAccount) {
+        return this.subjectAccount;
+      }
+      throw new Error();
+    })
+  }
+
   async requireWorkgroup(): Promise<void> {
     return await tryTimes(async () => {
       if (this.workgroup) {
@@ -937,13 +948,9 @@ export class ParticipantStack {
       this.baselineConfig?.nchainApiHost,
     );
 
-    console.log('fetching contract details');
-
     const contracts = await nchain.fetchContracts({
       type: type,
     });
-
-    console.log('contracts', contracts);
 
     if (contracts && contracts.results.length === 1 && contracts.results[0]['address'] !== '0x') {
       const contract = await nchain.fetchContractDetails(contracts.results[0].id!);
@@ -1023,10 +1030,9 @@ export class ParticipantStack {
 		runcmd += ` --vault-refresh-token="${this.orgRefreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
     if (this.baselineConfig.operator) runcmd += ` --workgroup="${this.workgroup?.id}"`
+    runcmd += ` --without-require-subject-account="true"`
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
-
-    console.log('runenv+runcmd', runenv+runcmd);
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
     console.log(`shelled out to start baseline protocol instance (BPI) containers; child: ${child}`)

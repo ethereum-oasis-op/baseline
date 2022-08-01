@@ -87,6 +87,11 @@ export const shouldBehaveLikeAWorkgroupOrganization = (getApp: () => Participant
         assert(org.id, 'org id should not be null');
       });
 
+      it('should create a subject account', async () => {
+        const subjectAccount = await getApp().requireSubjectAccount();
+        assert(subjectAccount, 'subject account should not be null');
+      });
+
       it('should register the organization in the on-chain registry using its default secp256k1 address', async () => {
         const org = await getApp().requireOrganization(address);
         assert(org, 'org should be present in on-chain registry');

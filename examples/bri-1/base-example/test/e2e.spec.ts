@@ -76,7 +76,6 @@ describe('Baseline', () => {
       'bobp455',
     );
     bob = bobUserToken[0];
-    console.log('bob', bob);
 
     bearerTokens = {};
     bearerTokens[alice['id']] = aliceUserToken[1];
