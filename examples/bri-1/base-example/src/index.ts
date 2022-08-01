@@ -3,7 +3,17 @@ import { IMessagingService, messagingProviderNats, messagingServiceFactory } fro
 import { zkSnarkProverProviderServiceFactory, zkSnarkProverProviderServiceProvide, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
 import { IProverProver, IProverRegistry, IProverVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
 import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
-import { Application as Workgroup, Prover, Invite, Vault as ProvideVault, Object as BaselineObject, Organization, Token, Key as VaultKey } from '@provide/types';
+import {
+  Application as Workgroup,
+  Prover,
+  Invite,
+  Vault as ProvideVault,
+  Object as BaselineObject,
+  Organization,
+  Token,
+  Key as VaultKey,
+  SubjectAccount,
+} from '@provide/types';
 import { Baseline, Capabilities, Ident, NChain, Vault, baselineClientFactory, capabilitiesFactory, nchainClientFactory } from 'provide-js';
 import { compile as solidityCompile } from 'solc';
 import * as jwt from 'jsonwebtoken';
@@ -322,6 +332,7 @@ export class ParticipantStack {
     await this.requireIdent();
     await this.deployBaselineStack();
     await this.requireBaselineStack();
+    await this.createSubjectAccount(await this.fetchOrganizationContract());
     await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
       address: await this.resolveOrganizationAddress(),
@@ -553,11 +564,12 @@ export class ParticipantStack {
     })
   }
 
-  async fetchOrganization(address: string, orgRegistryContract: any): Promise<Organization> {
+  async createSubjectAccount(orgRegistryContract: any): Promise<SubjectAccount> {
     const subjectAccountParams = {
       metadata: {
         organization_id: this.org.id,
-        organization_address: address,
+        organization_address: this.org.address,
+        organization_domain: 'org.local',
         organization_refresh_token: this.orgRefreshToken,
         workgroup_id: this.workgroup.id,
         registry_contract_address: orgRegistryContract.address,
@@ -577,12 +589,20 @@ export class ParticipantStack {
       this.baselineConfig?.baselineApiPath,
     );
 
+    let subjectAccount;
+
     try {
-      const subjectAccount = await baseline.createSubjectAccount(this.org.id, subjectAccountParams);
+      subjectAccount = await baseline.createSubjectAccount(this.org.id, subjectAccountParams);
       console.log('subjectAccount', subjectAccount);
     } catch (error) {
       console.log('error on createSubjectAccount', error);
     }
+
+    return subjectAccount;
+  }
+
+  async fetchOrganization(address: string, orgRegistryContract: any): Promise<Organization> {
+    await this.requireOrgTokens();
 
     const nchain = nchainClientFactory(
       this.orgAccessToken!,
