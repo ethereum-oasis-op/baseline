@@ -10,8 +10,8 @@
 
 *feature/BLIP-#-repo-branch-standards* - related BLIP-#.
 
-Note: *When working on a branch that covers multiple issues and\or bugs, use the main one for the name of the branch but make sure
-to link all of the affected issues before merging the PR.*
+Note: *When working on a branch that covers multiple issues or blips, use the main one for the name of the branch but make sure
+to link all related ones before merging the PR.*
 
 ## Bugs
 
