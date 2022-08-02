@@ -30,7 +30,8 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 | Name                                                                              | Company                         |
 | --------------------------------------------------------------------------------- | ------------------------------- |
 | [**Dr. Andreas Freund**](https://www.linkedin.com/in/afconsultant/)               | ZK & L2 Leader, EEA L2 WG Chair |
-| [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/) **--** Co-Chair    | Golden Next Ventures            |
+| [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/) **--** Chair       | Golden Next Ventures            |
+| ****[**Sonal Patel**](https://www.linkedin.com/in/sonalpatel13/)****              | ConsenSys Mesh                  |
 | [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)                    | Unibright                       |
 | [**Mehran Shakeri**](https://www.linkedin.com/in/mehran-shakeri-8833b347/)        | SAP                             |
 | [**Luiz Soares**](./#your-project-governance-board)                               | WhitePrompt                     |
@@ -38,11 +39,10 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 | [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)                        | Microsoft                       |
 | [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)                       | Provide                         |
 | [**Jack Wiering**](https://www.linkedin.com/in/jackwiering1977/)                  | Unibright                       |
-| [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) -- Co-Chair          | ConsenSys Mesh                  |
 
 ## Standards Team
 
-The standards team worked through most of 2021 to develop a world-class, technical specification for implementers of the [Baseline Protocol specification](broken-reference). The draft is being shepherded through the OASIS process of review and amendments, culminating in becoming an official [OASIS standard](https://www.oasis-open.org/standards/).&#x20;
+The standards team worked through most of 2021 to develop a world-class, technical specification for implementers of the [Baseline Protocol specification](broken-reference/). The draft is being shepherded through the OASIS process of review and amendments, culminating in becoming an official [OASIS standard](https://www.oasis-open.org/standards/).
 
 This team deserves high recognition from the community for its hard-toiling service and commitment to the Baseline Protocol.
 
