@@ -204,7 +204,6 @@ export class JSDomErrorHandler {
     let matched = false;
     for (let match in this.errorHandlers) {
       if (msg.indexOf(match) > 0) {
-        console.log(msg);
         this.errorHandlers[match]();
         matched = true;
       }
