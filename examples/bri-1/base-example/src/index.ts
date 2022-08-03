@@ -34,7 +34,7 @@ class TryError extends Error {
 }
 
 
-export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 100000, wait: number = 500): Promise<T> => {
+export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 10000, wait: number = 500): Promise<T> => {
   const errors : any[] = [];
   for (let index = 0; index < times; index++) {
     try {
@@ -597,7 +597,6 @@ export class ParticipantStack {
       subjectAccount = await baseline.createSubjectAccount(this.org.id, subjectAccountParams);
       console.log('subjectAccount', subjectAccount);
     } catch (error) {
-      console.log('error on createSubjectAccount', error);
     }
 
     return subjectAccount;
