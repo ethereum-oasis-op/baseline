@@ -33,6 +33,14 @@ On August 26, 2020, the first set of generalized core libraries for the baseline
 
 Most/all baseline reference implementations shall include a "base" example application, reusable libraries, and sometimes relevant components, such as specific connectors.
 
+The reference implementations below are given in chronological order of submission:
+
+### **Radish34**
+
+Strictly speaking, Radish34, the first demo code that started the Baseline Protocol project in 2019, is not a reference implementation. It is a complete stack written as a proof of concept for a specific story around the use case of purchase orders and discount agreements. This work does not separate the implementation from a set of core, abstract interfaces. But it did allow the open source community to begin the abstraction and generalization process that resulted in the Baseline Protocol v0.1 (and subsequent) versions.
+
+Radish34 might be called BRI-0, but for historical purposes, and so as not to confuse people who have "grown up" with Radish34 on their baseline journey, we keep the name.
+
 ### **BRI-1**
 
 Baseline Reference Implementation #1 ([BRI-1](bri-1/)) was developed by contributors from Provide, Nethermind, EY and others, with support and oversight from the entire Baseline Maintainer team. This implementation correctly utilizes the core Baseline Protocol abstract interfaces, which are free of dependencies on any particular set of components or proprietary systems, but it also relies heavily on tools and systems made available by Provide. Provide's [Shuttle](https://shuttle.provide.services/waitlist) infrastructure deployment and manifold system is used by many \_baselining \_developers to make their work easier. Nethermind is the first Ethereum public client to implement the `IBaselineRPC` interface (found [here](https://github.com/ethereum-oasis/baseline/tree/master/core/api#interfaces)). NATS is a production-ready enterprise messaging layer that meets the privacy and performance requirements for baselining.
@@ -41,10 +49,16 @@ Details on BRI-1 can be found [here](bri-1/), and the code can be found [here](h
 
 ### **BRI-2**
 
-Baseline Reference Implementation#2 ([BRI-2](bri-2.md)) is the second "baseline reference implementation". The purpose of this project is to show a baseline stack using different services compared to BRI-1, but this stack must still comply with the baseline specificiations, therefore allowing interoperability with other baseline stacks. `bri-2` introduces the `commit-mgr` service to `baseline`. The `commit-mgr` acts as an extension to a web3 provider, which allows a variety of Ethereum clients to become "baseline compatible".
+Baseline Reference Implementation#2 ([BRI-2](bri-2.md)) is the second "baseline reference implementation". The purpose of this project is to show a baseline stack using different services compared to BRI-1, but this stack must still comply with the baseline specifications, therefore allowing interoperability with other baseline stacks. `bri-2` introduces the `commit-mgr` service to `baseline`. The `commit-mgr` acts as an extension to a web3 provider, which allows a variety of Ethereum clients to become "baseline compatible".
 
-### **Radish34**
+In addition, the following, independent projects are engaged in implementations of the Baseline Protocol.  
 
-Strictly speaking, Radish34, the first demo code that started the Baseline Protocol project in 2019, is not a reference implementation. It is a complete stack written as a proof of concept for a specific story around the use case of purchase orders and discount agreements. This work does not separate the implementation from a set of core, abstract interfaces. But it did allow the open source community to begin the abstraction and generalization process that resulted in the Baseline Protocol v0.1 (and subsequent) versions.
+**Baseledger**
 
-Radish34 might be called BRI-0, but for historical purposes, and so as not to confuse people who have "grown up" with Radish34 on their baseline journey, we keep the name.
+Baseledger is a separate open source project developing a public Layer-2 implementation of Baseline-enabled processes. Details on the project can be found on its [website](https://baseledger.net/).
+
+**PRVD OASIS Open Project**
+
+PRVD is a separate OASIS Open Project enhancing the BRI-1 reference implementation. You can find out more at the [website](https://prvd-oasis.org/) and the [GitHub organization](https://github.com/prvd-oasis).
+
+Working on a Baseline implementation? Feel free to let us know.

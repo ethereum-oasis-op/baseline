@@ -36,16 +36,4 @@ The Baseline Protocol Standard contains three specifications - [CORE](https://gi
 
 ## The Baseline Protocol Reference Implementations
 
-A growing number of [Reference Implementations](docs/bri/overview-of-reference-implementations.md) and demos can be [found here ](https://github.com/ethereum-oasis/baseline/tree/master/examples)to help you understand baselining and give you ideas for your implementation needs.
-
-The first complete reference implementation, [**BRI-1**](docs/bri/bri-1/) **** has been developed by individuals and community leaders including Provide, EY, Nethermind, ConsenSys Mesh, and others.
-
-Today there are demos, prototypes, and production systems being developed in more places than can be tracked, and some have been submitted as public domain contributions to the community.
-
-### PRVD OASIS
-
-The source code for the BRI-1 reference implementation has been donated by Provide to OASIS to form the [PRVD OASIS Open Project](https://prvd-oasis.org). You can view the GitHub organization [here](https://github.com/prvd-oasis).
-
-### Baseledger
-
-The [Baseline Protocol standard ](broken-reference)does not stipulate the use of any particular state machine as the common frame of reference, where baseline proofs are deposited and managed in a baselined workgroup. However, Baseledger is the first public Layer-2 implementation of this service, details can be [found here](https://baseledger.net).
+A growing number of Baseline Protocol Reference Implementations can be found [here](docs/bri/overview-of-reference-implementations.md). Demos and examples can be found [here](https://github.com/ethereum-oasis/baseline/tree/master/examples). These are intended to help you understand baselining and give you ideas for your implementation needs.
