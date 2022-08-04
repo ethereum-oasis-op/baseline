@@ -567,6 +567,10 @@ export class ParticipantStack {
   }
 
   async createSubjectAccount(orgRegistryContract: any): Promise<SubjectAccount> {
+    await this.requireOrgTokens();
+
+    console.log('creating subject account');
+
     const subjectAccountParams = {
       metadata: {
         organization_id: this.org.id,
@@ -580,26 +584,19 @@ export class ParticipantStack {
       },
     };
 
-    console.log('subjectAccountParams', subjectAccountParams);
-
-    await this.requireOrgTokens();
-
-    const baseline = Baseline.clientFactory(
-      this.orgAccessToken!,
-      this.baselineConfig?.baselineApiScheme,
-      this.baselineConfig?.baselineApiHost,
-      this.baselineConfig?.baselineApiPath,
-    );
-
-    let subjectAccount;
-
-    try {
-      subjectAccount = await baseline.createSubjectAccount(this.org.id, subjectAccountParams);
-      console.log('subjectAccount', subjectAccount);
-    } catch (error) {
-    }
-
-    return subjectAccount;
+    return await tryTimes(async () => {
+      const subjectAccount = await Baseline.clientFactory(
+        this.orgAccessToken!,
+        this.baselineConfig?.baselineApiScheme,
+        this.baselineConfig?.baselineApiHost,
+        this.baselineConfig?.baselineApiPath,
+      ).createSubjectAccount(this.org.id, subjectAccountParams);
+      if (subjectAccount) {
+        console.log('created subject account');
+        return subjectAccount;
+      }
+      throw new Error();
+    })
   }
 
   async fetchOrganization(address: string, orgRegistryContract: any): Promise<Organization> {
