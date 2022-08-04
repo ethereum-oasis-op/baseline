@@ -87,7 +87,7 @@ export const bpiFactory = async (
   return new ParticipantStack(
     {
       baselineApiScheme: 'http',
-      baselineApiHost: baselineHost,
+      baselineApiHost: baselineHost.replace('localhost', '127.0.0.1'),
       baselineMessagingPort: baselineMessagingPort,
       baselineMessagingStreamingPort: baselineMessagingStreamingPort,
       baselineMessagingWebsocketPort: baselineMessagingWebsocketPort,
