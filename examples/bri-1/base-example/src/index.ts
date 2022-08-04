@@ -656,6 +656,7 @@ export class ParticipantStack {
       ).status();
       console.log(status);
       if (status === 204) {
+        await sleep(10000);
         return true;
       }
       throw new Error();
