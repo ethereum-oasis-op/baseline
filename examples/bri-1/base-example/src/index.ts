@@ -579,7 +579,7 @@ export class ParticipantStack {
         organization_id: this.org.id,
         organization_address: address,
         organization_domain: 'org.local',
-        organization_messaging_endpoint: await this.resolveMessagingEndpoint(address),
+        organization_messaging_endpoint: this.natsConfig.natsServers[0],
         organization_refresh_token: this.orgRefreshToken,
         workgroup_id: this.workgroup.id,
         registry_contract_address: orgRegistryContract.address,
@@ -615,9 +615,6 @@ export class ParticipantStack {
     const signerResp = (await nchain.createAccount({
       network_id: this.baselineConfig?.networkId,
     }));
-    console.log('signerResp', signerResp);
-
-    console.log('address', address);
 
     const resp = await NChain.clientFactory(
       this.orgAccessToken!,
@@ -629,7 +626,6 @@ export class ParticipantStack {
       value: 0,
       account_id: signerResp['id'],
     });
-    console.log('resp', resp);
 
     if (resp && resp['response'] && resp['response'][0] !== '0x0000000000000000000000000000000000000000') {
       const org = {} as Organization;
@@ -658,7 +654,7 @@ export class ParticipantStack {
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
       ).status();
-      console.log(status);
+      console.log('BPI status is now', status);
       if (status === 204) {
         await sleep(10000);
         return true;
@@ -910,7 +906,7 @@ export class ParticipantStack {
   async requireOrganization(address: string): Promise<Organization> {
     const orgRegistryContract = await this.fetchOrganizationContract();
     const org = await this.fetchOrganization(address, orgRegistryContract);
-    console.log('org', org);
+    console.log('found org', org.id);
     if (org && org['address'].toLowerCase() === address.toLowerCase()) {
       return org;
     }
