@@ -572,11 +572,14 @@ export class ParticipantStack {
 
     console.log('creating subject account');
 
+    const address = await this.resolveOrganizationAddress();
+
     const subjectAccountParams = {
       metadata: {
         organization_id: this.org.id,
-        organization_address: await this.resolveOrganizationAddress(),
+        organization_address: address,
         organization_domain: 'org.local',
+        organization_messaging_endpoint: await this.resolveMessagingEndpoint(address),
         organization_refresh_token: this.orgRefreshToken,
         workgroup_id: this.workgroup.id,
         registry_contract_address: orgRegistryContract.address,
