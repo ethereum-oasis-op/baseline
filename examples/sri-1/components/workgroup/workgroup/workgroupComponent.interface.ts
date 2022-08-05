@@ -10,6 +10,7 @@ export interface IWorkgroupComponent {
 
     workgroups: Workgroup[];
     invitations: Invitation[];
+    archivedWorkgroups: Workgroup[];
     getWorkgroups(): Workgroup[];
     createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[], securityPolicy: Security, privacyPolicy: Privacy): Workgroup;  //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. [R237] A workgroup MUST consist of at least one BPI Subject participant.
     getWorkgroupById(id: string): Workgroup
@@ -18,6 +19,6 @@ export interface IWorkgroupComponent {
     getReceivedInvitationsByEmail(email: string): Invitation[];
     acceptWorkgroupInvitation(id: string, name: string, recipient: string, workGroupId: string) : {acceptanceStatus: string};
     updateWorkgroup(id: string, ...updates: string[] ): Workgroup; //TODO string collection of updates to be made
-    deleteWorkgroup(id: string): { workgroupName: string } 
-    archiveWorkgroup(id: string): { workgroupName: string }
+    deleteWorkgroup(id: string): Workgroup[];
+    archiveWorkgroup(id: string): Workgroup | string;
 }
