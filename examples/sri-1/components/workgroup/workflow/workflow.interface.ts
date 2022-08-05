@@ -15,4 +15,5 @@ This means that the output of a workstep in a workflow is a required input into 
 
 [R235]
 A workflow with more than one workstep and a given set of inputs MUST be sequentially executed by a BPI.
-This simply means that for a given set of inputs there is only one process path through a given workflow. */
+This simply means that for a given set of inputs there is only one process path through a given workflow. 
+*/

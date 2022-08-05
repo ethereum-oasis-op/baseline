@@ -1,66 +1,99 @@
-import { Workstep } from '../workstep';
+import { Workstep } from '../workstep/workstep';
 import { BpiSubject } from '../identity/bpiSubject';
 import { IWorkgroup } from './workgroup.interface';
+import { Workflow } from '../workflow/workflow';
+import { Security } from '../policy/security'
+import { Privacy } from "../policy/privacy"
 
 export class Workgroup implements IWorkgroup {
     id: string;
     name: string
     administrator: BpiSubject[] = []; //[R238] A workgroup MUST have at least one administrator.
-    securityPolicy: AuthRules[] = []; //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy.
-    privacyPolicy: DataVisibilityRoles[] = []; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
+    securityPolicy: Security[] = []; //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy.
+    privacyPolicy: Privacy[] = []; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
     participants: BpiSubject[] = [];
     worksteps: Workstep[] = [];
-    workflow: Workstep[] = [];
+    workflows: Workflow[] = [];
 
-    constructor(id: string, name: string, participants: BpiSubject[],  ) {
-
+    constructor(id: string, name: string, administrators: BpiSubject[], participants: BpiSubject[], securityPolicy: Security, privacyPolicy: Privacy ) {
+        this.id = id;
+        this.name = name;
+        this.administrator.push(administrators);
+        this.participants.push(participants);
+        this.securityPolicy.push(securityPolicy);
+        this.privacyPolicy.push(privacyPolicy);
     }
-    addParticipants(bpiSubject: BpiSubject){
-        return
+
+    addParticipant(bpiSubject: BpiSubject) {
+        return  this.participants.push(bpiSubject);
     };
-    getParticipantById(id: string): BpiSubject{
-        return
+
+    addParticipants(bpiSubjects: BpiSubject[]) {
+        bpiSubjects.forEach(subject => {
+            this.participants.push(subject);
+        });
+    }
+
+    getParticipantById(id: string): BpiSubject {
+        return this.participants.find(subject => subject.id == id);
     };
-    getParticipants(): BpiSubject[]{
-        return
+
+    getAllParticipants(): BpiSubject[] {
+        return this.participants;
     };
-    updateParticipant(id: string, update:any): BpiSubject{
-        return
+
+    updateParticipant(id: string, ...update:any): BpiSubject{
+        //TODO write logic for dynamic update
+        return null;
     };
+
     removeParticipant(id: string): BpiSubject{
-        return
+        return this.participants = this.participants.filter(subject => subject.id != id);
     };
+
     removeParticipants(ids: string[]): BpiSubject[]{
-        return
+        return this.participants = this.participants.filter(subject => !ids.includes(subject.id))
     };
-    addSecurityPolicy() {
-        return
+
+    addSecurityPolicy(securityPolicy: Security) {
+        return this.securityPolicy.push(securityPolicy);
     };
-    removeSecurityPolicy() {
-        return
+
+    removeSecurityPolicy(securityPolicy: Security) {
+        return this.securityPolicy = this.securityPolicy.filter(policy => policy.id != securityPolicy.id);
     };
-    updateSecurityPolicy() {
-        return
+
+    updateSecurityPolicy(id: string, ...updates: string[]) {
+        //TODO write logic for dynamic update
+        return null;
     };
-    addPrivacyPolicy() {
-        return
+
+    addPrivacyPolicy(privacyPolicy: Privacy) {
+        return this.privacyPolicy.push(privacyPolicy);
     };
-    removePrivacyPolicy() {
-        return
+
+    removePrivacyPolicy(privacyPolicy: Privacy) {
+        this.privacyPolicy = this.privacyPolicy.filter(policy => policy.id != privacyPolicy.id);
     };
-    updatePrivacyPolicy() {
-        return
+
+    updatePrivacyPolicy(id: string, ...updates: string[]) {
+        //TODO write logic for dynamic update
+        return null;
     };
+
     addWorkstep(workstep: Workstep) {
-        return
+        return this.worksteps.push(workstep);
     };
-    getWorkstepyId(workstepId: string) {
-        return
+
+    getWorkstepById(workstepId: string) {
+        return this.worksteps.find(step => step.id == workstepId);
     };
-    addWorkflow(...worksteps: Workstep[]) {
-        return
+
+    addWorkflow(workflow: Workflow) {
+        return this.workflows.push(workflow);
     };
+
     getWorkflowById(workflowId: string) {
-        return
+        return this.workflows.find(workflow => workflow.id == workflowId);
     };
 }

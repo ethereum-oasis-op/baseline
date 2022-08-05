@@ -1,31 +1,35 @@
-import { Workstep } from '../workstep';
-import { BpiSubject } from '../identity/bpiSubject';
+import { Workstep } from '../workstep/workstep';
+import { BpiSubject } from ('../identity/bpiSubject';
+import { Security } from '../policy/security';
+import { Privacy } from '../policy/privacy';
+import { Workflow } from '../workflow/workflow';
 
 export interface IWorkgroup {
     id: string;
     name: string;
     administrator: BpiSubject[]; //[R238] A workgroup MUST have at least one administrator.
-    securityPolicy: AuthRules[]; //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy.
-    privacyPolicy: DataVisibilityRoles[]; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
+    securityPolicy: Security[]; //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy. //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup.
+    privacyPolicy: Privacy[]; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
     participants: BpiSubject[];
     worksteps: Workstep[];
-    workflow: Workstep[];
+    workflows: Workflow[];
 
-    addParticipants(bpiSubject: BpiSubject);
+    addParticipant(bpiSubject: BpiSubject);
+    addParticipants(bpiSubjects: BpiSubject[]);
     getParticipantById(id: string): BpiSubject;
-    getParticipants(): BpiSubject[];
+    getAllParticipants(): BpiSubject[];
     updateParticipant(id: string, update:any): BpiSubject;
     removeParticipant(id: string): BpiSubject;
     removeParticipants(ids: string[]): BpiSubject[];
-    addSecurityPolicy();
-    removeSecurityPolicy();
-    updateSecurityPolicy();
-    addPrivacyPolicy();
-    removePrivacyPolicy();
-    updatePrivacyPolicy();    
+    addSecurityPolicy(securityPolicy: Security);
+    removeSecurityPolicy(securityPolicy: Security);
+    updateSecurityPolicy(id: string, ...udpates: string[]);
+    addPrivacyPolicy(privacyPolicy: Privacy);
+    removePrivacyPolicy(privacyPolicy: Privacy);
+    updatePrivacyPolicy(id: string, ...udpates: string[]);    
     addWorkstep(workstep: Workstep);
-    getWorkstepyId(workstepId: string);
-    addWorkflow(...worksteps: Workstep[]);
+    getWorkstepById(workstepId: string);
+    addWorkflow(workflow: Workflow);
     getWorkflowById(workflowId: string);
 }
 

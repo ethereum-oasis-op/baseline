@@ -1,20 +1,23 @@
-import { Workstep } from '../workstep';
+import { Workstep } from '../workstep/workstep';
 import { Workgroup } from './workgroup';
 import { BpiSubject } from '../identity/bpiSubject';
 import { Agreement } from '../storage/agreement';
-import { Invitation } from './invitation';
-import { Organization } from "./organization"
+import { Invitation } from '../invitation/invitation';
+import { Security } from '../policy/security';
+import { Privacy } from '../policy/privacy';
 
 export interface IWorkgroupComponent {
+
+    workgroups: Workgroup[];
+    invitations: Invitation[];
     getWorkgroups(): Workgroup[];
-    createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[]): Workgroup;  //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. [R237] A workgroup MUST consist of at least one BPI Subject participant.
+    createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[], securityPolicy: Security, privacyPolicy: Privacy): Workgroup;  //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. [R237] A workgroup MUST consist of at least one BPI Subject participant.
     getWorkgroupById(id: string): Workgroup
     sendInviteToWorkgroup(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation;
     getInvitationById(id: string): Invitation;
     getReceivedInvitationsByEmail(email: string): Invitation[];
     acceptWorkgroupInvitation(id: string, name: string, recipient: string, workGroupId: string) : {acceptanceStatus: string};
-    updateWorkgroup(id: string, ): Workgroup; //TODO what values should be updated? 
-    getWorkgroupOrganizations(id: string): Organization[];
-    createWorkgroupOrganization(id: string): {workgroup: Workgroup, organization: Organization};
-    updateWorkgroupOrganization(id: string): Organization;
+    updateWorkgroup(id: string, ...updates: string[] ): Workgroup; //TODO string collection of updates to be made
+    deleteWorkgroup(id: string): { workgroupName: string } 
+    archiveWorkgroup(id: string): { workgroupName: string }
 }
