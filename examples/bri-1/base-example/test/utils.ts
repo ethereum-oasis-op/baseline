@@ -223,6 +223,6 @@ export class JSDomErrorHandler {
   }
 
   public ignoreNetworkFailures() {
-    this.addHandler("Request.onRequestError", () => {});
+    this.addHandler('Request', () => {});
   }
 }

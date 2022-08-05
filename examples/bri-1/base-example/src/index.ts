@@ -142,6 +142,7 @@ export class ParticipantStack {
 
     if (this.baselineConfig.operator) {
       this.subjectAccount = await this.createSubjectAccount(await this.fetchOrganizationContract());
+      console.log('created subject account');
     }
 
     this.initialized = true;
@@ -592,9 +593,9 @@ export class ParticipantStack {
         this.baselineConfig?.baselineApiPath,
       ).createSubjectAccount(this.org.id, subjectAccountParams);
       if (subjectAccount) {
-        console.log('created subject account');
         return subjectAccount;
       }
+
       throw new Error();
     })
   }
