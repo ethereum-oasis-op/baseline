@@ -71,6 +71,7 @@ export const bpiFactory = async (
   rpcScheme,
   redisHost,
   redisPort,
+  postgresPort,
   workgroup,
   workgroupName,
   workgroupToken,
@@ -105,6 +106,7 @@ export const bpiFactory = async (
       rpcScheme: rpcScheme,
       redisHost: redisHost,
       redisPort: redisPort,
+      postgresPort: postgresPort,
       token: userAccessToken, // HACK
       userAccessToken: userAccessToken,
       userRefreshToken: userRefreshToken,

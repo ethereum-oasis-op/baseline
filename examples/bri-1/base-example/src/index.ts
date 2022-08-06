@@ -1013,7 +1013,7 @@ export class ParticipantStack {
     runcmd += ` --nchain-host="${this.baselineConfig?.nchainApiHost}"`
 		runcmd += ` --nchain-scheme="${this.baselineConfig?.nchainApiScheme}"`
 		runcmd += ` --nchain-network-id="${this.baselineConfig?.networkId}"`
-		runcmd += ` --organization="${this.org.id}"`,
+		runcmd += ` --organization="${this.org.id}"`
     runcmd += ` --organization-address="${orgAddress}"`
     runcmd += ` --organization-refresh-token="${this.orgRefreshToken}"`
     runcmd += ` --port="${this.baselineConfig?.baselineApiHost.split(':')[1]}"`
@@ -1022,6 +1022,8 @@ export class ParticipantStack {
 		if (this.baselineConfig.operator) runcmd += ` --registry-contract-address="${registryContract.address}"`
     runcmd += ` --redis-hostname=${name[0]}-redis`
     runcmd += ` --redis-port=${this.baselineConfig?.redisPort}`
+    runcmd += ` --postgres-hostname=${name[0]}-postgres`
+    runcmd += ` --postgres-port="${this.baselineConfig?.postgresPort}"`
     runcmd += ` --sor="ephemeral"`
     runcmd += ` --vault-host="${this.baselineConfig?.vaultApiHost}"`
 		runcmd += ` --vault-refresh-token="${this.orgRefreshToken}"`
