@@ -1027,6 +1027,7 @@ export class ParticipantStack {
 		runcmd += ` --vault-refresh-token="${this.orgRefreshToken}"`
 		runcmd += ` --vault-scheme="${this.baselineConfig?.vaultApiScheme}"`
     if (this.baselineConfig.operator) runcmd += ` --workgroup="${this.workgroup?.id}"`
+    if (!this.baselineConfig.operator) runcmd += ` --without-require-workgroup="true"`
     runcmd += ` --without-require-subject-account="true"`
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
