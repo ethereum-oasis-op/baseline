@@ -738,12 +738,12 @@ export class ParticipantStack {
       this.baselineConfig.vaultApiHost!,
     );
 
-    await vaultInstance.createVault({
-                    name       : `${this.org.name} Vault`,
-                    description: `${this.org.name} vault instance`,
-                  });
-
     return await tryTimes(async () => {
+      await vaultInstance.createVault({
+        name       : `${this.org.name} Vault`,
+        description: `${this.org.name} vault instance`,
+      });
+
       const vaults = await vaultInstance.fetchVaults({});
       if (vaults && vaults.results.length > 0) {
         return vaults.results[0];
