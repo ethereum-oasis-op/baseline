@@ -1030,11 +1030,12 @@ export class ParticipantStack {
     if (this.baselineConfig.operator) runcmd += ` --workgroup="${this.workgroup?.id}"`
     if (!this.baselineConfig.operator) runcmd += ` --without-require-workgroup="true"`
     runcmd += ` --without-require-subject-account="true"`
+    runcmd += ` --prune="true"`
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
-    console.log(`shelled out to start baseline protocol instance (BPI) containers; child: ${child}`)
+    console.log('shelled out to start baseline protocol instance (BPI) containers', child)
   }
 
   async startProtocolSubscriptions(): Promise<any> {
