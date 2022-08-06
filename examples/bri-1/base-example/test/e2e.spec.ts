@@ -209,7 +209,7 @@ describe('Baseline', () => {
 
         before(async () => {
           await bobBPI.inviteWorkgroupParticipant(alice.email);
-          inviteToken = await scrapeInvitationToken('bob-ident-consumer'); // if configured, ident would have sent an email to Alice
+          inviteToken = await scrapeInvitationToken('ident-consumer'); // if configured, ident would have sent an email to Alice
         });
 
         it('should have created an invite for alice', async () => {
