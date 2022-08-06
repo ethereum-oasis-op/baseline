@@ -261,10 +261,9 @@ export class ParticipantStack {
     return (await this.baselineMerkleTree?.Root());
   }
 
-
   // HACK!! workgroup/contracts should be synced via protocol
   async acceptWorkgroupInvite(inviteToken: string, contracts: any): Promise<void> {
-    if (this.workgroup || this.orgAccessToken || this.org || this.baselineConfig.operator) {
+    if (this.baselineConfig.operator) {
       return Promise.reject('failed to accept workgroup invite');
     }
 
@@ -874,7 +873,7 @@ export class ParticipantStack {
 
   async inviteWorkgroupParticipant(email: string): Promise<Invite> {
     return await Ident.clientFactory(
-      this.baselineConfig?.token,
+      this.orgAccessToken!,
       this.baselineConfig?.identApiScheme,
       this.baselineConfig?.identApiHost,
     ).createInvitation({
