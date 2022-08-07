@@ -1,14 +1,14 @@
 import { exec } from 'child_process';
 import * as log from 'loglevel';
 import { Client } from 'pg';
-import { domain } from 'process';
 import { Ident } from 'provide-js';
 import { AuthService } from 'ts-natsutil';
 import { ParticipantStack } from '../src/index';
+import {
+  promisedTimeout,
+  tryTimes,
+} from '../src/utils';
 
-export const promisedTimeout = (ms) => {
-  return new Promise(resolve => setTimeout(resolve, ms));
-};
 
 const infuraProjectId = 'cb6285a29e9c4f91ad6dc3ef6abd06bd';
 const altNetworkConfiguration = JSON.stringify({
@@ -151,19 +151,24 @@ export const createUser = async (identHost, firstName, lastName, email, password
 };
 
 export const scrapeInvitationToken = async (container) => {
-  await promisedTimeout(800);
+  return await tryTimes(async () => {
+    await promisedTimeout(800);
 
-  let logs;
-  exec(`docker logs ${container}`, (err, stdout, stderr) => {
-   logs = stderr.toString();
-  });
+    let logs;
+    exec(`docker logs ${container}`, (err, stdout, stderr) => {
+     logs = stderr.toString();
+    });
+  
+    await promisedTimeout(800);
+    const matches = logs.match(/\"dispatch invitation\: (.*)\"/);
+    if (matches && matches.length > 0) {
+      return matches[matches.length - 1];
+    }
+    return null;
 
-  await promisedTimeout(800);
-  const matches = logs.match(/\"dispatch invitation\: (.*)\"/);
-  if (matches && matches.length > 0) {
-    return matches[matches.length - 1];
-  }
-  return null;
+    throw new Error();
+  })
+
 };
 
 export const vendNatsAuthorization = async (natsConfig, subject): Promise<string> => {

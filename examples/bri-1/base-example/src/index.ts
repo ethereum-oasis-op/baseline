@@ -20,34 +20,13 @@ import * as jwt from 'jsonwebtoken';
 import * as log from 'loglevel';
 import { sha256 } from 'js-sha256';
 import { AuthService } from 'ts-natsutil';
-import { spawn, exec } from 'child_process';
+import { spawn } from 'child_process';
+import { sleep, tryTimes } from './utils';
 
 import fs from 'fs';
 
 const baselineProtocolMessageSubject = 'baseline.proxy';
 const baselineProtocolDefaultDomain = 'baseline.local';
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-class TryError extends Error {
-  promiseErrors: any[] = []
-}
-
-
-export const tryTimes = async <T>(prom: () => Promise<T>, times: number = 10000, wait: number = 500): Promise<T> => {
-  const errors : any[] = [];
-  for (let index = 0; index < times; index++) {
-    try {
-      return await prom()
-    } catch (err) {
-      errors.push(err);
-    }
-    await sleep(wait);
-  }
-  const error = new TryError("Unfulfilled promises");
-  error.promiseErrors = errors;
-  throw error;
-}
 
 export class ParticipantStack {
   private baseline?: IBaselineRPC & IBlockchainService & IRegistry & IVault;
@@ -1034,7 +1013,7 @@ export class ParticipantStack {
 
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
-    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: true });
+    var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: '/bin/bash' });
     console.log('shelled out to start baseline protocol instance (BPI) containers', child)
   }
 
@@ -1102,5 +1081,3 @@ export class ParticipantStack {
     );
   }
 }
-
-

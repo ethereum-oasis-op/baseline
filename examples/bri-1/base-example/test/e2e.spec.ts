@@ -1,6 +1,11 @@
 import { Opcode } from '@baseline-protocol/types';
 import { assert, expect } from 'chai';
-import { ParticipantStack } from '../src';
+import {
+  ParticipantStack,
+} from '../src';
+import {
+  promisedTimeout,
+} from '../src/utils';
 import {
   shouldBehaveLikeAWorkgroupOrganization,
   shouldBehaveLikeWorkgroupOperator,
@@ -14,7 +19,6 @@ import {
   bpiFactory,
   configureTestnet,
   createUser,
-  promisedTimeout,
   scrapeInvitationToken,
   JSDomErrorHandler
 } from './utils';

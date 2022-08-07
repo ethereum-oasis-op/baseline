@@ -1,7 +1,6 @@
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import { ParticipantStack } from '../src';
-import { spawnSync } from 'child_process'
-import { tryTimes } from '../src/index'
+import { tryTimes } from '../src/utils'
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
