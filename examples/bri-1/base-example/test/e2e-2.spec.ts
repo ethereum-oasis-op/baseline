@@ -83,24 +83,24 @@ describe('Baseline', () => {
         );
       });
 
-      it('should create organization Alice', () => {
-        assert(orgAlice, 'organization Alice should not be null');
-        assert(orgAlice.id !== '', 'organization Alice id should not be empty');
+      it('should create organization Alice Corp', () => {
+        assert(orgAlice, 'organization Alice Corp should not be null');
+        assert(orgAlice.id !== '', 'organization Alice Corp id should not be empty');
       });
 
-      it('should create tokens for organization Alice', () => {
-        assert(orgAlice.accessToken !== '', 'organization Alice access token should not be empty');
-        assert(orgAlice.refreshToken !== '', 'organization Alice refresh token should not be empty');
+      it('should create tokens for organization Alice Corp', () => {
+        assert(orgAlice.accessToken !== '', 'organization Alice Corp access token should not be empty');
+        assert(orgAlice.refreshToken !== '', 'organization Alice Corp refresh token should not be empty');
       });
 
-      it('should create organization Bob', () => {
-        assert(orgBob, 'organization Bob should not be null');
-        assert(orgBob.id !== '', 'organization Bob id should not be empty');
+      it('should create organization Bob Corp', () => {
+        assert(orgBob, 'organization Bob Corp should not be null');
+        assert(orgBob.id !== '', 'organization Bob Corp id should not be empty');
       });
 
-      it('should create tokens for organization Bob', () => {
-        assert(orgBob.accessToken !== '', 'organization Bob access token should not be empty');
-        assert(orgBob.refreshToken !== '', 'organization Bob refresh token should not be empty');
+      it('should create tokens for organization Bob Corp', () => {
+        assert(orgBob.accessToken !== '', 'organization Bob Corp access token should not be empty');
+        assert(orgBob.refreshToken !== '', 'organization Bob Corp refresh token should not be empty');
       });
 
       describe('Vault Creation', () => {
@@ -133,12 +133,12 @@ describe('Baseline', () => {
           vaultBob = vaultBobPage.results[0];
         });
 
-        it('should have created a default vault for organization Alice', () => {
-          assert(vaultAlice, 'organization vault Alice should not be null');
+        it('should have created a default vault for organization Alice Corp', () => {
+          assert(vaultAlice, 'organization vault for Alice Corp should not be null');
         });
 
-        it('should have created a default vault for organization Bob', () => {
-          assert(vaultBob, 'organization vault Bob should not be null');
+        it('should have created a default vault for organization Bob Corp', () => {
+          assert(vaultBob, 'organization vault for Bob Corp should not be null');
         });
 
       });
