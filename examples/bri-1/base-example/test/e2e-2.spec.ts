@@ -1,6 +1,8 @@
-import { assert }       from 'chai';
-import { Organization } from '../src/organization';
-import { User }         from '../src/user';
+import { Vault as VaultObject } from '@provide/types/dist/cjs/vault/vault';
+import { assert }               from 'chai';
+import { Vault }                from 'provide-js';
+import { Organization }         from '../src/organization';
+import { User }                 from '../src/user';
 
 describe('Baseline', () => {
 
@@ -99,6 +101,46 @@ describe('Baseline', () => {
       it('should create tokens for organization Bob', () => {
         assert(orgBob.accessToken !== '', 'organization Bob access token should not be empty');
         assert(orgBob.refreshToken !== '', 'organization Bob refresh token should not be empty');
+      });
+
+      describe('Vault Creation', () => {
+
+        const vaultScheme = 'http';
+        const vaultHost   = 'localhost:8083';
+
+        let vaultAlice: VaultObject;
+        let vaultBob: VaultObject;
+
+        before(async() => {
+          const vaultAlicePage = await new Vault(
+            orgAlice.accessToken,
+            vaultScheme,
+            vaultHost,
+          ).fetchVaults(
+            {rpp: 1},
+          );
+          console.log(vaultAlicePage);
+          vaultAlice = vaultAlicePage.results[0];
+
+          const vaultBobPage = await new Vault(
+            orgBob.accessToken,
+            vaultScheme,
+            vaultHost,
+          ).fetchVaults(
+            {rpp: 1},
+          );
+          console.log(vaultBobPage);
+          vaultBob = vaultBobPage.results[0];
+        });
+
+        it('should have created a default vault for organization Alice', () => {
+          assert(vaultAlice, 'organization vault Alice should not be null');
+        });
+
+        it('should have created a default vault for organization Bob', () => {
+          assert(vaultBob, 'organization vault Bob should not be null');
+        });
+
       });
 
     });
