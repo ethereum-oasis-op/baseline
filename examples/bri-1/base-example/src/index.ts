@@ -1,8 +1,37 @@
-import { IBaselineRPC, IBlockchainService, IRegistry, IVault, MerkleTreeNode, baselineServiceFactory, baselineProviderProvide } from '@baseline-protocol/api';
-import { IMessagingService, messagingProviderNats, messagingServiceFactory } from '@baseline-protocol/messaging';
-import { zkSnarkProverProviderServiceFactory, zkSnarkProverProviderServiceProvide, Element, elementify, rndHex, concatenateThenHash } from '@baseline-protocol/privacy';
-import { IProverProver, IProverRegistry, IProverVerifier } from '@baseline-protocol/privacy/dist/cjs/zkp';
-import { Message as ProtocolMessage, Opcode, PayloadType, marshalProtocolMessage, unmarshalProtocolMessage } from '@baseline-protocol/types';
+import {
+  IBaselineRPC,
+  IBlockchainService,
+  IRegistry,
+  IVault,
+  MerkleTreeNode,
+  baselineServiceFactory,
+  baselineProviderProvide,
+}                                     from '@baseline-protocol/api';
+import {
+  IMessagingService,
+  messagingProviderNats,
+  messagingServiceFactory,
+}                                     from '@baseline-protocol/messaging';
+import {
+  zkSnarkProverProviderServiceFactory,
+  zkSnarkProverProviderServiceProvide,
+  Element,
+  elementify,
+  rndHex,
+  concatenateThenHash,
+}                                     from '@baseline-protocol/privacy';
+import {
+  IProverProver,
+  IProverRegistry,
+  IProverVerifier,
+}                                     from '@baseline-protocol/privacy/dist/cjs/zkp';
+import {
+  Message as ProtocolMessage,
+  Opcode,
+  PayloadType,
+  marshalProtocolMessage,
+  unmarshalProtocolMessage,
+}                                     from '@baseline-protocol/types';
 import {
   Application as Workgroup,
   Prover,
@@ -13,15 +42,33 @@ import {
   Token,
   Key as VaultKey,
   SubjectAccount,
-} from '@provide/types';
-import { Baseline, Capabilities, Ident, NChain, Vault, baselineClientFactory, capabilitiesFactory, nchainClientFactory } from 'provide-js';
+}                                     from '@provide/types';
+import { ethers }                     from 'ethers';
+import {
+  encode as base64Encode,
+  fromUint8Array,
+}                                     from 'js-base64';
+import {
+  Baseline,
+  Capabilities,
+  Ident,
+  NChain,
+  Vault,
+  baselineClientFactory,
+  capabilitiesFactory,
+  nchainClientFactory,
+}                                     from 'provide-js';
 import { compile as solidityCompile } from 'solc';
-import * as jwt from 'jsonwebtoken';
-import * as log from 'loglevel';
-import { sha256 } from 'js-sha256';
-import { AuthService } from 'ts-natsutil';
-import { spawn } from 'child_process';
-import { sleep, tryTimes } from './utils';
+import * as jwt                       from 'jsonwebtoken';
+import * as log                       from 'loglevel';
+import { sha256 }                     from 'js-sha256';
+import { AuthService }                from 'ts-natsutil';
+import { spawn }                      from 'child_process';
+import {
+  sleep,
+  tryTimes,
+  unmarshalSnake,
+}                                     from './utils';
 
 import fs from 'fs';
 
@@ -851,6 +898,41 @@ export class ParticipantStack {
   }
 
   async inviteWorkgroupParticipant(email: string): Promise<Invite> {
+    const vault = await this.requireVault(this.orgAccessToken);
+
+    const jwtForInvite = await this.vendJwt(
+      this.org.id,
+      vault.id,
+      email,
+      {
+        invitor_organization_address: await this.resolveOrganizationAddress(),
+        registry_contract_address   : this.contracts['organization-registry'].address,
+        workgroup_id                : this.workgroup.id,
+        invitor_subject_account_id  : this.subjectAccount?.id,
+      },
+    );
+
+    return await Ident.clientFactory(
+      this.orgAccessToken!,
+      this.baselineConfig?.identApiScheme,
+      this.baselineConfig?.identApiHost,
+    ).createInvitation(
+      {
+        first_name       : 'Alice',
+        last_name        : 'Baseline',
+        email,
+        organization_name: this.baselineConfig?.orgName,
+        application_id   : this.workgroup.id,
+        params           : {
+          authorized_bearer_token   : jwtForInvite,
+          is_organization_invite    : true,
+          metadata                  : {},
+          operator_separation_degree: 1,
+          workgroup                 : unmarshalSnake(this.workgroup),
+        },
+      });
+
+    /*
     return await Ident.clientFactory(
       this.orgAccessToken!,
       this.baselineConfig?.identApiScheme,
@@ -870,6 +952,7 @@ export class ParticipantStack {
         workflow_identifier: this.workflowIdentifier,
       },
     });
+    */
   }
 
   private async requireCapabilities(): Promise<void> {
@@ -1079,5 +1162,89 @@ export class ParticipantStack {
       5000,
       permissions,
     );
+  }
+
+  async vendJwt(organizationId, vaultId, subject, baseline): Promise<string> {
+    try {
+
+      const {results: [key]} = await new Vault(
+        this.orgAccessToken!,
+        this.baselineConfig?.vaultApiScheme,
+        this.baselineConfig?.vaultApiHost,
+      ).fetchVaultKeys(
+        vaultId,
+        {spec: 'RSA-4096'},
+      );
+
+      const claims = {
+        aud: null,
+        iat: Math.floor(new Date().getTime() / 1000),
+        iss: organizationId,
+        sub: subject,
+        baseline,
+
+        nats: {
+          permissions: {
+            publish  : {
+              allow: ['baseline', 'baseline.>'],
+            },
+            subscribe: {
+              allow: [
+                'baseline',
+                'baseline.>',
+                'network.*.connector.*',
+                'network.*.contracts.*',
+                'network.*.status',
+                'platform.>',
+              ],
+            },
+          },
+        },
+      };
+
+      const header = {
+        typ: 'JWT',
+        alg: 'RS256',
+        // @ts-ignore
+        kid: key.fingerprint,
+      };
+
+      const segments = [JSON.stringify(header), JSON.stringify(claims)].map(
+        (item) =>
+          base64Encode(item)
+          .replace(/\+/g, '-') // Convert '+' to '-'
+          .replace(/\//g, '_') // Convert '/' to '_'
+          .replace(/=+$/, ''), // Remove ending '='
+      );
+
+      const jwtStr = segments.join('.');
+
+      const jwtStrUTF8 = ethers.utils.toUtf8Bytes(jwtStr);
+
+      const strToSign = ethers.utils.hexlify(jwtStrUTF8).slice(2);
+
+      const {signature} = await new Vault(
+        this.orgAccessToken!,
+        this.baselineConfig?.vaultApiScheme,
+        this.baselineConfig?.vaultApiHost,
+      ).signMessage(
+        vaultId,
+        key.id!,
+        strToSign,
+        {algorithm: 'RS256'},
+      );
+
+      const sigBuffer = Uint8Array.from(Buffer.from(signature, 'hex'));
+
+      const base64Sig = fromUint8Array(sigBuffer, true)
+      .replace(/\+/g, '-') // Convert '+' to '-'
+      .replace(/\//g, '_') // Convert '/' to '_'
+      .replace(/=+$/, ''); // Remove ending '='
+
+      const token = [...segments, base64Sig].join('.');
+      return token;
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 }
