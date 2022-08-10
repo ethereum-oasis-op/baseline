@@ -135,40 +135,29 @@ export class ParticipantStack {
 
     this.contracts = {};
     this.startProtocolSubscriptions();
-    console.log('started protocol subscriptions');
 
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
-    console.log('registered organization');
 
     await this.requireOrgTokens();
 
     if (this.baselineConfig.operator) {
       if (this.baselineConfig.workgroup && this.baselineConfig.workgroupToken) {
         await this.setWorkgroup(this.baselineConfig.workgroup);
-        console.log('workgroup set');
       } else if (this.baselineConfig.workgroupName) {
-        console.log('creating workgroup');
         await this.createWorkgroup(this.baselineConfig.workgroupName);
-        console.log('created workgroup');
       }
 
     }
 
 /*
     await this.registerWorkgroupOrganization();
-    console.log('registered workgroup organization');
 */
     await this.requireIdent();
-    console.log('connected to Ident');
-    console.log('deploying baseline stack');
     await this.deployBaselineStack();
-    console.log('deployed baseline stack');
     await this.requireBaselineStack();
-    console.log('connected to baseline stack');
 
     if (this.baselineConfig.operator) {
       this.subjectAccount = await this.createSubjectAccount(await this.fetchOrganizationContract());
-      console.log('created subject account');
     }
 
     this.initialized = true;
@@ -468,16 +457,12 @@ export class ParticipantStack {
       return Promise.reject('failed to init workgroup');
     }
 
-    console.log('init workgroup');
-
     this.capabilities = capabilitiesFactory();
     await this.requireCapabilities();
 
     const registryContracts = JSON.parse(JSON.stringify(this.capabilities?.getBaselineRegistryContracts()));
     const contractParams = registryContracts[2]; // "shuttle" launch contract
     // ^^ FIXME -- load from disk -- this is a wrapper to deploy the OrgRegistry contract
-
-    console.log('deploying registry contract');
 
     await this.deployRegistryContract('Shuttle', 'registry', contractParams);
     await this.requireRegistryContract('organization-registry');
@@ -595,8 +580,6 @@ export class ParticipantStack {
   async createSubjectAccount(orgRegistryContract: any): Promise<SubjectAccount> {
     await this.requireOrgTokens();
 
-    console.log('creating subject account');
-
     const address = await this.resolveOrganizationAddress();
 
     const subjectAccountParams = {
@@ -673,13 +656,11 @@ export class ParticipantStack {
       token = orgToken.accessToken || orgToken.token;
     }
     return await tryTimes(async () => {
-      console.log('checking BPI status');
       const status = await Baseline.clientFactory(
         this.orgAccessToken!,
         this.baselineConfig.baselineApiScheme!,
         this.baselineConfig.baselineApiHost!,
       ).status();
-      console.log('BPI status is now', status);
       if (status === 204) {
         await sleep(10000);
         return true;
@@ -859,9 +840,6 @@ export class ParticipantStack {
       network_id: this.baselineConfig?.networkId,
     }));
 
-    console.log('created signing account');
-    console.log('creating contract');
-
     const resp = await nchain.createContract({
       address: '0x',
       params: {
@@ -879,7 +857,6 @@ export class ParticipantStack {
         compiled_artifact: params,
       };
     }
-    console.log('created contract');
     return resp;
   }
 
@@ -967,7 +944,6 @@ export class ParticipantStack {
   async requireOrganization(address: string): Promise<Organization> {
     const orgRegistryContract = await this.fetchOrganizationContract();
     const org = await this.fetchOrganization(address, orgRegistryContract);
-    console.log('found org', org.id);
     if (org && org['address'].toLowerCase() === address.toLowerCase()) {
       return org;
     }
@@ -1013,7 +989,6 @@ export class ParticipantStack {
     if (contracts && contracts.results.length === 1 && contracts.results[0]['address'] !== '0x') {
       const contract = await nchain.fetchContractDetails(contracts.results[0].id!);
       this.contracts[type] = contract;
-      console.log('fetched contract details');
       return Promise.resolve(contract);
     }
     return Promise.reject();
@@ -1097,7 +1072,7 @@ export class ParticipantStack {
     runcmd = runcmd.replace(/localhost/ig, 'host.docker.internal')
 
     var child = spawn(runenv+runcmd, [], { detached: true, stdio: 'pipe', shell: '/bin/bash' });
-    console.log('shelled out to start baseline protocol instance (BPI) containers', child)
+    console.log('shelled out to start baseline protocol instance (BPI) containers');
   }
 
   async startProtocolSubscriptions(): Promise<any> {
