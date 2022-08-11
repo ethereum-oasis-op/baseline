@@ -900,12 +900,20 @@ export class ParticipantStack {
         email,
         organization_name: this.baselineConfig?.orgName,
         application_id   : this.workgroup.id,
+        permissions: 0,
         params           : {
           authorized_bearer_token   : jwtForInvite,
           is_organization_invite    : true,
           metadata                  : {},
           operator_separation_degree: 1,
           workgroup                 : unmarshalSnake(this.workgroup),
+          // TODO: Update address resolutions.
+          erc1820_registry_contract_address: this.contracts['erc1820-registry'].address,
+          invitor_organization_address: await this.resolveOrganizationAddress(),
+          organization_registry_contract_address: this.contracts['organization-registry'].address,
+          shield_contract_address: this.contracts['shield'].address,
+          verifier_contract_address: this.contracts['verifier'].address,
+          workflow_identifier: this.workflowIdentifier,
         },
       });
 
