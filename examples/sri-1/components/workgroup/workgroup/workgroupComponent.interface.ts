@@ -1,6 +1,6 @@
 import { Workstep } from '../workstep';
 import { Workgroup } from './workgroup';
-import { BpiSubject } from '../identity/bpiSubject';
+import { BpiSubject } from '../../identity/bpiSubject/bpiSubject';
 import { Agreement } from '../storage/agreement';
 import { Invitation } from './invitation';
 import { Organization } from "./organization"
