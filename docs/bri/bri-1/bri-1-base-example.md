@@ -20,7 +20,7 @@ Checkout the bri-1-privacy branch:
 git checkout bri-1-privacy
 ```
 
-Once checked out, navigate to the /examples/bri-1/base-examples folder.&#x20;
+Once checked out, navigate to the /examples/bri-1/base-examples folder.
 
 ### Running Locally
 
@@ -48,19 +48,19 @@ The following high-level architecture diagram illustrates how the concepts discu
 There are several assertion and checks that have to be carried out, in full and in a specific order to ensure that the base example can run and fully demonstrate the functionality and potential of the Baseline protocol, leveraged by the Provide stack. Subsequent sections illustrate the necessary components and their outputs as well as the rationale for their importance.
 
 **Workgroup assertions**\
-****All on-chain artifacts existence and accessibility will be asserted, this includes the ERC1820 contract, the organization registry, workgroup shield, workflow circuit verifier contract, and the circuit identifier. We will also assert we have established a connection with NATS, and that there is an active subscription to the  baseline.proxy subject.
+\*\*\*\*All on-chain artifacts existence and accessibility will be asserted, this includes the ERC1820 contract, the organization registry, workgroup shield, workflow circuit verifier contract, and the circuit identifier. We will also assert we have established a connection with NATS, and that there is an active subscription to the baseline.proxy subject.
 
 **Vault assertions**\
-****The user will be able to register its corporation in the local registry and the on-chain registry using the default secp256k1 address. We will the ensure all vault related services are fully functional. We will assert a default vault for the organization has been created as well as a set of key pairs for the organization for babyJubJub, secp256k1, and finally ensure the secp256k1 key pair can resolve as the organization address.
+\*\*\*\*The user will be able to register its corporation in the local registry and the on-chain registry using the default secp256k1 address. We will the ensure all vault related services are fully functional. We will assert a default vault for the organization has been created as well as a set of key pairs for the organization for babyJubJub, secp256k1, and finally ensure the secp256k1 key pair can resolve as the organization address.
 
 **Messaging assertions**\
-****We will also assert we have established a connection with NATS, and that there is an active subscription to the  baseline.proxy subject.&#x20;
+\*\*\*\*We will also assert we have established a connection with NATS, and that there is an active subscription to the baseline.proxy subject.
 
 **SNARK assertions**\
-****TBD
+\*\*\*\*TBD
 
 **Decoded workgroup Invitation**\
-****The following JSON object represents the decoded invitation JWT signed by Bob Corp and delivered to Alice. The invitation has everything Alice needs to join Bob's new Baseline workgroup, register Alice Corp with the on-chain `OrgRegistry` contract and use the protocol to synchronize her local Provide stack.
+\*\*\*\*The following JSON object represents the decoded invitation JWT signed by Bob Corp and delivered to Alice. The invitation has everything Alice needs to join Bob's new Baseline workgroup, register Alice Corp with the on-chain `OrgRegistry` contract and use the protocol to synchronize her local Provide stack.
 
 ```
 {

@@ -1,4 +1,4 @@
-# Vault
+# Messaging
 
 ## @baseline-protocol/messaging
 
@@ -8,7 +8,7 @@ Baseline core messaging package.
 
 ## Installation <a href="installation" id="installation"></a>
 
-`npm install @baseline-protocol/vault`_(npm package soon to be published)_
+`npm install @baseline-protocol/messaging`_(npm package soon to be published)_
 
 ## Building <a href="building" id="building"></a>
 
