@@ -9,9 +9,9 @@ export const shouldCreateUser = (
   password: string,
 ): void => {
 
-  describe(`User ${firstName} Creation`, () => {
+  describe(`${firstName} Creation`, () => {
 
-    it(`should create user ${firstName}`, async() => {
+    it(`should create ${firstName}`, async() => {
       await userHelper.create(
         firstName,
         lastName,
@@ -19,25 +19,22 @@ export const shouldCreateUser = (
         password,
       );
 
-      assert(userHelper.creationResponse, `user ${firstName} should not be null`);
-      assert(userHelper.creationResponse?.id !== '', `user ${firstName} id should not be empty`);
+      assert(userHelper.creationResponse, `${firstName} should not be null`);
+      assert(userHelper.creationResponse?.id !== '', `${firstName} id should not be empty`);
     });
 
-    it(`should authenticate user ${firstName}`, async() => {
-      await userHelper.authenticate(
-        email,
-        password,
-      );
+    it(`should authenticate ${firstName}`, async() => {
+      await userHelper.authenticate(password);
 
-      assert(userHelper.accessToken, `user ${firstName} access token should not be null`);
-      assert(userHelper.refreshToken, `user ${firstName} refresh token should not be null`);
+      assert(userHelper.accessToken, `${firstName} access token should not be null`);
+      assert(userHelper.refreshToken, `${firstName} refresh token should not be null`);
     });
 
-    it(`should fetch user ${firstName}`, async() => {
+    it(`should fetch ${firstName}`, async() => {
       await userHelper.fetch();
 
-      assert(userHelper.fetchedResponse, `user ${firstName} should not be null`);
-      assert(userHelper.fetchedResponse?.id !== '', `user ${firstName} id should not be empty`);
+      assert(userHelper.fetchedResponse, `${firstName} should not be null`);
+      assert(userHelper.fetchedResponse?.id !== '', `${firstName} id should not be empty`);
     });
 
   });

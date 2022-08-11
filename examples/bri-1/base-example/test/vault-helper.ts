@@ -5,6 +5,7 @@ import { OrganizationHelper }     from './organization-helper';
 
 export class VaultHelper {
 
+  public creationResponse?: VaultResponse;
   public fetchedResponse?: VaultResponse;
 
   protected vaultScheme: string;
@@ -33,6 +34,23 @@ export class VaultHelper {
     this.vaultScheme        = vaultScheme;
     this.vaultHost          = vaultHost;
     this.organizationHelper = organizationHelper;
+  }
+
+  public async create(
+    name: string,
+    description: string,
+  ): Promise<VaultResponse> {
+
+    const vaultParams = {
+      name,
+      description,
+    };
+
+    this.creationResponse = await this.prvdVault.createVault(
+      vaultParams,
+    );
+
+    return this.creationResponse;
   }
 
   public async fetch(): Promise<VaultResponse> {

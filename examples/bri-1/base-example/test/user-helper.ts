@@ -19,7 +19,7 @@ export class UserHelper {
 
   protected _prvdIdent?: PrvdIdent;
 
-  public get prvdIdent(): PrvdIdent {
+  protected get prvdIdent(): PrvdIdent {
     if (this._prvdIdent) { return this._prvdIdent; }
 
     if (!this.accessToken) { throw new Error('missing user access token for PrvdIdent'); }
@@ -67,19 +67,19 @@ export class UserHelper {
   }
 
   public async authenticate(
-    email: string,
     password: string,
   ): Promise<AuthenticationResponse> {
-
-    const authenticationParams = {
-      email   : email,
-      password: password,
-      scope   : UserHelper.authenticationScope,
-    };
-
     return await tryTimes(async(): Promise<AuthenticationResponse> => {
 
       if (!this.creationResponse) { throw new Error('must create user before authenticate user'); }
+
+      if (!password) { throw new Error('missing user password'); }
+
+      const authenticationParams = {
+        email   : this.creationResponse.email,
+        password: password,
+        scope   : UserHelper.authenticationScope,
+      };
 
       this.authenticationResponse = await PrvdIdent.authenticate(
         authenticationParams,

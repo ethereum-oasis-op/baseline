@@ -17,16 +17,17 @@ export class OrganizationHelper {
 
   protected identScheme: string;
   protected identHost: string;
+  protected userHelper: UserHelper;
 
   protected _prvdIdent?: PrvdIdent;
 
   protected get prvdIdent(): PrvdIdent {
     if (this._prvdIdent) { return this._prvdIdent; }
 
-    if (!this.accessToken) { throw new Error('missing organization access token for PrvdIdent'); }
+    if (!this.userHelper.accessToken) { throw new Error('missing user access token for PrvdIdent'); }
 
     return PrvdIdent.clientFactory(
-      this.accessToken,
+      this.userHelper.accessToken,
       this.identScheme,
       this.identHost,
     );
@@ -35,13 +36,14 @@ export class OrganizationHelper {
   constructor(
     identScheme: string,
     identHost: string,
+    userHelper: UserHelper,
   ) {
     this.identScheme = identScheme;
     this.identHost   = identHost;
+    this.userHelper = userHelper;
   }
 
   public async create(
-    userHelper: UserHelper,
     name: string,
     description: string,
     domain: string,
@@ -57,17 +59,14 @@ export class OrganizationHelper {
       },
     };
 
-    this.creationResponse = await userHelper.prvdIdent.createOrganization(
+    this.creationResponse = await this.prvdIdent.createOrganization(
       organizationParams,
     );
 
     return this.creationResponse;
   }
 
-  public async createToken(
-    userHelper: UserHelper,
-  ): Promise<TokenResponse> {
-
+  public async createToken(): Promise<TokenResponse> {
     return await tryTimes(async(): Promise<TokenResponse> => {
       if (!this.creationResponse) { throw new Error('must create organization before creating token for organization'); }
 
@@ -78,7 +77,7 @@ export class OrganizationHelper {
         scope          : OrganizationHelper.authenticationScope,
       };
 
-      this.tokenResponse = await userHelper.prvdIdent.createToken(tokenParams);
+      this.tokenResponse = await this.prvdIdent.createToken(tokenParams);
 
       if (this.tokenResponse) {
         this.accessToken  = this.tokenResponse.accessToken;
@@ -91,16 +90,13 @@ export class OrganizationHelper {
     });
   }
 
-  public async fetch(
-    userHelper: UserHelper,
-  ): Promise<OrganizationResponse> {
-
+  public async fetch(): Promise<OrganizationResponse> {
     return await tryTimes(async(): Promise<OrganizationResponse> => {
       if (!this.creationResponse) { throw new Error('must create organization before creating token for organization'); }
 
       if (!this.creationResponse.id) { throw new Error('missing organization id'); }
 
-      this.fetchedResponse = await userHelper.prvdIdent.fetchOrganizationDetails(this.creationResponse.id);
+      this.fetchedResponse = await this.prvdIdent.fetchOrganizationDetails(this.creationResponse.id);
 
       if (this.fetchedResponse) { return this.fetchedResponse; }
 

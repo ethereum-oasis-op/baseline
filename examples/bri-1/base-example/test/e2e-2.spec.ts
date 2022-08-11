@@ -51,11 +51,13 @@ describe('Stack Status', () => {
       const organizationAlice: OrganizationHelper = new OrganizationHelper(
         identScheme,
         identHost,
+        userAlice,
       );
 
       const organizationBob: OrganizationHelper = new OrganizationHelper(
         identScheme,
         identHost,
+        userBob,
       );
 
       shouldCreateOrganization(
@@ -95,12 +97,14 @@ describe('Stack Status', () => {
 
         shouldCreateVault(
           vaultAlice,
-          'Alice Corp',
+          'Alice Corp Vault',
+          'a vault for Alice Corp',
         );
 
         shouldCreateVault(
           vaultBob,
-          'Bob Corp',
+          'Bob Corp Vault',
+          'a vault for Bob Corp',
         );
 
       });
