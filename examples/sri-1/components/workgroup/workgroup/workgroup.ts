@@ -24,11 +24,12 @@ export class Workgroup implements IWorkgroup {
         this.privacyPolicy.push(privacyPolicy); //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
     }
 
-    addParticipant(bpiSubject: BpiSubject) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    //TODO Implement checks for actions bound by security and privacy policies
+    addParticipant(bpiSubject: BpiSubject) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions
         return  this.participants.push(bpiSubject);
     };
 
-    addParticipants(bpiSubjects: BpiSubject[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    addParticipants(bpiSubjects: BpiSubject[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions
         bpiSubjects.forEach(subject => {
             this.participants.push(subject);
         });
@@ -42,16 +43,13 @@ export class Workgroup implements IWorkgroup {
         return this.participants;
     };
 
-    updateParticipant(id: string, ...update:any): BpiSubject{
-        //TODO write logic for dynamic update
-        return null;
-    };
+    updateParticipant(id: string, ...update:any): BpiSubject {}; //TODO write logic for dynamic update #485
 
-    removeParticipant(id: string): BpiSubject{ //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    removeParticipant(id: string): BpiSubject { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
         return this.participants = this.participants.filter(subject => subject.id != id);
     };
 
-    removeParticipants(ids: string[]): BpiSubject[]{ //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    removeParticipants(ids: string[]): BpiSubject[] { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
         return this.participants = this.participants.filter(subject => !ids.includes(subject.id))
     };
 
@@ -64,8 +62,7 @@ export class Workgroup implements IWorkgroup {
     };
 
     updateSecurityPolicy(id: string, ...updates: string[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        //TODO write logic for dynamic update
-        return null;
+        //TODO write logic for dynamic update #485
     };
 
     addPrivacyPolicy(privacyPolicy: Privacy) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
@@ -77,8 +74,7 @@ export class Workgroup implements IWorkgroup {
     };
 
     updatePrivacyPolicy(id: string, ...updates: string[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        //TODO write logic for dynamic update
-        return null;
+        //TODO write logic for dynamic update #485
     };
 
     addWorkstep(workstep: Workstep) {
