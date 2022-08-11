@@ -350,8 +350,6 @@ export class ParticipantStack {
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
     await this.registerWorkgroupOrganization();
     await this.requireIdent();
-    await this.deployBaselineStack();
-    await this.requireBaselineStack();
     this.subjectAccount = await this.createSubjectAccount(await this.fetchOrganizationContract());
     await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
