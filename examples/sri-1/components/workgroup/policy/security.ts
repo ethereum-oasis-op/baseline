@@ -13,13 +13,8 @@ export class Security implements ISecurity {
         });
     }
 
-    addAuthRule(rule: string, authRule: string) {
-        return null;
-    }
-    removeAuthRule(rule: string){
-        return null;
-    }
-    updateAuthRule(rule: string, ...updates: string[]){
-        return null;
-    }
+    //TODO construct implementation of substitute Auth rules or import Auth library for current scope purposes
+    addAuthRule(rule: string, authRule: string) {};
+    removeAuthRule(rule: string) {};
+    updateAuthRule(rule: string, ...updates: string[]) {};
 }
