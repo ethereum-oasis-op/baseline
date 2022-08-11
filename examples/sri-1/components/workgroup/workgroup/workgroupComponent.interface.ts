@@ -12,7 +12,7 @@ export interface IWorkgroupComponent {
     invitations: Invitation[];
     archivedWorkgroups: Workgroup[];
     getWorkgroups(): Workgroup[];
-    createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[], securityPolicy: Security, privacyPolicy: Privacy): Workgroup;  //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. [R237] A workgroup MUST consist of at least one BPI Subject participant.
+    createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[], securityPolicy: Security, privacyPolicy: Privacy): Workgroup;
     getWorkgroupById(id: string): Workgroup
     sendInviteToWorkgroup(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation;
     getInvitationById(id: string): Invitation;
