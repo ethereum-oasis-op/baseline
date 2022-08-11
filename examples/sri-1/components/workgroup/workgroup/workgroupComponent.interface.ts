@@ -18,7 +18,7 @@ export interface IWorkgroupComponent {
     getInvitationById(id: string): Invitation;
     getReceivedInvitationsByEmail(email: string): Invitation[];
     acceptWorkgroupInvitation(id: string, name: string, recipient: string, workGroupId: string) : {acceptanceStatus: string};
-    updateWorkgroup(id: string, ...updates: string[] ): Workgroup; //TODO string collection of updates to be made
+    updateWorkgroup(id: string, ...updates: string[] ): Workgroup;
     deleteWorkgroup(id: string): Workgroup[];
     archiveWorkgroup(id: string): Workgroup | string;
 }
