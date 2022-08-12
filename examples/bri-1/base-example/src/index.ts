@@ -347,11 +347,7 @@ export class ParticipantStack {
     this.workflowIdentifier = invite.prvd.data.params.workflow_identifier;
 
     await this.baseline?.track(invite.prvd.data.params.shield_contract_address).catch((err) => { });
-    await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
-    await this.registerWorkgroupOrganization();
-    await this.requireIdent();
     this.subjectAccount = await this.createSubjectAccount(await this.fetchOrganizationContract());
-    await this.requireOrganization(await this.resolveOrganizationAddress());
     await this.sendProtocolMessage(counterpartyAddr, Opcode.Join, {
       address: await this.resolveOrganizationAddress(),
       authorized_bearer_token: await this.vendNatsAuthorization(),
@@ -584,7 +580,7 @@ export class ParticipantStack {
       metadata: {
         organization_id: this.org.id,
         organization_address: address,
-        organization_domain: 'org.local',
+        organization_domain: this.baselineConfig?.domain,
         organization_messaging_endpoint: this.natsConfig.natsServers[0],
         organization_refresh_token: this.orgRefreshToken,
         workgroup_id: this.workgroup.id,
