@@ -7,7 +7,7 @@ import { Privacy } from "../policy/privacy"
 
 export class Workgroup implements IWorkgroup {
     id: string;
-    name: string
+    name: string;
     administrator: BpiSubject[] = []; //[R238] A workgroup MUST have at least one administrator.
     securityPolicy: Security[] = []; //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy. //TODO Implement securityPolicy #485
     privacyPolicy: Privacy[] = []; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant. //TODO Implement privacyPolicy #485
@@ -37,7 +37,7 @@ export class Workgroup implements IWorkgroup {
     }
 
     getParticipantById(id: string): BpiSubject {
-        return this.participants.find(subject => subject.id == id);
+        return this.participants.find(subject => subject.id === id);
     };
 
     getAllParticipants(): BpiSubject[] {
