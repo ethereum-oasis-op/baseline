@@ -227,7 +227,6 @@ describe('Baseline', () => {
             await aliceBPI.acceptWorkgroupInvite(inviteToken, bobBPI.getWorkgroupContracts());
           });
 
-          describe(`baseline stack for "${aliceCorpName}"`, shouldCreateBaselineStack(() => aliceBPI))
           describe(`invited workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAnInvitedWorkgroupOrganization(() => aliceBPI));
           describe(`workgroup organization: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupOrganization(() => aliceBPI));
           describe(`workgroup counterparty: "${aliceCorpName}"`, shouldBehaveLikeAWorkgroupCounterpartyOrganization(() => aliceBPI));
