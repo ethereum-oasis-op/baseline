@@ -7,6 +7,6 @@ export interface IWorkstep {
     workgroupId: string;
     version: string;
     status: string;
-    securityPolicy: Security[];
-    privacyPolicy: Privacy[];
+    securityPolicy: Security;
+    privacyPolicy: Privacy;
 }

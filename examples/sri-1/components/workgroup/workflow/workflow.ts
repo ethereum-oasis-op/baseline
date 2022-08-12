@@ -3,10 +3,10 @@ import { Workstep } from '../workstep/workstep';
 
 export class Workflow implements IWorkflow {
   id: string; // TODO: Add uuid after #491
-  Worksteps: Workstep[] = []; //TODO enforce workstep causal connection through collection order
+  worksteps: Workstep[] = []; //TODO enforce workstep causal connection through collection order
 
   constructors(id: string, worksteps: Workstep[]) {
     this.id = id;
-    this.Worksteps = worksteps;
+    this.worksteps = worksteps;
   };
 }

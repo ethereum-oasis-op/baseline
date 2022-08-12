@@ -8,8 +8,8 @@ export interface IWorkgroup {
     id: string; // TODO: Add uuid after #491
     name: string;
     administrator: BpiSubject[];
-    securityPolicy: Security[];
-    privacyPolicy: Privacy[];
+    securityPolicy: Security;
+    privacyPolicy: Privacy;
     participants: BpiSubject[];
     worksteps: Workstep[];
     workflows: Workflow[];

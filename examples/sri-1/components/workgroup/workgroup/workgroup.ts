@@ -9,8 +9,8 @@ export class Workgroup implements IWorkgroup {
     id: string; // TODO: Add uuid after #491
     name: string;
     administrator: BpiSubject[] = []; 
-    securityPolicy: Security[] = []; //TODO Implement securityPolicy #485
-    privacyPolicy: Privacy[] = []; //TODO Implement privacyPolicy #485
+    securityPolicy: Security; //TODO Implement securityPolicy #485
+    privacyPolicy: Privacy; //TODO Implement privacyPolicy #485
     participants: BpiSubject[] = [];
     worksteps: Workstep[] = [];
     workflows: Workflow[] = [];

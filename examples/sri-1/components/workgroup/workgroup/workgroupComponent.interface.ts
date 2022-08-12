@@ -1,13 +1,9 @@
-import { Workstep } from '../workstep/workstep';
 import { Workgroup } from './workgroup';
 import { BpiSubject } from '../identity/bpiSubject';
 import { Agreement } from '../storage/agreement';
 import { Invitation } from '../invitation/invitation';
-import { Security } from '../policy/security';
-import { Privacy } from '../policy/privacy';
 
 export interface IWorkgroupComponent {
-
     workgroups: Workgroup[];
     invitations: Invitation[];
     archivedWorkgroups: Workgroup[];

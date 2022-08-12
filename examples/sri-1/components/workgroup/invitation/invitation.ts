@@ -8,7 +8,6 @@ export class Invitation implements IInvitation {
     recipient: string;
     workgroupId: string;
 
-
     constructor(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string) {
         this.id = id;
         this.name = name;
