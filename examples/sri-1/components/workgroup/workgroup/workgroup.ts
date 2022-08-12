@@ -24,85 +24,71 @@ export class Workgroup implements IWorkgroup {
         this.privacyPolicy.push(privacyPolicy);
     }
 
-    //TODO Implement checks for actions bound by security and privacy policies #485
     addParticipant(bpiSubject: BpiSubject) { 
-        return  this.participants.push(bpiSubject);
+       throw new Error("not implemented");
     };
 
     addParticipants(bpiSubjects: BpiSubject[]) { 
-        bpiSubjects.forEach(subject => {
-            this.participants.push(subject);
-        });
-        return this.participants;
+        throw new Error("not implemented");
     }
 
     getParticipantById(id: string): BpiSubject {
-        return this.participants.find(subject => subject.id === id);
+        throw new Error("not implemented");
     };
 
     getAllParticipants(): BpiSubject[] {
-        return this.participants;
+        throw new Error("not implemented");
     };
 
-    updateParticipant(id: string, ...update:any): BpiSubject {}; //TODO write logic for dynamic update #485
+    updateParticipant(id: string, ...update:any): BpiSubject {
+        throw new Error("not implemented");
+    };
 
     removeParticipant(id: string): BpiSubject {
-        const participant = this.participants.filter(subject => subject.id != id);
-        if(!participant.length) {
-            throw new Error('No mathcing participant found');
-        }
-        return this.participants = participant;
+        throw new Error("not implemented");
     };
 
     removeParticipants(ids: string[]): BpiSubject[] {
-        const participants = this.participants.filter(subject => !ids.includes(subject.id));
-        if(!participants.length) {
-            throw new Error('No matching participant found');
-        }
-        return this.participants = participants;
+        throw new Error("not implemented");
     };
 
     addSecurityPolicy(securityPolicy: Security) {
-        return this.securityPolicy.push(securityPolicy); 
+        throw new Error("not implemented");
     };
 
     removeSecurityPolicy(securityPolicy: Security) {
-        const secPolicy = this.securityPolicy.filter(policy => policy.id != securityPolicy.id);
-        if(!secPolicy.length) {
-            throw new Error('No matching security policy');
-        }
-        return this.securityPolicy = secPolicy;
+        throw new Error("not implemented");
     };
 
-    updateSecurityPolicy(id: string, ...updates: string[]) {}; //TODO write logic for dynamic update #485
+    updateSecurityPolicy(id: string, ...updates: string[]) {
+        throw new Error("not implemented");
+    };
 
     addPrivacyPolicy(privacyPolicy: Privacy) {
-        return this.privacyPolicy.push(privacyPolicy);
+        throw new Error("not implemented");
     };
 
     removePrivacyPolicy(privacyPolicy: Privacy) {
-        const privPolicy = this.privacyPolicy.filter(policy => policy.id != privacyPolicy.id);
-        if(!privPolicy.length) {
-            throw new Error('No matching privacy policy');
-        }
-        this.privacyPolicy = privPolicy;
+        throw new Error("not implemented");
     };
 
-    updatePrivacyPolicy(id: string, ...updates: string[]) {}; //TODO write logic for dynamic update #485
+    updatePrivacyPolicy(id: string, ...updates: string[]) {
+        throw new Error("not implemented");
+    }; 
 
     addWorkstep(workstep: Workstep) {
-        return this.worksteps.push(workstep);
+        throw new Error("not implemented");
     };
 
     getWorkstepById(workstepId: string) {
-        return this.worksteps.find(step => step.id === workstepId);
+        throw new Error("not implemented");
     };
 
     addWorkflow(workflow: Workflow) {
-        return this.workflows.push(workflow);
+        throw new Error("not implemented");
     };
 
     getWorkflowById(workflowId: string) {
-        return this.workflows.find(workflow => workflow.id === workflowId);
+        throw new Error("not implemented");
     };
 }
