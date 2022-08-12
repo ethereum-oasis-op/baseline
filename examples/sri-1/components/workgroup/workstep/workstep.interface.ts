@@ -4,7 +4,7 @@ import { Agreement } from '../storage/agreement';
 
 export interface IWorkstep {
     name: string;
-    id: string;
+    id: string; // TODO: Add uuid after #491
     workgroupId: string;
     version: string;
     status: string;

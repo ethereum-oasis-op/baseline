@@ -6,7 +6,7 @@ import { WorkgroupComponent } from "../workgroup/workgroupComponent.service";
 
 export class Workstep implements IWorkstep {
     name: string;
-    id: string;
+    id: string; // TODO: Add uuid after #491
     workgroupId: string;
     version: string;
     status: string;

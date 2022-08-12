@@ -5,7 +5,7 @@ import { Privacy } from '../policy/privacy';
 import { Workflow } from '../workflow/workflow';
 
 export interface IWorkgroup {
-    id: string;
+    id: string; // TODO: Add uuid after #491
     name: string;
     administrator: BpiSubject[];
     securityPolicy: Security[];

@@ -6,7 +6,7 @@ import { Security } from '../policy/security'
 import { Privacy } from "../policy/privacy"
 
 export class Workgroup implements IWorkgroup {
-    id: string;
+    id: string; // TODO: Add uuid after #491
     name: string;
     administrator: BpiSubject[] = []; 
     securityPolicy: Security[] = []; //TODO Implement securityPolicy #485

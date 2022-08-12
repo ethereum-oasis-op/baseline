@@ -1,7 +1,7 @@
 import { Agreement } from "../storage/agreement";
 import { BpiSubject } from "../identity/bpiSubject";
 export interface IInvitation {
-    id: string;
+    id: string; 
     name: string;
     sender: BpiSubject;
     recipient: string;
