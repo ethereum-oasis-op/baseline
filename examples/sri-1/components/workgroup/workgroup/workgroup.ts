@@ -9,8 +9,8 @@ export class Workgroup implements IWorkgroup {
     id: string;
     name: string
     administrator: BpiSubject[] = []; //[R238] A workgroup MUST have at least one administrator.
-    securityPolicy: Security[] = []; //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy.
-    privacyPolicy: Privacy[] = []; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
+    securityPolicy: Security[] = []; //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy. //TODO Implement securityPolicy #485
+    privacyPolicy: Privacy[] = []; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant. //TODO Implement privacyPolicy #485
     participants: BpiSubject[] = [];
     worksteps: Workstep[] = [];
     workflows: Workflow[] = [];
@@ -24,7 +24,7 @@ export class Workgroup implements IWorkgroup {
         this.privacyPolicy.push(privacyPolicy); //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
     }
 
-    //TODO Implement checks for actions bound by security and privacy policies
+    //TODO Implement checks for actions bound by security and privacy policies #485
     addParticipant(bpiSubject: BpiSubject) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions
         return  this.participants.push(bpiSubject);
     };

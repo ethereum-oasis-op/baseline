@@ -12,7 +12,7 @@ export class WorkgroupComponent implements IWorkgroupComponent {
     invitations: Invitation[] = [];
     archivedWorkgroups: Workgroup[] = [];
     
-    //TODO Implement checks for actions bound by security and privacy policies
+    //TODO Implement checks for actions bound by security and privacy policies #485
     getWorkgroups(): Workgroup[] { 
         return this.workgroups;
     };
