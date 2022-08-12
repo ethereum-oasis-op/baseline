@@ -8,9 +8,9 @@ import { Privacy } from "../policy/privacy"
 export class Workgroup implements IWorkgroup {
     id: string;
     name: string;
-    administrator: BpiSubject[] = []; //[R238] A workgroup MUST have at least one administrator.
-    securityPolicy: Security[] = []; //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy. //TODO Implement securityPolicy #485
-    privacyPolicy: Privacy[] = []; //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant. //TODO Implement privacyPolicy #485
+    administrator: BpiSubject[] = []; 
+    securityPolicy: Security[] = []; //TODO Implement securityPolicy #485
+    privacyPolicy: Privacy[] = []; //TODO Implement privacyPolicy #485
     participants: BpiSubject[] = [];
     worksteps: Workstep[] = [];
     workflows: Workflow[] = [];
@@ -18,18 +18,18 @@ export class Workgroup implements IWorkgroup {
     constructor(id: string, name: string, administrators: BpiSubject[], participants: BpiSubject[], securityPolicy: Security, privacyPolicy: Privacy ) {
         this.id = id;
         this.name = name;
-        this.administrator.push(administrators); //[R238] A workgroup MUST have at least one administrator.
-        this.participants.push(participants); //[R237] A workgroup MUST consist of at least one BPI Subject participant.
-        this.securityPolicy.push(securityPolicy); //[239] A workgroup MUST have at least one security policy. Note that a security policy consists of authentication and authorization rules for the workgroup participants. Note also that one or more workgroup administrators define the workgroup security policy.
-        this.privacyPolicy.push(privacyPolicy); //[R240] A workgroup MUST have at least one security policy. A privacy policy consists of the data visibility rules for each participant.
+        this.administrator.push(administrators);
+        this.participants.push(participants);
+        this.securityPolicy.push(securityPolicy);
+        this.privacyPolicy.push(privacyPolicy);
     }
 
     //TODO Implement checks for actions bound by security and privacy policies #485
-    addParticipant(bpiSubject: BpiSubject) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions
+    addParticipant(bpiSubject: BpiSubject) { 
         return  this.participants.push(bpiSubject);
     };
 
-    addParticipants(bpiSubjects: BpiSubject[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions
+    addParticipants(bpiSubjects: BpiSubject[]) { 
         bpiSubjects.forEach(subject => {
             this.participants.push(subject);
         });
@@ -46,7 +46,7 @@ export class Workgroup implements IWorkgroup {
 
     updateParticipant(id: string, ...update:any): BpiSubject {}; //TODO write logic for dynamic update #485
 
-    removeParticipant(id: string): BpiSubject { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    removeParticipant(id: string): BpiSubject {
         const participant = this.participants.filter(subject => subject.id != id);
         if(!participant.length) {
             throw new Error('No mathcing participant found');
@@ -54,7 +54,7 @@ export class Workgroup implements IWorkgroup {
         return this.participants = participant;
     };
 
-    removeParticipants(ids: string[]): BpiSubject[] { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    removeParticipants(ids: string[]): BpiSubject[] {
         const participants = this.participants.filter(subject => !ids.includes(subject.id));
         if(!participants.length) {
             throw new Error('No matching participant found');
@@ -62,11 +62,11 @@ export class Workgroup implements IWorkgroup {
         return this.participants = participants;
     };
 
-    addSecurityPolicy(securityPolicy: Security) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    addSecurityPolicy(securityPolicy: Security) {
         return this.securityPolicy.push(securityPolicy); 
     };
 
-    removeSecurityPolicy(securityPolicy: Security) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    removeSecurityPolicy(securityPolicy: Security) {
         const secPolicy = this.securityPolicy.filter(policy => policy.id != securityPolicy.id);
         if(!secPolicy.length) {
             throw new Error('No matching security policy');
@@ -74,15 +74,13 @@ export class Workgroup implements IWorkgroup {
         return this.securityPolicy = secPolicy;
     };
 
-    updateSecurityPolicy(id: string, ...updates: string[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        //TODO write logic for dynamic update #485
-    };
+    updateSecurityPolicy(id: string, ...updates: string[]) {}; //TODO write logic for dynamic update #485
 
-    addPrivacyPolicy(privacyPolicy: Privacy) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    addPrivacyPolicy(privacyPolicy: Privacy) {
         return this.privacyPolicy.push(privacyPolicy);
     };
 
-    removePrivacyPolicy(privacyPolicy: Privacy) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
+    removePrivacyPolicy(privacyPolicy: Privacy) {
         const privPolicy = this.privacyPolicy.filter(policy => policy.id != privacyPolicy.id);
         if(!privPolicy.length) {
             throw new Error('No matching privacy policy');
@@ -90,9 +88,7 @@ export class Workgroup implements IWorkgroup {
         this.privacyPolicy = privPolicy;
     };
 
-    updatePrivacyPolicy(id: string, ...updates: string[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        //TODO write logic for dynamic update #485
-    };
+    updatePrivacyPolicy(id: string, ...updates: string[]) {}; //TODO write logic for dynamic update #485
 
     addWorkstep(workstep: Workstep) {
         return this.worksteps.push(workstep);
