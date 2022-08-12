@@ -17,7 +17,7 @@ export class WorkgroupComponent implements IWorkgroupComponent {
         return this.workgroups;
     };
 
-    createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[], securityPolicy: Security, privacyPolicy: Privacy): Workgroup {  //[R236] There MUST be at least one BPI Subject role that has the authorization to create a workgroup. [R237] A workgroup MUST consist of at least one BPI Subject participant.
+    createWorkgroup(name: string, id: string, owner: BpiSubject, worksteps: Workstep[], securityPolicy: Security, privacyPolicy: Privacy): Workgroup {
         const workgroup = new Workgroup(name, id, owner, worksteps, securityPolicy, privacyPolicy); //TODO Authorize BPI subject to create workgroup #485
         this.workgroups.push(workgroup);
         return workgroup;
@@ -33,11 +33,11 @@ export class WorkgroupComponent implements IWorkgroupComponent {
 
     updateWorkgroup(id: string, ...updates: string[]): Workgroup {}; //TODO write logic for dynamic update #485
 
-    deleteWorkgroup(id: string): Workgroup[] { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions
+    deleteWorkgroup(id: string): Workgroup[] {
         this.workgroups = this.workgroups.filter(workgroup => workgroup.id != id);
         return this.workgroups;
     }
-    archiveWorkgroup(id: string): Workgroup | string { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions
+    archiveWorkgroup(id: string): Workgroup | string {
         const workgroup = this.workgroups.find(group => group.id == id);
         if (!workgroup) {
             throw new Error('Workgroup Does Not Exist');
