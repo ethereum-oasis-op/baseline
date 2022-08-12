@@ -33,6 +33,7 @@ export class Workgroup implements IWorkgroup {
         bpiSubjects.forEach(subject => {
             this.participants.push(subject);
         });
+        return this.participants;
     }
 
     getParticipantById(id: string): BpiSubject {
@@ -46,11 +47,19 @@ export class Workgroup implements IWorkgroup {
     updateParticipant(id: string, ...update:any): BpiSubject {}; //TODO write logic for dynamic update #485
 
     removeParticipant(id: string): BpiSubject { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        return this.participants = this.participants.filter(subject => subject.id != id);
+        const participant = this.participants.filter(subject => subject.id != id);
+        if(!participant.length) {
+            throw new Error('No mathcing participant found');
+        }
+        return this.participants = participant;
     };
 
     removeParticipants(ids: string[]): BpiSubject[] { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        return this.participants = this.participants.filter(subject => !ids.includes(subject.id))
+        const participants = this.participants.filter(subject => !ids.includes(subject.id));
+        if(!participants.length) {
+            throw new Error('No matching participant found');
+        }
+        return this.participants = participants;
     };
 
     addSecurityPolicy(securityPolicy: Security) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
@@ -58,7 +67,11 @@ export class Workgroup implements IWorkgroup {
     };
 
     removeSecurityPolicy(securityPolicy: Security) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        return this.securityPolicy = this.securityPolicy.filter(policy => policy.id != securityPolicy.id);
+        const secPolicy = this.securityPolicy.filter(policy => policy.id != securityPolicy.id);
+        if(!secPolicy.length) {
+            throw new Error('No matching security policy');
+        }
+        return this.securityPolicy = secPolicy;
     };
 
     updateSecurityPolicy(id: string, ...updates: string[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
@@ -70,7 +83,11 @@ export class Workgroup implements IWorkgroup {
     };
 
     removePrivacyPolicy(privacyPolicy: Privacy) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
-        this.privacyPolicy = this.privacyPolicy.filter(policy => policy.id != privacyPolicy.id);
+        const privPolicy = this.privacyPolicy.filter(policy => policy.id != privacyPolicy.id);
+        if(!privPolicy.length) {
+            throw new Error('No matching privacy policy');
+        }
+        this.privacyPolicy = privPolicy;
     };
 
     updatePrivacyPolicy(id: string, ...updates: string[]) { //[R241] A workgroup administrator MUST be able to perform at minimum the following functions:
@@ -82,7 +99,7 @@ export class Workgroup implements IWorkgroup {
     };
 
     getWorkstepById(workstepId: string) {
-        return this.worksteps.find(step => step.id == workstepId);
+        return this.worksteps.find(step => step.id === workstepId);
     };
 
     addWorkflow(workflow: Workflow) {
@@ -90,6 +107,6 @@ export class Workgroup implements IWorkgroup {
     };
 
     getWorkflowById(workflowId: string) {
-        return this.workflows.find(workflow => workflow.id == workflowId);
+        return this.workflows.find(workflow => workflow.id === workflowId);
     };
 }
