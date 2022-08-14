@@ -944,13 +944,15 @@ export class ParticipantStack {
   }
 
   async requireOrganization(address: string): Promise<Organization> {
-    const orgRegistryContract = await this.fetchOrganizationContract();
-    const org = await this.fetchOrganization(address, orgRegistryContract);
-    if (org && org['address'].toLowerCase() === address.toLowerCase()) {
-      return org;
-    }
-
-    throw new Error();
+    return await tryTimes(async () => {
+      const orgRegistryContract = await this.fetchOrganizationContract();
+      const org = await this.fetchOrganization(address, orgRegistryContract);
+      if (org && org['address'].toLowerCase() === address.toLowerCase()) {
+        return org;
+      }
+  
+      throw new Error();
+    })
   }
 
   async requireSubjectAccount(): Promise<SubjectAccount> {
