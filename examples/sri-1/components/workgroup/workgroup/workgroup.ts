@@ -24,15 +24,11 @@ export class Workgroup implements IWorkgroup {
         this.privacyPolicy.push(privacyPolicy);
     }
 
-    addParticipant(bpiSubject: BpiSubject) { 
+    addParticipants(bpiSubject: BpiSubject[]): BpiSubject[] { 
        throw new Error("not implemented");
     };
 
-    addParticipants(bpiSubjects: BpiSubject[]) { 
-        throw new Error("not implemented");
-    }
-
-    getParticipantById(id: string): BpiSubject {
+    getParticipantsById(ids: string[]): BpiSubject[] {
         throw new Error("not implemented");
     };
 
@@ -41,10 +37,6 @@ export class Workgroup implements IWorkgroup {
     };
 
     updateParticipant(id: string, ...update:any): BpiSubject {
-        throw new Error("not implemented");
-    };
-
-    removeParticipant(id: string): BpiSubject {
         throw new Error("not implemented");
     };
 
@@ -76,19 +68,19 @@ export class Workgroup implements IWorkgroup {
         throw new Error("not implemented");
     }; 
 
-    addWorkstep(workstep: Workstep) {
+    addWorksteps(worksteps: Workstep[]): Workstep[] {
         throw new Error("not implemented");
     };
 
-    getWorkstepById(workstepId: string) {
+    getWorkstepsById(workstepIds: string[]): Workstep[] {
         throw new Error("not implemented");
     };
 
-    addWorkflow(workflow: Workflow) {
+    addWorkflows(workflows: Workflow[]): Workflow[] {
         throw new Error("not implemented");
     };
 
-    getWorkflowById(workflowId: string) {
+    getWorkflowsById(workflowIds: string[]): Workflow[] {
         throw new Error("not implemented");
     };
 }

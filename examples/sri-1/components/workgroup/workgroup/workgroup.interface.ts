@@ -14,12 +14,10 @@ export interface IWorkgroup {
     worksteps: Workstep[];
     workflows: Workflow[];
 
-    addParticipant(bpiSubject: BpiSubject);
-    addParticipants(bpiSubjects: BpiSubject[]);
-    getParticipantById(id: string): BpiSubject;
+    addParticipants(bpiSubjects: BpiSubject[]): BpiSubject[];
+    getParticipantsById(ids: string[]): BpiSubject[];
     getAllParticipants(): BpiSubject[];
     updateParticipant(id: string, update:any): BpiSubject;
-    removeParticipant(id: string): BpiSubject;
     removeParticipants(ids: string[]): BpiSubject[];
     addSecurityPolicy(securityPolicy: Security);
     removeSecurityPolicy(securityPolicy: Security);
@@ -27,8 +25,8 @@ export interface IWorkgroup {
     addPrivacyPolicy(privacyPolicy: Privacy);
     removePrivacyPolicy(privacyPolicy: Privacy);
     updatePrivacyPolicy(id: string, ...udpates: string[]);    
-    addWorkstep(workstep: Workstep);
-    getWorkstepById(workstepId: string);
-    addWorkflow(workflow: Workflow);
-    getWorkflowById(workflowId: string);
+    addWorksteps(worksteps: Workstep[]): Workstep[];
+    getWorkstepsById(workstepIds: string[]): Workstep[];
+    addWorkflows(workflows: Workflow[]): Workflow[];
+    getWorkflowsById(workflowIds: string[]): Workflow[];
 }
