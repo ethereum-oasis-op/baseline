@@ -17,7 +17,7 @@ export interface IWorkgroup {
     addParticipants(bpiSubjects: BpiSubject[]): BpiSubject[];
     getParticipantsById(ids: string[]): BpiSubject[];
     getAllParticipants(): BpiSubject[];
-    updateParticipant(id: string, update:any): BpiSubject;
+    updateParticipants(id: string[], update:any[]): BpiSubject[];
     removeParticipants(ids: string[]): BpiSubject[];
     addSecurityPolicy(securityPolicy: Security);
     removeSecurityPolicy(securityPolicy: Security);

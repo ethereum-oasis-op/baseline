@@ -1,5 +1,6 @@
 import { BpiSubject } from "../identity/bpiSubject";
-export interface IInvitation {
+export type TInvitation = 
+{
     id: string; 
     name: string;
     sender: BpiSubject;

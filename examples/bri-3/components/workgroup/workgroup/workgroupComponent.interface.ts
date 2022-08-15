@@ -9,7 +9,7 @@ export interface IWorkgroupComponent {
     archivedWorkgroups: Workgroup[];
     getWorkgroups(): Workgroup[];
     createWorkgroup(workgroup: Workgroup): Workgroup;
-    getWorkgroupById(id: string): Workgroup
+    getWorkgroupsById(id: string[]): Workgroup[];
     sendInviteToWorkgroup(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string, agreement: Agreement): Invitation;
     getInvitationById(id: string): Invitation;
     getReceivedInvitationsByEmail(email: string): Invitation[];

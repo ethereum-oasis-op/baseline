@@ -1,7 +1,7 @@
 import { BpiSubject } from "../identity/bpiSubject";
-import { IInvitation } from "./invitation.interface";
+import { TInvitation } from "./invitation.type";
 
-export class Invitation implements IInvitation {
+export class Invitation implements TInvitation {
     id: string; // TODO: Add uuid after #491
     name: string;
     sender: BpiSubject;
