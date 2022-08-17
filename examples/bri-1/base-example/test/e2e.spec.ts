@@ -1,11 +1,7 @@
-import { Opcode } from '@baseline-protocol/types';
-import { assert, expect } from 'chai';
+import { assert } from 'chai';
 import {
   ParticipantStack,
 } from '../src';
-import {
-  promisedTimeout,
-} from '../src/utils';
 import {
   shouldBehaveLikeAWorkgroupOrganization,
   shouldBehaveLikeWorkgroupOperator,
@@ -22,7 +18,6 @@ import {
   scrapeInvitationToken,
   JSDomErrorHandler
 } from './utils';
-import { uuid } from 'uuidv4';
 
 const aliceCorpName = 'Alice Corp';
 const aliceDomain = 'alice.baseline.local';
@@ -195,7 +190,7 @@ describe('Baseline', () => {
       before(async () => {
         // sanity check
         assert(alice && bob, 'an administrative user should have been created for each workgroup counterparty');
-        assert(Object.keys(bearerTokens).length === 2, 'a bearer token should have been authorized for each administrative user');
+        assert(Object.keys(bearerTokens).length === 2, 'a bearer token should have been authorized for each organization administrator');
         assert(aliceBPI, 'an instance should have been initialized for Alice Corp');
         assert(bobBPI, 'an instance should have been initialized for Bob Corp');
         assert(workgroup, 'workgroup should not be null');
@@ -237,71 +232,71 @@ describe('Baseline', () => {
         });
       });
 
-      describe('workflow', () => {
-        var workstepId
+      // describe('workflow', () => {
+      //   var workstepId
 
-        describe('create a work step', () => {
-          before(async () => {
-            // TODO: Ensure ParticipantStack.org was assigned.
+      //   describe('create a work step', () => {
+      //     before(async () => {
+      //       // TODO: Ensure ParticipantStack.org was assigned.
 
-            await bobBPI.requireBaselineStack();
+      //       await bobBPI.requireBaselineStack();
 
-            workstepId = String(uuid())
-            const recipient = await aliceBPI.resolveOrganizationAddress();
+      //       workstepId = String(uuid())
+      //       const recipient = await aliceBPI.resolveOrganizationAddress();
 
-            await bobBPI.sendBaselineProtocolMessage({
-              "id": workstepId,
-              "payload": {
-                "proof": "8d8f7498db7aee910428c737d8427ac4add98353f981ca70db07697a091d8c23972b55b0b20fc0eebc1ac6c2ae427d783291c7fcb2e3f7417d279fea78ce1eac2d2293e53579abbef4960a1e290bd023e2999d8ff423d01080d449ce5d14ca89c94e277e8e0bb14fb91a0b71129920ae4411e77685287611f4d2aaf66b8fc5dc",
-                "type": "general_consistency",
-                "witness":{}
-              },
-              "type":"general_consistency",
-            });
-        })
+      //       await bobBPI.sendBaselineProtocolMessage({
+      //         "id": workstepId,
+      //         "payload": {
+      //           "proof": "8d8f7498db7aee910428c737d8427ac4add98353f981ca70db07697a091d8c23972b55b0b20fc0eebc1ac6c2ae427d783291c7fcb2e3f7417d279fea78ce1eac2d2293e53579abbef4960a1e290bd023e2999d8ff423d01080d449ce5d14ca89c94e277e8e0bb14fb91a0b71129920ae4411e77685287611f4d2aaf66b8fc5dc",
+      //           "type": "general_consistency",
+      //           "witness":{}
+      //         },
+      //         "type":"general_consistency",
+      //       });
+      //   })
 
-          it('should increment protocol message tx count for the sender', async () => {
-            assert(bobBPI.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 2');
-          });
+      //     it('should increment protocol message tx count for the sender', async () => {
+      //       assert(bobBPI.getProtocolMessagesTx() === 1, 'protocol messages tx should equal 2');
+      //     });
 
-          it('should increment protocol message rx count for the recipient', async () => {
-            await promisedTimeout(50);
-            assert(aliceBPI.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 2');
-          });
+      //     it('should increment protocol message rx count for the recipient', async () => {
+      //       await promisedTimeout(50);
+      //       assert(aliceBPI.getProtocolMessagesRx() === 1, 'protocol messages rx should equal 2');
+      //     });
 
-          // it('should match the merkle root between sender and receiver', async() => {
-          //   let bobRoot = bobApp.getMerkleRoot()
-          //   let aliceRoot = aliceApp.getMerkleRoot()
-          //   expect(bobRoot).to.equal(aliceRoot);
-          // })
-        });
+      //     // it('should match the merkle root between sender and receiver', async() => {
+      //     //   let bobRoot = bobApp.getMerkleRoot()
+      //     //   let aliceRoot = aliceApp.getMerkleRoot()
+      //     //   expect(bobRoot).to.equal(aliceRoot);
+      //     // })
+      //   });
 
-        // describe('update a work step', () => {
-        //   before(async () => {
-        //     await aliceApp.sendBaselineProtocolMessage({
-        //       id: workstepId,
-        //       name: 'hello world',
-        //       url: 'proto://deep/link/to/doc',
-        //       rfp_id: uuid(),
-        //     });
-        //   });
+      //   // describe('update a work step', () => {
+      //   //   before(async () => {
+      //   //     await aliceApp.sendBaselineProtocolMessage({
+      //   //       id: workstepId,
+      //   //       name: 'hello world',
+      //   //       url: 'proto://deep/link/to/doc',
+      //   //       rfp_id: uuid(),
+      //   //     });
+      //   //   });
 
-        //   it('should increment protocol message tx count for the sender', async () => {
-        //     assert(aliceApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
-        //   });
+      //   //   it('should increment protocol message tx count for the sender', async () => {
+      //   //     assert(aliceApp.getProtocolMessagesTx() === 2, 'protocol messages tx should equal 2');
+      //   //   });
 
-        //   it('should increment protocol message rx count for the recipient', async () => {
-        //     await promisedTimeout(50);
-        //     assert(bobApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
-        //   });
+      //   //   it('should increment protocol message rx count for the recipient', async () => {
+      //   //     await promisedTimeout(50);
+      //   //     assert(bobApp.getProtocolMessagesRx() === 2, 'protocol messages rx should equal 2');
+      //   //   });
 
-        //   it('should match the merkle root between sender and receiver', async() => {
-        //     let bobRoot = bobApp.getMerkleRoot()
-        //     let aliceRoot = aliceApp.getMerkleRoot()
-        //     expect(bobRoot).to.equal(aliceRoot);
-        //   })
-        // });
-      });
+      //   //   it('should match the merkle root between sender and receiver', async() => {
+      //   //     let bobRoot = bobApp.getMerkleRoot()
+      //   //     let aliceRoot = aliceApp.getMerkleRoot()
+      //   //     expect(bobRoot).to.equal(aliceRoot);
+      //   //   })
+      //   // });
+      // });
     });
   });
 });
