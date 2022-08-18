@@ -18,8 +18,8 @@ export class Workgroup implements IWorkgroup {
     constructor(id: string, name: string, administrators: BpiSubject[], participants: BpiSubject[], securityPolicy: Security, privacyPolicy: Privacy ) {
         this.id = id;
         this.name = name;
-        this.administrator.push(administrators);
-        this.participants.push(participants);
+        this.administrator.push(...administrators);
+        this.participants.push(...participants);
         this.securityPolicy.push(securityPolicy);
         this.privacyPolicy.push(privacyPolicy);
     }
