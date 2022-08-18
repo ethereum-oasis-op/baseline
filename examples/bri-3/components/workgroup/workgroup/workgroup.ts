@@ -1,5 +1,5 @@
 import { Workstep } from '../workstep/workstep';
-import { BpiSubject } from '../identity/bpiSubject';
+import { BpiSubject } from '../../identity/bpiSubject/bpiSubject';
 import { IWorkgroup } from './workgroup.interface';
 import { Workflow } from '../workflow/workflow';
 import { Security } from '../policy/security'
