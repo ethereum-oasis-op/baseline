@@ -79,7 +79,7 @@ export const bpiFactory = async (
 ): Promise<ParticipantStack> => {
   const natsConfig = {
     bearerToken: '',
-    natsServers: [natsHost],
+    natsServers: [natsHost.replace('localhost', '127.0.0.1')],
     privateKey: natsPrivateKey,
     publicKey: natsPublicKey,
   };

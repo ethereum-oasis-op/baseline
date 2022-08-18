@@ -134,7 +134,6 @@ export class ParticipantStack {
     }
 
     this.contracts = {};
-    this.startProtocolSubscriptions();
 
     await this.registerOrganization(this.baselineConfig.orgName, this.natsConfig.natsServers[0]);
 
@@ -155,6 +154,7 @@ export class ParticipantStack {
     await this.requireIdent();
     await this.deployBaselineStack();
     await this.requireBaselineStack();
+    await this.startProtocolSubscriptions();
 
     if (this.baselineConfig.operator) {
       this.subjectAccount = await this.createSubjectAccount(await this.fetchOrganizationContract());
