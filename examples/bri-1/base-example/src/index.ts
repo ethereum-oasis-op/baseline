@@ -1081,7 +1081,9 @@ export class ParticipantStack {
 
   async startProtocolSubscriptions(): Promise<any> {
     if (!this.nats?.isConnected()) {
-      await this.nats?.connect();
+      await tryTimes(async () => {
+        await this.nats?.connect();
+      });
     }
 
     const subscription = await this.nats?.subscribe(baselineProtocolMessageSubject, (msg, err) => {
