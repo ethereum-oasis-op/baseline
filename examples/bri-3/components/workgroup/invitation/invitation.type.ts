@@ -1,4 +1,4 @@
-import { BpiSubject } from "../identity/bpiSubject";
+import { BpiSubject } from "../../identity/bpiSubject/bpiSubject";
 export type TInvitation = 
 {
     id: string; 
