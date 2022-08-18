@@ -36,9 +36,9 @@ export class Workgroup implements IWorkgroup {
         throw new Error("not implemented");
     };
 
-    updateParticipant(id: string, ...update:any): BpiSubject {
-        throw new Error("not implemented");
-    };
+    updateParticipants(id: string[], update: any[]): BpiSubject[] {
+        throw new Error('Method not implemented.');
+    }
 
     removeParticipants(ids: string[]): BpiSubject[] {
         throw new Error("not implemented");
