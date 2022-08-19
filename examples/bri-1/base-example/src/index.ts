@@ -72,7 +72,7 @@ import {
 
 import fs from 'fs';
 
-const baselineProtocolMessageSubject = 'baseline.proxy';
+const baselineProtocolMessageSubject = 'baseline.invitation.outbound';
 const baselineProtocolDefaultDomain = 'baseline.local';
 
 export class ParticipantStack {

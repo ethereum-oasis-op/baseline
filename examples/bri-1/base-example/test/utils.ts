@@ -83,7 +83,7 @@ export const bpiFactory = async (
     privateKey: natsPrivateKey,
     publicKey: natsPublicKey,
   };
-  natsConfig.bearerToken = await vendNatsAuthorization(natsConfig, 'baseline.proxy');
+  natsConfig.bearerToken = await vendNatsAuthorization(natsConfig, 'baseline.invitation.outbound');
 
   return new ParticipantStack(
     {
