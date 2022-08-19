@@ -1130,11 +1130,11 @@ export class ParticipantStack {
     );
 
     const permissions = {
-      publish: {
-        allow: ['baseline.>'],
+      publish  : {
+        allow: ['baseline', 'baseline.>'],
       },
       subscribe: {
-        allow: [`baseline.proxy`],
+        allow: ['baseline', 'baseline.>'],
       },
     };
 
