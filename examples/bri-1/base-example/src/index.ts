@@ -1228,4 +1228,154 @@ export class ParticipantStack {
       return Promise.reject(e);
     }
   }
+
+  async createWorkflow() {
+    return new Baseline(
+      this.orgAccessToken!,
+      this.baselineConfig?.baselineApiScheme,
+      this.baselineConfig?.baselineApiHost,
+    ).createWorkflow(
+      {
+        name: 'test workflow',
+        description: 'workflow for test',
+        workgroup_id: this.workgroup.id,
+        status: 'draft',
+        version: '0.1'
+      }
+    );
+  }
+
+  async fetchWorkflows() {
+    return await tryTimes(async () => {
+      const result = await new Baseline(
+        this.orgAccessToken!,
+        this.baselineConfig?.baselineApiScheme,
+        this.baselineConfig?.baselineApiHost,
+      ).fetchWorkflows(
+        {
+          workgroup_id    : this.workgroup.id,
+          filter_instances: true,
+        }
+      );
+      if (result && result.length) { return result; }
+
+      throw new Error();
+    });
+  }
+
+  async createWorkflowInstance(workflowId) {
+    return new Baseline(
+      this.orgAccessToken!,
+      this.baselineConfig?.baselineApiScheme,
+      this.baselineConfig?.baselineApiHost,
+    ).createWorkflow(
+      {
+        name: 'test workflow instance',
+        workgroup_id: this.workgroup.id,
+        workflow_id: workflowId,
+      }
+    );
+  }
+
+  async fetchWorkflowInstances() {
+    return await tryTimes(async () => {
+      const result = await new Baseline(
+        this.orgAccessToken!,
+        this.baselineConfig?.baselineApiScheme,
+        this.baselineConfig?.baselineApiHost,
+      ).fetchWorkflows(
+        {
+          workgroup_id     : this.workgroup.id,
+          filter_prototypes: true,
+        }
+      );
+      if (result && result.length) { return result; }
+
+      throw new Error();
+    });
+  }
+
+  async createWorkstep(workflowId) {
+    return new Baseline(
+      this.orgAccessToken!,
+      this.baselineConfig?.baselineApiScheme,
+      this.baselineConfig?.baselineApiHost,
+    ).createWorkstep(
+      workflowId,
+      {
+        name: 'test workstep',
+        description: 'test workstep description',
+        require_finality: true,
+        status: 'draft',
+        cardinality: 1,
+        metadata: {
+          prover: this.baselineProver,
+        },
+      }
+    );
+  }
+
+  async fetchWorksteps(workflowId) {
+    return await tryTimes(async () => {
+      const result = await new Baseline(
+        this.orgAccessToken!,
+        this.baselineConfig?.baselineApiScheme,
+        this.baselineConfig?.baselineApiHost,
+      ).fetchWorksteps(
+        workflowId,
+        {
+          filter_instances: true,
+        }
+      );
+      if (result && result.length) { return result; }
+
+      throw new Error();
+    });
+  }
+
+  async createWorkstepInstance(workflowId, workstepId) {
+    return new Baseline(
+      this.orgAccessToken!,
+      this.baselineConfig?.baselineApiScheme,
+      this.baselineConfig?.baselineApiHost,
+    ).createWorkstep(
+      workflowId,
+      {
+        name: 'test workstep instance',
+        workgroup_id: this.workgroup.id,
+        workstep_id: workstepId,
+      }
+    );
+  }
+
+  async fetchWorkstepInstances(workflowId) {
+    return await tryTimes(async () => {
+      const result = await new Baseline(
+        this.orgAccessToken!,
+        this.baselineConfig?.baselineApiScheme,
+        this.baselineConfig?.baselineApiHost,
+      ).fetchWorksteps(
+        workflowId,
+        {
+          filter_prototypes: true,
+        }
+      );
+      if (result && result.length) { return result; }
+
+      throw new Error();
+    });
+  }
+
+  async executeWorkstep(workflowId, workstepId) {
+    return new Baseline(
+      this.orgAccessToken!,
+      this.baselineConfig?.baselineApiScheme,
+      this.baselineConfig?.baselineApiHost,
+    ).executeWorkstep(
+      workflowId,
+      workstepId,
+      {},
+    );
+  }
+
 }

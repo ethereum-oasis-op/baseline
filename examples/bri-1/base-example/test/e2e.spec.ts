@@ -1,14 +1,17 @@
-import { assert } from 'chai';
+import { assert }          from 'chai';
+import { before }          from 'mocha';
+import { uuid }            from 'uuidv4';
 import {
   ParticipantStack,
-} from '../src';
+}                          from '../src';
+import { promisedTimeout } from '../src/utils';
 import {
   shouldBehaveLikeAWorkgroupOrganization,
   shouldBehaveLikeWorkgroupOperator,
   shouldBehaveLikeAnInvitedWorkgroupOrganization,
   shouldBehaveLikeAWorkgroupCounterpartyOrganization,
   shouldCreateBaselineStack,
-} from './shared';
+}                          from './shared';
 
 import {
   authenticateUser,
@@ -215,7 +218,7 @@ describe('Baseline', () => {
           assert(inviteToken, 'invite token should not be null');
         });
 
-        describe('alice', function () {
+        describe('accepting a workgroup invite', function () {
           before(async () => {
             await bobBPI.requireRegistryContract('erc1820-registry');
             await bobBPI.requireRegistryContract('organization-registry');
@@ -228,7 +231,63 @@ describe('Baseline', () => {
         });
 
         describe('counterparties post-onboarding', function () {
-          describe(bobCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization(() => bobBPI));
+          // describe(bobCorpName, shouldBehaveLikeAWorkgroupCounterpartyOrganization(() => bobBPI));
+        });
+
+        describe('workflow', () => {
+          let workflow;
+
+          before(async () => {
+            await bobBPI.createWorkflow();
+          });
+
+          it('should have created a workflow', async () => {
+            const workflowList = await bobBPI.fetchWorkflows();
+            assert(workflowList && workflowList.length, '');
+            workflow = workflowList[0];
+          });
+
+          describe('worksteps', () => {
+            let workstep;
+
+            before(async () => {
+              await bobBPI.createWorkstep(workflow.id);
+            });
+
+            it('should have created a workstep', async () => {
+              const workstepList = await bobBPI.fetchWorksteps(workflow.id);
+              assert(workstepList && workstepList.length, '');
+              workstep = workstepList[0];
+            });
+
+            describe('workflow instance', () => {
+              let workflowInstance;
+
+              before(async () => {
+                await bobBPI.createWorkflowInstance(workflow.id);
+              });
+
+              it('should have created a workflow instance', async () => {
+                const workflowInstanceList = await bobBPI.fetchWorkflowInstances();
+                assert(workflowInstanceList && workflowInstanceList.length, '');
+                workflowInstance = workflowInstanceList[0];
+              });
+
+              describe('workstep instance', () => {
+                let workstepInstance;
+
+                before(async () => {
+                  await bobBPI.createWorkstepInstance(workflow.id, workstep.id);
+                });
+
+                it('should have created a workstep instance', async () => {
+                  const workstepInstanceList = await bobBPI.fetchWorkstepInstances(workflow.id);
+                  assert(workstepInstanceList && workstepInstanceList.length, '');
+                  workstepInstance = workstepInstanceList[0];
+                });
+              });
+            });
+          });
         });
       });
 
