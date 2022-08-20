@@ -1,6 +1,6 @@
 import { Workgroup } from './workgroup';
 import { BpiSubject } from '../../identity/bpiSubject/bpiSubject';
-import { Agreement } from '../storage/agreement';
+import { Agreement } from '../../storage/agreement';
 import { Invitation } from '../invitation/invitation';
 
 export interface IWorkgroupComponent {

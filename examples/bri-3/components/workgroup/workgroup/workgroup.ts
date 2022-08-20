@@ -2,15 +2,15 @@ import { Workstep } from '../workstep/workstep';
 import { BpiSubject } from '../../identity/bpiSubject/bpiSubject';
 import { IWorkgroup } from './workgroup.interface';
 import { Workflow } from '../workflow/workflow';
-import { Security } from '../policy/security'
-import { Privacy } from "../policy/privacy"
+import { Security } from '../../policy/security'
+import { Privacy } from "../../policy/privacy"
 
 export class Workgroup implements IWorkgroup {
     id: string; // TODO: Add uuid after #491
     name: string;
     administrator: BpiSubject[] = []; 
-    securityPolicy: Security; //TODO Implement securityPolicy #485
-    privacyPolicy: Privacy; //TODO Implement privacyPolicy #485
+    securityPolicy: Security[]; //TODO Implement securityPolicy #485
+    privacyPolicy: Privacy[]; //TODO Implement privacyPolicy #485
     participants: BpiSubject[] = [];
     worksteps: Workstep[] = [];
     workflows: Workflow[] = [];
