@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SubjectController } from './controllers/subjects.controller';
+import { SubjectController } from './api/subjects.controller';
 import { CreateBpiSubjectCommandHandler } from './capabilities/createBpiSubject/createBpiSubjectCommand.handler';
 
 export const CommandHandlers = [CreateBpiSubjectCommandHandler];
