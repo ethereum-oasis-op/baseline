@@ -1,4 +1,4 @@
-import { Privacy } from '../../policy/privacy';
+import { Privacy } from '../../ policy/privacy';
 import { Security } from '../../policy/security';
 
 export interface IWorkstep {

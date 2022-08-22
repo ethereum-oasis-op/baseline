@@ -1,4 +1,4 @@
-import { BpiSubject } from "../../identity/bpiSubject/bpiSubject";
+import { BpiSubject } from "../../../identity/bpiSubjects/models/bpiSubject";
 import { TInvitation } from "./invitation.type";
 
 export class Invitation implements TInvitation {
