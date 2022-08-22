@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { SubjectsModule } from './bri/subjects/subjects.module';
+import { IdentityModule } from './bri/identity/identity.module';
 
 @Module({
-  imports: [SubjectsModule],
+  imports: [IdentityModule],
 })
 export class AppModule {}

@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { CreateBpiSubjectCommand } from "../commands/createBpiSubject.command";
+import { CreateBpiSubjectCommand } from "./createBpiSubject.command";
 
 @CommandHandler(CreateBpiSubjectCommand)
 export class CreateBpiSubjectCommandHandler implements ICommandHandler<CreateBpiSubjectCommand> {
