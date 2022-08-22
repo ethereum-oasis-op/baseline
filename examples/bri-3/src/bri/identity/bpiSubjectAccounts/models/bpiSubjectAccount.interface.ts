@@ -1,4 +1,4 @@
-import { IBpiSubject } from "../bpiSubject/bpiSubject.interface";
+import { IBpiSubject } from "../../bpiSubjects/models/bpiSubject.interface";
 
 export interface IBpiSubjectAccount {
     id: string; // TODO: Add uuid after #491

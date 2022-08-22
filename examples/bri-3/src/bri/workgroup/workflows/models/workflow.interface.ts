@@ -1,4 +1,4 @@
-import { Workstep } from '../workstep/workstep';
+import { Workstep } from '../../worksteps/models/workstep';
 
 export interface IWorkflow {
     id: string; // TODO: Add uuid after #491

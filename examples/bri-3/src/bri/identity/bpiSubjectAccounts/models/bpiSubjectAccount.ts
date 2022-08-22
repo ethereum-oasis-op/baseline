@@ -1,4 +1,4 @@
-import { IBpiSubject } from "../bpiSubject/bpiSubject.interface";
+import { IBpiSubject } from "../../bpiSubjects/models/bpiSubject.interface";
 import { IBpiSubjectAccount } from "./bpiSubjectAccount.interface";
 
 export class BpiSubjectAccount implements IBpiSubjectAccount {
