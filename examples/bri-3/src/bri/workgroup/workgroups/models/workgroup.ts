@@ -1,9 +1,9 @@
-import { Workstep } from '../workstep/workstep';
-import { BpiSubject } from '../../identity/bpiSubject/bpiSubject';
+import { Workstep } from '../../worksteps/models/workstep';
 import { IWorkgroup } from './workgroup.interface';
-import { Workflow } from '../workflow/workflow';
-import { Security } from '../../policy/security'
-import { Privacy } from "../../policy/privacy"
+import { Workflow } from '../../workflows/models/workflow';
+import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
+import { Security } from '../../../../../components/policy/security';
+import { Privacy } from '../../../../../components/policy/privacy';
 
 export class Workgroup implements IWorkgroup {
     id: string; // TODO: Add uuid after #491

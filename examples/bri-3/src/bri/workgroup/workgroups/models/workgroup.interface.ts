@@ -1,4 +1,4 @@
-import { Workstep } from '../../worksteps/models/workstep";
+import { Workstep } from '../../worksteps/models/workstep';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { Security } from '../../../../../components/policy/security';
 import { Privacy } from '../../../../../components/policy/privacy';
