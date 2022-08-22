@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateBpiSubjectCommand } from '../commands/createBpiSubject.command';
+import { CreateBpiSubjectCommand } from '../businessLogic/createBpiSubject/createBpiSubject.command';
 
 @Controller("subjects")
 export class SubjectController {
