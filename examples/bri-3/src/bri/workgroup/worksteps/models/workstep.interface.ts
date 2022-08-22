@@ -1,5 +1,5 @@
-import { Privacy } from '../../ policy/privacy';
-import { Security } from '../../policy/security';
+import { Privacy } from '../../../../../components/policy/privacy';
+import { Security } from '../../../../../components/policy/security';
 
 export interface IWorkstep {
     name: string;
