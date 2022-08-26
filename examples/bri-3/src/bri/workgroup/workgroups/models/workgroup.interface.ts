@@ -1,7 +1,7 @@
 import { Workstep } from '../../worksteps/models/workstep';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
-import { Security } from '../../../../../components/policy/security';
-import { Privacy } from '../../../../../components/policy/privacy';
+import { Security } from '../../../policy/models/security';
+import { Privacy } from '../../../policy/models/privacy';
 import { Workflow } from '../../workflows/models/workflow';
 
 export interface IWorkgroup {
