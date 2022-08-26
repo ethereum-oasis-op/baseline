@@ -1,16 +1,22 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { BpiSubjectAgent } from "../../agents/bpiSubjects.agent";
 import { CreateBpiSubjectCommand } from "./createBpiSubject.command";
 
 @CommandHandler(CreateBpiSubjectCommand)
 export class CreateBpiSubjectCommandHandler implements ICommandHandler<CreateBpiSubjectCommand> {
-  constructor() {}
+  constructor(private agent: BpiSubjectAgent) {}
 
   async execute(command: CreateBpiSubjectCommand) {
-    const { prop1, prop2 } = command;
-    // 1. validate props for new bpi subject cretation
-    // 2. create the bpi subject
-    // 3. store the bpi subject
-    // 4. throw events to trigger any relevant business logic (i.e. inform bpi owner)
+    const { name, desc, publicKey } = command;
+
+    this.agent.throwIfCreateBpiSubjectInputInvalid(name, desc, publicKey);
+
+    const newBpiSubject = this.agent.createNewExternalBpiSubject(name, desc, publicKey);
+    
+    // TODO: Generic map of domain model to entity model
+    // this.orm.store(newBpiSubject);
+
+    // TODO: Response DTO
     return true;
   }
 }
