@@ -1,6 +1,6 @@
 import { IWorkstep } from './workstep.interface';
-import { Privacy } from '../../../../../components/policy/privacy';
-import { Security } from '../../../../../components/policy/security';
+import { Security } from '../../../policy/models/security';
+import { Privacy } from '../../../policy/models/privacy';
 
 export class Workstep implements IWorkstep {
   id: string; // TODO: Add uuid after #491
