@@ -14,7 +14,6 @@ export class BpiSubjectAgent {
     };
   } 
 
-  // Agent always works through the methods of the domain object to change it's state
   public createNewExternalBpiSubject(name :string, desc: string, pk: string): BpiSubject {
     return new BpiSubject(name, desc, BpiSubjectType.External, pk);
   }

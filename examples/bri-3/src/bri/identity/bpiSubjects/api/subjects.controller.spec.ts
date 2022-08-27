@@ -21,7 +21,7 @@ describe('SubjectController', () => {
     await app.init();
   });
 
-  describe('CRUD', () => {
+  describe('Bpi Subject creation', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
       const requestDto = { desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
@@ -30,6 +30,17 @@ describe('SubjectController', () => {
       expect(async () => {
         await sController.CreateBpiSubject(requestDto);
       }).rejects.toThrow(new BadRequestException("Name cannot be empty."));
+    });
+
+    it('should return true if all input params provided', async () => {
+      // Arrange
+      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
+
+      // Act
+      var response = await sController.CreateBpiSubject(requestDto);
+
+      // Assert
+      expect(response).toEqual(true);
     });
   });
 });
