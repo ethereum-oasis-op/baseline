@@ -1,1 +1,5 @@
-{}
+{
+  "dependencies": {
+    "ew-precise-proofs-js": "^1.2.0"
+  }
+}
