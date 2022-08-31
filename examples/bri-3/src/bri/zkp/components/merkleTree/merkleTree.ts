@@ -2,7 +2,7 @@ import { Tree } from "./tree"
 import { IMerkleTree} from "./merkleTree.interface";
 import { PreciseProofs } from "ew-precise-proofs-js";
 
-class MerkleTree implements IMerkleTree {
+export class MerkleTree implements IMerkleTree {
   tree: Tree;
 
   constructor(document: any){
@@ -12,7 +12,7 @@ class MerkleTree implements IMerkleTree {
     this.tree.root = merkleTree.root; 
   }
 
-  createTree(document: any): Tree {
+  private createTree(document: any): Tree {
     try {
       var tree: Tree;
 
@@ -34,7 +34,7 @@ class MerkleTree implements IMerkleTree {
     }
   }
 
-  createLeaves(document: any): PreciseProofs.Leaf[] {
+  private createLeaves(document: any): PreciseProofs.Leaf[] {
     try {
       const leaves = PreciseProofs.createLeafs(document);
       return leaves;
@@ -61,7 +61,7 @@ class MerkleTree implements IMerkleTree {
       console.log(e);
     } 
   }
-   
+
   getRoot(): string {
     try {
       return this.tree.root
