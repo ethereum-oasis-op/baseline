@@ -1,8 +1,38 @@
-import { IMerkleTree, Tree } from "./merkleTree.interface";
+import { Tree } from "./tree"
+import { IMerkleTree} from "./merkleTree.interface";
 import { PreciseProofs } from "ew-precise-proofs-js";
 
-export class MerkleTree implements IMerkleTree {
+class MerkleTree implements IMerkleTree {
   tree: Tree;
+
+  constructor(document: any){
+    const merkleTree: Tree = this.createTree(document);
+
+    this.tree.leaves = merkleTree.leaves;
+    this.tree.root = merkleTree.root; 
+  }
+
+  createTree(document: any): Tree {
+    try {
+      var tree: Tree;
+
+      const leaves: PreciseProofs.Leaf[] = this.createLeaves(document);
+
+      const merkleTree = PreciseProofs.createMerkleTree(
+        leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash)
+      );
+
+      const root = PreciseProofs.getRootHash(merkleTree);
+      
+      tree.leaves = leaves;
+      tree.root = root;
+
+      return tree;
+    } catch (e) {
+      console.log("Tree not created");
+      console.log(e);
+    }
+  }
 
   createLeaves(document: any): PreciseProofs.Leaf[] {
     try {
@@ -13,42 +43,32 @@ export class MerkleTree implements IMerkleTree {
       console.log(e);
     }
   }
-  createTree(leaves: PreciseProofs.Leaf[]): any[] {
+
+  getTree(): Tree {
     try {
-      const merkleTree = PreciseProofs.createMerkleTree(
-        leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash)
-      );
-      return merkleTree;
+      return this.tree;
     } catch (e) {
-      console.log("Tree not created");
+      console.log("Unable to get tree");
       console.log(e);
     }
   }
 
-  createRoot(leaves: PreciseProofs.Leaf[], merkleTree: any[]): string {
+  getLeaves(): PreciseProofs.Leaf[]{
     try {
-      const rootHash = PreciseProofs.getRootHash(merkleTree);
-      const schema = leaves.map((leaf: PreciseProofs.Leaf) => leaf.key);
-      const extendedTreeRootHash = PreciseProofs.createExtendedTreeRootHash(
-        rootHash,
-        schema
-      );
-      return extendedTreeRootHash;
+      return this.tree.leaves;
     } catch (e) {
-      console.log("Root not created");
+      console.log("Unable to get leaves");
       console.log(e);
-    }
+    } 
   }
-
-  getRoot(document: any): string {
+   
+  getRoot(): string {
     try {
-      const leaves = this.createLeaves(document);
-      const merkleTree = this.createTree(leaves);
-      const root = this.createRoot(leaves, merkleTree);
-      return root;
+      return this.tree.root
     } catch (e) {
       console.log("Unable to get root");
       console.log(e);
     }
   }
+  
 }
