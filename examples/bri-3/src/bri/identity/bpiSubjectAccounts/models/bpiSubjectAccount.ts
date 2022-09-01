@@ -1,6 +1,6 @@
+import { IBpiAccount } from "../../bpiAccounts/models/bpiAccount.interface";
 import { IBpiSubject } from "../../bpiSubjects/models/bpiSubject.interface";
 import { IBpiSubjectAccount } from "./bpiSubjectAccount.interface";
-import { IBpiAccount } from "../bpiAccount/bpiAccount.interface";
 
 export class BpiSubjectAccount implements IBpiSubjectAccount {
     id: string; // TODO: Add uuid after #491
