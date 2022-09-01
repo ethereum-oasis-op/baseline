@@ -8,31 +8,22 @@ import { Privacy } from '../../../policy/models/privacy';
 export class Workgroup implements IWorkgroup {
     id: string; // TODO: Add uuid after #491
     name: string;
-    administrator: BpiSubject[] = []; 
+    administrator: BpiSubject[]; 
     securityPolicy: Security[]; //TODO Implement securityPolicy #485
     privacyPolicy: Privacy[]; //TODO Implement privacyPolicy #485
-    participants: BpiSubject[] = [];
-    worksteps: Workstep[] = [];
-    workflows: Workflow[] = [];
+    participants: BpiSubject[];
+    worksteps: Workstep[];
+    workflows: Workflow[];
 
-    constructor(id: string, name: string, administrators: BpiSubject[], participants: BpiSubject[], securityPolicy: Security, privacyPolicy: Privacy ) {
-        this.id = id;
-        this.name = name;
-        this.administrator.push(...administrators);
-        this.participants.push(...participants);
-        this.securityPolicy.push(securityPolicy);
-        this.privacyPolicy.push(privacyPolicy);
+    constructor(init: Workgroup) {
+        Object.assign(this, init);
     }
 
     addParticipants(bpiSubject: BpiSubject[]): BpiSubject[] { 
        throw new Error("not implemented");
     };
 
-    getParticipantsById(ids: string[]): BpiSubject[] {
-        throw new Error("not implemented");
-    };
-
-    getAllParticipants(): BpiSubject[] {
+    getAllParticipants(ids? : string[]): BpiSubject[] {
         throw new Error("not implemented");
     };
 

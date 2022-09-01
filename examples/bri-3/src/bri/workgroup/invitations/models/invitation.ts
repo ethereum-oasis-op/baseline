@@ -1,18 +1,13 @@
 import { BpiSubject } from "../../../identity/bpiSubjects/models/bpiSubject";
-import { TInvitation } from "./invitation.type";
 
-export class Invitation implements TInvitation {
+export class Invitation {
     id: string; // TODO: Add uuid after #491
     name: string;
     sender: BpiSubject;
     recipient: string;
     workgroupId: string;
 
-    constructor(id: string, name: string, sender: BpiSubject, recipient: string, workgroupId: string) {
-        this.id = id;
-        this.name = name;
-        this.sender = sender;
-        this.recipient = recipient;
-        this.workgroupId = workgroupId;
+    constructor(init : Invitation) {
+        Object.assign(this, init);
     }
 }

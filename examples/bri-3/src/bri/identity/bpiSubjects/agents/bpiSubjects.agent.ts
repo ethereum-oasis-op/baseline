@@ -15,6 +15,6 @@ export class BpiSubjectAgent {
   } 
 
   public createNewExternalBpiSubject(name :string, desc: string, pk: string): BpiSubject {
-    return new BpiSubject(name, desc, BpiSubjectType.External, pk);
+    return new BpiSubject(<BpiSubject>{ name, description: desc, type: BpiSubjectType.External, publicKey: pk });
   }
 }

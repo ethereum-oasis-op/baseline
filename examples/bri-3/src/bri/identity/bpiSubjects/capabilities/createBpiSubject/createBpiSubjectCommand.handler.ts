@@ -4,6 +4,7 @@ import { CreateBpiSubjectCommand } from "./createBpiSubject.command";
 
 @CommandHandler(CreateBpiSubjectCommand)
 export class CreateBpiSubjectCommandHandler implements ICommandHandler<CreateBpiSubjectCommand> {
+  
   constructor(private agent: BpiSubjectAgent) {}
 
   async execute(command: CreateBpiSubjectCommand) {
