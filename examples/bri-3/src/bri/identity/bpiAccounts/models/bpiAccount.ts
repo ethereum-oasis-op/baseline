@@ -2,11 +2,11 @@ import { IBpiAccount } from "./bpiAccount.interface";
 
 export class BpiAccount implements IBpiAccount {
     id: string; // TODO: Add uuid after #491
-    nonce: number;
-    ownerBpiSubjectId: string;
+    nonce: string;
+    ownerBpiSubjectIds: string[];
 
-    constructor(nonce: number, ownerBpiSubjectId: string) {
+    constructor(nonce: string, ownerBpiSubjectIds: string[]) {
         this.nonce = nonce;
-        this.ownerBpiSubjectId = ownerBpiSubjectId;
+        this.ownerBpiSubjectIds = ownerBpiSubjectIds;
     }
 }
