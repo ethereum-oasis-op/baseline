@@ -7,7 +7,16 @@ export class Invitation {
     private recipient: string;
     private workgroupId: string;
 
-    constructor(init : Invitation) {
-        Object.assign(this, init);
+    constructor(
+        name: string, 
+        sender: BpiSubject, 
+        recipient: string, 
+        workgroupId: string
+    ) {
+        this.name = name
+        this.sender = sender
+        this.recipient = recipient
+        this.workgroupId = workgroupId
     }
+    
 }

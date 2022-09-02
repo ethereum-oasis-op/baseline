@@ -15,10 +15,26 @@ export class Workgroup implements IWorkgroup {
     private worksteps: Workstep[];
     private workflows: Workflow[];
 
-    constructor(init: Workgroup) {
-        Object.assign(this, init);
+    constructor(
+        id: string, 
+        name: string, 
+        administrator: BpiSubject[], 
+        securityPolicy: Security[], 
+        privacyPolicy: Privacy[], 
+        participants: BpiSubject[], 
+        worksteps: Workstep[], 
+        workflows: Workflow[]
+    ) {
+        this.id = id
+        this.name = name
+        this.administrator = administrator
+        this.securityPolicy = securityPolicy
+        this.privacyPolicy = privacyPolicy
+        this.participants = participants
+        this.worksteps = worksteps
+        this.workflows = workflows
     }
-
+    
     addParticipants(bpiSubject: BpiSubject[]): BpiSubject[] { 
        throw new Error("not implemented");
     };

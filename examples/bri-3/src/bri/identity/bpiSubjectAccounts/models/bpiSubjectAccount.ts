@@ -6,7 +6,14 @@ export class BpiSubjectAccount {
     private ownerBpiSubject: BpiSubject;
     private bpiAccounts: string[]; // TODO: Add as part of #489
 
-    constructor(init: BpiSubjectAccount) {
-        Object.assign(this, init);
+    constructor(
+        id: string, 
+        creatorBpiSubject: BpiSubject, 
+        ownerBpiSubject: BpiSubject, 
+        bpiAccounts: string[]) {
+            this.id = id
+            this.creatorBpiSubject = creatorBpiSubject
+            this.ownerBpiSubject = ownerBpiSubject
+            this.bpiAccounts = bpiAccounts
     }
 }

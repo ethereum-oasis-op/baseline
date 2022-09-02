@@ -15,14 +15,10 @@ export class SubjectController {
   async CreateBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<BpiSubject> {
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
-        new CreateBpiSubjectCommand(<CreateBpiSubjectCommand> 
-          { 
-            name: requestDto.name, 
-            description: requestDto.desc, 
-            publicKey: requestDto.publicKey
-          }
+            requestDto.name, 
+            requestDto.desc, 
+            requestDto.publicKey
         )
-      )
-    );
+      );
   }
 }

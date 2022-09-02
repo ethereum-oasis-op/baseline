@@ -8,7 +8,15 @@ export class BpiSubject {
     private type: BpiSubjectType;
     private publicKey: string;
 
-    constructor(init: BpiSubject) {
-        Object.assign(this, init);
+    constructor(
+        name: string, 
+        description: string, 
+        type: BpiSubjectType, 
+        publicKey: string) {
+            this.name = name
+            this.description = description
+            this.type = type
+            this.publicKey = publicKey
     }
+    
 }

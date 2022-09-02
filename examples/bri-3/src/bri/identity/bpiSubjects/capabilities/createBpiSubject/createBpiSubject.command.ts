@@ -4,7 +4,10 @@ export class CreateBpiSubjectCommand {
   description: string;
   publicKey: string;
 
-    constructor(init : CreateBpiSubjectCommand) {
-      Object.assign(this, init);
-    }
+  constructor(name: string, description: string, publicKey: string) {
+    this.name = name
+    this.description = description
+    this.publicKey = publicKey
+  }
+    
   }
