@@ -13,6 +13,16 @@ export class SubjectController {
   // TODO: DTO -> Command mapping
   @Post()
   async CreateBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<BpiSubject> {
-    return await this.commandBus.execute(new CreateBpiSubjectCommand(requestDto.name, requestDto.desc, requestDto.publicKey));
+    return await this.commandBus.execute(
+      new CreateBpiSubjectCommand(
+        new CreateBpiSubjectCommand(<CreateBpiSubjectCommand> 
+          { 
+            name: requestDto.name, 
+            description: requestDto.desc, 
+            publicKey: requestDto.publicKey
+          }
+        )
+      )
+    );
   }
 }

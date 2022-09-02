@@ -3,13 +3,13 @@ import { Privacy } from '../../../policy/models/privacy';
 
 export class Workstep {
 
-  id              : string; // TODO: Add uuid after #491
-  name            : string;
-  version         : string;
-  status          : string;
-  workgroupId     : string;
-  securityPolicy  : Security; // TODO Implement security policy inhereted from workgroup #487
-  privacyPolicy   : Privacy; // TODO Implement simple privacy policy inhereted from workgroup #487
+  private id              : string; // TODO: Add uuid after #491
+  private name            : string;
+  private version         : string;
+  private status          : string;
+  private workgroupId     : string;
+  private securityPolicy  : Security; // TODO Implement security policy inhereted from workgroup #487
+  private privacyPolicy   : Privacy; // TODO Implement simple privacy policy inhereted from workgroup #487
 
   constructor(init:Workstep) {
     Object.assign(this, init);

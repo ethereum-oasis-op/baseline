@@ -7,17 +7,17 @@ import { Workflow } from '../../workflows/models/workflow';
 export interface IWorkgroup {
 
     addParticipants(bpiSubjects: BpiSubject[]): BpiSubject[];
-    getAllParticipants(ids? : string[]): BpiSubject[];
+    getParticipants(ids? : string[]): BpiSubject[];
     updateParticipants(id: string[], update:any[]): BpiSubject[];
     removeParticipants(ids: string[]): BpiSubject[];
 
     addSecurityPolicy(securityPolicy: Security);
     removeSecurityPolicy(securityPolicy: Security);
-    updateSecurityPolicy(id: string, ...udpates: string[]);
+    updateSecurityPolicy(id: string, ...updates: string[]);
 
     addPrivacyPolicy(privacyPolicy: Privacy);
     removePrivacyPolicy(privacyPolicy: Privacy);
-    updatePrivacyPolicy(id: string, ...udpates: string[]);
+    updatePrivacyPolicy(id: string, ...updates: string[]);
 
     addWorksteps(worksteps: Workstep[]): Workstep[];
     getWorkstepsById(workstepIds: string[]): Workstep[];

@@ -6,14 +6,14 @@ import { Security } from '../../../policy/models/security';
 import { Privacy } from '../../../policy/models/privacy';
 
 export class Workgroup implements IWorkgroup {
-    id: string; // TODO: Add uuid after #491
-    name: string;
-    administrator: BpiSubject[]; 
-    securityPolicy: Security[]; //TODO Implement securityPolicy #485
-    privacyPolicy: Privacy[]; //TODO Implement privacyPolicy #485
-    participants: BpiSubject[];
-    worksteps: Workstep[];
-    workflows: Workflow[];
+    private id: string; // TODO: Add uuid after #491
+    private name: string;
+    private administrator: BpiSubject[]; 
+    private securityPolicy: Security[]; //TODO Implement securityPolicy #485
+    private privacyPolicy: Privacy[]; //TODO Implement privacyPolicy #485
+    private participants: BpiSubject[];
+    private worksteps: Workstep[];
+    private workflows: Workflow[];
 
     constructor(init: Workgroup) {
         Object.assign(this, init);
@@ -23,7 +23,7 @@ export class Workgroup implements IWorkgroup {
        throw new Error("not implemented");
     };
 
-    getAllParticipants(ids? : string[]): BpiSubject[] {
+    getParticipants(ids? : string[]): BpiSubject[] {
         throw new Error("not implemented");
     };
 
