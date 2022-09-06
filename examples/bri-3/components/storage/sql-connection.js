@@ -9,21 +9,13 @@ const { Client } = require('pg');
 //     port: 5432,
 // });
 
-//Docker Container
-//    host: '172.18.0.2',
-// adminer shows 172.19.0.3
-
 const client = new Client({
     user: 'postgres',
-    host: '172.19.0.3',
+    host: 'localhost',
     database: 'postgres',
     password: 'example',
     port: 5433,
 });
-
-// const client = new Client ({
-//     connectionString: 'postgresql://postgres:example@172.18.0.2:5432/postgres'
-// });
 
 client.connect();
 
