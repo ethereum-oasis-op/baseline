@@ -1,11 +1,13 @@
 const { Client } = require('pg');
 
+//docker run --name postgres -e POSTGRES_PASSWORD=example -p 5433:5432 -d postgres 
+
 //Local DB
 // const client = new Client({
 //     user: 'postgres',
 //     host: 'localhost',
 //     database: 'postgres',
-//     password: '12212',
+//     password: '',
 //     port: 5432,
 // });
 
@@ -53,16 +55,6 @@ const stateTable = `CREATE TABLE state (
 
 const tables = [ordersTable, bpiTable, workstepsTable, bpiTimestampRecordsTable, stateTable]
 
-
-// client.query(playersQuery, (err, res) => {
-//     if (err) {
-//         console.error(err);
-//         return;
-//     }
-//     console.log('Table is successfully created');
-//     client.end();
-// });
-
 //run a query to run the create tables listed above, included in the tables array
 tables.forEach(table => {
     client.query(table, (err, res) => {
@@ -71,7 +63,6 @@ tables.forEach(table => {
             return;
         }
         console.log('Table is successfully created');
-        // client.end();
     });
 });
 
