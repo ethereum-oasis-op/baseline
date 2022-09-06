@@ -1,6 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { WorkstepAgent } from '../agents/worksteps.agent';
+import { CreateWorkstepCommandHandler } from '../capabilities/createWorkstep/createWorkstep.command.handler';
 import { CreateWorkstepDTO } from './dtos/request/createWorkstep.dto';
 import { WorkstepController } from './worksteps.controller';
 

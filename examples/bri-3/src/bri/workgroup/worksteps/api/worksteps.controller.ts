@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { CreateWorkstepCommand } from '../capabilities/createWorkstep/createWorkstep.command';
 import { Workstep } from '../models/workstep';
 import { CreateWorkstepDTO } from './dtos/request/createWorkstep.dto';
 
