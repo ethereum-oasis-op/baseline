@@ -4,6 +4,8 @@ import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/create
 import { BpiSubject } from '../models/bpiSubject';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 
+import { uuid } from 'uuidv4';
+
 @Controller("subjects")
 export class SubjectController {
   constructor(private commandBus: CommandBus) {}
@@ -15,6 +17,8 @@ export class SubjectController {
   async CreateBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<BpiSubject> {
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
+            //TODO: remove this after a decision is made for uuid
+            uuid(),
             requestDto.name, 
             requestDto.desc, 
             requestDto.publicKey

@@ -7,16 +7,17 @@ export class Invitation {
     private recipient: string;
     private workgroupId: string;
 
-    constructor(
-        name: string, 
-        sender: BpiSubject, 
-        recipient: string, 
-        workgroupId: string
-    ) {
-        this.name = name
-        this.sender = sender
-        this.recipient = recipient
-        this.workgroupId = workgroupId
-    }
-    
+  constructor(
+    id: string, 
+    name: string, 
+    sender: BpiSubject, 
+    recipient: string, 
+    workgroupId: string
+) {
+    this.id = id
+    this.name = name
+    this.sender = sender
+    this.recipient = recipient
+    this.workgroupId = workgroupId
+  }  
 }
