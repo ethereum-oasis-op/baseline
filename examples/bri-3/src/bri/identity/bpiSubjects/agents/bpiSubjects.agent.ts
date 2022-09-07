@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { BpiSubject } from "../models/bpiSubject";
 import { BpiSubjectType } from "../models/bpiSubjectType.enum";
+
+import { uuid } from 'uuidv4'; 
  
 @Injectable()
 export class BpiSubjectAgent {
@@ -15,6 +17,6 @@ export class BpiSubjectAgent {
   } 
 
   public createNewExternalBpiSubject(name :string, description: string, publicKey: string): BpiSubject {
-    return new BpiSubject(name, description, BpiSubjectType.External, publicKey );
+    return new BpiSubject(uuid(), name, description, BpiSubjectType.External, publicKey );
   }
 }

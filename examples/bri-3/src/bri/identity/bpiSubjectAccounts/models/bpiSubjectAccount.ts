@@ -9,11 +9,9 @@ export class BpiSubjectAccount {
     constructor(
         id: string, 
         creatorBpiSubject: BpiSubject, 
-        ownerBpiSubject: BpiSubject, 
-        bpiAccounts: string[]) {
+        ownerBpiSubject: BpiSubject) {
             this.id = id
             this.creatorBpiSubject = creatorBpiSubject
             this.ownerBpiSubject = ownerBpiSubject
-            this.bpiAccounts = bpiAccounts
     }
 }
