@@ -1,7 +1,7 @@
 export class BpiAccount {
-    id: string; // TODO: Add uuid after #491
-    nonce: string;
-    ownerBpiSubjectIds: string[];
+    private id: string; // TODO: Add uuid after #491
+    private nonce: string;
+    private ownerBpiSubjectIds: string[];
 
   constructor(id: string, nonce: string, ownerBpiSubjectIds: string[]) {
     this.id = id

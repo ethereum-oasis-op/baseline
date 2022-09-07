@@ -17,8 +17,6 @@ export class SubjectController {
   async CreateBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<BpiSubject> {
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
-            //TODO: remove this after a decision is made for uuid
-            uuid(),
             requestDto.name, 
             requestDto.desc, 
             requestDto.publicKey

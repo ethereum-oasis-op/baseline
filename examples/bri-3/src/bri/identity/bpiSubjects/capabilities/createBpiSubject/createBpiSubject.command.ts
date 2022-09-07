@@ -1,23 +1,19 @@
 export class CreateBpiSubjectCommand {
 
-  private id: string; // TODO: Add uuid after #491
   private name: string;
   private description: string;
   private publicKey: string;
 
   constructor(
-    id: string, 
     name: string, 
     description: string, 
     publicKey: string
 ) {
-    this.id = id
     this.name = name
     this.description = description
     this.publicKey = publicKey
   }
   
-
   get _name() { return this.name}
   get _description() { return this.description}
   get _publicKey() { return this.publicKey}
