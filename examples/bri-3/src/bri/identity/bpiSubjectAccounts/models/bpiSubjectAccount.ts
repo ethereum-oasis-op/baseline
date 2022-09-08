@@ -1,15 +1,17 @@
-import { IBpiAccount } from "../../bpiAccounts/models/bpiAccount.interface";
-import { IBpiSubject } from "../../bpiSubjects/models/bpiSubject.interface";
-import { IBpiSubjectAccount } from "./bpiSubjectAccount.interface";
+import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 
-export class BpiSubjectAccount implements IBpiSubjectAccount {
-    id: string; // TODO: Add uuid after #491
-    creatorBpiSubject: IBpiSubject;
-    ownerBpiSubject: IBpiSubject;
-    bpiAccounts: IBpiAccount[];
+export class BpiSubjectAccount {
+    private id: string; // TODO: Add uuid after #491
+    private creatorBpiSubject: BpiSubject;
+    private ownerBpiSubject: BpiSubject;
+    private bpiAccounts: string[]; // TODO: Add as part of #489
 
-    constructor(creatorBpiSubject: IBpiSubject, ownerBpiSubject: IBpiSubject) {
-        this.creatorBpiSubject = creatorBpiSubject;
-        this.ownerBpiSubject = ownerBpiSubject;
+    constructor(
+        id: string, 
+        creatorBpiSubject: BpiSubject, 
+        ownerBpiSubject: BpiSubject) {
+            this.id = id
+            this.creatorBpiSubject = creatorBpiSubject
+            this.ownerBpiSubject = ownerBpiSubject
     }
 }
