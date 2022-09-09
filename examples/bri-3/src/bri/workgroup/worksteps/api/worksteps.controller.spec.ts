@@ -24,7 +24,11 @@ describe('WorkstepController', () => {
   describe('Workstep creation', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
-      const requestDto = { id: 'id', workgroupId: 'wgId' } as CreateWorkstepDTO;
+      const requestDto = {
+        version: 'v',
+        status: 's',
+        workgroupId: 'wgid',
+      } as CreateWorkstepDTO;
 
       // Act and assert
       expect(async () => {
@@ -36,8 +40,9 @@ describe('WorkstepController', () => {
       // Arrange
       const requestDto = {
         name: 'name',
-        id: 'id',
-        workgroupId: 'wgId',
+        version: 'v',
+        status: 's',
+        workgroupId: 'wgid',
       } as CreateWorkstepDTO;
 
       // Act

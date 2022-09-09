@@ -1,5 +1,6 @@
 export class CreateWorkstepDTO {
   name: string;
-  id: string;
+  version: string;
+  status: string;
   workgroupId: string;
 }
