@@ -18,7 +18,8 @@ export class WorkstepController {
     return await this.commandBus.execute(
       new CreateWorkstepCommand(
         requestDto.name,
-        requestDto.id,
+        requestDto.version,
+        requestDto.status,
         requestDto.workgroupId,
       ),
     );
