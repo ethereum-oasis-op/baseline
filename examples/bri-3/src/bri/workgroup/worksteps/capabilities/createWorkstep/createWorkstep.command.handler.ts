@@ -9,9 +9,12 @@ export class CreateWorkstepCommandHandler
   constructor(private agent: WorkstepAgent) {}
 
   async execute(command: CreateWorkstepCommand) {
-    const { name, id, workgroupId } = command;
-
-    this.agent.throwIfCreateWorkstepInputInvalid(name, id, workgroupId);
+    this.agent.throwIfCreateWorkstepInputInvalid(
+      command._name,
+      command._version,
+      command._status,
+      command._workgroupId,
+    );
 
     const newWorkstep = this.agent.createNewWorkstep(name, id, workgroupId);
 
