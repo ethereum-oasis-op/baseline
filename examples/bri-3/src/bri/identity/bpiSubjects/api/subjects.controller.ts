@@ -28,6 +28,7 @@ export class SubjectController {
 
   @Put()
   async UpdateBpiSubject(@Body() requestDto: UpdateBpiSubjectDto): Promise<BpiSubject> {
+    // TODO: WIP
     return await this.commandBus.execute(new CreateBpiSubjectCommand(requestDto.name, requestDto.desc, requestDto.publicKey));
   }
 
