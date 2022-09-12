@@ -9,7 +9,7 @@ export class UpdateBpiSubjectCommandHandler implements ICommandHandler<UpdateBpi
   async execute(command: UpdateBpiSubjectCommand) {
     const { id, name, desc, publicKey } = command;
 
-    this.agent.throwIfUpdateBpiSubjectInvalid(name, desc, publicKey);
+    // this.agent.throwIfUpdateBpiSubjectInvalid(name, desc, publicKey);
 
     // const bpiSubjectToUpdate = this.agent.fetchBpiSubjectToUpdate(id);
     // this.agent.updateBpiSubject(bpiSubjectToUpdate, name, desc, publicKey);

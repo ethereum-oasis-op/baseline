@@ -1,4 +1,4 @@
 export enum BpiSubjectType {
-    Interal,
-    External
+  Interal,
+  External,
 }

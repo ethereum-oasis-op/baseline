@@ -13,7 +13,6 @@ datasource db {
 model BpiSubject {
   id String @id @default(uuid())
   name String
-  lastName String  
   description String  
   type Int
   publicKey String 
