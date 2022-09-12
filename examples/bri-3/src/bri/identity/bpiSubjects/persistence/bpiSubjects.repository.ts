@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common'
 import { PrismaService } from 'prisma/prisma.service';
 import { BpiSubject } from '../models/bpiSubject';
 
+// Repositories are the only places that talk the Prisma language of models.
+// They are always mapped to and from domain objects so that the business layer of the application
+// does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectRepository extends PrismaService {
     async getBpiSubjectById(id: string): Promise<BpiSubject> {
