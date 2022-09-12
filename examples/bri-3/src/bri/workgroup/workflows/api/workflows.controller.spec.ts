@@ -3,6 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Workstep } from '../../worksteps/models/workstep';
 import { WorkflowAgent } from '../agents/workflows.agent';
+import { CreateWorkflowCommandHandler } from '../capabilities/createWorkflow/createWorkflowCommand.handler';
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
 
