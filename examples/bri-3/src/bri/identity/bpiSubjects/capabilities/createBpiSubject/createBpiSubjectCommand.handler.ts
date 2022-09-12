@@ -8,8 +8,8 @@ export class CreateBpiSubjectCommandHandler implements ICommandHandler<CreateBpi
   constructor(private agent: BpiSubjectAgent) {}
 
   async execute(command: CreateBpiSubjectCommand) {
-    this.agent.throwIfCreateBpiSubjectInputInvalid(command._name, command._description, command._publicKey);
-    const newBpiSubject = this.agent.createNewExternalBpiSubject(command._name, command._description, command._publicKey);
+    this.agent.throwIfCreateBpiSubjectInputInvalid(command.name, command.description, command.publicKey);
+    const newBpiSubject = this.agent.createNewExternalBpiSubject(command.name, command.description, command.publicKey);
     
     // TODO: Generic map of domain model to entity model
     // this.orm.store(newBpiSubject);
