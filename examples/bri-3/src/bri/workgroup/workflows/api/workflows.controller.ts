@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
+import { CreateWorkflowCommand } from '../capabilities/createWorkflow/createWorkflow.command';
 import { Workflow } from '../models/workflow';
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 

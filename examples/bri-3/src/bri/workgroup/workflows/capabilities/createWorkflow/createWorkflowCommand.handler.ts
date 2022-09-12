@@ -9,11 +9,9 @@ export class CreateWorkflowCommandHandler
   constructor(private agent: WorkflowAgent) {}
 
   async execute(command: CreateWorkflowCommand) {
-    const workflow = command.getWorksteps();
+    this.agent.throwIfCreateWorkflowInputInvalid(command._worksteps);
 
-    this.agent.throwIfCreateWorkflowInputInvalid(workflow);
-
-    const newWorkflow = this.agent.createNewWorkflow(workflow);
+    const newWorkflow = this.agent.createNewWorkflow(command._worksteps);
 
     // TODO: Generic map of domain model to entity model
     // this.orm.store(newWorkflow);

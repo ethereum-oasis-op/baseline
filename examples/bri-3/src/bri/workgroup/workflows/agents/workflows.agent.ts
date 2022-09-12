@@ -17,4 +17,20 @@ export class WorkflowAgent {
   public createNewWorkflow(worksteps: Workstep[]): Workflow {
     return new Workflow(worksteps);
   }
+
+  throwIfDeleteWorkflowInputInvalid(_id: () => string) {
+    throw new Error('Method not implemented.');
+  }
+
+  deleteWorkflow(_id: () => string) {
+    throw new Error('Method not implemented.');
+  }
+
+  updateWorkflow(_worksteps: Workstep[]) {
+    throw new Error('Method not implemented.');
+  }
+
+  throwIfUpdateWorkflowInputInvalid(_worksteps: Workstep[]) {
+    throw new Error('Method not implemented.');
+  }
 }

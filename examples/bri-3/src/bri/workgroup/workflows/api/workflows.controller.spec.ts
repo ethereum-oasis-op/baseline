@@ -1,6 +1,9 @@
 import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { Privacy } from 'src/bri/policy/models/privacy';
+import { Security } from 'src/bri/policy/models/security';
+import { uuid } from 'uuidv4';
 import { Workstep } from '../../worksteps/models/workstep';
 import { WorkflowAgent } from '../agents/workflows.agent';
 import { CreateWorkflowCommandHandler } from '../capabilities/createWorkflow/createWorkflowCommand.handler';
@@ -36,7 +39,17 @@ describe('WorkflowsController', () => {
     it('should return true if all input params provided', async () => {
       // Arrange
       const requestDto = {
-        worksteps: [new Workstep('name', 'id', 'workgroupId')],
+        worksteps: [
+          new Workstep(
+            uuid(),
+            'name',
+            'id',
+            'version',
+            'status',
+            new Security(),
+            new Privacy(),
+          ),
+        ],
       } as CreateWorkflowDto;
 
       // Act

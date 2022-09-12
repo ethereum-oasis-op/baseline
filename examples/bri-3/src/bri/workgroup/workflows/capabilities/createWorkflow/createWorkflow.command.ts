@@ -1,11 +1,11 @@
 import { Workstep } from 'src/bri/workgroup/worksteps/models/workstep';
 
 export class CreateWorkflowCommand {
-  constructor(private _worksteps: Workstep[]) {}
-  public getWorksteps(): Workstep[] {
-    return this._worksteps;
+  constructor(private worksteps: Workstep[]) {}
+  public get _worksteps(): Workstep[] {
+    return this.worksteps;
   }
-  public setWorksteps(value: Workstep[]) {
-    this._worksteps = value;
+  public set _worksteps(worksteps: Workstep[]) {
+    this.worksteps = worksteps;
   }
 }
