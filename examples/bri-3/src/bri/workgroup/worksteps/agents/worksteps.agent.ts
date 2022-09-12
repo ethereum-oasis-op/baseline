@@ -13,8 +13,6 @@ export class WorkstepAgent {
     version: string,
     status: string,
     workgroupId: string,
-    securityPolicy: Security,
-    privacyPolicy: Privacy,
   ) {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..)
@@ -48,13 +46,16 @@ export class WorkstepAgent {
     version: string,
     status: string,
     workgroupId: string,
-    securityPolicy: Security,
-    privacyPolicy: Privacy,
   ) {
     throw new Error('Method not implemented.');
   }
 
-  deleteWorkstep(name: string, id: string, workgroupId: string) {
+  deleteWorkstep(
+    name: string,
+    version: string,
+    status: string,
+    workgroupId: string,
+  ) {
     throw new Error('Method not implemented.');
   }
 
@@ -63,13 +64,16 @@ export class WorkstepAgent {
     version: string,
     status: string,
     workgroupId: string,
-    securityPolicy: Security,
-    privacyPolicy: Privacy,
   ) {
     throw new Error('Method not implemented.');
   }
 
-  updateWorkstep(name: string, id: string, workgroupId: string) {
+  updateWorkstep(
+    name: string,
+    version: string,
+    status: string,
+    workgroupId: string,
+  ) {
     throw new Error('Method not implemented.');
   }
 }

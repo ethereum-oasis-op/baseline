@@ -16,7 +16,14 @@ export class CreateWorkstepCommandHandler
       command._workgroupId,
     );
 
-    const newWorkstep = this.agent.createNewWorkstep(name, id, workgroupId);
+    const newWorkstep = this.agent.createNewWorkstep(
+      command._name,
+      command._version,
+      command._status,
+      command._workgroupId,
+      command._securityPolicy,
+      command._privacyPolicy,
+    );
 
     // TODO: Generic map of domain model to entity model
     // this.orm.store(newWorkstep);
