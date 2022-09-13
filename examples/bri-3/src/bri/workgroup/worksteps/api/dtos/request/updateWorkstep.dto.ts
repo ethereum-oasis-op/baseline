@@ -1,4 +1,4 @@
-export class UpdateWorkstepDTO {
+export class UpdateWorkstepDto {
   name: string;
   version: string;
   status: string;

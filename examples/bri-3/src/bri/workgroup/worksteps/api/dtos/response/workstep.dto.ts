@@ -1,4 +1,4 @@
-export interface workstepDto {
+export interface WorkstepDto {
   name: string;
   version: string;
   status: string;
