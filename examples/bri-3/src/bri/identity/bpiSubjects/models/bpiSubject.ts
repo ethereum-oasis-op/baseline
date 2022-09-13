@@ -15,45 +15,30 @@ export class BpiSubject {
     type: BpiSubjectType,
     publicKey: string,
   ) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.type = type;
-    this.publicKey = publicKey;
+    this._id = id;
+    this._name = name;
+    this._description = description;
+    this._type = type;
+    this._publicKey = publicKey;
   }
 
   public get id(): string {
     return this._id;
   }
-  public set id(value: string) {
-    this._id = value;
-  }
 
   public get name(): string {
     return this._name;
-  }
-  public set name(value: string) {
-    this._name = value;
   }
 
   public get description(): string {
     return this._description;
   }
-  public set description(value: string) {
-    this._description = value;
-  }
 
   public get type(): BpiSubjectType {
     return this._type;
   }
-  public set type(value: BpiSubjectType) {
-    this._type = value;
-  }
   
   public get publicKey(): string {
     return this._publicKey;
-  }
-  public set publicKey(value: string) {
-    this._publicKey = value;
   }
 }
