@@ -5,6 +5,8 @@ import { Workstep } from '../../worksteps/models/workstep';
 
 import { uuid } from 'uuidv4';
 import { Workgroup } from '../models/workgroup';
+import { Security } from 'src/bri/policy/models/security';
+import { Privacy } from 'src/bri/policy/models/privacy';
 
 @Injectable()
 export class WorkgroupAgent {
@@ -28,6 +30,8 @@ export class WorkgroupAgent {
     name: string,
     administrator: BpiSubject[],
     participants: BpiSubject[],
+    securityPolicy: Security[],
+    privacyPolicy: Privacy[],
     worksteps: Workstep[],
     workflows: Workflow[],
   ): Workgroup {
