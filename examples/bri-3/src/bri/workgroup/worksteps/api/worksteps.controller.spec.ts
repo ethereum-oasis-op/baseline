@@ -3,7 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkstepAgent } from '../agents/worksteps.agent';
 import { CreateWorkstepCommandHandler } from '../capabilities/createWorkstep/createWorkstep.command.handler';
-import { CreateWorkstepDTO } from './dtos/request/createWorkstep.dto';
+import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { WorkstepController } from './worksteps.controller';
 
 describe('WorkstepController', () => {
@@ -25,10 +25,10 @@ describe('WorkstepController', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
       const requestDto = {
-        version: 'v',
-        status: 's',
+        version: 'version',
+        status: 'status',
         workgroupId: 'wgid',
-      } as CreateWorkstepDTO;
+      } as CreateWorkstepDto;
 
       // Act and assert
       expect(async () => {
@@ -40,10 +40,10 @@ describe('WorkstepController', () => {
       // Arrange
       const requestDto = {
         name: 'name',
-        version: 'v',
-        status: 's',
+        version: 'version',
+        status: 'status',
         workgroupId: 'wgid',
-      } as CreateWorkstepDTO;
+      } as CreateWorkstepDto;
 
       // Act
       const response = await wController.CreateWorkstep(requestDto);
