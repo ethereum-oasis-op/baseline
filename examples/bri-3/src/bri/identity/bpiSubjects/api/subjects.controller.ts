@@ -16,7 +16,7 @@ export class SubjectController {
   // TODO: Response DTOs
   // TODO: DTO -> Command mapping
   @Post()
-  async createBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<BpiSubject> {
+  async createBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<string> {
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
             requestDto.name, 
