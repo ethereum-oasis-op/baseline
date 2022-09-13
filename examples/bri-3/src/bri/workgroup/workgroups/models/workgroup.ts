@@ -6,14 +6,14 @@ import { Security } from '../../../policy/models/security';
 import { Privacy } from '../../../policy/models/privacy';
 
 export class Workgroup implements IWorkgroup {
-  private id: string; // TODO: Add uuid after #491
-  private name: string;
-  private administrator: BpiSubject[];
-  private securityPolicy: Security[]; //TODO Implement securityPolicy #485
-  private privacyPolicy: Privacy[]; //TODO Implement privacyPolicy #485
-  private participants: BpiSubject[];
-  private worksteps: Workstep[];
-  private workflows: Workflow[];
+  private _id: string; // TODO: Add uuid after #491
+  private _name: string;
+  private _administrator: BpiSubject[];
+  private _securityPolicy: Security[]; //TODO Implement securityPolicy #485
+  private _privacyPolicy: Privacy[]; //TODO Implement privacyPolicy #485
+  private _participants: BpiSubject[];
+  private _worksteps: Workstep[];
+  private _workflows: Workflow[];
 
   constructor(
     id: string,
@@ -25,14 +25,46 @@ export class Workgroup implements IWorkgroup {
     worksteps: Workstep[],
     workflows: Workflow[],
   ) {
-    this.id = id;
-    this.name = name;
-    this.administrator = administrator;
-    this.securityPolicy = securityPolicy;
-    this.privacyPolicy = privacyPolicy;
-    this.participants = participants;
-    this.worksteps = worksteps;
-    this.workflows = workflows;
+    this._id = id;
+    this._name = name;
+    this._administrator = administrator;
+    this._securityPolicy = securityPolicy;
+    this._privacyPolicy = privacyPolicy;
+    this._participants = participants;
+    this._worksteps = worksteps;
+    this._workflows = workflows;
+  }
+
+  public get id(): string {
+    return this._id;
+  }
+
+  public get name(): string {
+    return this._name;
+  }
+
+  public get administrator(): BpiSubject[] {
+    return this._administrator;
+  }
+
+  public get securityPolicy(): Security {
+    return this._securityPolicy;
+  }
+
+  public get privacyPolicy(): Privacy {
+    return this._privacyPolicy;
+  }
+
+  public get participants(): BpiSubject[] {
+    return this._participants;
+  }
+
+  public get worksteps(): Workstep[] {
+    return this._worksteps;
+  }
+
+  public get workflows(): Workflow[] {
+    return this._workflows;
   }
 
   addParticipants(bpiSubject: BpiSubject[]): BpiSubject[] {
