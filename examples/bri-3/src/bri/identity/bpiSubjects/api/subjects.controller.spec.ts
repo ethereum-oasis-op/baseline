@@ -3,6 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BpiSubjectAgent } from '../agents/bpiSubjects.agent';
 import { CreateBpiSubjectCommandHandler } from '../capabilities/createBpiSubject/createBpiSubjectCommand.handler';
+import { BpiSubjectRepository } from '../persistence/bpiSubjects.repository';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { SubjectController } from './subjects.controller';
 
@@ -13,7 +14,8 @@ describe('SubjectController', () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule],
       controllers: [SubjectController],
-      providers: [BpiSubjectAgent, CreateBpiSubjectCommandHandler],
+      // TODO: Repository mock for unit tests
+      providers: [BpiSubjectAgent, CreateBpiSubjectCommandHandler, BpiSubjectRepository],
     }).compile();
 
     sController = app.get<SubjectController>(SubjectController);
