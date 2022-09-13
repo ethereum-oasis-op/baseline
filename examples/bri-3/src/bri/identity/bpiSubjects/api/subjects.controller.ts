@@ -16,7 +16,7 @@ export class SubjectController {
   // TODO: Response DTOs
   // TODO: DTO -> Command mapping
   @Post()
-  async CreateBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<BpiSubject> {
+  async createBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<BpiSubject> {
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
             requestDto.name, 
@@ -27,7 +27,7 @@ export class SubjectController {
   }
 
   @Put()
-  async UpdateBpiSubject(@Body() requestDto: UpdateBpiSubjectDto): Promise<BpiSubject> {
+  async updateBpiSubject(@Body() requestDto: UpdateBpiSubjectDto): Promise<BpiSubject> {
     // TODO: WIP
     return await this.commandBus.execute(new CreateBpiSubjectCommand(requestDto.name, requestDto.desc, requestDto.publicKey));
   }
