@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common'
 import { uuid } from 'uuidv4';
 import { BpiSubject } from '../models/bpiSubject';
 
-// Repositories are the only places that talk the Prisma language of models.
-// They are always mapped to and from domain objects so that the business layer of the application
-// does not have to care about the ORM.
 @Injectable()
 export class MockBpiSubjectRepository {
     private bpiSubjectsStore: BpiSubject[] = [];
@@ -21,8 +18,8 @@ export class MockBpiSubjectRepository {
             bpiSubject.type, 
             bpiSubject.publicKey);
         
-            this.bpiSubjectsStore.push(createdBp);
+        this.bpiSubjectsStore.push(createdBp);
 
-            return Promise.resolve(createdBp);
+        return Promise.resolve(createdBp);
     }
 }

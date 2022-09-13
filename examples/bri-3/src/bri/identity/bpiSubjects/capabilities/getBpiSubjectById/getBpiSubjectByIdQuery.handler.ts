@@ -17,7 +17,7 @@ export class GetBpiSubjectByIdQueryHandler implements IQueryHandler<GetBpiSubjec
       throw new NotFoundException(`Bpi Subject with id: ${query.id} does not exist.`)
     }
 
-    return { // TODO:  // TODO: Write generic mapper domainObject -> DTO
+    return { // TODO: Write generic mapper domainObject -> DTO
         id: bpiSubject.id,
         name: bpiSubject.name,
         desc: bpiSubject.description,
