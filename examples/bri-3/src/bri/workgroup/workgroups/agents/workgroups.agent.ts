@@ -31,9 +31,9 @@ export class WorkgroupAgent {
   public createNewWorkgroup(
     name: string,
     administrator: BpiSubject[],
-    participants: BpiSubject[],
     securityPolicy: Security[],
     privacyPolicy: Privacy[],
+    participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
   ): Workgroup {
