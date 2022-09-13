@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkgroupAgent } from '../agents/workgroups.agent';
+import { CreateWorkgroupCommandHandler } from '../capabilities/createWorkgroup/createWorkgroupCommand.handler';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { WorkgroupController } from './workgroups.controller';
 
@@ -12,7 +13,8 @@ describe('WorkgroupController', () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule],
       controllers: [WorkgroupController],
-      providers: [WorkgroupAgent, CreateWorkgroupCommandHandler],
+      // TODO Repository mock for unit tests
+      providers: [WorkgroupAgent, CreateWorkgroupCommandHandler, WorkgroupRepository],
     }).compile();
 
     wController = app.get<WorkgroupController>(WorkgroupController);
@@ -20,14 +22,16 @@ describe('WorkgroupController', () => {
     await app.init();
   });
 
-  describe('Bpi Workgroup creation', () => {
+  describe('Workgroup creation', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
       const requestDto = {
-        administrator: 'A',
-        participants: 'P',
-        worksteps: 'W',
-        workflows: 'W',
+        administrator: 'administrator',
+        securityPolicy: 'securityPolicy',
+        privacyPolicy: 'privacyPolicy',
+        participants: 'participants',
+        worksteps: 'worksteps',
+        workflows: 'workflows',
       } as unknown as CreateWorkgroupDto;
 
       // Act and assert
@@ -39,10 +43,13 @@ describe('WorkgroupController', () => {
     it('should return true if all input params provided', async () => {
       // Arrange
       const requestDto = {
-        administrator: 'A',
-        participants: 'P',
-        worksteps: 'W',
-        workflows: 'W',
+        name: 'name',
+        administrator: 'administrator',
+        securityPolicy: 'securityPolicy',
+        privacyPolicy: 'privacyPolicy',
+        participants: 'participants',
+        worksteps: 'worksteps',
+        workflows: 'workflows',
       } as unknown as CreateWorkgroupDto;
 
       // Act
