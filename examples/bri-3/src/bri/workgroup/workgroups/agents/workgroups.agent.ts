@@ -14,6 +14,8 @@ export class WorkgroupAgent {
   public throwIfCreateWorkgroupInputInvalid(
     name: string,
     administrator: BpiSubject[],
+    securityPolicy: Security[],
+    privacyPolicy: Privacy[],
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
