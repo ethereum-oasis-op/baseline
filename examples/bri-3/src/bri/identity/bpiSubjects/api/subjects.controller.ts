@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
 import { GetBpiSubjectByIdQuery } from '../capabilities/getBpiSubjectById/getBpiSubjectById.query';
+import { UpdateBpiSubjectCommand } from '../capabilities/updateBpiSubject/updateBpiSubject.command';
 import { BpiSubject } from '../models/bpiSubject';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
@@ -28,8 +29,12 @@ export class SubjectController {
 
   @Put()
   async updateBpiSubject(@Body() requestDto: UpdateBpiSubjectDto): Promise<BpiSubject> {
-    // TODO: WIP
-    return await this.commandBus.execute(new CreateBpiSubjectCommand(requestDto.name, requestDto.desc, requestDto.publicKey));
+    return await this.commandBus.execute(
+      new UpdateBpiSubjectCommand(
+        requestDto.id,
+        requestDto.name, 
+        requestDto.desc, 
+        requestDto.publicKey));
   }
 
   @Get('/:id')

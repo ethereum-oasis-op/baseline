@@ -34,4 +34,23 @@ export class BpiSubjectRepository extends PrismaService {
             newBpiSubjectModel.type, 
             newBpiSubjectModel.publicKey);
     }
+
+    async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+        const newBpiSubjectModel = await this.bpiSubject.update({
+            where: { id: bpiSubject.id },
+            data: {
+                name: bpiSubject.name,
+                description: bpiSubject.description,
+                publicKey: bpiSubject.publicKey,
+                type: bpiSubject.type
+            }
+        });
+
+        return new BpiSubject(
+            newBpiSubjectModel.id, 
+            newBpiSubjectModel.name, 
+            newBpiSubjectModel.description, 
+            newBpiSubjectModel.type, 
+            newBpiSubjectModel.publicKey);
+    }
 }
