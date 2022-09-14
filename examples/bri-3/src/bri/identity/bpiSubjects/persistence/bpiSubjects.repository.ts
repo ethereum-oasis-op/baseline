@@ -17,6 +17,18 @@ export class BpiSubjectRepository extends PrismaService {
             bpiSubjectModel.publicKey);
     }
 
+    async getAllBpiSubjects(): Promise<BpiSubject[]> {
+        const bpiSubjectModels = await this.bpiSubject.findMany();
+        return bpiSubjectModels.map(bp => {
+            return new BpiSubject( 
+                bp.id, 
+                bp.name, 
+                bp.description, 
+                bp.type, 
+                bp.publicKey)
+        })  
+    }
+
     async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
         const newBpiSubjectModel = await this.bpiSubject.create({ // TODO: Write generic mapper domainObject -> prismaModel 
             data: {

@@ -10,6 +10,10 @@ export class MockBpiSubjectRepository {
         return this.bpiSubjectsStore.find(bp => bp.id === id);
     }
 
+    async getAllBpiSubjects(): Promise<BpiSubject[]> {
+        return Promise.resolve(this.bpiSubjectsStore);
+    }
+
     async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
         const createdBp = new BpiSubject(
             uuid(),

@@ -2,9 +2,9 @@ import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
 import { DeleteBpiSubjectCommand } from '../capabilities/deleteBpiSubject/deleteBpiSubject.command';
+import { GetAllBpiSubjectsQuery } from '../capabilities/getAllBpiSubjects/getAllBpiSubjects.query';
 import { GetBpiSubjectByIdQuery } from '../capabilities/getBpiSubjectById/getBpiSubjectById.query';
 import { UpdateBpiSubjectCommand } from '../capabilities/updateBpiSubject/updateBpiSubject.command';
-import { BpiSubject } from '../models/bpiSubject';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 
@@ -17,6 +17,16 @@ export class SubjectController {
   // TODO: DTO validation
   // TODO: Response DTOs
   // TODO: DTO -> Command mapping
+  @Get('/:id')
+  async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
+    return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
+  }
+
+  @Get()
+  async getAllBpiSubjects(): Promise<BpiSubjectDto[]> {
+    return await this.queryBus.execute(new GetAllBpiSubjectsQuery());
+  }
+
   @Post()
   async createBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<string> {
     return await this.commandBus.execute(
@@ -41,10 +51,5 @@ export class SubjectController {
   @Delete('/:id')
   async deleteBpiSubject(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(new DeleteBpiSubjectCommand(id));
-  }
-
-  @Get('/:id')
-  async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
-    return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
   }
 }
