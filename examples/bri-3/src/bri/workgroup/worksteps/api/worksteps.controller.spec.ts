@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkstepAgent } from '../agents/worksteps.agent';
-import { CreateWorkstepCommandHandler } from '../capabilities/createWorkstep/createWorkstep.command.handler';
+import { CreateWorkstepCommandHandler } from '../capabilities/createWorkstep/createWorkstepCommand.handler';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { WorkstepController } from './worksteps.controller';
 
@@ -13,8 +13,16 @@ describe('WorkstepController', () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule],
       controllers: [WorkstepController],
-      providers: [WorkstepAgent, CreateWorkstepCommandHandler],
-    }).compile();
+      providers: [
+        WorkstepAgent,
+        CreateWorkstepCommandHandler,
+        GetWorkstepByIdQueryHandler,
+        WorkstepRepository,
+      ],
+    })
+      .overrideProvider(WorkstepRepository)
+      .useValue(new MockWorkstepRepository())
+      .compile();
 
     wController = app.get<WorkstepController>(WorkstepController);
 
