@@ -1,42 +1,30 @@
 import { MerkleTree } from './merkleTree';
 
 describe('Create a Merkle Tree and return a unique root', () => {
-  it('Should return the same merkle tree root if the input document is same', () => {
-    const document1 = {
+  it('Should create merkle tree out of document', () => {
+    const document = {
       name: 'Alice',
       company: 'AliceCo',
     };
 
-    const document2 = {
-      name: 'Alice',
-      company: 'AliceCo',
-    };
+    const merkleTree = new MerkleTree(document);
+    expect(merkleTree.getTree().leaves.length).toEqual(2);
+    expect(merkleTree.getTree().root).toBeDefined();
 
-    const merkleTree1 = new MerkleTree(document1);
-    const root1 = merkleTree1.getRoot();
+    const companyLeaf = merkleTree.getTree().leaves[0];
+    const nameLeaf = merkleTree.getTree().leaves[1];
 
-    const merkleTree2 = new MerkleTree(document2);
-    const root2 = merkleTree2.getRoot();
+    expect(companyLeaf.key).toEqual('company');
+    expect(nameLeaf.key).toEqual('name');
 
-    expect(root1).toEqual(root2);
-  });
-  it('Should return different merkle tree root if the input document is different', () => {
-    const document1 = {
-      name: 'Alice',
-      company: 'AliceCo',
-    };
+    const companyLeafValue = Buffer.from(
+      companyLeaf.value,
+      'base64',
+    ).toString();
 
-    const document2 = {
-      name: 'Bob',
-      company: 'BobCo',
-    };
+    expect(companyLeafValue).toEqual(document.company);
 
-    const merkleTree1 = new MerkleTree(document1);
-    const root1 = merkleTree1.getRoot();
-
-    const merkleTree2 = new MerkleTree(document2);
-    const root2 = merkleTree2.getRoot();
-
-    expect(root1).not.toEqual(root2);
+    const nameLeafValue = Buffer.from(nameLeaf.value, 'base64').toString();
+    expect(nameLeafValue).toEqual(document.name);
   });
 });
