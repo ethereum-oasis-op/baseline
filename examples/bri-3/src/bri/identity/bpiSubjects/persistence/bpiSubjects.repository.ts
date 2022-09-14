@@ -53,4 +53,10 @@ export class BpiSubjectRepository extends PrismaService {
             newBpiSubjectModel.type, 
             newBpiSubjectModel.publicKey);
     }
+
+    async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
+        await this.bpiSubject.delete({
+            where: { id: bpiSubject.id },
+        });
+    }
 }

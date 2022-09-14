@@ -28,4 +28,9 @@ export class MockBpiSubjectRepository {
         Object.assign(bpToUpdate, bpiSubject);
         return Promise.resolve(bpToUpdate);
     }
+
+    async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
+        const bpToDeleteIndex = this.bpiSubjectsStore.findIndex(bp => bp.id === bpiSubject.id);
+        this.bpiSubjectsStore.splice(bpToDeleteIndex, 1);
+    }
 }

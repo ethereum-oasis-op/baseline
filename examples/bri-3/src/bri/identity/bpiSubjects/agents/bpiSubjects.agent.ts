@@ -44,4 +44,15 @@ export class BpiSubjectAgent {
     bpiSubjectToUpdate.updateDescription(description);
     bpiSubjectToUpdate.updatePublicKey(publicKey);
   }
+
+  public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(id: string): Promise<BpiSubject> {
+
+    const bpiSubjectToDelete = await this.repo.getBpiSubjectById(id);
+
+    if(!bpiSubjectToDelete) {
+      throw new NotFoundException(`Bpi Subject with id: ${id} does not exist.`)
+    }
+
+    return bpiSubjectToDelete;
+  }
 }
