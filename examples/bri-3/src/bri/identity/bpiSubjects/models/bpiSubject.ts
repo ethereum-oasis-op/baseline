@@ -1,7 +1,6 @@
 import { BpiSubjectType } from './bpiSubjectType.enum';
 
 export class BpiSubject {
-  // Fields of the domain model are always changed through it's methods
   private _id: string; // TODO: Add uuid after #491
   private _name: string;
   private _description: string;
@@ -40,5 +39,17 @@ export class BpiSubject {
   
   public get publicKey(): string {
     return this._publicKey;
+  }
+
+  public updateName(newName: string): void {
+    this._name = newName;
+  }
+
+  public updateDescription(newDescription: string): void {
+    this._description = newDescription;
+  }
+
+  public updatePublicKey(newPk: string): void {
+    this._publicKey = newPk;
   }
 }

@@ -22,4 +22,10 @@ export class MockBpiSubjectRepository {
 
         return Promise.resolve(createdBp);
     }
+
+    async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+        const bpToUpdate = this.bpiSubjectsStore.find(bp => bp.id === bpiSubject.id);
+        Object.assign(bpToUpdate, bpiSubject);
+        return Promise.resolve(bpToUpdate);
+    }
 }
