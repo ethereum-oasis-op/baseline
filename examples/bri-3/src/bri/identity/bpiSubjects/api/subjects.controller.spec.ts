@@ -3,6 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BpiSubjectAgent } from '../agents/bpiSubjects.agent';
 import { CreateBpiSubjectCommandHandler } from '../capabilities/createBpiSubject/createBpiSubjectCommand.handler';
+import { DeleteBpiSubjectCommandHandler } from '../capabilities/deleteBpiSubject/updateBpiSubjectCommand.handler';
 import { GetBpiSubjectByIdQueryHandler } from '../capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from '../capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
 import { BpiSubjectRepository } from '../persistence/bpiSubjects.repository';
@@ -22,6 +23,7 @@ describe('SubjectController', () => {
         BpiSubjectAgent, 
         CreateBpiSubjectCommandHandler,
         UpdateBpiSubjectCommandHandler,
+        DeleteBpiSubjectCommandHandler,
         GetBpiSubjectByIdQueryHandler,
         BpiSubjectRepository
       ],
@@ -85,6 +87,31 @@ describe('SubjectController', () => {
       expect(updatedBpiSubject.name).toEqual(updateRequestDto.name);
       expect(updatedBpiSubject.desc).toEqual(updateRequestDto.desc);
       expect(updatedBpiSubject.publicKey).toEqual(updateRequestDto.publicKey);
+    });
+  });
+
+  describe('deleteBpiSubject', () => {
+    it('should throw NotFound if non existent id passed', () => {
+      // Arrange
+      const nonExistentId = '123';
+      // Act and assert
+      expect(async () => {
+        await sController.deleteBpiSubject(nonExistentId);
+      }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${nonExistentId} does not exist.`));
+    });
+
+    it('should perform the delete if existing id passed', async () => {
+      // Arrange
+      const createRequestDto = { name: "name1", desc: "desc1", publicKey: "publicKey1"} as CreateBpiSubjectDto;
+      const newBpiSubjectId = await sController.createBpiSubject(createRequestDto);
+
+      // Act
+      await sController.deleteBpiSubject(newBpiSubjectId);
+      
+      // Assert
+      expect(async () => {
+        await sController.getBpiSubjectById(newBpiSubjectId);
+      }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${newBpiSubjectId} does not exist.`));
     });
   });
 
