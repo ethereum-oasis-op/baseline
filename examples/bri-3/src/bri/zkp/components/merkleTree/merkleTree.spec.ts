@@ -1,6 +1,6 @@
 import { MerkleTree } from './merkleTree';
 
-describe('Create a Merkle Tree and return a unique root', () => {
+describe('merkleTree', () => {
   it('Should create merkle tree out of document', () => {
     const document = {
       name: 'Alice',
