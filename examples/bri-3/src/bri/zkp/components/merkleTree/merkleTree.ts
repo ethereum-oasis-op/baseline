@@ -29,7 +29,7 @@ export class MerkleTree implements IMerkleTree {
 
       return tree;
     } catch (e) {
-      console.log('Tree not created ', e);
+      console.log('Tree not created');
       console.log(e);
     }
   }
