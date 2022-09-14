@@ -4,7 +4,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BpiSubjectAgent } from '../agents/bpiSubjects.agent';
 import { CreateBpiSubjectCommandHandler } from '../capabilities/createBpiSubject/createBpiSubjectCommand.handler';
 import { DeleteBpiSubjectCommandHandler } from '../capabilities/deleteBpiSubject/updateBpiSubjectCommand.handler';
-import { GetAllBpiSubjectsQuery } from '../capabilities/getAllBpiSubjects/getAllBpiSubjects.query';
 import { GetAllBpiSubjectsQueryHandler } from '../capabilities/getAllBpiSubjects/getAllBpiSubjectsQuery.handler';
 import { GetBpiSubjectByIdQueryHandler } from '../capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from '../capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
