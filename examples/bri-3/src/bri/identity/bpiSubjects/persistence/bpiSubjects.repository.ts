@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from '../../../../../prisma/prisma.service';
 import { BpiSubject } from '../models/bpiSubject';
 
 // Repositories are the only places that talk the Prisma language of models.
