@@ -1,36 +1,38 @@
-import { Tree } from "./tree"
-import { IMerkleTree} from "./merkleTree.interface";
-import { PreciseProofs } from "ew-precise-proofs-js";
+import { Tree } from './tree.interface';
+import { IMerkleTree } from './merkleTree.interface';
+import { PreciseProofs } from 'ew-precise-proofs-js';
+import { LoggerManager } from 'typescript-logger';
+const log = LoggerManager.create('logger');
 
 export class MerkleTree implements IMerkleTree {
-  tree: Tree;
+  private tree: Tree;
 
-  constructor(document: any){
-    const merkleTree: Tree = this.createTree(document);
-
-    this.tree.leaves = merkleTree.leaves;
-    this.tree.root = merkleTree.root; 
+  constructor(document: any) {
+    this.initTree(document);
   }
 
-  private createTree(document: any): Tree {
+  private initTree(document: any): Tree {
     try {
-      var tree: Tree;
+      if (!document) {
+        return;
+      }
 
       const leaves: PreciseProofs.Leaf[] = this.createLeaves(document);
 
+      if (leaves.length === 0) {
+        this.catchError('Empty leaves');
+        return;
+      }
+
       const merkleTree = PreciseProofs.createMerkleTree(
-        leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash)
+        leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash),
       );
-
       const root = PreciseProofs.getRootHash(merkleTree);
-      
-      tree.leaves = leaves;
-      tree.root = root;
 
-      return tree;
+      this.tree.leaves = leaves;
+      this.tree.root = root;
     } catch (e) {
-      console.log("Tree not created");
-      console.log(e);
+      this.catchError(e);
     }
   }
 
@@ -39,36 +41,17 @@ export class MerkleTree implements IMerkleTree {
       const leaves = PreciseProofs.createLeafs(document);
       return leaves;
     } catch (e) {
-      console.log("Leaves not created");
-      console.log(e);
+      return [];
     }
   }
 
   getTree(): Tree {
-    try {
-      return this.tree;
-    } catch (e) {
-      console.log("Unable to get tree");
-      console.log(e);
-    }
+    return this.tree;
   }
 
-  getLeaves(): PreciseProofs.Leaf[]{
-    try {
-      return this.tree.leaves;
-    } catch (e) {
-      console.log("Unable to get leaves");
-      console.log(e);
-    } 
+  private catchError(e) {
+    log.error(`Tree not created: ${e}`);
+    this.tree.leaves = [];
+    this.tree.root = '';
   }
-
-  getRoot(): string {
-    try {
-      return this.tree.root
-    } catch (e) {
-      console.log("Unable to get root");
-      console.log(e);
-    }
-  }
-  
 }

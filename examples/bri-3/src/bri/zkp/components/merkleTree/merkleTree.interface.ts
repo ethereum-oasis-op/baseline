@@ -1,6 +1,4 @@
-import { Tree } from "./tree"
+import { Tree } from './tree.interface';
 export interface IMerkleTree {
-  tree: Tree;
-  getRoot: (document: any) => string;
+  getTree(): Tree;
 }
-
