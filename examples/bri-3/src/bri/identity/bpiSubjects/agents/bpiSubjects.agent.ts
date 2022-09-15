@@ -3,14 +3,14 @@ import { BpiSubject } from "../models/bpiSubject";
 import { BpiSubjectType } from "../models/bpiSubjectType.enum";
 
 import { uuid } from 'uuidv4'; 
-import { BpiSubjectRepository } from "../persistence/bpiSubjects.repository";
+import { BpiSubjectStorageAgent } from "../persistence/bpiSubjectsStorage.agent";
 import { NotFoundError } from "rxjs";
  
 // Agent methods have extremely declarative names and perform a single task 
 @Injectable()
 export class BpiSubjectAgent {
 
-  constructor(private repo: BpiSubjectRepository) { }
+  constructor(private repo: BpiSubjectStorageAgent) { }
   public throwIfCreateBpiSubjectInputInvalid(name: string, desc: string, pk: string) {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..) 

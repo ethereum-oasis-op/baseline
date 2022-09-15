@@ -6,7 +6,7 @@ import { BpiSubject } from '../models/bpiSubject';
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
-export class BpiSubjectRepository extends PrismaService {
+export class BpiSubjectStorageAgent extends PrismaService {
     async getBpiSubjectById(id: string): Promise<BpiSubject> {
         const bpiSubjectModel = await this.bpiSubject.findUnique({ where: { id: id } });
         return new BpiSubject( // TODO: Write generic mapper prismaModel -> domainObject

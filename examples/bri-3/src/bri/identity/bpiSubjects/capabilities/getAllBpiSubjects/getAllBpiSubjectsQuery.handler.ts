@@ -1,16 +1,16 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { BpiSubjectDto } from "../../api/dtos/response/bpiSubject.dto";
-import { BpiSubjectRepository } from "../../persistence/bpiSubjects.repository";
+import { BpiSubjectStorageAgent } from "../../persistence/bpiSubjectsStorage.agent";
 import { GetAllBpiSubjectsQuery } from "./getAllBpiSubjects.query";
 
 @QueryHandler(GetAllBpiSubjectsQuery)
 export class GetAllBpiSubjectsQueryHandler implements IQueryHandler<GetAllBpiSubjectsQuery> {
   constructor(
-    private readonly repo: BpiSubjectRepository,
+    private readonly storageAgent: BpiSubjectStorageAgent,
   ) {}
 
   async execute(query: GetAllBpiSubjectsQuery) {
-    const bpiSubjects = await this.repo.getAllBpiSubjects();
+    const bpiSubjects = await this.storageAgent.getAllBpiSubjects();
 
     return bpiSubjects.map(bp => {
       return  {
