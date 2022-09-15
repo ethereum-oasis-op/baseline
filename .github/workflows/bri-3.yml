@@ -1,0 +1,55 @@
+name: bri-3
+
+on:
+  push:
+    paths:
+      - examples/bri-3/**
+    branches:
+      - main
+  pull_request:
+    paths:
+      - examples/bri-3/**
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [16.17.0]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node env
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Install dependencies
+        working-directory: examples/bri-3
+        run: npm ci
+
+      - name: Run prettier
+        working-directory: examples/bri-3
+        run: npm run format:check
+
+      - name: Run linter
+        working-directory: examples/bri-3
+        run: npm run lint:check
+
+      - name: Run test
+        working-directory: examples/bri-3
+        run: npm run test
