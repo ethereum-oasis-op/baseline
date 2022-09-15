@@ -11,6 +11,7 @@ import { BpiSubjectStorageAgent } from '../persistence/bpiSubjectsStorage.agent'
 import { MockBpiSubjectStorageAgent } from '../persistence/mockBpiSubjectStorage.agent';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
+import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectController } from './subjects.controller';
 
 describe('SubjectController', () => {
@@ -47,7 +48,7 @@ describe('SubjectController', () => {
       // Act and assert
       expect(async () => {
         await sController.getBpiSubjectById(nonExistentId);
-      }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${nonExistentId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should return the correct bpi subject if proper id passed ', async () => {
@@ -108,7 +109,7 @@ describe('SubjectController', () => {
       // Act and assert
       expect(async () => {
         await sController.createBpiSubject(requestDto);
-      }).rejects.toThrow(new BadRequestException("Name cannot be empty."));
+      }).rejects.toThrow(new BadRequestException(NAME_EMPTY_ERR_MESSAGE));
     });
 
     it('should return new uuid from the created bpi subject when all params provided', async () => {
@@ -132,7 +133,7 @@ describe('SubjectController', () => {
       // Act and assert
       expect(async () => {
         await sController.updateBpiSubject(nonExistentId, requestDto);
-      }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${nonExistentId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should perform the update if existing id passed', async () => {
@@ -160,7 +161,7 @@ describe('SubjectController', () => {
       // Act and assert
       expect(async () => {
         await sController.deleteBpiSubject(nonExistentId);
-      }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${nonExistentId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should perform the delete if existing id passed', async () => {
@@ -174,7 +175,7 @@ describe('SubjectController', () => {
       // Assert
       expect(async () => {
         await sController.getBpiSubjectById(newBpiSubjectId);
-      }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${newBpiSubjectId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
   });
 });
