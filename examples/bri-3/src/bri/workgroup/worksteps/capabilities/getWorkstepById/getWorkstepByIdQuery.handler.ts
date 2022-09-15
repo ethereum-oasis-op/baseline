@@ -1,15 +1,16 @@
 import { NotFoundException } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { WorkstepDto } from '../../api/dtos/response/workstep.dto';
-import { WorkstepRepository } from '../../persistence/worksteps.repository';
 import { GetWorkstepByIdQuery } from './getWorkstepById.query';
 
 @QueryHandler(GetWorkstepByIdQuery)
 export class GetWorkstepByIdQueryHandler implements IQueryHandler<GetWorkstepByIdQuery> {
-  constructor(private readonly repo: WorkstepRepository) {}
+  constructor(
+    private readonly storageAgent: WorkstepStorageAgent
+    ) {}
 
   async execute(query: GetWorkstepByIdQuery) {
-    const workstep = await this.repo.getWorkstepById(query.id);
+    const workstep = await this.storageAgent.getWorkstepById(query.id);
 
     if (!workstep) {
       throw new NotFoundException(`Workstep with id: ${query.id} does not exist.`)
@@ -21,6 +22,8 @@ export class GetWorkstepByIdQueryHandler implements IQueryHandler<GetWorkstepByI
       version: workstep.version,
       status: workstep.status,
       workgroupId: workstep.workgroupId,
+      securityPolicy: workstep.securityPolicy,
+      privacyPolicy: workstep.privacyPolicy
     } as WorkstepDto;
   }
 }
