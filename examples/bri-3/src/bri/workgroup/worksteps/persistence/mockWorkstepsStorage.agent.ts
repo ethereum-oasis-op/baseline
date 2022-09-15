@@ -3,7 +3,7 @@ import { uuid } from 'uuidv4';
 import { Workstep } from '../models/workstep';
 
 @Injectable()
-export class MockWorkstepRepository {
+export class MockWorkstepStorageAgent {
   private workstepsStore: Workstep[] = [];
 
   async getWorkstepById(id: string): Promise<Workstep> {

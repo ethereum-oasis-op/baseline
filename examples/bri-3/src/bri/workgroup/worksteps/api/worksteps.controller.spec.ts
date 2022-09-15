@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { WorkstepAgent } from '../agents/worksteps.agent';
 import { CreateWorkstepCommandHandler } from '../capabilities/createWorkstep/createWorkstepCommand.handler';
 import { GetWorkstepByIdQueryHandler } from '../capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
-import { WorkstepRepository } from '../persistence/worksteps.repository';
+import { WorkstepRepository } from '../persistence/workstepsStorage.agent';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { WorkstepController } from './worksteps.controller';
