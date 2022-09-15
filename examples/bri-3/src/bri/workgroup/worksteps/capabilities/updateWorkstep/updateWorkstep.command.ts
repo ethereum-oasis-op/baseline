@@ -1,7 +1,8 @@
 export class UpdateWorkstepCommand {
   constructor(
-    private name: string,
-    private id: string,
-    private workgroupId: string,
+    public readonly name: string,
+    public readonly version: string,
+    public readonly status: string,
+    public readonly workgroupId: string,
   ) {}
 }

@@ -9,16 +9,16 @@ export class UpdateWorkstepCommandHandler
   constructor(private agent: WorkstepAgent) {}
 
   async execute(command: UpdateWorkstepCommand) {
-    const { name, id, workgroupId } = command;
+    // const { name, id, workgroupId } = command;
 
-    this.agent.throwIfUpdateWorkstepInputInvalid(name, id, workgroupId);
+    // this.agent.throwIfUpdateWorkstepInputInvalid(name, id, workgroupId);
 
-    const updatedWorkstep = this.agent.updateWorkstep(name, id, workgroupId);
+    // const updatedWorkstep = this.agent.updateWorkstep(name, id, workgroupId);
 
-    // TODO: Generic map of domain model to entity model
-    // this.orm.store(newWorkstep);
+    // // TODO: Generic map of domain model to entity model
+    // // this.orm.store(newWorkstep);
 
-    // TODO: Response DTO
+    // // TODO: Response DTO
     return true;
   }
 }
