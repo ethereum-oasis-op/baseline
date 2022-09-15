@@ -1,8 +1,7 @@
 import { Tree } from './tree.interface';
-import { IMerkleTree } from './merkleTree.interface';
 import { PreciseProofs } from 'ew-precise-proofs-js';
 
-export class MerkleTree implements IMerkleTree {
+export class MerkleTree {
   private tree: Tree = { leaves: [], root: undefined };
 
   constructor(document: any) {
@@ -30,7 +29,11 @@ export class MerkleTree implements IMerkleTree {
     }
   }
 
-  getTree(): Tree {
-    return this.tree;
+  get leaves() {
+    return this.tree.leaves;
+  }
+
+  get root() {
+    return this.tree.root;
   }
 }
