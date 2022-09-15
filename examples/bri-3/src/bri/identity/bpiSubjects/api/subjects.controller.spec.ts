@@ -144,11 +144,11 @@ describe('SubjectController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-      const requestDto = { id: nonExistentId, name: "name", desc: "desc", publicKey: "publicKey"} as UpdateBpiSubjectDto;
+      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as UpdateBpiSubjectDto;
 
       // Act and assert
       expect(async () => {
-        await sController.updateBpiSubject(requestDto);
+        await sController.updateBpiSubject(nonExistentId, requestDto);
       }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${nonExistentId} does not exist.`));
     });
 
@@ -156,10 +156,10 @@ describe('SubjectController', () => {
       // Arrange
       const createRequestDto = { name: "name1", desc: "desc1", publicKey: "publicKey1"} as CreateBpiSubjectDto;
       const newBpiSubjectId = await sController.createBpiSubject(createRequestDto);
-      const updateRequestDto = { id: newBpiSubjectId,  name: "name2", desc: "desc2", publicKey: "publicKey2"} as UpdateBpiSubjectDto;
+      const updateRequestDto = { name: "name2", desc: "desc2", publicKey: "publicKey2"} as UpdateBpiSubjectDto;
 
       // Act
-      await sController.updateBpiSubject(updateRequestDto);
+      await sController.updateBpiSubject(newBpiSubjectId, updateRequestDto);
       
       // Assert
       const updatedBpiSubject = await sController.getBpiSubjectById(newBpiSubjectId);

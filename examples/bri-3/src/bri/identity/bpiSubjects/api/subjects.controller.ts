@@ -38,11 +38,11 @@ export class SubjectController {
       );
   }
 
-  @Put()
-  async updateBpiSubject(@Body() requestDto: UpdateBpiSubjectDto): Promise<void> {
+  @Put('/:id')
+  async updateBpiSubject(@Param('id') id: string, @Body() requestDto: UpdateBpiSubjectDto): Promise<void> {
     return await this.commandBus.execute(
       new UpdateBpiSubjectCommand(
-        requestDto.id,
+        id,
         requestDto.name, 
         requestDto.desc, 
         requestDto.publicKey));
