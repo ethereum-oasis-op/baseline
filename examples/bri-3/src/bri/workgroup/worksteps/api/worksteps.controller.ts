@@ -1,6 +1,8 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateWorkstepCommand } from '../capabilities/createWorkstep/createWorkstep.command';
+import { DeleteWorkstepCommand } from '../capabilities/deleteWorkstep/deleteWorkstep.command';
+import { GetAllWorkstepsQuery } from '../capabilities/getAllWorksteps/getAllWorksteps.query';
 import { GetWorkstepByIdQuery } from '../capabilities/getWorkstepById/getWorkstepById.query';
 import { UpdateWorkstepCommand } from '../capabilities/updateWorkstep/updateWorkstep.command';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
@@ -51,5 +53,10 @@ export class WorkstepController {
         requestDto.privacyPolicy
       )
     );
+  }
+
+  @Delete('/:id')
+  async deleteWorkstep(@Param('id') id: string): Promise<void> {
+    return await this.commandBus.execute(new DeleteWorkstepCommand(id));
   }
 }

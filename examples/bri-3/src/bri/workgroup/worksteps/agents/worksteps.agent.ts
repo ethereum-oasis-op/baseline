@@ -4,6 +4,7 @@ import { Security } from 'src/bri/policy/models/security';
 import { Workstep } from '../models/workstep';
 
 import { uuid } from 'uuidv4';
+import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 
 @Injectable()
 export class WorkstepAgent {

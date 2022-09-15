@@ -55,4 +55,20 @@ export class Workstep {
   public get privacyPolicy(): Privacy {
     return this._privacyPolicy;
   }
+
+  public updateName(newName: string): void {
+    this._name = newName;
+  }
+
+  public updateVersion(newVersion: string): void {
+    this._version = newVersion;
+  }
+
+  public updateStatus(newStatus: string): void {
+    this._status = newStatus;
+  }
+
+  public updateWorkgroupId(newWorkgroupId: string): void {
+    this._workgroupId = newWorkgroupId;
+  }
 }

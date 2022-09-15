@@ -1,5 +1,6 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { WorkstepAgent } from "../../agents/worksteps.agent";
+import { WorkstepStorageAgent } from "../../persistence/workstepsStorage.agent";
 import { DeleteWorkstepCommand } from "./deleteWorkstep.command";
 
 @CommandHandler(DeleteWorkstepCommand)
@@ -8,7 +9,7 @@ export class DeleteWorkstepCommandHandler implements ICommandHandler<DeleteWorks
 
   async execute(command: DeleteWorkstepCommand) {
     const workstepToDelete = await this.agent.fetchDeleteCandidateAndThrowIfDeleteValidationFails(command.id);
-    await this.storageAgent.deleteworkstep(workstepToDelete);
+    await this.storageAgent.deleteWorkstep(workstepToDelete);
     
     return;
   }

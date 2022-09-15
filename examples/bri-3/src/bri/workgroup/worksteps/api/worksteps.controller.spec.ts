@@ -3,8 +3,12 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkstepAgent } from '../agents/worksteps.agent';
 import { CreateWorkstepCommandHandler } from '../capabilities/createWorkstep/createWorkstepCommand.handler';
+import { DeleteWorkstepCommandHandler } from '../capabilities/deleteWorkstep/deleteWorkstepCommand.handler';
+import { GetAllWorkstepsQueryHandler } from '../capabilities/getAllWorksteps/getAllWorkstepsQuery.handler';
 import { GetWorkstepByIdQueryHandler } from '../capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
-import { WorkstepRepository } from '../persistence/workstepsStorage.agent';
+import { UpdateWorkstepCommandHandler } from '../capabilities/updateWorkstep/updateWorkstep.command.handler';
+import { MockWorkstepStorageAgent } from '../persistence/mockWorkstepsStorage.agent';
+import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { WorkstepController } from './worksteps.controller';
@@ -23,7 +27,7 @@ describe('WorkstepController', () => {
         DeleteWorkstepCommandHandler,
         GetWorkstepByIdQueryHandler,
         GetAllWorkstepsQueryHandler,
-        WorkstepRepository,
+        WorkstepStorageAgent,
       ],
     })
       .overrideProvider(WorkstepStorageAgent)

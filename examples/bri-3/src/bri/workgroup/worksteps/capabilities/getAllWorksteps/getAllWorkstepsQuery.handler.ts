@@ -1,5 +1,6 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { WorkstepDto } from "../../api/dtos/response/workstep.dto";
+import { WorkstepStorageAgent } from "../../persistence/workstepsStorage.agent";
 import { GetAllWorkstepsQuery } from "./getAllWorksteps.query";
 
 @QueryHandler(GetAllWorkstepsQuery)

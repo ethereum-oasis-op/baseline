@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { WorkstepAgent } from '../../agents/worksteps.agent';
-import { WorkstepRepository } from '../../persistence/workstepsStorage.agent';
+import { WorkstepStorageAgent } from '../../persistence/workstepsStorage.agent';
 import { CreateWorkstepCommand } from './createWorkstep.command';
 
 @CommandHandler(CreateWorkstepCommand)
 export class CreateWorkstepCommandHandler implements ICommandHandler<CreateWorkstepCommand>
 {
-  constructor(private agent: WorkstepAgent, private repo: WorkstepRepository) {}
+  constructor(private agent: WorkstepAgent, private repo: WorkstepStorageAgent) {}
 
   async execute(command: CreateWorkstepCommand) {
     this.agent.throwIfCreateWorkstepInputInvalid( command.name, command.version, command.status, command.workgroupId);
