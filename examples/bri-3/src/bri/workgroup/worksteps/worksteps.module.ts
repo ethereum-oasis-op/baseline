@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { WorkstepAgent } from './agents/worksteps.agent';
 import { WorkstepController } from './api/worksteps.controller';
-import { CreateWorkstepCommandHandler } from './capabilities/createWorkstep/createWorkstep.command.handler';
+import { CreateWorkstepCommandHandler } from './capabilities/createWorkstep/createWorkstepCommand.handler';
 
 export const CommandHandlers = [CreateWorkstepCommandHandler];
 
