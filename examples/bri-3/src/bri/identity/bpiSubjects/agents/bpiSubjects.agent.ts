@@ -24,17 +24,11 @@ export class BpiSubjectAgent {
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(id: string, name: string, desc: string, pk: string): Promise<BpiSubject> {
-
     const bpiSubjectToUpdate = await this.repo.getBpiSubjectById(id);
 
     if(!bpiSubjectToUpdate) {
       throw new NotFoundException(`Bpi Subject with id: ${id} does not exist.`)
     }
-
-    // Example additional checks
-    if (!name) {
-      throw new BadRequestException("Name cannot be empty.")
-    };
 
     return bpiSubjectToUpdate;
   }
