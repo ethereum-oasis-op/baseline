@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "http://localhost:3000/subjects",
+			"name": "Update Bpi Subject",
 			"request": {
 				"method": "PUT",
 				"header": [],
@@ -20,21 +20,22 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:3000/subjects",
+					"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
-						"subjects"
+						"subjects",
+						"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "http://localhost:3000/subjects Copy",
+			"name": "Create BPI Subject",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -62,7 +63,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:3000/subjects",
+			"name": "Delete Bpi Subject",
 			"request": {
 				"method": "DELETE",
 				"header": [],
@@ -91,7 +92,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:3000/subjects Copy 2",
+			"name": "Get specific Bpi Subject by id",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -123,7 +124,7 @@
 			"response": []
 		},
 		{
-			"name": "http://localhost:3000/subjects all",
+			"name": "Get all Bpi Subjects",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
