@@ -37,7 +37,7 @@ export class BpiSubject {
   public get type(): BpiSubjectType {
     return this._type;
   }
-  
+
   public get publicKey(): string {
     return this._publicKey;
   }

@@ -1,1 +1,1 @@
-export class Security {};
+export class Security {}

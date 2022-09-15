@@ -1,22 +1,36 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { BpiSubject } from "../models/bpiSubject";
-import { BpiSubjectType } from "../models/bpiSubjectType.enum";
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { BpiSubject } from '../models/bpiSubject';
+import { BpiSubjectType } from '../models/bpiSubjectType.enum';
 
-import { uuid } from 'uuidv4'; 
- 
+import { uuid } from 'uuidv4';
+
 @Injectable()
 export class BpiSubjectAgent {
-  // Agent methods have extremely declarative names and perform a single task 
-  public throwIfCreateBpiSubjectInputInvalid(name: string, desc: string, pk: string) {
+  // Agent methods have extremely declarative names and perform a single task
+  public throwIfCreateBpiSubjectInputInvalid(
+    name: string,
+    desc: string,
+    pk: string,
+  ) {
     // This is just an example, these fields will be validated on the DTO validation layer
-    // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..) 
+    // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..)
     if (!name) {
       // We stop execution in case of critical errors by throwing a simple exception
-      throw new BadRequestException("Name cannot be empty.")
-    };
+      throw new BadRequestException('Name cannot be empty.');
+    }
   }
 
-  public createNewExternalBpiSubject(name :string, description: string, publicKey: string): BpiSubject {
-    return new BpiSubject(uuid(), name, description, BpiSubjectType.External, publicKey );
+  public createNewExternalBpiSubject(
+    name: string,
+    description: string,
+    publicKey: string,
+  ): BpiSubject {
+    return new BpiSubject(
+      uuid(),
+      name,
+      description,
+      BpiSubjectType.External,
+      publicKey,
+    );
   }
 }

@@ -1,1 +1,1 @@
-export class Privacy {};
+export class Privacy {}

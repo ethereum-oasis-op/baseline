@@ -13,10 +13,10 @@ export const QueryHandlers = [GetBpiSubjectByIdQueryHandler];
   imports: [CqrsModule],
   controllers: [SubjectController],
   providers: [
-    ...CommandHandlers, 
+    ...CommandHandlers,
     ...QueryHandlers,
-    BpiSubjectAgent, 
-    BpiSubjectRepository
-  ]
+    BpiSubjectAgent,
+    BpiSubjectRepository,
+  ],
 })
 export class SubjectsModule {}
