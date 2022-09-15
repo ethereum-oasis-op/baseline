@@ -1,11 +1,9 @@
 import { Tree } from './tree.interface';
 import { IMerkleTree } from './merkleTree.interface';
 import { PreciseProofs } from 'ew-precise-proofs-js';
-import { LoggerManager } from 'typescript-logger';
-const log = LoggerManager.create('logger');
 
 export class MerkleTree implements IMerkleTree {
-  private tree: Tree;
+  private tree: Tree = { leaves: [], root: undefined };
 
   constructor(document: any) {
     this.initTree(document);
@@ -17,12 +15,7 @@ export class MerkleTree implements IMerkleTree {
         return;
       }
 
-      const leaves: PreciseProofs.Leaf[] = this.createLeaves(document);
-
-      if (leaves.length === 0) {
-        this.catchError('Empty leaves');
-        return;
-      }
+      const leaves: PreciseProofs.Leaf[] = PreciseProofs.createLeafs(document);
 
       const merkleTree = PreciseProofs.createMerkleTree(
         leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash),
@@ -32,26 +25,12 @@ export class MerkleTree implements IMerkleTree {
       this.tree.leaves = leaves;
       this.tree.root = root;
     } catch (e) {
-      this.catchError(e);
-    }
-  }
-
-  private createLeaves(document: any): PreciseProofs.Leaf[] {
-    try {
-      const leaves = PreciseProofs.createLeafs(document);
-      return leaves;
-    } catch (e) {
-      return [];
+      // TODO: replace with logger once we agree on method and library
+      console.log(`Init tree error: ${e}`);
     }
   }
 
   getTree(): Tree {
     return this.tree;
-  }
-
-  private catchError(e) {
-    log.error(`Tree not created: ${e}`);
-    this.tree.leaves = [];
-    this.tree.root = '';
   }
 }
