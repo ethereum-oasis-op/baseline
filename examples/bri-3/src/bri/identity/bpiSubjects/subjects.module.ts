@@ -3,11 +3,19 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { BpiSubjectAgent } from './agents/bpiSubjects.agent';
 import { SubjectController } from './api/subjects.controller';
 import { CreateBpiSubjectCommandHandler } from './capabilities/createBpiSubject/createBpiSubjectCommand.handler';
+import { DeleteBpiSubjectCommandHandler } from './capabilities/deleteBpiSubject/deleteBpiSubjectCommand.handler';
+import { GetAllBpiSubjectsQueryHandler } from './capabilities/getAllBpiSubjects/getAllBpiSubjectsQuery.handler';
 import { GetBpiSubjectByIdQueryHandler } from './capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
-import { BpiSubjectRepository } from './persistence/bpiSubjects.repository';
+import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
+import { BpiSubjectStorageAgent } from './persistence/bpiSubjectsStorage.agent';
 
-export const CommandHandlers = [CreateBpiSubjectCommandHandler];
-export const QueryHandlers = [GetBpiSubjectByIdQueryHandler];
+export const CommandHandlers = [
+  CreateBpiSubjectCommandHandler, 
+  UpdateBpiSubjectCommandHandler,
+  DeleteBpiSubjectCommandHandler];
+export const QueryHandlers = [
+  GetBpiSubjectByIdQueryHandler,
+  GetAllBpiSubjectsQueryHandler];
 
 @Module({
   imports: [CqrsModule],
@@ -16,7 +24,7 @@ export const QueryHandlers = [GetBpiSubjectByIdQueryHandler];
     ...CommandHandlers, 
     ...QueryHandlers,
     BpiSubjectAgent, 
-    BpiSubjectRepository
+    BpiSubjectStorageAgent
   ]
 })
 export class SubjectsModule {}
