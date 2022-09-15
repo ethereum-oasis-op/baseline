@@ -11,9 +11,19 @@ datasource db {
 }
 
 model BpiSubject {
-  id String @id @default(uuid())
-  name String
-  description String  
-  type Int
-  publicKey String 
+  id          String @id @default(uuid())
+  name        String
+  description String
+  type        Int
+  publicKey   String
+}
+
+model Workstep {
+  id             String  @id @default(uuid())
+  name           String
+  version        String
+  status         String
+  workgroupId    String
+  securityPolicy String?
+  privacyPolicy  String?
 }
