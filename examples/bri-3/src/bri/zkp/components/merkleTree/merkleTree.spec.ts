@@ -1,6 +1,14 @@
 import { MerkleTree } from './merkleTree';
 
 describe('merkleTree', () => {
+  it('Should create merkle tree out of empty document', () => {
+    const document = {};
+
+    const merkleTree = new MerkleTree(document);
+    expect(merkleTree.getTree().leaves.length).toEqual(0);
+    expect(merkleTree.getTree().root).toBeUndefined();
+  });
+
   it('Should create merkle tree out of document', () => {
     const document = {
       name: 'Alice',
