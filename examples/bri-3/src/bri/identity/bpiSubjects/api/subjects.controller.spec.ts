@@ -76,23 +76,6 @@ describe('SubjectController', () => {
       expect(bpiSubjects.length).toEqual(0);
     });
 
-    it('should return 1 bpi subject if 1 exists ', async () => {
-      // Arrange
-      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
-
-      const newBpiSubjectId = await sController.createBpiSubject(requestDto);
-
-      // Act
-      const bpiSubjects = await sController.getAllBpiSubjects();
-
-      // Assert
-      expect(bpiSubjects.length).toEqual(1);
-      expect(bpiSubjects[0].id).toEqual(newBpiSubjectId);
-      expect(bpiSubjects[0].name).toEqual(requestDto.name);
-      expect(bpiSubjects[0].desc).toEqual(requestDto.desc);
-      expect(bpiSubjects[0].publicKey).toEqual(requestDto.publicKey);
-    });
-
     it('should return 2 bpi subjects if 2 exists ', async () => {
       // Arrange
       const requestDto1 = { name: "name1", desc: "desc1", publicKey: "publicKey1"} as CreateBpiSubjectDto;
