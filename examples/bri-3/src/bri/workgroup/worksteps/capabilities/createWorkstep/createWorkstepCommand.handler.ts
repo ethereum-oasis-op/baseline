@@ -9,21 +9,9 @@ export class CreateWorkstepCommandHandler implements ICommandHandler<CreateWorks
   constructor(private agent: WorkstepAgent, private repo: WorkstepRepository) {}
 
   async execute(command: CreateWorkstepCommand) {
-    this.agent.throwIfCreateWorkstepInputInvalid(
-      command.name,
-      command.version,
-      command.status,
-      command.workgroupId,
-    );
+    this.agent.throwIfCreateWorkstepInputInvalid( command.name, command.version, command.status, command.workgroupId);
 
-    const newWorkstepCandidate = this.agent.createNewWorkstep(
-      command.name,
-      command.version,
-      command.status,
-      command.workgroupId,
-      command.securityPolicy,
-      command.privacyPolicy,
-    );
+    const newWorkstepCandidate = this.agent.createNewWorkstep( command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
 
     const newWorkstep = this.repo.createNewWorkstep(newWorkstepCandidate);
 
