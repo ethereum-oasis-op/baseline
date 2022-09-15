@@ -1,6 +1,7 @@
 import { NotFoundException } from "@nestjs/common";
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { BpiSubjectDto } from "../../api/dtos/response/bpiSubject.dto";
+import { NOT_FOUND_ERR_MESSAGE } from "../../api/err.messages";
 import { BpiSubjectStorageAgent } from "../../persistence/bpiSubjectsStorage.agent";
 import { GetBpiSubjectByIdQuery } from "./getBpiSubjectById.query";
 
@@ -14,7 +15,7 @@ export class GetBpiSubjectByIdQueryHandler implements IQueryHandler<GetBpiSubjec
     const bpiSubject = await this.storageAgent.getBpiSubjectById(query.id);
 
     if (!bpiSubject) {
-      throw new NotFoundException(`Bpi Subject with id: ${query.id} does not exist.`)
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE)
     }
 
     return { // TODO: Write generic mapper domainObject -> DTO

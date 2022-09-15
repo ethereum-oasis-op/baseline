@@ -2,9 +2,9 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { BpiSubject } from "../models/bpiSubject";
 import { BpiSubjectType } from "../models/bpiSubjectType.enum";
 
-import { uuid } from 'uuidv4'; 
+import { uuid } from 'uuidv4';
+import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from "../api/err.messages";
 import { BpiSubjectStorageAgent } from "../persistence/bpiSubjectsStorage.agent";
-import { NotFoundError } from "rxjs";
  
 // Agent methods have extremely declarative names and perform a single task 
 @Injectable()
@@ -15,7 +15,7 @@ export class BpiSubjectAgent {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..) 
     if (!name) {
-      throw new BadRequestException("Name cannot be empty.")
+      throw new BadRequestException(NAME_EMPTY_ERR_MESSAGE)
     };
   }
 
@@ -27,7 +27,7 @@ export class BpiSubjectAgent {
     const bpiSubjectToUpdate = await this.repo.getBpiSubjectById(id);
 
     if(!bpiSubjectToUpdate) {
-      throw new NotFoundException(`Bpi Subject with id: ${id} does not exist.`)
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
     return bpiSubjectToUpdate;
@@ -44,7 +44,7 @@ export class BpiSubjectAgent {
     const bpiSubjectToDelete = await this.repo.getBpiSubjectById(id);
 
     if(!bpiSubjectToDelete) {
-      throw new NotFoundException(`Bpi Subject with id: ${id} does not exist.`)
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
     return bpiSubjectToDelete;
