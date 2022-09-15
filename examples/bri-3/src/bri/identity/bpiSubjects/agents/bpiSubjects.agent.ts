@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { BpiSubject } from "../models/bpiSubject";
 import { BpiSubjectType } from "../models/bpiSubjectType.enum";
+
+import { uuid } from 'uuidv4'; 
  
 @Injectable()
 export class BpiSubjectAgent {
@@ -12,9 +14,9 @@ export class BpiSubjectAgent {
       // We stop execution in case of critical errors by throwing a simple exception
       throw new BadRequestException("Name cannot be empty.")
     };
-  } 
+  }
 
-  public createNewExternalBpiSubject(name :string, desc: string, pk: string): BpiSubject {
-    return new BpiSubject(name, desc, BpiSubjectType.External, pk);
+  public createNewExternalBpiSubject(name :string, description: string, publicKey: string): BpiSubject {
+    return new BpiSubject(uuid(), name, description, BpiSubjectType.External, publicKey );
   }
 }
