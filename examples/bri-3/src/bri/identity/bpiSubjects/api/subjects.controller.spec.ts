@@ -7,8 +7,8 @@ import { DeleteBpiSubjectCommandHandler } from '../capabilities/deleteBpiSubject
 import { GetAllBpiSubjectsQueryHandler } from '../capabilities/getAllBpiSubjects/getAllBpiSubjectsQuery.handler';
 import { GetBpiSubjectByIdQueryHandler } from '../capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from '../capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
-import { BpiSubjectRepository } from '../persistence/bpiSubjects.repository';
-import { MockBpiSubjectRepository } from '../persistence/mockBpiSubject.repository';
+import { BpiSubjectStorageAgent } from '../persistence/bpiSubjectsStorage.agent';
+import { MockBpiSubjectStorageAgent } from '../persistence/mockBpiSubjectStorage.agent';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { SubjectController } from './subjects.controller';
@@ -27,11 +27,11 @@ describe('SubjectController', () => {
         DeleteBpiSubjectCommandHandler,
         GetBpiSubjectByIdQueryHandler,
         GetAllBpiSubjectsQueryHandler,
-        BpiSubjectRepository
+        BpiSubjectStorageAgent
       ],
     })
-    .overrideProvider(BpiSubjectRepository)
-    .useValue(new MockBpiSubjectRepository())
+    .overrideProvider(BpiSubjectStorageAgent)
+    .useValue(new MockBpiSubjectStorageAgent())
     .compile();
 
     sController = app.get<SubjectController>(SubjectController);

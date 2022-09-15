@@ -3,7 +3,7 @@ import { uuid } from 'uuidv4';
 import { BpiSubject } from '../models/bpiSubject';
 
 @Injectable()
-export class MockBpiSubjectRepository {
+export class MockBpiSubjectStorageAgent {
     private bpiSubjectsStore: BpiSubject[] = [];
 
     async getBpiSubjectById(id: string): Promise<BpiSubject> {
