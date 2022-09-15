@@ -1,5 +1,6 @@
 const { Client } = require('pg');
 
+//Terminal cmd to spin up pg docker image
 //docker run --name postgres -e POSTGRES_PASSWORD=example -p 5433:5432 -d postgres 
 
 //Local DB
@@ -11,6 +12,7 @@ const { Client } = require('pg');
 //     port: 5432,
 // });
 
+//Docker DB
 const client = new Client({
     user: 'postgres',
     host: 'localhost',
@@ -66,6 +68,7 @@ tables.forEach(table => {
     });
 });
 
+//Example of single query execution
 // client.query(ordersTable, (err, res) => {
 //     if (err) {
 //         console.error(err);
