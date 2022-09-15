@@ -1,5 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { WorkstepAgent } from '../../agents/worksteps.agent';
+import { WorkstepRepository } from '../../persistence/worksteps.repository';
 import { CreateWorkstepCommand } from './createWorkstep.command';
 
 @CommandHandler(CreateWorkstepCommand)
@@ -26,6 +27,6 @@ export class CreateWorkstepCommandHandler implements ICommandHandler<CreateWorks
 
     const newWorkstep = this.repo.createNewWorkstep(newWorkstepCandidate);
 
-    return newWorkstep.id;
+    return (await newWorkstep).id;
   }
 }
