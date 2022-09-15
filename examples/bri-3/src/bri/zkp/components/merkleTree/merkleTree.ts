@@ -1,14 +1,14 @@
-import { Tree } from './tree.interface';
+import { ITree } from './tree.interface';
 import { PreciseProofs } from 'ew-precise-proofs-js';
 
 export class MerkleTree {
-  private tree: Tree = { leaves: [], root: undefined };
+  private tree: ITree = { leaves: [], root: undefined };
 
   constructor(document: any) {
     this.initTree(document);
   }
 
-  private initTree(document: any): Tree {
+  private initTree(document: any): ITree {
     try {
       if (!document) {
         return;
@@ -24,7 +24,7 @@ export class MerkleTree {
       this.tree.leaves = leaves;
       this.tree.root = root;
     } catch (e) {
-      // TODO: replace with logger once we agree on method and library
+      // TODO 521: replace with logger once we agree on method and library
       console.log(`Init tree error: ${e}`);
     }
   }
