@@ -1,5 +1,6 @@
 export class UpdateWorkstepCommand {
   constructor(
+    public readonly id: string,
     public readonly name: string,
     public readonly version: string,
     public readonly status: string,

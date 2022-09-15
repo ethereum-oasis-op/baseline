@@ -1,24 +1,18 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { WorkstepAgent } from '../../agents/worksteps.agent';
-import { UpdateWorkstepCommand } from './updateWorkstep.command';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { WorkstepAgent } from "../../agents/worksteps.agent";
+import { UpdateWorkstepCommand } from "./updateWorkstep.command";
 
 @CommandHandler(UpdateWorkstepCommand)
-export class UpdateWorkstepCommandHandler
-  implements ICommandHandler<UpdateWorkstepCommand>
-{
-  constructor(private agent: WorkstepAgent) {}
+export class UpdateWorkstepCommandHandler implements ICommandHandler<UpdateWorkstepCommand> {
+  constructor(private agent: WorkstepAgent, private storageAgent: WorkstepStorageAgent) {}
 
   async execute(command: UpdateWorkstepCommand) {
-    // const { name, id, workgroupId } = command;
+    const workstepToUpdate = await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(command.id, command.name, command.version, command.status, command.workgroupId);
 
-    // this.agent.throwIfUpdateWorkstepInputInvalid(name, id, workgroupId);
+    this.agent.updateWorkstep(workstepToUpdate, command.name, command.version, command.status, command.workgroupId);
 
-    // const updatedWorkstep = this.agent.updateWorkstep(name, id, workgroupId);
-
-    // // TODO: Generic map of domain model to entity model
-    // // this.orm.store(newWorkstep);
-
-    // // TODO: Response DTO
-    return true;
+    await this.storageAgent.updateWorkstep(workstepToUpdate);
+    
+    return;
   }
 }
