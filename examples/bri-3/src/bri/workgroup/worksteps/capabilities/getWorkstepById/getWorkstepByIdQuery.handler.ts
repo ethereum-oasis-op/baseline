@@ -3,6 +3,8 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { WorkstepDto } from '../../api/dtos/response/workstep.dto';
 import { WorkstepStorageAgent } from '../../persistence/workstepsStorage.agent';
 import { GetWorkstepByIdQuery } from './getWorkstepById.query';
+import { NOT_FOUND_ERR_MESSAGE } from "../../api/err.messages";
+
 
 @QueryHandler(GetWorkstepByIdQuery)
 export class GetWorkstepByIdQueryHandler implements IQueryHandler<GetWorkstepByIdQuery> {
@@ -14,7 +16,7 @@ export class GetWorkstepByIdQueryHandler implements IQueryHandler<GetWorkstepByI
     const workstep = await this.storageAgent.getWorkstepById(query.id);
 
     if (!workstep) {
-      throw new NotFoundException(`Workstep with id: ${query.id} does not exist.`)
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
     return { // TODO: Write generic mapper domainObject -> DTO

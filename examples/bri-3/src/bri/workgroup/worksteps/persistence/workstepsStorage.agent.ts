@@ -16,7 +16,7 @@ export class WorkstepStorageAgent extends PrismaService {
       workstepModel.status,
       workstepModel.workgroupId,
       workstepModel.securityPolicy,
-      workstepModel.privacyPolicy,
+      workstepModel.privacyPolicy
     );
   }
 
@@ -35,16 +35,15 @@ export class WorkstepStorageAgent extends PrismaService {
   }
 
   async createNewWorkstep(workstep: Workstep): Promise<Workstep> {
-    const newWorkstepModel = await this.workstep.create({
-      // TODO: Write generic mapper domainObject -> prismaModel
+    const newWorkstepModel = await this.workstep.create({ // TODO: Write generic mapper domainObject -> prismaModel
       data: {
         id: workstep.id,
         name: workstep.name,
         version: workstep.version,
         status: workstep.status,
         workgroupId: workstep.workgroupId,
-        securityPolicy: workstep.securityPolicy as string,
-        privacyPolicy: workstep.privacyPolicy as string,
+        securityPolicy: workstep.securityPolicy,
+        privacyPolicy: workstep.privacyPolicy,
       },
     });
 

@@ -7,8 +7,8 @@ export class Workstep {
   private _version: string;
   private _status: string;
   private _workgroupId: string;
-  private _securityPolicy: Security; // TODO Implement security policy inhereted from workgroup #487
-  private _privacyPolicy: Privacy; // TODO Implement simple privacy policy inhereted from workgroup #487
+  private _securityPolicy: string; // TODO Implement security policy inhereted from workgroup #487
+  private _privacyPolicy: string; // TODO Implement simple privacy policy inhereted from workgroup #487
 
   constructor(
     id: string,
@@ -16,8 +16,8 @@ export class Workstep {
     version: string,
     status: string,
     workgroupId: string,
-    securityPolicy: Security,
-    privacyPolicy: Privacy,
+    securityPolicy: string,
+    privacyPolicy: string,
   ) {
     this._id = id;
     this._name = name;
@@ -48,11 +48,11 @@ export class Workstep {
     return this._workgroupId;
   }
 
-  public get securityPolicy(): Security {
+  public get securityPolicy(): string {
     return this._securityPolicy;
   }
 
-  public get privacyPolicy(): Privacy {
+  public get privacyPolicy(): string {
     return this._privacyPolicy;
   }
 
@@ -70,5 +70,13 @@ export class Workstep {
 
   public updateWorkgroupId(newWorkgroupId: string): void {
     this._workgroupId = newWorkgroupId;
+  }
+
+  public updateSecurityPolicy(newSecurityPolicy: string): void {
+    this._securityPolicy = newSecurityPolicy;
+  }
+
+  public updatePrivacyPolicy(newPrivacyPolicy: string): void {
+    this._privacyPolicy = newPrivacyPolicy;
   }
 }

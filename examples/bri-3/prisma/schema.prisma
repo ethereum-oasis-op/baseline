@@ -19,11 +19,11 @@ model BpiSubject {
 }
 
 model Workstep {
-  id             String  @id @default(uuid())
+  id             String     @id @default(uuid())
   name           String
   version        String
   status         String
   workgroupId    String
-  securityPolicy String?
-  privacyPolicy  String?
+  securityPolicy String
+  privacyPolicy  String
 }

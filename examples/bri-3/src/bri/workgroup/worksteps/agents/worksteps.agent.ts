@@ -1,9 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { Privacy } from 'src/bri/policy/models/privacy';
-import { Security } from 'src/bri/policy/models/security';
 import { Workstep } from '../models/workstep';
 
-import { uuid } from 'uuidv4';
+import { v4 as uuidv4 } from 'uuid';
+import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from "../api/err.messages";
 import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 
 @Injectable()
@@ -13,29 +12,31 @@ export class WorkstepAgent {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules
     if (!name) {
-      throw new BadRequestException('Name cannot be empty.');
+      throw new BadRequestException(NAME_EMPTY_ERR_MESSAGE);
     }
   }
 
-  public createNewWorkstep( name: string, version: string, status: string, workgroupId: string, securityPolicy: Security, privacyPolicy: Privacy): Workstep {
-    return new Workstep( uuid(), name, version, status, workgroupId, securityPolicy, privacyPolicy);
+  public createNewWorkstep( name: string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string): Workstep {
+    return new Workstep( uuidv4(), name, version, status, workgroupId, securityPolicy, privacyPolicy);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(id:string, name: string, version: string, status: string, workgroupId: string): Promise<Workstep> {
     const workstepToUpdate = await this.repo.getWorkstepById(id);
 
     if(!workstepToUpdate) {
-      throw new NotFoundException(`Workstep with id: ${id} does not exist.`)
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE)
     }
 
     return workstepToUpdate;
   }
 
-  public updateWorkstep(workstepToUpdate: Workstep, name :string, version: string, status: string, workgroupId: string) {
+  public updateWorkstep(workstepToUpdate: Workstep, name :string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string) {
     workstepToUpdate.updateName(name);
     workstepToUpdate.updateVersion(version);
     workstepToUpdate.updateStatus(status);
     workstepToUpdate.updateWorkgroupId(workgroupId);
+    workstepToUpdate.updateSecurityPolicy(securityPolicy);
+    workstepToUpdate.updatePrivacyPolicy(privacyPolicy);
   }
   
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(id: string): Promise<Workstep> {
@@ -43,7 +44,7 @@ export class WorkstepAgent {
     const workstepToDelete = await this.repo.getWorkstepById(id);
 
     if(!workstepToDelete) {
-      throw new NotFoundException(`Workstep with id: ${id} does not exist.`)
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
     return workstepToDelete;

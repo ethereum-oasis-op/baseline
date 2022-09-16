@@ -11,7 +11,9 @@ import { MockWorkstepStorageAgent } from '../persistence/mockWorkstepsStorage.ag
 import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
+import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { WorkstepController } from './worksteps.controller';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('WorkstepController', () => {
   let wController: WorkstepController;
@@ -47,20 +49,17 @@ describe('WorkstepController', () => {
       // Act and assert
       expect(async () => {
         await wController.getWorkstepById(nonExistentId);
-      }).rejects.toThrow(
-        new NotFoundException(`Workstep with id: ${nonExistentId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should return the correct workstep if proper id passed ', async () => {
       // Arrange
-      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid' } as CreateWorkstepDto;
+      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
 
       const newWorkstepId = await wController.createWorkstep(requestDto);
 
       // Act
-      const createdWorkstep = await wController.getWorkstepById(
-        newWorkstepId,
-      );
+      const createdWorkstep = await wController.getWorkstepById(newWorkstepId);
 
       // Assert
       expect(createdWorkstep.id).toEqual(newWorkstepId);
@@ -68,6 +67,8 @@ describe('WorkstepController', () => {
       expect(createdWorkstep.version).toEqual(requestDto.version);
       expect(createdWorkstep.status).toEqual(requestDto.status);
       expect(createdWorkstep.workgroupId).toEqual(requestDto.workgroupId);
+      expect(createdWorkstep.securityPolicy).toEqual(requestDto.securityPolicy);
+      expect(createdWorkstep.privacyPolicy).toEqual(requestDto.privacyPolicy);
     });
   });
 
@@ -82,10 +83,10 @@ describe('WorkstepController', () => {
 
     it('should return 2 worksteps if 2 exist', async () => {
       // Arrange
-      const requestDto1 = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1' } as CreateWorkstepDto;
+      const requestDto1 = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
       const newWorkstepId1 = await wController.createWorkstep(requestDto1);
 
-      const requestDto2 = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2' } as CreateWorkstepDto;
+      const requestDto2 = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
       const newWorkstepId2 = await wController.createWorkstep(requestDto2);
 
       // Act
@@ -98,28 +99,32 @@ describe('WorkstepController', () => {
       expect(worksteps[0].version).toEqual(requestDto1.version);
       expect(worksteps[0].status).toEqual(requestDto1.status);
       expect(worksteps[0].workgroupId).toEqual(requestDto1.workgroupId);
+      expect(worksteps[0].securityPolicy).toEqual(requestDto1.securityPolicy);
+      expect(worksteps[0].privacyPolicy).toEqual(requestDto1.privacyPolicy);
       expect(worksteps[1].id).toEqual(newWorkstepId2);
       expect(worksteps[1].name).toEqual(requestDto2.name);
       expect(worksteps[1].version).toEqual(requestDto2.version);
       expect(worksteps[1].status).toEqual(requestDto2.status);
       expect(worksteps[1].workgroupId).toEqual(requestDto2.workgroupId);
+      expect(worksteps[1].securityPolicy).toEqual(requestDto1.securityPolicy);
+      expect(worksteps[1].privacyPolicy).toEqual(requestDto1.privacyPolicy);
     });
   });
 
   describe('createWorkstep', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
-      const requestDto = { version: 'version', status: 'status', workgroupId: 'wgid' } as CreateWorkstepDto;
+      const requestDto = { version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
 
       // Act and assert
       expect(async () => {
         await wController.createWorkstep(requestDto);
-      }).rejects.toThrow(new BadRequestException('Name cannot be empty.'));
+      }).rejects.toThrow(new BadRequestException(NAME_EMPTY_ERR_MESSAGE));
     });
 
     it('should return new uuid from the created workstep when all params provided', async () => {
       // Arrange
-      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid' } as CreateWorkstepDto;
+      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
 
       // Act
       const response = await wController.createWorkstep(requestDto);
@@ -133,19 +138,19 @@ describe('WorkstepController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid' } as UpdateWorkstepDto;
+      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as UpdateWorkstepDto;
 
       // Act and assert
       expect(async () => {
         await wController.updateWorkstep(nonExistentId, requestDto);
-      }).rejects.toThrow(new NotFoundException(`Workstep with id: ${nonExistentId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1' } as CreateWorkstepDto;
+      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
       const newWorkstepId = await wController.createWorkstep(createRequestDto);
-      const updateRequestDto = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2' } as UpdateWorkstepDto;
+      const updateRequestDto = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as UpdateWorkstepDto;
 
       // Act
       await wController.updateWorkstep(newWorkstepId, updateRequestDto);
@@ -157,6 +162,8 @@ describe('WorkstepController', () => {
       expect(updatedWorkstep.version).toEqual(updateRequestDto.version);
       expect(updatedWorkstep.status).toEqual(updateRequestDto.status);
       expect(updatedWorkstep.workgroupId).toEqual(updateRequestDto.workgroupId);
+      expect(updatedWorkstep.securityPolicy).toEqual(updateRequestDto.securityPolicy);
+      expect(updatedWorkstep.privacyPolicy).toEqual(updateRequestDto.privacyPolicy);
     });
   });
 
@@ -167,12 +174,12 @@ describe('WorkstepController', () => {
       // Act and assert
       expect(async () => {
         await wController.deleteWorkstep(nonExistentId);
-      }).rejects.toThrow(new NotFoundException(`Workstep with id: ${nonExistentId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1'} as CreateWorkstepDto;
+      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy'} as CreateWorkstepDto;
       const newWorkstepId = await wController.createWorkstep(createRequestDto);
 
       // Act
@@ -181,7 +188,7 @@ describe('WorkstepController', () => {
       // Assert
       expect(async () => {
         await wController.getWorkstepById(newWorkstepId);
-      }).rejects.toThrow(new NotFoundException(`Workstep with id: ${newWorkstepId} does not exist.`));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
   });
 });

@@ -13,8 +13,8 @@ export class CreateWorkstepCommandHandler implements ICommandHandler<CreateWorks
 
     const newWorkstepCandidate = this.agent.createNewWorkstep( command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
 
-    const newWorkstep = this.repo.createNewWorkstep(newWorkstepCandidate);
+    const newWorkstep = await this.repo.createNewWorkstep(newWorkstepCandidate);
 
-    return (await newWorkstep).id;
+    return newWorkstep.id;
   }
 }

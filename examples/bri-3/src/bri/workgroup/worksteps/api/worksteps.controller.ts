@@ -35,7 +35,7 @@ export class WorkstepController {
         requestDto.status,
         requestDto.workgroupId,
         requestDto.securityPolicy,
-        requestDto.privacyPolicy,
+        requestDto.privacyPolicy
       )
     );
   }

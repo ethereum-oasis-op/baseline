@@ -5,6 +5,6 @@ CREATE TABLE "Workstep" (
     "version" TEXT NOT NULL,
     "status" TEXT NOT NULL,
     "workgroupId" TEXT NOT NULL,
-    "securityPolicy" TEXT,
-    "privacyPolicy" TEXT
+    "securityPolicy" TEXT NOT NULL,
+    "privacyPolicy" TEXT NOT NULL
 );
