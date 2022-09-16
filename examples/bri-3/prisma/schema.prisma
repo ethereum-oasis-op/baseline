@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,4 +16,36 @@ model BpiSubject {
   description String  
   type Int
   publicKey String 
+}
+
+model Order {
+    id String @id @default(uuid())
+    price Decimal
+    created_at DateTime
+}
+
+model Bpi {
+    id String @id @default(uuid())
+    name String
+    product_id Int
+    created_at DateTime
+    last_updated DateTime
+}
+
+model Workstep {
+    id String @id @default(uuid())
+    name String
+    version String
+}
+
+model BpiTimestampRecord {
+    id String @id @default(uuid())
+    bpi_id Int
+    updated DateTime 
+}
+
+model State {
+    id String @id @default(uuid())
+    agreementState String
+    acceptanceStatus String
 }
