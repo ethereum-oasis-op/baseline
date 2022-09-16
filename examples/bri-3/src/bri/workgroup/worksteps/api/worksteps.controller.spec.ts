@@ -13,7 +13,6 @@ import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { WorkstepController } from './worksteps.controller';
-import { v4 as uuidv4 } from 'uuid';
 
 describe('WorkstepController', () => {
   let wController: WorkstepController;
