@@ -6,14 +6,14 @@ import { CreateWorkstepCommand } from './createWorkstep.command';
 @CommandHandler(CreateWorkstepCommand)
 export class CreateWorkstepCommandHandler implements ICommandHandler<CreateWorkstepCommand>
 {
-  constructor(private agent: WorkstepAgent, private repo: WorkstepStorageAgent) {}
+  constructor(private agent: WorkstepAgent, private storageAgent: WorkstepStorageAgent) {}
 
   async execute(command: CreateWorkstepCommand) {
-    this.agent.throwIfCreateWorkstepInputInvalid( command.name, command.version, command.status, command.workgroupId);
+    this.agent.throwIfCreateWorkstepInputInvalid( command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
 
     const newWorkstepCandidate = this.agent.createNewWorkstep( command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
 
-    const newWorkstep = await this.repo.createNewWorkstep(newWorkstepCandidate);
+    const newWorkstep = await this.storageAgent.createNewWorkstep(newWorkstepCandidate);
 
     return newWorkstep.id;
   }

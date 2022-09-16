@@ -8,7 +8,7 @@ export class UpdateWorkstepCommandHandler implements ICommandHandler<UpdateWorks
   constructor(private agent: WorkstepAgent, private storageAgent: WorkstepStorageAgent) {}
 
   async execute(command: UpdateWorkstepCommand) {
-    const workstepToUpdate = await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(command.id, command.name, command.version, command.status, command.workgroupId);
+    const workstepToUpdate = await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(command.id, command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
 
     this.agent.updateWorkstep(workstepToUpdate, command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
 

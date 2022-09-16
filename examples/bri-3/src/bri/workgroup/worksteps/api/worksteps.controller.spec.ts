@@ -72,7 +72,7 @@ describe('WorkstepController', () => {
   });
 
   describe('getAllWorksteps', () => {
-    it('should return emtpy array if no worksteps', async () => {
+    it('should return empty array if no worksteps', async () => {
       // Act
       const worksteps = await wController.getAllWorksteps();
 
@@ -147,9 +147,9 @@ describe('WorkstepController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
+      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy1', privacyPolicy: 'privPolicy1' } as CreateWorkstepDto;
       const newWorkstepId = await wController.createWorkstep(createRequestDto);
-      const updateRequestDto = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as UpdateWorkstepDto;
+      const updateRequestDto = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2', securityPolicy: 'secPolicy2', privacyPolicy: 'privPolicy2' } as UpdateWorkstepDto;
 
       // Act
       await wController.updateWorkstep(newWorkstepId, updateRequestDto);
@@ -178,7 +178,7 @@ describe('WorkstepController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy'} as CreateWorkstepDto;
+      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy1', privacyPolicy: 'privPolicy1'} as CreateWorkstepDto;
       const newWorkstepId = await wController.createWorkstep(createRequestDto);
 
       // Act

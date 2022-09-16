@@ -19,7 +19,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"a300552d-622c-44d2-962e-3bf5a393429a\",\n    \"name\": \"hello3\",\n    \"desc\": \"world2\",\n    \"publicKey\": \"xyz2\"\n}",
+									"raw": "{\n    \"id\": \"22530de2-f368-4d26-808a-787a1528adbd\",\n    \"name\": \"hello3\",\n    \"desc\": \"world2\",\n    \"publicKey\": \"xyz2\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -108,7 +108,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"hello\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
+									"raw": "",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -116,7 +116,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"raw": "http://localhost:3000/subjects/22530de2-f368-4d26-808a-787a1528adbd",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -124,7 +124,7 @@
 									"port": "3000",
 									"path": [
 										"subjects",
-										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+										"22530de2-f368-4d26-808a-787a1528adbd"
 									]
 								}
 							},
@@ -179,7 +179,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"id\": \"a300552d-622c-44d2-962e-3bf5a393429a\",\n    \"name\": \"hello3\",\n    \"desc\": \"world2\",\n    \"publicKey\": \"xyz2\"\n}",
+									"raw": "{\n    \"id\": \"19854519-fe4b-45fc-843b-39b0446d556e\",\n    \"name\": \"hello2\",\n    \"version\": \"world2\",\n    \"status\": \"xyz2\",\n    \"workgroupId\": \"zyx2\",\n    \"securityPolicy\": \"dlrow2\",\n    \"privacyPolicy\": \"olleh2\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -187,15 +187,15 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"raw": "http://localhost:3000/worksteps/19854519-fe4b-45fc-843b-39b0446d556e",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
-										"subjects",
-										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+										"worksteps",
+										"19854519-fe4b-45fc-843b-39b0446d556e"
 									]
 								}
 							},
@@ -208,7 +208,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"hello\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"version\": \"world1\",\n    \"status\": \"xyz1\",\n    \"workgroupId\": \"zyx1\",\n    \"securityPolicy\": \"dlrow1\",\n    \"privacyPolicy\": \"olleh1\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -216,14 +216,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/subjects",
+									"raw": "http://localhost:3000/worksteps",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
-										"subjects"
+										"worksteps"
 									]
 								}
 							},
@@ -244,14 +244,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"raw": "http://localhost:3000/worksteps/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
-										"subjects",
+										"worksteps",
 										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
 									]
 								}
@@ -308,14 +308,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/subjects/",
+									"raw": "http://localhost:3000/worksteps/",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
-										"subjects",
+										"worksteps",
 										""
 									]
 								}

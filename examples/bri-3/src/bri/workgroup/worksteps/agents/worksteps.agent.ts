@@ -7,8 +7,8 @@ import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 
 @Injectable()
 export class WorkstepAgent {
-  constructor(private repo: WorkstepStorageAgent) {}
-  public throwIfCreateWorkstepInputInvalid(name: string, version: string, status: string, workgroupId: string) {
+  constructor(private storageAgent: WorkstepStorageAgent) {}
+  public throwIfCreateWorkstepInputInvalid(name: string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string) {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules
     if (!name) {
@@ -20,8 +20,8 @@ export class WorkstepAgent {
     return new Workstep( uuidv4(), name, version, status, workgroupId, securityPolicy, privacyPolicy);
   }
 
-  public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(id:string, name: string, version: string, status: string, workgroupId: string): Promise<Workstep> {
-    const workstepToUpdate = await this.repo.getWorkstepById(id);
+  public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(id:string, name: string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string): Promise<Workstep> {
+    const workstepToUpdate = await this.storageAgent.getWorkstepById(id);
 
     if(!workstepToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE)
@@ -41,7 +41,7 @@ export class WorkstepAgent {
   
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(id: string): Promise<Workstep> {
 
-    const workstepToDelete = await this.repo.getWorkstepById(id);
+    const workstepToDelete = await this.storageAgent.getWorkstepById(id);
 
     if(!workstepToDelete) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
