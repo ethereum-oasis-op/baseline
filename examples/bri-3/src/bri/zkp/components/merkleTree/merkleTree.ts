@@ -1,39 +1,35 @@
-import { ITree } from './tree.interface';
 import { PreciseProofs } from 'ew-precise-proofs-js';
 
 export class MerkleTree {
-  private tree: ITree = { leaves: [], root: undefined };
+  private _leaves: PreciseProofs.Leaf[] = [];
+  private _root: string;
 
   constructor(document: any) {
     this.initTree(document);
   }
 
-  private initTree(document: any): ITree {
+  private initTree(document: any) {
     try {
       if (!document) {
         return;
       }
 
-      const leaves: PreciseProofs.Leaf[] = PreciseProofs.createLeafs(document);
-
+      this._leaves = PreciseProofs.createLeafs(document);
       const merkleTree = PreciseProofs.createMerkleTree(
-        leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash),
+        this._leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash),
       );
-      const root = PreciseProofs.getRootHash(merkleTree);
-
-      this.tree.leaves = leaves;
-      this.tree.root = root;
+      this._root = PreciseProofs.getRootHash(merkleTree);
     } catch (e) {
       // TODO 521: replace with logger once we agree on method and library
-      console.log(`Init tree error: ${e}`);
+      console.log(`Init merkle tree error: ${e}`);
     }
   }
 
   get leaves() {
-    return this.tree.leaves;
+    return this._leaves;
   }
 
   get root() {
-    return this.tree.root;
+    return this._root;
   }
 }
