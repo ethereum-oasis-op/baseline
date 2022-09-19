@@ -13,7 +13,5 @@ export class UpdateBpiSubjectCommandHandler implements ICommandHandler<UpdateBpi
     this.agent.updateBpiSubject(bpiSubjectToUpdate, command.name, command.desc, command.publicKey);
 
     await this.storageAgent.updateBpiSubject(bpiSubjectToUpdate);
-    
-    return;
   }
 }

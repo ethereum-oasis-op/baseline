@@ -13,7 +13,5 @@ export class UpdateWorkstepCommandHandler implements ICommandHandler<UpdateWorks
     this.agent.updateWorkstep(workstepToUpdate, command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
 
     await this.storageAgent.updateWorkstep(workstepToUpdate);
-    
-    return;
   }
 }
