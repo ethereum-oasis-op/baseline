@@ -1,9 +1,0 @@
-{
-    "client": {
-        "user": "postgres",
-        "host": "localhost",
-        "database": "postgres",
-        "password": "example",
-        "port": "5433"
-    }
-}
