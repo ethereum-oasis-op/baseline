@@ -3,7 +3,7 @@ import { Workstep } from '../models/workstep';
 
 import { v4 as uuidv4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from "../api/err.messages";
-import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
+import { WorkstepStorageAgent } from './workstepsStorage.agent';
 
 @Injectable()
 export class WorkstepAgent {

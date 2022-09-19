@@ -7,8 +7,8 @@ import { DeleteWorkstepCommandHandler } from '../capabilities/deleteWorkstep/del
 import { GetAllWorkstepsQueryHandler } from '../capabilities/getAllWorksteps/getAllWorkstepsQuery.handler';
 import { GetWorkstepByIdQueryHandler } from '../capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
 import { UpdateWorkstepCommandHandler } from '../capabilities/updateWorkstep/updateWorkstep.command.handler';
-import { MockWorkstepStorageAgent } from '../persistence/mockWorkstepsStorage.agent';
-import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
+import { MockWorkstepStorageAgent } from '../agents/mockWorkstepsStorage.agent';
+import { WorkstepStorageAgent } from '../agents/workstepsStorage.agent';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';

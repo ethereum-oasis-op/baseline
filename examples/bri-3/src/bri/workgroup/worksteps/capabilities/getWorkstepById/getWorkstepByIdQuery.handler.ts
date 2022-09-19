@@ -1,9 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { WorkstepDto } from '../../api/dtos/response/workstep.dto';
-import { WorkstepStorageAgent } from '../../persistence/workstepsStorage.agent';
+import { WorkstepStorageAgent } from '../../agents/workstepsStorage.agent';
 import { GetWorkstepByIdQuery } from './getWorkstepById.query';
-import { NOT_FOUND_ERR_MESSAGE } from "../../api/err.messages";
 
 
 @QueryHandler(GetWorkstepByIdQuery)

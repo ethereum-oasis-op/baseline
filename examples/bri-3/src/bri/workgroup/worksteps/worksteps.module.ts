@@ -7,7 +7,7 @@ import { DeleteWorkstepCommandHandler } from './capabilities/deleteWorkstep/dele
 import { GetAllWorkstepsQueryHandler } from './capabilities/getAllWorksteps/getAllWorkstepsQuery.handler';
 import { GetWorkstepByIdQueryHandler } from './capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
 import { UpdateWorkstepCommandHandler } from './capabilities/updateWorkstep/updateWorkstep.command.handler';
-import { WorkstepStorageAgent } from './persistence/workstepsStorage.agent';
+import { WorkstepStorageAgent } from './agents/workstepsStorage.agent';
 
 export const CommandHandlers = [
   CreateWorkstepCommandHandler,

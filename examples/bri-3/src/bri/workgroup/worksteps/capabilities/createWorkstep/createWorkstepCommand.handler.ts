@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { WorkstepAgent } from '../../agents/worksteps.agent';
-import { WorkstepStorageAgent } from '../../persistence/workstepsStorage.agent';
+import { WorkstepStorageAgent } from '../../agents/workstepsStorage.agent';
 import { CreateWorkstepCommand } from './createWorkstep.command';
 
 @CommandHandler(CreateWorkstepCommand)
