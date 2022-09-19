@@ -13,6 +13,7 @@ import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { WorkstepController } from './worksteps.controller';
+import { validate as uuidValidate, version as uuidVersion } from "uuid";
 
 describe('WorkstepController', () => {
   let wController: WorkstepController;
@@ -112,14 +113,21 @@ describe('WorkstepController', () => {
 
   describe('createWorkstep', () => {
     it('should return new uuid from the created workstep when all necessary params provided', async () => {
+
+      let worksteps = await wController.getAllWorksteps();
+      expect(worksteps).toEqual([]);
+
       // Arrange
       const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
 
       // Act
       const response = await wController.createWorkstep(requestDto);
-
+      worksteps = await wController.getAllWorksteps();
+      
       // Assert
-      expect(response.length).toEqual(36);
+      expect(worksteps).toHaveLength(1);
+      expect(uuidValidate(response));
+      expect(uuidVersion(response)).toEqual(4);
     });
   });
 

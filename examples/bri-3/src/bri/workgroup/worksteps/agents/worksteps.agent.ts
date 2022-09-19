@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Workstep } from '../models/workstep';
 
-import { v4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from "../api/err.messages";
 import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 
@@ -10,7 +10,7 @@ export class WorkstepAgent {
   constructor(private storageAgent: WorkstepStorageAgent) {}
 
   public createNewWorkstep( name: string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string): Workstep {
-    return new Workstep( v4(), name, version, status, workgroupId, securityPolicy, privacyPolicy);
+    return new Workstep( uuidv4(), name, version, status, workgroupId, securityPolicy, privacyPolicy);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(id:string, name: string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string): Promise<Workstep> {
