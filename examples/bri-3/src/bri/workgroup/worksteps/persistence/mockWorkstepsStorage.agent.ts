@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { uuid } from 'uuidv4';
+import { v4 } from 'uuid';
 import { Workstep } from '../models/workstep';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class MockWorkstepStorageAgent {
 
   async createNewWorkstep(workstep: Workstep): Promise<Workstep> {
     const createdWs = new Workstep(
-      uuid(),
+      v4(),
       workstep.name,
       workstep.version,
       workstep.status,

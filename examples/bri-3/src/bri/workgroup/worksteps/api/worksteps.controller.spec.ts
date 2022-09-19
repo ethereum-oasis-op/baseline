@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkstepAgent } from '../agents/worksteps.agent';
@@ -11,7 +11,7 @@ import { MockWorkstepStorageAgent } from '../persistence/mockWorkstepsStorage.ag
 import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
-import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { WorkstepController } from './worksteps.controller';
 
 describe('WorkstepController', () => {
@@ -111,8 +111,7 @@ describe('WorkstepController', () => {
   });
 
   describe('createWorkstep', () => {
-
-    it('should return new uuid from the created workstep when all params provided', async () => {
+    it('should return new uuid from the created workstep when all necessary params provided', async () => {
       // Arrange
       const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
 

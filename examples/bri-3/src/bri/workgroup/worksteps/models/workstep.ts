@@ -1,6 +1,3 @@
-import { Security } from '../../../policy/models/security';
-import { Privacy } from '../../../policy/models/privacy';
-
 export class Workstep {
   private _id: string; // TODO: Add uuid after #491
   private _name: string;
