@@ -111,15 +111,6 @@ describe('WorkstepController', () => {
   });
 
   describe('createWorkstep', () => {
-    it('should throw BadRequest if name not provided', () => {
-      // Arrange
-      const requestDto = { version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
-
-      // Act and assert
-      expect(async () => {
-        await wController.createWorkstep(requestDto);
-      }).rejects.toThrow(new BadRequestException(NAME_EMPTY_ERR_MESSAGE));
-    });
 
     it('should return new uuid from the created workstep when all params provided', async () => {
       // Arrange

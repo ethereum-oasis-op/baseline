@@ -1,20 +1,13 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Workstep } from '../models/workstep';
 
 import { v4 as uuidv4 } from 'uuid';
-import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from "../api/err.messages";
+import { NOT_FOUND_ERR_MESSAGE } from "../api/err.messages";
 import { WorkstepStorageAgent } from '../persistence/workstepsStorage.agent';
 
 @Injectable()
 export class WorkstepAgent {
   constructor(private storageAgent: WorkstepStorageAgent) {}
-  public throwIfCreateWorkstepInputInvalid(name: string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string) {
-    // This is just an example, these fields will be validated on the DTO validation layer
-    // This validation would check internal business rules
-    if (!name) {
-      throw new BadRequestException(NAME_EMPTY_ERR_MESSAGE);
-    }
-  }
 
   public createNewWorkstep( name: string, version: string, status: string, workgroupId: string, securityPolicy: string, privacyPolicy: string): Workstep {
     return new Workstep( uuidv4(), name, version, status, workgroupId, securityPolicy, privacyPolicy);
