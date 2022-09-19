@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workstep } from '../models/workstep';
 
 // Storage Agents are the only places that talk the Prisma language of models.
@@ -9,6 +10,11 @@ import { Workstep } from '../models/workstep';
 export class WorkstepStorageAgent extends PrismaService {
   async getWorkstepById(id: string): Promise<Workstep> {
     const workstepModel = await this.workstep.findUnique({ where: { id: id } });
+
+    if (!workstepModel) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
     return new Workstep( // TODO: Write generic mapper prismaModel -> domainObject
       workstepModel.id,
       workstepModel.name,

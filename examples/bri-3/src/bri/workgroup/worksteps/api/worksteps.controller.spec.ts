@@ -15,8 +15,17 @@ import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { WorkstepController } from './worksteps.controller';
 import { validate as uuidValidate, version as uuidVersion } from "uuid";
 
+
+
+
 describe('WorkstepController', () => {
   let wController: WorkstepController;
+  const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
+
+  const createTestWorkstep = async (): Promise<string> => {
+    const workstepId = await wController.createWorkstep(requestDto);
+    return workstepId;
+  };
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -54,15 +63,13 @@ describe('WorkstepController', () => {
 
     it('should return the correct workstep if proper id passed ', async () => {
       // Arrange
-      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
-
-      const newWorkstepId = await wController.createWorkstep(requestDto);
+      const workstepId = await createTestWorkstep();
 
       // Act
-      const createdWorkstep = await wController.getWorkstepById(newWorkstepId);
+      const createdWorkstep = await wController.getWorkstepById(workstepId);
 
       // Assert
-      expect(createdWorkstep.id).toEqual(newWorkstepId);
+      expect(createdWorkstep.id).toEqual(workstepId);
       expect(createdWorkstep.name).toEqual(requestDto.name);
       expect(createdWorkstep.version).toEqual(requestDto.version);
       expect(createdWorkstep.status).toEqual(requestDto.status);
@@ -78,14 +85,12 @@ describe('WorkstepController', () => {
       const worksteps = await wController.getAllWorksteps();
 
       // Assert
-      expect(worksteps.length).toEqual(0);
+      expect(worksteps).toHaveLength(0);
     });
 
     it('should return 2 worksteps if 2 exist', async () => {
       // Arrange
-      const requestDto1 = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
-      const newWorkstepId1 = await wController.createWorkstep(requestDto1);
-
+      const workstepId = await createTestWorkstep();
       const requestDto2 = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
       const newWorkstepId2 = await wController.createWorkstep(requestDto2);
 
@@ -94,20 +99,20 @@ describe('WorkstepController', () => {
 
       // Assert
       expect(worksteps.length).toEqual(2);
-      expect(worksteps[0].id).toEqual(newWorkstepId1);
-      expect(worksteps[0].name).toEqual(requestDto1.name);
-      expect(worksteps[0].version).toEqual(requestDto1.version);
-      expect(worksteps[0].status).toEqual(requestDto1.status);
-      expect(worksteps[0].workgroupId).toEqual(requestDto1.workgroupId);
-      expect(worksteps[0].securityPolicy).toEqual(requestDto1.securityPolicy);
-      expect(worksteps[0].privacyPolicy).toEqual(requestDto1.privacyPolicy);
+      expect(worksteps[0].id).toEqual(workstepId);
+      expect(worksteps[0].name).toEqual(requestDto.name);
+      expect(worksteps[0].version).toEqual(requestDto.version);
+      expect(worksteps[0].status).toEqual(requestDto.status);
+      expect(worksteps[0].workgroupId).toEqual(requestDto.workgroupId);
+      expect(worksteps[0].securityPolicy).toEqual(requestDto.securityPolicy);
+      expect(worksteps[0].privacyPolicy).toEqual(requestDto.privacyPolicy);
       expect(worksteps[1].id).toEqual(newWorkstepId2);
       expect(worksteps[1].name).toEqual(requestDto2.name);
       expect(worksteps[1].version).toEqual(requestDto2.version);
       expect(worksteps[1].status).toEqual(requestDto2.status);
       expect(worksteps[1].workgroupId).toEqual(requestDto2.workgroupId);
-      expect(worksteps[1].securityPolicy).toEqual(requestDto1.securityPolicy);
-      expect(worksteps[1].privacyPolicy).toEqual(requestDto1.privacyPolicy);
+      expect(worksteps[1].securityPolicy).toEqual(requestDto2.securityPolicy);
+      expect(worksteps[1].privacyPolicy).toEqual(requestDto2.privacyPolicy);
     });
   });
 
@@ -118,16 +123,14 @@ describe('WorkstepController', () => {
       expect(worksteps).toEqual([]);
 
       // Arrange
-      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as CreateWorkstepDto;
-
       // Act
-      const response = await wController.createWorkstep(requestDto);
+      const workstepId = await createTestWorkstep();
       worksteps = await wController.getAllWorksteps();
-      
+
       // Assert
       expect(worksteps).toHaveLength(1);
-      expect(uuidValidate(response));
-      expect(uuidVersion(response)).toEqual(4);
+      expect(uuidValidate(workstepId));
+      expect(uuidVersion(workstepId)).toEqual(4);
     });
   });
 
@@ -135,7 +138,7 @@ describe('WorkstepController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-      const requestDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' } as UpdateWorkstepDto;
+      const requestDto: UpdateWorkstepDto = { name: 'name', version: 'version', status: 'status', workgroupId: 'wgid', securityPolicy: 'secPolicy', privacyPolicy: 'privPolicy' };
 
       // Act and assert
       expect(async () => {
@@ -145,16 +148,15 @@ describe('WorkstepController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy1', privacyPolicy: 'privPolicy1' } as CreateWorkstepDto;
-      const newWorkstepId = await wController.createWorkstep(createRequestDto);
-      const updateRequestDto = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2', securityPolicy: 'secPolicy2', privacyPolicy: 'privPolicy2' } as UpdateWorkstepDto;
+      const workstepId = await createTestWorkstep();
+      const updateRequestDto: UpdateWorkstepDto = { name: 'name2', version: 'version2', status: 'status2', workgroupId: 'wgid2', securityPolicy: 'secPolicy2', privacyPolicy: 'privPolicy2' };
 
       // Act
-      await wController.updateWorkstep(newWorkstepId, updateRequestDto);
+      await wController.updateWorkstep(workstepId, updateRequestDto);
       
       // Assert
-      const updatedWorkstep = await wController.getWorkstepById(newWorkstepId);
-      expect(updatedWorkstep.id).toEqual(newWorkstepId);
+      const updatedWorkstep = await wController.getWorkstepById(workstepId);
+      expect(updatedWorkstep.id).toEqual(workstepId);
       expect(updatedWorkstep.name).toEqual(updateRequestDto.name);
       expect(updatedWorkstep.version).toEqual(updateRequestDto.version);
       expect(updatedWorkstep.status).toEqual(updateRequestDto.status);
@@ -176,15 +178,14 @@ describe('WorkstepController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: 'name1', version: 'version1', status: 'status1', workgroupId: 'wgid1', securityPolicy: 'secPolicy1', privacyPolicy: 'privPolicy1'} as CreateWorkstepDto;
-      const newWorkstepId = await wController.createWorkstep(createRequestDto);
+      const workstepId = await createTestWorkstep();
 
       // Act
-      await wController.deleteWorkstep(newWorkstepId);
+      await wController.deleteWorkstep(workstepId);
       
       // Assert
       expect(async () => {
-        await wController.getWorkstepById(newWorkstepId);
+        await wController.getWorkstepById(workstepId);
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
   });

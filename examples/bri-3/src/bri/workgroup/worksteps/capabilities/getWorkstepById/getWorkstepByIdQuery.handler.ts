@@ -15,10 +15,6 @@ export class GetWorkstepByIdQueryHandler implements IQueryHandler<GetWorkstepByI
   async execute(query: GetWorkstepByIdQuery) {
     const workstep = await this.storageAgent.getWorkstepById(query.id);
 
-    if (!workstep) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    }
-
     return { // TODO: Write generic mapper domainObject -> DTO
       id: workstep.id,
       name: workstep.name,
