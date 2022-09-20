@@ -1,3 +1,3 @@
 export class GetAllWorkstepsQuery {
-    constructor() {}
+  constructor() {}
 }

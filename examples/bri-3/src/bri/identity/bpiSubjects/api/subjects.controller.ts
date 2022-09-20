@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
 import { DeleteBpiSubjectCommand } from '../capabilities/deleteBpiSubject/deleteBpiSubject.command';
@@ -10,7 +18,7 @@ import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 
-@Controller("subjects")
+@Controller('subjects')
 export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
@@ -28,24 +36,31 @@ export class SubjectController {
   }
 
   @Post()
-  async createBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<string> {
+  async createBpiSubject(
+    @Body() requestDto: CreateBpiSubjectDto,
+  ): Promise<string> {
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
-            requestDto.name, 
-            requestDto.desc, 
-            requestDto.publicKey
-        )
-      );
+        requestDto.name,
+        requestDto.desc,
+        requestDto.publicKey,
+      ),
+    );
   }
 
   @Put('/:id')
-  async updateBpiSubject(@Param('id') id: string, @Body() requestDto: UpdateBpiSubjectDto): Promise<void> {
+  async updateBpiSubject(
+    @Param('id') id: string,
+    @Body() requestDto: UpdateBpiSubjectDto,
+  ): Promise<void> {
     return await this.commandBus.execute(
       new UpdateBpiSubjectCommand(
         id,
-        requestDto.name, 
-        requestDto.desc, 
-        requestDto.publicKey));
+        requestDto.name,
+        requestDto.desc,
+        requestDto.publicKey,
+      ),
+    );
   }
 
   @Delete('/:id')

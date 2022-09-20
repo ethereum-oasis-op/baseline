@@ -9,7 +9,7 @@ export class MockWorkstepStorageAgent {
 
   async getWorkstepById(id: string): Promise<Workstep> {
     const workstep = this.workstepsStore.find((ws) => ws.id === id);
-    if(!workstep) {
+    if (!workstep) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
     return workstep;
@@ -36,13 +36,15 @@ export class MockWorkstepStorageAgent {
   }
 
   async updateWorkstep(workstep: Workstep): Promise<Workstep> {
-    const wsToUpdate = this.workstepsStore.find(ws => ws.id === workstep.id);
+    const wsToUpdate = this.workstepsStore.find((ws) => ws.id === workstep.id);
     Object.assign(wsToUpdate, workstep);
     return Promise.resolve(wsToUpdate);
   }
 
-async deleteWorkstep(workstep: Workstep): Promise<void> {
-    const wsToDeleteIndex = this.workstepsStore.findIndex(ws => ws.id === workstep.id);
+  async deleteWorkstep(workstep: Workstep): Promise<void> {
+    const wsToDeleteIndex = this.workstepsStore.findIndex(
+      (ws) => ws.id === workstep.id,
+    );
     this.workstepsStore.splice(wsToDeleteIndex, 1);
   }
 }

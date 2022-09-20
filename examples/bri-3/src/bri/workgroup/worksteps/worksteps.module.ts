@@ -12,11 +12,13 @@ import { WorkstepStorageAgent } from './agents/workstepsStorage.agent';
 export const CommandHandlers = [
   CreateWorkstepCommandHandler,
   UpdateWorkstepCommandHandler,
-  DeleteWorkstepCommandHandler];
+  DeleteWorkstepCommandHandler,
+];
 
-  export const QueryHandlers = [
-    GetWorkstepByIdQueryHandler,
-    GetAllWorkstepsQueryHandler];
+export const QueryHandlers = [
+  GetWorkstepByIdQueryHandler,
+  GetAllWorkstepsQueryHandler,
+];
 
 @Module({
   imports: [CqrsModule],
@@ -24,8 +26,8 @@ export const CommandHandlers = [
   providers: [
     ...CommandHandlers,
     ...QueryHandlers,
-     WorkstepAgent,
-    WorkstepStorageAgent
-  ]
+    WorkstepAgent,
+    WorkstepStorageAgent,
+  ],
 })
 export class WorkstepsModule {}
