@@ -1,12 +1,12 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { BpiSubjectAgent } from "../../agents/bpiSubjects.agent";
-import { BpiSubjectRepository } from "../../persistence/bpiSubjects.repository";
+import { BpiSubjectStorageAgent } from "../../agents/bpiSubjectsStorage.agent";
 import { CreateBpiSubjectCommand } from "./createBpiSubject.command";
 
 @CommandHandler(CreateBpiSubjectCommand)
 export class CreateBpiSubjectCommandHandler implements ICommandHandler<CreateBpiSubjectCommand> {
   
-  constructor(private agent: BpiSubjectAgent, private repo: BpiSubjectRepository) {}
+  constructor(private agent: BpiSubjectAgent, private repo: BpiSubjectStorageAgent) {}
 
   async execute(command: CreateBpiSubjectCommand) {
     this.agent.throwIfCreateBpiSubjectInputInvalid(command.name, command.description, command.publicKey);

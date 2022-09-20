@@ -1,0 +1,330 @@
+{
+	"info": {
+		"_postman_id": "e1b60709-50ae-4fd8-b6c1-eb847752597f",
+		"name": "bri",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11201020"
+	},
+	"item": [
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "Bpi Subject",
+					"item": [
+						{
+							"name": "Update Bpi Subject",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"22530de2-f368-4d26-808a-787a1528adbd\",\n    \"name\": \"hello3\",\n    \"desc\": \"world2\",\n    \"publicKey\": \"xyz2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create BPI Subject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Subject",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Subject by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/22530de2-f368-4d26-808a-787a1528adbd",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										"22530de2-f368-4d26-808a-787a1528adbd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Bpi Subjects",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "workgroup",
+			"item": [
+				{
+					"name": "workstep",
+					"item": [
+						{
+							"name": "Update Workstep",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"19854519-fe4b-45fc-843b-39b0446d556e\",\n    \"name\": \"hello2\",\n    \"version\": \"world2\",\n    \"status\": \"xyz2\",\n    \"workgroupId\": \"zyx2\",\n    \"securityPolicy\": \"dlrow2\",\n    \"privacyPolicy\": \"olleh2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/19854519-fe4b-45fc-843b-39b0446d556e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										"19854519-fe4b-45fc-843b-39b0446d556e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Workstep",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"version\": \"world1\",\n    \"status\": \"xyz1\",\n    \"workgroupId\": \"zyx1\",\n    \"securityPolicy\": \"dlrow1\",\n    \"privacyPolicy\": \"olleh1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Workstep",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Workstep by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/63bce4b9-3b77-4cfe-ae78-dbc155436415",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										"63bce4b9-3b77-4cfe-ae78-dbc155436415"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Workstep",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
