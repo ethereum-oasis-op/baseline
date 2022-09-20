@@ -8,7 +8,7 @@ import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 
-@Controller('subjects')
+@Controller("subjects")
 export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
@@ -16,30 +16,20 @@ export class SubjectController {
   // TODO: Response DTOs
   // TODO: DTO -> Command mapping
   @Post()
-  async createBpiSubject(
-    @Body() requestDto: CreateBpiSubjectDto,
-  ): Promise<string> {
+  async createBpiSubject(@Body() requestDto: CreateBpiSubjectDto): Promise<string> {
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
-        requestDto.name,
-        requestDto.desc,
-        requestDto.publicKey,
-      ),
-    );
+            requestDto.name, 
+            requestDto.desc, 
+            requestDto.publicKey
+        )
+      );
   }
 
   @Put()
-  async updateBpiSubject(
-    @Body() requestDto: UpdateBpiSubjectDto,
-  ): Promise<BpiSubject> {
+  async updateBpiSubject(@Body() requestDto: UpdateBpiSubjectDto): Promise<BpiSubject> {
     // TODO: WIP
-    return await this.commandBus.execute(
-      new CreateBpiSubjectCommand(
-        requestDto.name,
-        requestDto.desc,
-        requestDto.publicKey,
-      ),
-    );
+    return await this.commandBus.execute(new CreateBpiSubjectCommand(requestDto.name, requestDto.desc, requestDto.publicKey));
   }
 
   @Get('/:id')

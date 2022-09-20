@@ -17,15 +17,15 @@ describe('SubjectController', () => {
       imports: [CqrsModule],
       controllers: [SubjectController],
       providers: [
-        BpiSubjectAgent,
+        BpiSubjectAgent, 
         CreateBpiSubjectCommandHandler,
         GetBpiSubjectByIdQueryHandler,
-        BpiSubjectRepository,
+        BpiSubjectRepository
       ],
     })
-      .overrideProvider(BpiSubjectRepository)
-      .useValue(new MockBpiSubjectRepository())
-      .compile();
+    .overrideProvider(BpiSubjectRepository)
+    .useValue(new MockBpiSubjectRepository())
+    .compile();
 
     sController = app.get<SubjectController>(SubjectController);
 
@@ -35,24 +35,17 @@ describe('SubjectController', () => {
   describe('createBpiSubject', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
-      const requestDto = {
-        desc: 'desc',
-        publicKey: 'publicKey',
-      } as CreateBpiSubjectDto;
+      const requestDto = { desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
 
       // Act and assert
       expect(async () => {
         await sController.createBpiSubject(requestDto);
-      }).rejects.toThrow(new BadRequestException('Name cannot be empty.'));
+      }).rejects.toThrow(new BadRequestException("Name cannot be empty."));
     });
 
     it('should return new uuid from the created bpi subject when all params provided', async () => {
       // Arrange
-      const requestDto = {
-        name: 'name',
-        desc: 'desc',
-        publicKey: 'publicKey',
-      } as CreateBpiSubjectDto;
+      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
 
       // Act
       const response = await sController.createBpiSubject(requestDto);
@@ -70,27 +63,17 @@ describe('SubjectController', () => {
       // Act and assert
       expect(async () => {
         await sController.getBpiSubjectById(nonExistentId);
-      }).rejects.toThrow(
-        new NotFoundException(
-          `Bpi Subject with id: ${nonExistentId} does not exist.`,
-        ),
-      );
+      }).rejects.toThrow(new NotFoundException(`Bpi Subject with id: ${nonExistentId} does not exist.`));
     });
 
     it('should return the correct bpi subject if proper id passed ', async () => {
       // Arrange
-      const requestDto = {
-        name: 'name',
-        desc: 'desc',
-        publicKey: 'publicKey',
-      } as CreateBpiSubjectDto;
+      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
 
       const newBpiSubjectId = await sController.createBpiSubject(requestDto);
 
       // Act
-      const createdBpiSubject = await sController.getBpiSubjectById(
-        newBpiSubjectId,
-      );
+      const createdBpiSubject = await sController.getBpiSubjectById(newBpiSubjectId);
 
       // Assert
       expect(createdBpiSubject.id).toEqual(newBpiSubjectId);

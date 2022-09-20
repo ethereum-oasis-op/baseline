@@ -1,11 +1,9 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BpiSubjectAgent } from '../../agents/bpiSubjects.agent';
-import { UpdateBpiSubjectCommand } from './updateBpiSubject.command';
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
+import { BpiSubjectAgent } from "../../agents/bpiSubjects.agent";
+import { UpdateBpiSubjectCommand } from "./updateBpiSubject.command";
 
 @CommandHandler(UpdateBpiSubjectCommand)
-export class UpdateBpiSubjectCommandHandler
-  implements ICommandHandler<UpdateBpiSubjectCommand>
-{
+export class UpdateBpiSubjectCommandHandler implements ICommandHandler<UpdateBpiSubjectCommand> {
   constructor(private agent: BpiSubjectAgent) {}
 
   async execute(command: UpdateBpiSubjectCommand) {

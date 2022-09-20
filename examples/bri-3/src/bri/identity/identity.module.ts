@@ -4,6 +4,10 @@ import { SubjectAccountsModule } from './bpiSubjectAccounts/subjectAccounts.modu
 import { SubjectsModule } from './bpiSubjects/subjects.module';
 
 @Module({
-  imports: [SubjectsModule, SubjectAccountsModule, AccountsModule],
+  imports: [
+    SubjectsModule, 
+    SubjectAccountsModule, 
+    AccountsModule
+  ]
 })
 export class IdentityModule {}

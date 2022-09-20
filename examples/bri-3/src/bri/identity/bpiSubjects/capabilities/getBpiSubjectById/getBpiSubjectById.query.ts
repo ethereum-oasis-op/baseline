@@ -1,3 +1,5 @@
 export class GetBpiSubjectByIdQuery {
-  constructor(public readonly id: string) {}
+  constructor(
+    public readonly id: string,
+  ) {}
 }
