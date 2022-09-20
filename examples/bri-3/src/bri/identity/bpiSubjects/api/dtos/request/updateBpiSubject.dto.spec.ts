@@ -45,7 +45,7 @@ describe('UpdateBpiSubjectDto', () => {
         expect(errors[0].constraints.isNotEmpty).toContain("publicKey should not be empty");
     });
 
-    it('should return no error in all properties provided.', async () => {
+    it('should return no error if all required properties provided.', async () => {
         // Arrange
         const dto = { name: 'test', desc: 'this is a description', publicKey: '2323' }
         const updateBpiSubjectDto = plainToInstance(UpdateBpiSubjectDto, dto);
