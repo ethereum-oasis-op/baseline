@@ -9,7 +9,7 @@ export class GetAllBpiSubjectsQueryHandler
 {
   constructor(private readonly storageAgent: BpiSubjectStorageAgent) {}
 
-  async execute(query: GetAllBpiSubjectsQuery) {
+  async execute() {
     const bpiSubjects = await this.storageAgent.getAllBpiSubjects();
 
     return bpiSubjects.map((bp) => {

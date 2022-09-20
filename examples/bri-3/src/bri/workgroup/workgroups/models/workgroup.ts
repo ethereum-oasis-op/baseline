@@ -35,59 +35,59 @@ export class Workgroup implements IWorkgroup {
     this.workflows = workflows;
   }
 
-  addParticipants(bpiSubject: BpiSubject[]): BpiSubject[] {
+  addParticipants(): BpiSubject[] {
     throw new Error('not implemented');
   }
 
-  getParticipants(ids?: string[]): BpiSubject[] {
+  getParticipants(): BpiSubject[] {
     throw new Error('not implemented');
   }
 
-  updateParticipants(id: string[], update: any[]): BpiSubject[] {
+  updateParticipants(): BpiSubject[] {
     throw new Error('Method not implemented.');
   }
 
-  removeParticipants(ids: string[]): BpiSubject[] {
+  removeParticipants(): BpiSubject[] {
     throw new Error('not implemented');
   }
 
-  addSecurityPolicy(securityPolicy: Security) {
+  addSecurityPolicy() {
     throw new Error('not implemented');
   }
 
-  removeSecurityPolicy(securityPolicy: Security) {
+  removeSecurityPolicy() {
     throw new Error('not implemented');
   }
 
-  updateSecurityPolicy(id: string, ...updates: string[]) {
+  updateSecurityPolicy() {
     throw new Error('not implemented');
   }
 
-  addPrivacyPolicy(privacyPolicy: Privacy) {
+  addPrivacyPolicy() {
     throw new Error('not implemented');
   }
 
-  removePrivacyPolicy(privacyPolicy: Privacy) {
+  removePrivacyPolicy() {
     throw new Error('not implemented');
   }
 
-  updatePrivacyPolicy(id: string, ...updates: string[]) {
+  updatePrivacyPolicy() {
     throw new Error('not implemented');
   }
 
-  addWorksteps(worksteps: Workstep[]): Workstep[] {
+  addWorksteps(): Workstep[] {
     throw new Error('not implemented');
   }
 
-  getWorkstepsById(workstepIds: string[]): Workstep[] {
+  getWorkstepsById(): Workstep[] {
     throw new Error('not implemented');
   }
 
-  addWorkflows(workflows: Workflow[]): Workflow[] {
+  addWorkflows(): Workflow[] {
     throw new Error('not implemented');
   }
 
-  getWorkflowsById(workflowIds: string[]): Workflow[] {
+  getWorkflowsById(): Workflow[] {
     throw new Error('not implemented');
   }
 }

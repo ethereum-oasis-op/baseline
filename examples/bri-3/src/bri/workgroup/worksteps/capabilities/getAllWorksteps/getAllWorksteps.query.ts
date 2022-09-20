@@ -1,3 +1,1 @@
-export class GetAllWorkstepsQuery {
-  constructor() {}
-}
+export class GetAllWorkstepsQuery {}

@@ -9,7 +9,7 @@ export class GetAllWorkstepsQueryHandler
 {
   constructor(private readonly storageAgent: WorkstepStorageAgent) {}
 
-  async execute(query: GetAllWorkstepsQuery) {
+  async execute() {
     const worksteps = await this.storageAgent.getAllWorksteps();
 
     return worksteps.map((w) => {

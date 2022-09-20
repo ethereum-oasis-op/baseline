@@ -17,11 +17,7 @@ import { BpiSubjectStorageAgent } from './bpiSubjectsStorage.agent';
 @Injectable()
 export class BpiSubjectAgent {
   constructor(private repo: BpiSubjectStorageAgent) {}
-  public throwIfCreateBpiSubjectInputInvalid(
-    name: string,
-    desc: string,
-    pk: string,
-  ) {
+  public throwIfCreateBpiSubjectInputInvalid(name: string) {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..)
     if (!name) {
@@ -45,9 +41,6 @@ export class BpiSubjectAgent {
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
-    name: string,
-    desc: string,
-    pk: string,
   ): Promise<BpiSubject> {
     const bpiSubjectToUpdate = await this.repo.getBpiSubjectById(id);
 

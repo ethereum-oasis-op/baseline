@@ -5,7 +5,7 @@ import { Privacy } from '../../../policy/models/privacy';
 import { Workflow } from '../../workflows/models/workflow';
 
 export interface IWorkgroup {
-  addParticipants(bpiSubjects: BpiSubject[]): BpiSubject[];
+  addParticipants(): BpiSubject[];
   getParticipants(ids?: string[]): BpiSubject[];
   updateParticipants(id: string[], update: any[]): BpiSubject[];
   removeParticipants(ids: string[]): BpiSubject[];

@@ -30,12 +30,6 @@ export class WorkstepAgent {
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
-    name: string,
-    version: string,
-    status: string,
-    workgroupId: string,
-    securityPolicy: string,
-    privacyPolicy: string,
   ): Promise<Workstep> {
     const workstepToUpdate = await this.storageAgent.getWorkstepById(id);
 
