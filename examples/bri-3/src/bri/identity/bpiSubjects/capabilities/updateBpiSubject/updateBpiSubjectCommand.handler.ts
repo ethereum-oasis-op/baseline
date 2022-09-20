@@ -16,9 +16,6 @@ export class UpdateBpiSubjectCommandHandler
     const bpiSubjectToUpdate =
       await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.id,
-        command.name,
-        command.desc,
-        command.publicKey,
       );
 
     this.agent.updateBpiSubject(

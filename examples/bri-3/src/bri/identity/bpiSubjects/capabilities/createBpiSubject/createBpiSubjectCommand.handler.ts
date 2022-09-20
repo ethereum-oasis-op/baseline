@@ -13,11 +13,7 @@ export class CreateBpiSubjectCommandHandler
   ) {}
 
   async execute(command: CreateBpiSubjectCommand) {
-    this.agent.throwIfCreateBpiSubjectInputInvalid(
-      command.name,
-      command.description,
-      command.publicKey,
-    );
+    this.agent.throwIfCreateBpiSubjectInputInvalid(command.name);
 
     const newBpiSubjectCandidate = this.agent.createNewExternalBpiSubject(
       command.name,

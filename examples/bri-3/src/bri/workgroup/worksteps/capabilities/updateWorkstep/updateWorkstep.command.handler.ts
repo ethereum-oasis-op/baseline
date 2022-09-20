@@ -16,12 +16,6 @@ export class UpdateWorkstepCommandHandler
     const workstepToUpdate =
       await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.id,
-        command.name,
-        command.version,
-        command.status,
-        command.workgroupId,
-        command.securityPolicy,
-        command.privacyPolicy,
       );
 
     this.agent.updateWorkstep(
