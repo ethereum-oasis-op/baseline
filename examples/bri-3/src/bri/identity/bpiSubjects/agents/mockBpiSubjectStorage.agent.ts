@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 
@@ -19,16 +19,15 @@ export class MockBpiSubjectStorageAgent {
     return Promise.resolve(this.bpiSubjectsStore);
   }
 
-  async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const createdBp = new BpiSubject(
-      uuidv4(),
-      bpiSubject.name,
-      bpiSubject.description,
-      bpiSubject.type,
-      bpiSubject.publicKey,
-    );
-
-    this.bpiSubjectsStore.push(createdBp);
+    async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+        const createdBp = new BpiSubject(
+            v4(),
+            bpiSubject.name, 
+            bpiSubject.description, 
+            bpiSubject.type, 
+            bpiSubject.publicKey);
+        
+        this.bpiSubjectsStore.push(createdBp);
 
     return Promise.resolve(createdBp);
   }
