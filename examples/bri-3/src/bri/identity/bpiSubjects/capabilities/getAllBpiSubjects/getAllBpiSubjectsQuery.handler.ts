@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
 import { BpiSubjectDto } from "../../api/dtos/response/bpiSubject.dto";
-import { BpiSubjectStorageAgent } from "../../persistence/bpiSubjectsStorage.agent";
+import { BpiSubjectStorageAgent } from "../../agents/bpiSubjectsStorage.agent";
 import { GetAllBpiSubjectsQuery } from "./getAllBpiSubjects.query";
 
 @QueryHandler(GetAllBpiSubjectsQuery)

@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { BpiSubjectAgent } from "../../agents/bpiSubjects.agent";
-import { BpiSubjectStorageAgent } from "../../persistence/bpiSubjectsStorage.agent";
+import { BpiSubjectStorageAgent } from "../../agents/bpiSubjectsStorage.agent";
 import { UpdateBpiSubjectCommand } from "./updateBpiSubject.command";
 
 @CommandHandler(UpdateBpiSubjectCommand)
@@ -13,7 +13,5 @@ export class UpdateBpiSubjectCommandHandler implements ICommandHandler<UpdateBpi
     this.agent.updateBpiSubject(bpiSubjectToUpdate, command.name, command.desc, command.publicKey);
 
     await this.storageAgent.updateBpiSubject(bpiSubjectToUpdate);
-    
-    return;
   }
 }

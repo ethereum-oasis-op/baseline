@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 
 // Repositories are the only places that talk the Prisma language of models.
@@ -9,6 +10,11 @@ import { BpiSubject } from '../models/bpiSubject';
 export class BpiSubjectStorageAgent extends PrismaService {
     async getBpiSubjectById(id: string): Promise<BpiSubject> {
         const bpiSubjectModel = await this.bpiSubject.findUnique({ where: { id: id } });
+
+        if(!bpiSubjectModel) {
+            throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+        }
+        
         return new BpiSubject( // TODO: Write generic mapper prismaModel -> domainObject
             bpiSubjectModel.id, 
             bpiSubjectModel.name, 

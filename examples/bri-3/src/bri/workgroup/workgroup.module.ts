@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
+import { WorkstepsModule } from './worksteps/worksteps.module';
 
 @Module({
-  imports: []
+  imports: [WorkstepsModule]
 })
 export class WorkgroupModule {}

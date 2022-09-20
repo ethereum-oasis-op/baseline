@@ -7,7 +7,7 @@ import { DeleteBpiSubjectCommandHandler } from './capabilities/deleteBpiSubject/
 import { GetAllBpiSubjectsQueryHandler } from './capabilities/getAllBpiSubjects/getAllBpiSubjectsQuery.handler';
 import { GetBpiSubjectByIdQueryHandler } from './capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
-import { BpiSubjectStorageAgent } from './persistence/bpiSubjectsStorage.agent';
+import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler, 
