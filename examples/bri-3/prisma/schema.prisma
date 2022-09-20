@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -17,6 +17,7 @@ model BpiSubject {
   type        Int
   publicKey   String
 }
+
 
 model Workstep {
   id             String     @id @default(uuid())
