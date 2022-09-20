@@ -5,7 +5,7 @@ import { CreateWorkstepDto } from "./createWorkstep.dto";
 describe('CreateWorkstepDto', () => {
     it('should return error in case name not provided.', async () => {
         // Arrange
-        const dto = { workgroupId: '1'}
+        const dto = { workgroupId: '1'};
         const createWorkstepDto = plainToInstance(CreateWorkstepDto, dto);
 
         // Act
@@ -19,7 +19,7 @@ describe('CreateWorkstepDto', () => {
 
     it('should return error in case workgroupId not provided.', async () => {
         // Arrange
-        const dto = { name: 'test'}
+        const dto = { name: 'test'};
         const createWorkstepDto = plainToInstance(CreateWorkstepDto, dto);
 
         // Act
@@ -33,7 +33,7 @@ describe('CreateWorkstepDto', () => {
 
     it('should return no error if all required properties provided.', async () => {
         // Arrange
-        const dto = { name: 'test', workgroupId: '1' }
+        const dto = { name: 'test', workgroupId: '1' };
         const createWorkstepDto = plainToInstance(CreateWorkstepDto, dto);
 
         // Act
