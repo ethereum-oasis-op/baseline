@@ -1,12 +1,12 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateBpiSubjectDto {
-    @IsNotEmpty()
-    name: string;
+  @IsNotEmpty()
+  name: string;
 
-    @IsNotEmpty()
-    desc: string;
+  @IsNotEmpty()
+  desc: string;
 
-    @IsNotEmpty()
-    publicKey: string;
+  @IsNotEmpty()
+  publicKey: string;
 }
