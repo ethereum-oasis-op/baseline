@@ -1,12 +1,19 @@
-import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 } from 'uuid';
-import { BpiSubject } from "../models/bpiSubject";
-import { BpiSubjectType } from "../models/bpiSubjectType.enum";
+import { BpiSubject } from '../models/bpiSubject';
+import { BpiSubjectType } from '../models/bpiSubjectType.enum';
 
-import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from "../api/err.messages";
-import { BpiSubjectStorageAgent } from "./bpiSubjectsStorage.agent";
- 
-// Agent methods have extremely declarative names and perform a single task 
+import {
+  NAME_EMPTY_ERR_MESSAGE,
+  NOT_FOUND_ERR_MESSAGE,
+} from '../api/err.messages';
+import { BpiSubjectStorageAgent } from './bpiSubjectsStorage.agent';
+
+// Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class BpiSubjectAgent {
   constructor(private repo: BpiSubjectStorageAgent) {}
@@ -18,8 +25,18 @@ export class BpiSubjectAgent {
     }
   }
 
-  public createNewExternalBpiSubject(name :string, description: string, publicKey: string): BpiSubject {
-    return new BpiSubject(v4(), name, description, BpiSubjectType.External, publicKey );
+  public createNewExternalBpiSubject(
+    name: string,
+    description: string,
+    publicKey: string,
+  ): BpiSubject {
+    return new BpiSubject(
+      v4(),
+      name,
+      description,
+      BpiSubjectType.External,
+      publicKey,
+    );
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
