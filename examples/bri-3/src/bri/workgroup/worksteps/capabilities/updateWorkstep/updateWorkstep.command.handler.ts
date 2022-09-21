@@ -1,16 +1,32 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { WorkstepAgent } from "../../agents/worksteps.agent";
-import { WorkstepStorageAgent } from "../../agents/workstepsStorage.agent";
-import { UpdateWorkstepCommand } from "./updateWorkstep.command";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { WorkstepAgent } from '../../agents/worksteps.agent';
+import { WorkstepStorageAgent } from '../../agents/workstepsStorage.agent';
+import { UpdateWorkstepCommand } from './updateWorkstep.command';
 
 @CommandHandler(UpdateWorkstepCommand)
-export class UpdateWorkstepCommandHandler implements ICommandHandler<UpdateWorkstepCommand> {
-  constructor(private agent: WorkstepAgent, private storageAgent: WorkstepStorageAgent) {}
+export class UpdateWorkstepCommandHandler
+  implements ICommandHandler<UpdateWorkstepCommand>
+{
+  constructor(
+    private agent: WorkstepAgent,
+    private storageAgent: WorkstepStorageAgent,
+  ) {}
 
   async execute(command: UpdateWorkstepCommand) {
-    const workstepToUpdate = await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(command.id, command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
+    const workstepToUpdate =
+      await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
+        command.id,
+      );
 
-    this.agent.updateWorkstep(workstepToUpdate, command.name, command.version, command.status, command.workgroupId, command.securityPolicy, command.privacyPolicy);
+    this.agent.updateWorkstep(
+      workstepToUpdate,
+      command.name,
+      command.version,
+      command.status,
+      command.workgroupId,
+      command.securityPolicy,
+      command.privacyPolicy,
+    );
 
     await this.storageAgent.updateWorkstep(workstepToUpdate);
   }

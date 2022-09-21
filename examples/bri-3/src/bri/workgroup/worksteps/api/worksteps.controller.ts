@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateWorkstepCommand } from '../capabilities/createWorkstep/createWorkstep.command';
 import { DeleteWorkstepCommand } from '../capabilities/deleteWorkstep/deleteWorkstep.command';
@@ -35,13 +43,16 @@ export class WorkstepController {
         requestDto.status,
         requestDto.workgroupId,
         requestDto.securityPolicy,
-        requestDto.privacyPolicy
-      )
+        requestDto.privacyPolicy,
+      ),
     );
   }
 
   @Put('/:id')
-  async updateWorkstep(@Param('id') id: string, @Body() requestDto: UpdateWorkstepDto): Promise<void> {
+  async updateWorkstep(
+    @Param('id') id: string,
+    @Body() requestDto: UpdateWorkstepDto,
+  ): Promise<void> {
     return await this.commandBus.execute(
       new UpdateWorkstepCommand(
         id,
@@ -50,8 +61,8 @@ export class WorkstepController {
         requestDto.status,
         requestDto.workgroupId,
         requestDto.securityPolicy,
-        requestDto.privacyPolicy
-      )
+        requestDto.privacyPolicy,
+      ),
     );
   }
 

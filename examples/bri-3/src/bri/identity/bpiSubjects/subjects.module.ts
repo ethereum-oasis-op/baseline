@@ -10,21 +10,23 @@ import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/
 import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
 
 export const CommandHandlers = [
-  CreateBpiSubjectCommandHandler, 
+  CreateBpiSubjectCommandHandler,
   UpdateBpiSubjectCommandHandler,
-  DeleteBpiSubjectCommandHandler];
+  DeleteBpiSubjectCommandHandler,
+];
 export const QueryHandlers = [
   GetBpiSubjectByIdQueryHandler,
-  GetAllBpiSubjectsQueryHandler];
+  GetAllBpiSubjectsQueryHandler,
+];
 
 @Module({
   imports: [CqrsModule],
   controllers: [SubjectController],
   providers: [
-    ...CommandHandlers, 
+    ...CommandHandlers,
     ...QueryHandlers,
-    BpiSubjectAgent, 
-    BpiSubjectStorageAgent
-  ]
+    BpiSubjectAgent,
+    BpiSubjectStorageAgent,
+  ],
 })
 export class SubjectsModule {}

@@ -1,3 +1,1 @@
-export class GetAllBpiSubjectsQuery {
-  constructor() {}
-}
+export class GetAllBpiSubjectsQuery {}

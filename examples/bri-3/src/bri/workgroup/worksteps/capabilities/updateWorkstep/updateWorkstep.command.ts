@@ -6,6 +6,6 @@ export class UpdateWorkstepCommand {
     public readonly status: string,
     public readonly workgroupId: string,
     public readonly securityPolicy: string,
-    public readonly privacyPolicy: string
+    public readonly privacyPolicy: string,
   ) {}
 }
