@@ -6,17 +6,20 @@ import { CreateWorkflowCommand } from './createWorkflow.command';
 export class CreateWorkflowCommandHandler
   implements ICommandHandler<CreateWorkflowCommand>
 {
-  constructor(private agent: WorkflowAgent) {}
+  constructor(
+    private agent: WorkflowAgent,
+    private storageAgent: WorkflowStorageAgent,
+  ) {}
 
   async execute(command: CreateWorkflowCommand) {
-    this.agent.throwIfCreateWorkflowInputInvalid(command._worksteps);
+    const newWorkflowCandidate = this.agent.createNewWorkflow(
+      command.worksteps,
+    );
 
-    const newWorkflow = this.agent.createNewWorkflow(command._worksteps);
+    const newWorkflow = await this.storageAgent.createNewWorkflow(
+      newWorkflowCandidate,
+    );
 
-    // TODO: Generic map of domain model to entity model
-    // this.orm.store(newWorkflow);
-
-    // TODO: Response DTO
-    return true;
+    return newWorkflow.id;
   }
 }
