@@ -1,20 +1,30 @@
-import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
-import { BpiSubjectAgent } from "../../agents/bpiSubjects.agent";
-import { CreateBpiSubjectCommand } from "./createBpiSubject.command";
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { BpiSubjectAgent } from '../../agents/bpiSubjects.agent';
+import { BpiSubjectStorageAgent } from '../../agents/bpiSubjectsStorage.agent';
+import { CreateBpiSubjectCommand } from './createBpiSubject.command';
 
 @CommandHandler(CreateBpiSubjectCommand)
-export class CreateBpiSubjectCommandHandler implements ICommandHandler<CreateBpiSubjectCommand> {
-  
-  constructor(private agent: BpiSubjectAgent) {}
+export class CreateBpiSubjectCommandHandler
+  implements ICommandHandler<CreateBpiSubjectCommand>
+{
+  constructor(
+    private agent: BpiSubjectAgent,
+    private repo: BpiSubjectStorageAgent,
+  ) {}
 
   async execute(command: CreateBpiSubjectCommand) {
-    this.agent.throwIfCreateBpiSubjectInputInvalid(command._name, command._description, command._publicKey);
-    const newBpiSubject = this.agent.createNewExternalBpiSubject(command._name, command._description, command._publicKey);
-    
-    // TODO: Generic map of domain model to entity model
-    // this.orm.store(newBpiSubject);
+    this.agent.throwIfCreateBpiSubjectInputInvalid(command.name);
 
-    // TODO: Response DTO
-    return true;
+    const newBpiSubjectCandidate = this.agent.createNewExternalBpiSubject(
+      command.name,
+      command.description,
+      command.publicKey,
+    );
+
+    const newBpiSubject = await this.repo.createNewBpiSubject(
+      newBpiSubjectCandidate,
+    );
+
+    return newBpiSubject.id;
   }
 }

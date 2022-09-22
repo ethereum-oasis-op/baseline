@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BpiSubject {
+  id          String @id @default(uuid())
+  name        String
+  description String
+  type        Int
+  publicKey   String
+}
+
+
+model Workstep {
+  id             String     @id @default(uuid())
+  name           String
+  version        String
+  status         String
+  workgroupId    String
+  securityPolicy String
+  privacyPolicy  String
+}

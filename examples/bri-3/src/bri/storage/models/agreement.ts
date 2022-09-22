@@ -1,1 +1,1 @@
-export class Agreement {};
+export class Agreement {}
