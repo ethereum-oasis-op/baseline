@@ -5,23 +5,22 @@ import { Privacy } from '../../../policy/models/privacy';
 import { Workflow } from '../../workflows/models/workflow';
 
 export interface IWorkgroup {
+  addParticipants(): BpiSubject[];
+  getParticipants(ids?: string[]): BpiSubject[];
+  updateParticipants(id: string[], update: any[]): BpiSubject[];
+  removeParticipants(ids: string[]): BpiSubject[];
 
-    addParticipants(bpiSubjects: BpiSubject[]): BpiSubject[];
-    getParticipants(ids? : string[]): BpiSubject[];
-    updateParticipants(id: string[], update:any[]): BpiSubject[];
-    removeParticipants(ids: string[]): BpiSubject[];
+  addSecurityPolicy(securityPolicy: Security);
+  removeSecurityPolicy(securityPolicy: Security);
+  updateSecurityPolicy(id: string, ...updates: string[]);
 
-    addSecurityPolicy(securityPolicy: Security);
-    removeSecurityPolicy(securityPolicy: Security);
-    updateSecurityPolicy(id: string, ...updates: string[]);
+  addPrivacyPolicy(privacyPolicy: Privacy);
+  removePrivacyPolicy(privacyPolicy: Privacy);
+  updatePrivacyPolicy(id: string, ...updates: string[]);
 
-    addPrivacyPolicy(privacyPolicy: Privacy);
-    removePrivacyPolicy(privacyPolicy: Privacy);
-    updatePrivacyPolicy(id: string, ...updates: string[]);
+  addWorksteps(worksteps: Workstep[]): Workstep[];
+  getWorkstepsById(workstepIds: string[]): Workstep[];
 
-    addWorksteps(worksteps: Workstep[]): Workstep[];
-    getWorkstepsById(workstepIds: string[]): Workstep[];
-
-    addWorkflows(workflows: Workflow[]): Workflow[];
-    getWorkflowsById(workflowIds: string[]): Workflow[];
+  addWorkflows(workflows: Workflow[]): Workflow[];
+  getWorkflowsById(workflowIds: string[]): Workflow[];
 }

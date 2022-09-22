@@ -7,8 +7,8 @@ import { DeleteBpiSubjectCommandHandler } from '../capabilities/deleteBpiSubject
 import { GetAllBpiSubjectsQueryHandler } from '../capabilities/getAllBpiSubjects/getAllBpiSubjectsQuery.handler';
 import { GetBpiSubjectByIdQueryHandler } from '../capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from '../capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
-import { BpiSubjectStorageAgent } from '../persistence/bpiSubjectsStorage.agent';
-import { MockBpiSubjectStorageAgent } from '../persistence/mockBpiSubjectStorage.agent';
+import { BpiSubjectStorageAgent } from '../agents/bpiSubjectsStorage.agent';
+import { MockBpiSubjectStorageAgent } from '../agents/mockBpiSubjectStorage.agent';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
@@ -22,18 +22,18 @@ describe('SubjectController', () => {
       imports: [CqrsModule],
       controllers: [SubjectController],
       providers: [
-        BpiSubjectAgent, 
+        BpiSubjectAgent,
         CreateBpiSubjectCommandHandler,
         UpdateBpiSubjectCommandHandler,
         DeleteBpiSubjectCommandHandler,
         GetBpiSubjectByIdQueryHandler,
         GetAllBpiSubjectsQueryHandler,
-        BpiSubjectStorageAgent
+        BpiSubjectStorageAgent,
       ],
     })
-    .overrideProvider(BpiSubjectStorageAgent)
-    .useValue(new MockBpiSubjectStorageAgent())
-    .compile();
+      .overrideProvider(BpiSubjectStorageAgent)
+      .useValue(new MockBpiSubjectStorageAgent())
+      .compile();
 
     sController = app.get<SubjectController>(SubjectController);
 
@@ -53,12 +53,18 @@ describe('SubjectController', () => {
 
     it('should return the correct bpi subject if proper id passed ', async () => {
       // Arrange
-      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
+      const requestDto = {
+        name: 'name',
+        desc: 'desc',
+        publicKey: 'publicKey',
+      } as CreateBpiSubjectDto;
 
       const newBpiSubjectId = await sController.createBpiSubject(requestDto);
 
       // Act
-      const createdBpiSubject = await sController.getBpiSubjectById(newBpiSubjectId);
+      const createdBpiSubject = await sController.getBpiSubjectById(
+        newBpiSubjectId,
+      );
 
       // Assert
       expect(createdBpiSubject.id).toEqual(newBpiSubjectId);
@@ -79,10 +85,18 @@ describe('SubjectController', () => {
 
     it('should return 2 bpi subjects if 2 exists ', async () => {
       // Arrange
-      const requestDto1 = { name: "name1", desc: "desc1", publicKey: "publicKey1"} as CreateBpiSubjectDto;
+      const requestDto1 = {
+        name: 'name1',
+        desc: 'desc1',
+        publicKey: 'publicKey1',
+      } as CreateBpiSubjectDto;
       const newBpiSubjectId1 = await sController.createBpiSubject(requestDto1);
 
-      const requestDto2 = { name: "name2", desc: "desc2", publicKey: "publicKey2"} as CreateBpiSubjectDto;
+      const requestDto2 = {
+        name: 'name2',
+        desc: 'desc2',
+        publicKey: 'publicKey2',
+      } as CreateBpiSubjectDto;
       const newBpiSubjectId2 = await sController.createBpiSubject(requestDto2);
 
       // Act
@@ -104,7 +118,10 @@ describe('SubjectController', () => {
   describe('createBpiSubject', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
-      const requestDto = { desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
+      const requestDto = {
+        desc: 'desc',
+        publicKey: 'publicKey',
+      } as CreateBpiSubjectDto;
 
       // Act and assert
       expect(async () => {
@@ -114,7 +131,11 @@ describe('SubjectController', () => {
 
     it('should return new uuid from the created bpi subject when all params provided', async () => {
       // Arrange
-      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as CreateBpiSubjectDto;
+      const requestDto = {
+        name: 'name',
+        desc: 'desc',
+        publicKey: 'publicKey',
+      } as CreateBpiSubjectDto;
 
       // Act
       const response = await sController.createBpiSubject(requestDto);
@@ -128,7 +149,11 @@ describe('SubjectController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-      const requestDto = { name: "name", desc: "desc", publicKey: "publicKey"} as UpdateBpiSubjectDto;
+      const requestDto = {
+        name: 'name',
+        desc: 'desc',
+        publicKey: 'publicKey',
+      } as UpdateBpiSubjectDto;
 
       // Act and assert
       expect(async () => {
@@ -138,15 +163,27 @@ describe('SubjectController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: "name1", desc: "desc1", publicKey: "publicKey1"} as CreateBpiSubjectDto;
-      const newBpiSubjectId = await sController.createBpiSubject(createRequestDto);
-      const updateRequestDto = { name: "name2", desc: "desc2", publicKey: "publicKey2"} as UpdateBpiSubjectDto;
+      const createRequestDto = {
+        name: 'name1',
+        desc: 'desc1',
+        publicKey: 'publicKey1',
+      } as CreateBpiSubjectDto;
+      const newBpiSubjectId = await sController.createBpiSubject(
+        createRequestDto,
+      );
+      const updateRequestDto = {
+        name: 'name2',
+        desc: 'desc2',
+        publicKey: 'publicKey2',
+      } as UpdateBpiSubjectDto;
 
       // Act
       await sController.updateBpiSubject(newBpiSubjectId, updateRequestDto);
-      
+
       // Assert
-      const updatedBpiSubject = await sController.getBpiSubjectById(newBpiSubjectId);
+      const updatedBpiSubject = await sController.getBpiSubjectById(
+        newBpiSubjectId,
+      );
       expect(updatedBpiSubject.id).toEqual(newBpiSubjectId);
       expect(updatedBpiSubject.name).toEqual(updateRequestDto.name);
       expect(updatedBpiSubject.desc).toEqual(updateRequestDto.desc);
@@ -166,12 +203,18 @@ describe('SubjectController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const createRequestDto = { name: "name1", desc: "desc1", publicKey: "publicKey1"} as CreateBpiSubjectDto;
-      const newBpiSubjectId = await sController.createBpiSubject(createRequestDto);
+      const createRequestDto = {
+        name: 'name1',
+        desc: 'desc1',
+        publicKey: 'publicKey1',
+      } as CreateBpiSubjectDto;
+      const newBpiSubjectId = await sController.createBpiSubject(
+        createRequestDto,
+      );
 
       // Act
       await sController.deleteBpiSubject(newBpiSubjectId);
-      
+
       // Assert
       expect(async () => {
         await sController.getBpiSubjectById(newBpiSubjectId);
