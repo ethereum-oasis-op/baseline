@@ -6,17 +6,19 @@ import { UpdateWorkflowCommand } from './updateWorkflow.command';
 export class UpdateWorkflowCommandHandler
   implements ICommandHandler<UpdateWorkflowCommand>
 {
-  constructor(private agent: WorkflowAgent) {}
+  constructor(
+    private agent: WorkflowAgent,
+    private storageAgent: WorkflowStorageAgent,
+  ) {}
 
   async execute(command: UpdateWorkflowCommand) {
-    this.agent.throwIfUpdateWorkflowInputInvalid(command._worksteps);
+    const workflowToUpdate =
+      await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
+        command.id,
+      );
 
-    const updatedWorkflow = this.agent.updateWorkflow(command._worksteps);
+    this.agent.updateWorkflow(workflowToUpdate, command.worksteps);
 
-    // TODO: Generic map of domain model to entity model
-    // this.orm.store(newWorkflow);
-
-    // TODO: Response DTO
-    return true;
+    await this.storageAgent.updateWorkflow(workflowToUpdate);
   }
 }
