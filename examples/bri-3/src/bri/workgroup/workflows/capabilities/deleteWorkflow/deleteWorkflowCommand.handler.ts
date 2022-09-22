@@ -6,17 +6,17 @@ import { DeleteWorkflowCommand } from './deleteWorkflow.command';
 export class DeleteWorkflowCommandHandler
   implements ICommandHandler<DeleteWorkflowCommand>
 {
-  constructor(private agent: WorkflowAgent) {}
+  constructor(
+    private agent: WorkflowAgent,
+    private storageAgent: WorkflowStorageAgent,
+  ) {}
 
   async execute(command: DeleteWorkflowCommand) {
-    this.agent.throwIfDeleteWorkflowInputInvalid(command._id);
+    const workflowToDelete =
+      await this.agent.fetchDeleteCandidateAndThrowIfDeleteValidationFails(
+        command.id,
+      );
 
-    const deletedWorkflow = this.agent.deleteWorkflow(command._id);
-
-    // TODO: Generic map of domain model to entity model
-    // this.orm.store(newWorkflow);
-
-    // TODO: Response DTO
-    return true;
+    await this.storageAgent.deleteWorkflow(workflowToDelete);
   }
 }
