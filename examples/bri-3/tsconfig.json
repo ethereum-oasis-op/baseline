@@ -16,6 +16,16 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
-  }
+    "noFallthroughCasesInSwitch": false,
+    "useDefineForClassFields": true,
+    "plugins": [
+      {
+          "transform": "tst-reflect-transformer"
+      }
+  ]
+  },
+  "ts-node": {
+    // This can be omitted when using ts-patch
+    "compiler": "ttypescript"
+},
 }
