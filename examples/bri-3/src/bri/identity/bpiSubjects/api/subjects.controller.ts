@@ -23,8 +23,6 @@ export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   // TODO: DTO validation
-  // TODO: Response DTOs
-  // TODO: DTO -> Command mapping
   @Get('/:id')
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));

@@ -8,8 +8,8 @@ export class DeleteBpiSubjectCommandHandler
   implements ICommandHandler<DeleteBpiSubjectCommand>
 {
   constructor(
-    private agent: BpiSubjectAgent,
-    private storageAgent: BpiSubjectStorageAgent,
+    private readonly agent: BpiSubjectAgent,
+    private readonly storageAgent: BpiSubjectStorageAgent,
   ) {}
 
   async execute(command: DeleteBpiSubjectCommand) {

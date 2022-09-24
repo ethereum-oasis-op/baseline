@@ -29,7 +29,6 @@ export class MockBpiSubjectStorageAgent {
     );
 
     this.bpiSubjectsStore.push(createdBp);
-
     return Promise.resolve(createdBp);
   }
 

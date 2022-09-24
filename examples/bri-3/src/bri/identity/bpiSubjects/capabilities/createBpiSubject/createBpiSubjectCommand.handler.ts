@@ -8,8 +8,8 @@ export class CreateBpiSubjectCommandHandler
   implements ICommandHandler<CreateBpiSubjectCommand>
 {
   constructor(
-    private agent: BpiSubjectAgent,
-    private repo: BpiSubjectStorageAgent,
+    private readonly agent: BpiSubjectAgent,
+    private readonly repo: BpiSubjectStorageAgent,
   ) {}
 
   async execute(command: CreateBpiSubjectCommand) {
