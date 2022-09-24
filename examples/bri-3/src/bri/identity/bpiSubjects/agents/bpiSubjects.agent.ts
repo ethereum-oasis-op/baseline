@@ -3,10 +3,10 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { v4 } from 'uuid';
 import { BpiSubject } from '../models/bpiSubject';
 import { BpiSubjectType } from '../models/bpiSubjectType.enum';
 
-import { v4 as uuidv4 } from 'uuid';
 import {
   NAME_EMPTY_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
@@ -31,7 +31,7 @@ export class BpiSubjectAgent {
     publicKey: string,
   ): BpiSubject {
     return new BpiSubject(
-      uuidv4(),
+      v4(),
       name,
       description,
       BpiSubjectType.External,

@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 
@@ -21,7 +21,7 @@ export class MockBpiSubjectStorageAgent {
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const createdBp = new BpiSubject(
-      uuidv4(),
+      v4(),
       bpiSubject.name,
       bpiSubject.description,
       bpiSubject.type,
