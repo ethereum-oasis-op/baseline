@@ -90,7 +90,7 @@ export default class Mapper {
       }
     }
 
-    console.log(`Type conversion successful`);    
+    console.log(`Type conversion successful`);
     if (mismatchedKeys.length > 0) {
       console.log(
         `Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`,
