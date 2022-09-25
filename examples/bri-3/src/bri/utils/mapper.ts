@@ -22,10 +22,9 @@ export default class Mapper {
    */
   static map<T>(from: any, classType: Type, opts?: any) {
     if (!from) throw new Error('undefined source');
-    console.log(from);
 
-    let result = {};
-    let mismatchedKeys = [];
+    const result = {};
+    const mismatchedKeys = [];
     if (classType.kind === TypeKind.Interface) {
       const keys = classType.getProperties().map((param) => param.name);
       Object.keys(from).forEach((prop) => {
