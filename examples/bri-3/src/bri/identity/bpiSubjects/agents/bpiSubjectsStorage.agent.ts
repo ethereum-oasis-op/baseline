@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
-import { getType } from "tst-reflect";
+import { getType } from 'tst-reflect';
 import Mapper from '../../../../bri/utils/mapper';
 
 // Repositories are the only places that talk the Prisma language of models.
@@ -10,7 +10,6 @@ import Mapper from '../../../../bri/utils/mapper';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
-
   async getBpiSubjectById(id: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.bpiSubject.findUnique({
       where: { id },
@@ -19,32 +18,35 @@ export class BpiSubjectStorageAgent extends PrismaService {
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject; 
+    return Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.bpiSubject.findMany();
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject; 
+      return Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
     });
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const {name, description, publicKey, type} = bpiSubject
+    const { name, description, publicKey, type } = bpiSubject;
     const newBpiSubjectModel = await this.bpiSubject.create({
-      data : {name, description, publicKey, type}
+      data: { name, description, publicKey, type },
     });
 
-    return Mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;   
+    return Mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const {id, name, description, publicKey, type} = bpiSubject
+    const { id, name, description, publicKey, type } = bpiSubject;
     const updatedBpiSubjectModel = await this.bpiSubject.update({
       where: { id },
-      data : {name, description, publicKey, type}
+      data: { name, description, publicKey, type },
     });
-    return Mapper.map(updatedBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;   
+    return Mapper.map(
+      updatedBpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {

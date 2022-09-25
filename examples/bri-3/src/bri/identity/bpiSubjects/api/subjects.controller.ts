@@ -36,11 +36,13 @@ export class SubjectController {
   async createBpiSubject(
     @Body() requestDto: CreateBpiSubjectDto,
   ): Promise<string> {
-    return await this.commandBus.execute(new CreateBpiSubjectCommand(
-      requestDto.name,
-      requestDto.desc,
-      requestDto.publicKey,
-    ),);
+    return await this.commandBus.execute(
+      new CreateBpiSubjectCommand(
+        requestDto.name,
+        requestDto.desc,
+        requestDto.publicKey,
+      ),
+    );
   }
 
   @Put('/:id')
