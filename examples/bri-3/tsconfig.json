@@ -25,7 +25,6 @@
   ]
   },
   "ts-node": {
-    // This can be omitted when using ts-patch
     "compiler": "ttypescript"
 },
 }

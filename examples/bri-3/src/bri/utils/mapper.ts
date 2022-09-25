@@ -21,9 +21,10 @@ export default class Mapper {
      * @param opts 
      * @returns generated object
      */
-    static map<T>(from: T, classType : Type, opts? : any) {
+    static map<T>(from: any, classType : Type, opts? : any) {
 
         if(!from) throw new Error('undefined source')  
+        console.log(from)
         
         let result = {};  
         let mismatchedKeys = []      
@@ -48,6 +49,7 @@ export default class Mapper {
             }
 
             console.log(`Type conversion successful`)
+            console.log(result)
             if(mismatchedKeys.length > 0) {
                 console.log(`Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`)
             }
@@ -88,6 +90,7 @@ export default class Mapper {
         }
 
         console.log(`Type conversion successful`)
+        console.log(result)
         if(mismatchedKeys.length > 0) {
             console.log(`Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`)
         }

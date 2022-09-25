@@ -15,7 +15,6 @@ import { GetBpiSubjectByIdQuery } from '../capabilities/getBpiSubjectById/getBpi
 import { UpdateBpiSubjectCommand } from '../capabilities/updateBpiSubject/updateBpiSubject.command';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
-
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 
 @Controller('subjects')
@@ -37,13 +36,11 @@ export class SubjectController {
   async createBpiSubject(
     @Body() requestDto: CreateBpiSubjectDto,
   ): Promise<string> {
-    return await this.commandBus.execute(
-      new CreateBpiSubjectCommand(
-        requestDto.name,
-        requestDto.desc,
-        requestDto.publicKey,
-      ),
-    );
+    return await this.commandBus.execute(new CreateBpiSubjectCommand(
+      requestDto.name,
+      requestDto.desc,
+      requestDto.publicKey,
+    ),);
   }
 
   @Put('/:id')

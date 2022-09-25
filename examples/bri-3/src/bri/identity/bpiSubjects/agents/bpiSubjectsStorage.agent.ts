@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
-import { getType, Type, PropertyInfo } from "tst-reflect";
-import Mapper from 'src/bri/utils/mapper';
+import { getType } from "tst-reflect";
+import Mapper from '../../../../bri/utils/mapper';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -30,16 +30,19 @@ export class BpiSubjectStorageAgent extends PrismaService {
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+    const {name, description, publicKey, type} = bpiSubject
     const newBpiSubjectModel = await this.bpiSubject.create({
-      data : Mapper.map(bpiSubject, getType<BpiSubject>())
+      data : {name, description, publicKey, type}
     });
+
     return Mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;   
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+    const {id, name, description, publicKey, type} = bpiSubject
     const updatedBpiSubjectModel = await this.bpiSubject.update({
-      where: { id: bpiSubject.id },
-      data : Mapper.map(bpiSubject, getType<BpiSubject>())
+      where: { id },
+      data : {name, description, publicKey, type}
     });
     return Mapper.map(updatedBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;   
   }
