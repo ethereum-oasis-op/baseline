@@ -1,4 +1,6 @@
 import { PreciseProofs } from 'ew-precise-proofs-js';
+import { Logger } from 'tslog';
+const log: Logger = new Logger();
 
 export class MerkleTree {
   private _leaves: PreciseProofs.Leaf[] = [];
@@ -13,15 +15,13 @@ export class MerkleTree {
       if (!document) {
         return;
       }
-
       this._leaves = PreciseProofs.createLeafs(document);
       const merkleTree = PreciseProofs.createMerkleTree(
         this._leaves.map((leaf: PreciseProofs.Leaf) => leaf.hash),
       );
       this._root = PreciseProofs.getRootHash(merkleTree);
     } catch (e) {
-      // TODO 521: replace with logger once we agree on method and library
-      console.log(`Init merkle tree error: ${e}`);
+      log.error(`Init merkle tree error: ${e}`);
     }
   }
 
