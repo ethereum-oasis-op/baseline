@@ -1,36 +1,53 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Workstep } from '../../worksteps/models/workstep';
 import { Workflow } from '../models/workflow';
+import { v4 as uuidv4 } from 'uuid';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 
 @Injectable()
 export class WorkflowAgent {
-  // Agent methods have extremely declarative names and perform a single task
-  public throwIfCreateWorkflowInputInvalid(worksteps: Workstep[]) {
-    // This is just an example, these fields will be validated on the DTO validation layer
-    // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..)
-    if (!worksteps.length) {
-      // We stop execution in case of critical errors by throwing a simple exception
-      throw new BadRequestException('Worksteps cannot be empty.');
+  constructor(private storageAgent: WorkflowStorageAgent) {}
+
+  public createNewWorkflow(
+    name: string,
+    worksteps: Workstep[],
+    workgroupId: string,
+  ): Workflow {
+    return new Workflow(uuidv4(), name, worksteps, workgroupId);
+  }
+
+  public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
+    id: string,
+  ): Promise<Workflow> {
+    const workflowToUpdate = await this.storageAgent.getWorkflowById(id);
+
+    if (!workflowToUpdate) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
+
+    return workflowToUpdate;
   }
 
-  public createNewWorkflow(worksteps: Workstep[]): Workflow {
-    return new Workflow(worksteps);
+  public updateWorkflow(
+    workflowToUpdate: Workflow,
+    name: string,
+    worksteps: Workstep[],
+    workgroupId: string,
+  ) {
+    workflowToUpdate.updateName(name);
+    workflowToUpdate.updateWorksteps(worksteps);
+    workflowToUpdate.updateWorkgroupId(workgroupId);
   }
 
-  throwIfDeleteWorkflowInputInvalid(_id: () => string) {
-    throw new Error('Method not implemented.');
-  }
+  public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
+    id: string,
+  ): Promise<Workflow> {
+    const workflowToDelete = await this.storageAgent.getWorkflowById(id);
 
-  deleteWorkflow(_id: () => string) {
-    throw new Error('Method not implemented.');
-  }
+    if (!workflowToDelete) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
 
-  updateWorkflow(_worksteps: Workstep[]) {
-    throw new Error('Method not implemented.');
-  }
-
-  throwIfUpdateWorkflowInputInvalid(_worksteps: Workstep[]) {
-    throw new Error('Method not implemented.');
+    return workflowToDelete;
   }
 }
