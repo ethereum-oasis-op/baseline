@@ -1,5 +1,5 @@
 import { PreciseProofs } from 'ew-precise-proofs-js';
-import { getLogger } from 'LogConfig';
+import { getLogger } from '../../../../../LogConfig';
 
 const log = getLogger();
 export class MerkleTree {
