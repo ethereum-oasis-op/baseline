@@ -1,5 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetWorkstepByIdQuery } from 'src/bri/workgroup/worksteps/capabilities/getWorkstepById/getWorkstepById.query';
+import { WorkflowDto } from '../../api/dtos/response/workflow.dto';
 import { GetWorkflowByIdQuery } from './getWorkflowById.query';
 
 @QueryHandler(GetWorkflowByIdQuery)
@@ -14,7 +15,9 @@ export class GetWorkflowByIdQueryHandler
     return {
       //TODO: Write generic mapper domainObject -> DTO
       id: workflow.id,
+      name: workflow.name,
       worksteps: workflow.worksteps,
+      workgroupId: workflow.workgroupId,
     } as WorkflowDto;
   }
 }

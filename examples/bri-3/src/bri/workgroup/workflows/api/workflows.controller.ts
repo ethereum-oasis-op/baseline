@@ -14,6 +14,8 @@ import { GetAllWorkflowsQuery } from '../capabilities/getAllWorkflows/getAllWork
 import { GetWorkflowByIdQuery } from '../capabilities/getWorkflowById/getWorkflowById.query';
 import { UpdateWorkflowCommand } from '../capabilities/updateWorkflow/updateWorkflow.command';
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
+import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
+import { WorkflowDto } from './dtos/response/workflow.dto';
 
 @Controller('workflows')
 export class WorkflowController {
@@ -35,7 +37,11 @@ export class WorkflowController {
   @Post()
   async createWorkflow(@Body() requestDto: CreateWorkflowDto): Promise<string> {
     return await this.commandBus.execute(
-      new CreateWorkflowCommand(requestDto.worksteps),
+      new CreateWorkflowCommand(
+        requestDto.name,
+        requestDto.worksteps,
+        requestDto.workgroupId,
+      ),
     );
   }
 
@@ -45,7 +51,12 @@ export class WorkflowController {
     @Body() requestDto: UpdateWorkflowDto,
   ): Promise<void> {
     return await this.commandBus.execute(
-      new UpdateWorkflowCommand(id, requestDto.worksteps),
+      new UpdateWorkflowCommand(
+        id,
+        requestDto.name,
+        requestDto.worksteps,
+        requestDto.workgroupId,
+      ),
     );
   }
 
