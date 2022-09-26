@@ -1,5 +1,5 @@
 import { PreciseProofs } from 'ew-precise-proofs-js';
-import { Logger } from "tslog";
+import { Logger } from 'tslog';
 const log: Logger = new Logger();
 
 export class MerkleTree {
@@ -21,7 +21,7 @@ export class MerkleTree {
       );
       this._root = PreciseProofs.getRootHash(merkleTree);
     } catch (e) {
-        log.error(`Init merkle tree error: ${e}`);
+      log.error(`Init merkle tree error: ${e}`);
     }
   }
 
