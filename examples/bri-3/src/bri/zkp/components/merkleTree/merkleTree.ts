@@ -1,7 +1,7 @@
 import { PreciseProofs } from 'ew-precise-proofs-js';
-import { Logger } from 'tslog';
-const log: Logger = new Logger();
+import { getLogger } from 'LogConfig';
 
+const log = getLogger();
 export class MerkleTree {
   private _leaves: PreciseProofs.Leaf[] = [];
   private _root: string;
