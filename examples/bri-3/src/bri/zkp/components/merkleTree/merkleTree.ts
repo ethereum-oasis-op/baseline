@@ -21,7 +21,7 @@ export class MerkleTree {
       );
       this._root = PreciseProofs.getRootHash(merkleTree);
     } catch (e) {
-        log.error(`Init merkle tree error: ${e}`);
+      log.error(`Init merkle tree error: ${e}`);
     }
   }
 
