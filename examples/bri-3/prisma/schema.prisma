@@ -18,13 +18,21 @@ model BpiSubject {
   publicKey   String
 }
 
-
 model Workstep {
-  id             String     @id @default(uuid())
+  id             String   @id @default(uuid())
   name           String
   version        String
   status         String
   workgroupId    String
   securityPolicy String
   privacyPolicy  String
+  workflow       Workflow @relation(fields: [workflowId], references: [id])
+  workflowId     String
+}
+
+model Workflow {
+  id          String     @id @default(uuid())
+  name        String
+  workgroupId String
+  worksteps   Workstep[]
 }
