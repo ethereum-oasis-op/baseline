@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { Workstep } from '../../worksteps/models/workstep';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 
@@ -9,7 +10,10 @@ import { Workflow } from '../models/workflow';
 @Injectable()
 export class WorkflowStorageAgent extends PrismaService {
   async getWorkflowById(id: string): Promise<Workflow> {
-    const workflowModel = await this.workflow.findUnique({ where: { id: id } });
+    const workflowModel = await this.workflow.findUnique({
+      where: { id: id },
+      include: { worksteps: true },
+    });
 
     if (!workflowModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
@@ -18,51 +22,130 @@ export class WorkflowStorageAgent extends PrismaService {
     return new Workflow( // TODO: Write generic mapper prismaModel -> domainObject
       workflowModel.id,
       workflowModel.name,
-      workflowModel.worksteps,
+      workflowModel.worksteps.map((w) => {
+        return new Workstep(
+          w.id,
+          w.name,
+          w.version,
+          w.status,
+          w.workgroupId,
+          w.securityPolicy,
+          w.privacyPolicy,
+        );
+      }),
       workflowModel.workgroupId,
     );
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
-    const workflowModels = await this.workflow.findMany();
+    const workflowModels = await this.workflow.findMany({
+      include: { worksteps: true },
+    });
     return workflowModels.map((w) => {
-      return new Workflow(w.id, w.name, w.worksteps, w.workgroupId);
+      return new Workflow(
+        w.id,
+        w.name,
+        w.worksteps.map((ws) => {
+          return new Workstep(
+            ws.id,
+            ws.name,
+            ws.version,
+            ws.status,
+            ws.workgroupId,
+            ws.securityPolicy,
+            ws.privacyPolicy,
+          );
+        }),
+        w.workgroupId,
+      );
     });
   }
 
   async createNewWorkflow(workflow: Workflow): Promise<Workflow> {
+    const workstepsData = workflow.worksteps?.map((w) => {
+      return {
+        id: w.id,
+        name: w.name,
+        version: w.version,
+        status: w.status,
+        workgroupId: w.workgroupId,
+        securityPolicy: w.securityPolicy,
+        privacyPolicy: w.privacyPolicy,
+      };
+    });
     const newWorkflowModel = await this.workflow.create({
-      // TODO: Write generic mapper domainObject -> prismaModel
       data: {
         id: workflow.id,
         name: workflow.name,
-        worksteps: workflow.worksteps,
+        worksteps: {
+          connect: workstepsData,
+        },
         workgroupId: workflow.workgroupId,
+      },
+      include: {
+        worksteps: true,
       },
     });
 
     return new Workflow(
       newWorkflowModel.id,
       newWorkflowModel.name,
-      newWorkflowModel.worksteps,
+      newWorkflowModel.worksteps.map((w) => {
+        return new Workstep(
+          w.id,
+          w.name,
+          w.version,
+          w.version,
+          w.workgroupId,
+          w.securityPolicy,
+          w.privacyPolicy,
+        );
+      }),
       newWorkflowModel.workgroupId,
     );
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
+    const workstepsData = workflow.worksteps?.map((w) => {
+      return {
+        id: w.id,
+        name: w.name,
+        version: w.version,
+        status: w.status,
+        workgroupId: w.workgroupId,
+        securityPolicy: w.securityPolicy,
+        privacyPolicy: w.privacyPolicy,
+      };
+    });
+
     const newWorkflowModel = await this.workflow.update({
       where: { id: workflow.id },
       data: {
         name: workflow.name,
-        worksteps: workflow.worksteps,
+        worksteps: {
+          connect: workstepsData,
+        },
         workgroupId: workflow.workgroupId,
+      },
+      include: {
+        worksteps: true,
       },
     });
 
     return new Workflow(
       newWorkflowModel.id,
       newWorkflowModel.name,
-      newWorkflowModel.worksteps,
+      newWorkflowModel.worksteps.map((ws) => {
+        return new Workstep(
+          ws.id,
+          ws.name,
+          ws.version,
+          ws.status,
+          ws.workgroupId,
+          ws.securityPolicy,
+          ws.privacyPolicy,
+        );
+      }),
       newWorkflowModel.workgroupId,
     );
   }
