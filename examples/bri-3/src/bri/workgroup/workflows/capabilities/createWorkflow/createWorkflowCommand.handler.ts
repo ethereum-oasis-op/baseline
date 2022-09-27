@@ -1,5 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { WorkflowAgent } from '../../agents/workflows.agent';
+import { WorkflowStorageAgent } from '../../agents/workflowsStorage.agent';
 import { CreateWorkflowCommand } from './createWorkflow.command';
 
 @CommandHandler(CreateWorkflowCommand)
@@ -13,7 +14,9 @@ export class CreateWorkflowCommandHandler
 
   async execute(command: CreateWorkflowCommand) {
     const newWorkflowCandidate = this.agent.createNewWorkflow(
+      command.name,
       command.worksteps,
+      command.workgroupId,
     );
 
     const newWorkflow = await this.storageAgent.createNewWorkflow(

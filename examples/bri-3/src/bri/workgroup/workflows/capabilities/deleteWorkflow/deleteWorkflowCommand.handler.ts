@@ -1,5 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { WorkflowAgent } from '../../agents/workflows.agent';
+import { WorkflowStorageAgent } from '../../agents/workflowsStorage.agent';
 import { DeleteWorkflowCommand } from './deleteWorkflow.command';
 
 @CommandHandler(DeleteWorkflowCommand)

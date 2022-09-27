@@ -1,5 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetWorkstepByIdQuery } from 'src/bri/workgroup/worksteps/capabilities/getWorkstepById/getWorkstepById.query';
+import { WorkflowStorageAgent } from '../../agents/workflowsStorage.agent';
 import { WorkflowDto } from '../../api/dtos/response/workflow.dto';
 import { GetWorkflowByIdQuery } from './getWorkflowById.query';
 

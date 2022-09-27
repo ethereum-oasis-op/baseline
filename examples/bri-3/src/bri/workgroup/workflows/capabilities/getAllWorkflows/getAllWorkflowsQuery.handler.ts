@@ -1,4 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { WorkflowStorageAgent } from '../../agents/workflowsStorage.agent';
 import { WorkflowDto } from '../../api/dtos/response/workflow.dto';
 import { GetAllWorkflowsQuery } from './getAllWorkflows.query';
 
@@ -15,7 +16,7 @@ export class GetAllWorkflowsQueryHandler
       return {
         id: w.id,
         name: w.name,
-        worksteps: w.workteps,
+        worksteps: w.worksteps,
         workgroupId: w.workgroupId,
       } as WorkflowDto;
     });
