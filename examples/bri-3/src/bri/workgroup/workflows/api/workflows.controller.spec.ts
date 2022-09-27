@@ -11,15 +11,33 @@ import { UpdateWorkflowCommandHandler } from '../capabilities/updateWorkflow/upd
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
+import { MockWorkflowStorageAgent } from '../agents/mockWorkflowStorage.agent';
+import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 
 describe('WorkflowsController', () => {
-  let wController: WorkflowController;
-  const requestDto = {
-    workflows: ['workflow1', 'workflow2', 'workflow3'],
+  let workflowController: WorkflowController;
+  // let worktepController: WorkstepController;
+
+  // const workstepRequestDto = {
+  //   name: 'name',
+  //   version: 'version',
+  //   status: 'status',
+  //   workgroupId: 'wgid',
+  //   securityPolicy: 'secPolicy',
+  //   privacyPolicy: 'privPolicy',
+  // } as CreateWorkstepDto;
+
+  const workflowRequestDto = {
+    name: 'name1',
+    worksteps: [],
+    workgroupId: 'workgroup1',
   } as CreateWorkflowDto;
 
   const createTestWorkflow = async (): Promise<string> => {
-    const workflowId = await wController.createWorkflow(requestDto);
+    const workflowId = await workflowController.createWorkflow(
+      workflowRequestDto,
+    );
     return workflowId;
   };
 
@@ -41,7 +59,7 @@ describe('WorkflowsController', () => {
       .useValue(new MockWorkflowStorageAgent())
       .compile();
 
-    wController = app.get<WorkflowController>(WorkflowController);
+    workflowController = app.get<WorkflowController>(WorkflowController);
 
     await app.init();
   });
@@ -53,7 +71,7 @@ describe('WorkflowsController', () => {
 
       // Act and assert
       expect(async () => {
-        await wController.getWorkflowById(nonExistentId);
+        await workflowController.getWorkflowById(nonExistentId);
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
@@ -62,18 +80,20 @@ describe('WorkflowsController', () => {
       const workflowId = await createTestWorkflow();
 
       // Act
-      const createdWorkflow = await wController.getWorkflowById(workflowId);
+      const createdWorkflow = await workflowController.getWorkflowById(
+        workflowId,
+      );
 
       // Assert
       expect(createdWorkflow.id).toEqual(workflowId);
-      expect(createdWorkflow.workflows).toEqual(requestDto.workflows);
+      expect(createdWorkflow.worksteps).toEqual(workflowRequestDto.worksteps);
     });
   });
 
   describe('getAllWorkflows', () => {
     it('should return empty array if no workflows', async () => {
       // Act
-      const workflows = await wController.getAllWorkflows();
+      const workflows = await workflowController.getAllWorkflows();
 
       // Assert
       expect(workflows).toHaveLength(0);
@@ -83,17 +103,21 @@ describe('WorkflowsController', () => {
       // Arrange
       const workflowId = await createTestWorkflow();
       const requestDto2 = {
-        workflows: ['workflow3', 'workflow2', 'workflow1'],
+        name: 'name2',
+        worksteps: [],
+        workgroupId: 'workgroupId2',
       } as CreateWorkflowDto;
-      const newWorkflowId2 = await wController.createWorkflow(requestDto2);
+      const newWorkflowId2 = await workflowController.createWorkflow(
+        requestDto2,
+      );
 
       // Act
-      const workflows = await wController.getAllWorkflows();
+      const workflows = await workflowController.getAllWorkflows();
 
       // Assert
       expect(workflows.length).toEqual(2);
       expect(workflows[0].id).toEqual(workflowId);
-      expect(workflows[0].worksteps).toEqual(requestDto.worksteps);
+      expect(workflows[0].worksteps).toEqual(workflowRequestDto.worksteps);
       expect(workflows[1].id).toEqual(newWorkflowId2);
       expect(workflows[1].worksteps).toEqual(requestDto2.worksteps);
     });
@@ -101,13 +125,13 @@ describe('WorkflowsController', () => {
 
   describe('createWorkflow', () => {
     it('should return new uuid from the created workstep when all necessary params provided', async () => {
-      let workflows = await wController.getAllWorkflows();
+      let workflows = await workflowController.getAllWorkflows();
       expect(workflows).toEqual([]);
 
       // Arrange
       // Act
       const workflowId = await createTestWorkflow();
-      workflows = await wController.getAllWorkflows();
+      workflows = await workflowController.getAllWorkflows();
 
       // Assert
       expect(workflows).toHaveLength(1);
@@ -120,30 +144,36 @@ describe('WorkflowsController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-      const requestDto: UpdateWorkstepDto = {
-        workflows: ['workflow3', 'workflow2', 'workflow1'],
+      const requestDto: UpdateWorkflowDto = {
+        name: 'name1',
+        worksteps: [],
+        workgroupId: 'workgroupId1',
       };
 
       // Act and assert
       expect(async () => {
-        await wController.updateWorkflow(nonExistentId, requestDto);
+        await workflowController.updateWorkflow(nonExistentId, requestDto);
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
       const workflowId = await createTestWorkflow();
-      const updateRequestDto: UpdateWorkstepDto = {
-        workflows: ['workflow3', 'workflow2', 'workflow1'],
+      const updateRequestDto: UpdateWorkflowDto = {
+        name: 'name1',
+        worksteps: [],
+        workgroupId: 'workgroupId1',
       };
 
       // Act
-      await wController.updateWorkflow(workflowId, updateRequestDto);
+      await workflowController.updateWorkflow(workflowId, updateRequestDto);
 
       // Assert
-      const updatedWorkflow = await wController.getWorkflowById(workflowId);
+      const updatedWorkflow = await workflowController.getWorkflowById(
+        workflowId,
+      );
       expect(updatedWorkflow.id).toEqual(workflowId);
-      expect(updatedWorkflow.workflow).toEqual(updateRequestDto.workflow);
+      expect(updatedWorkflow.worksteps).toEqual(updateRequestDto.worksteps);
     });
   });
 
@@ -153,7 +183,7 @@ describe('WorkflowsController', () => {
       const nonExistentId = '123';
       // Act and assert
       expect(async () => {
-        await wController.deleteWorkflow(nonExistentId);
+        await workflowController.deleteWorkflow(nonExistentId);
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
@@ -162,11 +192,11 @@ describe('WorkflowsController', () => {
       const workflowId = await createTestWorkflow();
 
       // Act
-      await wController.deleteWorkflow(workflowId);
+      await workflowController.deleteWorkflow(workflowId);
 
       // Assert
       expect(async () => {
-        await wController.getWorkflowById(workflowId);
+        await workflowController.getWorkflowById(workflowId);
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
   });
