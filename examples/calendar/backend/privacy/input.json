@@ -1,6 +1,0 @@
-{
-  "availableTimesSetterStart": [1, 2, 3, 4, 5],
-  "availableTimesSetterEnd": [21, 22, 23, 24, 25],
-  "availableTimeGetterStart": [1, 2, 3, 4, 5],
-  "availableTimeGetterEnd": [21, 22, 23, 24, 25]
-}

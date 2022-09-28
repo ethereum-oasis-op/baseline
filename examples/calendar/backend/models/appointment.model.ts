@@ -1,10 +1,9 @@
 import { Model } from "sequelize";
 
 export class Appointment extends Model {
-  public id!: number;
-  public fromUser!: string;
-  public toUser!: string;
-  public timeStart!: number;
-  public timeEnd!: number;
-  public status!: string;
+	public id!: number;
+	public fromUser!: number;
+	public toUser?: number;
+	public status?: string;
+	public secret?: string;
 }
