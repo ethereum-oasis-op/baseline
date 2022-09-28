@@ -1,5 +1,5 @@
-#proUBC
-*An open source connector for SAP ABAP to PRVD Baseline aka BRI-1*
+# proUBC
+*An open source, SAP ABAP connector for PRVD Baseline aka BRI-1*
 
 proUBC is an open source connector to make Baseline Protocol integration possible in SAP ABAP systems - such as S/4 HANA or SAP BTP ABAP Environment
 
