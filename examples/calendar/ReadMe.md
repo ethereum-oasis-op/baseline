@@ -53,19 +53,11 @@ npm start
 
 ### Backend Tasks
 
-<<<<<<< HEAD
 -   [x] User Creation API
 -   [x] User Authentication API
 -   [x] Fetch user via ID API
 -   [x] User Set Time Availability API
 -   [x] Schedule Appointment API
-=======
-- [x] User Creation API
-- [x] User Authentication API
-- [x] Fetch user via ID API
-- [x] User Set Time Availability API
-- [ ] Schedule Appointment API
->>>>>>> 3eeadcce43d6b090ffe576edb27c8c5a12a0c0d9
 
 ### Privacy Tasks
 
