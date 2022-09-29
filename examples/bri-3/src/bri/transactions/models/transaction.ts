@@ -1,4 +1,5 @@
 import { BpiAccount } from "../../identity/bpiAccounts/models/bpiAccount";
+import { TransactionStatus } from "./transactionStatus.enum";
 
 export class Transaction {
   private _transactionId: string;
@@ -9,7 +10,7 @@ export class Transaction {
   private _to: BpiAccount;
   private _payload: string;
   private _signature: string;
-  private _status: number;
+  private _status: TransactionStatus;
 
 
   constructor(
@@ -21,7 +22,7 @@ export class Transaction {
     to: BpiAccount,
     payload: string,
     signature: string,
-    status: number
+    status: TransactionStatus
   ) {
     this._transactionId = transactionId;
     this._nonce = nonce;
@@ -66,7 +67,7 @@ export class Transaction {
     return this._signature;
   }
 
-  public get status(): number {
+  public get status(): TransactionStatus {
     return this._status;
   }
 }
