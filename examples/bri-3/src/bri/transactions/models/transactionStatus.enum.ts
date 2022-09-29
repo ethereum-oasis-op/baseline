@@ -3,5 +3,5 @@ export enum TransactionStatus {
   Processing,
   Executed,
   Aborted,
-  Invalid
+  Invalid,
 }
