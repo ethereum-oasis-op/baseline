@@ -1,10 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
 import {
+  DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
-  WRONG_STATUS_ERR_MESSAGE,
+  UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
@@ -50,7 +55,7 @@ export class TransactionAgent {
     }
 
     if (transactionToUpdate.status != TransactionStatus.Initialized) {
-      throw new NotFoundException(WRONG_STATUS_ERR_MESSAGE);
+      throw new BadRequestException(UPDATE_WRONG_STATUS_ERR_MESSAGE);
     }
 
     return transactionToUpdate;
@@ -71,6 +76,13 @@ export class TransactionAgent {
 
     if (!transactionToDelete) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
+    if (
+      transactionToDelete.status == TransactionStatus.Processing ||
+      transactionToDelete.status == TransactionStatus.Executed
+    ) {
+      throw new BadRequestException(DELETE_WRONG_STATUS_ERR_MESSAGE);
     }
 
     return transactionToDelete;
