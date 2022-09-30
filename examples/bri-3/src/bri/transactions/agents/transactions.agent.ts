@@ -9,7 +9,7 @@ import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 @Injectable()
 export class TransactionAgent {
   constructor(private repo: TransactionStorageAgent) {}
-  public throwIfCreateTransactionInputInvalid(name: string) {
+  public throwIfCreateTransactionInputInvalid() {
     return true;
   }
 
