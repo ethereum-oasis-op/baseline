@@ -69,4 +69,10 @@ export class Transaction {
   public get status(): TransactionStatus {
     return this._status;
   }
+
+  public updatePayload(payload: string, signature: string): void {
+    // TODO: Verify signature
+    this._payload = payload;
+    this._signature = signature;
+  }
 }
