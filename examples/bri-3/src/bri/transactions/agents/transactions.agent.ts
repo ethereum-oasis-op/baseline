@@ -2,7 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import {
+  NOT_FOUND_ERR_MESSAGE,
+  WRONG_STATUS_ERR_MESSAGE,
+} from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 
@@ -44,6 +47,10 @@ export class TransactionAgent {
 
     if (!transactionToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
+    if (transactionToUpdate.status != TransactionStatus.Initialized) {
+      throw new NotFoundException(WRONG_STATUS_ERR_MESSAGE);
     }
 
     return transactionToUpdate;
