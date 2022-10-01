@@ -21,7 +21,6 @@ import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
-  // TODO: DTO validation
   @Get('/:id')
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));

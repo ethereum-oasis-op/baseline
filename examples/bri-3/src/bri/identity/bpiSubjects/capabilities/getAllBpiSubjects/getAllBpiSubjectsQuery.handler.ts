@@ -13,8 +13,6 @@ export class GetAllBpiSubjectsQueryHandler
 
   async execute() {
     const bpiSubjects = await this.storageAgent.getAllBpiSubjects();
-    console.log(bpiSubjects);
-
     return bpiSubjects.map((bp) => {
       return Mapper.map(bp, getType<BpiSubjectDto>()) as BpiSubjectDto;
     });

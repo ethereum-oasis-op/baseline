@@ -10,6 +10,7 @@ import Mapper from '../../../../bri/utils/mapper';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
+  
   async getBpiSubjectById(id: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.bpiSubject.findUnique({
       where: { id },
@@ -23,30 +24,26 @@ export class BpiSubjectStorageAgent extends PrismaService {
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.bpiSubject.findMany();
+    console.log(bpiSubjectModels)
     return bpiSubjectModels.map((bpiSubjectModel) => {
       return Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
     });
   }
 
-  async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const { name, description, publicKey, type } = bpiSubject;
+  async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {    
     const newBpiSubjectModel = await this.bpiSubject.create({
-      data: { name, description, publicKey, type },
+      data : Mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject
     });
 
     return Mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const { id, name, description, publicKey, type } = bpiSubject;
     const updatedBpiSubjectModel = await this.bpiSubject.update({
-      where: { id },
-      data: { name, description, publicKey, type },
+      where: { id : bpiSubject.id },
+      data: Mapper.map(bpiSubject, getType<BpiSubject>(), {exclude : ['id']}) as BpiSubject,
     });
-    return Mapper.map(
-      updatedBpiSubjectModel,
-      getType<BpiSubject>(),
-    ) as BpiSubject;
+    return Mapper.map(updatedBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
