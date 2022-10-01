@@ -10,7 +10,6 @@ import Mapper from '../../../utils/mapper';
 // does not have to care about the ORM.
 @Injectable()
 export class WorkstepStorageAgent extends PrismaService {
-
   constructor(private readonly mapper: Mapper) {
     super();
   }
@@ -46,7 +45,10 @@ export class WorkstepStorageAgent extends PrismaService {
         exclude: ['id'],
       }) as Workstep,
     });
-    return this.mapper.map(updatedWorkstepModel, getType<Workstep>()) as Workstep;
+    return this.mapper.map(
+      updatedWorkstepModel,
+      getType<Workstep>(),
+    ) as Workstep;
   }
 
   async deleteWorkstep(workstep: Workstep): Promise<void> {

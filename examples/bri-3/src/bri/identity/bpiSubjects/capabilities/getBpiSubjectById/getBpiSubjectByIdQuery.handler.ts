@@ -9,12 +9,16 @@ import Mapper from '../../../../utils/mapper';
 export class GetBpiSubjectByIdQueryHandler
   implements IQueryHandler<GetBpiSubjectByIdQuery>
 {
-  constructor(private readonly storageAgent: BpiSubjectStorageAgent, 
-    private readonly mapper: Mapper
-    ) {}
+  constructor(
+    private readonly storageAgent: BpiSubjectStorageAgent,
+    private readonly mapper: Mapper,
+  ) {}
 
   async execute(query: GetBpiSubjectByIdQuery) {
     const bpiSubject = await this.storageAgent.getBpiSubjectById(query.id);
-    return this.mapper.map(bpiSubject, getType<BpiSubjectDto>()) as BpiSubjectDto;
+    return this.mapper.map(
+      bpiSubject,
+      getType<BpiSubjectDto>(),
+    ) as BpiSubjectDto;
   }
 }

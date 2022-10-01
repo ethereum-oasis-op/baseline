@@ -9,9 +9,10 @@ import Mapper from '../../../../utils/mapper';
 export class GetAllBpiSubjectsQueryHandler
   implements IQueryHandler<GetAllBpiSubjectsQuery>
 {
-  constructor(private readonly storageAgent: BpiSubjectStorageAgent,
-    private readonly mapper: Mapper
-    ) {}
+  constructor(
+    private readonly storageAgent: BpiSubjectStorageAgent,
+    private readonly mapper: Mapper,
+  ) {}
 
   async execute() {
     const bpiSubjects = await this.storageAgent.getAllBpiSubjects();

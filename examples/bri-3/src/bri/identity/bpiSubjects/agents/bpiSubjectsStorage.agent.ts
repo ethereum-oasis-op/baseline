@@ -10,7 +10,6 @@ import Mapper from '../../../../bri/utils/mapper';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
-
   constructor(private readonly mapper: Mapper) {
     super();
   }
@@ -35,7 +34,10 @@ export class BpiSubjectStorageAgent extends PrismaService {
     const bpiSubjectModels = await this.bpiSubject.findMany();
     console.log(bpiSubjectModels);
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
+      return this.mapper.map(
+        bpiSubjectModel,
+        getType<BpiSubject>(),
+      ) as BpiSubject;
     });
   }
 
@@ -44,7 +46,10 @@ export class BpiSubjectStorageAgent extends PrismaService {
       data: this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
     });
 
-    return this.mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
+    return this.mapper.map(
+      newBpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {

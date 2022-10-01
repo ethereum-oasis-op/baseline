@@ -29,7 +29,7 @@ export const QueryHandlers = [
     ...QueryHandlers,
     WorkstepAgent,
     WorkstepStorageAgent,
-    Mapper
+    Mapper,
   ],
 })
 export class WorkstepsModule {}

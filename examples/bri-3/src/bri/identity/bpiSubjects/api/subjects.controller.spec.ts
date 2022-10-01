@@ -30,7 +30,7 @@ describe('SubjectController', () => {
         GetBpiSubjectByIdQueryHandler,
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
-        Mapper
+        Mapper,
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
