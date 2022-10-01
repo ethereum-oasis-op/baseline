@@ -10,6 +10,11 @@ import Mapper from '../../../../bri/utils/mapper';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
+
+  constructor(private readonly mapper: Mapper) {
+    super();
+  }
+
   async getBpiSubjectById(id: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.bpiSubject.findUnique({
       where: { id },
@@ -18,7 +23,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    const r: BpiSubject = Mapper.map(
+    const r: BpiSubject = this.mapper.map(
       bpiSubjectModel,
       getType<BpiSubject>(),
     ) as BpiSubject;
@@ -30,26 +35,26 @@ export class BpiSubjectStorageAgent extends PrismaService {
     const bpiSubjectModels = await this.bpiSubject.findMany();
     console.log(bpiSubjectModels);
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
+      return this.mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
     });
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const newBpiSubjectModel = await this.bpiSubject.create({
-      data: Mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
+      data: this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
     });
 
-    return Mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
+    return this.mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const updatedBpiSubjectModel = await this.bpiSubject.update({
       where: { id: bpiSubject.id },
-      data: Mapper.map(bpiSubject, getType<BpiSubject>(), {
+      data: this.mapper.map(bpiSubject, getType<BpiSubject>(), {
         exclude: ['id'],
       }) as BpiSubject,
     });
-    return Mapper.map(
+    return this.mapper.map(
       updatedBpiSubjectModel,
       getType<BpiSubject>(),
     ) as BpiSubject;

@@ -10,6 +10,11 @@ import Mapper from '../../../utils/mapper';
 // does not have to care about the ORM.
 @Injectable()
 export class WorkstepStorageAgent extends PrismaService {
+
+  constructor(private readonly mapper: Mapper) {
+    super();
+  }
+
   async getWorkstepById(id: string): Promise<Workstep> {
     const workstepModel = await this.workstep.findUnique({ where: { id } });
 
@@ -17,31 +22,31 @@ export class WorkstepStorageAgent extends PrismaService {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return Mapper.map(workstepModel, getType<Workstep>()) as Workstep;
+    return this.mapper.map(workstepModel, getType<Workstep>()) as Workstep;
   }
 
   async getAllWorksteps(): Promise<Workstep[]> {
     const workstepModels = await this.workstep.findMany();
     return workstepModels.map((workstepModel) => {
-      return Mapper.map(workstepModel, getType<Workstep>()) as Workstep;
+      return this.mapper.map(workstepModel, getType<Workstep>()) as Workstep;
     });
   }
 
   async createNewWorkstep(workstep: Workstep): Promise<Workstep> {
     const newWorkstepModel = await this.workstep.create({
-      data: Mapper.map(workstep, getType<Workstep>()) as Workstep,
+      data: this.mapper.map(workstep, getType<Workstep>()) as Workstep,
     });
-    return Mapper.map(newWorkstepModel, getType<Workstep>()) as Workstep;
+    return this.mapper.map(newWorkstepModel, getType<Workstep>()) as Workstep;
   }
 
   async updateWorkstep(workstep: Workstep): Promise<Workstep> {
     const updatedWorkstepModel = await this.workstep.update({
       where: { id: workstep.id },
-      data: Mapper.map(workstep, getType<Workstep>(), {
+      data: this.mapper.map(workstep, getType<Workstep>(), {
         exclude: ['id'],
       }) as Workstep,
     });
-    return Mapper.map(updatedWorkstepModel, getType<Workstep>()) as Workstep;
+    return this.mapper.map(updatedWorkstepModel, getType<Workstep>()) as Workstep;
   }
 
   async deleteWorkstep(workstep: Workstep): Promise<void> {

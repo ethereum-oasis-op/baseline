@@ -8,6 +8,7 @@ import { GetAllWorkstepsQueryHandler } from './capabilities/getAllWorksteps/getA
 import { GetWorkstepByIdQueryHandler } from './capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
 import { UpdateWorkstepCommandHandler } from './capabilities/updateWorkstep/updateWorkstep.command.handler';
 import { WorkstepStorageAgent } from './agents/workstepsStorage.agent';
+import Mapper from '../../utils/mapper';
 
 export const CommandHandlers = [
   CreateWorkstepCommandHandler,
@@ -28,6 +29,7 @@ export const QueryHandlers = [
     ...QueryHandlers,
     WorkstepAgent,
     WorkstepStorageAgent,
+    Mapper
   ],
 })
 export class WorkstepsModule {}

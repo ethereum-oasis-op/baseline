@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { Type, TypeKind } from 'tst-reflect';
 import { AccessModifier } from './types/access-modifiers';
 import Options from './types/options';
@@ -7,6 +8,7 @@ import Options from './types/options';
  *
  * @author : Manik-Jain
  */
+@Injectable()
 export default class Mapper {
   /**
    * type convert from provided input to provided Type
@@ -21,7 +23,7 @@ export default class Mapper {
    * @param options
    * @returns generated object
    */
-  static map(from: any, object: Type, options?: Options) {
+  map(from: any, object: Type, options?: Options) {
     if (!from) throw new Error('undefined source');
     const supportedPrefix = ['$', '_'];
 
