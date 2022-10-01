@@ -23,7 +23,7 @@ export default class Mapper {
    */
   static map(from: any, object: Type, options?: Options) {
     if (!from) throw new Error('undefined source');    
-    const supportedPrefix = ['$', '_']
+    const supportedPrefix = ['$', '_']    
 
     const result = {};
     const mismatchedKeys = [];
@@ -48,17 +48,20 @@ export default class Mapper {
         });
       }
 
-      console.log(`Type conversion successful to ${object.name}`);
-      if (mismatchedKeys.length > 0) {
-        console.log(
-          `Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`,
-        );
+      if(process.env.DEBUG === 'true') {
+        console.log(`Type conversion successful to ${object.name}`);
+        if (mismatchedKeys.length > 0) {
+          console.log(
+            `Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`,
+          );
+        }
       }
 
       return result;
     } else if (object.kind === TypeKind.Class) {
       const constructorParams = object.getConstructors()[0].getParameters();
       const classProperties = object.getProperties().filter(property => property.accessModifier === 2).map(property => property.name)
+      
       const mandatoryParams = constructorParams
         .filter((param) => param.optional === false)
         .map((param) => param.name);
@@ -102,12 +105,15 @@ export default class Mapper {
       }
     }
 
-    console.log(`Type conversion successful to ${object.name}`);
-    if (mismatchedKeys.length > 0) {
-      console.log(
-        `Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`,
-      );
-    }
+    if(process.env.DEBUG === 'true') {
+      console.log(`Type conversion successful to ${object.name}`);
+      if (mismatchedKeys.length > 0) {
+        console.log(
+          `Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`,
+        );
+      }
+    } 
+
     return result;
   }
 }
