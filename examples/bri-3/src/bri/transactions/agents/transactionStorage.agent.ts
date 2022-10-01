@@ -51,8 +51,8 @@ export class TransactionStorageAgent extends PrismaService {
         nonce: transaction.nonce,
         workflowInstanceId: transaction.workflowInstanceId,
         workstepInstanceId: transaction.workstepInstanceId,
-        from: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
-        to: null, // TODO: transactionModel.to once BpiAccount in the prisma schema,
+        from: '', // TODO: transactionModel.from once BpiAccount in the prisma schema,
+        to: '', // TODO: transactionModel.to once BpiAccount in the prisma schema,
         payload: transaction.payload,
         signature: transaction.signature,
         status: transaction.status,
@@ -76,14 +76,8 @@ export class TransactionStorageAgent extends PrismaService {
     const newTransactionModel = await this.transaction.update({
       where: { transactionId: transaction.transactionId },
       data: {
-        nonce: transaction.nonce,
-        workflowInstanceId: transaction.workflowInstanceId,
-        workstepInstanceId: transaction.workstepInstanceId,
-        from: null, // TODO: newTransactionModel.from once BpiAccount in the prisma schema,
-        to: null, // TODO: newTransactionModel.to once BpiAccount in the prisma schema,
         payload: transaction.payload,
         signature: transaction.signature,
-        status: transaction.status,
       },
     });
 
