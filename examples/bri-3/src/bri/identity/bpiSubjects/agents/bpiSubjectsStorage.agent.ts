@@ -22,12 +22,10 @@ export class BpiSubjectStorageAgent extends PrismaService {
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    const r: BpiSubject = this.mapper.map(
+    return this.mapper.map(
       bpiSubjectModel,
       getType<BpiSubject>(),
     ) as BpiSubject;
-    console.log(r);
-    return r;
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
