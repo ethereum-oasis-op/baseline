@@ -14,7 +14,7 @@ export class UpdateBpiSubjectCommandHandler
   ) {}
 
   async execute(command: UpdateBpiSubjectCommand) {
-    const bpiSubjectToUpdate : BpiSubject =
+    const bpiSubjectToUpdate: BpiSubject =
       await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.id,
       );

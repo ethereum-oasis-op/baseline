@@ -10,7 +10,6 @@ import Mapper from '../../../../bri/utils/mapper';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
-  
   async getBpiSubjectById(id: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.bpiSubject.findUnique({
       where: { id },
@@ -19,22 +18,25 @@ export class BpiSubjectStorageAgent extends PrismaService {
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    const r: BpiSubject = Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
-    console.log(r)
-    return r
+    const r: BpiSubject = Mapper.map(
+      bpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
+    console.log(r);
+    return r;
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.bpiSubject.findMany();
-    console.log(bpiSubjectModels)    
+    console.log(bpiSubjectModels);
     return bpiSubjectModels.map((bpiSubjectModel) => {
       return Mapper.map(bpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
     });
   }
 
-  async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {       
+  async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const newBpiSubjectModel = await this.bpiSubject.create({
-      data : Mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject
+      data: Mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
     });
 
     return Mapper.map(newBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
@@ -42,10 +44,15 @@ export class BpiSubjectStorageAgent extends PrismaService {
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const updatedBpiSubjectModel = await this.bpiSubject.update({
-      where: { id : bpiSubject.id },
-      data: Mapper.map(bpiSubject, getType<BpiSubject>(), {exclude : ['id']}) as BpiSubject,
+      where: { id: bpiSubject.id },
+      data: Mapper.map(bpiSubject, getType<BpiSubject>(), {
+        exclude: ['id'],
+      }) as BpiSubject,
     });
-    return Mapper.map(updatedBpiSubjectModel, getType<BpiSubject>()) as BpiSubject;
+    return Mapper.map(
+      updatedBpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {

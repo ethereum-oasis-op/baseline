@@ -36,8 +36,10 @@ export class WorkstepStorageAgent extends PrismaService {
 
   async updateWorkstep(workstep: Workstep): Promise<Workstep> {
     const updatedWorkstepModel = await this.workstep.update({
-      where: { id : workstep.id },
-      data: Mapper.map(workstep, getType<Workstep>(), {exclude : ['id'] }) as Workstep,
+      where: { id: workstep.id },
+      data: Mapper.map(workstep, getType<Workstep>(), {
+        exclude: ['id'],
+      }) as Workstep,
     });
     return Mapper.map(updatedWorkstepModel, getType<Workstep>()) as Workstep;
   }

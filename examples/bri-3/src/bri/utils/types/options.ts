@@ -1,4 +1,4 @@
 export default interface Options {
-    opts? : any;
-    exclude? : any;
+  opts?: any;
+  exclude?: any;
 }

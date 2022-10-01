@@ -186,13 +186,12 @@ describe('SubjectController', () => {
       const updatedBpiSubject = await sController.getBpiSubjectById(
         newBpiSubjectId,
       );
-      
+
       //TODO : [MJ] fix this with ttsc
       // expect(updatedBpiSubject.id).toEqual(newBpiSubjectId);
       // expect(updatedBpiSubject.name).toEqual(updateRequestDto.name);
       // expect(updatedBpiSubject.description).toEqual(updateRequestDto.desc);
       // expect(updatedBpiSubject.publicKey).toEqual(updateRequestDto.publicKey);
-
     });
   });
 
