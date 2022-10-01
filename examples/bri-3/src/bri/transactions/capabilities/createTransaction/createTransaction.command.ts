@@ -1,5 +1,3 @@
-import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
-
 export class CreateTransactionCommand {
   constructor(
     public readonly transactionId: string,
