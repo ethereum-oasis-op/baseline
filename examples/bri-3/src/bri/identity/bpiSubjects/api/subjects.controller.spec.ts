@@ -13,6 +13,7 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectController } from './subjects.controller';
+import Mapper from '../../../utils/mapper';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
@@ -29,6 +30,7 @@ describe('SubjectController', () => {
         GetBpiSubjectByIdQueryHandler,
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
+        Mapper
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
