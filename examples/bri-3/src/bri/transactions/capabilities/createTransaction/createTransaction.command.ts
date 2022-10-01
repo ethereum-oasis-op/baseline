@@ -6,8 +6,8 @@ export class CreateTransactionCommand {
     public readonly nonce: number,
     public readonly workflowInstanceId: string,
     public readonly workstepInstanceId: string,
-    public readonly from: BpiAccount,
-    public readonly to: BpiAccount,
+    public readonly fromAccountId: string,
+    public readonly toAccountId: string,
     public readonly payload: string,
     public readonly signature: string,
   ) {}
