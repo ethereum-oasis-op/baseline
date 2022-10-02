@@ -14,7 +14,7 @@ export class BpiAccountAgent {
     return true;
   }
 
-  public createNewExternalBpiAccount(nonce: string): BpiAccount {
+  public createNewBpiAccount(nonce: string): BpiAccount {
     return new BpiAccount(v4(), nonce, []);
   }
 
