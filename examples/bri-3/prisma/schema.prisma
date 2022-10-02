@@ -18,6 +18,11 @@ model BpiSubject {
   publicKey   String
 }
 
+model BpiAccount {
+  id    String @id @default(uuid())
+  nonce String
+}
+
 
 model Workstep {
   id             String     @id @default(uuid())
