@@ -1,11 +1,11 @@
-import { IsNotEmpty } from 'class-validator';
-import { Workstep } from 'src/bri/workgroup/worksteps/models/workstep';
+import { ArrayNotEmpty, IsNotEmpty } from 'class-validator';
 
 export class CreateWorkflowDto {
   @IsNotEmpty()
   name: string;
 
-  worksteps: Workstep[];
+  @ArrayNotEmpty()
+  workstepIds: string[];
 
   @IsNotEmpty()
   workgroupId: string;
