@@ -41,6 +41,25 @@ export class WorkstepStorageAgent extends PrismaService {
     });
   }
 
+  async getMatchingWorkstepsById(ids: string[]): Promise<Workstep[]> {
+    const workstepModels = await this.workstep.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
+    return workstepModels.map((w) => {
+      return new Workstep(
+        w.id,
+        w.name,
+        w.version,
+        w.status,
+        w.workgroupId,
+        w.securityPolicy,
+        w.privacyPolicy,
+      );
+    });
+  }
+
   async createNewWorkstep(workstep: Workstep): Promise<Workstep> {
     const newWorkstepModel = await this.workstep.create({
       // TODO: Write generic mapper domainObject -> prismaModel
