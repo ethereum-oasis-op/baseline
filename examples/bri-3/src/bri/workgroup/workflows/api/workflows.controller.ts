@@ -39,8 +39,8 @@ export class WorkflowController {
     return await this.commandBus.execute(
       new CreateWorkflowCommand(
         requestDto.name,
-        requestDto.worksteps,
         requestDto.workgroupId,
+        requestDto.workstepIds,
       ),
     );
   }
@@ -54,7 +54,7 @@ export class WorkflowController {
       new UpdateWorkflowCommand(
         id,
         requestDto.name,
-        requestDto.worksteps,
+        requestDto.workstepIds,
         requestDto.workgroupId,
       ),
     );
