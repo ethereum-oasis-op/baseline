@@ -31,10 +31,6 @@ OASIS employs key personnel that support all the open standards and open source 
 
 The technical steering committee (TSC) is accountable to the Project Governance Board for managing conflicts on merges and Core Dev self-organization. It also governs the allocation of grant money. And it meets regularly to set technical roadmaps and ensure progress of the community toward the ubiquitous implementation of the baseline protocol in systems of record everywhere.
 
-On October 27, 2021, the following people were voted in as the TSC through October 2022 and the date of the next election's results.
-
-During Summer 2022, former Co-Chair of the Baseline TSC John Wolpert (Consensys Mesh) stepped down for personal reasons. Sonal Patel was elected to serve the remainder of the term in his place.
-
 | Name                                                                               | Company                         |
 | ---------------------------------------------------------------------------------- | ------------------------------- |
 | [**Ryan Fisch**](https://www.linkedin.com/in/ryanfisch/)\*\*\*\*                   | End-Labs                        |
