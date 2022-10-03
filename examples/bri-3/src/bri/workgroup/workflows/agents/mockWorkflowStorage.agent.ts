@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class MockWorkflowStorageAgent {
   async getWorkflowById(id: string): Promise<Workflow> {
     const workflow = this.workflowsStore.find((ws) => ws.id === id);
     if (!workflow) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
     return workflow;
   }
@@ -28,7 +28,6 @@ export class MockWorkflowStorageAgent {
     );
 
     this.workflowsStore.push(createdWs);
-
     return Promise.resolve(createdWs);
   }
 

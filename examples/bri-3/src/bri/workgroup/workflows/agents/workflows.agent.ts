@@ -2,12 +2,33 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Workstep } from '../../worksteps/models/workstep';
 import { Workflow } from '../models/workflow';
 import { v4 as uuidv4 } from 'uuid';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import {
+  WORKFLOW_NOT_FOUND_ERR_MESSAGE,
+  WORKSTEP_NOT_FOUND_ERR_MESSAGE,
+} from '../api/err.messages';
 import { WorkflowStorageAgent } from './workflowsStorage.agent';
+import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 
 @Injectable()
 export class WorkflowAgent {
-  constructor(private storageAgent: WorkflowStorageAgent) {}
+  constructor(
+    private workflowStorageAgent: WorkflowStorageAgent,
+    private WorkstepStorageAgent: WorkstepStorageAgent,
+  ) {}
+
+  public async fetchWorkstepCandidatesForWorkflowAndThrowIfExistenceValidationFails(
+    workstepIds: string[],
+  ): Promise<Workstep[]> {
+    const worksteps = await this.WorkstepStorageAgent.getMatchingWorkstepsById(
+      workstepIds,
+    );
+
+    if (Array.isArray(worksteps) && !worksteps.length) {
+      throw new NotFoundException(WORKSTEP_NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return worksteps;
+  }
 
   public createNewWorkflow(
     name: string,
@@ -20,10 +41,12 @@ export class WorkflowAgent {
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
   ): Promise<Workflow> {
-    const workflowToUpdate = await this.storageAgent.getWorkflowById(id);
+    const workflowToUpdate = await this.workflowStorageAgent.getWorkflowById(
+      id,
+    );
 
     if (!workflowToUpdate) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
     return workflowToUpdate;
@@ -43,10 +66,12 @@ export class WorkflowAgent {
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
     id: string,
   ): Promise<Workflow> {
-    const workflowToDelete = await this.storageAgent.getWorkflowById(id);
+    const workflowToDelete = await this.workflowStorageAgent.getWorkflowById(
+      id,
+    );
 
     if (!workflowToDelete) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
     return workflowToDelete;

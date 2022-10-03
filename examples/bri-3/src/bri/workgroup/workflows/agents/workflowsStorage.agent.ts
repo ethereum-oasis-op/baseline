@@ -1,12 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Workstep } from '../../worksteps/models/workstep';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 
-// Storage Agents are the only places that talk the Prisma language of models.
-// They are always mapped to and from domain objects so that the business layer of the application
-// does not have to care about the ORM.
 @Injectable()
 export class WorkflowStorageAgent extends PrismaService {
   async getWorkflowById(id: string): Promise<Workflow> {
@@ -16,10 +13,10 @@ export class WorkflowStorageAgent extends PrismaService {
     });
 
     if (!workflowModel) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new Workflow( // TODO: Write generic mapper prismaModel -> domainObject
+    return new Workflow(
       workflowModel.id,
       workflowModel.name,
       workflowModel.worksteps.map((w) => {
@@ -62,17 +59,12 @@ export class WorkflowStorageAgent extends PrismaService {
   }
 
   async createNewWorkflow(workflow: Workflow): Promise<Workflow> {
-    const workstepsData = workflow.worksteps?.map((w) => {
+    const workstepsData = workflow.worksteps.map((w) => {
       return {
         id: w.id,
-        name: w.name,
-        version: w.version,
-        status: w.status,
-        workgroupId: w.workgroupId,
-        securityPolicy: w.securityPolicy,
-        privacyPolicy: w.privacyPolicy,
       };
     });
+
     const newWorkflowModel = await this.workflow.create({
       data: {
         id: workflow.id,
@@ -106,15 +98,9 @@ export class WorkflowStorageAgent extends PrismaService {
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
-    const workstepsData = workflow.worksteps?.map((w) => {
+    const workstepsData = workflow.worksteps.map((w) => {
       return {
         id: w.id,
-        name: w.name,
-        version: w.version,
-        status: w.status,
-        workgroupId: w.workgroupId,
-        securityPolicy: w.securityPolicy,
-        privacyPolicy: w.privacyPolicy,
       };
     });
 
@@ -123,7 +109,7 @@ export class WorkflowStorageAgent extends PrismaService {
       data: {
         name: workflow.name,
         worksteps: {
-          connect: workstepsData,
+          set: workstepsData,
         },
         workgroupId: workflow.workgroupId,
       },
