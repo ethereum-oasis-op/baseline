@@ -13,6 +13,11 @@ export class UpdateWorkflowCommandHandler
   ) {}
 
   async execute(command: UpdateWorkflowCommand) {
+    const workstepsToUpdate =
+      await this.agent.fetchWorkstepCandidatesForWorkflowAndThrowIfExistenceValidationFails(
+        command.workstepIds,
+      );
+
     const workflowToUpdate =
       await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.id,
@@ -21,7 +26,7 @@ export class UpdateWorkflowCommandHandler
     this.agent.updateWorkflow(
       workflowToUpdate,
       command.name,
-      command.worksteps,
+      workstepsToUpdate,
       command.workgroupId,
     );
 

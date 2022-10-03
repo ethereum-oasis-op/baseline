@@ -13,9 +13,14 @@ export class CreateWorkflowCommandHandler
   ) {}
 
   async execute(command: CreateWorkflowCommand) {
+    const workstepsToConnect =
+      await this.agent.fetchWorkstepCandidatesForWorkflowAndThrowIfExistenceValidationFails(
+        command.workstepIds,
+      );
+
     const newWorkflowCandidate = this.agent.createNewWorkflow(
       command.name,
-      command.worksteps,
+      workstepsToConnect,
       command.workgroupId,
     );
 
