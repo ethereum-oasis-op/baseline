@@ -33,7 +33,7 @@ The technical steering committee (TSC) is accountable to the Project Governance 
 
 On October 27, 2021, the following people were voted in as the TSC through October 2022 and the date of the next election's results.
 
-During Summer 2021, former Co-Chair of the Baseline TSC John Wolpert (Consensys Mesh) stepped down for personal reasons. Sonal Patel was elected to serve the remainder of the term in his place.
+During Summer 2022, former Co-Chair of the Baseline TSC John Wolpert (Consensys Mesh) stepped down for personal reasons. Sonal Patel was elected to serve the remainder of the term in his place.
 
 | Name                                                                               | Company                         |
 | ---------------------------------------------------------------------------------- | ------------------------------- |
