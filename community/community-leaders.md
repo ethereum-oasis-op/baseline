@@ -33,6 +33,8 @@ The technical steering committee (TSC) is accountable to the Project Governance 
 
 On October 27, 2021, the following people were voted in as the TSC through October 2022 and the date of the next election's results.
 
+During Summer 2021, former Co-Chair of the Baseline TSC John Wolpert (Consensys Mesh) stepped down for personal reasons. Sonal Patel was elected to serve the remainder of the term in his place.
+
 | Name                                                                               | Company                         |
 | ---------------------------------------------------------------------------------- | ------------------------------- |
 | [**Ryan Fisch**](https://www.linkedin.com/in/ryanfisch/)\*\*\*\*                   | End-Labs                        |
@@ -45,7 +47,7 @@ On October 27, 2021, the following people were voted in as the TSC through Octob
 | [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)                         | Microsoft                       |
 | [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)                        | Provide                         |
 | [**Jack Wiering**](https://www.linkedin.com/in/jackwiering1977/)                   | Unibright                       |
-| [**John Wolpert**](https://www.linkedin.com/in/johnwolpert/) -- Co-Chair           | ConsenSys Mesh                  |
+| [**Sonal Patel**](https://www.linkedin.com/in/sonalpatel13/) -- Co-Chair           | ConsenSys Mesh                  |
 
 ### Core Developers Team <a href="#maintainer-team" id="maintainer-team"></a>
 
@@ -62,6 +64,7 @@ Details on how to become a [Core Developer here](broken-reference).
 | [**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/)             | Nethermind                          |
 | [**Anais Ofranc**](https://github.com/Consianimis)                                            | Consianimis                         |
 | [**Hamza Tokuchi**](https://github.com/Meuko)                                                 | [BlockLab](https://www.blocklab.nl) |
+| [**Ryan Fleischmann**](https://github.com/fleischr)                                           | Provide                             |
 
 ## Standards Team
 
