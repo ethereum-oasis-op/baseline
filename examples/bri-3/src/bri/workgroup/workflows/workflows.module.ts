@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { WorkstepStorageAgent } from '../worksteps/agents/workstepsStorage.agent';
+import { WorkstepsModule } from '../worksteps/worksteps.module';
 import { WorkflowAgent } from './agents/workflows.agent';
+import { WorkflowStorageAgent } from './agents/workflowsStorage.agent';
 import { WorkflowController } from './api/workflows.controller';
 import { CreateWorkflowCommandHandler } from './capabilities/createWorkflow/createWorkflowCommand.handler';
 import { DeleteWorkflowCommandHandler } from './capabilities/deleteWorkflow/deleteWorkflowCommand.handler';
@@ -21,13 +22,13 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, WorkstepsModule],
   controllers: [WorkflowController],
   providers: [
     ...CommandHandlers,
     ...QueryHandlers,
     WorkflowAgent,
-    WorkstepStorageAgent,
+    WorkflowStorageAgent,
   ],
 })
 export class WorkflowsModule {}

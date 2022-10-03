@@ -26,8 +26,7 @@ model Workstep {
   workgroupId    String
   securityPolicy String
   privacyPolicy  String
-  workflow       Workflow @relation(fields: [workflowId], references: [id])
-  workflowId     String
+  workflow       Workflow[]
 }
 
 model Workflow {

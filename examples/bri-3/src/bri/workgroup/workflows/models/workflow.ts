@@ -3,7 +3,7 @@ import { Workstep } from '../../worksteps/models/workstep';
 export class Workflow {
   private _id: string; // TODO: Add uuid after #491
   private _name: string;
-  private _worksteps: Workstep[]; //TODO enforce workstep causal connection through collection order]
+  private _worksteps: Workstep[]; //TODO enforce workstep causal connection through collection order
   private _workgroupId: string;
 
   constructor(
