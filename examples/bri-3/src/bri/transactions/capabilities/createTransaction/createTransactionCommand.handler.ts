@@ -10,7 +10,7 @@ export class CreateTransactionCommandHandler
 {
   constructor(
     private agent: TransactionAgent,
-    private repo: TransactionStorageAgent,
+    private storageAgent: TransactionStorageAgent,
   ) {}
 
   async execute(command: CreateTransactionCommand) {
@@ -28,7 +28,7 @@ export class CreateTransactionCommandHandler
       TransactionStatus.Initialized,
     );
 
-    const newTransaction = await this.repo.createNewTransaction(
+    const newTransaction = await this.storageAgent.createNewTransaction(
       newTransactionCandidate,
     );
 

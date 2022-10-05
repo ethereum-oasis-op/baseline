@@ -9,7 +9,7 @@ export class CreateBpiSubjectCommandHandler
 {
   constructor(
     private agent: BpiSubjectAgent,
-    private repo: BpiSubjectStorageAgent,
+    private storageAgent: BpiSubjectStorageAgent,
   ) {}
 
   async execute(command: CreateBpiSubjectCommand) {
@@ -21,7 +21,7 @@ export class CreateBpiSubjectCommandHandler
       command.publicKey,
     );
 
-    const newBpiSubject = await this.repo.createNewBpiSubject(
+    const newBpiSubject = await this.storageAgent.createNewBpiSubject(
       newBpiSubjectCandidate,
     );
 
