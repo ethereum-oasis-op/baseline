@@ -2,6 +2,8 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { TransactionDto } from '../../api/dtos/response/transaction.dto';
 import { TransactionStorageAgent } from '../../agents/transactionStorage.agent';
 import { GetTransactionByIdQuery } from './getTransactionById.query';
+import { NotFoundException } from '@nestjs/common';
+import { NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
 
 @QueryHandler(GetTransactionByIdQuery)
 export class GetBpiSubjectByIdQueryHandler
@@ -12,7 +14,9 @@ export class GetBpiSubjectByIdQueryHandler
   async execute(query: GetTransactionByIdQuery) {
     const transaction = await this.storageAgent.getTransactionById(query.id);
 
-    // TODO: null check
+    if (!transaction) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
 
     return {
       id: transaction.id,
