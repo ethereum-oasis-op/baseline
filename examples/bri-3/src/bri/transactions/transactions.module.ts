@@ -18,4 +18,4 @@ export const CommandHandlers = [
   controllers: [TransactionController],
   providers: [...CommandHandlers, TransactionAgent, TransactionStorageAgent],
 })
-export class TransactionsModule {}
+export class TransactionModule {}
