@@ -10,13 +10,20 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateTransactionCommand } from '../capabilities/createTransaction/createTransaction.command';
 import { DeleteTransactionCommand } from '../capabilities/deleteTransaction/deleteTransaction.command';
+import { GetTransactionByIdQuery } from '../capabilities/getTransactionById/getTransactionById.query';
 import { UpdateTransactionCommand } from '../capabilities/updateTransaction/updateTransaction.command';
 import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
+import { TransactionDto } from './dtos/response/transaction.dto';
 
 @Controller('transactions')
 export class TransactionController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
+
+  @Get('/:id')
+  async getTransactionById(@Param('id') id: string): Promise<TransactionDto> {
+    return await this.queryBus.execute(new GetTransactionByIdQuery(id));
+  }
 
   @Post()
   async createTransaction(
