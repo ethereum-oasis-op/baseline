@@ -16,7 +16,7 @@ import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 
 @Injectable()
 export class TransactionAgent {
-  constructor(private repo: TransactionStorageAgent) {}
+  constructor(private storageAgent: TransactionStorageAgent) {}
   public throwIfCreateTransactionInputInvalid() {
     return true;
   }
@@ -48,7 +48,7 @@ export class TransactionAgent {
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
   ): Promise<Transaction> {
-    const transactionToUpdate = await this.repo.getTransactionById(id);
+    const transactionToUpdate = await this.storageAgent.getTransactionById(id);
 
     if (!transactionToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
@@ -72,7 +72,7 @@ export class TransactionAgent {
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
     id: string,
   ): Promise<Transaction> {
-    const transactionToDelete = await this.repo.getTransactionById(id);
+    const transactionToDelete = await this.storageAgent.getTransactionById(id);
 
     if (!transactionToDelete) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
