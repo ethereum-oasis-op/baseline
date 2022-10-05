@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionAgent } from '../../agents/transactions.agent';
 import { TransactionStorageAgent } from '../../agents/transactionStorage.agent';
-import { TransactionStatus } from '../../models/transactionStatus.enum';
 import { CreateTransactionCommand } from './createTransaction.command';
 
 @CommandHandler(CreateTransactionCommand)
@@ -25,7 +24,6 @@ export class CreateTransactionCommandHandler
       null, // TODO: Fetch BpiAccount based on id ,
       command.payload,
       command.signature,
-      TransactionStatus.Initialized,
     );
 
     const newTransaction = await this.storageAgent.createNewTransaction(
