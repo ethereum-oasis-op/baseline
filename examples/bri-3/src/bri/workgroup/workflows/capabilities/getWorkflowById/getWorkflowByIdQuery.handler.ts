@@ -14,7 +14,6 @@ export class GetWorkflowByIdQueryHandler
     const workflow = await this.storageAgent.getWorkflowById(query.id);
 
     return {
-      //TODO: Write generic mapper domainObject -> DTO
       id: workflow.id,
       name: workflow.name,
       worksteps: workflow.worksteps,

@@ -21,9 +21,6 @@ import { WorkflowDto } from './dtos/response/workflow.dto';
 export class WorkflowController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
-  // TODO: DTO validation
-  // TODO: Response DTOs
-  // TODO: DTO -> Command mapping
   @Get('/:id')
   async getWorkflowById(@Param('id') id: string): Promise<WorkflowDto> {
     return await this.queryBus.execute(new GetWorkflowByIdQuery(id));

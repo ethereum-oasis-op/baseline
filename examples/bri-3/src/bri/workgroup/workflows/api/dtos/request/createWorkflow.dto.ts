@@ -4,6 +4,7 @@ export class CreateWorkflowDto {
   @IsNotEmpty()
   name: string;
 
+  @IsNotEmpty()
   @ArrayNotEmpty()
   workstepIds: string[];
 

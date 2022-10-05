@@ -169,7 +169,7 @@ describe('WorkflowsController', () => {
       const nonExistentId = '123';
       const requestDto: UpdateWorkflowDto = {
         name: 'name1',
-        workstepIds: ['386c5af6-4206-464d-bef2-b8a78e5a0c6a'],
+        workstepIds: ['worsktep1'],
         workgroupId: 'workgroupId1',
       };
 
@@ -181,14 +181,14 @@ describe('WorkflowsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const workstepRequestDto = {
-        name: 'name',
-        version: 'version',
-        status: 'status',
-        workgroupId: 'wgid',
-        securityPolicy: 'secPolicy',
-        privacyPolicy: 'privPolicy',
-      } as CreateWorkstepDto;
+      // const workstepRequestDto = {
+      //   name: 'name',
+      //   version: 'version',
+      //   status: 'status',
+      //   workgroupId: 'wgid',
+      //   securityPolicy: 'secPolicy',
+      //   privacyPolicy: 'privPolicy',
+      // } as CreateWorkstepDto;
 
       const workstepId = await workstepController.createWorkstep(
         workstepRequestDto,
@@ -212,6 +212,8 @@ describe('WorkflowsController', () => {
       expect(updatedWorkflow.worksteps.map((ws) => ws.id)).toEqual(
         updateRequestDto.workstepIds,
       );
+      expect(updatedWorkflow.workgroupId).toEqual(updateRequestDto.workgroupId);
+      expect(updatedWorkflow.name).toEqual(updateRequestDto.name);
     });
   });
 

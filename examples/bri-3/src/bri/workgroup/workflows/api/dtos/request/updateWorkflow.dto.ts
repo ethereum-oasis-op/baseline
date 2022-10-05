@@ -4,6 +4,7 @@ export class UpdateWorkflowDto {
   @IsNotEmpty()
   name: string;
 
+  @IsNotEmpty()
   @ArrayNotEmpty()
   workstepIds: string[];
 
