@@ -5,6 +5,7 @@ import { TransactionStorageAgent } from './agents/transactionStorage.agent';
 import { TransactionController } from './api/transactions.controller';
 import { CreateTransactionCommandHandler } from './capabilities/createTransaction/createTransactionCommand.handler';
 import { DeleteTransactionCommandHandler } from './capabilities/deleteTransaction/deleteTransactionCommand.handler';
+import { GetTransactionByIdQueryHandler } from './capabilities/getTransactionById/getTransactionByIdQuery.handler';
 import { UpdateTransactionCommandHandler } from './capabilities/updateTransaction/updateTransactionCommand.handler';
 
 export const CommandHandlers = [
@@ -13,9 +14,17 @@ export const CommandHandlers = [
   DeleteTransactionCommandHandler,
 ];
 
+export const QueryHandlers = [
+  GetTransactionByIdQueryHandler,
+];
+
 @Module({
   imports: [CqrsModule],
   controllers: [TransactionController],
-  providers: [...CommandHandlers, TransactionAgent, TransactionStorageAgent],
+  providers: [
+    ...CommandHandlers,
+    ...QueryHandlers,
+    TransactionAgent,
+    TransactionStorageAgent],
 })
 export class TransactionModule {}
