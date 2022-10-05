@@ -6,7 +6,7 @@ import { NotFoundException } from '@nestjs/common';
 import { NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
 
 @QueryHandler(GetTransactionByIdQuery)
-export class GetBpiSubjectByIdQueryHandler
+export class GetTransactionByIdQueryHandler  
   implements IQueryHandler<GetTransactionByIdQuery>
 {
   constructor(private readonly storageAgent: TransactionStorageAgent) {}

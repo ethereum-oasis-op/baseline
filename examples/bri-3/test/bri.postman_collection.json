@@ -166,10 +166,10 @@
 			]
 		},
 		{
-			"name": "workgroup",
+			"name": "Workgroup",
 			"item": [
 				{
-					"name": "workstep",
+					"name": "Workstep",
 					"item": [
 						{
 							"name": "Update Workstep",
@@ -389,6 +389,38 @@
 					"name": "Delete Transaction",
 					"request": {
 						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific Transaction by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
