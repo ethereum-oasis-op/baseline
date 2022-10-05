@@ -17,7 +17,7 @@ export class CreateTransactionCommandHandler
     this.agent.throwIfCreateTransactionInputInvalid();
 
     const newTransactionCandidate = this.agent.createNewTransaction(
-      command.transactionId,
+      command.id,
       command.nonce,
       command.workflowInstanceId,
       command.workstepInstanceId,
@@ -32,6 +32,6 @@ export class CreateTransactionCommandHandler
       newTransactionCandidate,
     );
 
-    return newTransaction.transactionId;
+    return newTransaction.id;
   }
 }

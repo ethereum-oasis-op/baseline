@@ -7,7 +7,7 @@ import { Transaction } from '../models/transaction';
 export class TransactionStorageAgent extends PrismaService {
   async getTransactionById(id: string): Promise<Transaction> {
     const transactionModel = await this.transaction.findUnique({
-      where: { transactionId: id },
+      where: { id: id },
     });
 
     if (!transactionModel) {
@@ -15,7 +15,7 @@ export class TransactionStorageAgent extends PrismaService {
     }
 
     return new Transaction(
-      transactionModel.transactionId,
+      transactionModel.id,
       transactionModel.nonce,
       transactionModel.workflowInstanceId,
       transactionModel.workstepInstanceId,
@@ -31,7 +31,7 @@ export class TransactionStorageAgent extends PrismaService {
     const transactionModels = await this.transaction.findMany();
     return transactionModels.map((t) => {
       return new Transaction(
-        t.transactionId,
+        t.id,
         t.nonce,
         t.workflowInstanceId,
         t.workstepInstanceId,
@@ -47,7 +47,7 @@ export class TransactionStorageAgent extends PrismaService {
   async createNewTransaction(transaction: Transaction): Promise<Transaction> {
     const newTransactionModel = await this.transaction.create({
       data: {
-        transactionId: transaction.transactionId,
+        id: transaction.id,
         nonce: transaction.nonce,
         workflowInstanceId: transaction.workflowInstanceId,
         workstepInstanceId: transaction.workstepInstanceId,
@@ -60,7 +60,7 @@ export class TransactionStorageAgent extends PrismaService {
     });
 
     return new Transaction(
-      newTransactionModel.transactionId,
+      newTransactionModel.id,
       newTransactionModel.nonce,
       newTransactionModel.workflowInstanceId,
       newTransactionModel.workstepInstanceId,
@@ -74,7 +74,7 @@ export class TransactionStorageAgent extends PrismaService {
 
   async updateTransaction(transaction: Transaction): Promise<Transaction> {
     const newTransactionModel = await this.transaction.update({
-      where: { transactionId: transaction.transactionId },
+      where: { id: transaction.id },
       data: {
         payload: transaction.payload,
         signature: transaction.signature,
@@ -82,7 +82,7 @@ export class TransactionStorageAgent extends PrismaService {
     });
 
     return new Transaction(
-      newTransactionModel.transactionId,
+      newTransactionModel.id,
       newTransactionModel.nonce,
       newTransactionModel.workflowInstanceId,
       newTransactionModel.workstepInstanceId,
@@ -96,7 +96,7 @@ export class TransactionStorageAgent extends PrismaService {
 
   async deleteTransaction(transaction: Transaction): Promise<void> {
     await this.transaction.delete({
-      where: { transactionId: transaction.transactionId },
+      where: { id: transaction.id },
     });
   }
 }

@@ -30,7 +30,7 @@ model Workstep {
 }
 
 model Transaction {
-  transactionId String @id
+  id String @id
   nonce Int
   workflowInstanceId String
   workstepInstanceId String
