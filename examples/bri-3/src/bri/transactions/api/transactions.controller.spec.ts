@@ -52,14 +52,14 @@ describe('TransactionController', () => {
     it('should return the correct transaction if proper id passed ', async () => {
       // Arrange
       const requestDto = {
-          id: "123",
-          nonce: 1,
-          workflowInstanceId: "42",
-          workstepInstanceId: "24",
-          fromAccountId: "from",
-          toAccountId: "to",
-          payload: "payload1",
-          signature: "signature",
+        id: '123',
+        nonce: 1,
+        workflowInstanceId: '42',
+        workstepInstanceId: '24',
+        fromAccountId: 'from',
+        toAccountId: 'to',
+        payload: 'payload1',
+        signature: 'signature',
       } as CreateTransactionDto;
 
       const newTransactionId = await controller.createTransaction(requestDto);
@@ -70,14 +70,18 @@ describe('TransactionController', () => {
       );
 
       // Assert
-      expect(createdTransaction.id).toEqual(requestDto.id)
-      expect(createdTransaction.nonce).toEqual(requestDto.nonce)
-      expect(createdTransaction.workflowInstanceId).toEqual(requestDto.workflowInstanceId)
-      expect(createdTransaction.workstepInstanceId).toEqual(requestDto.workstepInstanceId)
-      expect(createdTransaction.from).toEqual('') // TODO: Will be fixed with #489
-      expect(createdTransaction.to).toEqual('') // TODO: Will be fixed with #489
-      expect(createdTransaction.payload).toEqual(requestDto.payload)
-      expect(createdTransaction.signature).toEqual(requestDto.signature)
+      expect(createdTransaction.id).toEqual(requestDto.id);
+      expect(createdTransaction.nonce).toEqual(requestDto.nonce);
+      expect(createdTransaction.workflowInstanceId).toEqual(
+        requestDto.workflowInstanceId,
+      );
+      expect(createdTransaction.workstepInstanceId).toEqual(
+        requestDto.workstepInstanceId,
+      );
+      expect(createdTransaction.from).toEqual(''); // TODO: Will be fixed with #489
+      expect(createdTransaction.to).toEqual(''); // TODO: Will be fixed with #489
+      expect(createdTransaction.payload).toEqual(requestDto.payload);
+      expect(createdTransaction.signature).toEqual(requestDto.signature);
     });
   });
 
@@ -85,15 +89,15 @@ describe('TransactionController', () => {
     it('should return new id from the created transaction when all params provided', async () => {
       // Arrange
       const requestDto = {
-        id: "123",
+        id: '123',
         nonce: 1,
-        workflowInstanceId: "42",
-        workstepInstanceId: "24",
-        fromAccountId: "from",
-        toAccountId: "to",
-        payload: "payload1",
-        signature: "signature1",
-    } as CreateTransactionDto;
+        workflowInstanceId: '42',
+        workstepInstanceId: '24',
+        fromAccountId: 'from',
+        toAccountId: 'to',
+        payload: 'payload1',
+        signature: 'signature1',
+      } as CreateTransactionDto;
 
       // Act
       const response = await controller.createTransaction(requestDto);
@@ -108,8 +112,8 @@ describe('TransactionController', () => {
       // Arrange
       const nonExistentId = '123';
       const requestDto = {
-        payload: "payload2",
-        signature: "signature2",
+        payload: 'payload2',
+        signature: 'signature2',
       } as UpdateTransactionDto;
 
       // Act and assert
@@ -121,21 +125,21 @@ describe('TransactionController', () => {
     it('should perform the update if existing id passed', async () => {
       // Arrange
       const createRequestDto = {
-        id: "123",
+        id: '123',
         nonce: 1,
-        workflowInstanceId: "42",
-        workstepInstanceId: "24",
-        fromAccountId: "from",
-        toAccountId: "to",
-        payload: "payload1",
-        signature: "signature1",
+        workflowInstanceId: '42',
+        workstepInstanceId: '24',
+        fromAccountId: 'from',
+        toAccountId: 'to',
+        payload: 'payload1',
+        signature: 'signature1',
       } as CreateTransactionDto;
       const newTransactionId = await controller.createTransaction(
         createRequestDto,
       );
       const updateRequestDto = {
-        payload: "payload2",
-        signature: "signature2",
+        payload: 'payload2',
+        signature: 'signature2',
       } as UpdateTransactionDto;
 
       // Act
@@ -164,14 +168,14 @@ describe('TransactionController', () => {
     it('should perform the delete if existing id passed', async () => {
       // Arrange
       const createRequestDto = {
-        id: "123",
+        id: '123',
         nonce: 1,
-        workflowInstanceId: "42",
-        workstepInstanceId: "24",
-        fromAccountId: "from",
-        toAccountId: "to",
-        payload: "payload1",
-        signature: "signature1",
+        workflowInstanceId: '42',
+        workstepInstanceId: '24',
+        fromAccountId: 'from',
+        toAccountId: 'to',
+        payload: 'payload1',
+        signature: 'signature1',
       } as CreateTransactionDto;
       const newTransactionId = await controller.createTransaction(
         createRequestDto,
