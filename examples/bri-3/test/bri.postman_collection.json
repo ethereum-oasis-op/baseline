@@ -364,7 +364,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"transactionId\": \"123\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromAccountId\": \"1\",\n    \"toAccountId\": \"2\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
+							"raw": "{\n    \"id\": \"123\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromAccountId\": \"1\",\n    \"toAccountId\": \"2\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"

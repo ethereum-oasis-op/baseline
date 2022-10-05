@@ -1,6 +1,6 @@
 export class CreateTransactionCommand {
   constructor(
-    public readonly transactionId: string,
+    public readonly id: string,
     public readonly nonce: number,
     public readonly workflowInstanceId: string,
     public readonly workstepInstanceId: string,

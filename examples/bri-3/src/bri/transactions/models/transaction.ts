@@ -2,7 +2,7 @@ import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { TransactionStatus } from './transactionStatus.enum';
 
 export class Transaction {
-  private _transactionId: string;
+  private _id: string;
   private _nonce: number;
   private _workflowInstanceId: string;
   private _workstepInstanceId: string;
@@ -13,7 +13,7 @@ export class Transaction {
   private _status: TransactionStatus;
 
   constructor(
-    transactionId: string,
+    id: string,
     nonce: number,
     workflowInstanceId: string,
     workstepInstanceId: string,
@@ -23,7 +23,7 @@ export class Transaction {
     signature: string,
     status: TransactionStatus,
   ) {
-    this._transactionId = transactionId;
+    this._id = id;
     this._nonce = nonce;
     this._workflowInstanceId = workflowInstanceId;
     this._workstepInstanceId = workstepInstanceId;
@@ -34,8 +34,8 @@ export class Transaction {
     this._status = status;
   }
 
-  public get transactionId(): string {
-    return this._transactionId;
+  public get id(): string {
+    return this._id;
   }
 
   public get nonce(): number {

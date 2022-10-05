@@ -22,7 +22,7 @@ export class TransactionAgent {
   }
 
   public createNewTransaction(
-    transactionId: string,
+    id: string,
     nonce: number,
     workflowInstanceId: string,
     workstepInstanceId: string,
@@ -33,7 +33,7 @@ export class TransactionAgent {
     status: TransactionStatus,
   ): Transaction {
     return new Transaction(
-      transactionId,
+      id,
       nonce,
       workflowInstanceId,
       workstepInstanceId,

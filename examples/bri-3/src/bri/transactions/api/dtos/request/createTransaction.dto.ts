@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateTransactionDto {
   @IsNotEmpty()
-  transactionId: string;
+  id: string;
 
   @IsNotEmpty()
   nonce: number;

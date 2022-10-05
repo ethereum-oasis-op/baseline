@@ -24,7 +24,7 @@ export class TransactionController {
   ): Promise<string> {
     return await this.commandBus.execute(
       new CreateTransactionCommand(
-        requestDto.transactionId,
+        requestDto.id,
         requestDto.nonce,
         requestDto.workflowInstanceId,
         requestDto.workstepInstanceId,
