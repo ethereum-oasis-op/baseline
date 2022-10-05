@@ -30,7 +30,6 @@ export class TransactionAgent {
     to: BpiAccount,
     payload: string,
     signature: string,
-    status: TransactionStatus,
   ): Transaction {
     return new Transaction(
       id,
@@ -41,7 +40,7 @@ export class TransactionAgent {
       to,
       payload,
       signature,
-      status,
+      TransactionStatus.Initialized,
     );
   }
 
