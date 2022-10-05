@@ -14,9 +14,7 @@ export const CommandHandlers = [
   DeleteTransactionCommandHandler,
 ];
 
-export const QueryHandlers = [
-  GetTransactionByIdQueryHandler,
-];
+export const QueryHandlers = [GetTransactionByIdQueryHandler];
 
 @Module({
   imports: [CqrsModule],
@@ -25,6 +23,7 @@ export const QueryHandlers = [
     ...CommandHandlers,
     ...QueryHandlers,
     TransactionAgent,
-    TransactionStorageAgent],
+    TransactionStorageAgent,
+  ],
 })
 export class TransactionModule {}
