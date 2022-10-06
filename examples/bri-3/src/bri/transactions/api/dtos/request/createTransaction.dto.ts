@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
+// TODO: Revisit validations rules once we move into business logic implementation
 export class CreateTransactionDto {
   @IsNotEmpty()
   id: string;
