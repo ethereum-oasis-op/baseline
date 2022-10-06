@@ -4,7 +4,7 @@ import { BpiAccountStorageAgent } from '../../agents/bpiAccountsStorage.agent';
 import { UpdateBpiAccountCommand } from './updateBpiAccount.command';
 
 @CommandHandler(UpdateBpiAccountCommand)
-export class UpdateBpiSubjectCommandHandler
+export class UpdateBpiAccountCommandHandler
   implements ICommandHandler<UpdateBpiAccountCommand>
 {
   constructor(
