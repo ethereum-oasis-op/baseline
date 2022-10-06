@@ -14,7 +14,7 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
 import { MockWorkflowStorageAgent } from '../agents/mockWorkflowStorage.agent';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
-import { WorkstepsModule } from '../../worksteps/worksteps.module';
+import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 import { MockWorkstepStorageAgent } from '../../worksteps/agents/mockWorkstepsStorage.agent';
 import { WorkstepController } from '../../worksteps/api/worksteps.controller';
@@ -52,7 +52,7 @@ describe('WorkflowsController', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule, WorkstepsModule],
+      imports: [CqrsModule, WorkstepModule],
       controllers: [WorkflowController, WorkstepController],
       providers: [
         WorkflowAgent,

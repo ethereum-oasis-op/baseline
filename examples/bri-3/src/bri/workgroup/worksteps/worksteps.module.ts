@@ -31,4 +31,4 @@ export const QueryHandlers = [
   ],
   exports: [WorkstepAgent, WorkstepStorageAgent],
 })
-export class WorkstepsModule {}
+export class WorkstepModule {}
