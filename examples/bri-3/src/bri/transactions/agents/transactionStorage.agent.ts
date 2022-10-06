@@ -27,23 +27,6 @@ export class TransactionStorageAgent extends PrismaService {
     );
   }
 
-  async getAllTransactions(): Promise<Transaction[]> {
-    const transactionModels = await this.transaction.findMany();
-    return transactionModels.map((t) => {
-      return new Transaction(
-        t.id,
-        t.nonce,
-        t.workflowInstanceId,
-        t.workstepInstanceId,
-        null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
-        null, // TODO: transactionModel.to once BpiAccount in the prisma schema,
-        t.payload,
-        t.signature,
-        t.status,
-      );
-    });
-  }
-
   async createNewTransaction(transaction: Transaction): Promise<Transaction> {
     const newTransactionModel = await this.transaction.create({
       data: {
