@@ -6,6 +6,7 @@ import { Login } from "./Login";
 import { Profile } from "./Profile";
 import { Auth } from "./types";
 import logo from "./logo.svg";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const LS_KEY = "login-with-metamask:auth";
 

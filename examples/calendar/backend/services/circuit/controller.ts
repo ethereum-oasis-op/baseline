@@ -22,16 +22,18 @@ const verifier_artifact = require("./../../build/contracts/Verifier.json");
 const truffle = require("@truffle/contract");
 export const proof = async (req: Request, res: Response, next: NextFunction) => {
 	const { secret, publicAddress, slot } = req.body;
+	const user = await User.findOne({ where: { address: publicAddress } });
+
 	const times = await Time.findAll({
 		where: {
 			timeStart: {
 				$gte: Date.now()
-			}
+			},
+			fromUser: user?.id
 		},
 		limit: 5
 	});
 	const appointment = await Appointment.findOne({ where: { secret: secret }, limit: 1 });
-	const user = await User.findOne({ where: { address: publicAddress } });
 	const poseidon = new PoseidonHasher(await buildPoseidon());
 	const tree = new MerkleTree(5, [], {
 		hashFunction: (a, b) => poseidon.hash(BigNumber.from(a), BigNumber.from(b)).toString(),
@@ -51,8 +53,7 @@ export const proof = async (req: Request, res: Response, next: NextFunction) => 
 				time_slot_indices: path?.pathIndices
 			});
 			appointment.status = "pending";
-			appointment.fromUser = user.id;
-			appointment.toUser = times[0].user;
+			appointment.toUser = user.id;
 			await appointment?.save();
 			return res.status(200).send({ proof: proof, appointment: appointment });
 		}

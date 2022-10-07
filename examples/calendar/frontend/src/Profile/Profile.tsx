@@ -1,15 +1,23 @@
 import "./Profile.css";
 
 import jwtDecode from "jwt-decode";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, startTransition } from "react";
 
-import { Auth } from "../types";
+import { Auth, User } from "../types";
+import axios from "axios";
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import ToggleButton from 'react-bootstrap/ToggleButton';
 
 interface Props {
 	auth: Auth;
 	onLoggedOut: () => void;
 }
 
+interface Time {
+	startTime: number;
+	checked: boolean;
+}
 interface State {
 	loading: boolean;
 	user?: {
@@ -17,6 +25,7 @@ interface State {
 		username: string;
 	};
 	username: string;
+	times?: Time[]
 }
 
 interface JwtDecoded {
@@ -27,10 +36,12 @@ interface JwtDecoded {
 }
 
 export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
+	
 	const [state, setState] = useState<State>({
 		loading: false,
 		user: undefined,
-		username: ""
+		username: "",
+		times: [{startTime: 1888, checked: false}],
 	});
 
 	useEffect(() => {
@@ -39,46 +50,17 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 			payload: { id }
 		} = jwtDecode<JwtDecoded>(accessToken);
 
-		fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${id}`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		})
-			.then((response) => response.json())
-			.then((user) => setState({ ...state, user }))
-			.catch(window.alert);
+		async function fetchUserAPI() {
+			const user = (await axios.get<User>(`${process.env.REACT_APP_BACKEND_URL}/users/user`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			})).data;
+			setState({...state, user});
+		};
+		fetchUserAPI();
+
 	}, []);
-
-	const handleChange = ({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => {
-		setState({ ...state, username: value });
-	};
-
-	const handleSubmit = () => {
-		const { accessToken } = auth;
-		const { user, username } = state;
-
-		setState({ ...state, loading: true });
-
-		if (!user) {
-			window.alert("The user id has not been fetched yet. Please try again in 5 seconds.");
-			return;
-		}
-
-		fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${user.id}`, {
-			body: JSON.stringify({ username }),
-			headers: {
-				Authorization: `Bearer ${accessToken}`,
-				"Content-Type": "application/json"
-			},
-			method: "PATCH"
-		})
-			.then((response) => response.json())
-			.then((user) => setState({ ...state, loading: false, user }))
-			.catch((err) => {
-				window.alert(err);
-				setState({ ...state, loading: false });
-			});
-	};
 
 	const { accessToken } = auth;
 
@@ -86,26 +68,30 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 		payload: { publicAddress }
 	} = jwtDecode<JwtDecoded>(accessToken);
 
-	const { loading, user } = state;
+	const { loading, user, times } = state;
 
 	const username = user && user.username;
 
 	return (
 		<div className="Profile">
-			<p>Logged in as {publicAddress}</p>
-			<div>
-				My username is {username ? <pre>{username}</pre> : "not set."} My publicAddress is <pre>{publicAddress}</pre>
-			</div>
-			<div>
-				<label htmlFor="username">Change username: </label>
-				<input name="username" onChange={handleChange} />
-				<button disabled={loading} onClick={handleSubmit}>
-					Submit
-				</button>
-			</div>
 			<p>
-				<button onClick={onLoggedOut}>Logout</button>
-			</p>
+			Logged in as {publicAddress}  
+			</p> 				
+			
+			<h1>Set your availability</h1>
+			<div style={{display: "grid", gridTemplateColumns: "3fr 9fr"}}>
+			<Calendar />
+				<div style={{ "textAlign": "left" }}>
+					{times?.map((time: Time) => {
+						return (
+						<ToggleButton className="mb-2" id="toggle-check" type="checkbox" variant="outline-primary" value="1">
+       					{time.startTime}
+      					</ToggleButton>)
+					})}
+			</div>
+			</div>
+			<button onClick={onLoggedOut}>Logout</button>
+			
 		</div>
 	);
 };

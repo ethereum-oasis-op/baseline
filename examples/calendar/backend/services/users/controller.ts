@@ -1,16 +1,35 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../../models/user.model";
 
+export const find = async (req: Request, res: Response, next: NextFunction) => {
+	if (!(req as any).query.hasOwnProperty("publicAddress")) {
+		return res.status(401).send({ error: "Please send Address!" });
+	}
+	return res.status(200).send(await User.findAll({where: { publicAddress: req.query.publicAddress }}));
+};
+
 export const get = (req: Request, res: Response, next: NextFunction) => {
-	
-	return User.findByPk(req.user.payload.id)
+	if (!(req as any).hasOwnProperty("user")) {
+		return res.status(401).send({ error: "No User found!" });
+	}
+	return User.findByPk((req as any).user.payload.id)
 		.then((user: User | null) => res.json(user))
 		.catch(next);
 };
 
-export const create = (req: Request, res: Response, next: NextFunction) =>
-	User.create(req.body)
-		.then((user: User) => res.json(user))
-		.catch(next);
-
+export const create = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const {publicAddress} = req.body;
+		const userObject = {
+			publicAddress: publicAddress ,
+			username: Math.random().toString(36).slice(2, 7),			
+		};
+		const user = await User.create(userObject);
+		const result = {appointment: user};
+		return res.status(200).send(result);
+	} catch (error) {
+		console.log(error);
+		return res.status(400);
+	}
+};
 

@@ -2,8 +2,9 @@ import "./Login.css";
 
 import React, { useState } from "react";
 import Web3 from "web3";
+import axios from 'axios';
 
-import { Auth } from "../types";
+import { Auth, User } from "../types";
 
 interface Props {
 	onLoggedIn: (auth: Auth) => void;
@@ -11,36 +12,36 @@ interface Props {
 
 let web3: Web3 | undefined = undefined; // Will hold the web3 instance
 
-export const Login = ({ onLoggedIn }: Props): JSX.Element => {
+export const Login =  ({ onLoggedIn }: Props): JSX.Element => {
 	const [loading, setLoading] = useState(false); // Loading button state
 
-	const handleAuthenticate = ({ publicAddress, signature }: { publicAddress: string; signature: string }) =>
-		fetch(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
-			body: JSON.stringify({ publicAddress, signature }),
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: "POST"
-		}).then((response) => response.json());
+	const handleAuthenticate = async ({ publicAddress, signature }: { publicAddress: string; signature: string }) => {
+		const res = await axios.post<Auth>(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
+			 "publicAddress": publicAddress, 
+			 "signature": signature });
+		return res.data;
+		}
 
-	const handleSignMessage = async ({ publicAddress, nonce }: { publicAddress: string; nonce: string }) => {
+	const handleSignMessage = async ({ publicAddressSigned, nonce }: { publicAddressSigned: string; nonce: string }) => {
 		try {
-			const signature = await web3!.eth.personal.sign(`I am signing my one-time nonce: ${nonce}`, publicAddress, "");
-
-			return { publicAddress, signature };
+			const signature = await web3!.eth.personal.sign(`I am signing my one-time nonce: ${nonce}`, publicAddressSigned, "");
+			return { publicAddressSigned, signature };
 		} catch (err) {
 			throw new Error("You need to sign the message to be able to log in.");
 		}
 	};
 
-	const handleSignup = (publicAddress: string) =>
-		fetch(`${process.env.REACT_APP_BACKEND_URL}/users`, {
-			body: JSON.stringify({ publicAddress }),
-			headers: {
-				"Content-Type": "application/json"
-			},
-			method: "POST"
-		}).then((response) => response.json());
+	const handleSignup = async (publicAddress: string) =>{
+		try {
+			const resonse = await axios.post<User>(`${process.env.REACT_APP_BACKEND_URL}/users`, {
+				"publicAddress":  publicAddress 
+			});
+			return resonse.data;
+		}
+		catch (err) {
+			throw new Error("Unable to sign up on the website!");
+		}
+	}
 
 	const handleClick = async () => {
 		// Check if MetaMask is installed
@@ -73,38 +74,36 @@ export const Login = ({ onLoggedIn }: Props): JSX.Element => {
 		setLoading(true);
 
 		// Look if user with current publicAddress is already present on backend
-		fetch(`${process.env.REACT_APP_BACKEND_URL}/users?publicAddress=${publicAddress}`)
-			.then((response) => response.json())
-			// If yes, retrieve it. If no, create it.
-			.then((users) => (users.length ? users[0] : handleSignup(publicAddress)))
-			// Popup MetaMask confirmation modal to sign message
-			.then(handleSignMessage)
-			// Send signature to backend on the /auth route
-			.then(handleAuthenticate)
-			// Pass accessToken back to parent component (to save it in localStorage)
-			.then(onLoggedIn)
-			.catch((err) => {
-				window.alert(err);
-				setLoading(false);
-			});
+		const users = (await axios.get<User[]>(`${process.env.REACT_APP_BACKEND_URL}/users?publicAddress=${publicAddress}`)).data;
+		if(users.length > 0){
+			const {publicAddressSigned, signature} = await handleSignMessage({"publicAddressSigned": publicAddress, "nonce": users[0].nonce});
+			const auth = await handleAuthenticate({"publicAddress": publicAddressSigned, "signature": signature});
+			await onLoggedIn(auth)
+			onLoggedIn(auth);
+			setLoading(false);
+		}
+		else
+		{
+			const user = await handleSignup(publicAddress);
+			const {publicAddressSigned, signature} = await handleSignMessage({"publicAddressSigned": publicAddress, "nonce": user.nonce});
+			const auth = await handleAuthenticate({"publicAddress": publicAddressSigned, "signature": signature});
+			await onLoggedIn(auth)
+			onLoggedIn(auth);
+			setLoading(false);
+		}	
+			
 	};
 
 	return (
 		<div>
 			<p>
-				Please select your login method.
-				<br />
-				For the purpose of this demo, only MetaMask login is implemented.
+				Login with metamask! If the address is not associated with an account, 
+				it will create one. 
 			</p>
 			<button className="Login-button Login-mm" onClick={handleClick}>
 				{loading ? "Loading..." : "Login with MetaMask"}
 			</button>
-			<button className="Login-button Login-fb" disabled>
-				Login with Facebook
-			</button>
-			<button className="Login-button Login-email" disabled>
-				Login with Email
-			</button>
+			
 		</div>
 	);
 };
