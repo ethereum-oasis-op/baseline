@@ -60,7 +60,7 @@ export default class Mapper {
             `Found ${mismatchedKeys.length} mismatched keys => ${mismatchedKeys}`,
           );
         }
-      }
+      }      
 
       return result;
     } else if (object.kind === TypeKind.Class) {

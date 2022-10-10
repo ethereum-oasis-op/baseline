@@ -34,7 +34,7 @@ describe('SubjectController', () => {
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(new MockBpiSubjectStorageAgent())
+      .useValue(new MockBpiSubjectStorageAgent(new Mapper()))
       .compile();
 
     sController = app.get<SubjectController>(SubjectController);
@@ -68,12 +68,11 @@ describe('SubjectController', () => {
         newBpiSubjectId,
       );
 
-      //TODO : [MJ] fix this with ttsc
       // Assert
-      // expect(createdBpiSubject.id).toEqual(newBpiSubjectId);
-      // expect(createdBpiSubject.name).toEqual(requestDto.name);
-      // expect(createdBpiSubject.description).toEqual(requestDto.desc);
-      // expect(createdBpiSubject.publicKey).toEqual(requestDto.publicKey);
+      expect(createdBpiSubject.id).toEqual(newBpiSubjectId);
+      expect(createdBpiSubject.name).toEqual(requestDto.name);
+      expect(createdBpiSubject.description).toEqual(requestDto.desc);
+      expect(createdBpiSubject.publicKey).toEqual(requestDto.publicKey);
     });
   });
 
@@ -106,16 +105,16 @@ describe('SubjectController', () => {
       const bpiSubjects = await sController.getAllBpiSubjects();
 
       //TODO : [MJ] fix this with ttsc
-      // Assert
-      // expect(bpiSubjects.length).toEqual(2);
-      // expect(bpiSubjects[0].id).toEqual(newBpiSubjectId1);
-      // expect(bpiSubjects[0].name).toEqual(requestDto1.name);
-      // expect(bpiSubjects[0].description).toEqual(requestDto1.desc);
-      // expect(bpiSubjects[0].publicKey).toEqual(requestDto1.publicKey);
-      // expect(bpiSubjects[1].id).toEqual(newBpiSubjectId2);
-      // expect(bpiSubjects[1].name).toEqual(requestDto2.name);
-      // expect(bpiSubjects[1].description).toEqual(requestDto2.desc);
-      // expect(bpiSubjects[1].publicKey).toEqual(requestDto2.publicKey);
+      //Assert
+      expect(bpiSubjects.length).toEqual(2);
+      expect(bpiSubjects[0].id).toEqual(newBpiSubjectId1);
+      expect(bpiSubjects[0].name).toEqual(requestDto1.name);
+      expect(bpiSubjects[0].description).toEqual(requestDto1.desc);
+      expect(bpiSubjects[0].publicKey).toEqual(requestDto1.publicKey);
+      expect(bpiSubjects[1].id).toEqual(newBpiSubjectId2);
+      expect(bpiSubjects[1].name).toEqual(requestDto2.name);
+      expect(bpiSubjects[1].description).toEqual(requestDto2.desc);
+      expect(bpiSubjects[1].publicKey).toEqual(requestDto2.publicKey);
     });
   });
 
@@ -189,11 +188,10 @@ describe('SubjectController', () => {
         newBpiSubjectId,
       );
 
-      //TODO : [MJ] fix this with ttsc
-      // expect(updatedBpiSubject.id).toEqual(newBpiSubjectId);
-      // expect(updatedBpiSubject.name).toEqual(updateRequestDto.name);
-      // expect(updatedBpiSubject.description).toEqual(updateRequestDto.desc);
-      // expect(updatedBpiSubject.publicKey).toEqual(updateRequestDto.publicKey);
+      expect(updatedBpiSubject.id).toEqual(newBpiSubjectId);
+      expect(updatedBpiSubject.name).toEqual(updateRequestDto.name);
+      expect(updatedBpiSubject.description).toEqual(updateRequestDto.desc);
+      expect(updatedBpiSubject.publicKey).toEqual(updateRequestDto.publicKey);
     });
   });
 
