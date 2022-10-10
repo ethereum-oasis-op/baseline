@@ -34,17 +34,17 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 
 // Get all available times for a person
 export const get = async (req: Request, res: Response, next: NextFunction) => {
-	if ((req as any).user.payload.id !== +req.params.userId) {
-		return res.status(401).send({ error: "You can can only access yourself" });
-	}
+	
 	try {
+		const userId = (req as any).user.payload.id;
 		const times = await Time.findAll({
 			where: {
-				userId: {
-					[Op.eq]: req.params.userId
+				user: {
+					[Op.eq]: userId
 				}
 			}
 		});
+		console.log("Times", times);
 		return res.status(200).send(times);
 	} catch (error) {
 		console.log(error);
