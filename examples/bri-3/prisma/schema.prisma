@@ -28,3 +28,15 @@ model Workstep {
   securityPolicy String
   privacyPolicy  String
 }
+
+model Transaction {
+  id String @id
+  nonce Int
+  workflowInstanceId String
+  workstepInstanceId String
+  from String // Add BpiAccount once #489 done
+  to String // Add BpiAccount once #489 done
+  payload String
+  signature String
+  status Int
+}

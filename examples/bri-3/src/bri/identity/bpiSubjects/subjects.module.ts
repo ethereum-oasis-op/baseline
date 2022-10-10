@@ -31,4 +31,4 @@ export const QueryHandlers = [
     Mapper,
   ],
 })
-export class SubjectsModule {}
+export class SubjectModule {}

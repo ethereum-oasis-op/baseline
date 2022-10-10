@@ -32,4 +32,4 @@ export const QueryHandlers = [
     Mapper,
   ],
 })
-export class WorkstepsModule {}
+export class WorkstepModule {}
