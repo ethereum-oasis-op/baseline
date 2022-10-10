@@ -1,4 +1,3 @@
-
 export class TypeClass {
   private id: string;
   private name: string;
@@ -8,7 +7,7 @@ export class TypeClass {
   constructor(
     id: string,
     name: string,
-    description: string,    
+    description: string,
     publicKey: string,
   ) {
     this.id = id;

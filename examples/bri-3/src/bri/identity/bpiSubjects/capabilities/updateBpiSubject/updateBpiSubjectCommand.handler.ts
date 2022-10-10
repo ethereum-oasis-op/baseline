@@ -18,7 +18,7 @@ export class UpdateBpiSubjectCommandHandler
       await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.id,
       );
-    Object.assign(bpiSubjectToUpdate, command)
+    Object.assign(bpiSubjectToUpdate, command);
     return await this.storageAgent.updateBpiSubject(bpiSubjectToUpdate);
   }
 }

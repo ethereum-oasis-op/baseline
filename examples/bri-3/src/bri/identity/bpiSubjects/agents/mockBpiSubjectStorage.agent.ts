@@ -7,13 +7,11 @@ import { getType } from 'tst-reflect';
 
 @Injectable()
 export class MockBpiSubjectStorageAgent {
-
-  constructor(private readonly mapper: Mapper) {
-  }
+  constructor(private readonly mapper: Mapper) {}
 
   private bpiSubjectsStore: BpiSubject[] = [];
 
-  async getBpiSubjectById(id: string): Promise<BpiSubject> {    
+  async getBpiSubjectById(id: string): Promise<BpiSubject> {
     const bpiSubject = this.bpiSubjectsStore.find((bp) => bp.id === id);
     if (!bpiSubject) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
@@ -22,7 +20,12 @@ export class MockBpiSubjectStorageAgent {
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
-    return Promise.resolve(this.bpiSubjectsStore.map(bpiSubject => this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject));
+    return Promise.resolve(
+      this.bpiSubjectsStore.map(
+        (bpiSubject) =>
+          this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
+      ),
+    );
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
@@ -39,14 +42,17 @@ export class MockBpiSubjectStorageAgent {
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const bpToUpdate = this.mapper.map(this.bpiSubjectsStore.find(
+    const bpToUpdate = this.mapper.map(
+      this.bpiSubjectsStore.find((bp) => bp.id === bpiSubject.id),
+      getType<BpiSubject>(),
+    ) as BpiSubject;
+
+    const index = this.bpiSubjectsStore.findIndex(
       (bp) => bp.id === bpiSubject.id,
-    ), getType<BpiSubject>()) as BpiSubject
+    );
 
-    const index = this.bpiSubjectsStore.findIndex(bp => bp.id === bpiSubject.id)
-
-    Object.assign(bpToUpdate, bpiSubject) as BpiSubject
-    this.bpiSubjectsStore[index] = bpToUpdate
+    Object.assign(bpToUpdate, bpiSubject) as BpiSubject;
+    this.bpiSubjectsStore[index] = bpToUpdate;
     return Promise.resolve(this.bpiSubjectsStore[index]);
   }
 
