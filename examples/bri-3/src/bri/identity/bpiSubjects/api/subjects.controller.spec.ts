@@ -104,7 +104,6 @@ describe('SubjectController', () => {
       // Act
       const bpiSubjects = await sController.getAllBpiSubjects();
 
-      //TODO : [MJ] fix this with ttsc
       //Assert
       expect(bpiSubjects.length).toEqual(2);
       expect(bpiSubjects[0].id).toEqual(newBpiSubjectId1);

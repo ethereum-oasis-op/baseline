@@ -13,10 +13,10 @@ export default class Mapper {
   /**
    * type convert from provided input to provided Type
    * provides capabilities to define some explicit
-   * keyerties on the type
+   * properties on the type
    *
    * Be careful with providing options object as
-   * this will change the keyerties on the type
+   * this will change the properties on the type
    *
    * @param from
    * @param object
@@ -67,7 +67,7 @@ export default class Mapper {
       const constructorParams = object.getConstructors()[0].getParameters();
       const classProperties = object
         .getProperties()
-        .filter((property) => property.accessModifier === 2)
+        .filter((property) => property.accessModifier === AccessModifier.Public)
         .map((property) => property.name);
 
       const mandatoryParams = constructorParams
