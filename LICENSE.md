@@ -10,7 +10,7 @@ page.
 
 # CC0 1.0 Universal
 
-Statement of Purpose
+## Statement of Purpose
 
 The laws of most jurisdictions throughout the world automatically confer
 exclusive Copyright and Related Rights (defined below) upon the creator and
