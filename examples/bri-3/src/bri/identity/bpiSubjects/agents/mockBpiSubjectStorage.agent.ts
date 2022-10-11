@@ -29,31 +29,27 @@ export class MockBpiSubjectStorageAgent {
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const createdBp = new BpiSubject(
-      v4(),
-      bpiSubject.name,
-      bpiSubject.description,
-      bpiSubject.type,
-      bpiSubject.publicKey,
-    );
+    const createdBp = this.mapper.map(
+      new BpiSubject(
+        v4(),
+        bpiSubject.name,
+        bpiSubject.description,
+        bpiSubject.type,
+        bpiSubject.publicKey,
+      ),
+      getType<BpiSubject>(),
+    ) as BpiSubject;
 
     this.bpiSubjectsStore.push(createdBp);
     return Promise.resolve(createdBp);
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const bpToUpdate = this.mapper.map(
-      this.bpiSubjectsStore.find((bp) => bp.id === bpiSubject.id),
-      getType<BpiSubject>(),
-    ) as BpiSubject;
-
-    const index = this.bpiSubjectsStore.findIndex(
+    const bpToUpdate = this.bpiSubjectsStore.find(
       (bp) => bp.id === bpiSubject.id,
     );
-
     Object.assign(bpToUpdate, bpiSubject) as BpiSubject;
-    this.bpiSubjectsStore[index] = bpToUpdate;
-    return Promise.resolve(this.bpiSubjectsStore[index]);
+    return Promise.resolve(bpToUpdate);
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
