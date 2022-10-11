@@ -1,5 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../../shared/constants';
 import { CreateBpiSubjectDto } from './createBpiSubject.dto';
 
 describe('CreateBpiSubjectDto', () => {
@@ -15,7 +16,7 @@ describe('CreateBpiSubjectDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('name');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'name should not be empty',
+      'name ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
@@ -31,7 +32,7 @@ describe('CreateBpiSubjectDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('desc');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'desc should not be empty',
+      'desc ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
@@ -47,7 +48,7 @@ describe('CreateBpiSubjectDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('publicKey');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'publicKey should not be empty',
+      'publicKey ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
