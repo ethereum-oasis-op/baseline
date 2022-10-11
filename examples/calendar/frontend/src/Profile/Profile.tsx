@@ -7,7 +7,7 @@ import { Auth, User } from "../types";
 import axios from "axios";
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-import ToggleButton from 'react-bootstrap/ToggleButton';
+import {ToggleButton, Button} from 'react-bootstrap';
 
 interface Props {
 	auth: Auth;
@@ -43,7 +43,6 @@ interface JwtDecoded {
 }
 
 export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
-	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
 	const getTimeAvailAPI = async (userId: string) => {
 		const fetchAvailTimes = (await axios.get(`${process.env.REACT_APP_BACKEND_URL}/time/${userId}`, {
@@ -54,11 +53,21 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 		console.log("fetch", fetchAvailTimes);
 		return fetchAvailTimes;
 	}
-	const setTimeAvailAPI = async (availableTimes:SetBooking ) => {
-		const setAvailTimes = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/time`, {
+	const createAppointmentAPI = async () => {
+		const createAppointment = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/appointments`, {} ,{
 			headers: {
 				Authorization: `Bearer ${accessToken}`
-			}, json: availableTimes
+			}
+		})).data;
+		return createAppointment;
+	}
+	const setTimeAvailAPI = async (availableTimes: SetBooking) => {
+		alert(accessToken);
+		const setAvailTimes = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/time`, {availableTimes} ,{
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${accessToken}`
+			}
 		})).data;
 		return setAvailTimes;
 	}
@@ -73,25 +82,43 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 		}
 		return timeReturn;
 	}
-	const setTimesFalse = () => {
-		const timeReturn = [];
-		var someDate = new Date(selectedDate);
-		someDate.setHours(8, 0, 0);
-		for (var i = 0; i < 60; i++)
-		{
-			const newTime = someDate.getTime() + i * 15 * 60 * 1000;
-			timeReturn.push({ startTime: new Date(newTime), checked: false, disabled: false });	
+	
+	const createAppointment = async () => {
+		let timeStarts:number[] = [];
+		let timeEnds:number[] = [];
+		checkedTimes.forEach((time: string) => {
+			timeStarts.push(parseInt(time));
+			let endTime = parseInt(time) + 15 * 60 * 1000;
+			timeEnds.push(endTime);
+		});
+		const booking: SetBooking = {
+			"timeStarts": timeStarts,
+			"timeEnds": timeEnds,
+			"status": "available",
+			"userId": userV.user?.id || 0,
 		}
-		return timeReturn;
-	}
+		console.log("booking", booking);
+		await setTimeAvailAPI(booking);
+		alert("times are set!");
+		const data = await createAppointmentAPI();
+		alert("created appointment");
+		console.log("data", data);
+		const secret_c = (data as any).appointment.secret;
+		alert(secret_c);
+		setVisibleLink(true);
+		setLink(`${process.env.REACT_APP_FRONTEND_URL}/appointment/${secret_c}`)
 
+	}
+	const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+	const [visibleLink, setVisibleLink] = useState<Boolean>(false);
 	const [times, setTimes] = useState<Time[]>(timesInitial())
 	const [userV, setUser] = useState<State>({
 		loading: false,
 		user: undefined,
 		username: ""
 	});
-	const [checkedTimes, setCheckedTimes] = useState<String[]>([]);
+	const [checkedTimes, setCheckedTimes] = useState<string[]>([]);
+	const [link, setLink] = useState<string>("text");
 	useEffect(() => { 
 		setTimes(timesInitial());
 	}, [selectedDate]);
@@ -109,10 +136,9 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 			})).data;
 			setUser({ ...userV, user });
 			const booked = await getTimeAvailAPI(id);
-			booked.forEach((booking: any) => {
-				let item = { startTime: booking.startTime, checked: false, disabled: false };
-				const tempTimes = times;
-				var foundIndex = tempTimes.findIndex(x => x === item);
+			booked.forEach((booking: any) => {				
+				const tempTimes = [...times];
+				var foundIndex = tempTimes.findIndex(x => parseInt((x.startTime.getTime()/1000).toString()) == (booked.timestart/1000));
 				tempTimes[foundIndex] = { startTime: booking.startTime, checked: false, disabled: true };
 				setTimes(tempTimes);
 			});
@@ -135,7 +161,13 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 			<p>
 				Logged in as {publicAddress}  
 				
-			</p> 				
+			</p>
+			{visibleLink ? (
+				<>
+					<h1> Share Link with Appointment </h1>
+					<pre><code>{link}</code></pre>
+
+				</>) : (<>
 			<h1>Set your availability</h1>
 
 			<div style={{display: "grid", gridTemplateColumns: "3fr 9fr"}}>
@@ -148,15 +180,8 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 							<ToggleButton key={index} className="mb-2" disabled={time.disabled} id={`toggle-check-${index}`} type="checkbox"
 								variant="outline-primary" checked={checkedTimes[index] === time.startTime.getTime().toString()} value={index} onChange={
 									(e) => {
-										console.log("Checked times", checkedTimes[index]);
 										const tempTimes = [...checkedTimes];
-										//alert(e.target.value);
-										//const findIndex = tempTimes.findIndex(x => x.startTime.getTime().toString() == e.target.value);
-										//alert(findIndex);
 										tempTimes[index] = time.startTime.getTime().toString();
-										console.log("temptimes", tempTimes);
-										//alert(e.target.checked);
-										//e.target.checked = false;
 										setCheckedTimes(tempTimes);
 									}
 								}>
@@ -165,8 +190,13 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 					})}
 						</>
 			</div>
-			</div>
-			<button onClick={onLoggedOut}>Logout</button>
+				</div>
+				<Button variant="primary" size="lg" onClick={createAppointment}>Create Appointment</Button>
+				<br/><br/><br/>
+			</>)
+			}
+			
+			<Button variant="secondary" onClick={onLoggedOut}>Logout</Button>
 			
 		</div>
 	);

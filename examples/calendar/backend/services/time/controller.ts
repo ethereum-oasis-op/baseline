@@ -5,16 +5,18 @@ import { Op } from "sequelize";
 
 // Create time availablity for the user
 export const create = async (req: Request, res: Response, next: NextFunction) => {
-	const { timeStarts, timeEnds } = req.body;
+	console.log("req", req.body);
+	const { timeStarts, timeEnds } = req.body.availableTimes;
 	if (!(req as any).hasOwnProperty("user")) {
 		return res.status(401).send({ error: "No User found!" });
 	}
 	const userId = (req as any).user.payload.id;
-	if (timeStarts.length !== timeEnds.length) {
+	if (timeStarts !== undefined && timeEnds !==undefined && timeStarts.length !== timeEnds.length) {
 		return res.status(400).send({ error: "The length of startimes and endtimes should match!" });
 	}
 	try {
 		const times = [];
+		console.log("timeStarts", timeStarts);
 		for (let i = 0; i < timeStarts.length; i++) {
 			times.push({
 				timestart: timeStarts[i],
