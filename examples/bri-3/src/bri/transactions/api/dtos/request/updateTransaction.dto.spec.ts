@@ -1,5 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
 import { UpdateTransactionDto } from './updateTransaction.dto';
 
 describe('UpdateTransactionDto', () => {
@@ -15,7 +16,7 @@ describe('UpdateTransactionDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('payload');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'payload should not be empty',
+      'payload ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
@@ -31,7 +32,7 @@ describe('UpdateTransactionDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('signature');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'signature should not be empty',
+      'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 

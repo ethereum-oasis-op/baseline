@@ -1,5 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
 import { CreateTransactionDto } from './createTransaction.dto';
 
 describe('CreateTransactionDto', () => {
@@ -23,7 +24,7 @@ describe('CreateTransactionDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('id');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'id should not be empty',
+      'id ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
