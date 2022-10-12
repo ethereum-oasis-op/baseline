@@ -16,6 +16,8 @@ model BpiSubject {
   description String
   type        Int
   publicKey   String
+  OwnedBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "ownerBpiSubject_fk")
+  CreatedBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "creatorBpiSubject_fk")
 }
 
 model BpiAccount {
@@ -23,6 +25,13 @@ model BpiAccount {
   nonce Int
 }
 
+model BpiSubjectAccount {
+  id                  String @id @default(uuid())
+  creatorBpiSubjectId String
+  ownerBpiSubjectId   String
+  CreatorBpiSubject   BpiSubject  @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
+  OwnerBpiSubject     BpiSubject  @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
+}
 
 model Workstep {
   id             String     @id @default(uuid())
