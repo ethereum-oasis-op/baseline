@@ -20,11 +20,11 @@ export class BpiSubjectAccount {
     return this._id;
   }
 
-  public get creatorBpiSubjectId(): string {
-    return this._creatorBpiSubject.id;
+  public get creatorBpiSubject(): BpiSubject {
+    return this._creatorBpiSubject;
   }
 
-  public get ownerBpiSubjectId(): string {
-    return this._ownerBpiSubject.id;
+  public get ownerBpiSubject(): BpiSubject {
+    return this._ownerBpiSubject;
   }
 }

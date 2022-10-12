@@ -71,8 +71,8 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     const newBpiSubjectAccountModel = await this.bpiSubjectAccount.create({
       // TODO: Write generic mapper domainObject -> prismaModel
       data: {
-        creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubjectId,
-        ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubjectId,
+        creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
+        ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
       },
       include: { OwnerBpiSubject: true, CreatorBpiSubject: true },
     });
@@ -102,8 +102,8 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     const newBpiSubjectAccountModel = await this.bpiSubjectAccount.update({
       where: { id: bpiSubjectAccount.id },
       data: {
-        creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubjectId,
-        ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubjectId,
+        creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
+        ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
       },
       include: { OwnerBpiSubject: true, CreatorBpiSubject: true },
     });
