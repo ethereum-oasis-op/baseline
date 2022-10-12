@@ -5,11 +5,32 @@ import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubjectAccountStorageAgent } from './bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
+import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class BpiSubjectAccountAgent {
-  constructor(private storageAgent: BpiSubjectAccountStorageAgent) {}
+  constructor(
+    private storageAgent: BpiSubjectAccountStorageAgent,
+    private storageSubjectAgent: BpiSubjectStorageAgent,
+  ) {}
+
+  public async getCreatorAndOwnerSubjectsAndThrowIfNotExist(
+    creatorBpiSubjectId: string,
+    ownerBpiSubjectId: string,
+  ) {
+    const creatorBpiSubject = await this.storageSubjectAgent.getBpiSubjectById(
+      creatorBpiSubjectId,
+    );
+    const ownerBpiSubject = await this.storageSubjectAgent.getBpiSubjectById(
+      ownerBpiSubjectId,
+    );
+    return {
+      creatorBpiSubject,
+      ownerBpiSubject,
+    };
+  }
+
   public throwIfCreateBpiSubjectAccountInputInvalid() {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..)
