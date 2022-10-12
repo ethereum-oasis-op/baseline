@@ -4,4 +4,4 @@ import { CqrsModule } from '@nestjs/cqrs';
 @Module({
   imports: [CqrsModule],
 })
-export class SubjectAccountsModule {}
+export class SubjectAccountModule {}
