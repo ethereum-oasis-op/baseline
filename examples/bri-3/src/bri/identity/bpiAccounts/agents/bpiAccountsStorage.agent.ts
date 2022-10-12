@@ -17,13 +17,13 @@ export class BpiAccountStorageAgent extends PrismaService {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new BpiAccount(bpiAccountModel.id, bpiAccountModel.nonce, []);
+    return new BpiAccount(bpiAccountModel.id, []);
   }
 
   async getAllBpiAccounts(): Promise<BpiAccount[]> {
     const bpiAccountModels = await this.bpiAccount.findMany();
     return bpiAccountModels.map((bp) => {
-      return new BpiAccount(bp.id, bp.nonce, []);
+      return new BpiAccount(bp.id, []);
     });
   }
 
@@ -34,7 +34,7 @@ export class BpiAccountStorageAgent extends PrismaService {
       },
     });
 
-    return new BpiAccount(newBpiAccountModel.id, newBpiAccountModel.nonce, []);
+    return new BpiAccount(newBpiAccountModel.id, []);
   }
 
   async updateBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
@@ -45,7 +45,7 @@ export class BpiAccountStorageAgent extends PrismaService {
       },
     });
 
-    return new BpiAccount(newBpiAccountModel.id, newBpiAccountModel.nonce, []);
+    return new BpiAccount(newBpiAccountModel.id, []);
   }
 
   async deleteBpiAccount(bpiAccount: BpiAccount): Promise<void> {

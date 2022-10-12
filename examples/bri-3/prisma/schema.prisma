@@ -20,7 +20,7 @@ model BpiSubject {
 
 model BpiAccount {
   id    String @id @default(uuid())
-  nonce String
+  nonce Int
 }
 
 

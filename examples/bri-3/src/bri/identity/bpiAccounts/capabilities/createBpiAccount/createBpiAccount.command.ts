@@ -1,3 +1,1 @@
-export class CreateBpiAccountCommand {
-  constructor(public readonly nonce: string) {}
-}
+export class CreateBpiAccountCommand {}

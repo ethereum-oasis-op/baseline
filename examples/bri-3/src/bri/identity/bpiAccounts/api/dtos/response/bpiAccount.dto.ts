@@ -1,5 +1,5 @@
 export interface BpiAccountDto {
   id: string;
-  nonce: string;
+  nonce: number;
   ownerBpiSubjectIds: string[];
 }

@@ -1,20 +1,10 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBpiAccountCommand } from '../capabilities/createBpiAccount/createBpiAccount.command';
 import { DeleteBpiAccountCommand } from '../capabilities/deleteBpiAccount/deleteBpiAccount.command';
 import { GetAllBpiAccountsQuery } from '../capabilities/getAllBpiAccounts/getAllBpiAccounts.query';
 import { GetBpiAccountByIdQuery } from '../capabilities/getBpiAccountById/getBpiAccountById.query';
 import { UpdateBpiAccountCommand } from '../capabilities/updateBpiAccount/updateBpiAccount.command';
-import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
-import { UpdateBpiAccountDto } from './dtos/request/updateBpiAccount.dto';
 import { BpiAccountDto } from './dtos/response/bpiAccount.dto';
 
 @Controller('accounts')
@@ -35,22 +25,13 @@ export class AccountController {
   }
 
   @Post()
-  async createBpiAccount(
-    @Body() requestDto: CreateBpiAccountDto,
-  ): Promise<string> {
-    return await this.commandBus.execute(
-      new CreateBpiAccountCommand(requestDto.nonce),
-    );
+  async createBpiAccount(): Promise<string> {
+    return await this.commandBus.execute(new CreateBpiAccountCommand());
   }
 
   @Put('/:id')
-  async updateBpiAccount(
-    @Param('id') id: string,
-    @Body() requestDto: UpdateBpiAccountDto,
-  ): Promise<void> {
-    return await this.commandBus.execute(
-      new UpdateBpiAccountCommand(id, requestDto.nonce),
-    );
+  async updateBpiAccount(@Param('id') id: string): Promise<void> {
+    return await this.commandBus.execute(new UpdateBpiAccountCommand(id));
   }
 
   @Delete('/:id')

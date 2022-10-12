@@ -10,12 +10,12 @@ export class GetBpiAccountByIdQueryHandler
   constructor(private readonly storageAgent: BpiAccountStorageAgent) {}
 
   async execute(query: GetBpiAccountByIdQuery) {
-    const bpiSubject = await this.storageAgent.getAccountById(query.id);
+    const bpiAccount = await this.storageAgent.getAccountById(query.id);
 
     return {
-      id: bpiSubject.id,
-      nonce: bpiSubject.nonce,
-      ownerBpiSubjectIds: bpiSubject.ownerBpiSubjectIds,
+      id: bpiAccount.id,
+      nonce: bpiAccount.nonce,
+      ownerBpiSubjectIds: bpiAccount.ownerBpiSubjectIds,
     } as BpiAccountDto;
   }
 }

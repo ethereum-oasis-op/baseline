@@ -1,11 +1,11 @@
 export class BpiAccount {
   private _id: string; // TODO: Add uuid after #491
-  private _nonce: string;
+  private _nonce: number;
   private _ownerBpiSubjectIds: string[];
 
-  constructor(id: string, nonce: string, ownerBpiSubjectIds: string[]) {
+  constructor(id: string, ownerBpiSubjectIds: string[]) {
     this._id = id;
-    this._nonce = nonce;
+    this._nonce = 0;
     this._ownerBpiSubjectIds = ownerBpiSubjectIds;
   }
 
@@ -13,7 +13,7 @@ export class BpiAccount {
     return this._id;
   }
 
-  public get nonce(): string {
+  public get nonce(): number {
     return this._nonce;
   }
 
@@ -21,7 +21,7 @@ export class BpiAccount {
     return this._ownerBpiSubjectIds;
   }
 
-  public updateNonce(newNonce: string): void {
-    this._nonce = newNonce;
+  public updateNonce(): void {
+    this._nonce++;
   }
 }

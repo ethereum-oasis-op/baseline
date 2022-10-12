@@ -12,12 +12,10 @@ export class CreateBpiAccountCommandHandler
     private repo: BpiAccountStorageAgent,
   ) {}
 
-  async execute(command: CreateBpiAccountCommand) {
+  async execute() {
     this.agent.throwIfCreateBpiAccountInputInvalid();
 
-    const newBpiSubjectCandidate = this.agent.createNewBpiAccount(
-      command.nonce,
-    );
+    const newBpiSubjectCandidate = this.agent.createNewBpiAccount();
 
     const newBpiSubject = await this.repo.createNewBpiAccount(
       newBpiSubjectCandidate,

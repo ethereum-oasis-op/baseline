@@ -18,7 +18,7 @@ export class UpdateBpiAccountCommandHandler
         command.id,
       );
 
-    this.agent.updateBpiAccount(bpiSubjectToUpdate, command.nonce);
+    this.agent.incrementAcountNonce(bpiSubjectToUpdate);
 
     await this.storageAgent.updateBpiAccount(bpiSubjectToUpdate);
   }

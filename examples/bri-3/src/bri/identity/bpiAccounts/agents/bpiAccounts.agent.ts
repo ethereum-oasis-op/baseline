@@ -9,19 +9,20 @@ import { BpiAccountStorageAgent } from './bpiAccountsStorage.agent';
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class BpiAccountAgent {
-  constructor(private repo: BpiAccountStorageAgent) {}
+  constructor(private storageAgent: BpiAccountStorageAgent) {}
+
   public throwIfCreateBpiAccountInputInvalid() {
     return true;
   }
 
-  public createNewBpiAccount(nonce: string): BpiAccount {
-    return new BpiAccount(v4(), nonce, []);
+  public createNewBpiAccount(): BpiAccount {
+    return new BpiAccount(v4(), []);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
   ): Promise<BpiAccount> {
-    const bpiAccountToUpdate = await this.repo.getAccountById(id);
+    const bpiAccountToUpdate = await this.storageAgent.getAccountById(id);
 
     if (!bpiAccountToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
@@ -30,14 +31,14 @@ export class BpiAccountAgent {
     return bpiAccountToUpdate;
   }
 
-  public updateBpiAccount(bpiAccountToUpdate: BpiAccount, nonce: string) {
-    bpiAccountToUpdate.updateNonce(nonce);
+  public incrementAcountNonce(bpiAccountToUpdate: BpiAccount) {
+    bpiAccountToUpdate.updateNonce();
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
     id: string,
   ): Promise<BpiAccount> {
-    const bpiAccountToDelete = await this.repo.getAccountById(id);
+    const bpiAccountToDelete = await this.storageAgent.getAccountById(id);
 
     if (!bpiAccountToDelete) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
