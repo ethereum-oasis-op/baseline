@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { SubjectModule } from '../bpiSubjects/subjects.module';
 import { BpiSubjectAccountAgent } from './agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from './agents/bpiSubjectAccountsStorage.agent';
 import { SubjectAccountController } from './api/subjectAccounts.controller';
@@ -20,7 +21,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, SubjectModule],
   controllers: [SubjectAccountController],
   providers: [
     ...CommandHandlers,
