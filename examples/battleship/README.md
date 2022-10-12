@@ -59,7 +59,7 @@ For example, turn has following steps:
 the verify step can have two outcomes : 
 a) HIT : the ship was placed at the coordinates where the other player has placed their ship
 b) MISS : the ship was placed in an empty area
-Once verification is successful, new leaf containing hash of turn information is stored in merkle tree
+Once verification is successful, new leaf containing hash of turn information is stored in Merkle tree
 
 ## Demo
 [See the demo here](https://www.youtube.com/watch?v=qyqqu2wNZe8)
@@ -79,7 +79,7 @@ Baselining is the practice of using zero knowledge cryptography techniques to pr
 
 The practice is essential for greater coordination between companies, because companies today must work together more closely than ever before, but they’ve never been so aware of the risks of leaking information between entities. The world needs a way to increase coordination, while also increasing compliance (by reducing information security risks otherwise posed by that level of coordination), to transform its balkanized, bespoke and brittle patchwork of information systems.
 
-Say hello the the Baseline Protocol - for more information, [see here](https://baseline-protocol.org )
+Say hello to the Baseline Protocol - for more information, [see here](https://baseline-protocol.org )
 
 Before baselining transforms the world of industry, developers need to get used to the approach, making it important to get started with something simple, like a game. And ideally a game that’s easy to implement, easy to create new features for (best way to learn), and easy to see how it mirrors the real world implementation. 
 
