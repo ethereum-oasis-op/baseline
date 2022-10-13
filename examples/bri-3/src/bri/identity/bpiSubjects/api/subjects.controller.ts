@@ -15,16 +15,12 @@ import { GetBpiSubjectByIdQuery } from '../capabilities/getBpiSubjectById/getBpi
 import { UpdateBpiSubjectCommand } from '../capabilities/updateBpiSubject/updateBpiSubject.command';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
-
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 
 @Controller('subjects')
 export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
-  // TODO: DTO validation
-  // TODO: Response DTOs
-  // TODO: DTO -> Command mapping
   @Get('/:id')
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));

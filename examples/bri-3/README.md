@@ -30,6 +30,10 @@
 
 ```bash
 $ npm install
+$ npm install -g prisma
+$ prisma generate
+$ npx prisma migrate dev
+$ npx ttsc
 ```
 
 ## Running the app

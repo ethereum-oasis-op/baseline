@@ -1,4 +1,4 @@
-export interface BpiSubjectDto {
+export interface TypeInterface {
   id: string;
   name: string;
   description: string;

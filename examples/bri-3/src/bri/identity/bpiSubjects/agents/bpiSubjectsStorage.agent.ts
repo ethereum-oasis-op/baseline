@@ -2,81 +2,64 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
+import { getType } from 'tst-reflect';
+import Mapper from '../../../../bri/utils/mapper';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
+  constructor(private readonly mapper: Mapper) {
+    super();
+  }
+
   async getBpiSubjectById(id: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.bpiSubject.findUnique({
-      where: { id: id },
+      where: { id },
     });
 
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-
-    return new BpiSubject( // TODO: Write generic mapper prismaModel -> domainObject
-      bpiSubjectModel.id,
-      bpiSubjectModel.name,
-      bpiSubjectModel.description,
-      bpiSubjectModel.type,
-      bpiSubjectModel.publicKey,
-    );
+    return this.mapper.map(
+      bpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.bpiSubject.findMany();
-    return bpiSubjectModels.map((bp) => {
-      return new BpiSubject(
-        bp.id,
-        bp.name,
-        bp.description,
-        bp.type,
-        bp.publicKey,
-      );
+    return bpiSubjectModels.map((bpiSubjectModel) => {
+      return this.mapper.map(
+        bpiSubjectModel,
+        getType<BpiSubject>(),
+      ) as BpiSubject;
     });
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const newBpiSubjectModel = await this.bpiSubject.create({
-      // TODO: Write generic mapper domainObject -> prismaModel
-      data: {
-        name: bpiSubject.name,
-        description: bpiSubject.description,
-        publicKey: bpiSubject.publicKey,
-        type: bpiSubject.type,
-      },
+      data: this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
     });
 
-    return new BpiSubject(
-      newBpiSubjectModel.id,
-      newBpiSubjectModel.name,
-      newBpiSubjectModel.description,
-      newBpiSubjectModel.type,
-      newBpiSubjectModel.publicKey,
-    );
+    return this.mapper.map(
+      newBpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const newBpiSubjectModel = await this.bpiSubject.update({
+    const updatedBpiSubjectModel = await this.bpiSubject.update({
       where: { id: bpiSubject.id },
-      data: {
-        name: bpiSubject.name,
-        description: bpiSubject.description,
-        publicKey: bpiSubject.publicKey,
-        type: bpiSubject.type,
-      },
+      data: this.mapper.map(bpiSubject, getType<BpiSubject>(), {
+        exclude: ['id'],
+      }) as BpiSubject,
     });
-
-    return new BpiSubject(
-      newBpiSubjectModel.id,
-      newBpiSubjectModel.name,
-      newBpiSubjectModel.description,
-      newBpiSubjectModel.type,
-      newBpiSubjectModel.publicKey,
-    );
+    return this.mapper.map(
+      updatedBpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
