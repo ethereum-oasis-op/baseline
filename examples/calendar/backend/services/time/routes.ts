@@ -11,3 +11,5 @@ timeRouter.route("/").post(jwt(config), controller.create);
 
 /** GET /api/time */
 timeRouter.route("/:userId").get(jwt(config), controller.get);
+
+timeRouter.route("/fewTimes").post(controller.fewTimes);

@@ -4,9 +4,12 @@ import React, { useEffect, useState } from "react";
 
 import { Login } from "./Login";
 import { Profile } from "./Profile";
+import { Appointment } from "./Appointment";
+
 import { Auth } from "./types";
 import logo from "./logo.svg";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 
 const LS_KEY = "login-with-metamask:auth";
 
@@ -38,10 +41,17 @@ const App = (): JSX.Element => {
 
 	return (
 		<div className="App">
-			<header className="App-header">
+				<header className="App-header">
 				<h1 className="App-title">Welcome to Baseline Calendar!</h1>
 			</header>
-			<div className="App-intro">{auth ? <Profile auth={auth} onLoggedOut={handleLoggedOut} /> : <Login onLoggedIn={handleLoggedIn} />}</div>
+			<Router>
+				<Routes>
+					<Route path="/appointment/:secret" element={auth ? <Appointment auth={auth} onLoggedOut={handleLoggedOut} /> :  <Login onLoggedIn={handleLoggedIn} />} />
+					<Route path="/" element={<div className="App-intro">{auth ? <Profile auth={auth} onLoggedOut={handleLoggedOut} /> : <Login onLoggedIn={handleLoggedIn} />}</div>} />
+				</Routes>
+			</Router>
+		
+			
 		</div>
 	);
 };

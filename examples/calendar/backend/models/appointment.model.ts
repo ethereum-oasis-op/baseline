@@ -6,4 +6,5 @@ export class Appointment extends Model {
 	public toUser?: number;
 	public status?: string;
 	public secret?: string;
+	public slot?: string;
 }

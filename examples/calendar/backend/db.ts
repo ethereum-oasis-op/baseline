@@ -81,6 +81,10 @@ Appointment.init(
 		status: {
 			type: ENUM,
 			values: ["available", "unavailable", "confirmed", "pending"]
+		},
+		slot: {
+			type: STRING,
+			allowNull: true,
 		}
 	},
 	{

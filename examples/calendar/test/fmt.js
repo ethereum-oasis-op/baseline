@@ -15,11 +15,12 @@ import { BigNumber, ethers } from "ethers";
 		hashFunction: (a, b) => poseidon.hash(BigNumber.from(a), BigNumber.from(b)).toString(),
 		zeroElement: "1"
 	});
+	tree.insert("6");
 	tree.insert("2");
 	tree.insert("3");
 	tree.insert("4");
 	tree.insert("5");
-	const path = tree.proof("2");
-	console.log(path);
+	const path = tree.proof("6");
+	console.log(tree);
 	//console.log('root', tree);
 })();

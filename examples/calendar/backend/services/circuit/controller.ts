@@ -9,6 +9,7 @@ import { Appointment } from "../../models/appointment.model";
 import { generateProof } from "../lib/generateProof";
 import { MerkleTree } from "fixed-merkle-tree";
 import { BigNumber } from "ethers";
+import { Op } from "sequelize";
 import { PoseidonHasher } from "../lib/hasher";
 //@ts-ignore
 import { buildPoseidon } from "circomlibjs";
@@ -22,29 +23,38 @@ const verifier_artifact = require("./../../build/contracts/Verifier.json");
 const truffle = require("@truffle/contract");
 export const proof = async (req: Request, res: Response, next: NextFunction) => {
 	const { secret, publicAddress, slot } = req.body;
-	const user = await User.findOne({ where: { address: publicAddress } });
+	console.log("body", req.body);
+	const user = await User.findOne({where: { publicAddress: publicAddress}});
+	const appointment = await Appointment.findOne({ where: { secret: secret }, limit: 1 });
+	console.log("user", appointment?.getDataValue("fromUser"));
+	
 
 	const times = await Time.findAll({
 		where: {
 			timeStart: {
-				$gte: Date.now()
+				[Op.gte]: Date.now()
 			},
-			fromUser: user?.id
+			user: {
+				[Op.eq]: appointment?.getDataValue("fromUser")
+			}
 		},
 		limit: 5
 	});
-	const appointment = await Appointment.findOne({ where: { secret: secret }, limit: 1 });
+	console.log("times", times);
+	
+	console.log("appointment", appointment);
 	const poseidon = new PoseidonHasher(await buildPoseidon());
 	const tree = new MerkleTree(5, [], {
 		hashFunction: (a, b) => poseidon.hash(BigNumber.from(a), BigNumber.from(b)).toString(),
 		zeroElement: "1"
 	});
 
-	try {
-		if (times !== null && appointment !== null && user !== null && times.length > 1) {
+	//try {
+		if (times !== null && appointment !== null && times.length > 1) {
 			(times as any).forEach((time: any) => {
 				tree.insert(time?.dataValues?.timestart.toString());
 			});
+			console.log("tree",tree);
 			const path = tree.proof(slot);
 			const proof = await generateProof({
 				time_slot_leaves: path?.pathElements,
@@ -53,36 +63,45 @@ export const proof = async (req: Request, res: Response, next: NextFunction) => 
 				time_slot_indices: path?.pathIndices
 			});
 			appointment.status = "pending";
-			appointment.toUser = user.id;
-			await appointment?.save();
+			appointment.toUser = user?.getDataValue("id");
+			console.log("slot", slot);
+			appointment.slot = slot;
+			await appointment.save();
 			return res.status(200).send({ proof: proof, appointment: appointment });
 		}
-	} catch {
-		return res.status(200).send({ error: "An error occurred while generating proof!" });
-	}
+	//} catch {
+	//	return res.status(200).send({ error: "An error occurred while generating proof!" });
+	//}
 };
 
 export const verify = async (req: Request, res: Response, next: NextFunction) => {
 	const { secret, slot } = req.body;
 	const verifier_address = process.env.VERIFIER_ADDRESS || "";
+	const appointment = await Appointment.findOne({ where: { secret: secret }, limit: 1 });
 	const times = await Time.findAll({
-		where: { secret: secret, status: "available" },
+		where: {
+			timeStart: {
+				[Op.gte]: Date.now()
+			},
+			user: {
+				[Op.eq]: appointment?.getDataValue("fromUser")
+			}
+		},
 		limit: 5
 	});
-	const appointment = await Appointment.findOne({
-		where: { secret: secret },
-		limit: 1
-	});
+	
 	const poseidon = new PoseidonHasher(await buildPoseidon());
 	const tree = new MerkleTree(5, [], {
 		hashFunction: (a, b) => poseidon.hash(BigNumber.from(a), BigNumber.from(b)).toString(),
 		zeroElement: "1"
 	});
 
-	try {
+	//try {
 		(times as any).forEach((time: any) => {
-			tree.insert(time?.dataValues?.timestart.toString());
+			tree.insert(time.getDataValue("timestart").toString());
 		});
+		console.log("tree", tree);
+		console.log("slot", slot);
 		const path = tree.proof(slot);
 		const publicInputs = {
 			root: tree?.root.toString(),
@@ -93,6 +112,7 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
 		const publicInputsMain = [tree?.root.toString(), path?.pathElements, path?.pathIndices, slot].flat();
 		const publicInputsStr = utils.stringifyBigInts(publicInputs);
 		const proof = await generateProof(publicInputsStr);
+		console.log("proof", proof);
 		const provider = new PrivateKeyProvider(process.env.PRIVATE_KEY_ACCOUNT, process.env.PROVIDER);
 		const web3 = new Web3(provider);
 		const Verifier = truffle(verifier_artifact);
@@ -113,7 +133,7 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
 			await appointment?.save();
 			return res.status(200).send({ verified: true });
 		} else return res.status(200).send({ verified: false });
-	} catch (e) {
-		return res.status(200).send({ verified: false });
-	}
+	//} catch (e) {
+	//	return res.status(200).send({ verified: false });
+	//}
 };

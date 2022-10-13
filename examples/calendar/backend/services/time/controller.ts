@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { NextFunction, Request, Response } from "express";
 import { Time } from "../../models/time.model";
+import { Appointment } from "../../models/appointment.model";
 import { Op } from "sequelize";
 
 // Create time availablity for the user
@@ -30,6 +31,31 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 		return res.status(200).send(result);
 	} catch (error) {
 		console.log(error);
+		return res.status(400);
+	}
+};
+
+export const fewTimes  = async (req: Request, res: Response, next: NextFunction) => {
+	try {
+		const {secret} = req.body;
+		const appointment = await Appointment.findOne({ where: { secret: secret }, limit: 1 });
+		const userId = appointment?.fromUser;
+		const times = await Time.findAll({
+			where: {
+				timeStart: {
+					[Op.gte]: Date.now()
+				},
+				user: {
+					[Op.eq]: userId
+				}
+			},
+			limit: 5
+		});
+		
+		return res.status(200).send(times);
+
+	}catch(error){
+		console.log("error", error);
 		return res.status(400);
 	}
 };
