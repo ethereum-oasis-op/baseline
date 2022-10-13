@@ -15,6 +15,20 @@ export class BpiSubjectAccountAgent {
     private subjectStorageAgent: BpiSubjectStorageAgent,
   ) {}
 
+  public async getOwnerBpiSubjectAccountsAndThrowIfNotExist(subjectAccountIds) {
+    const subjectAccounts: BpiSubjectAccount[] = [];
+
+    for (const subjectAccountId of subjectAccountIds) {
+      const subjectAccount =
+        await this.subjectAccountStorageAgent.getBpiSubjectAccountById(
+          subjectAccountId,
+        );
+      subjectAccounts.push(subjectAccount);
+    }
+
+    return subjectAccounts;
+  }
+
   public async getCreatorAndOwnerSubjectsAndThrowIfNotExist(
     creatorBpiSubjectId: string,
     ownerBpiSubjectId: string,

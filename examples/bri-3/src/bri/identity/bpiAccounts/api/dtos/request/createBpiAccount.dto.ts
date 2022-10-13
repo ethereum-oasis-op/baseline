@@ -1,1 +1,3 @@
-export class CreateBpiAccountDto {}
+export class CreateBpiAccountDto {
+  ownerBpiSubjectAccountsIds: string[];
+}

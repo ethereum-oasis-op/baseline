@@ -4,7 +4,6 @@ export class BpiSubjectAccount {
   private _id: string; // TODO: Add uuid after #491
   private _creatorBpiSubject: BpiSubject;
   private _ownerBpiSubject: BpiSubject;
-  private bpiAccounts: string[]; // TODO: Add as part of #489
 
   constructor(
     id: string,

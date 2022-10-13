@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { BpiSubjectAccountAgent } from 'src/bri/identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { BpiAccountAgent } from '../../agents/bpiAccounts.agent';
 import { BpiAccountStorageAgent } from '../../agents/bpiAccountsStorage.agent';
 import { CreateBpiAccountCommand } from './createBpiAccount.command';
@@ -8,16 +9,22 @@ export class CreateBpiAccountCommandHandler
   implements ICommandHandler<CreateBpiAccountCommand>
 {
   constructor(
-    private agent: BpiAccountAgent,
-    private repo: BpiAccountStorageAgent,
+    private accountAgent: BpiAccountAgent,
+    private accountStorageAgent: BpiAccountStorageAgent,
+    private subjectAccountAgent: BpiSubjectAccountAgent,
   ) {}
 
-  async execute() {
-    this.agent.throwIfCreateBpiAccountInputInvalid();
+  async execute(command: CreateBpiAccountCommand) {
+    const ownerBpiSubjectAccounts =
+      await this.subjectAccountAgent.getOwnerBpiSubjectAccountsAndThrowIfNotExist(
+        command.ownerBpiSubjectAccountsIds,
+      );
 
-    const newBpiSubjectCandidate = this.agent.createNewBpiAccount();
+    const newBpiSubjectCandidate = this.accountAgent.createNewBpiAccount(
+      ownerBpiSubjectAccounts,
+    );
 
-    const newBpiSubject = await this.repo.createNewBpiAccount(
+    const newBpiSubject = await this.accountStorageAgent.createNewBpiAccount(
       newBpiSubjectCandidate,
     );
 
