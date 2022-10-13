@@ -7,7 +7,7 @@ This document outlays an approach to bridging considerations for committing base
 1. Baseline proof verification on the mainnet is a gas intensive process owing to the complexity in computing the verification against the pairing library.
 2. Furthermore, there is an added cost of gas to verify the set membership of the document hash in the Shield contract on the mainnet.
 3. Enterprises typically have over millions of internal processes, that would be baselined, and it is not feasible to verify every baseline proof on the mainnet.
-4. Transactions on the mainnet have intrinsic ecoonomic value to indicate the processes' value, transactability/transferability and prevent double spending.
+4. Transactions on the mainnet have intrinsic economic value to indicate the processes' value, transactability/transferability and prevent double spending.
 5. While individual baseline proofs need not necessarily have 1:1 correspondence on the mainnet, they can still be represented as a composite transaction on the mainnet.
 
 ## Path to Scaling
@@ -44,7 +44,7 @@ Rank ordering, with "Crucial" indicating absolutely necessary criterion and "Imp
 
 1. Any local step of a workgroup can be "materialized" into a token transaction on the mainnet.
 2. Determine exit or trigger conditions for exiting a process
-3. Upload a "composite" proof to used by all workgroups to a Merkle Tree Set on the mainnet.
+3. Upload a "composite" proof to be used by all workgroups to a Merkle Tree Set on the mainnet.
 4. Anchor signatures and timestamp deltas for offchain consensus, as inputs to a wrapped rollup (R1CS) circuit.
 5. Verify wrapped proof contents and transfer token from one workgroup to another (tied to verifying entry criteria for the target workgroup)
 
@@ -69,10 +69,10 @@ Rank ordering, with "Crucial" indicating absolutely necessary criterion and "Imp
 
 1. Layer 2 protocols can be used to scale baseline proofs and leverage recursive proof generations to compose/batch baseline proofs.
 2. The composition depicted in the above design assumes a simpler protoocol proof, that is common to any baseline participant to verify BLS signatures of workgroup proofs.
-3. Each of the workgroup proofs are created with R1CS circuits, custom and specific to the particular workgoup.
+3. Each of the workgroup proofs are created with R1CS circuits, custom and specific to the particular workgroup.
 4. The workgroup proof itself is a composition of proofs and the above scheme depicts a simple zk-rollup proof, leveraging gnark as the privacy provider.
-5. Using standardized interfaces for Shield and RShield to represent accumulators of commitments and nullifers, cross chain state can be synchronized to the mainnet.
-6. Synchronization to the mainnet, is pre-supposed on the exit condtion of signed proofs and can be represented as a trigger for minting token to the mainnet participants.
+5. Using standardized interfaces for Shield and RShield to represent accumulators of commitments and nullifiers, cross chain state can be synchronized to the mainnet.
+6. Synchronization to the mainnet, is pre-supposed on the exit condition of signed proofs and can be represented as a trigger for minting token to the mainnet participants.
 7. Verifier interface on the mainnet can be defined based on the type of composition and pairing elliptic curve configured for zk-rollup.
 
 ## Future Directions
@@ -80,7 +80,7 @@ Rank ordering, with "Crucial" indicating absolutely necessary criterion and "Imp
 1. Overall baseline protocol proof can be extended to be a multi-sign verification R!CS circuit.
 2. Composition scheme can be extended or generalized to work with zk-zkrollups and plonk rollup schemes within the context of enabling privacy using zk-snarks.
 3. Extensions to use other zkp techniques such as zk-starks, bulletproofs, etc.
-4. Using bilinear accumulators in place of merkle trees for set membership proofs.
+4. Using bilinear accumulators in place of Merkle trees for set membership proofs.
 
 ## Contributors
 
