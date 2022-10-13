@@ -11,18 +11,18 @@ import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStor
 @Injectable()
 export class BpiSubjectAccountAgent {
   constructor(
-    private storageAgent: BpiSubjectAccountStorageAgent,
-    private storageSubjectAgent: BpiSubjectStorageAgent,
+    private subjectAccountStorageAgent: BpiSubjectAccountStorageAgent,
+    private subjectStorageAgent: BpiSubjectStorageAgent,
   ) {}
 
   public async getCreatorAndOwnerSubjectsAndThrowIfNotExist(
     creatorBpiSubjectId: string,
     ownerBpiSubjectId: string,
   ) {
-    const creatorBpiSubject = await this.storageSubjectAgent.getBpiSubjectById(
+    const creatorBpiSubject = await this.subjectStorageAgent.getBpiSubjectById(
       creatorBpiSubjectId,
     );
-    const ownerBpiSubject = await this.storageSubjectAgent.getBpiSubjectById(
+    const ownerBpiSubject = await this.subjectStorageAgent.getBpiSubjectById(
       ownerBpiSubjectId,
     );
     return {
@@ -47,7 +47,7 @@ export class BpiSubjectAccountAgent {
     id: string,
   ): Promise<BpiSubjectAccount> {
     const bpiSubjectAccountToUpdate =
-      await this.storageAgent.getBpiSubjectAccountById(id);
+      await this.subjectAccountStorageAgent.getBpiSubjectAccountById(id);
 
     if (!bpiSubjectAccountToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
@@ -64,7 +64,7 @@ export class BpiSubjectAccountAgent {
     id: string,
   ): Promise<BpiSubjectAccount> {
     const bpiSubjectAccountToDelete =
-      await this.storageAgent.getBpiSubjectAccountById(id);
+      await this.subjectAccountStorageAgent.getBpiSubjectAccountById(id);
 
     if (!bpiSubjectAccountToDelete) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
