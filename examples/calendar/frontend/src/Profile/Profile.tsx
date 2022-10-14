@@ -62,7 +62,6 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 		return createAppointment;
 	}
 	const setTimeAvailAPI = async (availableTimes: SetBooking) => {
-		alert(accessToken);
 		const setAvailTimes = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/time`, {availableTimes} ,{
 			headers: {
 				'Content-Type': 'application/json',
@@ -99,12 +98,8 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 		}
 		console.log("booking", booking);
 		await setTimeAvailAPI(booking);
-		alert("times are set!");
 		const data = await createAppointmentAPI();
-		alert("created appointment");
-		console.log("data", data);
 		const secret_c = (data as any).appointment.secret;
-		alert(secret_c);
 		setVisibleLink(true);
 		setLink(`${process.env.REACT_APP_FRONTEND_URL}/appointment/${secret_c}`)
 

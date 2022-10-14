@@ -56,8 +56,8 @@ export const Appointment = ({ auth, onLoggedOut }: Props): JSX.Element => {
 			}
         })).data.appointment;
 		setStatus(appointment.status);
-		alert(appointment.slot);
-		const slotDate = new Date(appointment.slot/1000);
+
+		const slotDate = new Date(parseInt(appointment.slot));
 		setSlot(slotDate.getHours().toString() + ":" + slotDate.getMinutes().toString());
 
         if (userV.id == appointment.fromUser) setIsCreator(true);
@@ -184,14 +184,13 @@ export const Appointment = ({ auth, onLoggedOut }: Props): JSX.Element => {
 					{status === "pending" && <p>Other person as requested a slot at {slot}, confirm and verify the appointment </p>}
 					{status === "confirmed" && <p>Appointment booked at {slot}! </p>}
 
-					<Button onClick={confirmAppointment} disabled={status === "created"} variant="primary" size="lg">Confirm Appointment - Verify Proof</Button>
+					<Button onClick={confirmAppointment} disabled={status !== "pending"} variant="primary" size="lg">Confirm Appointment - Verify Proof</Button>
 
 				</>) : (<>
 			        <h1>Schedule Appointment!</h1>
                 	<h3>Status: {status} </h3>
 			
-				
-				<div style={{ "textAlign": "center" }}>
+				{status === "created" && <div style={{ "textAlign": "center" }}>
 					 <ButtonGroup className="mb-2">
 					{times?.map((time: booking, index:number) => {
 						return (
@@ -208,7 +207,8 @@ export const Appointment = ({ auth, onLoggedOut }: Props): JSX.Element => {
                         </ButtonGroup> <br/>
                         <Button  disabled={selectedTime === ""} variant="primary" size="lg" onClick={scheduleAppointment}>Request Appointment - Create Proof</Button>
 						
-			</div>
+			</div>}
+				
 				
 				
 				
