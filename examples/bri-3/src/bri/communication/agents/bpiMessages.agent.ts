@@ -63,11 +63,11 @@ export class BpiMessageAgent {
 
   public updateBpiMessage(
     bpiMessageToUpdate: BpiMessage,
-    name: string,
-    description: string,
-    publicKey: string,
+    content: string,
+    signature: string,
   ) {
-    // TODO: Update bpi message
+    bpiMessageToUpdate.updateContent(content);
+    bpiMessageToUpdate.updateSignature(signature);
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(

@@ -48,4 +48,12 @@ export class BpiMessage {
   public get type(): BpiMessageType {
     return this._type;
   }
+
+  public updateContent(newContent: string): void {
+    this._content = newContent;
+  }
+
+  public updateSignature(newSignature: string): void {
+    this._signature = newSignature;
+  }
 }
