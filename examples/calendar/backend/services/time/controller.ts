@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { Time } from "../../models/time.model";
 import { Appointment } from "../../models/appointment.model";
 import { Op } from "sequelize";
-
+import {Status} from "./../../db";
 // Create time availablity for the user
 export const create = async (req: Request, res: Response, next: NextFunction) => {
 	console.log("req", req.body);
@@ -17,13 +17,12 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 	}
 	try {
 		const times = [];
-		console.log("timeStarts", timeStarts);
 		for (let i = 0; i < timeStarts.length; i++) {
 			times.push({
-				timestart: timeStarts[i],
-				timeend: timeEnds[i],
+				timeStart: timeStarts[i],
+				timeEnd: timeEnds[i],
 				user: userId,
-				status: "available"
+				status: Status.available
 			});
 		}
 		const timejson = await Time.bulkCreate(times);

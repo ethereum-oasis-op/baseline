@@ -3,6 +3,9 @@ import { Appointment } from "../../models";
 import { ethers, BigNumber } from "ethers";
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
+	if (!(req as any).hasOwnProperty("user")) {
+		return res.status(401).send({ error: "No User found!" });
+	}
 	try {
 		const secret = BigNumber.from(ethers.utils.randomBytes(Math.floor(Math.random() * 100)));
 		const userId = (req as any).user.payload.id;

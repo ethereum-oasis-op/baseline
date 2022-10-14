@@ -74,7 +74,7 @@ export const Appointment = ({ auth, onLoggedOut }: Props): JSX.Element => {
         })).data;
         const timeslots:booking[] = [];
         createAppointment.forEach((timeslot:any) => {
-            const date = new Date(timeslot.timestart);
+            const date = new Date(timeslot.timeStart);
             timeslots.push({ display: date.getHours().toString() + ":" + date.getMinutes().toString(), value: date.getTime().toString() });
         });
         setTimes(timeslots);

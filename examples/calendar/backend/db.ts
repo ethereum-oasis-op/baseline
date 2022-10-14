@@ -10,6 +10,14 @@ const sequelize = new Sequelize("calendar-example", "", undefined, {
 	logging: true
 });
 
+export enum Status {
+	available = "available",
+	pending="pending",
+	confirmed="confirmed",
+	unavailable="unavailable",
+  }
+    
+
 // Initialize all models.
 User.init(
 	{
@@ -48,10 +56,10 @@ Time.init(
 			type: STRING,
 			defaultValue: "unavailable" // Initialize with a unavailable status
 		},
-		timestart: {
+		timeStart: {
 			type: NUMBER // start time the user is available in epoch
 		},
-		timeend: {
+		timeEnd: {
 			type: NUMBER // end time the user is available in epoch
 		},
 		secret: {
@@ -80,7 +88,7 @@ Appointment.init(
 		},
 		status: {
 			type: ENUM,
-			values: ["available", "unavailable", "confirmed", "pending"]
+			values: [Status.available, Status.unavailable, Status.pending, Status.confirmed]
 		},
 		slot: {
 			type: STRING,
@@ -89,16 +97,11 @@ Appointment.init(
 	},
 	{
 		modelName: "appointment",
-		sequelize, // This bit is important
+		sequelize, 
 		timestamps: true
 	}
 );
 
-// Create new tables
 sequelize.sync();
-
-// User.hasMany(Appointment, { foreignKey: 'fromUser' });
-// User.hasMany(Appointment, { foreignKey: 'toUser' });
-//User.hasMany(Time, { foreignKey: 'user' });
 
 export { sequelize };

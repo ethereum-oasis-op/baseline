@@ -1,7 +1,6 @@
 ## Problem Statement
 
-Right now when we use calendly, it has gives access to the scheduler and what times they are not available. This might be an issue for folks are serious
-about privacy of their
+Right now when we use calendly, it has gives access to the scheduler and what times they are available. Caldendly also shows the times the person is not available. You have to trust this central authority to ensure proper scheduling takes place.Baseline Calendar uses Zero Knowledge Proof to ensure that privacy of user is mantained. This matching of time availability happens on client side which generates a proof which is then verified by the setter (to make sure incorrect information is not passed around) 
 
 ## Basic Flow
 
@@ -16,8 +15,7 @@ to the seeker.
 
 ## Main idea.
 
-With help of merkle trees we can prove that one the nodes has a certain root without revealing the nodes. So if we have the merkle root and the node,
-then we can prove existance (merkle tree) or inexistance (sparse merkle trees). If changes in nodes of merkle tree would change the root.
+With help of merkle trees we can prove that one the nodes has a certain root without revealing the nodes. So if we have the merkle root and the node,then we can prove existance (merkle tree) or inexistance (sparse merkle trees). If changes in nodes of merkle tree would change the root.
 
 In this case, we need to prove that person A and person B are scheduled for an appointment without revealing their individual commitments to each other
 (more than they need to know).
@@ -71,9 +69,11 @@ npm start
 
 -   [x] Create Login Page
 -   [x] Create Scheduling Page
--   [ ] Set an appointment
--   [ ] Appointment Page
+-   [x] Set an appointment
+-   [x] Appointment Page
 
+### Demo Video
+[Demo Video](https://www.youtube.com/watch?v=_eVsyjWFXhw)
 ### Credits
 
 The authentication starter has been used from (https://github.com/amaurym/login-with-metamask-demo), which has been licensed under the MIT License which allows the use of code for commercial / non commercial use and is open to modify and redistribute for free.

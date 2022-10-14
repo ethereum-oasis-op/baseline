@@ -133,7 +133,7 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 			const booked = await getTimeAvailAPI(id);
 			booked.forEach((booking: any) => {				
 				const tempTimes = [...times];
-				var foundIndex = tempTimes.findIndex(x => parseInt((x.startTime.getTime()/1000).toString()) == (booked.timestart/1000));
+				var foundIndex = tempTimes.findIndex(x => parseInt((x.startTime.getTime()/1000).toString()) == (booked.timeStart/1000));
 				tempTimes[foundIndex] = { startTime: booking.startTime, checked: false, disabled: true };
 				setTimes(tempTimes);
 			});
