@@ -447,6 +447,129 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Message",
+			"item": [
+				{
+					"name": "Update Message",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"hello world2\",\n    \"signature\": \"xyz2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"123\",\n  \"fromId\": \"eb6ab5d2-fe0e-4c74-b6e2-343f16eface4\",\n  \"toId\": \"cf77044d-dd3c-42b6-98dc-5d15ef769eb8\",\n  \"content\": \"hello world\",\n  \"signature\": \"xyz\",\n  \"type\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Message",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific Message by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages",
+								"123"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
