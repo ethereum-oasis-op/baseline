@@ -4,6 +4,7 @@ import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
 import Mapper from '../utils/mapper';
 import { BpiMessageAgent } from './agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from './agents/bpiMessagesStorage.agent';
+import { MessageController } from './api/messages.controller';
 import { CreateBpiMessageCommandHandler } from './capabilities/createBpiMessage/createBpiMessageCommand.handler';
 import { DeleteBpiMessageCommandHandler } from './capabilities/deleteBpiMessage/deleteBpiMessageCommand.handler';
 import { GetBpiMessageByIdQueryHandler } from './capabilities/getBpiMessageById/getBpiMessageByIdQuery.handler';
@@ -18,6 +19,7 @@ export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
 
 @Module({
   imports: [CqrsModule, SubjectModule],
+  controllers: [MessageController],
   providers: [
     ...CommandHandlers,
     ...QueryHandlers,
