@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateBpiMessageDto {
   @IsNotEmpty()
@@ -17,5 +17,6 @@ export class CreateBpiMessageDto {
   signature: string;
 
   @IsNotEmpty()
+  @IsNumber()
   type: number;
 }
