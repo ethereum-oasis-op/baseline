@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
 import Mapper from '../utils/mapper';
 import { BpiMessageAgent } from './agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from './agents/bpiMessagesStorage.agent';
@@ -16,7 +17,7 @@ export const CommandHandlers = [
 export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, SubjectModule],
   providers: [
     ...CommandHandlers,
     ...QueryHandlers,
