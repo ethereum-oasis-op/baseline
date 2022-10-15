@@ -27,6 +27,7 @@ export class BpiMessageStorageAgent extends PrismaService {
 
   async getAllBpiMessages(): Promise<BpiMessage[]> {
     const bpiMessageModels = await this.message.findMany();
+
     return bpiMessageModels.map((bpiMessageModel) => {
       return this.mapper.map(
         bpiMessageModel,
