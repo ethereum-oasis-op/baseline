@@ -4,8 +4,8 @@ import { BpiMessageType } from '../models/bpiMessageType.enum';
 
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessageStorageAgent } from './bpiMessagesStorage.agent';
-import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectStorageAgent } from 'src/bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 @Injectable()
 export class BpiMessageAgent {
