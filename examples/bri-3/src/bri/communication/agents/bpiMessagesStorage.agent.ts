@@ -46,7 +46,7 @@ export class BpiMessageStorageAgent extends PrismaService {
         signature: bpiMessage.signature,
         type: bpiMessage.type,
       },
-      include: { fromBpiSubject: true, toBpiSubject: true },
+      include: { FromBpiSubject: true, ToBpiSubject: true },
     });
 
     return this.mapper.map(
