@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
@@ -16,6 +17,8 @@ import { UpdateBpiSubjectCommand } from '../capabilities/updateBpiSubject/update
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
+import { MapInterceptor } from '@automapper/nestjs';
+import { BpiSubject } from '../models/bpiSubject';
 
 @Controller('subjects')
 export class SubjectController {
@@ -27,6 +30,7 @@ export class SubjectController {
   }
 
   @Get()
+  //@UseInterceptors(MapInterceptor(BpiSubject, BpiSubjectDto))
   async getAllBpiSubjects(): Promise<BpiSubjectDto[]> {
     return await this.queryBus.execute(new GetAllBpiSubjectsQuery());
   }
