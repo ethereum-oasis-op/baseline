@@ -162,6 +162,128 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Bpi Account",
+					"item": [
+						{
+							"name": "Get all Bpi Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bpi Account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/accounts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Bpi Account",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/accounts/a38774cd-8f14-41bb-b9b5-4d9bda81a161",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"a38774cd-8f14-41bb-b9b5-4d9bda81a161"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/6d05ef1f-6ff3-47eb-afba-2af1086fbb6e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"6d05ef1f-6ff3-47eb-afba-2af1086fbb6e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/a38774cd-8f14-41bb-b9b5-4d9bda81a161",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"a38774cd-8f14-41bb-b9b5-4d9bda81a161"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
