@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "eb68b1df-c9c6-4400-820c-08c91a47b7f0",
+		"_postman_id": "b9b1a6d8-c0be-41bf-98da-a91ca1389de8",
 		"name": "bri",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -162,136 +162,14 @@
 							"response": []
 						}
 					]
-				},
-				{
-					"name": "Bpi Account",
-					"item": [
-						{
-							"name": "Get all Bpi Accounts",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:3000/accounts/",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"accounts",
-										""
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create Bpi Account",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:3000/accounts",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"accounts"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update Bpi Account",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:3000/accounts/a38774cd-8f14-41bb-b9b5-4d9bda81a161",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"accounts",
-										"a38774cd-8f14-41bb-b9b5-4d9bda81a161"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get specific Bpi Account",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:3000/accounts/6d05ef1f-6ff3-47eb-afba-2af1086fbb6e",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"accounts",
-										"6d05ef1f-6ff3-47eb-afba-2af1086fbb6e"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete Bpi Account",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:3000/accounts/a38774cd-8f14-41bb-b9b5-4d9bda81a161",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "3000",
-									"path": [
-										"accounts",
-										"a38774cd-8f14-41bb-b9b5-4d9bda81a161"
-									]
-								}
-							},
-							"response": []
-						}
-					]
 				}
 			]
 		},
 		{
-			"name": "workgroup",
+			"name": "Workgroup",
 			"item": [
 				{
-					"name": "workstep",
+					"name": "Workstep",
 					"item": [
 						{
 							"name": "Update Workstep",
@@ -444,6 +322,129 @@
 							"response": []
 						}
 					]
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Update Transaction",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": \"hello3\",\n    \"signature\": \"world2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"123\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromAccountId\": \"1\",\n    \"toAccountId\": \"2\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Transaction",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific Transaction by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions",
+								"123"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
