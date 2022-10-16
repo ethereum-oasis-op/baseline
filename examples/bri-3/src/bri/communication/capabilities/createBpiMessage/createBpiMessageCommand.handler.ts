@@ -19,7 +19,7 @@ export class CreateBpiMessageCommandHandler
         command.toId,
       );
 
-    const newBpiSubjectCandidate = this.agent.createNewBpiMessage(
+    const newBpiMessageCandidate = this.agent.createNewBpiMessage(
       command.id,
       fromBpiSubject,
       toBpiSubject,
@@ -29,7 +29,7 @@ export class CreateBpiMessageCommandHandler
     );
 
     const newBpiSubject = await this.storageAgent.createNewBpiMessage(
-      newBpiSubjectCandidate,
+      newBpiMessageCandidate,
     );
 
     return newBpiSubject.id;

@@ -7,7 +7,7 @@ import { BpiMessageStorageAgent } from './agents/bpiMessagesStorage.agent';
 import { CreateBpiMessageCommandHandler } from './capabilities/createBpiMessage/createBpiMessageCommand.handler';
 import { DeleteBpiMessageCommandHandler } from './capabilities/deleteBpiMessage/deleteBpiMessageCommand.handler';
 import { GetBpiMessageByIdQueryHandler } from './capabilities/getBpiMessageById/getBpiMessageByIdQuery.handler';
-import { UpdateBpiMessageCommandHandler } from './capabilities/updateBpiMessage/updateBpiSubjectCommand.handler';
+import { UpdateBpiMessageCommandHandler } from './capabilities/updateBpiMessage/updateBpiMessageCommand.handler';
 
 export const CommandHandlers = [
   CreateBpiMessageCommandHandler,
