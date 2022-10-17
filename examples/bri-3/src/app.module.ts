@@ -4,7 +4,7 @@ import { CommunicationModule } from './bri/communication/communication.module';
 import { IdentityModule } from './bri/identity/identity.module';
 import { TransactionModule } from './bri/transactions/transactions.module';
 import { WorkgroupModule } from './bri/workgroup/workgroups.module';
-import { LoggingModule } from './shared/logging/Logging.module';
+import { LoggingModule } from './shared/logging/logging.module';
 
 @Module({
   imports: [
