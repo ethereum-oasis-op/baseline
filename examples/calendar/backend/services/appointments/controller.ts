@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { Appointment } from "../../models";
 import { ethers, BigNumber } from "ethers";
+import { Logger } from "tslog";
+
+
+const log: Logger = new Logger({ name: "errorLogger" });
 
 export const create = async (req: Request, res: Response, next: NextFunction) => {
 	if (!(req as any).hasOwnProperty("user")) {
@@ -18,7 +22,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 		const result = {appointment: appointment};
 		return res.status(200).send(result);
 	} catch (error) {
-		console.log(error);
+		log.error(error);
 		return res.status(400);
 	}
 	
@@ -31,7 +35,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 		const result = {appointment: appointment};
 		return res.status(200).send(result);
 	} catch (error) {
-		console.log(error);
+		log.error(error);
 		return res.status(400);
 	}
 	

@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../../models/user.model";
+import { Logger } from "tslog";
+
+
+const log: Logger = new Logger({ name: "errorLogger" });
 
 export const find = async (req: Request, res: Response, next: NextFunction) => {
 	if (!(req as any).query.hasOwnProperty("publicAddress")) {
@@ -28,7 +32,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 		const result = {appointment: user};
 		return res.status(200).send(result);
 	} catch (error) {
-		console.log(error);
+		log.error(error);
 		return res.status(400);
 	}
 };

@@ -4,7 +4,12 @@ import { Time } from "../../models/time.model";
 import { Appointment } from "../../models/appointment.model";
 import { Op } from "sequelize";
 import {Status} from "./../../db";
+import { Logger } from "tslog";
+
+
+const log: Logger = new Logger({ name: "errorLogger" });
 // Create time availablity for the user
+
 export const create = async (req: Request, res: Response, next: NextFunction) => {
 	console.log("req", req.body);
 	const { timeStarts, timeEnds } = req.body.availableTimes;
@@ -29,7 +34,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 		const result = { times: timejson };
 		return res.status(200).send(result);
 	} catch (error) {
-		console.log(error);
+		log.error(error);
 		return res.status(400);
 	}
 };
@@ -54,7 +59,7 @@ export const fewTimes  = async (req: Request, res: Response, next: NextFunction)
 		return res.status(200).send(times);
 
 	}catch(error){
-		console.log("error", error);
+		log.error(error);
 		return res.status(400);
 	}
 };
@@ -74,7 +79,7 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 		console.log("Times", times);
 		return res.status(200).send(times);
 	} catch (error) {
-		console.log(error);
+		log.error(error);
 		return res.status(400);
 	}
 };

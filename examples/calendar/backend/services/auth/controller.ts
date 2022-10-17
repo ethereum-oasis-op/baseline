@@ -5,6 +5,9 @@ import jwt from "jsonwebtoken";
 
 import { config } from "../../config";
 import { User } from "../../models/user.model";
+import { Logger } from "tslog";
+
+const log: Logger = new Logger({ name: "errorLogger" });
 
 export const create = (req: Request, res: Response, next: NextFunction) => {
 	const { signature, publicAddress } = req.body;
@@ -100,6 +103,6 @@ export const create = (req: Request, res: Response, next: NextFunction) => {
 				);
 			})
 			.then((accessToken: string) => res.json({ accessToken }))
-			.catch((error) => console.log(error))
+			.catch((error) => log.error(error))
 	);
 };

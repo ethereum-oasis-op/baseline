@@ -9,7 +9,7 @@ template AppointmentSchdeule(levels){
 
     // get signal to construct the tree to verify with root of tree
     signal input root;
-    //log(root);
+
     // the actual time slots
     signal input time_slot_leaves[levels];
     
@@ -19,22 +19,16 @@ template AppointmentSchdeule(levels){
     // get availability of seeker
     signal input selected_time;
 
-    //component commitmentHasher = Poseidon(1);
-    //commitmentHasher.inputs[0] <== selected_time;
-
+    // creation of merkel tree with levels
     component tree = MerkleProof(levels); 
     tree.leaf <== selected_time;
 
-    //log(tree.root);
+    //insertion of leaves
     for(var i = 0; i < levels; i++) {
-        //log(time_slot_indices[i]);
-        log(time_slot_leaves[i]);
         tree.pathElements[i] <== time_slot_leaves[i];
         tree.pathIndices[i] <== time_slot_indices[i];
-        //log(tree.root);
     }
-    log(tree.root);
-    log(root);
+    // making sure the root of tree = computed root of tree from leaves. 
     tree.root === root;
 
   

@@ -43,6 +43,7 @@
 		"sqlite3": "^5.0.0",
 		"truffle": "^5.5.30",
 		"truffle-privatekey-provider": "^1.5.0",
+		"tslog": "^3.3.4",
 		"typechain": "^8.1.0"
 	},
 	"devDependencies": {
