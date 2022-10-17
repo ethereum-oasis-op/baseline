@@ -59,7 +59,7 @@ export class WorkflowStorageAgent extends PrismaService {
   }
 
   async createNewWorkflow(workflow: Workflow): Promise<Workflow> {
-    const workstepsData = workflow.worksteps.map((w) => {
+    const workstepIds = workflow.worksteps.map((w) => {
       return {
         id: w.id,
       };
@@ -70,7 +70,7 @@ export class WorkflowStorageAgent extends PrismaService {
         id: workflow.id,
         name: workflow.name,
         worksteps: {
-          connect: workstepsData,
+          connect: workstepIds,
         },
         workgroupId: workflow.workgroupId,
       },
