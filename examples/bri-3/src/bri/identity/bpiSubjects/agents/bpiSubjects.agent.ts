@@ -42,13 +42,20 @@ export class BpiSubjectAgent {
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
   ): Promise<BpiSubject> {
-    const bpiSubjectToUpdate = await this.storageAgent.getBpiSubjectById(id);
+    const bpiSubjectToUpdate: BpiSubject =
+      await this.storageAgent.getBpiSubjectById(id);
 
     if (!bpiSubjectToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return bpiSubjectToUpdate;
+    return new BpiSubject(
+      bpiSubjectToUpdate.id,
+      bpiSubjectToUpdate.name,
+      bpiSubjectToUpdate.description,
+      bpiSubjectToUpdate.type,
+      bpiSubjectToUpdate.publicKey,
+    );
   }
 
   public updateBpiSubject(

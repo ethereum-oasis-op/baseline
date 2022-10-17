@@ -4,10 +4,14 @@ import { Workstep } from '../models/workstep';
 import { v4 as uuidv4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { WorkstepStorageAgent } from './workstepsStorage.agent';
+import { LoggingService } from 'src/shared/logging/logging.service';
 
 @Injectable()
 export class WorkstepAgent {
-  constructor(private storageAgent: WorkstepStorageAgent) {}
+  constructor(
+    private storageAgent: WorkstepStorageAgent,
+    private log: LoggingService,
+  ) {}
 
   public createNewWorkstep(
     name: string,
@@ -17,6 +21,7 @@ export class WorkstepAgent {
     securityPolicy: string,
     privacyPolicy: string,
   ): Workstep {
+    this.log.logError('This is an error string');
     return new Workstep(
       uuidv4(),
       name,

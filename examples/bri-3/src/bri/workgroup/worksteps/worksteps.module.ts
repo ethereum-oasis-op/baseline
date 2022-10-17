@@ -8,6 +8,8 @@ import { GetAllWorkstepsQueryHandler } from './capabilities/getAllWorksteps/getA
 import { GetWorkstepByIdQueryHandler } from './capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
 import { UpdateWorkstepCommandHandler } from './capabilities/updateWorkstep/updateWorkstep.command.handler';
 import { WorkstepStorageAgent } from './agents/workstepsStorage.agent';
+import Mapper from '../../utils/mapper';
+import { LoggingModule } from 'src/shared/logging/Logging.module';
 
 export const CommandHandlers = [
   CreateWorkstepCommandHandler,
@@ -21,13 +23,14 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, LoggingModule],
   controllers: [WorkstepController],
   providers: [
     ...CommandHandlers,
     ...QueryHandlers,
     WorkstepAgent,
     WorkstepStorageAgent,
+    Mapper,
   ],
 })
 export class WorkstepModule {}

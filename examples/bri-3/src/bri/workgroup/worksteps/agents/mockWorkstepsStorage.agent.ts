@@ -2,9 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workstep } from '../models/workstep';
-import { getLogger } from '../../../../../LogConfig';
-
-const log = getLogger();
 
 @Injectable()
 export class MockWorkstepStorageAgent {
@@ -12,7 +9,6 @@ export class MockWorkstepStorageAgent {
 
   async getWorkstepById(id: string): Promise<Workstep> {
     const workstep = this.workstepsStore.find((ws) => ws.id === id);
-    log.error(`This is a test error log`);
     if (!workstep) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
