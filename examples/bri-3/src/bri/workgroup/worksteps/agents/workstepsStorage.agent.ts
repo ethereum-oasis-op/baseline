@@ -20,7 +20,7 @@ export class WorkstepStorageAgent extends PrismaService {
 
     if (!workstepModel) {
       //Example error log string
-      this.log.logError('This is an error string');
+      this.log.logError('Workstep for given ID not found');
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
