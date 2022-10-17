@@ -19,6 +19,17 @@ export class MockWorkstepStorageAgent {
     return Promise.resolve(this.workstepsStore);
   }
 
+  async getMatchingWorkstepsById(workstepIds: string[]): Promise<Workstep[]> {
+    const worksteps: Workstep[] = [];
+    workstepIds.forEach((wsId) => {
+      worksteps.push(this.workstepsStore.find((ws) => ws.id === wsId));
+    });
+    if (!worksteps.length) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+    return Promise.resolve(worksteps);
+  }
+
   async createNewWorkstep(workstep: Workstep): Promise<Workstep> {
     const createdWs = new Workstep(
       uuidv4(),
