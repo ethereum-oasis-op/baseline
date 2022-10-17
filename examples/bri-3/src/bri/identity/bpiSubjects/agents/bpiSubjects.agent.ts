@@ -16,7 +16,7 @@ import { BpiSubjectStorageAgent } from './bpiSubjectsStorage.agent';
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class BpiSubjectAgent {
-  constructor(private repo: BpiSubjectStorageAgent) {}
+  constructor(private storageAgent: BpiSubjectStorageAgent) {}
   public throwIfCreateBpiSubjectInputInvalid(name: string) {
     // This is just an example, these fields will be validated on the DTO validation layer
     // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..)
@@ -42,13 +42,20 @@ export class BpiSubjectAgent {
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
   ): Promise<BpiSubject> {
-    const bpiSubjectToUpdate = await this.repo.getBpiSubjectById(id);
+    const bpiSubjectToUpdate: BpiSubject =
+      await this.storageAgent.getBpiSubjectById(id);
 
     if (!bpiSubjectToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return bpiSubjectToUpdate;
+    return new BpiSubject(
+      bpiSubjectToUpdate.id,
+      bpiSubjectToUpdate.name,
+      bpiSubjectToUpdate.description,
+      bpiSubjectToUpdate.type,
+      bpiSubjectToUpdate.publicKey,
+    );
   }
 
   public updateBpiSubject(
@@ -65,7 +72,7 @@ export class BpiSubjectAgent {
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
     id: string,
   ): Promise<BpiSubject> {
-    const bpiSubjectToDelete = await this.repo.getBpiSubjectById(id);
+    const bpiSubjectToDelete = await this.storageAgent.getBpiSubjectById(id);
 
     if (!bpiSubjectToDelete) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);

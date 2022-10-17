@@ -8,8 +8,8 @@ export class CreateBpiSubjectCommandHandler
   implements ICommandHandler<CreateBpiSubjectCommand>
 {
   constructor(
-    private agent: BpiSubjectAgent,
-    private repo: BpiSubjectStorageAgent,
+    private readonly agent: BpiSubjectAgent,
+    private readonly storageAgent: BpiSubjectStorageAgent,
   ) {}
 
   async execute(command: CreateBpiSubjectCommand) {
@@ -21,7 +21,7 @@ export class CreateBpiSubjectCommandHandler
       command.publicKey,
     );
 
-    const newBpiSubject = await this.repo.createNewBpiSubject(
+    const newBpiSubject = await this.storageAgent.createNewBpiSubject(
       newBpiSubjectCandidate,
     );
 

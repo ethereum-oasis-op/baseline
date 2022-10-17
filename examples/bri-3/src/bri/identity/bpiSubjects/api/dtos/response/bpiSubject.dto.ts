@@ -1,6 +1,6 @@
 export interface BpiSubjectDto {
   id: string;
   name: string;
-  desc: string;
+  description: string;
   publicKey: string;
 }
