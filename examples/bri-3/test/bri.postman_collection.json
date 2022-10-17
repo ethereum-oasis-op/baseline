@@ -275,7 +275,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/worksteps/63bce4b9-3b77-4cfe-ae78-dbc155436415",
+									"raw": "http://localhost:3000/worksteps/386c5af6-4206-464d-bef2-b8a78e5a0c6a",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -283,14 +283,14 @@
 									"port": "3000",
 									"path": [
 										"worksteps",
-										"63bce4b9-3b77-4cfe-ae78-dbc155436415"
+										"386c5af6-4206-464d-bef2-b8a78e5a0c6a"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "Get all Workstep",
+							"name": "Get all Worksteps",
 							"protocolProfileBehavior": {
 								"disableBodyPruning": true
 							},
@@ -315,6 +315,149 @@
 									"port": "3000",
 									"path": [
 										"worksteps",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "workflow",
+					"item": [
+						{
+							"name": "Update Workflow",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"workstepIds\": [\"386c5af6-4206-464d-bef2-b8a78e5a0c6a\", \"d3800b48-4c22-4ee1-aa42-4a4ed476cbdd\"],\n    \"workgroupId\": \"zyx1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workflows/870c9f9d-1615-45a5-9262-d5ee1b85ca1c",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workflows",
+										"870c9f9d-1615-45a5-9262-d5ee1b85ca1c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Workflow",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"workstepIds\": [\"d3800b48-4c22-4ee1-aa42-4a4ed476cbdd\"],\n    \"workgroupId\": \"zyx1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workflows",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workflows"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Workflow",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workflows/e877279d-8987-4e5b-8b6a-8785e8194e30",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workflows",
+										"e877279d-8987-4e5b-8b6a-8785e8194e30"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Workflow by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workflows/870c9f9d-1615-45a5-9262-d5ee1b85ca1c",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workflows",
+										"870c9f9d-1615-45a5-9262-d5ee1b85ca1c"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Workflows",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/workflows/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workflows",
 										""
 									]
 								}
