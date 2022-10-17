@@ -2,6 +2,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { TransactionAgent } from '../../agents/transactions.agent';
 import { TransactionStorageAgent } from '../../agents/transactionStorage.agent';
 import { UpdateTransactionCommand } from './updateTransaction.command';
+import Mapper from '../../../utils/mapper';
+import { getType } from 'tst-reflect';
 
 @CommandHandler(UpdateTransactionCommand)
 export class UpdateTransactionCommandHandler
@@ -10,6 +12,7 @@ export class UpdateTransactionCommandHandler
   constructor(
     private agent: TransactionAgent,
     private storageAgent: TransactionStorageAgent,
+    private readonly mapper: Mapper,
   ) {}
 
   async execute(command: UpdateTransactionCommand) {

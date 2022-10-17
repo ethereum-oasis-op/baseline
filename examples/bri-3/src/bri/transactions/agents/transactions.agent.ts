@@ -58,7 +58,17 @@ export class TransactionAgent {
       throw new BadRequestException(UPDATE_WRONG_STATUS_ERR_MESSAGE);
     }
 
-    return transactionToUpdate;
+    return new Transaction(
+      transactionToUpdate.id,
+      transactionToUpdate.nonce,
+      transactionToUpdate.workflowInstanceId,
+      transactionToUpdate.workstepInstanceId,
+      transactionToUpdate.from,
+      transactionToUpdate.to,
+      transactionToUpdate.payload,
+      transactionToUpdate.signature,
+      transactionToUpdate.status,
+    );
   }
 
   public updateTransaction(

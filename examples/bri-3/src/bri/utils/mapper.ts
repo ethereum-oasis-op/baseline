@@ -110,9 +110,12 @@ export default class Mapper {
               key.accessModifier === AccessModifier.Protected,
           )
           .map((param) => param.name);
+
+        console.log(options.opts);
+
         Object.keys(options.opts).forEach((key) => {
           if (classkeys.includes(key) && !options?.exclude?.includes(key)) {
-            result[key] = options[key];
+            result[key] = options.opts[key];
           } else {
             mismatchedKeys.push(key);
           }

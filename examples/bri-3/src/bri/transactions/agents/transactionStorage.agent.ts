@@ -1,30 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import Mapper from '../../utils/mapper';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '..//api/err.messages';
 import { Transaction } from '../models/transaction';
+import { getType } from 'tst-reflect';
 
 @Injectable()
 export class TransactionStorageAgent extends PrismaService {
+  constructor(private readonly mapper: Mapper) {
+    super();
+  }
+
+  async getAllTransactions(): Promise<Transaction[]> {
+    const transactionModels = await this.transaction.findMany();
+    return transactionModels.map((transactionModel) => {
+      return this.mapper.map(transactionModel, getType<Transaction>(), {
+        opts: {
+          from: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+          to: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+        },
+      }) as Transaction;
+    });
+  }
+
   async getTransactionById(id: string): Promise<Transaction> {
     const transactionModel = await this.transaction.findUnique({
-      where: { id: id },
+      where: { id },
     });
 
     if (!transactionModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new Transaction(
-      transactionModel.id,
-      transactionModel.nonce,
-      transactionModel.workflowInstanceId,
-      transactionModel.workstepInstanceId,
-      null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
-      null, // TODO: transactionModel.to once BpiAccount in the prisma schema,
-      transactionModel.payload,
-      transactionModel.signature,
-      transactionModel.status,
-    );
+    return this.mapper.map(transactionModel, getType<Transaction>(), {
+      opts: {
+        from: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+        to: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+      },
+    }) as Transaction;
   }
 
   async createNewTransaction(transaction: Transaction): Promise<Transaction> {
@@ -42,17 +55,12 @@ export class TransactionStorageAgent extends PrismaService {
       },
     });
 
-    return new Transaction(
-      newTransactionModel.id,
-      newTransactionModel.nonce,
-      newTransactionModel.workflowInstanceId,
-      newTransactionModel.workstepInstanceId,
-      null, // TODO: newTransactionModel.from once BpiAccount in the prisma schema,
-      null, // TODO: newTransactionModel.to once BpiAccount in the prisma schema,
-      newTransactionModel.payload,
-      newTransactionModel.signature,
-      newTransactionModel.status,
-    );
+    return this.mapper.map(newTransactionModel, getType<Transaction>(), {
+      opts: {
+        from: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+        to: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+      },
+    }) as Transaction;
   }
 
   async updateTransaction(transaction: Transaction): Promise<Transaction> {
@@ -64,17 +72,12 @@ export class TransactionStorageAgent extends PrismaService {
       },
     });
 
-    return new Transaction(
-      newTransactionModel.id,
-      newTransactionModel.nonce,
-      newTransactionModel.workflowInstanceId,
-      newTransactionModel.workstepInstanceId,
-      null, // TODO: newTransactionModel.from once BpiAccount in the prisma schema,
-      null, // TODO: newTransactionModel.to once BpiAccount in the prisma schema,
-      newTransactionModel.payload,
-      newTransactionModel.signature,
-      newTransactionModel.status,
-    );
+    return this.mapper.map(newTransactionModel, getType<Transaction>(), {
+      opts: {
+        from: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+        to: null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+      },
+    }) as Transaction;
   }
 
   async deleteTransaction(transaction: Transaction): Promise<void> {

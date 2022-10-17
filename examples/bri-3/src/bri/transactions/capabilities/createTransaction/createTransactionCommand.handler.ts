@@ -8,8 +8,8 @@ export class CreateTransactionCommandHandler
   implements ICommandHandler<CreateTransactionCommand>
 {
   constructor(
-    private agent: TransactionAgent,
-    private storageAgent: TransactionStorageAgent,
+    private readonly agent: TransactionAgent,
+    private readonly storageAgent: TransactionStorageAgent,
   ) {}
 
   async execute(command: CreateTransactionCommand) {

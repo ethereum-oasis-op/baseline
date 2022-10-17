@@ -12,6 +12,7 @@ import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { MockTransactionStorageAgent } from '../agents/mockTransactionStorage.agent';
+import Mapper from '../../utils/mapper';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -27,10 +28,11 @@ describe('TransactionController', () => {
         DeleteTransactionCommandHandler,
         GetTransactionByIdQueryHandler,
         TransactionStorageAgent,
+        Mapper,
       ],
     })
       .overrideProvider(TransactionStorageAgent)
-      .useValue(new MockTransactionStorageAgent())
+      .useValue(new MockTransactionStorageAgent(new Mapper()))
       .compile();
 
     controller = app.get<TransactionController>(TransactionController);
