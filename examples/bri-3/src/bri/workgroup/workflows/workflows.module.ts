@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import Mapper from 'src/bri/utils/mapper';
 import { WorkstepModule } from '../worksteps/worksteps.module';
 import { WorkflowAgent } from './agents/workflows.agent';
 import { WorkflowStorageAgent } from './agents/workflowsStorage.agent';
@@ -29,6 +30,7 @@ export const QueryHandlers = [
     ...QueryHandlers,
     WorkflowAgent,
     WorkflowStorageAgent,
+    Mapper,
   ],
 })
 export class WorkflowModule {}

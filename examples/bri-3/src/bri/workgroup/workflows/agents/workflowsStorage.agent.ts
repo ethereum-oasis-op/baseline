@@ -3,9 +3,14 @@ import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Workstep } from '../../worksteps/models/workstep';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
+import Mapper from '../../../../bri/utils/mapper';
+import { getType } from 'tst-reflect';
 
 @Injectable()
 export class WorkflowStorageAgent extends PrismaService {
+  constructor(private readonly mapper: Mapper) {
+    super();
+  }
   async getWorkflowById(id: string): Promise<Workflow> {
     const workflowModel = await this.workflow.findUnique({
       where: { id: id },
@@ -16,22 +21,7 @@ export class WorkflowStorageAgent extends PrismaService {
       throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new Workflow(
-      workflowModel.id,
-      workflowModel.name,
-      workflowModel.worksteps.map((w) => {
-        return new Workstep(
-          w.id,
-          w.name,
-          w.version,
-          w.status,
-          w.workgroupId,
-          w.securityPolicy,
-          w.privacyPolicy,
-        );
-      }),
-      workflowModel.workgroupId,
-    );
+    return this.mapper.map(workflowModel, getType<Workflow>()) as Workflow;
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
