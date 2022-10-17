@@ -18,6 +18,10 @@ model BpiSubject {
   publicKey   String
   sentMessages Message[] @relation(name: "fromBpiSubject_fk")
   receivedMessages Message[] @relation(name: "toBpiSubject_fk")
+  administratedWorkgroup Workgroup @relation(fields: [administratedWorkgroupId], references: [id], name: "administrators_fk")
+  administratedWorkgroupId String
+  participatingWorkgroup Workgroup @relation(fields: [particpatingWorkgroupId], references: [id], name: "participants_fk")
+  particpatingWorkgroupId String
 }
 
 model Workstep {
@@ -29,6 +33,7 @@ model Workstep {
   securityPolicy String
   privacyPolicy  String
   workflow       Workflow[]
+  workgroup Workgroup @relation(fields: [workgroupId], references: [id])
 }
 
 model Workflow {
@@ -36,6 +41,18 @@ model Workflow {
   name        String
   workgroupId String
   worksteps   Workstep[]
+  workgroup Workgroup @relation(fields: [workgroupId], references: [id])
+}
+
+model Workgroup {
+  id String @id @default(uuid())
+  name String
+  administrator BpiSubject[] @relation(name: "administrators_fk")
+  securityPolicy String 
+  privacyPolicy String
+  participants BpiSubject[] @relation(name: "participants_fk")
+  worksteps Workstep[] 
+  workflows Workflow[]
 }
 
 model Transaction {
