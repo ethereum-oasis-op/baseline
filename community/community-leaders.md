@@ -31,6 +31,8 @@ OASIS employs key personnel that support all the open standards and open source 
 
 The technical steering committee (TSC) is accountable to the Project Governance Board for managing conflicts on merges and Core Dev self-organization. It also governs the allocation of grant money. And it meets regularly to set technical roadmaps and ensure progress of the community toward the ubiquitous implementation of the baseline protocol in systems of record everywhere.
 
+In September of 2022, Sonal Patel took over John Wolpert's TSC seat and role for the remainder of the 2021/2022 term.
+
 | Name                                                                               | Company                         |
 | ---------------------------------------------------------------------------------- | ------------------------------- |
 | [**Ryan Fisch**](https://www.linkedin.com/in/ryanfisch/)\*\*\*\*                   | End-Labs                        |
@@ -45,22 +47,23 @@ The technical steering committee (TSC) is accountable to the Project Governance 
 | [**Jack Wiering**](https://www.linkedin.com/in/jackwiering1977/)                   | Unibright                       |
 | [**Sonal Patel**](https://www.linkedin.com/in/sonalpatel13/) -- Co-Chair           | ConsenSys Mesh                  |
 
-### Core Developers Team <a href="#maintainer-team" id="maintainer-team"></a>
+### Maintainers Team <a href="#maintainer-team" id="maintainer-team"></a>
 
-The Core Developers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Main branch of the repo.
+The Maintainers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Main branch of the repo.
 
-Details on how to become a [Core Developer here](broken-reference).
+Details on how to become a [Maintainer here](broken-reference).
 
 | Maintainer (with link to Github ID)                                                           | Company                             |
 | --------------------------------------------------------------------------------------------- | ----------------------------------- |
-| [**Sam Stokes**](https://github.com/bitwiseguy)                                               | ConsenSys                           |
-| [**Lucas Rodriguez Benitez**](https://www.linkedin.com/in/lucas-rodriguez-benitez-229092171/) | Provide                             |
-| [**Kartheek Solipuram**](https://github.com/skarred14)                                        | EY                                  |
-| [**Kyle Thomas**](https://github.com/kthomas)                                                 | Provide                             |
-| [**Tomasz Kajetan Stańczak**](https://www.linkedin.com/in/tomaszkajetanstanczak/)             | Nethermind                          |
-| [**Anais Ofranc**](https://github.com/Consianimis)                                            | Consianimis                         |
-| [**Hamza Tokuchi**](https://github.com/Meuko)                                                 | [BlockLab](https://www.blocklab.nl) |
-| [**Ryan Fleischmann**](https://github.com/fleischr)                                           | Provide                             |
+| [**Dr. Andreas Freund**](https://github.com/Therecanbeonlyone1969)\*\*\*\*        | ZK & L2 Leader, EEA L2 WG Chair |
+| [**Sonal Patel**](https://github.com/GoldenBit0/)                                  | ConsenSys Mesh                  |
+| [**Kartheek Solipuram**](https://github.com/skarred14)                             | EY                   |
+| [**Kyle Thomas**](https://github.com/kthomas)                                      | Provide                         |
+| [**Ongen Kurtic**](https://github.com/ognjenkurtic)                                | Finspot                         |
+| [**Luiz Soares**](https://github.com/fosgate29)\*\*\*\*                            | WhitePrompt                     |
+| [**Manik Jain**](https://github.com/Manik-Jain)\*\*\*\*                            | Tata Consultancy Services (TCS)                     |
+| [**Keith Salzman**](https://github.com/Kasshern)                                   | Consensys Mesh                  |
+| [**Stefan Kostic**](https://github.com/skosito)                                    | END Labs / Unibright            |           
 
 ## Standards Team
 
