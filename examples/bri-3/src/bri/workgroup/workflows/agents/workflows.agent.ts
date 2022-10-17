@@ -13,13 +13,13 @@ import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.ag
 export class WorkflowAgent {
   constructor(
     private workflowStorageAgent: WorkflowStorageAgent,
-    private WorkstepStorageAgent: WorkstepStorageAgent,
+    private workstepStorageAgent: WorkstepStorageAgent,
   ) {}
 
   public async fetchWorkstepCandidatesForWorkflowAndThrowIfExistenceValidationFails(
     workstepIds: string[],
   ): Promise<Workstep[]> {
-    const worksteps = await this.WorkstepStorageAgent.getMatchingWorkstepsById(
+    const worksteps = await this.workstepStorageAgent.getMatchingWorkstepsById(
       workstepIds,
     );
 
