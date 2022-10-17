@@ -15,8 +15,8 @@ export class CreateBpiMessageCommandHandler
   async execute(command: CreateBpiMessageCommand) {
     const { fromBpiSubject, toBpiSubject } =
       await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
-        command.fromId,
-        command.toId,
+        command.from,
+        command.to,
       );
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(

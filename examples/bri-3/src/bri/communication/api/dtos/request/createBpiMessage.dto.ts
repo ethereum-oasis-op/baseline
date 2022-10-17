@@ -5,10 +5,10 @@ export class CreateBpiMessageDto {
   id: string;
 
   @IsNotEmpty()
-  fromId: string;
+  from: string;
 
   @IsNotEmpty()
-  toId: string;
+  to: string;
 
   @IsNotEmpty()
   content: string;

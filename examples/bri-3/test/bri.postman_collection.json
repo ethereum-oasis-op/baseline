@@ -487,7 +487,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": \"123\",\n  \"fromId\": \"eb6ab5d2-fe0e-4c74-b6e2-343f16eface4\",\n  \"toId\": \"cf77044d-dd3c-42b6-98dc-5d15ef769eb8\",\n  \"content\": \"hello world\",\n  \"signature\": \"xyz\",\n  \"type\": 1\n}",
+							"raw": "{\n  \"id\": \"123\",\n  \"from\": \"eb6ab5d2-fe0e-4c74-b6e2-343f16eface4\",\n  \"to\": \"cf77044d-dd3c-42b6-98dc-5d15ef769eb8\",\n  \"content\": \"hello world\",\n  \"signature\": \"xyz\",\n  \"type\": 1\n}",
 							"options": {
 								"raw": {
 									"language": "json"

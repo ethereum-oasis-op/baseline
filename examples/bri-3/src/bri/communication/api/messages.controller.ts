@@ -32,8 +32,8 @@ export class MessageController {
     return await this.commandBus.execute(
       new CreateBpiMessageCommand(
         requestDto.id,
-        requestDto.fromId,
-        requestDto.toId,
+        requestDto.from,
+        requestDto.to,
         requestDto.content,
         requestDto.signature,
         requestDto.type,
