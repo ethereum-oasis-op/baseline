@@ -181,15 +181,6 @@ describe('WorkflowsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      // const workstepRequestDto = {
-      //   name: 'name',
-      //   version: 'version',
-      //   status: 'status',
-      //   workgroupId: 'wgid',
-      //   securityPolicy: 'secPolicy',
-      //   privacyPolicy: 'privPolicy',
-      // } as CreateWorkstepDto;
-
       const workstepId = await workstepController.createWorkstep(
         workstepRequestDto,
       );
