@@ -19,7 +19,7 @@ import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../.
 import Mapper from '../../utils/mapper';
 import { MessageController } from './messages.controller';
 
-describe('MessageController', ()=> {
+describe('MessageController', () => {
   let mController: MessageController;
 
   let mockBpiMessageStorageAgent: MockBpiMessageStorageAgent;
@@ -28,10 +28,14 @@ describe('MessageController', ()=> {
   let existingBpiSubject2: BpiSubject;
 
   beforeEach(async () => {
-    mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent(new Mapper())
+    mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent(new Mapper());
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(new Mapper());
-    existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(new BpiSubject("", "name", "desc", BpiSubjectType.External, "xyz"));
-    existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(new BpiSubject("", "name2", "desc2", BpiSubjectType.External, "xyz2"));
+    existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
+      new BpiSubject('', 'name', 'desc', BpiSubjectType.External, 'xyz'),
+    );
+    existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
+      new BpiSubject('', 'name2', 'desc2', BpiSubjectType.External, 'xyz2'),
+    );
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule],
@@ -100,7 +104,7 @@ describe('MessageController', ()=> {
       // Arrange
       const requestDto = {
         id: '123',
-        fromId: "nonexistent",
+        fromId: 'nonexistent',
         toId: existingBpiSubject2.id,
         content: 'hello world',
         signature: 'xyz',
@@ -110,7 +114,9 @@ describe('MessageController', ()=> {
       // Act and assert
       expect(async () => {
         await mController.createBpiMessage(requestDto);
-      }).rejects.toThrow(new BadRequestException(BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE));
+      }).rejects.toThrow(
+        new BadRequestException(BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE),
+      );
     });
 
     it('should return new uuid from the created bpi subject when all params provided', async () => {
