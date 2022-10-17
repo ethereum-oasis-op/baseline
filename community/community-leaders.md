@@ -1,7 +1,3 @@
----
-description: TO DO
----
-
 # Community Leaders
 
 Over 500 people and companies signed up to be notified about the opening of the Baseline Protocol Github repository between March 4th and 19th, 2020. Over 300 of them also signed in as group members. The members represent many of the largest companies in the world, spanning several sectors. They also represent startups, students and talented individuals.
@@ -35,12 +31,12 @@ In September of 2022, Sonal Patel took over John Wolpert's TSC seat and role for
 
 | Name                                                                               | Company                         |
 | ---------------------------------------------------------------------------------- | ------------------------------- |
-| [**Ryan Fisch**](https://www.linkedin.com/in/ryanfisch/)\*\*\*\*                   | End-Labs                        |
-| [**Dr. Andreas Freund**](https://www.linkedin.com/in/afconsultant/)\*\*\*\*        | ZK & L2 Leader, EEA L2 WG Chair |
-| [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/)\*\* \*\*-- Co-Chair | Golden Next Ventures            |
+| [**Ryan Fisch**](https://www.linkedin.com/in/ryanfisch/)                  | End-Labs                        |
+| [**Dr. Andreas Freund**](https://www.linkedin.com/in/afconsultant/)       | ZK & L2 Leader, EEA L2 WG Chair |
+| [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/)-- Co-Chair | Golden Next Ventures            |
 | [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)                     | Unibright                       |
 | [**Mehran Shakeri**](https://www.linkedin.com/in/mehran-shakeri-8833b347/)         | SAP                             |
-| [**Luiz Soares**](community-leaders.md#your-project-governance-board)\*\*\*\*      | WhitePrompt                     |
+| [**Luiz Soares**](community-leaders.md#your-project-governance-board)      | WhitePrompt                     |
 | [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/)  | EY                              |
 | [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)                         | Microsoft                       |
 | [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)                        | Provide                         |
@@ -55,13 +51,13 @@ Details on how to become a [Maintainer here](broken-reference).
 
 | Maintainer (with link to Github ID)                                                           | Company                             |
 | --------------------------------------------------------------------------------------------- | ----------------------------------- |
-| [**Dr. Andreas Freund**](https://github.com/Therecanbeonlyone1969)\*\*\*\*        | ZK & L2 Leader, EEA L2 WG Chair |
+| [**Dr. Andreas Freund**](https://github.com/Therecanbeonlyone1969)      | ZK & L2 Leader, EEA L2 WG Chair |
 | [**Sonal Patel**](https://github.com/GoldenBit0/)                                  | ConsenSys Mesh                  |
 | [**Kartheek Solipuram**](https://github.com/skarred14)                             | EY                   |
 | [**Kyle Thomas**](https://github.com/kthomas)                                      | Provide                         |
 | [**Ongen Kurtic**](https://github.com/ognjenkurtic)                                | Finspot                         |
-| [**Luiz Soares**](https://github.com/fosgate29)\*\*\*\*                            | WhitePrompt                     |
-| [**Manik Jain**](https://github.com/Manik-Jain)\*\*\*\*                            | Tata Consultancy Services (TCS)                     |
+| [**Luiz Soares**](https://github.com/fosgate29)                          | WhitePrompt                     |
+| [**Manik Jain**](https://github.com/Manik-Jain)                           | Tata Consultancy Services (TCS)                     |
 | [**Keith Salzman**](https://github.com/Kasshern)                                   | Consensys Mesh                  |
 | [**Stefan Kostic**](https://github.com/skosito)                                    | END Labs / Unibright            |           
 
