@@ -111,8 +111,6 @@ export default class Mapper {
           )
           .map((param) => param.name);
 
-        console.log(options.opts);
-
         Object.keys(options.opts).forEach((key) => {
           if (classkeys.includes(key) && !options?.exclude?.includes(key)) {
             result[key] = options.opts[key];

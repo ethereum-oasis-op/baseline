@@ -29,17 +29,5 @@ export class GetTransactionByIdQueryHandler
         to: '', // TODO: transaction.from once BpiAccount in the prisma schema,
       },
     }) as TransactionDto;
-
-    // return {
-    //   id: transaction.id,
-    //   nonce: transaction.nonce,
-    //   workflowInstanceId: transaction.workflowInstanceId,
-    //   workstepInstanceId: transaction.workstepInstanceId,
-    //   from: '', // TODO: transaction.from once BpiAccount in the prisma schema,
-    //   to: '', // TODO: transaction.from once BpiAccount in the prisma schema,
-    //   payload: transaction.payload,
-    //   signature: transaction.signature,
-    //   status: transaction.status,
-    // } as TransactionDto;
   }
 }
