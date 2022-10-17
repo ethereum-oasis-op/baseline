@@ -98,18 +98,18 @@ export class WorkflowStorageAgent extends PrismaService {
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
-    const workstepsData = workflow.worksteps.map((w) => {
+    const workstepIds = workflow.worksteps.map((w) => {
       return {
         id: w.id,
       };
     });
 
-    const newWorkflowModel = await this.workflow.update({
+    const updatedWorkflowModel = await this.workflow.update({
       where: { id: workflow.id },
       data: {
         name: workflow.name,
         worksteps: {
-          set: workstepsData,
+          set: workstepIds,
         },
         workgroupId: workflow.workgroupId,
       },
@@ -119,9 +119,9 @@ export class WorkflowStorageAgent extends PrismaService {
     });
 
     return new Workflow(
-      newWorkflowModel.id,
-      newWorkflowModel.name,
-      newWorkflowModel.worksteps.map((ws) => {
+      updatedWorkflowModel.id,
+      updatedWorkflowModel.name,
+      updatedWorkflowModel.worksteps.map((ws) => {
         return new Workstep(
           ws.id,
           ws.name,
@@ -132,7 +132,7 @@ export class WorkflowStorageAgent extends PrismaService {
           ws.privacyPolicy,
         );
       }),
-      newWorkflowModel.workgroupId,
+      updatedWorkflowModel.workgroupId,
     );
   }
 
