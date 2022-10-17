@@ -1,22 +1,83 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { BpiSubject } from "../models/bpiSubject";
-import { BpiSubjectType } from "../models/bpiSubjectType.enum";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { v4 } from 'uuid';
+import { BpiSubject } from '../models/bpiSubject';
+import { BpiSubjectType } from '../models/bpiSubjectType.enum';
 
-import { uuid } from 'uuidv4'; 
- 
+import {
+  NAME_EMPTY_ERR_MESSAGE,
+  NOT_FOUND_ERR_MESSAGE,
+} from '../api/err.messages';
+import { BpiSubjectStorageAgent } from './bpiSubjectsStorage.agent';
+
+// Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class BpiSubjectAgent {
-  // Agent methods have extremely declarative names and perform a single task 
-  public throwIfCreateBpiSubjectInputInvalid(name: string, desc: string, pk: string) {
+  constructor(private storageAgent: BpiSubjectStorageAgent) {}
+  public throwIfCreateBpiSubjectInputInvalid(name: string) {
     // This is just an example, these fields will be validated on the DTO validation layer
-    // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..) 
+    // This validation would check internal business rules (i.e. bpiSubject must have public key in the format defined by the participants..)
     if (!name) {
-      // We stop execution in case of critical errors by throwing a simple exception
-      throw new BadRequestException("Name cannot be empty.")
-    };
+      throw new BadRequestException(NAME_EMPTY_ERR_MESSAGE);
+    }
   }
 
-  public createNewExternalBpiSubject(name :string, description: string, publicKey: string): BpiSubject {
-    return new BpiSubject(uuid(), name, description, BpiSubjectType.External, publicKey );
+  public createNewExternalBpiSubject(
+    name: string,
+    description: string,
+    publicKey: string,
+  ): BpiSubject {
+    return new BpiSubject(
+      v4(),
+      name,
+      description,
+      BpiSubjectType.External,
+      publicKey,
+    );
+  }
+
+  public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
+    id: string,
+  ): Promise<BpiSubject> {
+    const bpiSubjectToUpdate: BpiSubject =
+      await this.storageAgent.getBpiSubjectById(id);
+
+    if (!bpiSubjectToUpdate) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return new BpiSubject(
+      bpiSubjectToUpdate.id,
+      bpiSubjectToUpdate.name,
+      bpiSubjectToUpdate.description,
+      bpiSubjectToUpdate.type,
+      bpiSubjectToUpdate.publicKey,
+    );
+  }
+
+  public updateBpiSubject(
+    bpiSubjectToUpdate: BpiSubject,
+    name: string,
+    description: string,
+    publicKey: string,
+  ) {
+    bpiSubjectToUpdate.updateName(name);
+    bpiSubjectToUpdate.updateDescription(description);
+    bpiSubjectToUpdate.updatePublicKey(publicKey);
+  }
+
+  public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
+    id: string,
+  ): Promise<BpiSubject> {
+    const bpiSubjectToDelete = await this.storageAgent.getBpiSubjectById(id);
+
+    if (!bpiSubjectToDelete) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return bpiSubjectToDelete;
   }
 }

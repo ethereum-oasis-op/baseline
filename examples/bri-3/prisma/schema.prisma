@@ -6,14 +6,49 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model BpiSubject {
-  id String @id @default(uuid())
-  name String
-  description String  
+  id          String @id @default(uuid())
+  name        String
+  description String
+  type        Int
+  publicKey   String
+  sentMessages Message[] @relation(name: "fromBpiSubject_fk")
+  receivedMessages Message[] @relation(name: "toBpiSubject_fk")
+}
+
+model Workstep {
+  id             String     @id @default(uuid())
+  name           String
+  version        String
+  status         String
+  workgroupId    String
+  securityPolicy String
+  privacyPolicy  String
+}
+
+model Transaction {
+  id String @id
+  nonce Int
+  workflowInstanceId String
+  workstepInstanceId String
+  from String // Add BpiAccount once #489 done
+  to String // Add BpiAccount once #489 done
+  payload String
+  signature String
+  status Int
+}
+
+model Message {
+  id String @id
+  fromBpiSubjectId String
+  FromBpiSubject BpiSubject @relation(fields: [fromBpiSubjectId], references: [id], name: "fromBpiSubject_fk")
+  toBpiSubjectId String
+  ToBpiSubject BpiSubject @relation(fields: [toBpiSubjectId], references: [id], name: "toBpiSubject_fk")
+  content String
+  signature String 
   type Int
-  publicKey String 
 }

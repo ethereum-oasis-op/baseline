@@ -1,0 +1,575 @@
+{
+	"info": {
+		"_postman_id": "b9b1a6d8-c0be-41bf-98da-a91ca1389de8",
+		"name": "bri",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "Bpi Subject",
+					"item": [
+						{
+							"name": "Update Bpi Subject",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"22530de2-f368-4d26-808a-787a1528adbd\",\n    \"name\": \"hello3\",\n    \"desc\": \"world2\",\n    \"publicKey\": \"xyz2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create BPI Subject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Subject",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Subject by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/22530de2-f368-4d26-808a-787a1528adbd",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										"22530de2-f368-4d26-808a-787a1528adbd"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Bpi Subjects",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjects/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjects",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Workgroup",
+			"item": [
+				{
+					"name": "Workstep",
+					"item": [
+						{
+							"name": "Update Workstep",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"19854519-fe4b-45fc-843b-39b0446d556e\",\n    \"name\": \"hello2\",\n    \"version\": \"world2\",\n    \"status\": \"xyz2\",\n    \"workgroupId\": \"zyx2\",\n    \"securityPolicy\": \"dlrow2\",\n    \"privacyPolicy\": \"olleh2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/19854519-fe4b-45fc-843b-39b0446d556e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										"19854519-fe4b-45fc-843b-39b0446d556e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Workstep",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"version\": \"world1\",\n    \"status\": \"xyz1\",\n    \"workgroupId\": \"zyx1\",\n    \"securityPolicy\": \"dlrow1\",\n    \"privacyPolicy\": \"olleh1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Workstep",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Workstep by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/63bce4b9-3b77-4cfe-ae78-dbc155436415",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										"63bce4b9-3b77-4cfe-ae78-dbc155436415"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all Workstep",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/worksteps/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"worksteps",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Update Transaction",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"payload\": \"hello3\",\n    \"signature\": \"world2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transaction",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"123\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromAccountId\": \"1\",\n    \"toAccountId\": \"2\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Transaction",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific Transaction by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/transactions/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions",
+								"123"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Message",
+			"item": [
+				{
+					"name": "Update Message",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"hello world2\",\n    \"signature\": \"xyz2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": \"123\",\n  \"from\": \"eb6ab5d2-fe0e-4c74-b6e2-343f16eface4\",\n  \"to\": \"cf77044d-dd3c-42b6-98dc-5d15ef769eb8\",\n  \"content\": \"hello world\",\n  \"signature\": \"xyz\",\n  \"type\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Message",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages",
+								"123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific Message by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/messages/123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"messages",
+								"123"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,13 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AccountsModule } from './bpiAccounts/accounts.module';
-import { SubjectAccountsModule } from './bpiSubjectAccounts/subjectAccounts.module';
-import { SubjectsModule } from './bpiSubjects/subjects.module';
+import { AccountModule } from './bpiAccounts/accounts.module';
+import { SubjectAccountModule } from './bpiSubjectAccounts/subjectAccounts.module';
+import { SubjectModule } from './bpiSubjects/subjects.module';
 
 @Module({
-  imports: [
-    SubjectsModule, 
-    SubjectAccountsModule, 
-    AccountsModule
-  ]
+  imports: [SubjectModule, SubjectAccountModule, AccountModule],
 })
 export class IdentityModule {}

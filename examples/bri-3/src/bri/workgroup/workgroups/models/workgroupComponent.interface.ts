@@ -1,5 +1,4 @@
 import { Workgroup } from './workgroup';
-import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { Agreement } from '../../../storage/models/agreement';
 import { Invitation } from '../../invitations/models/invitation';
 
