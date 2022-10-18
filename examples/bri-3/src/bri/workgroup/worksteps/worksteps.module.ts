@@ -31,5 +31,6 @@ export const QueryHandlers = [
     WorkstepStorageAgent,
     Mapper,
   ],
+  exports: [WorkstepAgent, WorkstepStorageAgent],
 })
 export class WorkstepModule {}

@@ -30,5 +30,6 @@ export const QueryHandlers = [
     BpiSubjectStorageAgent,
     Mapper,
   ],
+  exports: [BpiSubjectStorageAgent],
 })
 export class SubjectModule {}

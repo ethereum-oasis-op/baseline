@@ -18,7 +18,5 @@ export class DeleteWorkstepCommandHandler
         command.id,
       );
     await this.storageAgent.deleteWorkstep(workstepToDelete);
-
-    return;
   }
 }
