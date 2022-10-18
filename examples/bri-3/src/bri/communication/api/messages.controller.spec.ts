@@ -77,8 +77,8 @@ describe('MessageController', () => {
       // Arrange
       const requestDto = {
         id: '123',
-        fromId: existingBpiSubject1.id,
-        toId: existingBpiSubject2.id,
+        from: existingBpiSubject1.id,
+        to: existingBpiSubject2.id,
         content: 'hello world',
         signature: 'xyz',
         type: 1,
@@ -104,8 +104,8 @@ describe('MessageController', () => {
       // Arrange
       const requestDto = {
         id: '123',
-        fromId: 'nonexistent',
-        toId: existingBpiSubject2.id,
+        from: 'nonexistent',
+        to: existingBpiSubject2.id,
         content: 'hello world',
         signature: 'xyz',
         type: 1,
@@ -123,8 +123,8 @@ describe('MessageController', () => {
       // Arrange
       const requestDto = {
         id: '123',
-        fromId: existingBpiSubject1.id,
-        toId: existingBpiSubject2.id,
+        from: existingBpiSubject1.id,
+        to: existingBpiSubject2.id,
         content: 'hello world',
         signature: 'xyz',
         type: 1,
@@ -158,8 +158,8 @@ describe('MessageController', () => {
       // Arrange
       const createRequestDto = {
         id: '123',
-        fromId: existingBpiSubject1.id,
-        toId: existingBpiSubject2.id,
+        from: existingBpiSubject1.id,
+        to: existingBpiSubject2.id,
         content: 'hello world',
         signature: 'xyz',
         type: 1,
@@ -202,8 +202,8 @@ describe('MessageController', () => {
       // Arrange
       const createRequestDto = {
         id: '123',
-        fromId: existingBpiSubject1.id,
-        toId: existingBpiSubject2.id,
+        from: existingBpiSubject1.id,
+        to: existingBpiSubject2.id,
         content: 'hello world',
         signature: 'xyz',
         type: 1,
