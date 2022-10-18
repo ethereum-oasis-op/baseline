@@ -1,16 +1,15 @@
 import { Workstep } from '../../worksteps/models/workstep';
-import { IWorkgroup } from './workgroup.interface';
 import { Workflow } from '../../workflows/models/workflow';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { Security } from '../../../policy/models/security';
 import { Privacy } from '../../../policy/models/privacy';
 
-export class Workgroup implements IWorkgroup {
+export class Workgroup {
   private _id: string; // TODO: Add uuid after #491
   private _name: string;
-  private _administrator: BpiSubject[];
-  private _securityPolicy: Security[]; //TODO Implement securityPolicy #485
-  private _privacyPolicy: Privacy[]; //TODO Implement privacyPolicy #485
+  private _administrators: BpiSubject[];
+  private _securityPolicy: string; //TODO Implement securityPolicy #485
+  private _privacyPolicy: string; //TODO Implement privacyPolicy #485
   private _participants: BpiSubject[];
   private _worksteps: Workstep[];
   private _workflows: Workflow[];
@@ -19,15 +18,15 @@ export class Workgroup implements IWorkgroup {
     id: string,
     name: string,
     administrator: BpiSubject[],
-    securityPolicy: Security[],
-    privacyPolicy: Privacy[],
+    securityPolicy: string,
+    privacyPolicy: string,
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
   ) {
     this._id = id;
     this._name = name;
-    this._administrator = administrator;
+    this._administrators = administrator;
     this._securityPolicy = securityPolicy;
     this._privacyPolicy = privacyPolicy;
     this._participants = participants;
@@ -44,7 +43,7 @@ export class Workgroup implements IWorkgroup {
   }
 
   public get administrator(): BpiSubject[] {
-    return this._administrator;
+    return this._administrators;
   }
 
   public get securityPolicy(): Security {
@@ -67,59 +66,31 @@ export class Workgroup implements IWorkgroup {
     return this._workflows;
   }
 
-  addParticipants(bpiSubject: BpiSubject[]): BpiSubject[] {
-    throw new Error('not implemented');
+  public updateName(newName: string): void {
+    this._name = newName;
   }
 
-  getParticipants(ids?: string[]): BpiSubject[] {
-    throw new Error('not implemented');
+  public updateAdministrators(newAdministrators: BpiSubject[]): void {
+    this._administrators = newAdministrators;
   }
 
-  updateParticipants(id: string[], update: any[]): BpiSubject[] {
-    throw new Error('Method not implemented.');
+  public updateSecurityPolicy(newSecurityPolicy: string): void {
+    this._securityPolicy = newSecurityPolicy;
   }
 
-  removeParticipants(ids: string[]): BpiSubject[] {
-    throw new Error('not implemented');
+  public updatePrivacyPolicy(newPrivacyPolicy: string): void {
+    this._privacyPolicy = newPrivacyPolicy;
   }
 
-  addSecurityPolicy(securityPolicy: Security) {
-    throw new Error('not implemented');
+  public updateParticipants(newParticipants: BpiSubject[]): void {
+    this._participants = newParticipants;
   }
 
-  removeSecurityPolicy(securityPolicy: Security) {
-    throw new Error('not implemented');
+  public updateWorksteps(newWorksteps: Workstep[]): void {
+    this._worksteps = newWorksteps;
   }
 
-  updateSecurityPolicy(id: string, ...updates: string[]) {
-    throw new Error('not implemented');
-  }
-
-  addPrivacyPolicy(privacyPolicy: Privacy) {
-    throw new Error('not implemented');
-  }
-
-  removePrivacyPolicy(privacyPolicy: Privacy) {
-    throw new Error('not implemented');
-  }
-
-  updatePrivacyPolicy(id: string, ...updates: string[]) {
-    throw new Error('not implemented');
-  }
-
-  addWorksteps(worksteps: Workstep[]): Workstep[] {
-    throw new Error('not implemented');
-  }
-
-  getWorkstepsById(workstepIds: string[]): Workstep[] {
-    throw new Error('not implemented');
-  }
-
-  addWorkflows(workflows: Workflow[]): Workflow[] {
-    throw new Error('not implemented');
-  }
-
-  getWorkflowsById(workflowIds: string[]): Workflow[] {
-    throw new Error('not implemented');
+  public updateWorkflows(newWorkflows: Workflow[]): void {
+    this._workflows = newWorkflows;
   }
 }
