@@ -15,7 +15,7 @@ export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
     ...CommandHandlers,
     ...QueryHandlers,
     WorkgroupAgent,
-    WorkgroupRepository
-  ]
+    WorkgroupRepository,
+  ],
 })
-export class WorkgroupsModule {}
+export class WorkgroupModule {}
