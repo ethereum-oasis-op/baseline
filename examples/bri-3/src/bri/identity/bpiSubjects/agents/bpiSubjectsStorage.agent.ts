@@ -38,6 +38,20 @@ export class BpiSubjectStorageAgent extends PrismaService {
     });
   }
 
+  async getBpiSubjectsById(ids: string[]): Promise<BpiSubject[]> {
+    const bpiSubjectModels = await this.bpiSubject.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
+    return bpiSubjectModels.map((bpiSubjectModel) => {
+      return this.mapper.map(
+        bpiSubjectModel,
+        getType<BpiSubject>(),
+      ) as BpiSubject;
+    });
+  }
+
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const newBpiSubjectModel = await this.bpiSubject.create({
       data: this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
