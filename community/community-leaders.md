@@ -55,7 +55,7 @@ Details on how to become a [Maintainer here](broken-reference).
 | [**Sonal Patel**](https://github.com/GoldenBit0/)                                  | ConsenSys Mesh                  |
 | [**Kartheek Solipuram**](https://github.com/skarred14)                             | EY                   |
 | [**Kyle Thomas**](https://github.com/kthomas)                                      | Provide                         |
-| [**Ongjen Kurtic**](https://github.com/ognjenkurtic)                                | Finspot                         |
+| [**Ognjen Kurtic**](https://github.com/ognjenkurtic)                                | Finspot                         |
 | [**Luiz Soares**](https://github.com/fosgate29)                          | WhitePrompt                     |
 | [**Manik Jain**](https://github.com/Manik-Jain)                           | Tata Consultancy Services (TCS)                     |
 | [**Keith Salzman**](https://github.com/Kasshern)                                   | Consensys Mesh                  |
