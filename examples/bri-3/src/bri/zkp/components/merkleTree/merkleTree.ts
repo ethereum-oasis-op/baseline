@@ -1,7 +1,4 @@
 import { PreciseProofs } from 'ew-precise-proofs-js';
-import { getLogger } from '../../../../../LogConfig';
-
-const log = getLogger();
 export class MerkleTree {
   private _leaves: PreciseProofs.Leaf[] = [];
   private _root: string;
@@ -21,7 +18,8 @@ export class MerkleTree {
       );
       this._root = PreciseProofs.getRootHash(merkleTree);
     } catch (e) {
-      log.error(`Init merkle tree error: ${e}`);
+      //TODO Refactor to integrate nestjs
+      console.log(`Init merkle tree error: ${e}`);
     }
   }
 
