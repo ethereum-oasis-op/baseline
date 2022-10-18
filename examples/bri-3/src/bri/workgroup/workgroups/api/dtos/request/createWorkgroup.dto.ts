@@ -1,15 +1,28 @@
-import { BpiSubject } from "src/bri/identity/bpiSubjects/models/bpiSubject";
-import { Privacy } from "src/bri/policy/models/privacy";
-import { Security } from "src/bri/policy/models/security";
-import { Workflow } from "src/bri/workgroup/workflows/models/workflow";
-import { Workstep } from "src/bri/workgroup/worksteps/models/workstep";
+import { ArrayNotEmpty, IsNotEmpty } from 'class-validator';
 
-export interface CreateWorkgroupDto {
-    name: string;
-    administrator: BpiSubject[];
-    parcitipants: BpiSubject[];
-    securityPolicy: Security[];
-    privacyPolicy: Privacy[];
-    worksteps: Workstep[];
-    workflows: Workflow[];
+export class CreateWorkgroupDto {
+  @IsNotEmpty()
+  name: string;
+
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  administratorIds: string[];
+
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  parcitipantIds: string[];
+
+  @IsNotEmpty()
+  securityPolicy: string;
+
+  @IsNotEmpty()
+  privacyPolicy: string;
+
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  workstepIds: string[];
+
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  workflowIds: string[];
 }
