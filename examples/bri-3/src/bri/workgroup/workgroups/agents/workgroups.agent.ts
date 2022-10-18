@@ -5,11 +5,11 @@ import { Workstep } from '../../worksteps/models/workstep';
 
 import { uuid } from 'uuidv4';
 import { Workgroup } from '../models/workgroup';
-import { Security } from 'src/bri/policy/models/security';
-import { Privacy } from 'src/bri/policy/models/privacy';
 import { BpiSubjectStorageAgent } from 'src/bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 import { WorkflowStorageAgent } from '../../workflows/agents/workflowsStorage.agent';
+import { WorkgroupStorageAgent } from './workgroupStorage.agent';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
@@ -38,7 +38,7 @@ export class WorkgroupAgent {
   public async fetchWorkgroupParticipantsAndThrowIfNoneExist(
     participantIds: string[],
   ): Promise<BpiSubject[]> {
-    const bpiSubjects = await this.bpiSubjectStorageAgent.getBpisubjectsById(
+    const bpiSubjects = await this.bpiSubjectStorageAgent.getBpiSubjectsById(
       participantIds,
     );
 
@@ -80,8 +80,8 @@ export class WorkgroupAgent {
   public createNewWorkgroup(
     name: string,
     administrator: BpiSubject[],
-    securityPolicy: Security[],
-    privacyPolicy: Privacy[],
+    securityPolicy: string,
+    privacyPolicy: string,
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
@@ -112,18 +112,18 @@ export class WorkgroupAgent {
     return workgroupToUpdate;
   }
 
-  public updateWorkflow(
-    workgroupToUpdate: Workflow,
+  public updateWorkgroup(
+    workgroupToUpdate: Workgroup,
     name: string,
     administrator: BpiSubject[],
-    securityPolicy: Security[],
-    privacyPolicy: Privacy[],
+    securityPolicy: string,
+    privacyPolicy: string,
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
   ) {
     workgroupToUpdate.updateName(name);
-    workgroupToUpdate.updateAdminstrators(administrator);
+    workgroupToUpdate.updateAdministrators(administrator);
     workgroupToUpdate.updateSecurityPolicy(securityPolicy);
     workgroupToUpdate.updatePrivacyPolicy(privacyPolicy);
     workgroupToUpdate.updateParticipants(participants);

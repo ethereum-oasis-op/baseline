@@ -1,11 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { Workflow } from '../../workflows/models/workflow';
 import { Workstep } from '../../worksteps/models/workstep';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workgroup } from '../models/workgroup';
 
 @Injectable()
 export class WorkgroupStorageAgent extends PrismaService {
-  async getworkgroupById(id: string): Promise<Workgroup> {
+  async getWorkgroupById(id: string): Promise<Workgroup> {
     const workgroupModel = await this.workgroup.findUnique({
       where: { id: id },
       include: { worksteps: true },
@@ -18,6 +21,14 @@ export class WorkgroupStorageAgent extends PrismaService {
     return new Workgroup(
       workgroupModel.id,
       workgroupModel.name,
+      workgroupModel.administrator.map((w) => {
+        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      }),
+      workgroupModel.securityPolicy,
+      workgroupModel.privacyPolicy,
+      workgroupModel.participants.map((w) => {
+        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      }),
       workgroupModel.worksteps.map((w) => {
         return new Workstep(
           w.id,
@@ -29,36 +40,32 @@ export class WorkgroupStorageAgent extends PrismaService {
           w.privacyPolicy,
         );
       }),
-      workgroupModel.workgroupId,
+      workgroupModel.workflows.map((w) => {
+        return new Workflow(w.id, w.name, w.worksteps, w.workgroupId);
+      }),
     );
   }
 
-  async getAllWorkgroups(): Promise<Workgroup[]> {
-    const workgroupModels = await this.workgroup.findMany({
-      include: { worksteps: true },
-    });
-    return workgroupModels.map((w) => {
-      return new Workgroup(
-        w.id,
-        w.name,
-        w.worksteps.map((ws) => {
-          return new Workstep(
-            ws.id,
-            ws.name,
-            ws.version,
-            ws.status,
-            ws.workgroupId,
-            ws.securityPolicy,
-            ws.privacyPolicy,
-          );
-        }),
-        w.workgroupId,
-      );
-    });
-  }
-
   async createNewWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
+    const administratorIds = workgroup.administrator.map((a) => {
+      return {
+        id: a.id,
+      };
+    });
+
+    const participantIds = workgroup.participants.map((p) => {
+      return {
+        id: p.id,
+      };
+    });
+
     const workstepIds = workgroup.worksteps.map((w) => {
+      return {
+        id: w.id,
+      };
+    });
+
+    const workflowIds = workgroup.workflows.map((w) => {
       return {
         id: w.id,
       };
@@ -68,36 +75,71 @@ export class WorkgroupStorageAgent extends PrismaService {
       data: {
         id: workgroup.id,
         name: workgroup.name,
+        administrator: {
+          connect: administratorIds,
+        },
+        securityPolicy: workgroup.securityPolicy,
+        privacyPolicy: workgroup.privacyPolicy,
+        participants: {
+          connect: participantIds,
+        },
         worksteps: {
           connect: workstepIds,
         },
-        workgroupId: workgroup.workgroupId,
-      },
-      include: {
-        worksteps: true,
+        workflows: {
+          connect: workflowIds,
+        },
       },
     });
 
     return new Workgroup(
       newWorkgroupModel.id,
       newWorkgroupModel.name,
+      newWorkgroupModel.administrator.map((w) => {
+        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      }),
+      newWorkgroupModel.securityPolicy,
+      newWorkgroupModel.privacyPolicy,
+      newWorkgroupModel.participants.map((w) => {
+        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      }),
       newWorkgroupModel.worksteps.map((w) => {
         return new Workstep(
           w.id,
           w.name,
           w.version,
-          w.version,
+          w.status,
           w.workgroupId,
           w.securityPolicy,
           w.privacyPolicy,
         );
       }),
-      newWorkgroupModel.workgroupId,
+      newWorkgroupModel.workflows.map((w) => {
+        return new Workflow(w.id, w.name, w.worksteps, w.workgroupId);
+      }),
     );
   }
 
   async updateWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
+    const administratorIds = workgroup.administrator.map((a) => {
+      return {
+        id: a.id,
+      };
+    });
+
+    const participantIds = workgroup.participants.map((p) => {
+      return {
+        id: p.id,
+      };
+    });
+
     const workstepIds = workgroup.worksteps.map((w) => {
+      return {
+        id: w.id,
+      };
+    });
+
+    const workflowIds = workgroup.workflows.map((w) => {
       return {
         id: w.id,
       };
@@ -107,31 +149,46 @@ export class WorkgroupStorageAgent extends PrismaService {
       where: { id: workgroup.id },
       data: {
         name: workgroup.name,
+        administrator: {
+          set: administratorIds,
+        },
+        participants: {
+          set: participantIds,
+        },
         worksteps: {
           set: workstepIds,
         },
-        workgroupId: workgroup.workgroupId,
       },
-      include: {
-        worksteps: true,
+      workflows: {
+        set: workflowIds,
       },
     });
 
     return new Workgroup(
       updatedWorkgroupModel.id,
       updatedWorkgroupModel.name,
-      updatedWorkgroupModel.worksteps.map((ws) => {
+      updatedWorkgroupModel.administrator.map((w) => {
+        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      }),
+      updatedWorkgroupModel.securityPolicy,
+      updatedWorkgroupModel.privacyPolicy,
+      updatedWorkgroupModel.participants.map((w) => {
+        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      }),
+      updatedWorkgroupModel.worksteps.map((w) => {
         return new Workstep(
-          ws.id,
-          ws.name,
-          ws.version,
-          ws.status,
-          ws.workgroupId,
-          ws.securityPolicy,
-          ws.privacyPolicy,
+          w.id,
+          w.name,
+          w.version,
+          w.status,
+          w.workgroupId,
+          w.securityPolicy,
+          w.privacyPolicy,
         );
       }),
-      updatedWorkgroupModel.workgroupId,
+      updatedWorkgroupModel.workflows.map((w) => {
+        return new Workflow(w.id, w.name, w.worksteps, w.workgroupId);
+      }),
     );
   }
 
