@@ -78,7 +78,6 @@ export const Appointment = ({ auth, onLoggedOut }: Props): JSX.Element => {
             timeslots.push({ display: date.getHours().toString() + ":" + date.getMinutes().toString(), value: date.getTime().toString() });
         });
         setTimes(timeslots);
-        console.log("create appointment", createAppointment);
 		return createAppointment;
 	}
 	const generateProof = async (address: string, slot: string) => {
@@ -94,7 +93,6 @@ export const Appointment = ({ auth, onLoggedOut }: Props): JSX.Element => {
 				Authorization: `Bearer ${accessToken}`
 			}
             })).data;
-        console.log("proof", proof);
 		return proof;
     }
     const validateProof = async ( address: string, slot: string) => {
@@ -110,7 +108,6 @@ export const Appointment = ({ auth, onLoggedOut }: Props): JSX.Element => {
 				Authorization: `Bearer ${accessToken}`
 			}
             })).data;
-        console.log("validated", validated);
 		return validated;
     }
 	

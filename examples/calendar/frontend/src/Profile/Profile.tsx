@@ -50,7 +50,6 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 				Authorization: `Bearer ${accessToken}`
 			}
 		})).data;
-		console.log("fetch", fetchAvailTimes);
 		return fetchAvailTimes;
 	}
 	const createAppointmentAPI = async () => {
@@ -96,7 +95,6 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 			"status": "available",
 			"userId": userV.user?.id || 0,
 		}
-		console.log("booking", booking);
 		await setTimeAvailAPI(booking);
 		const data = await createAppointmentAPI();
 		const secret_c = (data as any).appointment.secret;

@@ -5,18 +5,20 @@ import { Appointment } from "../../models/appointment.model";
 import { Op } from "sequelize";
 import {Status} from "./../../db";
 import { Logger } from "tslog";
-
-
+import {UserType} from "./../lib/types"
+interface UserWithRequest extends Request {
+	user: UserType
+}
 const log: Logger = new Logger({ name: "errorLogger" });
 // Create time availablity for the user
 
-export const create = async (req: Request, res: Response, next: NextFunction) => {
-	console.log("req", req.body);
+export const create = async (req: UserWithRequest, res: Response, next: NextFunction) => {
 	const { timeStarts, timeEnds } = req.body.availableTimes;
-	if (!(req as any).hasOwnProperty("user")) {
+	if (!(req.user && req.user.payload && req.user.payload.id)) {
 		return res.status(401).send({ error: "No User found!" });
 	}
-	const userId = (req as any).user.payload.id;
+	
+	const userId = req?.user?.payload.id;
 	if (timeStarts !== undefined && timeEnds !==undefined && timeStarts.length !== timeEnds.length) {
 		return res.status(400).send({ error: "The length of startimes and endtimes should match!" });
 	}
@@ -65,10 +67,13 @@ export const fewTimes  = async (req: Request, res: Response, next: NextFunction)
 };
 
 // Get all available times for a person
-export const get = async (req: Request, res: Response, next: NextFunction) => {
-	
+export const get = async (req: UserWithRequest, res: Response, next: NextFunction) => {
+	if (!(req.user && req.user.payload && req.user.payload.id)) {
+		return res.status(401).send({ error: "No User found!" });
+	}
+
 	try {
-		const userId = (req as any).user.payload.id;
+		const userId = req.user?.payload.id;
 		const times = await Time.findAll({
 			where: {
 				user: {
@@ -76,7 +81,6 @@ export const get = async (req: Request, res: Response, next: NextFunction) => {
 				}
 			}
 		});
-		console.log("Times", times);
 		return res.status(200).send(times);
 	} catch (error) {
 		log.error(error);

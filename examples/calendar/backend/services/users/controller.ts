@@ -1,9 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { User } from "../../models/user.model";
 import { Logger } from "tslog";
-
+import { UserType} from  "./../lib/types"
 
 const log: Logger = new Logger({ name: "errorLogger" });
+
+interface UserWithRequest extends Request {
+	user?: UserType
+}
 
 export const find = async (req: Request, res: Response, next: NextFunction) => {
 	if (!(req as any).query.hasOwnProperty("publicAddress")) {
@@ -12,10 +16,11 @@ export const find = async (req: Request, res: Response, next: NextFunction) => {
 	return res.status(200).send(await User.findAll({where: { publicAddress: req.query.publicAddress }}));
 };
 
-export const get = (req: Request, res: Response, next: NextFunction) => {
-	if (!(req as any).hasOwnProperty("user")) {
+export const get = (req: UserWithRequest, res: Response, next: NextFunction) => {
+	if (req.user && req.user.payload && req.user.payload.id) {
 		return res.status(401).send({ error: "No User found!" });
 	}
+
 	return User.findByPk((req as any).user.payload.id)
 		.then((user: User | null) => res.json(user))
 		.catch(next);
@@ -29,7 +34,7 @@ export const create = async (req: Request, res: Response, next: NextFunction) =>
 			username: Math.random().toString(36).slice(2, 7),			
 		};
 		const user = await User.create(userObject);
-		const result = {appointment: user};
+		const result = {user: user};
 		return res.status(200).send(result);
 	} catch (error) {
 		log.error(error);

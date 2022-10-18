@@ -15,7 +15,6 @@ import { PoseidonHasher } from "../lib/hasher";
 import { buildPoseidon } from "circomlibjs";
 const { utils } = require("ffjavascript");
 import {Status} from "./../../db";
-
 import Web3 from "web3";
 import PrivateKeyProvider from "truffle-privatekey-provider";
 
@@ -48,8 +47,8 @@ export const proof = async (req: Request, res: Response, next: NextFunction) => 
 
 	try {
 		if (times !== null && appointment !== null && times.length > 1) {
-			(times as any).forEach((time: any) => {
-				tree.insert(time?.dataValues?.timeStart.toString());
+			times.forEach((time: Time) => {
+				tree.insert(time?.getDataValue("timeStart").toString());
 			});
 			const path = tree.proof(slot);
 			const proof = await generateProof({
@@ -92,7 +91,7 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
 	});
 
 	try {
-		(times as any).forEach((time: any) => {
+		times.forEach((time: Time) => {
 			tree.insert(time.getDataValue("timeStart").toString());
 		});
 		const path = tree.proof(slot);
