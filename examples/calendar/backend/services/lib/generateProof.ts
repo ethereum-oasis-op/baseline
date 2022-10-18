@@ -25,7 +25,5 @@ export const generateProof = async (input: Input): Promise<Proof> => {
 		"./contracts/artifacts/calendar.wasm",
 		"./contracts/artifacts/calendar.zkey"
 	);
-	console.log("public signals", publicSignals);
-
 	return proof;
 };

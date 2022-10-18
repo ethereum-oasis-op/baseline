@@ -5,20 +5,17 @@ import { Appointment } from "../../models/appointment.model";
 import { Op } from "sequelize";
 import {Status} from "./../../db";
 import { Logger } from "tslog";
-import {UserType} from "./../lib/types"
-interface UserWithRequest extends Request {
-	user: UserType
-}
-const log: Logger = new Logger({ name: "errorLogger" });
-// Create time availablity for the user
 
-export const create = async (req: UserWithRequest, res: Response, next: NextFunction) => {
+
+const log: Logger = new Logger({ name: "errorLogger" });
+
+// Create time availablity for the user
+export const create = async (req: Request, res: Response, next: NextFunction) => {
 	const { timeStarts, timeEnds } = req.body.availableTimes;
-	if (!(req.user && req.user.payload && req.user.payload.id)) {
+	if (!(req as any).hasOwnProperty("user") && !(req as any).user.hasOwnProperty("payload") && !(req as any).user.payload.hasOwnProperty("id")) {
 		return res.status(401).send({ error: "No User found!" });
 	}
-	
-	const userId = req?.user?.payload.id;
+	const userId = (req as any).user.payload.id;
 	if (timeStarts !== undefined && timeEnds !==undefined && timeStarts.length !== timeEnds.length) {
 		return res.status(400).send({ error: "The length of startimes and endtimes should match!" });
 	}
@@ -41,6 +38,7 @@ export const create = async (req: UserWithRequest, res: Response, next: NextFunc
 	}
 };
 
+// display few times (5) for the user to select from 
 export const fewTimes  = async (req: Request, res: Response, next: NextFunction) => {
 	try {
 		const {secret} = req.body;
@@ -67,13 +65,12 @@ export const fewTimes  = async (req: Request, res: Response, next: NextFunction)
 };
 
 // Get all available times for a person
-export const get = async (req: UserWithRequest, res: Response, next: NextFunction) => {
-	if (!(req.user && req.user.payload && req.user.payload.id)) {
+export const get = async (req: Request, res: Response, next: NextFunction) => {
+	if (!(req as any).hasOwnProperty("user") && !(req as any).user.hasOwnProperty("payload") && !(req as any).user.payload.hasOwnProperty("id")) {
 		return res.status(401).send({ error: "No User found!" });
 	}
-
 	try {
-		const userId = req.user?.payload.id;
+		const userId = (req as any).user.payload.id;
 		const times = await Time.findAll({
 			where: {
 				user: {

@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable prettier/prettier */
-import { NextFunction, Request, Response } from "express";
+import { application, NextFunction, Request, Response } from "express";
 import { User } from "../../models/user.model";
 import { Time } from "../../models/time.model";
 import { Appointment } from "../../models/appointment.model";
@@ -21,6 +21,8 @@ import PrivateKeyProvider from "truffle-privatekey-provider";
 const verifier_artifact = require("./../../build/contracts/Verifier.json");
 
 const truffle = require("@truffle/contract");
+
+// create proof. 
 export const proof = async (req: Request, res: Response, next: NextFunction) => {
 	const { secret, publicAddress, slot } = req.body;
 	const user = await User.findOne({where: { publicAddress: publicAddress}});
@@ -48,9 +50,12 @@ export const proof = async (req: Request, res: Response, next: NextFunction) => 
 	try {
 		if (times !== null && appointment !== null && times.length > 1) {
 			times.forEach((time: Time) => {
+				console.log(time);
+				console.log(time.getDataValue("timeStart"));
 				tree.insert(time?.getDataValue("timeStart").toString());
 			});
 			const path = tree.proof(slot);
+			
 			const proof = await generateProof({
 				time_slot_leaves: path?.pathElements,
 				root: tree?.root.toString(),
@@ -68,6 +73,7 @@ export const proof = async (req: Request, res: Response, next: NextFunction) => 
 	}
 };
 
+// verify proof
 export const verify = async (req: Request, res: Response, next: NextFunction) => {
 	const { secret, slot } = req.body;
 	const verifier_address = process.env.VERIFIER_ADDRESS || "";
@@ -118,6 +124,8 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
 			[proof.pi_c[0], proof.pi_c[1]],
 			publicInputsMain
 		);
+		console.log("verified", verified)
+		console.log(appointment);
 
 		if (verified && appointment) {
 			appointment.status = Status.confirmed;
