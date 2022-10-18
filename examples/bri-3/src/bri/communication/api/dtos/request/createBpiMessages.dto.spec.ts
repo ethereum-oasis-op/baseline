@@ -10,8 +10,8 @@ describe('CreateBpiMessageDto', () => {
   it('should return error in case id not provided.', async () => {
     // Arrange
     const dto = {
-      fromId: '1',
-      toId: '2',
+      from: '1',
+      to: '2',
       content: 'hello world',
       signature: 'xyz',
       type: 1,
@@ -29,11 +29,11 @@ describe('CreateBpiMessageDto', () => {
     );
   });
 
-  it('should return error in case fromId not provided.', async () => {
+  it('should return error in case from not provided.', async () => {
     // Arrange
     const dto = {
       id: '1',
-      toId: '2',
+      to: '2',
       content: 'hello world',
       signature: 'xyz',
       type: 1,
@@ -45,17 +45,17 @@ describe('CreateBpiMessageDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('fromId');
+    expect(errors[0].property).toEqual('from');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'fromId ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+      'from ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
-  it('should return error in case toId not provided.', async () => {
+  it('should return error in case to not provided.', async () => {
     // Arrange
     const dto = {
       id: '1',
-      fromId: '1',
+      from: '1',
       content: 'hello world',
       signature: 'xyz',
       type: 1,
@@ -67,15 +67,15 @@ describe('CreateBpiMessageDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('toId');
+    expect(errors[0].property).toEqual('to');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'toId ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+      'to ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
   it('should return error in case content not provided.', async () => {
     // Arrange
-    const dto = { id: '1', fromId: '1', toId: '2', signature: 'xyz', type: 1 };
+    const dto = { id: '1', from: '1', to: '2', signature: 'xyz', type: 1 };
     const createBpiMessageDto = plainToInstance(CreateBpiMessageDto, dto);
 
     // Act
@@ -93,8 +93,8 @@ describe('CreateBpiMessageDto', () => {
     // Arrange
     const dto = {
       id: '1',
-      fromId: '1',
-      toId: '2',
+      from: '1',
+      to: '2',
       content: 'hello world',
       type: 1,
     };
@@ -115,8 +115,8 @@ describe('CreateBpiMessageDto', () => {
     // Arrange
     const dto = {
       id: '1',
-      fromId: '1',
-      toId: '2',
+      from: '1',
+      to: '2',
       content: 'hello world',
       signature: 'xyz',
     };
@@ -137,8 +137,8 @@ describe('CreateBpiMessageDto', () => {
     // Arrange
     const dto = {
       id: '1',
-      fromId: '1',
-      toId: '2',
+      from: '1',
+      to: '2',
       content: 'hello world',
       signature: 'xyz',
       type: '1',
@@ -160,8 +160,8 @@ describe('CreateBpiMessageDto', () => {
     // Arrange
     const dto = {
       id: '1',
-      fromId: '1',
-      toId: '2',
+      from: '1',
+      to: '2',
       content: 'hello world',
       signature: 'xyz',
       type: 1,
