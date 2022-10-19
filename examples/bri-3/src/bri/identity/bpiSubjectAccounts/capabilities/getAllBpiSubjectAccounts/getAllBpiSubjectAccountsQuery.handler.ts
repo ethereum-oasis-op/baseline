@@ -28,7 +28,8 @@ export class GetAllBpiSubjectAccountsQueryHandler
           desc: bp.ownerBpiSubject.description,
           publicKey: bp.ownerBpiSubject.publicKey,
         },
-      } as BpiSubjectAccountDto;
+        // TODO: automapper fix
+      } as unknown as BpiSubjectAccountDto;
     });
   }
 }

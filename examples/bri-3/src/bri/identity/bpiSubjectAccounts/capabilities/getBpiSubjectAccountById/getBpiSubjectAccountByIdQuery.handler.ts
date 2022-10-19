@@ -35,6 +35,7 @@ export class GetBpiSubjectAccountByIdQueryHandler
         desc: bpiSubjectAccount.ownerBpiSubject.description,
         publicKey: bpiSubjectAccount.ownerBpiSubject.publicKey,
       },
-    } as BpiSubjectAccountDto;
+      // TODO: automapper fix
+    } as unknown as BpiSubjectAccountDto;
   }
 }
