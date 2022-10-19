@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { WorkgroupAgent } from '../agents/workgroups.agent';
+import { WorkgroupStorageAgent } from '../agents/workgroupStorage.agent';
 import { CreateWorkgroupCommandHandler } from '../capabilities/createWorkgroup/createWorkgroupCommand.handler';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { WorkgroupController } from './workgroups.controller';
@@ -14,7 +15,11 @@ describe('WorkgroupController', () => {
       imports: [CqrsModule],
       controllers: [WorkgroupController],
       // TODO Repository mock for unit tests
-      providers: [WorkgroupAgent, CreateWorkgroupCommandHandler, WorkgroupRepository],
+      providers: [
+        WorkgroupAgent,
+        CreateWorkgroupCommandHandler,
+        WorkgroupStorageAgent,
+      ],
     }).compile();
 
     wController = app.get<WorkgroupController>(WorkgroupController);
