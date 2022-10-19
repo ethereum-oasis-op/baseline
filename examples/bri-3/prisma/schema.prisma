@@ -11,21 +11,19 @@ datasource db {
 }
 
 model BpiSubject {
-  id          String @id @default(uuid())
-  name        String
-  description String
-  type        Int
-  publicKey   String
-  sentMessages Message[] @relation(name: "fromBpiSubject_fk")
-  receivedMessages Message[] @relation(name: "toBpiSubject_fk")
-  administratedWorkgroup Workgroup @relation(fields: [administratedWorkgroupId], references: [id], name: "administrators_fk")
-  administratedWorkgroupId String
-  participatingWorkgroup Workgroup @relation(fields: [particpatingWorkgroupId], references: [id], name: "participants_fk")
-  particpatingWorkgroupId String
+  id                     String                       @id @default(uuid())
+  name                   String
+  description            String
+  type                   Int
+  publicKey              String
+  sentMessages           Message[]                    @relation(name: "fromBpiSubject_fk")
+  receivedMessages       Message[]                    @relation(name: "toBpiSubject_fk")
+  administratedWorkgroup AdministratorsOnWorkgroups[]
+  participatingWorkgroup ParticipantsOnWorkgroups[]
 }
 
 model Workstep {
-  id             String   @id @default(uuid())
+  id             String     @id @default(uuid())
   name           String
   version        String
   status         String
@@ -33,7 +31,7 @@ model Workstep {
   securityPolicy String
   privacyPolicy  String
   workflow       Workflow[]
-  workgroup Workgroup @relation(fields: [workgroupId], references: [id])
+  workgroup      Workgroup  @relation(fields: [workgroupId], references: [id])
 }
 
 model Workflow {
@@ -41,39 +39,57 @@ model Workflow {
   name        String
   workgroupId String
   worksteps   Workstep[]
-  workgroup Workgroup @relation(fields: [workgroupId], references: [id])
+  workgroup   Workgroup  @relation(fields: [workgroupId], references: [id])
 }
 
 model Workgroup {
-  id String @id @default(uuid())
-  name String
-  administrator BpiSubject[] @relation(name: "administrators_fk")
-  securityPolicy String 
-  privacyPolicy String
-  participants BpiSubject[] @relation(name: "participants_fk")
-  worksteps Workstep[] 
-  workflows Workflow[]
+  id             String                       @id @default(uuid())
+  name           String
+  administrators AdministratorsOnWorkgroups[]
+  securityPolicy String
+  privacyPolicy  String
+  participants   ParticipantsOnWorkgroups[]
+  worksteps      Workstep[]
+  workflows      Workflow[]
+}
+
+model AdministratorsOnWorkgroups {
+  workgroup       Workgroup  @relation(fields: [workgroupId], references: [id])
+  workgroupId     String
+  administrator   BpiSubject @relation(fields: [administratorId], references: [id])
+  administratorId String
+
+  @@id([workgroupId, administratorId])
+}
+
+model ParticipantsOnWorkgroups {
+  workgroup     Workgroup  @relation(fields: [workgroupId], references: [id])
+  workgroupId   String
+  participant   BpiSubject @relation(fields: [participantId], references: [id])
+  participantId String
+
+  @@id([workgroupId, participantId])
 }
 
 model Transaction {
-  id String @id
-  nonce Int
+  id                 String @id
+  nonce              Int
   workflowInstanceId String
   workstepInstanceId String
-  from String // Add BpiAccount once #489 done
-  to String // Add BpiAccount once #489 done
-  payload String
-  signature String
-  status Int
+  from               String // Add BpiAccount once #489 done
+  to                 String // Add BpiAccount once #489 done
+  payload            String
+  signature          String
+  status             Int
 }
 
 model Message {
-  id String @id
+  id               String     @id
   fromBpiSubjectId String
-  FromBpiSubject BpiSubject @relation(fields: [fromBpiSubjectId], references: [id], name: "fromBpiSubject_fk")
-  toBpiSubjectId String
-  ToBpiSubject BpiSubject @relation(fields: [toBpiSubjectId], references: [id], name: "toBpiSubject_fk")
-  content String
-  signature String 
-  type Int
+  FromBpiSubject   BpiSubject @relation(fields: [fromBpiSubjectId], references: [id], name: "fromBpiSubject_fk")
+  toBpiSubjectId   String
+  ToBpiSubject     BpiSubject @relation(fields: [toBpiSubjectId], references: [id], name: "toBpiSubject_fk")
+  content          String
+  signature        String
+  type             Int
 }
