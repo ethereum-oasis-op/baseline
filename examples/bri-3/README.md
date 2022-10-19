@@ -11,7 +11,7 @@ This reference implementation is being built from scratch and will contain a lim
 
  * Trying out the concepts from the standard in practice and producing feedback loops for standard improvements
 
- * Entry point for developers to get to know the protocol, and start contributing in iterative and atomic fashion
+ * Entry point for developers to get to know the protocol, and start contributing in an iterative and atomic fashion
 
  * Basis for the Baseline SDK
 
@@ -32,7 +32,7 @@ $ docker run --name postgres -e POSTGRES_PASSWORD=example -p 5432:5432 -d postgr
 $ create a .env file based on the .env.sample # provide a connection string for the db instance
 $ npm install # install project dependencies
 $ npm install -g prisma # install prisma globally
-$ prisma generate # generate the prisma client 
+$ npx prisma generate # generate the prisma client 
 $ npx prisma db push # migrate the db to latest state
 ```
 
