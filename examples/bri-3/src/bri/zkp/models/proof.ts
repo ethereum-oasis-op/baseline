@@ -9,14 +9,12 @@ export class Proof {
   constructor(
     id: string,
     owner: BpiAccount,
-    document: string,
+    payload: string,
     signature: string,
   ) {
     this._id = id;
     this._owner = owner;
-
-    //TODO: Convert document into merkle tree and store root as payload
-    this._payload = document;
+    this._payload = payload;
     this._signature = signature;
   }
 
@@ -34,9 +32,5 @@ export class Proof {
 
   public get signature(): string {
     return this._signature;
-  }
-
-  public verifyPayload(): void {
-    // TODO: Verify if the payload exists in the shield contract
   }
 }
