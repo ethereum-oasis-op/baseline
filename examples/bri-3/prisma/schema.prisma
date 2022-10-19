@@ -19,7 +19,6 @@ model BpiSubject {
   sentMessages           Message[]                    @relation(name: "fromBpiSubject_fk")
   receivedMessages       Message[]                    @relation(name: "toBpiSubject_fk")
   administratedWorkgroup AdministratorsOnWorkgroups[]
-  participatingWorkgroup ParticipantsOnWorkgroups[]
 }
 
 model Workstep {
@@ -48,7 +47,6 @@ model Workgroup {
   administrators AdministratorsOnWorkgroups[]
   securityPolicy String
   privacyPolicy  String
-  participants   ParticipantsOnWorkgroups[]
   worksteps      Workstep[]
   workflows      Workflow[]
 }
@@ -60,15 +58,6 @@ model AdministratorsOnWorkgroups {
   administratorId String
 
   @@id([workgroupId, administratorId])
-}
-
-model ParticipantsOnWorkgroups {
-  workgroup     Workgroup  @relation(fields: [workgroupId], references: [id])
-  workgroupId   String
-  participant   BpiSubject @relation(fields: [participantId], references: [id])
-  participantId String
-
-  @@id([workgroupId, participantId])
 }
 
 model Transaction {
