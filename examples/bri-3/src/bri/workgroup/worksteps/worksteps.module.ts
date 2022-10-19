@@ -9,6 +9,7 @@ import { GetWorkstepByIdQueryHandler } from './capabilities/getWorkstepById/getW
 import { UpdateWorkstepCommandHandler } from './capabilities/updateWorkstep/updateWorkstep.command.handler';
 import { WorkstepStorageAgent } from './agents/workstepsStorage.agent';
 import Mapper from '../../utils/mapper';
+import { LoggingModule } from '../../../../src/shared/logging/logging.module';
 
 export const CommandHandlers = [
   CreateWorkstepCommandHandler,
@@ -22,7 +23,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, LoggingModule],
   controllers: [WorkstepController],
   providers: [
     ...CommandHandlers,
