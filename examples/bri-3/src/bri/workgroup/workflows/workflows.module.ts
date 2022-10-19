@@ -30,5 +30,6 @@ export const QueryHandlers = [
     WorkflowAgent,
     WorkflowStorageAgent,
   ],
+  exports: [WorkflowAgent, WorkflowStorageAgent],
 })
 export class WorkflowModule {}
