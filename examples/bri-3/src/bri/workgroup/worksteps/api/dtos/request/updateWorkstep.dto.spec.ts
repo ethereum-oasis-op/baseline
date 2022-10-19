@@ -1,5 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
+import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../../shared/constants';
 import { UpdateWorkstepDto } from './updateWorkstep.dto';
 
 describe('UpdateWorkstepDto', () => {
@@ -15,7 +16,7 @@ describe('UpdateWorkstepDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('name');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'name should not be empty',
+      'name ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
@@ -31,7 +32,7 @@ describe('UpdateWorkstepDto', () => {
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('workgroupId');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'workgroupId should not be empty',
+      'workgroupId ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
