@@ -24,6 +24,9 @@ export class CreateBpiAccountCommandHandler
       ownerBpiSubjectAccounts,
     );
 
-    const newBpiSubject = await this.storageAgent.createNewBpiAccount(
+    const newBpiSubject = await this.accountStorageAgent.createNewBpiAccount(
+      newBpiSubjectCandidate,
+    );
     return newBpiSubject.id;
+  }
 }
