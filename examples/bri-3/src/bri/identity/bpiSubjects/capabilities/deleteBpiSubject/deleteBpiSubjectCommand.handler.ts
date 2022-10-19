@@ -18,7 +18,5 @@ export class DeleteBpiSubjectCommandHandler
         command.id,
       );
     await this.storageAgent.deleteBpiSubject(bpiSubjectToDelete);
-
-    return;
   }
 }
