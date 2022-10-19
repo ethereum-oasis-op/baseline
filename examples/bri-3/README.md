@@ -60,11 +60,13 @@ $ fire away postman requests
 
 ```bash
 # Unit testing - .spec files located next to the thing they are testing
+
 $ npm run test
 ```
 
 ```bash
 # e2e testing - .e2e.spec files located in ./test folder
+
 $ comming soon
 ```
 
