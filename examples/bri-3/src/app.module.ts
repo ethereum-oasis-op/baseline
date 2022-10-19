@@ -4,6 +4,7 @@ import { CommunicationModule } from './bri/communication/communication.module';
 import { IdentityModule } from './bri/identity/identity.module';
 import { TransactionModule } from './bri/transactions/transactions.module';
 import { WorkgroupModule } from './bri/workgroup/workgroup.module';
+import { ProofModule } from './bri/zkp/zkp.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { WorkgroupModule } from './bri/workgroup/workgroup.module';
     WorkgroupModule,
     TransactionModule,
     CommunicationModule,
+    ProofModule,
   ],
   providers: [PrismaService],
 })
