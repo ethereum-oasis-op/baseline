@@ -92,8 +92,8 @@ export class WorkgroupAgent {
       administrator,
       securityPolicy,
       privacyPolicy,
-      participants,
-      worksteps,
+      // participants,
+      // worksteps,
       workflows,
     );
   }

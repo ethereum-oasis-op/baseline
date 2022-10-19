@@ -30,7 +30,6 @@ model Workstep {
   securityPolicy String
   privacyPolicy  String
   workflow       Workflow[]
-  workgroup      Workgroup  @relation(fields: [workgroupId], references: [id])
 }
 
 model Workflow {
@@ -47,7 +46,6 @@ model Workgroup {
   administrators AdministratorsOnWorkgroups[]
   securityPolicy String
   privacyPolicy  String
-  worksteps      Workstep[]
   workflows      Workflow[]
 }
 

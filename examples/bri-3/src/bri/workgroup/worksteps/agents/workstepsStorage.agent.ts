@@ -4,13 +4,14 @@ import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workstep } from '../models/workstep';
 import { getType } from 'tst-reflect';
 import Mapper from '../../../utils/mapper';
+import { LoggingService } from '../../../../../src/shared/logging/logging.service';
 
 // Storage Agents are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
 export class WorkstepStorageAgent extends PrismaService {
-  constructor(private readonly mapper: Mapper) {
+  constructor(private readonly mapper: Mapper, private log: LoggingService) {
     super();
   }
 
@@ -18,6 +19,8 @@ export class WorkstepStorageAgent extends PrismaService {
     const workstepModel = await this.workstep.findUnique({ where: { id } });
 
     if (!workstepModel) {
+      //Example error log string
+      this.log.logError('Workstep for given ID not found');
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
