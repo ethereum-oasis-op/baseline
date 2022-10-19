@@ -5,6 +5,6 @@ import { SubjectModule } from './bpiSubjects/subjects.module';
 import { IdentityProfileModule } from './identity.mapper.module';
 
 @Module({
-  imports: [SubjectModule, SubjectAccountModule, AccountModule, IdentityProfileModule],
+  imports: [SubjectModule, SubjectAccountModule, AccountModule],
 })
 export class IdentityModule {}

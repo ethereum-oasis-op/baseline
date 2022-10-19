@@ -25,6 +25,7 @@ export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Get('/:id')
+  @UseInterceptors(MapInterceptor(BpiSubject, BpiSubjectDto))
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
   }

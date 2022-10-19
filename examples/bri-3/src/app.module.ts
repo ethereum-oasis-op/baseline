@@ -15,10 +15,10 @@ import { WorkgroupModule } from './bri/workgroup/workgroup.module';
         name: 'classes',
         strategyInitializer: classes(),
       },
-      {
-        name: 'pojos',
-        strategyInitializer: pojos(),
-      },
+      // {
+      //   name: 'pojos',
+      //   strategyInitializer: pojos(),
+      // },
     ]),
     IdentityModule,
     WorkgroupModule,
