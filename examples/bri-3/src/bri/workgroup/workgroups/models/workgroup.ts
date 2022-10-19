@@ -1,8 +1,6 @@
 import { Workstep } from '../../worksteps/models/workstep';
 import { Workflow } from '../../workflows/models/workflow';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
-import { Security } from '../../../policy/models/security';
-import { Privacy } from '../../../policy/models/privacy';
 
 export class Workgroup {
   private _id: string; // TODO: Add uuid after #491
@@ -17,7 +15,7 @@ export class Workgroup {
   constructor(
     id: string,
     name: string,
-    administrator: BpiSubject[],
+    administrators: BpiSubject[],
     securityPolicy: string,
     privacyPolicy: string,
     participants: BpiSubject[],
@@ -26,7 +24,7 @@ export class Workgroup {
   ) {
     this._id = id;
     this._name = name;
-    this._administrators = administrator;
+    this._administrators = administrators;
     this._securityPolicy = securityPolicy;
     this._privacyPolicy = privacyPolicy;
     this._participants = participants;
@@ -46,11 +44,11 @@ export class Workgroup {
     return this._administrators;
   }
 
-  public get securityPolicy(): Security {
+  public get securityPolicy(): string {
     return this._securityPolicy;
   }
 
-  public get privacyPolicy(): Privacy {
+  public get privacyPolicy(): string {
     return this._privacyPolicy;
   }
 
