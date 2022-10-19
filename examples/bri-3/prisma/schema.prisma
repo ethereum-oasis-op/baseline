@@ -11,14 +11,31 @@ datasource db {
 }
 
 model BpiSubject {
-  id                     String                       @id @default(uuid())
-  name                   String
-  description            String
-  type                   Int
-  publicKey              String
-  sentMessages           Message[]                    @relation(name: "fromBpiSubject_fk")
-  receivedMessages       Message[]                    @relation(name: "toBpiSubject_fk")
+  id          String @id @default(uuid())
+  name        String
+  description String
+  type        Int
+  publicKey   String
+  OwnedBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "ownerBpiSubject_fk")
+  CreatedBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "creatorBpiSubject_fk")
+  sentMessages Message[] @relation(name: "fromBpiSubject_fk")
+  receivedMessages Message[] @relation(name: "toBpiSubject_fk")
   administratedWorkgroup AdministratorsOnWorkgroups[]
+}
+
+model BpiAccount {
+  id    String @id @default(uuid())
+  nonce Int
+  ownerBpiSubjectAccounts BpiSubjectAccount[]
+}
+
+model BpiSubjectAccount {
+  id                  String @id @default(uuid())
+  creatorBpiSubjectId String
+  ownerBpiSubjectId   String
+  bpiAccounts         BpiAccount[]
+  CreatorBpiSubject   BpiSubject  @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
+  OwnerBpiSubject     BpiSubject  @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
 }
 
 model Workstep {

@@ -47,7 +47,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"hello\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
+									"raw": "{\n    \"name\": \"hello2\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -156,6 +156,241 @@
 									"path": [
 										"subjects",
 										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bpi Account",
+					"item": [
+						{
+							"name": "Get all Bpi Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bpi Account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"ownerBpiSubjectAccountsIds\": [\"c300973c-b1dc-407c-983f-853ceb869ef8\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/accounts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Bpi Account",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/accounts/6d05ef1f-6ff3-47eb-afba-2af1086fbb6e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"6d05ef1f-6ff3-47eb-afba-2af1086fbb6e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/3c99e7eb-2f2f-44a2-bc5e-648f7a5f6e3a",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"3c99e7eb-2f2f-44a2-bc5e-648f7a5f6e3a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/a38774cd-8f14-41bb-b9b5-4d9bda81a161",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"a38774cd-8f14-41bb-b9b5-4d9bda81a161"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bpi Subject Account",
+					"item": [
+						{
+							"name": "Get All Bpi Subject Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bpi Subject Account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"creatorBpiSubjectId\": \"f48620d3-26c3-4bd0-a4b0-37b8800f4327\",\r\n    \"ownerBpiSubjectId\": \"206bd1f7-abec-4bee-9377-3b5fa879c148\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Subject Account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Subject Account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Bpi Subject Account",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
 									]
 								}
 							},
