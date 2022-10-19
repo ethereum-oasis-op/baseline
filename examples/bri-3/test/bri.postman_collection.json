@@ -284,6 +284,119 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Bpi Subject Account",
+					"item": [
+						{
+							"name": "Get All Bpi Subject Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bpi Subject Account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"creatorBpiSubjectId\": \"2d334385-c4b0-456b-a012-5195316e2d5e\",\r\n    \"ownerBpiSubjectId\": \"fa4f7156-3fc4-430c-8a94-97ed2a5473f1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Subject Account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Subject Account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Bpi Subject Account",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
