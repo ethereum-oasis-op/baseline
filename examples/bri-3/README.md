@@ -51,8 +51,6 @@ $ npm run start:prod
 
 ## Test
 
-BRI-3 is tested on three levels. 
-
 ```bash
 # Manual testing - Export of the up-to-date Postman collection that can be used is located here: ./test/bri.postman_collection.json
 
