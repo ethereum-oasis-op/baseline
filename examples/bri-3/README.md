@@ -33,7 +33,7 @@ $ create a .env file based on the .env.sample # provide a connection string for 
 $ npm install # install project dependencies
 $ npm install -g prisma # install prisma globally
 $ prisma generate # generate the prisma client 
-$ npx prisma migrate dev # migrate the db to latest state
+$ npx prisma db push # migrate the db to latest state
 ```
 
 ## Running the app
