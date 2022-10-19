@@ -9,10 +9,8 @@ import { GetBpiSubjectByIdQueryHandler } from './capabilities/getBpiSubjectById/
 import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
 import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
 import Mapper from '../../utils/mapper';
-//import { IdentityProfile } from './identity.mapper.profile';
-import { IdentityProfileModule } from './identity.mapper.module';
-import { IdentityProfile } from './identity.mapper.profile';
-//import { IdentityProfile } from './identity.mapper.profile';
+import { IdentityProfileModule } from '../identity.mapper.module';
+import { IdentityProfile } from '../identity.mapper.profile';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler,
@@ -32,9 +30,8 @@ export const QueryHandlers = [
     ...QueryHandlers,
     BpiSubjectAgent,
     BpiSubjectStorageAgent,
-    Mapper,
-    //IdentityProfile
+    Mapper
   ],
-  exports: [BpiSubjectStorageAgent, IdentityProfileModule],
+  exports: [BpiSubjectStorageAgent],
 })
 export class SubjectModule {}

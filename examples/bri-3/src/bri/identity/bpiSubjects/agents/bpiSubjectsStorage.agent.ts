@@ -5,7 +5,7 @@ import { BpiSubject } from '../models/bpiSubject';
 import { getType } from 'tst-reflect';
 import Mapper from '../../../../bri/utils/mapper';
 import { MapInterceptor } from '@automapper/nestjs';
-import { IdentityProfile } from '../identity.mapper.profile';
+import { IdentityProfile } from '../../identity.mapper.profile';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -13,7 +13,7 @@ import { IdentityProfile } from '../identity.mapper.profile';
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
   constructor(private readonly mapper: Mapper,
-    private readonly identityProfile: IdentityProfile
+    //private readonly identityProfile: IdentityProfile
     ) {
     super();
   }
@@ -30,6 +30,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
       bpiSubjectModel,
       getType<BpiSubject>(),
     ) as BpiSubject;
+    //return bpiSubjectModel;
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
@@ -49,12 +50,12 @@ export class BpiSubjectStorageAgent extends PrismaService {
       data: bpiSubject
     });
 
-    return this.identityProfile.mapperInstance.map(newBpiSubjectModel, BpiSubject,BpiSubject)
+    //return this.identityProfile.mapperInstance.map(newBpiSubjectModel, BpiSubject,BpiSubject)
 
-    // return this.mapper.map(
-    //   newBpiSubjectModel,
-    //   getType<BpiSubject>(),
-    // ) as BpiSubject;
+    return this.mapper.map(
+      newBpiSubjectModel,
+      getType<BpiSubject>(),
+    ) as BpiSubject;
 
     //return newBpiSubjectModel;
   }

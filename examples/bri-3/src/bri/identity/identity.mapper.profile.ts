@@ -1,8 +1,8 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { BpiSubject } from './models/bpiSubject';
-import { BpiSubjectDto } from './api/dtos/response/bpiSubject.dto';
+import { BpiSubject } from './bpiSubjects/models/bpiSubject';
+import { BpiSubjectDto } from './bpiSubjects/api/dtos/response/bpiSubject.dto';
 
 @Injectable()
 export class IdentityProfile extends AutomapperProfile {
