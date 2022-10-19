@@ -47,7 +47,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"hello\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
+									"raw": "{\n    \"name\": \"hello2\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -193,7 +193,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n\r\n}",
+									"raw": "{\r\n    \"ownerBpiSubjectAccountsIds\": [\"c300973c-b1dc-407c-983f-853ceb869ef8\"]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -229,7 +229,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/accounts/a38774cd-8f14-41bb-b9b5-4d9bda81a161",
+									"raw": "http://localhost:3000/accounts/6d05ef1f-6ff3-47eb-afba-2af1086fbb6e",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -237,7 +237,7 @@
 									"port": "3000",
 									"path": [
 										"accounts",
-										"a38774cd-8f14-41bb-b9b5-4d9bda81a161"
+										"6d05ef1f-6ff3-47eb-afba-2af1086fbb6e"
 									]
 								}
 							},
@@ -249,7 +249,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:3000/accounts/6d05ef1f-6ff3-47eb-afba-2af1086fbb6e",
+									"raw": "http://localhost:3000/accounts/3c99e7eb-2f2f-44a2-bc5e-648f7a5f6e3a",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -257,7 +257,7 @@
 									"port": "3000",
 									"path": [
 										"accounts",
-										"6d05ef1f-6ff3-47eb-afba-2af1086fbb6e"
+										"3c99e7eb-2f2f-44a2-bc5e-648f7a5f6e3a"
 									]
 								}
 							},
@@ -314,7 +314,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"creatorBpiSubjectId\": \"2d334385-c4b0-456b-a012-5195316e2d5e\",\r\n    \"ownerBpiSubjectId\": \"fa4f7156-3fc4-430c-8a94-97ed2a5473f1\"\r\n}",
+									"raw": "{\r\n    \"creatorBpiSubjectId\": \"f48620d3-26c3-4bd0-a4b0-37b8800f4327\",\r\n    \"ownerBpiSubjectId\": \"206bd1f7-abec-4bee-9377-3b5fa879c148\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

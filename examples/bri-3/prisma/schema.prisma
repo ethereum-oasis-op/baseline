@@ -23,12 +23,14 @@ model BpiSubject {
 model BpiAccount {
   id    String @id @default(uuid())
   nonce Int
+  ownerBpiSubjectAccounts BpiSubjectAccount[]
 }
 
 model BpiSubjectAccount {
   id                  String @id @default(uuid())
   creatorBpiSubjectId String
   ownerBpiSubjectId   String
+  bpiAccounts         BpiAccount[]
   CreatorBpiSubject   BpiSubject  @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
   OwnerBpiSubject     BpiSubject  @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
 }

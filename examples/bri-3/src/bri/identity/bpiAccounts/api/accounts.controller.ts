@@ -1,10 +1,19 @@
-import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBpiAccountCommand } from '../capabilities/createBpiAccount/createBpiAccount.command';
 import { DeleteBpiAccountCommand } from '../capabilities/deleteBpiAccount/deleteBpiAccount.command';
 import { GetAllBpiAccountsQuery } from '../capabilities/getAllBpiAccounts/getAllBpiAccounts.query';
 import { GetBpiAccountByIdQuery } from '../capabilities/getBpiAccountById/getBpiAccountById.query';
 import { UpdateBpiAccountCommand } from '../capabilities/updateBpiAccount/updateBpiAccount.command';
+import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
 import { BpiAccountDto } from './dtos/response/bpiAccount.dto';
 
 @Controller('accounts')
@@ -25,8 +34,12 @@ export class AccountController {
   }
 
   @Post()
-  async createBpiAccount(): Promise<string> {
-    return await this.commandBus.execute(new CreateBpiAccountCommand());
+  async createBpiAccount(
+    @Body() requestDto: CreateBpiAccountDto,
+  ): Promise<string> {
+    return await this.commandBus.execute(
+      new CreateBpiAccountCommand(requestDto.ownerBpiSubjectAccountsIds),
+    );
   }
 
   @Put('/:id')

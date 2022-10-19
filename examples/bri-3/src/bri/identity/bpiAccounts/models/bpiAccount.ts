@@ -1,12 +1,14 @@
+import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
+
 export class BpiAccount {
   private _id: string; // TODO: Add uuid after #491
   private _nonce: number;
-  private _ownerBpiSubjectIds: string[];
+  private _ownerBpiSubjectAccounts: BpiSubjectAccount[];
 
-  constructor(id: string, ownerBpiSubjectIds: string[]) {
+  constructor(id: string, ownerBpiSubjectAccounts: BpiSubjectAccount[]) {
     this._id = id;
     this._nonce = 0;
-    this._ownerBpiSubjectIds = ownerBpiSubjectIds;
+    this._ownerBpiSubjectAccounts = ownerBpiSubjectAccounts;
   }
 
   public get id(): string {
@@ -17,8 +19,8 @@ export class BpiAccount {
     return this._nonce;
   }
 
-  public get ownerBpiSubjectIds(): string[] {
-    return this._ownerBpiSubjectIds;
+  public get ownerBpiSubjectAccounts(): BpiSubjectAccount[] {
+    return this._ownerBpiSubjectAccounts;
   }
 
   public updateNonce(): void {

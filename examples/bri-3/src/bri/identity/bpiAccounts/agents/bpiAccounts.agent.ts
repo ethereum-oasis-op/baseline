@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
+import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
 
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
@@ -15,8 +16,10 @@ export class BpiAccountAgent {
     return true;
   }
 
-  public createNewBpiAccount(): BpiAccount {
-    return new BpiAccount(v4(), []);
+  public createNewBpiAccount(
+    ownerBpiSubjectAccounts: BpiSubjectAccount[],
+  ): BpiAccount {
+    return new BpiAccount(v4(), ownerBpiSubjectAccounts);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
