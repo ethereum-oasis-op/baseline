@@ -1,16 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UseInterceptors } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 import { getType } from 'tst-reflect';
 import Mapper from '../../../../bri/utils/mapper';
+import { MapInterceptor } from '@automapper/nestjs';
+import { IdentityProfile } from '../identity.mapper.profile';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
-  constructor(private readonly mapper: Mapper) {
+  constructor(private readonly mapper: Mapper,
+    private readonly identityProfile: IdentityProfile
+    ) {
     super();
   }
 
@@ -38,15 +42,21 @@ export class BpiSubjectStorageAgent extends PrismaService {
     });
   }
 
+  //@UseInterceptors(MapInterceptor(BpiSubject, BpiSubject))
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const newBpiSubjectModel = await this.bpiSubject.create({
-      data: this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
+      //data: this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject,
+      data: bpiSubject
     });
 
-    return this.mapper.map(
-      newBpiSubjectModel,
-      getType<BpiSubject>(),
-    ) as BpiSubject;
+    return this.identityProfile.mapperInstance.map(newBpiSubjectModel, BpiSubject,BpiSubject)
+
+    // return this.mapper.map(
+    //   newBpiSubjectModel,
+    //   getType<BpiSubject>(),
+    // ) as BpiSubject;
+
+    //return newBpiSubjectModel;
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {

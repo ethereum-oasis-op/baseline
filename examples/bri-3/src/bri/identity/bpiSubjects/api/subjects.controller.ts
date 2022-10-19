@@ -30,7 +30,7 @@ export class SubjectController {
   }
 
   @Get()
-  //@UseInterceptors(MapInterceptor(BpiSubject, BpiSubjectDto))
+  @UseInterceptors(MapInterceptor(BpiSubject, BpiSubjectDto))
   async getAllBpiSubjects(): Promise<BpiSubjectDto[]> {
     return await this.queryBus.execute(new GetAllBpiSubjectsQuery());
   }

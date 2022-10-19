@@ -23,10 +23,9 @@ import { WorkgroupModule } from './bri/workgroup/workgroup.module';
     IdentityModule,
     WorkgroupModule,
     TransactionModule,
-    IdentityModule,
     WorkgroupModule,
     TransactionModule,
-    CommunicationModule,
+    CommunicationModule
   ],
   providers: [PrismaService],
 })
