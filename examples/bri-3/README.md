@@ -1,39 +1,39 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+BRI-3 is a simple reference implemenation of the baseline standard, developed under [grant 85](https://github.com/eea-oasis/baseline-grants/issues/85).  
+
+
+This reference implementation is being built from scratch and will contain a limited set of features. It will serve the following purposes:
+
+ * Plug and play Baseline Reference Implementation that can cover a number of business use-cases in live environments
+
+ * Basis for community adoption and participation of companies with real-life business cases in extending the protocol
+
+ * Trying out the concepts from the standard in practice and producing feedback loops for standard improvements
+
+ * Entry point for developers to get to know the protocol, and start contributing in iterative and atomic fashion
+
+ * Basis for the Baseline SDK
+
+ * Set an example of how to build an open-source project under the Baseline protocol in regard to transparency, community participation and collaboration
+
+ * First vendor-agnostic implementation of the protocol.
+
+## Prerequisites
+
+[Docker] (https://docs.docker.com/engine/install/)
+
+[Node LTS] (https://nodejs.org/en/)
 
 ## Installation
 
 ```bash
-$ npm install
-$ npm install -g prisma
-$ prisma generate
-$ npx prisma migrate dev
-$ npx ttsc
+$ docker run --name postgres -e POSTGRES_PASSWORD=example -p 5432:5432 -d postgres # start a postgres container
+$ create a .env file based on the .env.sample # provide a connection string for the db instance
+$ npm install # install project dependencies
+$ npm install -g prisma # install prisma globally
+$ prisma generate # generate the prisma client 
+$ npx prisma migrate dev # migrate the db to latest state
 ```
 
 ## Running the app
@@ -51,27 +51,35 @@ $ npm run start:prod
 
 ## Test
 
+BRI-3 is tested on three levels. 
+
 ```bash
-# unit tests
-$ npm run test
+# Manual testing - Export of the up-to-date Postman collection that can be used is located here: ./test/bri.postman_collection.json
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ npm run start
+$ fire away postman requests
 ```
 
-## Support
+```bash
+# Unit testing - .spec files located next to the thing they are testing
+$ npm run test
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+# e2e testing - .e2e.spec files located in ./test folder
+$ comming soon
+```
 
-## Stay in touch
+## Architecture
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+BRI-3 is written in Typescript.
 
-## License
+Server framework used is [NestJs](https://nestjs.com/). 
 
-Nest is [MIT licensed](LICENSE).
+Architectural pattern is CQRS, using the NestJs [CRQS Module](https://docs.nestjs.com/recipes/cqrs).
+
+ORM used is [Prisma](https://www.prisma.io/).
+
+## Contributions
+
+Comming soon.
