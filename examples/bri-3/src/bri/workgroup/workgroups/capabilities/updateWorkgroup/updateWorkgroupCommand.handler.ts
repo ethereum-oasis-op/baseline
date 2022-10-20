@@ -23,16 +23,6 @@ export class UpdateWorkgroupCommandHandler
         command.participantIds,
       );
 
-    const workstepsToUpdate =
-      await this.agent.fetchWorkstepCandidatesAndThrowIfNoneExist(
-        command.workstepIds,
-      );
-
-    const workflowsToUpdate =
-      await this.agent.fetchWorkflowCandidatesAndThrowIfNoneExist(
-        command.workflowIds,
-      );
-
     const workgroupToUpdate =
       await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.id,
@@ -45,8 +35,6 @@ export class UpdateWorkgroupCommandHandler
       command.securityPolicy,
       command.privacyPolicy,
       participantsToUpdate,
-      workstepsToUpdate,
-      workflowsToUpdate,
     );
 
     await this.storageAgent.updateWorkgroup(workgroupToUpdate);

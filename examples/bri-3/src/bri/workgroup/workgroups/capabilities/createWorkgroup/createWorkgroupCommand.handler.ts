@@ -15,22 +15,12 @@ export class CreateWorkgroupCommandHandler
   async execute(command: CreateWorkgroupCommand) {
     const administratorsToConnect =
       await this.agent.fetchWorkgroupAdministratorsAndThrowIfNoneExist(
-        command.workstepIds,
-      );
-
-    const workflowsToConnect =
-      await this.agent.fetchWorkflowCandidatesAndThrowIfNoneExist(
-        command.workstepIds,
+        command.administratorIds,
       );
 
     const participantsToConnect =
       await this.agent.fetchWorkgroupParticipantsAndThrowIfNoneExist(
-        command.workstepIds,
-      );
-
-    const workstepsToConnect =
-      await this.agent.fetchWorkstepCandidatesAndThrowIfNoneExist(
-        command.workstepIds,
+        command.participantIds,
       );
 
     const newWorkgroupCandidate = this.agent.createNewWorkgroup(
@@ -39,8 +29,8 @@ export class CreateWorkgroupCommandHandler
       command.securityPolicy,
       command.privacyPolicy,
       participantsToConnect,
-      workstepsToConnect,
-      workflowsToConnect,
+      [],
+      [],
     );
 
     const newWorkgroup = await this.storageAgent.createNewWorkgroup(
