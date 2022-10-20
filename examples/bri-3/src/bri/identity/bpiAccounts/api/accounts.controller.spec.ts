@@ -25,7 +25,7 @@ import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
 
-describe.only('AccountController', () => {
+describe('AccountController', () => {
   let accountController: AccountController;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
