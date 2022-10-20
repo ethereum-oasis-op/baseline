@@ -11,31 +11,32 @@ datasource db {
 }
 
 model BpiSubject {
-  id          String @id @default(uuid())
-  name        String
-  description String
-  type        Int
-  publicKey   String
-  OwnedBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "ownerBpiSubject_fk")
-  CreatedBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "creatorBpiSubject_fk")
-  sentMessages Message[] @relation(name: "fromBpiSubject_fk")
-  receivedMessages Message[] @relation(name: "toBpiSubject_fk")
-  administratedWorkgroup AdministratorsOnWorkgroups[]
+  id                        String                       @id @default(uuid())
+  name                      String
+  description               String
+  type                      Int
+  publicKey                 String
+  OwnedBpiSubjectAccounts   BpiSubjectAccount[]          @relation(name: "ownerBpiSubject_fk")
+  CreatedBpiSubjectAccounts BpiSubjectAccount[]          @relation(name: "creatorBpiSubject_fk")
+  sentMessages              Message[]                    @relation(name: "fromBpiSubject_fk")
+  receivedMessages          Message[]                    @relation(name: "toBpiSubject_fk")
+  administratedWorkgroups    Workgroup[]                 @relation(name: "administratorSubjects")
+  participatingWorkgroups    Workgroup[]                 @relation(name: "participantSubjects") 
 }
 
 model BpiAccount {
-  id    String @id @default(uuid())
-  nonce Int
+  id                      String              @id @default(uuid())
+  nonce                   Int
   ownerBpiSubjectAccounts BpiSubjectAccount[]
 }
 
 model BpiSubjectAccount {
-  id                  String @id @default(uuid())
+  id                  String       @id @default(uuid())
   creatorBpiSubjectId String
   ownerBpiSubjectId   String
   bpiAccounts         BpiAccount[]
-  CreatorBpiSubject   BpiSubject  @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
-  OwnerBpiSubject     BpiSubject  @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
+  CreatorBpiSubject   BpiSubject   @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
+  OwnerBpiSubject     BpiSubject   @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
 }
 
 model Workstep {
@@ -47,6 +48,7 @@ model Workstep {
   securityPolicy String
   privacyPolicy  String
   workflow       Workflow[]
+  workgroup      Workgroup  @relation(fields: [workgroupId], references: [id])
 }
 
 model Workflow {
@@ -60,19 +62,12 @@ model Workflow {
 model Workgroup {
   id             String                       @id @default(uuid())
   name           String
-  administrators AdministratorsOnWorkgroups[]
+  administrators BpiSubject[] @relation(name: "administratorSubjects")
   securityPolicy String
   privacyPolicy  String
+  participants   BpiSubject[] @relation(name: "participantSubjects")
   workflows      Workflow[]
-}
-
-model AdministratorsOnWorkgroups {
-  workgroup       Workgroup  @relation(fields: [workgroupId], references: [id])
-  workgroupId     String
-  administrator   BpiSubject @relation(fields: [administratorId], references: [id])
-  administratorId String
-
-  @@id([workgroupId, administratorId])
+  worksteps      Workstep[]
 }
 
 model Transaction {
