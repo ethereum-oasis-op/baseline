@@ -1,1 +1,1 @@
-export const NOT_FOUND_ERR_MESSAGE = 'Bpi Account does not exist.';
+export const NOT_FOUND_ERR_MESSAGE = 'Bpi Subject Account does not exist.';
