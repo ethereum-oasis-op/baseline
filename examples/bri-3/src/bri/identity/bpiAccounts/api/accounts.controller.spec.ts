@@ -27,12 +27,20 @@ import { SubjectAccountModule } from '../../bpiSubjectAccounts/subjectAccounts.m
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
+import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
+import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
+import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
 
 describe.only('AccountController', () => {
   let accountController: AccountController;
-  let subjectController: SubjectController;
-  let subjectAccountController: SubjectAccountController;
+  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
+  let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
+
   beforeEach(async () => {
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(new Mapper());
+    mockBpiSubjectAccountsStorageAgent = new MockBpiSubjectAccountsStorageAgent(
+      new Mapper(),
+    );
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule, SubjectModule, SubjectAccountModule],
       controllers: [
@@ -56,45 +64,46 @@ describe.only('AccountController', () => {
       .overrideProvider(BpiAccountStorageAgent)
       .useValue(new MockBpiAccountsStorageAgent(new Mapper()))
       .overrideProvider(BpiSubjectAccountStorageAgent)
-      .useValue(new MockBpiSubjectAccountsStorageAgent(new Mapper()))
+      .useValue(mockBpiSubjectAccountsStorageAgent)
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(new MockBpiSubjectStorageAgent(new Mapper()))
+      .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     accountController = app.get<AccountController>(AccountController);
-    subjectController = app.get<SubjectController>(SubjectController);
-    subjectAccountController = app.get<SubjectAccountController>(
-      SubjectAccountController,
-    );
 
     await app.init();
   });
 
   const createBpiSubjectAccount = async () => {
-    const ownerBpiSubjectDto = {
-      name: 'owner',
-      desc: 'desc',
-      publicKey: 'publicKey',
-    } as CreateBpiSubjectDto;
-    const creatorBpiSubjectDto = {
-      name: 'owner',
-      desc: 'desc',
-      publicKey: 'publicKey',
-    } as CreateBpiSubjectDto;
-
-    const ownerBpiSubject = await subjectController.createBpiSubject(
-      ownerBpiSubjectDto,
+    const ownerBpiSubject =
+      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        new BpiSubject(
+          '123',
+          'owner',
+          'desc',
+          BpiSubjectType.External,
+          'publicKey',
+        ),
+      );
+    const creatorBpiSubject =
+      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        new BpiSubject(
+          '321',
+          'creator',
+          'desc',
+          BpiSubjectType.External,
+          'publicKey',
+        ),
+      );
+    const bpiSubjectAccount = new BpiSubjectAccount(
+      '123',
+      creatorBpiSubject,
+      ownerBpiSubject,
     );
-    const creatorBpiSubject = await subjectController.createBpiSubject(
-      creatorBpiSubjectDto,
+
+    return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(
+      bpiSubjectAccount,
     );
-
-    const subjectAccountDto = {
-      creatorBpiSubjectId: creatorBpiSubject,
-      ownerBpiSubjectId: ownerBpiSubject,
-    } as CreateBpiSubjectAccountDto;
-
-    return subjectAccountController.createBpiSubjectAccount(subjectAccountDto);
   };
 
   const createBpiAccount = async (ownerBpiSubjectAccountsIds: string[]) => {
@@ -118,8 +127,8 @@ describe.only('AccountController', () => {
 
     it('should return the correct bpi account if proper id passed ', async () => {
       // Arrange
-      const bpiSubjectAccountId = await createBpiSubjectAccount();
-      const newBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
+      const bpiSubjectAccount = await createBpiSubjectAccount();
+      const newBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
 
       // Act
       const createdBpiAccount = await accountController.getBpiAccountById(
@@ -133,7 +142,7 @@ describe.only('AccountController', () => {
       expect(createdBpiAccount.ownerBpiSubjectAccounts.length).toEqual(1);
       const ownerBpiSubjectAccount =
         createdBpiAccount.ownerBpiSubjectAccounts[0];
-      expect(ownerBpiSubjectAccount.id).toEqual(bpiSubjectAccountId);
+      expect(ownerBpiSubjectAccount.id).toEqual(bpiSubjectAccount.id);
     });
   });
 
@@ -148,9 +157,9 @@ describe.only('AccountController', () => {
 
     it('should return 2 bpi accounts if 2 exists ', async () => {
       // Arrange
-      const bpiSubjectAccountId = await createBpiSubjectAccount();
-      const firstBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
-      const secondBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
+      const bpiSubjectAccount = await createBpiSubjectAccount();
+      const firstBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
+      const secondBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
 
       // Act
       const bpiAccounts = await accountController.getAllBpiAccounts();
@@ -163,7 +172,7 @@ describe.only('AccountController', () => {
       expect(bpiAccounts[0].ownerBpiSubjectAccounts.length).toEqual(1);
       const firstOwnerBpiSubjectAccount =
         bpiAccounts[0].ownerBpiSubjectAccounts[0];
-      expect(firstOwnerBpiSubjectAccount.id).toEqual(bpiSubjectAccountId);
+      expect(firstOwnerBpiSubjectAccount.id).toEqual(bpiSubjectAccount.id);
 
       expect(bpiAccounts[1].id).toEqual(secondBpiAccountId);
       // TODO fix when automapper is introduced, currently all fields that are not in constructor seems to be ignored
@@ -171,7 +180,7 @@ describe.only('AccountController', () => {
       expect(bpiAccounts[1].ownerBpiSubjectAccounts.length).toEqual(1);
       const secondOwnerBpiSubjectAccount =
         bpiAccounts[0].ownerBpiSubjectAccounts[0];
-      expect(secondOwnerBpiSubjectAccount.id).toEqual(bpiSubjectAccountId);
+      expect(secondOwnerBpiSubjectAccount.id).toEqual(bpiSubjectAccount.id);
     });
   });
 
@@ -192,8 +201,8 @@ describe.only('AccountController', () => {
 
     it('should return new uuid from the created bpi account when all params provided', async () => {
       // Arrange and act
-      const bpiSubjectAccountId = await createBpiSubjectAccount();
-      const newBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
+      const bpiSubjectAccount = await createBpiSubjectAccount();
+      const newBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
 
       // Assert
       expect(uuidValidate(newBpiAccountId));
@@ -213,8 +222,8 @@ describe.only('AccountController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const bpiSubjectAccountId = await createBpiSubjectAccount();
-      const newBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
+      const bpiSubjectAccount = await createBpiSubjectAccount();
+      const newBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
 
       // Act
       await accountController.deleteBpiAccount(newBpiAccountId);
