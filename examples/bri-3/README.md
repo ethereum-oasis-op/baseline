@@ -31,9 +31,8 @@ This reference implementation is being built from scratch and will contain a lim
 $ docker run --name postgres -e POSTGRES_PASSWORD=example -p 5432:5432 -d postgres # start a postgres container
 $ create a .env file based on the .env.sample # provide a connection string for the db instance
 $ npm install # install project dependencies
-$ npm install -g prisma # install prisma globally
-$ npx prisma generate # generate the prisma client 
-$ npx prisma db push # migrate the db to latest state
+$ npm run prisma:generate # generate the prisma client 
+$ npm run prisma:migrate:dev # migrate the db to latest state
 ```
 
 ## Running the app
