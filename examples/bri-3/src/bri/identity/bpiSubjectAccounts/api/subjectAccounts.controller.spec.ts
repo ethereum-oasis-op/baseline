@@ -7,7 +7,6 @@ import { NOT_FOUND_ERR_MESSAGE as SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../bp
 import Mapper from '../../../utils/mapper';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { SubjectAccountController } from './subjectAccounts.controller';
-import { SubjectModule } from '../../bpiSubjects/subjects.module';
 import { BpiSubjectAccountAgent } from '../agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from '../agents/bpiSubjectAccountsStorage.agent';
 import { MockBpiSubjectAccountsStorageAgent } from '../agents/mockBpiSubjectAccountsStorage.agent';
@@ -30,7 +29,7 @@ describe.only('SubjectAccountController', () => {
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(new Mapper());
 
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule, SubjectModule],
+      imports: [CqrsModule],
       controllers: [SubjectAccountController],
       providers: [
         BpiSubjectAccountAgent,
