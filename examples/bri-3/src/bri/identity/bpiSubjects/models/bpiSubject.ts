@@ -2,11 +2,21 @@ import { AutoMap } from '@automapper/classes';
 import { BpiSubjectType } from './bpiSubjectType.enum';
 
 export class BpiSubject {
-  private _id: string; // TODO: Add uuid after #491
-  private _name: string;
-  private _description: string;
-  private _type: BpiSubjectType;
-  private _publicKey: string;
+
+  @AutoMap()
+  id: string; // TODO: Add uuid after #491
+
+  @AutoMap()
+  name: string;
+
+  @AutoMap()
+  description: string;
+
+  @AutoMap()
+  type: BpiSubjectType;
+  
+  @AutoMap()
+  publicKey: string;
 
   constructor(
     id: string,
@@ -15,43 +25,67 @@ export class BpiSubject {
     type: BpiSubjectType,
     publicKey: string,
   ) {
-    this._id = id;
-    this._name = name;
-    this._description = description;
-    this._type = type;
-    this._publicKey = publicKey;
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.type = type;
+    this.publicKey = publicKey;
   }
 
-  public get id(): string {
-    return this._id;
-  }
+  // @AutoMap()
+  // public get id(): string {
+  //   return this._id;
+  // }
 
-  @AutoMap()
-  public get name(): string {
-    return this._name;
-  }
+  // public set id(id: string) {
+  //   this._id = id;
+  // }
 
-  public get description(): string {
-    return this._description;
-  }
+  // @AutoMap()
+  // public get name(): string {
+  //   return this._name;
+  // }
 
-  public get type(): BpiSubjectType {
-    return this._type;
-  }
+  // public set name(name: string)  {
+  //   this._name = name;
+  // }
 
-  public get publicKey(): string {
-    return this._publicKey;
-  }
+  // @AutoMap()
+  // public get description(): string {
+  //   return this._description;
+  // }
+
+  // public set description(description: string)  {
+  //   this._description = description;
+  // }
+
+  // @AutoMap()
+  // public get type(): BpiSubjectType {
+  //   return this._type;
+  // }
+
+  // public set type(type: BpiSubjectType)  {
+  //   this._type = type;
+  // }
+
+  // @AutoMap()
+  // public get publicKey(): string {
+  //   return this._publicKey;
+  // }
+
+  // public set publicKey(publicKey: string)  {
+  //   this._publicKey = publicKey;
+  // }
 
   public updateName(newName: string): void {
-    this._name = newName;
+    this.name = newName;
   }
 
   public updateDescription(newDescription: string): void {
-    this._description = newDescription;
+    this.description = newDescription;
   }
 
   public updatePublicKey(newPk: string): void {
-    this._publicKey = newPk;
+    this.publicKey = newPk;
   }
 }

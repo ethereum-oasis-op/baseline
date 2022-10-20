@@ -17,9 +17,8 @@ import { LoggingModule } from './shared/logging/logging.module';
     LoggingModule,
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
-  }),
+    }),
   ],
   providers: [PrismaService],
 })
 export class AppModule {}
-

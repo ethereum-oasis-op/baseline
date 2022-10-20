@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, CACHE_MANAGER, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BpiSubjectAgent } from '../agents/bpiSubjects.agent';
@@ -13,14 +13,21 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectController } from './subjects.controller';
-import Mapper from '../../../utils/mapper';
+//import Mapper from '../../../utils/mapper';
+import { Mapper } from '@automapper/core';
+import { SubjectsProfile } from '../subjects.profile';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
+  let mapper: Mapper;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [CqrsModule, AutomapperModule.forRoot({
+        strategyInitializer: classes(),
+      }),],
       controllers: [SubjectController],
       providers: [
         BpiSubjectAgent,
@@ -30,11 +37,11 @@ describe('SubjectController', () => {
         GetBpiSubjectByIdQueryHandler,
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
-        Mapper,
+        SubjectsProfile,
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(new MockBpiSubjectStorageAgent(new Mapper()))
+      .useValue(new MockBpiSubjectStorageAgent(mapper))
       .compile();
 
     sController = app.get<SubjectController>(SubjectController);

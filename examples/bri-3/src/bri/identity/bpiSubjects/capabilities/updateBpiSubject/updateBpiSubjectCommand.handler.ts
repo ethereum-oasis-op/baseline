@@ -14,7 +14,7 @@ export class UpdateBpiSubjectCommandHandler
   constructor(
     private agent: BpiSubjectAgent,
     private storageAgent: BpiSubjectStorageAgent,
-    @InjectMapper() private autoMapper: Mapper 
+    @InjectMapper() private autoMapper: Mapper,
   ) {}
 
   async execute(command: UpdateBpiSubjectCommand) {
@@ -30,10 +30,14 @@ export class UpdateBpiSubjectCommandHandler
       command.publicKey,
     );
 
-    const bpiSubject = await this.storageAgent.updateBpiSubject(bpiSubjectToUpdate);
-    console.log(bpiSubject);
-    const mappedToDto = this.autoMapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
-    console.log(mappedToDto);
-    return mappedToDto;
+    const bpiSubject = await this.storageAgent.updateBpiSubject(
+      bpiSubjectToUpdate,
+    );
+
+    return this.autoMapper.map(
+      bpiSubject,
+      BpiSubject,
+      BpiSubjectDto,
+    );
   }
 }

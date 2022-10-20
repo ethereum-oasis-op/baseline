@@ -30,7 +30,7 @@ export const QueryHandlers = [
     BpiSubjectAgent,
     BpiSubjectStorageAgent,
     Mapper,
-    SubjectsProfile
+    SubjectsProfile,
   ],
   exports: [BpiSubjectStorageAgent],
 })
