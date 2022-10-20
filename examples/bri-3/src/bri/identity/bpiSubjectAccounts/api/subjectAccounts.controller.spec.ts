@@ -11,8 +11,6 @@ import { SubjectModule } from '../../bpiSubjects/subjects.module';
 import { SubjectController } from '../../bpiSubjects/api/subjects.controller';
 import { BpiSubjectAccountAgent } from '../agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from '../agents/bpiSubjectAccountsStorage.agent';
-import { BpiAccountStorageAgent } from '../../bpiAccounts/agents/bpiAccountsStorage.agent';
-import { MockBpiAccountsStorageAgent } from '../../bpiAccounts/agents/mockBpiAccountStorage.agent';
 import { CreateBpiSubjectDto } from '../../bpiSubjects/api/dtos/request/createBpiSubject.dto';
 import { MockBpiSubjectAccountsStorageAgent } from '../agents/mockBpiSubjectAccountsStorage.agent';
 import { CreateBpiSubjectAccountCommandHandler } from '../capabilities/createBpiSubjectAccount/createBpiSubjectAccountCommand.handler';
@@ -21,6 +19,8 @@ import { GetAllBpiSubjectAccountsQueryHandler } from '../capabilities/getAllBpiS
 import { GetBpiSubjectAccountByIdQueryHandler } from '../capabilities/getBpiSubjectAccountById/getBpiSubjectAccountByIdQuery.handler';
 import { UpdateBpiSubjectAccountCommandHandler } from '../capabilities/updateBpiSubjectAccount/updateBpiSubjectAccountCommand.handler';
 import { CreateBpiSubjectAccountDto } from './dtos/request/createBpiSubjectAccount.dto';
+import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
 
 describe.only('SubjectAccountController', () => {
   let subjectAccountController: SubjectAccountController;
@@ -32,6 +32,7 @@ describe.only('SubjectAccountController', () => {
       providers: [
         BpiSubjectAccountAgent,
         BpiSubjectAccountStorageAgent,
+        BpiSubjectStorageAgent,
         CreateBpiSubjectAccountCommandHandler,
         UpdateBpiSubjectAccountCommandHandler,
         DeleteBpiSubjectAccountCommandHandler,
@@ -39,10 +40,10 @@ describe.only('SubjectAccountController', () => {
         GetAllBpiSubjectAccountsQueryHandler,
       ],
     })
-      .overrideProvider(BpiAccountStorageAgent)
-      .useValue(new MockBpiAccountsStorageAgent(new Mapper()))
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(new MockBpiSubjectAccountsStorageAgent(new Mapper()))
+      .overrideProvider(BpiSubjectStorageAgent)
+      .useValue(new MockBpiSubjectStorageAgent(new Mapper()))
       .compile();
 
     subjectController = app.get<SubjectController>(SubjectController);
