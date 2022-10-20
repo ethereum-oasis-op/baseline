@@ -32,51 +32,6 @@ export class BpiSubject {
     this.publicKey = publicKey;
   }
 
-  // @AutoMap()
-  // public get id(): string {
-  //   return this._id;
-  // }
-
-  // public set id(id: string) {
-  //   this._id = id;
-  // }
-
-  // @AutoMap()
-  // public get name(): string {
-  //   return this._name;
-  // }
-
-  // public set name(name: string)  {
-  //   this._name = name;
-  // }
-
-  // @AutoMap()
-  // public get description(): string {
-  //   return this._description;
-  // }
-
-  // public set description(description: string)  {
-  //   this._description = description;
-  // }
-
-  // @AutoMap()
-  // public get type(): BpiSubjectType {
-  //   return this._type;
-  // }
-
-  // public set type(type: BpiSubjectType)  {
-  //   this._type = type;
-  // }
-
-  // @AutoMap()
-  // public get publicKey(): string {
-  //   return this._publicKey;
-  // }
-
-  // public set publicKey(publicKey: string)  {
-  //   this._publicKey = publicKey;
-  // }
-
   public updateName(newName: string): void {
     this.name = newName;
   }
