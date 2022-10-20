@@ -5,11 +5,14 @@ import { Workstep } from '../../worksteps/models/workstep';
 
 import { uuid } from 'uuidv4';
 import { Workgroup } from '../models/workgroup';
-import { BpiSubjectStorageAgent } from 'src/bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 import { WorkflowStorageAgent } from '../../workflows/agents/workflowsStorage.agent';
 import { WorkgroupStorageAgent } from './workgroupStorage.agent';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import {
+  BPISUBJECT_NOT_FOUND_ERR_MESSAGE,
+  WORKGROUP_NOT_FOUND_ERR_MESSAGE,
+} from '../api/err.messages';
 
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
@@ -29,7 +32,7 @@ export class WorkgroupAgent {
     );
 
     if (Array.isArray(bpiSubjects) && !bpiSubjects.length) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
     return bpiSubjects;
@@ -43,38 +46,10 @@ export class WorkgroupAgent {
     );
 
     if (Array.isArray(bpiSubjects) && !bpiSubjects.length) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
     return bpiSubjects;
-  }
-
-  public async fetchWorkstepCandidatesAndThrowIfNoneExist(
-    workstepIds: string[],
-  ): Promise<Workstep[]> {
-    const worksteps = await this.workstepStorageAgent.getMatchingWorkstepsById(
-      workstepIds,
-    );
-
-    if (Array.isArray(worksteps) && !worksteps.length) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    }
-
-    return worksteps;
-  }
-
-  public async fetchWorkflowCandidatesAndThrowIfNoneExist(
-    workflowIds: string[],
-  ): Promise<Workflow[]> {
-    const workflows = await this.workflowStorageAgent.getWorkflowsById(
-      workflowIds,
-    );
-
-    if (Array.isArray(workflows) && !workflows.length) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    }
-
-    return workflows;
   }
 
   public createNewWorkgroup(
@@ -92,8 +67,8 @@ export class WorkgroupAgent {
       administrator,
       securityPolicy,
       privacyPolicy,
-      // participants,
-      // worksteps,
+      participants,
+      worksteps,
       workflows,
     );
   }
@@ -106,7 +81,7 @@ export class WorkgroupAgent {
     );
 
     if (!workgroupToUpdate) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
     }
 
     return workgroupToUpdate;
@@ -119,16 +94,12 @@ export class WorkgroupAgent {
     securityPolicy: string,
     privacyPolicy: string,
     participants: BpiSubject[],
-    worksteps: Workstep[],
-    workflows: Workflow[],
   ) {
     workgroupToUpdate.updateName(name);
     workgroupToUpdate.updateAdministrators(administrator);
     workgroupToUpdate.updateSecurityPolicy(securityPolicy);
     workgroupToUpdate.updatePrivacyPolicy(privacyPolicy);
     workgroupToUpdate.updateParticipants(participants);
-    workgroupToUpdate.updateWorksteps(worksteps);
-    workgroupToUpdate.updateWorkflows(workflows);
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
@@ -139,7 +110,7 @@ export class WorkgroupAgent {
     );
 
     if (!workgroupToDelete) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
     }
 
     return workgroupToDelete;
