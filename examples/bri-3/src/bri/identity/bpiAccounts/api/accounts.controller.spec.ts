@@ -9,7 +9,6 @@ import Mapper from '../../../utils/mapper';
 import { BpiAccountStorageAgent } from '../agents/bpiAccountsStorage.agent';
 import { BpiAccountAgent } from '../agents/bpiAccounts.agent';
 import { MockBpiAccountsStorageAgent } from '../agents/mockBpiAccountStorage.agent';
-import { SubjectModule } from '../../bpiSubjects/subjects.module';
 import { CreateBpiAccountCommandHandler } from '../capabilities/createBpiAccount/createBpiAccountCommand.handler';
 import { DeleteBpiAccountCommandHandler } from '../capabilities/deleteBpiAccount/deleteBpiAccountCommand.handler';
 import { GetAllBpiAccountsQueryHandler } from '../capabilities/getAllBpiAccounts/getAllBpiAccountQuery.handler';
@@ -19,7 +18,6 @@ import { BpiSubjectAccountAgent } from '../../bpiSubjectAccounts/agents/bpiSubje
 import { BpiSubjectAccountStorageAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { MockBpiSubjectAccountsStorageAgent } from '../../bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
 import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
-import { SubjectAccountModule } from '../../bpiSubjectAccounts/subjectAccounts.module';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
@@ -38,7 +36,7 @@ describe.only('AccountController', () => {
       new Mapper(),
     );
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule, SubjectModule, SubjectAccountModule],
+      imports: [CqrsModule],
       controllers: [AccountController],
       providers: [
         CreateBpiAccountCommandHandler,
