@@ -17,21 +17,11 @@ import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 import { MockWorkstepStorageAgent } from '../../worksteps/agents/mockWorkstepsStorage.agent';
-import { WorkstepController } from '../../worksteps/api/worksteps.controller';
-import { CreateWorkstepDto } from '../../worksteps/api/dtos/request/createWorkstep.dto';
+import { Workstep } from '../../worksteps/models/workstep';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
-  let workstepController: WorkstepController;
-
-  const workstepRequestDto = {
-    name: 'name',
-    version: 'version',
-    status: 'status',
-    workgroupId: 'wgid',
-    securityPolicy: 'secPolicy',
-    privacyPolicy: 'privPolicy',
-  } as CreateWorkstepDto;
+  let mockWorkstepStorageAgent: MockWorkstepStorageAgent;
 
   const workflowRequestDto = {
     name: 'name1',
@@ -39,11 +29,22 @@ describe('WorkflowsController', () => {
     workgroupId: 'workgroup1',
   } as CreateWorkflowDto;
 
-  const createTestWorkflow = async (): Promise<string> => {
-    const workstepId = await workstepController.createWorkstep(
-      workstepRequestDto,
+  const createTestWorkstep = async () => {
+    const newWorkstep = new Workstep(
+      '123',
+      'name',
+      'version',
+      'status',
+      'wgid',
+      'secPolicy',
+      'privPolicy',
     );
-    workflowRequestDto.workstepIds = [workstepId];
+    return await mockWorkstepStorageAgent.createNewWorkstep(newWorkstep);
+  };
+
+  const createTestWorkflow = async (): Promise<string> => {
+    const newWorkstep = await createTestWorkstep();
+    workflowRequestDto.workstepIds = [newWorkstep.id];
     const workflowId = await workflowController.createWorkflow(
       workflowRequestDto,
     );
@@ -51,9 +52,10 @@ describe('WorkflowsController', () => {
   };
 
   beforeEach(async () => {
+    mockWorkstepStorageAgent = new MockWorkstepStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule, WorkstepModule],
-      controllers: [WorkflowController, WorkstepController],
+      controllers: [WorkflowController],
       providers: [
         WorkflowAgent,
         CreateWorkflowCommandHandler,
@@ -67,11 +69,10 @@ describe('WorkflowsController', () => {
       .overrideProvider(WorkflowStorageAgent)
       .useValue(new MockWorkflowStorageAgent())
       .overrideProvider(WorkstepStorageAgent)
-      .useValue(new MockWorkstepStorageAgent())
+      .useValue(mockWorkstepStorageAgent)
       .compile();
 
     workflowController = app.get<WorkflowController>(WorkflowController);
-    workstepController = app.get<WorkstepController>(WorkstepController);
     await app.init();
   });
 
@@ -121,10 +122,8 @@ describe('WorkflowsController', () => {
       } as CreateWorkflowDto;
 
       const workflowId = await createTestWorkflow();
-      const workstepId = await workstepController.createWorkstep(
-        workstepRequestDto,
-      );
-      workflowRequestDto2.workstepIds = [workstepId];
+      const workstep = await createTestWorkstep();
+      workflowRequestDto2.workstepIds = [workstep.id];
 
       const newWorkflowId2 = await workflowController.createWorkflow(
         workflowRequestDto2,
@@ -181,14 +180,12 @@ describe('WorkflowsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const workstepId = await workstepController.createWorkstep(
-        workstepRequestDto,
-      );
+      const workstep = await createTestWorkstep();
 
       const workflowId = await createTestWorkflow();
       const updateRequestDto: UpdateWorkflowDto = {
         name: 'name2',
-        workstepIds: [workstepId],
+        workstepIds: [workstep.id],
         workgroupId: 'workgroupId2',
       };
 

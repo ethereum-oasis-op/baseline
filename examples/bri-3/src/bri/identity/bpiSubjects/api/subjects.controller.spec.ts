@@ -13,11 +13,11 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectController } from './subjects.controller';
-//import Mapper from '../../../utils/mapper';
 import { Mapper } from '@automapper/core';
 import { SubjectsProfile } from '../subjects.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
@@ -84,7 +84,7 @@ describe('SubjectController', () => {
   });
 
   describe('getAllBpiSubjects', () => {
-    it('should return emtpy array if not bpi subjects ', async () => {
+    it('should return empty array if no bpi subjects ', async () => {
       // Act
       const bpiSubjects = await sController.getAllBpiSubjects();
 
@@ -150,7 +150,8 @@ describe('SubjectController', () => {
       const response = await sController.createBpiSubject(requestDto);
 
       // Assert
-      expect(response.length).toEqual(36);
+      expect(uuidValidate(response));
+      expect(uuidVersion(response)).toEqual(4);
     });
   });
 
