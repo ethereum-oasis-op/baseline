@@ -34,10 +34,6 @@ export class UpdateBpiSubjectCommandHandler
       bpiSubjectToUpdate,
     );
 
-    return this.autoMapper.map(
-      bpiSubject,
-      BpiSubject,
-      BpiSubjectDto,
-    );
+    return this.autoMapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
   }
 }

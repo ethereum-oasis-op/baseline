@@ -12,7 +12,7 @@ export class GetAllBpiSubjectsQueryHandler
 {
   constructor(
     @InjectMapper() private autoMapper: Mapper,
-    private readonly storageAgent: BpiSubjectStorageAgent
+    private readonly storageAgent: BpiSubjectStorageAgent,
   ) {}
 
   async execute() {

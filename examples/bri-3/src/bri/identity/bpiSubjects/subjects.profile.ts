@@ -1,5 +1,13 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, forMember, mapFrom, Mapper, namingConventions, PascalCaseNamingConvention, SnakeCaseNamingConvention } from '@automapper/core';
+import {
+  createMap,
+  forMember,
+  mapFrom,
+  Mapper,
+  namingConventions,
+  PascalCaseNamingConvention,
+  SnakeCaseNamingConvention,
+} from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { BpiSubject } from './models/bpiSubject';
 import { BpiSubjectDto } from './api/dtos/response/bpiSubject.dto';
@@ -12,7 +20,6 @@ export class SubjectsProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-
       createMap(
         mapper,
         BpiSubject,
@@ -28,26 +35,25 @@ export class SubjectsProfile extends AutomapperProfile {
         BpiSubject,
         BpiSubject,
         forMember(
-            (d) => d.id,
-            mapFrom((s) => s.id),
-          ),
-          forMember(
-            (d) => d.name,
-            mapFrom((s) => s.name),
-          ),
-          forMember(
-            (d) => d.description,
-            mapFrom((s) => s.description),
-          ),
-          forMember(
-            (d) => d.type,
-            mapFrom((s) => s.type),
-          ),
-          forMember(
-            (d) => d.publicKey,
-            mapFrom((s) => s.publicKey),
-          ),
-        //namingConventions(new SnakeCaseNamingConvention())
+          (d) => d.id,
+          mapFrom((s) => s.id),
+        ),
+        forMember(
+          (d) => d.name,
+          mapFrom((s) => s.name),
+        ),
+        forMember(
+          (d) => d.description,
+          mapFrom((s) => s.description),
+        ),
+        forMember(
+          (d) => d.type,
+          mapFrom((s) => s.type),
+        ),
+        forMember(
+          (d) => d.publicKey,
+          mapFrom((s) => s.publicKey),
+        ),
       );
     };
   }

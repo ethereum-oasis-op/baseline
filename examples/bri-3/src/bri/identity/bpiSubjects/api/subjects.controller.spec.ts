@@ -1,4 +1,8 @@
-import { BadRequestException, CACHE_MANAGER, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  CACHE_MANAGER,
+  NotFoundException,
+} from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { BpiSubjectAgent } from '../agents/bpiSubjects.agent';
@@ -25,9 +29,12 @@ describe('SubjectController', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule, AutomapperModule.forRoot({
-        strategyInitializer: classes(),
-      }),],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [SubjectController],
       providers: [
         BpiSubjectAgent,

@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '..//api/err.messages';
@@ -5,9 +7,30 @@ import { Transaction } from '../models/transaction';
 
 @Injectable()
 export class TransactionStorageAgent extends PrismaService {
+  constructor(@InjectMapper() private autoMapper: Mapper) {
+    super();
+  }
+
+  async getAllTransactions(): Promise<Transaction[]> {
+    const transactionModels = await this.transaction.findMany();
+    return transactionModels.map((transactionModel) => {
+      return new Transaction(
+        transactionModel.id,
+        transactionModel.nonce,
+        transactionModel.workflowInstanceId,
+        transactionModel.workstepInstanceId,
+        null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+        null, // TODO: transactionModel.to once BpiAccount in the prisma schema,
+        transactionModel.payload,
+        transactionModel.signature,
+        transactionModel.status,
+      );
+    });
+  }
+
   async getTransactionById(id: string): Promise<Transaction> {
     const transactionModel = await this.transaction.findUnique({
-      where: { id: id },
+      where: { id },
     });
 
     if (!transactionModel) {
@@ -25,6 +48,8 @@ export class TransactionStorageAgent extends PrismaService {
       transactionModel.signature,
       transactionModel.status,
     );
+
+    //return this.autoMapper.map(transactionModel, Transaction, Transaction);
   }
 
   async createNewTransaction(transaction: Transaction): Promise<Transaction> {

@@ -12,13 +12,23 @@ import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { MockTransactionStorageAgent } from '../agents/mockTransactionStorage.agent';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { Mapper } from '@automapper/core';
+import { TransactionsProfile } from '../transactions.profile';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
+  let mapper: Mapper;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [TransactionController],
       providers: [
         TransactionAgent,
@@ -27,6 +37,7 @@ describe('TransactionController', () => {
         DeleteTransactionCommandHandler,
         GetTransactionByIdQueryHandler,
         TransactionStorageAgent,
+        TransactionsProfile,
       ],
     })
       .overrideProvider(TransactionStorageAgent)

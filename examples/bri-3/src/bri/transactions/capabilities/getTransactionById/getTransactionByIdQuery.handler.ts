@@ -4,12 +4,18 @@ import { TransactionStorageAgent } from '../../agents/transactionStorage.agent';
 import { GetTransactionByIdQuery } from './getTransactionById.query';
 import { NotFoundException } from '@nestjs/common';
 import { NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { Transaction } from '../../models/transaction';
 
 @QueryHandler(GetTransactionByIdQuery)
 export class GetTransactionByIdQueryHandler
   implements IQueryHandler<GetTransactionByIdQuery>
 {
-  constructor(private readonly storageAgent: TransactionStorageAgent) {}
+  constructor(
+    @InjectMapper() private readonly mapper: Mapper,
+    private readonly storageAgent: TransactionStorageAgent,
+  ) {}
 
   async execute(query: GetTransactionByIdQuery) {
     const transaction = await this.storageAgent.getTransactionById(query.id);
@@ -18,16 +24,6 @@ export class GetTransactionByIdQueryHandler
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return {
-      id: transaction.id,
-      nonce: transaction.nonce,
-      workflowInstanceId: transaction.workflowInstanceId,
-      workstepInstanceId: transaction.workstepInstanceId,
-      from: '', // TODO: transaction.from once BpiAccount in the prisma schema,
-      to: '', // TODO: transaction.from once BpiAccount in the prisma schema,
-      payload: transaction.payload,
-      signature: transaction.signature,
-      status: transaction.status,
-    } as TransactionDto;
+    return this.mapper.map(transaction, Transaction, TransactionDto);
   }
 }

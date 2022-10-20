@@ -1,7 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 
 export class BpiSubjectDto {
-  
   @AutoMap()
   id: string;
 

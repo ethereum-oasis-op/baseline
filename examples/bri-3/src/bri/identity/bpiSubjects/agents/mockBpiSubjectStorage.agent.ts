@@ -30,7 +30,7 @@ export class MockBpiSubjectStorageAgent {
       bpiSubject.description,
       bpiSubject.type,
       bpiSubject.publicKey,
-    )
+    );
 
     this.bpiSubjectsStore.push(createdBp);
     return Promise.resolve(createdBp);
