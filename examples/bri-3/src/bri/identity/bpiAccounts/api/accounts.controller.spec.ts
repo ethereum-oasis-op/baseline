@@ -19,10 +19,6 @@ import { BpiSubjectAccountAgent } from '../../bpiSubjectAccounts/agents/bpiSubje
 import { BpiSubjectAccountStorageAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { MockBpiSubjectAccountsStorageAgent } from '../../bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
 import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
-import { SubjectController } from '../../bpiSubjects/api/subjects.controller';
-import { SubjectAccountController } from '../../bpiSubjectAccounts/api/subjectAccounts.controller';
-import { CreateBpiSubjectDto } from '../../bpiSubjects/api/dtos/request/createBpiSubject.dto';
-import { CreateBpiSubjectAccountDto } from '../../bpiSubjectAccounts/api/dtos/request/createBpiSubjectAccount.dto';
 import { SubjectAccountModule } from '../../bpiSubjectAccounts/subjectAccounts.module';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
@@ -43,11 +39,7 @@ describe.only('AccountController', () => {
     );
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule, SubjectModule, SubjectAccountModule],
-      controllers: [
-        AccountController,
-        SubjectController,
-        SubjectAccountController,
-      ],
+      controllers: [AccountController],
       providers: [
         CreateBpiAccountCommandHandler,
         UpdateBpiAccountCommandHandler,
