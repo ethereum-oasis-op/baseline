@@ -11,7 +11,7 @@ export class MockBpiSubjectAccountsStorageAgent {
 
   private bpiSubjectAccountsStore: BpiSubjectAccount[] = [];
 
-  async getSubjectAccountById(id: string): Promise<BpiSubjectAccount> {
+  async getBpiSubjectAccountById(id: string): Promise<BpiSubjectAccount> {
     const bpiSubjectAccount = this.bpiSubjectAccountsStore.find(
       (bp) => bp.id === id,
     );
