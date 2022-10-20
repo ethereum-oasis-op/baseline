@@ -18,8 +18,8 @@ export class Workgroup {
     administrators: BpiSubject[],
     securityPolicy: string,
     privacyPolicy: string,
-    // participants: BpiSubject[],
-    // worksteps: Workstep[],
+    participants: BpiSubject[],
+    worksteps: Workstep[],
     workflows: Workflow[],
   ) {
     this._id = id;
@@ -27,8 +27,8 @@ export class Workgroup {
     this._administrators = administrators;
     this._securityPolicy = securityPolicy;
     this._privacyPolicy = privacyPolicy;
-    // this._participants = participants;
-    // this._worksteps = worksteps;
+    this._participants = participants;
+    this._worksteps = worksteps;
     this._workflows = workflows;
   }
 

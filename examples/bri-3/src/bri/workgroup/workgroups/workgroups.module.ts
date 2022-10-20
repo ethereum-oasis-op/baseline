@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { SubjectModule } from 'src/bri/identity/bpiSubjects/subjects.module';
+import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
 import { WorkflowModule } from '../workflows/workflows.module';
 import { WorkstepModule } from '../worksteps/worksteps.module';
 import { WorkgroupAgent } from './agents/workgroups.agent';
