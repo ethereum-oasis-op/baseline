@@ -25,6 +25,8 @@ import { CreateBpiSubjectDto } from '../../bpiSubjects/api/dtos/request/createBp
 import { CreateBpiSubjectAccountDto } from '../../bpiSubjectAccounts/api/dtos/request/createBpiSubjectAccount.dto';
 import { SubjectAccountModule } from '../../bpiSubjectAccounts/subjectAccounts.module';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
 
 describe.only('AccountController', () => {
   let accountController: AccountController;
@@ -46,6 +48,7 @@ describe.only('AccountController', () => {
         GetAllBpiAccountsQueryHandler,
         BpiAccountAgent,
         BpiAccountStorageAgent,
+        BpiSubjectStorageAgent,
         BpiSubjectAccountAgent,
         BpiSubjectAccountStorageAgent,
       ],
@@ -54,6 +57,8 @@ describe.only('AccountController', () => {
       .useValue(new MockBpiAccountsStorageAgent(new Mapper()))
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(new MockBpiSubjectAccountsStorageAgent(new Mapper()))
+      .overrideProvider(BpiSubjectStorageAgent)
+      .useValue(new MockBpiSubjectStorageAgent(new Mapper()))
       .compile();
 
     accountController = app.get<AccountController>(AccountController);
