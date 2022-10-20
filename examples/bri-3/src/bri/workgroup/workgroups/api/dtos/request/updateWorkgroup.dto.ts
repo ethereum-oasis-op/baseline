@@ -10,7 +10,7 @@ export class UpdateWorkgroupDto {
 
   @IsNotEmpty()
   @ArrayNotEmpty()
-  parcitipantIds: string[];
+  participantIds: string[];
 
   @IsNotEmpty()
   securityPolicy: string;

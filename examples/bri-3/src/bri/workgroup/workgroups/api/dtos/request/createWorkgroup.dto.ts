@@ -4,9 +4,13 @@ export class CreateWorkgroupDto {
   @IsNotEmpty()
   name: string;
 
+  @IsNotEmpty()
+  @ArrayNotEmpty()
   administratorIds: string[];
 
-  parcitipantIds: string[];
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  participantIds: string[];
 
   @IsNotEmpty()
   securityPolicy: string;
