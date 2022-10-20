@@ -3,6 +3,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import { NOT_FOUND_ERR_MESSAGE as SUBJECT_ACCOUNT_NOT_FOUND_ERR_MESSAGE } from '../../bpiSubjectAccounts/api/err.messages';
 import { AccountController } from './accounts.controller';
 import Mapper from '../../../utils/mapper';
 import { BpiAccountStorageAgent } from '../agents/bpiAccountsStorage.agent';
@@ -111,7 +112,8 @@ describe.only('AccountController', () => {
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
-    it('should return the correct bpi subject if proper id passed ', async () => {
+    it('should return the correct bpi account if proper id passed ', async () => {
+      // Arrange
       const bpiSubjectAccountId = await createBpiSubjectAccount();
       const newBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
 
@@ -133,7 +135,7 @@ describe.only('AccountController', () => {
 
   describe('getAllBpiAccounts', () => {
     it('should return empty array if no bpi accounts ', async () => {
-      // Act
+      // Arrange and act
       const bpiAccounts = await accountController.getAllBpiAccounts();
 
       // Assert
@@ -141,6 +143,7 @@ describe.only('AccountController', () => {
     });
 
     it('should return 2 bpi accounts if 2 exists ', async () => {
+      // Arrange
       const bpiSubjectAccountId = await createBpiSubjectAccount();
       const firstBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
       const secondBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
@@ -168,8 +171,8 @@ describe.only('AccountController', () => {
     });
   });
 
-  describe('createBpiSubject', () => {
-    it('should throw BadRequest if non existing owner provided', async () => {
+  describe('createBpiAccount', () => {
+    it('should throw BadRequest if non existent owner provided', async () => {
       // Arrange
       const requestDto = {
         ownerBpiSubjectAccountsIds: ['123'],
@@ -178,10 +181,12 @@ describe.only('AccountController', () => {
       // Act and assert
       expect(async () => {
         await accountController.createBpiAccount(requestDto);
-      }).rejects.toThrow(new BadRequestException(NOT_FOUND_ERR_MESSAGE));
+      }).rejects.toThrow(
+        new BadRequestException(SUBJECT_ACCOUNT_NOT_FOUND_ERR_MESSAGE),
+      );
     });
 
-    it('should return new uuid from the created bpi subject when all params provided', async () => {
+    it('should return new uuid from the created bpi account when all params provided', async () => {
       // Arrange and act
       const bpiSubjectAccountId = await createBpiSubjectAccount();
       const newBpiAccountId = await createBpiAccount([bpiSubjectAccountId]);
