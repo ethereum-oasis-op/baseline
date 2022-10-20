@@ -133,6 +133,13 @@ describe.only('AccountController', () => {
       const ownerBpiSubjectAccount =
         createdBpiAccount.ownerBpiSubjectAccounts[0];
       expect(ownerBpiSubjectAccount.id).toEqual(bpiSubjectAccount.id);
+
+      const ownerBpiSubject = ownerBpiSubjectAccount.ownerBpiSubject;
+      const creatorBpiSubject = ownerBpiSubjectAccount.creatorBpiSubject;
+      expect(ownerBpiSubject.id).toEqual(bpiSubjectAccount.ownerBpiSubject.id);
+      expect(creatorBpiSubject.id).toEqual(
+        bpiSubjectAccount.creatorBpiSubject.id,
+      );
     });
   });
 
@@ -163,6 +170,12 @@ describe.only('AccountController', () => {
       const firstOwnerBpiSubjectAccount =
         bpiAccounts[0].ownerBpiSubjectAccounts[0];
       expect(firstOwnerBpiSubjectAccount.id).toEqual(bpiSubjectAccount.id);
+      expect(firstOwnerBpiSubjectAccount.creatorBpiSubject.id).toEqual(
+        bpiSubjectAccount.creatorBpiSubject.id,
+      );
+      expect(firstOwnerBpiSubjectAccount.ownerBpiSubject.id).toEqual(
+        bpiSubjectAccount.ownerBpiSubject.id,
+      );
 
       expect(bpiAccounts[1].id).toEqual(secondBpiAccountId);
       // TODO fix when automapper is introduced, currently all fields that are not in constructor seems to be ignored
@@ -171,6 +184,12 @@ describe.only('AccountController', () => {
       const secondOwnerBpiSubjectAccount =
         bpiAccounts[0].ownerBpiSubjectAccounts[0];
       expect(secondOwnerBpiSubjectAccount.id).toEqual(bpiSubjectAccount.id);
+      expect(secondOwnerBpiSubjectAccount.creatorBpiSubject.id).toEqual(
+        bpiSubjectAccount.creatorBpiSubject.id,
+      );
+      expect(secondOwnerBpiSubjectAccount.ownerBpiSubject.id).toEqual(
+        bpiSubjectAccount.ownerBpiSubject.id,
+      );
     });
   });
 
