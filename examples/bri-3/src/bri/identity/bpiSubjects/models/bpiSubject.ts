@@ -1,3 +1,4 @@
+import { AutoMap } from '@automapper/classes';
 import { BpiSubjectType } from './bpiSubjectType.enum';
 
 export class BpiSubject {
@@ -25,6 +26,7 @@ export class BpiSubject {
     return this._id;
   }
 
+  @AutoMap()
   public get name(): string {
     return this._name;
   }
