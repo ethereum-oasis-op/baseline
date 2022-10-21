@@ -65,7 +65,7 @@ export class WorkgroupStorageAgent extends PrismaService {
   }
 
   async createNewWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
-    const administratorIds = workgroup.administrator.map((a) => {
+    const administratorIds = workgroup.administrators.map((a) => {
       return {
         id: a.id,
       };
@@ -140,7 +140,7 @@ export class WorkgroupStorageAgent extends PrismaService {
   }
 
   async updateWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
-    const administratorIds = workgroup.administrator.map((a) => {
+    const administratorIds = workgroup.administrators.map((a) => {
       return {
         id: a.id,
       };

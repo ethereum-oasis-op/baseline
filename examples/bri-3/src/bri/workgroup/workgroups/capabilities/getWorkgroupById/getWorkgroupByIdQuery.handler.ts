@@ -15,7 +15,7 @@ export class GetWorkgroupByIdQueryHandler
     return {
       id: workgroup.id,
       name: workgroup.name,
-      administrators: workgroup.administrator,
+      administrators: workgroup.administrators,
       securityPolicy: workgroup.securityPolicy,
       privacyPolicy: workgroup.privacyPolicy,
       participants: workgroup.participants,
