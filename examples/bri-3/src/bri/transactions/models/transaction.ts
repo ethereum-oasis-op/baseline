@@ -16,10 +16,10 @@ export class Transaction {
   workstepInstanceId: string;
 
   //@AutoMap()
-  from: BpiAccount;
+  fromBpiAccount: BpiAccount;
 
   //@AutoMap()
-  to: BpiAccount;
+  toBpiAccount: BpiAccount;
 
   @AutoMap()
   payload: string;
@@ -35,8 +35,8 @@ export class Transaction {
     nonce: number,
     workflowInstanceId: string,
     workstepInstanceId: string,
-    from: BpiAccount,
-    to: BpiAccount,
+    fromBpiAccount: BpiAccount,
+    toBpiAccount: BpiAccount,
     payload: string,
     signature: string,
     status: TransactionStatus,
@@ -45,8 +45,8 @@ export class Transaction {
     this.nonce = nonce;
     this.workflowInstanceId = workflowInstanceId;
     this.workstepInstanceId = workstepInstanceId;
-    this.from = from;
-    this.to = to;
+    this.fromBpiAccount = fromBpiAccount;
+    this.toBpiAccount = toBpiAccount;
     this.payload = payload;
     this.signature = signature;
     this.status = status;

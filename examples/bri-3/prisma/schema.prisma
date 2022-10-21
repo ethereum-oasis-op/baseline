@@ -65,7 +65,7 @@ model Transaction {
   fromBpiAccountId String
   FromBpiAccount BpiAccount @relation(fields: [fromBpiAccountId], references: [id], name: "fromBpiAccount_fk")
   toBpiAccountId String
-  toBpiAccount BpiAccount @relation(fields: [toBpiAccountId], references: [id], name: "toBpiAccount_fk")
+  ToBpiAccount BpiAccount @relation(fields: [toBpiAccountId], references: [id], name: "toBpiAccount_fk")
   payload String
   signature String
   status Int

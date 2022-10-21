@@ -11,7 +11,6 @@ import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectAccountStorageAgent extends PrismaService {
-
   constructor(@InjectMapper() private readonly mapper: Mapper) {
     super();
   }
@@ -28,8 +27,16 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
 
     return new BpiSubjectAccount(
       bpiSubjectAccountModel.id,
-      this.mapper.map(bpiSubjectAccountModel.CreatorBpiSubject, BpiSubject, BpiSubject),
-      this.mapper.map(bpiSubjectAccountModel.OwnerBpiSubject, BpiSubject, BpiSubject),
+      this.mapper.map(
+        bpiSubjectAccountModel.CreatorBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
+      this.mapper.map(
+        bpiSubjectAccountModel.OwnerBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
     );
   }
 
@@ -60,8 +67,16 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
 
     return new BpiSubjectAccount(
       newBpiSubjectAccountModel.id,
-      this.mapper.map(newBpiSubjectAccountModel.CreatorBpiSubject, BpiSubject, BpiSubject),
-      this.mapper.map(newBpiSubjectAccountModel.OwnerBpiSubject, BpiSubject, BpiSubject),
+      this.mapper.map(
+        newBpiSubjectAccountModel.CreatorBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
+      this.mapper.map(
+        newBpiSubjectAccountModel.OwnerBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
     );
   }
 
@@ -79,8 +94,16 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
 
     return new BpiSubjectAccount(
       newBpiSubjectAccountModel.id,
-      this.mapper.map(newBpiSubjectAccountModel.CreatorBpiSubject, BpiSubject, BpiSubject),
-      this.mapper.map(newBpiSubjectAccountModel.OwnerBpiSubject, BpiSubject, BpiSubject),
+      this.mapper.map(
+        newBpiSubjectAccountModel.CreatorBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
+      this.mapper.map(
+        newBpiSubjectAccountModel.OwnerBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
     );
   }
 
