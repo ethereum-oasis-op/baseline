@@ -77,18 +77,6 @@ export class WorkgroupStorageAgent extends PrismaService {
       };
     });
 
-    const workstepIds = workgroup.worksteps.map((w) => {
-      return {
-        id: w.id,
-      };
-    });
-
-    const workflowIds = workgroup.workflows.map((w) => {
-      return {
-        id: w.id,
-      };
-    });
-
     const newWorkgroupModel = await this.workgroup.create({
       data: {
         id: workgroup.id,
@@ -100,12 +88,6 @@ export class WorkgroupStorageAgent extends PrismaService {
         privacyPolicy: workgroup.privacyPolicy,
         participants: {
           connect: participantIds,
-        },
-        worksteps: {
-          connect: workstepIds,
-        },
-        workflows: {
-          connect: workflowIds,
         },
       },
       include: {
@@ -170,18 +152,6 @@ export class WorkgroupStorageAgent extends PrismaService {
       };
     });
 
-    const workstepIds = workgroup.worksteps.map((w) => {
-      return {
-        id: w.id,
-      };
-    });
-
-    const workflowIds = workgroup.workflows.map((w) => {
-      return {
-        id: w.id,
-      };
-    });
-
     const updatedWorkgroupModel = await this.workgroup.update({
       where: { id: workgroup.id },
       data: {
@@ -191,12 +161,6 @@ export class WorkgroupStorageAgent extends PrismaService {
         },
         participants: {
           set: participantIds,
-        },
-        worksteps: {
-          set: workstepIds,
-        },
-        workflows: {
-          set: workflowIds,
         },
       },
       include: {

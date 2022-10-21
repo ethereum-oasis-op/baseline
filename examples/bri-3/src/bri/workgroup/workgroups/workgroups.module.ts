@@ -7,9 +7,16 @@ import { WorkgroupAgent } from './agents/workgroups.agent';
 import { WorkgroupStorageAgent } from './agents/workgroupStorage.agent';
 import { WorkgroupController } from './api/workgroups.controller';
 import { CreateWorkgroupCommandHandler } from './capabilities/createWorkgroup/createWorkgroupCommand.handler';
+import { DeleteWorkgroupCommandHandler } from './capabilities/deleteWorkgroup/deleteWorkgroupCommand.handler';
 import { GetWorkgroupByIdQueryHandler } from './capabilities/getWorkgroupById/getWorkgroupByIdQuery.handler';
+import { UpdateWorkgroupCommandHandler } from './capabilities/updateWorkgroup/updateWorkgroupCommand.handler';
 
-export const CommandHandlers = [CreateWorkgroupCommandHandler];
+export const CommandHandlers = [
+  CreateWorkgroupCommandHandler,
+  UpdateWorkgroupCommandHandler,
+  DeleteWorkgroupCommandHandler,
+];
+
 export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
 @Module({
   imports: [CqrsModule, SubjectModule, WorkstepModule, WorkflowModule],

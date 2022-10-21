@@ -83,12 +83,4 @@ export class Workgroup {
   public updateParticipants(newParticipants: BpiSubject[]): void {
     this._participants = newParticipants;
   }
-
-  public updateWorksteps(newWorksteps: Workstep[]): void {
-    this._worksteps = newWorksteps;
-  }
-
-  public updateWorkflows(newWorkflows: Workflow[]): void {
-    this._workflows = newWorkflows;
-  }
 }

@@ -1,23 +1,23 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { WorkstepAgent } from 'src/bri/workgroup/worksteps/agents/worksteps.agent';
-import { WorkstepStorageAgent } from 'src/bri/workgroup/worksteps/agents/workstepsStorage.agent';
-import { DeleteWorkstepCommand } from './deleteWorkgroup.command';
+import { WorkgroupAgent } from '../../agents/workgroups.agent';
+import { WorkgroupStorageAgent } from '../../agents/workgroupStorage.agent';
+import { DeleteWorkgroupCommand } from './deleteWorkgroup.command';
 
-@CommandHandler(DeleteWorkstepCommand)
-export class DeleteWorkstepCommandHandler
-  implements ICommandHandler<DeleteWorkstepCommand>
+@CommandHandler(DeleteWorkgroupCommand)
+export class DeleteWorkgroupCommandHandler
+  implements ICommandHandler<DeleteWorkgroupCommand>
 {
   constructor(
-    private agent: WorkstepAgent,
-    private storageAgent: WorkstepStorageAgent,
+    private agent: WorkgroupAgent,
+    private storageAgent: WorkgroupStorageAgent,
   ) {}
 
-  async execute(command: DeleteWorkstepCommand) {
-    const workstepToDelete =
+  async execute(command: DeleteWorkgroupCommand) {
+    const workgroupToDelete =
       await this.agent.fetchDeleteCandidateAndThrowIfDeleteValidationFails(
         command.id,
       );
 
-    await this.storageAgent.deleteWorkstep(workstepToDelete);
+    await this.storageAgent.deleteWorkgroup(workgroupToDelete);
   }
 }

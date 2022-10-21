@@ -6,8 +6,6 @@ import { Workstep } from '../../worksteps/models/workstep';
 import { uuid } from 'uuidv4';
 import { Workgroup } from '../models/workgroup';
 import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
-import { WorkflowStorageAgent } from '../../workflows/agents/workflowsStorage.agent';
 import { WorkgroupStorageAgent } from './workgroupStorage.agent';
 import {
   BPISUBJECT_NOT_FOUND_ERR_MESSAGE,
@@ -20,8 +18,6 @@ export class WorkgroupAgent {
   constructor(
     private workgroupStorageAgent: WorkgroupStorageAgent,
     private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
-    private workstepStorageAgent: WorkstepStorageAgent,
-    private workflowStorageAgent: WorkflowStorageAgent,
   ) {}
 
   public async fetchWorkgroupAdministratorsAndThrowIfNoneExist(

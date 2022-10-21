@@ -8,10 +8,10 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { DeleteWorkflowCommand } from '../../workflows/capabilities/deleteWorkflow/deleteWorkflow.command';
 import { CreateWorkgroupCommand } from '../capabilities/createWorkgroup/createWorkgroup.command';
+import { DeleteWorkgroupCommand } from '../capabilities/deleteWorkgroup/deleteWorkgroup.command';
 import { GetWorkgroupByIdQuery } from '../capabilities/getWorkgroupById/getWorkgroupById.query';
-import { Workgroup } from '../models/workgroup';
+import { UpdateWorkgroupCommand } from '../capabilities/updateWorkgroup/updateWorkgroup.command';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
@@ -48,20 +48,19 @@ export class WorkgroupController {
     @Body() requestDto: UpdateWorkgroupDto,
   ): Promise<void> {
     return await this.commandBus.execute(
-      new CreateWorkgroupCommand(
+      new UpdateWorkgroupCommand(
+        id,
         requestDto.name,
         requestDto.administratorIds,
         requestDto.securityPolicy,
         requestDto.privacyPolicy,
         requestDto.participantIds,
-        requestDto.workstepIds,
-        requestDto.workflowIds,
       ),
     );
   }
 
   @Delete('/:id')
-  async DeleteWorkflowCommand(@Param('id') id: string): Promise<void> {
-    return await this.commandBus.execute(new DeleteWorkflowCommand(id));
+  async DeleteWorkgroupCommand(@Param('id') id: string): Promise<void> {
+    return await this.commandBus.execute(new DeleteWorkgroupCommand(id));
   }
 }

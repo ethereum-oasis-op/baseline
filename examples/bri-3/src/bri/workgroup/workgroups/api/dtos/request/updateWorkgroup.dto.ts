@@ -17,12 +17,4 @@ export class UpdateWorkgroupDto {
 
   @IsNotEmpty()
   privacyPolicy: string;
-
-  @IsNotEmpty()
-  @ArrayNotEmpty()
-  workstepIds: string[];
-
-  @IsNotEmpty()
-  @ArrayNotEmpty()
-  workflowIds: string[];
 }
