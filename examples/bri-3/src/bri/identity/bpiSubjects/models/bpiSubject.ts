@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { BpiSubjectType } from './bpiSubjectType.enum';
 
 export class BpiSubject {
+  
   @AutoMap()
   id: string; // TODO: Add uuid after #491
 

@@ -13,6 +13,7 @@ export class CreateBpiSubjectAccountCommandHandler
   ) {}
 
   async execute(command: CreateBpiSubjectAccountCommand) {
+    
     const { creatorBpiSubject, ownerBpiSubject } =
       await this.agent.getCreatorAndOwnerSubjectsAndThrowIfNotExist(
         command.creatorBpiSubjectId,
