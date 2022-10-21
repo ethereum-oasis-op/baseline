@@ -40,7 +40,7 @@ export class Workgroup {
     return this._name;
   }
 
-  public get administrator(): BpiSubject[] {
+  public get administrators(): BpiSubject[] {
     return this._administrators;
   }
 
