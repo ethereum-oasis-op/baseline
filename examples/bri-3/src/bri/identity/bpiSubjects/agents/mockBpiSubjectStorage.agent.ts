@@ -19,6 +19,17 @@ export class MockBpiSubjectStorageAgent {
     return this.mapper.map(bpiSubject, getType<BpiSubject>()) as BpiSubject;
   }
 
+  async getBpiSubjectsById(ids: string[]): Promise<BpiSubject[]> {
+    const bpiSubjects: BpiSubject[] = [];
+    ids.forEach((id) => {
+      bpiSubjects.push(this.bpiSubjectsStore.find((bs) => bs.id === id));
+    });
+    if (!bpiSubjects.length) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+    return Promise.resolve(bpiSubjects);
+  }
+
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     return Promise.resolve(
       this.bpiSubjectsStore.map(
