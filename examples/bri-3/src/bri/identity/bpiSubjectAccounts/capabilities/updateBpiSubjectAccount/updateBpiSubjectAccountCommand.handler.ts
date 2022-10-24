@@ -12,9 +12,9 @@ export class UpdateBpiSubjectAccountCommandHandler
   implements ICommandHandler<UpdateBpiSubjectAccountCommand>
 {
   constructor(
-    @InjectMapper() private readonly mapper: Mapper,
     private agent: BpiSubjectAccountAgent,
     private storageAgent: BpiSubjectAccountStorageAgent,
+    @InjectMapper() private readonly mapper: Mapper,
   ) {}
 
   async execute(command: UpdateBpiSubjectAccountCommand) {

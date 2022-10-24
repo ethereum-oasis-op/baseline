@@ -10,6 +10,7 @@ import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/
 import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
 import Mapper from '../../utils/mapper';
 import { SubjectsProfile } from './subjects.profile';
+import { SubjectAccountsProfile } from '../bpiSubjectAccounts/subject.accounts.profile';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler,
@@ -30,7 +31,7 @@ export const QueryHandlers = [
     BpiSubjectAgent,
     BpiSubjectStorageAgent,
     Mapper,
-    SubjectsProfile,
+    SubjectsProfile
   ],
   exports: [BpiSubjectStorageAgent],
 })

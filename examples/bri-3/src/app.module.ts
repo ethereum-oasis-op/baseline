@@ -7,6 +7,7 @@ import { IdentityModule } from './bri/identity/identity.module';
 import { TransactionModule } from './bri/transactions/transactions.module';
 import { WorkgroupModule } from './bri/workgroup/workgroup.module';
 import { LoggingModule } from './shared/logging/logging.module';
+import { pojos } from '@automapper/pojos';
 
 @Module({
   imports: [
@@ -15,9 +16,16 @@ import { LoggingModule } from './shared/logging/logging.module';
     TransactionModule,
     CommunicationModule,
     LoggingModule,
-    AutomapperModule.forRoot({
-      strategyInitializer: classes(),
-    }),
+    AutomapperModule.forRoot([
+      {
+          name: 'classes',
+          strategyInitializer: classes(),
+      },
+      {
+          name: 'pojos',
+          strategyInitializer: pojos(),
+      },
+  ]),
   ],
   providers: [PrismaService],
 })
