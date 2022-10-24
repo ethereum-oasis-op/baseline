@@ -2,7 +2,6 @@ import { AutoMap } from '@automapper/classes';
 import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
 
 export class BpiAccount {
-
   @AutoMap()
   id: string; // TODO: Add uuid after #491
 

@@ -28,7 +28,7 @@ export const QueryHandlers = [
     ...QueryHandlers,
     BpiAccountAgent,
     BpiAccountStorageAgent,
-    AccountsProfile
+    AccountsProfile,
   ],
 })
 export class AccountModule {}

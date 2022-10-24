@@ -2,7 +2,6 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { BpiSubjectDto } from '../../api/dtos/response/bpiSubject.dto';
 import { BpiSubjectStorageAgent } from '../../agents/bpiSubjectsStorage.agent';
 import { GetBpiSubjectByIdQuery } from './getBpiSubjectById.query';
-import { getType } from 'tst-reflect';
 import { NotFoundException } from '@nestjs/common';
 import { NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
 import { Mapper } from '@automapper/core';

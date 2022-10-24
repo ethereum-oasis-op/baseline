@@ -14,7 +14,8 @@ export class GetBpiSubjectAccountByIdQueryHandler
 {
   constructor(
     @InjectMapper() private readonly mapper: Mapper,
-    private readonly storageAgent: BpiSubjectAccountStorageAgent) {}
+    private readonly storageAgent: BpiSubjectAccountStorageAgent,
+  ) {}
 
   async execute(query: GetBpiSubjectAccountByIdQuery) {
     const bpiSubjectAccount = await this.storageAgent.getBpiSubjectAccountById(
@@ -25,6 +26,10 @@ export class GetBpiSubjectAccountByIdQueryHandler
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(bpiSubjectAccount, BpiSubjectAccount, BpiSubjectAccountDto)
+    return this.mapper.map(
+      bpiSubjectAccount,
+      BpiSubjectAccount,
+      BpiSubjectAccountDto,
+    );
   }
 }

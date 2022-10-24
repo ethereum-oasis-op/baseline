@@ -12,13 +12,15 @@ export class GetAllBpiSubjectAccountsQueryHandler
 {
   constructor(
     @InjectMapper() private readonly mapper: Mapper,
-    private readonly storageAgent: BpiSubjectAccountStorageAgent) {}
+    private readonly storageAgent: BpiSubjectAccountStorageAgent,
+  ) {}
 
   async execute() {
-    const bpiSubjectAccounts = await this.storageAgent.getAllBpiSubjectAccounts();
+    const bpiSubjectAccounts =
+      await this.storageAgent.getAllBpiSubjectAccounts();
 
     return bpiSubjectAccounts.map((bp) => {
-        return this.mapper.map(bp, BpiSubjectAccount, BpiSubjectAccountDto)
+      return this.mapper.map(bp, BpiSubjectAccount, BpiSubjectAccountDto);
     });
   }
 }

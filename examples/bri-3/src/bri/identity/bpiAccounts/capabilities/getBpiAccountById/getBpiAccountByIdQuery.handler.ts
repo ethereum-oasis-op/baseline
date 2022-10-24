@@ -13,7 +13,8 @@ export class GetBpiAccountByIdQueryHandler
 {
   constructor(
     @InjectMapper() private readonly mapper: Mapper,
-    private readonly storageAgent: BpiAccountStorageAgent) {}
+    private readonly storageAgent: BpiAccountStorageAgent,
+  ) {}
 
   async execute(query: GetBpiAccountByIdQuery) {
     const bpiAccount = await this.storageAgent.getAccountById(query.id);
@@ -24,8 +25,16 @@ export class GetBpiAccountByIdQueryHandler
       ownerBpiSubjectAccounts: bpiAccount.ownerBpiSubjectAccounts.map((a) => {
         return {
           id: a.id,
-          creatorBpiSubject : this.mapper.map(a.creatorBpiSubject, BpiSubject, BpiSubject),
-          ownerBpiSubject: this.mapper.map(a.ownerBpiSubject, BpiSubject, BpiSubject)
+          creatorBpiSubject: this.mapper.map(
+            a.creatorBpiSubject,
+            BpiSubject,
+            BpiSubject,
+          ),
+          ownerBpiSubject: this.mapper.map(
+            a.ownerBpiSubject,
+            BpiSubject,
+            BpiSubject,
+          ),
         } as BpiSubjectAccountDto;
       }),
     } as BpiAccountDto;

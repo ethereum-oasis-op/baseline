@@ -13,7 +13,8 @@ export class GetAllBpiAccountsQueryHandler
 {
   constructor(
     @InjectMapper() private readonly mapper: Mapper,
-    private readonly storageAgent: BpiAccountStorageAgent) {}
+    private readonly storageAgent: BpiAccountStorageAgent,
+  ) {}
 
   async execute() {
     const bpiAccounts = await this.storageAgent.getAllBpiAccounts();

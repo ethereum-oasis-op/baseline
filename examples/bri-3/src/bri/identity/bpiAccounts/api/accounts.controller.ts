@@ -18,7 +18,6 @@ import { BpiAccountDto } from './dtos/response/bpiAccount.dto';
 
 @Controller('accounts')
 export class AccountController {
-  
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Get('/:id')

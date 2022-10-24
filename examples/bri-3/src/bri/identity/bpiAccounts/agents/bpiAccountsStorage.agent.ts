@@ -12,7 +12,6 @@ import { BpiAccount } from '../models/bpiAccount';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiAccountStorageAgent extends PrismaService {
-
   constructor(@InjectMapper() private readonly mapper: Mapper) {
     super();
   }
@@ -65,7 +64,7 @@ export class BpiAccountStorageAgent extends PrismaService {
           return new BpiSubjectAccount(
             o.id,
             this.mapper.map(o.CreatorBpiSubject, BpiSubject, BpiSubject),
-            this.mapper.map(o.OwnerBpiSubject, BpiSubject, BpiSubject)
+            this.mapper.map(o.OwnerBpiSubject, BpiSubject, BpiSubject),
           );
         }),
       );

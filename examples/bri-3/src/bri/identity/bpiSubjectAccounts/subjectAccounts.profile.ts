@@ -1,10 +1,5 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import {
-  createMap,
-  forMember,
-  mapFrom,
-  Mapper,
-} from '@automapper/core';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { BpiSubjectAccountDto } from './api/dtos/response/bpiSubjectAccount.dto';
 import { BpiSubjectAccount } from './models/bpiSubjectAccount';
@@ -17,9 +12,8 @@ export class SubjectAccountsProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      
-      createMap(mapper, BpiSubjectAccount, BpiSubjectAccountDto)
-      createMap(mapper, BpiSubjectAccount, BpiSubjectAccount)
+      createMap(mapper, BpiSubjectAccount, BpiSubjectAccountDto);
+      createMap(mapper, BpiSubjectAccount, BpiSubjectAccount);
     };
   }
 }

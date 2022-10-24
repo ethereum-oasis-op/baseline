@@ -28,7 +28,7 @@ import { Mapper } from '@automapper/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
-import { SubjectAccountsProfile } from '../../bpiSubjectAccounts/subject.accounts.profile';
+import { SubjectAccountsProfile } from '../../bpiSubjectAccounts/subjectAccounts.profile';
 
 describe('AccountController', () => {
   let accountController: AccountController;
@@ -39,12 +39,15 @@ describe('AccountController', () => {
   beforeEach(async () => {
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(mapper);
     mockBpiSubjectAccountsStorageAgent = new MockBpiSubjectAccountsStorageAgent(
-        mapper
+      mapper,
     );
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule, AutomapperModule.forRoot({
-        strategyInitializer: classes(),
-      }),],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [AccountController],
       providers: [
         CreateBpiAccountCommandHandler,
@@ -59,7 +62,7 @@ describe('AccountController', () => {
         BpiSubjectAccountStorageAgent,
         SubjectsProfile,
         SubjectAccountsProfile,
-        AccountsProfile
+        AccountsProfile,
       ],
     })
       .overrideProvider(BpiAccountStorageAgent)

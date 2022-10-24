@@ -10,7 +10,7 @@ import { Mapper } from '@automapper/core';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private autoMapper: Mapper) {
+  constructor(@InjectMapper() private mapper: Mapper) {
     super();
   }
 
@@ -22,13 +22,13 @@ export class BpiSubjectStorageAgent extends PrismaService {
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.autoMapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.bpiSubject.findMany();
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.autoMapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+      return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
     });
   }
 
@@ -37,15 +37,15 @@ export class BpiSubjectStorageAgent extends PrismaService {
       data: bpiSubject,
     });
 
-    return this.autoMapper.map(newBpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.map(newBpiSubjectModel, BpiSubject, BpiSubject);
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const updatedBpiSubjectModel = await this.bpiSubject.update({
       where: { id: bpiSubject.id },
-      data: this.autoMapper.map(bpiSubject, BpiSubject, BpiSubject),
+      data: this.mapper.map(bpiSubject, BpiSubject, BpiSubject),
     });
-    return this.autoMapper.map(updatedBpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.map(updatedBpiSubjectModel, BpiSubject, BpiSubject);
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {

@@ -2,15 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
-import { getType } from 'tst-reflect';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class MockBpiSubjectAccountsStorageAgent {
-
-  constructor(@InjectMapper() private readonly mapper: Mapper) {    
-  }
+  constructor(@InjectMapper() private readonly mapper: Mapper) {}
 
   private bpiSubjectAccountsStore: BpiSubjectAccount[] = [];
 
@@ -21,7 +18,7 @@ export class MockBpiSubjectAccountsStorageAgent {
     if (!bpiSubjectAccount) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return bpiSubjectAccount
+    return bpiSubjectAccount;
   }
 
   async getAllBpiSubjectAccounts(): Promise<BpiSubjectAccount[]> {
@@ -35,7 +32,7 @@ export class MockBpiSubjectAccountsStorageAgent {
       v4(),
       bpiSubjectAccount.creatorBpiSubject,
       bpiSubjectAccount.ownerBpiSubject,
-    )
+    );
 
     this.bpiSubjectAccountsStore.push(createdBp);
     return Promise.resolve(createdBp);

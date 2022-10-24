@@ -24,7 +24,7 @@ export class MockBpiAccountsStorageAgent {
   }
 
   async createNewBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
-    const createdBp = new BpiAccount(v4(), bpiAccount.ownerBpiSubjectAccounts)
+    const createdBp = new BpiAccount(v4(), bpiAccount.ownerBpiSubjectAccounts);
 
     this.bpiAccountsStore.push(createdBp);
     return Promise.resolve(createdBp);

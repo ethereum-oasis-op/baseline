@@ -18,14 +18,14 @@ import { pojos } from '@automapper/pojos';
     LoggingModule,
     AutomapperModule.forRoot([
       {
-          name: 'classes',
-          strategyInitializer: classes(),
+        name: 'classes',
+        strategyInitializer: classes(),
       },
       {
-          name: 'pojos',
-          strategyInitializer: pojos(),
+        name: 'pojos',
+        strategyInitializer: pojos(),
       },
-  ]),
+    ]),
   ],
   providers: [PrismaService],
 })

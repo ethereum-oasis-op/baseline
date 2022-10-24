@@ -2,15 +2,14 @@ import { AutoMap } from '@automapper/classes';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 
 export class BpiSubjectAccount {
-  
   @AutoMap()
-   id: string; // TODO: Add uuid after #491
+  id: string; // TODO: Add uuid after #491
 
-   @AutoMap(() => BpiSubject)
-   creatorBpiSubject: BpiSubject;
+  @AutoMap(() => BpiSubject)
+  creatorBpiSubject: BpiSubject;
 
-   @AutoMap(() => BpiSubject)
-   ownerBpiSubject: BpiSubject;
+  @AutoMap(() => BpiSubject)
+  ownerBpiSubject: BpiSubject;
 
   constructor(
     id: string,
