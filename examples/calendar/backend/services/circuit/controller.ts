@@ -50,8 +50,6 @@ export const proof = async (req: Request, res: Response, next: NextFunction) => 
 	try {
 		if (times !== null && appointment !== null && times.length > 1) {
 			times.forEach((time: Time) => {
-				console.log(time);
-				console.log(time.getDataValue("timeStart"));
 				tree.insert(time?.getDataValue("timeStart").toString());
 			});
 			const path = tree.proof(slot);
@@ -124,8 +122,6 @@ export const verify = async (req: Request, res: Response, next: NextFunction) =>
 			[proof.pi_c[0], proof.pi_c[1]],
 			publicInputsMain
 		);
-		console.log("verified", verified)
-		console.log(appointment);
 
 		if (verified && appointment) {
 			appointment.status = Status.confirmed;

@@ -43,10 +43,8 @@
  */
 
 require("dotenv").config();
-console.log(process.env.PRIVATE_KEY_ACCOUNT);
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const privateKeys = [`0x${process.env.PRIVATE_KEY_ACCOUNT}`];
-console.log(process.env.PROVIDER);
 module.exports = {
 	/**
 	 * Networks define how you connect to your ethereum client and let you set the
