@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
-import Mapper from '../utils/mapper';
+import { SubjectsProfile } from '../identity/bpiSubjects/subjects.profile';
 import { BpiMessageAgent } from './agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from './agents/bpiMessagesStorage.agent';
 import { MessageController } from './api/messages.controller';
@@ -9,6 +9,7 @@ import { CreateBpiMessageCommandHandler } from './capabilities/createBpiMessage/
 import { DeleteBpiMessageCommandHandler } from './capabilities/deleteBpiMessage/deleteBpiMessageCommand.handler';
 import { GetBpiMessageByIdQueryHandler } from './capabilities/getBpiMessageById/getBpiMessageByIdQuery.handler';
 import { UpdateBpiMessageCommandHandler } from './capabilities/updateBpiMessage/updateBpiMessageCommand.handler';
+import { CommunicationProfile } from './communicaton.profile';
 
 export const CommandHandlers = [
   CreateBpiMessageCommandHandler,
@@ -25,7 +26,8 @@ export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
     ...QueryHandlers,
     BpiMessageAgent,
     BpiMessageStorageAgent,
-    Mapper,
+    SubjectsProfile,
+    CommunicationProfile
   ],
 })
 export class CommunicationModule {}

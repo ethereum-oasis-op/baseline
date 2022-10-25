@@ -1,12 +1,12 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import Mapper from '../../utils/mapper';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessage } from '../models/bpiMessage';
-import { getType } from 'tst-reflect';
 
 @Injectable()
 export class MockBpiMessageStorageAgent {
-  constructor(private readonly mapper: Mapper) {}
+  constructor(@InjectMapper() private mapper: Mapper) {}
 
   private bpiMessagesStore: BpiMessage[] = [];
 
@@ -15,30 +15,22 @@ export class MockBpiMessageStorageAgent {
     if (!bpiMessage) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.map(bpiMessage, getType<BpiMessage>()) as BpiMessage;
+    return bpiMessage
   }
 
   async getAllBpiMessages(): Promise<BpiMessage[]> {
-    return Promise.resolve(
-      this.bpiMessagesStore.map(
-        (bpiMessage) =>
-          this.mapper.map(bpiMessage, getType<BpiMessage>()) as BpiMessage,
-      ),
-    );
+    return Promise.resolve(this.bpiMessagesStore);
   }
 
   async createNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
-    const createdBp = this.mapper.map(
-      new BpiMessage(
+    const createdBp = new BpiMessage(
         bpiMessage.id,
-        bpiMessage.from,
-        bpiMessage.to,
+        bpiMessage.FromBpiSubject,
+        bpiMessage.ToBpiSubject,
         bpiMessage.content,
         bpiMessage.signature,
         bpiMessage.type,
-      ),
-      getType<BpiMessage>(),
-    ) as BpiMessage;
+      )
 
     this.bpiMessagesStore.push(createdBp);
     return Promise.resolve(createdBp);
