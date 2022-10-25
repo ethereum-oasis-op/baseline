@@ -3,7 +3,6 @@ import { BpiMessageType } from '../../../models/bpiMessageType.enum';
 import { BpiSubjectDto } from '../../../../identity/bpiSubjects/api/dtos/response/bpiSubject.dto';
 
 export class BpiMessageDto {
-
   @AutoMap()
   id: string;
 

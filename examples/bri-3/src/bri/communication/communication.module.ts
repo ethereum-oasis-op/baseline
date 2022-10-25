@@ -27,7 +27,7 @@ export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
     BpiMessageAgent,
     BpiMessageStorageAgent,
     SubjectsProfile,
-    CommunicationProfile
+    CommunicationProfile,
   ],
 })
 export class CommunicationModule {}

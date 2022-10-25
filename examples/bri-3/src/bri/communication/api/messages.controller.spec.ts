@@ -42,9 +42,12 @@ describe('MessageController', () => {
     );
 
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule,AutomapperModule.forRoot({
-        strategyInitializer: classes(),
-      }),],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [MessageController],
       providers: [
         BpiMessageAgent,
@@ -55,7 +58,7 @@ describe('MessageController', () => {
         BpiMessageStorageAgent,
         BpiSubjectStorageAgent,
         SubjectsProfile,
-        CommunicationProfile        
+        CommunicationProfile,
       ],
     })
       .overrideProvider(BpiMessageStorageAgent)

@@ -15,7 +15,7 @@ export class MockBpiMessageStorageAgent {
     if (!bpiMessage) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return bpiMessage
+    return bpiMessage;
   }
 
   async getAllBpiMessages(): Promise<BpiMessage[]> {
@@ -24,13 +24,13 @@ export class MockBpiMessageStorageAgent {
 
   async createNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
     const createdBp = new BpiMessage(
-        bpiMessage.id,
-        bpiMessage.FromBpiSubject,
-        bpiMessage.ToBpiSubject,
-        bpiMessage.content,
-        bpiMessage.signature,
-        bpiMessage.type,
-      )
+      bpiMessage.id,
+      bpiMessage.FromBpiSubject,
+      bpiMessage.ToBpiSubject,
+      bpiMessage.content,
+      bpiMessage.signature,
+      bpiMessage.type,
+    );
 
     this.bpiMessagesStore.push(createdBp);
     return Promise.resolve(createdBp);

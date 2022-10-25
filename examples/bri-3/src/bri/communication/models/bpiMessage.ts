@@ -3,19 +3,18 @@ import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiMessageType } from './bpiMessageType.enum';
 
 export class BpiMessage {
-
   @AutoMap()
   id: string;
 
   @AutoMap()
   FromBpiSubject: BpiSubject;
-  
+
   @AutoMap()
   fromBpiSubjectId: string;
 
   @AutoMap()
   ToBpiSubject: BpiSubject;
-  
+
   @AutoMap()
   toBpiSubjectId: string;
 
