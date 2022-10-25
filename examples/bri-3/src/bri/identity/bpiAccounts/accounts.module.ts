@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SubjectAccountModule } from '../bpiSubjectAccounts/subjectAccounts.module';
+import { SubjectAccountsProfile } from '../bpiSubjectAccounts/subjectAccounts.profile';
+import { SubjectsProfile } from '../bpiSubjects/subjects.profile';
 import { BpiAccountAgent } from './agents/bpiAccounts.agent';
 import { BpiAccountStorageAgent } from './agents/bpiAccountsStorage.agent';
 import { AccountController } from './api/accounts.controller';

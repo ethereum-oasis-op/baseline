@@ -12,9 +12,9 @@ export class UpdateBpiSubjectCommandHandler
   implements ICommandHandler<UpdateBpiSubjectCommand>
 {
   constructor(
+    @InjectMapper() private mapper: Mapper,
     private agent: BpiSubjectAgent,
     private storageAgent: BpiSubjectStorageAgent,
-    @InjectMapper() private autoMapper: Mapper,
   ) {}
 
   async execute(command: UpdateBpiSubjectCommand) {
@@ -34,6 +34,6 @@ export class UpdateBpiSubjectCommandHandler
       bpiSubjectToUpdate,
     );
 
-    return this.autoMapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
+    return this.mapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
   }
 }

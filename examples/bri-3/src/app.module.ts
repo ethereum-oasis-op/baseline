@@ -7,7 +7,6 @@ import { IdentityModule } from './bri/identity/identity.module';
 import { TransactionModule } from './bri/transactions/transactions.module';
 import { WorkgroupModule } from './bri/workgroup/workgroup.module';
 import { LoggingModule } from './shared/logging/logging.module';
-import { pojos } from '@automapper/pojos';
 
 @Module({
   imports: [
@@ -20,10 +19,6 @@ import { pojos } from '@automapper/pojos';
       {
         name: 'classes',
         strategyInitializer: classes(),
-      },
-      {
-        name: 'pojos',
-        strategyInitializer: pojos(),
       },
     ]),
   ],

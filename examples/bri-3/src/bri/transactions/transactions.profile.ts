@@ -2,13 +2,9 @@ import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import {
   createMap,
   forMember,
-  fromValue,
   ignore,
   mapFrom,
   Mapper,
-  namingConventions,
-  PascalCaseNamingConvention,
-  SnakeCaseNamingConvention,
 } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { Transaction } from './models/transaction';
