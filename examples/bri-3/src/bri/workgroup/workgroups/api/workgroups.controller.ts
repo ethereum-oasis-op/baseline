@@ -21,12 +21,12 @@ export class WorkgroupController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Get('/:id')
-  async getworkgroupById(@Param('id') id: string): Promise<WorkgroupDto> {
+  async getWorkgroupById(@Param('id') id: string): Promise<WorkgroupDto> {
     return await this.queryBus.execute(new GetWorkgroupByIdQuery(id));
   }
 
   @Post()
-  async CreateWorkgroup(
+  async createWorkgroup(
     @Body() requestDto: CreateWorkgroupDto,
   ): Promise<string> {
     return await this.commandBus.execute(
@@ -60,7 +60,7 @@ export class WorkgroupController {
   }
 
   @Delete('/:id')
-  async DeleteWorkgroupCommand(@Param('id') id: string): Promise<void> {
+  async deleteWorkgroupCommand(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(new DeleteWorkgroupCommand(id));
   }
 }

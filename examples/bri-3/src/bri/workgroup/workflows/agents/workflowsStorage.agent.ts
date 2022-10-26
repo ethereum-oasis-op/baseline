@@ -58,7 +58,7 @@ export class WorkflowStorageAgent extends PrismaService {
     });
   }
 
-  async getWorkflowsById(ids: string[]): Promise<Workflow[]> {
+  async getWorkflowsByIds(ids: string[]): Promise<Workflow[]> {
     const workflowModels = await this.workflow.findMany({
       where: {
         id: { in: ids },

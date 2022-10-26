@@ -13,22 +13,22 @@ export class CreateWorkgroupCommandHandler
   ) {}
 
   async execute(command: CreateWorkgroupCommand) {
-    const administratorsToConnect =
+    const workgroupAdministrators =
       await this.agent.fetchWorkgroupAdministratorsAndThrowIfNoneExist(
         command.administratorIds,
       );
 
-    const participantsToConnect =
+    const workgroupParticipants =
       await this.agent.fetchWorkgroupParticipantsAndThrowIfNoneExist(
         command.participantIds,
       );
 
     const newWorkgroupCandidate = this.agent.createNewWorkgroup(
       command.name,
-      administratorsToConnect,
+      workgroupAdministrators,
       command.securityPolicy,
       command.privacyPolicy,
-      participantsToConnect,
+      workgroupParticipants,
       [],
       [],
     );
