@@ -2,7 +2,6 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
-import { Workstep } from '../../worksteps/models/workstep';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 

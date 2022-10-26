@@ -110,8 +110,6 @@ describe('WorkflowsController', () => {
         workflowId,
       );
 
-      console.log(createdWorkflow);
-
       // Assert
       expect(createdWorkflow.id).toEqual(workflowId);
       // expect(createdWorkflow.worksteps.map((ws) => ws.id)).toEqual(

@@ -2,7 +2,6 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { TransactionDto } from '../../api/dtos/response/transaction.dto';
 import { TransactionStorageAgent } from '../../agents/transactionStorage.agent';
 import { GetAllTransactionsQuery } from './getAllTransactions.query';
-import { getType } from 'tst-reflect';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Transaction } from '../../models/transaction';

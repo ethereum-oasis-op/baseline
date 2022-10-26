@@ -19,7 +19,6 @@ import { TransactionsProfile } from '../transactions.profile';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
-  let mapper: Mapper;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({

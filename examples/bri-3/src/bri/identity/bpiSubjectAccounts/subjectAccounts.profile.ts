@@ -1,5 +1,5 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { BpiSubjectAccountDto } from './api/dtos/response/bpiSubjectAccount.dto';
 import { BpiSubjectAccount } from './models/bpiSubjectAccount';
