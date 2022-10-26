@@ -28,13 +28,13 @@ export class WorkgroupStorageAgent extends PrismaService {
     return new Workgroup(
       workgroupModel.id,
       workgroupModel.name,
-      workgroupModel.administrators.map((w) => {
-        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      workgroupModel.administrators.map((a) => {
+        return new BpiSubject(a.id, a.name, a.description, a.type, a.publicKey);
       }),
       workgroupModel.securityPolicy,
       workgroupModel.privacyPolicy,
-      workgroupModel.participants.map((w) => {
-        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      workgroupModel.participants.map((p) => {
+        return new BpiSubject(p.id, p.name, p.description, p.type, p.publicKey);
       }),
       workgroupModel.worksteps.map((w) => {
         return new Workstep(
@@ -103,13 +103,13 @@ export class WorkgroupStorageAgent extends PrismaService {
     return new Workgroup(
       newWorkgroupModel.id,
       newWorkgroupModel.name,
-      newWorkgroupModel.administrators.map((w) => {
-        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      newWorkgroupModel.administrators.map((a) => {
+        return new BpiSubject(a.id, a.name, a.description, a.type, a.publicKey);
       }),
       newWorkgroupModel.securityPolicy,
       newWorkgroupModel.privacyPolicy,
-      newWorkgroupModel.participants.map((w) => {
-        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      newWorkgroupModel.participants.map((p) => {
+        return new BpiSubject(p.id, p.name, p.description, p.type, p.publicKey);
       }),
       newWorkgroupModel.worksteps.map((w) => {
         return new Workstep(
@@ -176,13 +176,13 @@ export class WorkgroupStorageAgent extends PrismaService {
     return new Workgroup(
       updatedWorkgroupModel.id,
       updatedWorkgroupModel.name,
-      updatedWorkgroupModel.administrators.map((w) => {
-        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      updatedWorkgroupModel.administrators.map((a) => {
+        return new BpiSubject(a.id, a.name, a.description, a.type, a.publicKey);
       }),
       updatedWorkgroupModel.securityPolicy,
       updatedWorkgroupModel.privacyPolicy,
-      updatedWorkgroupModel.participants.map((w) => {
-        return new BpiSubject(w.id, w.name, w.description, w.type, w.publicKey);
+      updatedWorkgroupModel.participants.map((p) => {
+        return new BpiSubject(p.id, p.name, p.description, p.type, p.publicKey);
       }),
       updatedWorkgroupModel.worksteps.map((w) => {
         return new Workstep(

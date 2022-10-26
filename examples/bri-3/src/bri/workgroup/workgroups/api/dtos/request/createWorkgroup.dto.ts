@@ -4,11 +4,9 @@ export class CreateWorkgroupDto {
   @IsNotEmpty()
   name: string;
 
-  @IsNotEmpty()
   @ArrayNotEmpty()
   administratorIds: string[];
 
-  @IsNotEmpty()
   @ArrayNotEmpty()
   participantIds: string[];
 

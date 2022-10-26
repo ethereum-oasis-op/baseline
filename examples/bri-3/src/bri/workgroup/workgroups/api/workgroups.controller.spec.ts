@@ -132,15 +132,17 @@ describe('WorkgroupsController', () => {
   });
 
   describe('updateWorkgroup', () => {
-    it('should throw NotFound if non existent id passed', () => {
+    it('should throw NotFound if non existent id passed', async () => {
       // Arrange
       const nonExistentId = '123';
+      const newBpiSubject = await createTestBpiSubject();
+
       const requestDto: UpdateWorkgroupDto = {
         name: 'name',
-        administratorIds: ['1'],
+        administratorIds: [newBpiSubject.id],
         securityPolicy: 'sec',
         privacyPolicy: 'priv',
-        participantIds: ['1'],
+        participantIds: [newBpiSubject.id],
       };
 
       // Act and assert
