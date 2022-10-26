@@ -4,12 +4,18 @@ import { WorkstepStorageAgent } from '../../agents/workstepsStorage.agent';
 import { GetWorkstepByIdQuery } from './getWorkstepById.query';
 import { NotFoundException } from '@nestjs/common';
 import { NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
+import { Workstep } from '../../models/workstep';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @QueryHandler(GetWorkstepByIdQuery)
 export class GetWorkstepByIdQueryHandler
   implements IQueryHandler<GetWorkstepByIdQuery>
 {
-  constructor(private readonly storageAgent: WorkstepStorageAgent) {}
+  constructor(
+    @InjectMapper() private readonly mapper: Mapper,
+    private readonly storageAgent: WorkstepStorageAgent,
+  ) {}
 
   async execute(query: GetWorkstepByIdQuery) {
     const workstep = await this.storageAgent.getWorkstepById(query.id);
@@ -18,15 +24,6 @@ export class GetWorkstepByIdQueryHandler
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return {
-      // TODO: Write generic mapper domainObject -> DTO
-      id: workstep.id,
-      name: workstep.name,
-      version: workstep.version,
-      status: workstep.status,
-      workgroupId: workstep.workgroupId,
-      securityPolicy: workstep.securityPolicy,
-      privacyPolicy: workstep.privacyPolicy,
-    } as WorkstepDto;
+    return this.mapper.map(workstep, Workstep, WorkstepDto) as WorkstepDto;
   }
 }
