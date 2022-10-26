@@ -45,29 +45,49 @@ interface JwtDecoded {
 export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 
 	const getTimeAvailAPI = async (userId: string) => {
-		const fetchAvailTimes = (await axios.get(`${process.env.REACT_APP_BACKEND_URL}/time/${userId}`, {
-			headers: {
-				Authorization: `Bearer ${accessToken}`
-			}
-		})).data;
-		return fetchAvailTimes;
+		try{
+			const fetchAvailTimes = (await axios.get(`${process.env.REACT_APP_BACKEND_URL}/time/${userId}`, {
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			})).data;
+			return fetchAvailTimes;
+		}
+		catch(error){
+			console.log(error);
+			throw new Error("Error occured in getting Time Availability from server.");
+		}
+		
 	}
 	const createAppointmentAPI = async () => {
-		const createAppointment = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/appointments`, {} ,{
+		try {
+			const createAppointment = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/appointments`, {} ,{
 			headers: {
 				Authorization: `Bearer ${accessToken}`
 			}
-		})).data;
-		return createAppointment;
+			})).data;
+			return createAppointment;
+		}
+		catch(error){
+			console.log(error);
+			throw new Error("Error ocurred in getting appointments from server.")
+		}
 	}
 	const setTimeAvailAPI = async (availableTimes: SetBooking) => {
-		const setAvailTimes = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/time`, {availableTimes} ,{
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${accessToken}`
-			}
-		})).data;
-		return setAvailTimes;
+		try{
+			const setAvailTimes = (await axios.post(`${process.env.REACT_APP_BACKEND_URL}/time`, {availableTimes} ,{
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: `Bearer ${accessToken}`
+				}
+			})).data;
+			return setAvailTimes;
+		}
+		catch(error){
+			console.log(error);
+			throw new Error("Error in Setting Time Availablity");
+		}
+		
 	}
 	const timesInitial = () => {
 		const timeReturn = [];
@@ -122,19 +142,26 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 			payload: { id }
 		} = jwtDecode<JwtDecoded>(accessToken);
 		async function fetchUserAPI() {
-			const user = (await axios.get<User>(`${process.env.REACT_APP_BACKEND_URL}/users/user`, {
-				headers: {
-					Authorization: `Bearer ${accessToken}`
-				}
-			})).data;
-			setUser({ ...userV, user });
-			const booked = await getTimeAvailAPI(id);
-			booked.forEach((booking: any) => {				
-				const tempTimes = [...times];
-				var foundIndex = tempTimes.findIndex(x => parseInt((x.startTime.getTime()/1000).toString()) == (booked.timeStart/1000));
-				tempTimes[foundIndex] = { startTime: booking.startTime, checked: false, disabled: true };
-				setTimes(tempTimes);
-			});
+			try {
+				const user = (await axios.get<User>(`${process.env.REACT_APP_BACKEND_URL}/users/user`, {
+					headers: {
+						Authorization: `Bearer ${accessToken}`
+					}
+				})).data;
+				setUser({ ...userV, user });
+				const booked = await getTimeAvailAPI(id);
+				booked.forEach((booking: any) => {				
+					const tempTimes = [...times];
+					var foundIndex = tempTimes.findIndex(x => parseInt((x.startTime.getTime()/1000).toString()) == parseInt((booked.timeStart/1000).toString()));
+					tempTimes[foundIndex] = { startTime: booking.startTime, checked: false, disabled: true };
+					setTimes(tempTimes);
+				});
+			}
+			catch(error){
+				console.log(error);
+				throw new Error("Unable get user information. ");
+			}
+			
 		};
 		fetchUserAPI();
 	}, []);
@@ -147,7 +174,6 @@ export const Profile = ({ auth, onLoggedOut }: Props): JSX.Element => {
 
 	const { loading, user } = userV;
 
-	const username = user && user.username;
 
 	return (
 		<div className="Profile">

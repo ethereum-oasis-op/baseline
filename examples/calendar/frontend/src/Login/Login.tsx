@@ -16,10 +16,16 @@ export const Login =  ({ onLoggedIn }: Props): JSX.Element => {
 	const [loading, setLoading] = useState(false); // Loading button state
 
 	const handleAuthenticate = async ({ publicAddress, signature }: { publicAddress: string; signature: string }) => {
-		const res = await axios.post<Auth>(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
-			 "publicAddress": publicAddress, 
-			 "signature": signature });
-		return res.data;
+		try{
+			const res = await axios.post<Auth>(`${process.env.REACT_APP_BACKEND_URL}/auth`, {
+				"publicAddress": publicAddress, 
+				"signature": signature });
+		   return res.data;
+		}
+		catch(error){
+			console.log(error);
+			throw new Error("You need to login first");
+		}
 		}
 
 	const handleSignMessage = async ({ publicAddressSigned, nonce }: { publicAddressSigned: string; nonce: string }) => {
@@ -78,7 +84,6 @@ export const Login =  ({ onLoggedIn }: Props): JSX.Element => {
 		if(users.length > 0){
 			const {publicAddressSigned, signature} = await handleSignMessage({"publicAddressSigned": publicAddress, "nonce": users[0].nonce});
 			const auth = await handleAuthenticate({"publicAddress": publicAddressSigned, "signature": signature});
-			await onLoggedIn(auth)
 			onLoggedIn(auth);
 			setLoading(false);
 		}
@@ -87,7 +92,6 @@ export const Login =  ({ onLoggedIn }: Props): JSX.Element => {
 			const user = await handleSignup(publicAddress);
 			const {publicAddressSigned, signature} = await handleSignMessage({"publicAddressSigned": publicAddress, "nonce": user.nonce});
 			const auth = await handleAuthenticate({"publicAddress": publicAddressSigned, "signature": signature});
-			await onLoggedIn(auth)
 			onLoggedIn(auth);
 			setLoading(false);
 		}	
