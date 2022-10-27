@@ -53,7 +53,7 @@ export class TransactionController {
   async updateTransaction(
     @Param('id') id: string,
     @Body() requestDto: UpdateTransactionDto,
-  ): Promise<UpdateTransactionDto> {
+  ): Promise<void> {
     return await this.commandBus.execute(
       new UpdateTransactionCommand(
         id,

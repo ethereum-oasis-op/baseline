@@ -48,7 +48,7 @@ export class SubjectController {
   async updateBpiSubject(
     @Param('id') id: string,
     @Body() requestDto: UpdateBpiSubjectDto,
-  ): Promise<UpdateBpiSubjectDto> {
+  ): Promise<void> {
     return await this.commandBus.execute(
       new UpdateBpiSubjectCommand(
         id,
