@@ -7,8 +7,6 @@ import { InjectMapper } from '@automapper/nestjs';
 
 @Injectable()
 export class MockBpiSubjectStorageAgent {
-  constructor(@InjectMapper() private readonly mapper: Mapper) {}
-
   private bpiSubjectsStore: BpiSubject[] = [];
 
   async getBpiSubjectById(id: string): Promise<BpiSubject> {

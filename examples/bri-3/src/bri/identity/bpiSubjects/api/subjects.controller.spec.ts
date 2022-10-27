@@ -21,7 +21,6 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
-  let mapper: Mapper;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -44,7 +43,7 @@ describe('SubjectController', () => {
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(new MockBpiSubjectStorageAgent(mapper))
+      .useValue(new MockBpiSubjectStorageAgent())
       .compile();
 
     sController = app.get<SubjectController>(SubjectController);

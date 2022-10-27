@@ -29,11 +29,10 @@ describe('MessageController', () => {
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let existingBpiSubject1: BpiSubject;
   let existingBpiSubject2: BpiSubject;
-  let mapper: Mapper;
 
   beforeEach(async () => {
-    mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent(mapper);
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(mapper);
+    mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
       new BpiSubject('', 'name', 'desc', BpiSubjectType.External, 'xyz'),
     );

@@ -6,8 +6,6 @@ import { BpiMessage } from '../models/bpiMessage';
 
 @Injectable()
 export class MockBpiMessageStorageAgent {
-  constructor(@InjectMapper() private mapper: Mapper) {}
-
   private bpiMessagesStore: BpiMessage[] = [];
 
   async getBpiMessageById(id: string): Promise<BpiMessage> {

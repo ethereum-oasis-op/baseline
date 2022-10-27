@@ -7,8 +7,6 @@ import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class MockBpiSubjectAccountsStorageAgent {
-  constructor(@InjectMapper() private readonly mapper: Mapper) {}
-
   private bpiSubjectAccountsStore: BpiSubjectAccount[] = [];
 
   async getBpiSubjectAccountById(id: string): Promise<BpiSubjectAccount> {

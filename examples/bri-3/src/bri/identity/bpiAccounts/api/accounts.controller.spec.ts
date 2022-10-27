@@ -34,13 +34,11 @@ describe('AccountController', () => {
   let accountController: AccountController;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
-  let mapper: Mapper;
 
   beforeEach(async () => {
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(mapper);
-    mockBpiSubjectAccountsStorageAgent = new MockBpiSubjectAccountsStorageAgent(
-      mapper,
-    );
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
+    mockBpiSubjectAccountsStorageAgent =
+      new MockBpiSubjectAccountsStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -66,7 +64,7 @@ describe('AccountController', () => {
       ],
     })
       .overrideProvider(BpiAccountStorageAgent)
-      .useValue(new MockBpiAccountsStorageAgent(mapper))
+      .useValue(new MockBpiAccountsStorageAgent())
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(mockBpiSubjectAccountsStorageAgent)
       .overrideProvider(BpiSubjectStorageAgent)

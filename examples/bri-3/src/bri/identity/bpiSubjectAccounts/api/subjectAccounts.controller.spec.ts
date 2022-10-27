@@ -27,10 +27,9 @@ import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
 describe('SubjectAccountController', () => {
   let subjectAccountController: SubjectAccountController;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
-  let mapper: Mapper;
 
   beforeEach(async () => {
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(mapper);
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -54,7 +53,7 @@ describe('SubjectAccountController', () => {
       ],
     })
       .overrideProvider(BpiSubjectAccountStorageAgent)
-      .useValue(new MockBpiSubjectAccountsStorageAgent(mapper))
+      .useValue(new MockBpiSubjectAccountsStorageAgent())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockBpiSubjectStorageAgent)
       .compile();
