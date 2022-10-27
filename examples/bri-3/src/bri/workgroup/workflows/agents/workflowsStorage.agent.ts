@@ -21,7 +21,7 @@ export class WorkflowStorageAgent extends PrismaService {
       throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(workflowModel, Workflow, Workflow) as Workflow;
+    return this.mapper.map(workflowModel, Workflow, Workflow);
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
@@ -29,7 +29,7 @@ export class WorkflowStorageAgent extends PrismaService {
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return this.mapper.map(w, Workflow, Workflow) as Workflow;
+      return this.mapper.map(w, Workflow, Workflow);
     });
   }
 
@@ -54,7 +54,7 @@ export class WorkflowStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(newWorkflowModel, Workflow, Workflow) as Workflow;
+    return this.mapper.map(newWorkflowModel, Workflow, Workflow);
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
@@ -78,11 +78,7 @@ export class WorkflowStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(
-      updatedWorkflowModel,
-      Workflow,
-      Workflow,
-    ) as Workflow;
+    return this.mapper.map(updatedWorkflowModel, Workflow, Workflow);
   }
 
   async deleteWorkflow(workflow: Workflow): Promise<void> {

@@ -43,7 +43,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     const updatedBpiSubjectModel = await this.bpiSubject.update({
       where: { id: bpiSubject.id },
-      data: this.mapper.map(bpiSubject, BpiSubject, BpiSubject),
+      data: bpiSubject,
     });
     return this.mapper.map(updatedBpiSubjectModel, BpiSubject, BpiSubject);
   }

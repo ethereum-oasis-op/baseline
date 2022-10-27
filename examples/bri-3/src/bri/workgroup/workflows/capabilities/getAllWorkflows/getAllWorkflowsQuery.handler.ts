@@ -19,7 +19,7 @@ export class GetAllWorkflowsQueryHandler
     const workflows = await this.storageAgent.getAllWorkflows();
 
     return workflows.map((w) => {
-      return this.mapper.map(w, Workflow, WorkflowDto) as WorkflowDto;
+      return this.mapper.map(w, Workflow, WorkflowDto);
     });
   }
 }

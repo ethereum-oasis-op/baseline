@@ -25,10 +25,13 @@ export class UpdateBpiSubjectAccountCommandHandler
 
     this.agent.updateBpiSubjectAccount();
 
-    return this.mapper.map(
+    const updatedBpiSubjectAccount =
       await this.storageAgent.updateBpiSubjectAccount(
         bpiSubjectAccountToUpdate,
-      ),
+      );
+
+    return this.mapper.map(
+      updatedBpiSubjectAccount,
       BpiSubjectAccount,
       BpiSubjectAccountDto,
     );

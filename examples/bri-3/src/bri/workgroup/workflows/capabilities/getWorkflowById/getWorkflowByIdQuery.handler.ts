@@ -18,6 +18,6 @@ export class GetWorkflowByIdQueryHandler
 
   async execute(query: GetWorkstepByIdQuery) {
     const workflow = await this.storageAgent.getWorkflowById(query.id);
-    return this.mapper.map(workflow, Workflow, WorkflowDto) as WorkflowDto;
+    return this.mapper.map(workflow, Workflow, WorkflowDto);
   }
 }

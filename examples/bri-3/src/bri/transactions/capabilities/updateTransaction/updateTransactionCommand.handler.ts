@@ -29,10 +29,10 @@ export class UpdateTransactionCommandHandler
       command.signature,
     );
 
-    return this.mapper.map(
-      await this.storageAgent.updateTransaction(transactionToUpdate),
-      Transaction,
-      TransactionDto,
+    const updatedTransaction = await this.storageAgent.updateTransaction(
+      transactionToUpdate,
     );
+
+    return this.mapper.map(updatedTransaction, Transaction, TransactionDto);
   }
 }
