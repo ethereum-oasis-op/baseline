@@ -40,6 +40,8 @@ export class TransactionStorageAgent extends PrismaService {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
+    //this.autoMapper.map(transactionModel, Transaction, Transaction);
+
     return new Transaction(
       transactionModel.id,
       transactionModel.nonce,
@@ -51,8 +53,6 @@ export class TransactionStorageAgent extends PrismaService {
       transactionModel.signature,
       transactionModel.status,
     );
-
-    //return this.autoMapper.map(transactionModel, Transaction, Transaction);
   }
 
   async createNewTransaction(transaction: Transaction): Promise<Transaction> {

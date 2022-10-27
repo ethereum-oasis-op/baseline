@@ -36,27 +36,27 @@ export class TransactionsProfile extends AutomapperProfile {
         ),
       );
 
-      createMap(
-        mapper,
-        Transaction,
-        Transaction,
+      // createMap(
+      //   mapper,
+      //   Transaction,
+      //   Transaction,
 
-        //remove this once the good value is available
-        // forMember(
-        //   (d) => d.from,
-        //   fromValue(null),
-        // ),
+      //   //remove this once the good value is available
+      //   // forMember(
+      //   //   (d) => d.from,
+      //   //   fromValue(null),
+      //   // ),
 
-        // //remove this once the good value is available
-        // forMember(
-        //   (d) => d.to,
-        //   fromValue(null),
-        // ),
+      //   // //remove this once the good value is available
+      //   // forMember(
+      //   //   (d) => d.to,
+      //   //   fromValue(null),
+      //   // ),
 
-        forMember((d) => d.updatePayload, ignore()),
-        forMember((d) => d.from, ignore()),
-        forMember((d) => d.to, ignore()),
-      );
+      //   forMember((d) => d.updatePayload, ignore()),
+      //   forMember((d) => d.FromBpiAccount, ignore()),
+      //   forMember((d) => d.ToBpiAccount, ignore()),
+      // );
     };
   }
 }
