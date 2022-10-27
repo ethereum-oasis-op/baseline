@@ -1,30 +1,42 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
-import { CreateTransactionDto } from './createProof.dto';
+import { CreateProofDto } from './createProof.dto';
 
-describe('CreateTransactionDto', () => {
-  it('should return error in case id not provided.', async () => {
+describe('CreateProofDto', () => {
+  it('should return error in case document not provided.', async () => {
     // Arrange
     const dto = {
-      nonce: 123,
-      workflowInstanceId: '123',
-      workstepInstanceId: '123',
-      fromAccountId: '123',
-      toAccountId: '123',
-      payload: '123',
+      id: '123',
+      ownerAccountId: '123',
       signature: '123',
     };
-    const createTransactionDto = plainToInstance(CreateTransactionDto, dto);
+    const createProofDto = plainToInstance(CreateProofDto, dto);
 
     // Act
-    const errors = await validate(createTransactionDto);
+    const errors = await validate(createProofDto);
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('id');
+    expect(errors[0].property).toEqual('document');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'id ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+      'document ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+    );
+  });
+
+  it('should return error in case signature not provided.', async () => {
+    // Arrange
+    const dto = { document: 'this is a description' };
+    const verifyProofDto = plainToInstance(CreateProofDto, dto);
+
+    // Act
+    const errors = await validate(verifyProofDto);
+
+    // Assert
+    expect(errors.length).toBe(1);
+    expect(errors[0].property).toEqual('signature');
+    expect(errors[0].constraints.isNotEmpty).toContain(
+      'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
@@ -32,18 +44,14 @@ describe('CreateTransactionDto', () => {
     // Arrange
     const dto = {
       id: '123',
-      nonce: 123,
-      workflowInstanceId: '123',
-      workstepInstanceId: '123',
-      fromAccountId: '123',
-      toAccountId: '123',
-      payload: '123',
+      ownerAccountId: '123',
+      document: '123',
       signature: '123',
     };
-    const createTransactionDto = plainToInstance(CreateTransactionDto, dto);
+    const createProofDto = plainToInstance(CreateProofDto, dto);
 
     // Act
-    const errors = await validate(createTransactionDto);
+    const errors = await validate(createProofDto);
 
     // Assert
     expect(errors.length).toBe(0);

@@ -6,9 +6,6 @@ export class CreateProofDto {
   id: string;
 
   @IsNotEmpty()
-  owner: number;
-
-  @IsNotEmpty()
   ownerAccountId: string;
 
   @IsNotEmpty()

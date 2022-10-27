@@ -13,7 +13,7 @@ export class CreateProofCommandHandler
   ) {}
 
   async execute(command: CreateProofCommand) {
-    this.agent.throwIfCreateProofInputInvalid();
+    this.agent.throwIfProofInputInvalid(command.document);
 
     const newProof = this.agent.createNewProof(
       command.id,

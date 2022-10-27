@@ -1,193 +1,97 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
-import { TransactionController } from './proof.controller';
-import { TransactionAgent } from '../agents/transactions.agent';
-import { CreateTransactionCommandHandler } from '../capabilities/createTransaction/createTransactionCommand.handler';
-import { UpdateTransactionCommandHandler } from '../capabilities/updateTransaction/updateTransactionCommand.handler';
-import { DeleteTransactionCommandHandler } from '../capabilities/deleteTransaction/deleteTransactionCommand.handler';
-import { GetTransactionByIdQueryHandler } from '../capabilities/getTransactionById/getTransactionByIdQuery.handler';
-import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
-import { CreateTransactionDto } from './dtos/request/createProof.dto';
-import { UpdateTransactionDto } from './dtos/request/verifyProof.dto';
-import { MockTransactionStorageAgent } from '../agents/mockTransactionStorage.agent';
+import { INVALID_PROOF_INPUT, NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import { ProofController } from './proof.controller';
+import { ProofAgent } from '../agents/proof.agent';
+import { CreateProofCommandHandler } from '../capabilities/createProof/createProofCommand.handler';
+import { VerifyProofCommandHandler } from '../capabilities/verifyProof/verifyProofCommand.handler';
+import { ProofStorageAgent } from '../agents/proofStorage.agent';
+import { CreateProofDto } from './dtos/request/createProof.dto';
+import { VerifyProofDto } from './dtos/request/verifyProof.dto';
 
-describe('TransactionController', () => {
-  let controller: TransactionController;
+describe('ProofController', () => {
+  let controller: ProofController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule],
-      controllers: [TransactionController],
+      controllers: [ProofController],
       providers: [
-        TransactionAgent,
-        CreateTransactionCommandHandler,
-        UpdateTransactionCommandHandler,
-        DeleteTransactionCommandHandler,
-        GetTransactionByIdQueryHandler,
-        TransactionStorageAgent,
+        ProofAgent,
+        CreateProofCommandHandler,
+        VerifyProofCommandHandler,
+        ProofStorageAgent,
       ],
-    })
-      .overrideProvider(TransactionStorageAgent)
-      .useValue(new MockTransactionStorageAgent())
-      .compile();
+    }).compile();
 
-    controller = app.get<TransactionController>(TransactionController);
+    controller = app.get<ProofController>(ProofController);
 
     await app.init();
   });
 
-  describe('getTransactionById', () => {
-    it('should throw NotFound if non existent id passed', () => {
+  describe('createProof', () => {
+    it('should throw BadRequest if document parameter is empty', async () => {
       // Arrange
-      const nonExistentId = '123';
+      const missingDocumentParam = {
+        id: '123',
+        ownerAccountId: '123',
+        document: '',
+        signature: '123',
+      };
 
       // Act and assert
       expect(async () => {
-        await controller.getTransactionById(nonExistentId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+        await controller.createProof(missingDocumentParam);
+      }).rejects.toThrow(new BadRequestException(INVALID_PROOF_INPUT));
     });
 
-    it('should return the correct transaction if proper id passed ', async () => {
+    it('should return the correct transaction if proper document passed ', async () => {
       // Arrange
       const requestDto = {
         id: '123',
-        nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
-        payload: 'payload1',
+        ownerAccountId: 'from',
+        document: 'document1',
         signature: 'signature',
-      } as CreateTransactionDto;
-
-      const newTransactionId = await controller.createTransaction(requestDto);
+      } as CreateProofDto;
 
       // Act
-      const createdTransaction = await controller.getTransactionById(
-        newTransactionId,
-      );
+      const createdProof = await controller.createProof(requestDto);
 
       // Assert
-      expect(createdTransaction.id).toEqual(requestDto.id);
-      expect(createdTransaction.nonce).toEqual(requestDto.nonce);
-      expect(createdTransaction.workflowInstanceId).toEqual(
-        requestDto.workflowInstanceId,
-      );
-      expect(createdTransaction.workstepInstanceId).toEqual(
-        requestDto.workstepInstanceId,
-      );
-      expect(createdTransaction.from).toEqual(''); // TODO: Will be fixed with #489
-      expect(createdTransaction.to).toEqual(''); // TODO: Will be fixed with #489
-      expect(createdTransaction.payload).toEqual(requestDto.payload);
-      expect(createdTransaction.signature).toEqual(requestDto.signature);
+      expect(createdProof.id).toEqual(requestDto.id);
+      expect(createdProof.owner).toEqual(requestDto.ownerAccountId);
+      expect(createdProof.payload).toEqual('document1'); // TODO: Add merkle root of document as payload
+      expect(createdProof.signature).toEqual(requestDto.signature);
     });
   });
 
-  describe('createTransaction', () => {
-    it('should return new id from the created transaction when all params provided', async () => {
+  describe('verifyProof', () => {
+    it('should throw BadRequest if document parameter is missing', async () => {
       // Arrange
-      const requestDto = {
-        id: '123',
-        nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
-        payload: 'payload1',
-        signature: 'signature1',
-      } as CreateTransactionDto;
-
-      // Act
-      const response = await controller.createTransaction(requestDto);
-
-      // Assert
-      expect(response).toEqual(requestDto.id);
-    });
-  });
-
-  describe('updateTransaction', () => {
-    it('should throw NotFound if non existent id passed', () => {
-      // Arrange
-      const nonExistentId = '123';
-      const requestDto = {
-        payload: 'payload2',
-        signature: 'signature2',
-      } as UpdateTransactionDto;
+      const missingDocumentParam = {
+        document: '',
+        signature: '123',
+      };
 
       // Act and assert
       expect(async () => {
-        await controller.updateTransaction(nonExistentId, requestDto);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+        await controller.verifyProof(missingDocumentParam);
+      }).rejects.toThrow(new BadRequestException(INVALID_PROOF_INPUT));
     });
 
-    it('should perform the update if existing id passed', async () => {
+    it('should perform the verification if document is provided', async () => {
       // Arrange
-      const createRequestDto = {
-        id: '123',
-        nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
-        payload: 'payload1',
-        signature: 'signature1',
-      } as CreateTransactionDto;
-      const newTransactionId = await controller.createTransaction(
-        createRequestDto,
-      );
-      const updateRequestDto = {
-        payload: 'payload2',
-        signature: 'signature2',
-      } as UpdateTransactionDto;
+      const verifyRequestDto = {
+        document: 'document1',
+        signature: '123',
+      } as VerifyProofDto;
 
       // Act
-      await controller.updateTransaction(newTransactionId, updateRequestDto);
+      const verification = await controller.verifyProof(verifyRequestDto);
 
       // Assert
-      const updatedTransaction = await controller.getTransactionById(
-        newTransactionId,
-      );
-      expect(updatedTransaction.id).toEqual(newTransactionId);
-      expect(updatedTransaction.payload).toEqual(updateRequestDto.payload);
-      expect(updatedTransaction.signature).toEqual(updateRequestDto.signature);
-    });
-  });
-
-  describe('deleteTransaction', () => {
-    it('should throw NotFound if non existent id passed', () => {
-      // Arrange
-      const nonExistentId = '123';
-      // Act and assert
-      expect(async () => {
-        await controller.deleteTransaction(nonExistentId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
-    });
-
-    it('should perform the delete if existing id passed', async () => {
-      // Arrange
-      const createRequestDto = {
-        id: '123',
-        nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
-        payload: 'payload1',
-        signature: 'signature1',
-      } as CreateTransactionDto;
-      const newTransactionId = await controller.createTransaction(
-        createRequestDto,
-      );
-
-      // Act
-      await controller.deleteTransaction(newTransactionId);
-
-      // Assert
-      expect(async () => {
-        await controller.getTransactionById(newTransactionId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+      expect(verification).toEqual(true);
     });
   });
 });
