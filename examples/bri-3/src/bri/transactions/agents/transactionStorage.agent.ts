@@ -12,7 +12,9 @@ export class TransactionStorageAgent extends PrismaService {
   }
 
   async getAllTransactions(): Promise<Transaction[]> {
-    const transactionModels = await this.transaction.findMany();
+    const transactionModels = await this.transaction.findMany({
+      include: { FromBpiAccount: true, ToBpiAccount: true },
+    });
     return transactionModels.map((transactionModel) => {
       return new Transaction(
         transactionModel.id,
@@ -31,6 +33,7 @@ export class TransactionStorageAgent extends PrismaService {
   async getTransactionById(id: string): Promise<Transaction> {
     const transactionModel = await this.transaction.findUnique({
       where: { id },
+      include: { FromBpiAccount: true, ToBpiAccount: true },
     });
 
     if (!transactionModel) {
@@ -59,8 +62,8 @@ export class TransactionStorageAgent extends PrismaService {
         nonce: transaction.nonce,
         workflowInstanceId: transaction.workflowInstanceId,
         workstepInstanceId: transaction.workstepInstanceId,
-        from: '', // TODO: transactionModel.from once BpiAccount in the prisma schema,
-        to: '', // TODO: transactionModel.to once BpiAccount in the prisma schema,
+        fromBpiAccountId: transaction.from.id,
+        toBpiAccountId: transaction.to.id,
         payload: transaction.payload,
         signature: transaction.signature,
         status: transaction.status,
