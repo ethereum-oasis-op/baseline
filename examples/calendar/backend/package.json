@@ -1,0 +1,60 @@
+{
+	"name": "calendar",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.ts",
+	"scripts": {
+		"build": "tsc",
+		"dev": "nodemon --watch '**/*.ts' --exec 'yarn start'",
+		"heroku": "node ./build",
+		"start": "ts-node server.ts"
+	},
+	"dependencies": {
+		"@truffle/contract": "^4.6.1",
+		"@truffle/hdwallet-provider": "^2.0.15",
+		"@typechain/truffle-v5": "^8.0.1",
+		"@types/bluebird": "^3.5.33",
+		"@types/chai": "^4.3.3",
+		"@types/cors": "^2.8.8",
+		"@types/eth-sig-util": "^2.1.0",
+		"@types/express": "^4.17.4",
+		"@types/express-jwt": "^0.0.42",
+		"@types/jsonwebtoken": "^8.5.0",
+		"@types/mocha": "^9.1.1",
+		"@types/node": "^18.7.18",
+		"@types/truffle-privatekey-provider": "^1.1.0",
+		"@types/validator": "^13.1.0",
+		"@types/web3": "^1.2.2",
+		"body-parser": "^1.18.3",
+		"circomlib": "^2.0.5",
+		"circomlibjs": "^0.1.7",
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.2",
+		"eth-sig-util": "^3.0.0",
+		"ethereumjs-util": "^7.0.5",
+		"ethers": "^5.7.0",
+		"express": "^4.16.4",
+		"express-jwt": "^6.0.0",
+		"fixed-merkle-tree": "^0.7.3",
+		"jsonwebtoken": "^8.5.1",
+		"sequelize": "^6.3.5",
+		"snarkjs": "^0.4.26",
+		"solc": "^0.8.17",
+		"sqlite3": "^5.0.0",
+		"truffle": "^5.5.30",
+		"truffle-privatekey-provider": "^1.5.0",
+		"tslog": "^3.3.4",
+		"typechain": "^8.1.0"
+	},
+	"devDependencies": {
+		"@machinomy/types-truffle-contract": "^0.2.0",
+		"nodemon": "^2.0.6",
+		"ts-node": "^10.9.1",
+		"typescript": "^4.8.3"
+	},
+	"resolutions": {
+		"ethereumjs-util": ">=6.0.0"
+	},
+	"author": "",
+	"license": "ISC"
+}

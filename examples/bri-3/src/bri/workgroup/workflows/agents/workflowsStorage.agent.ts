@@ -33,6 +33,33 @@ export class WorkflowStorageAgent extends PrismaService {
     });
   }
 
+  async getWorkflowsByIds(ids: string[]): Promise<Workflow[]> {
+    const workflowModels = await this.workflow.findMany({
+      where: {
+        id: { in: ids },
+      },
+      include: { worksteps: true },
+    });
+    return workflowModels.map((w) => {
+      return new Workflow(
+        w.id,
+        w.name,
+        w.worksteps.map((ws) => {
+          return new Workstep(
+            ws.id,
+            ws.name,
+            ws.version,
+            ws.status,
+            ws.workgroupId,
+            ws.securityPolicy,
+            ws.privacyPolicy,
+          );
+        }),
+        w.workgroupId,
+      );
+    });
+  }
+
   async createNewWorkflow(workflow: Workflow): Promise<Workflow> {
     const workstepIds = workflow.worksteps.map((w) => {
       return {
