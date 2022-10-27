@@ -18,23 +18,7 @@ export class TransactionsProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(
-        mapper,
-        Transaction,
-        TransactionDto,
-
-        //remove this once the good value is available
-        forMember(
-          (d) => d.from,
-          mapFrom((s) => ''),
-        ),
-
-        //remove this once the good value is available
-        forMember(
-          (d) => d.to,
-          mapFrom((s) => ''),
-        ),
-      );
+      createMap(mapper, Transaction, TransactionDto);
     };
   }
 }
