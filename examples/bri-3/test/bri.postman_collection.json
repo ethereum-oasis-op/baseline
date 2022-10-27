@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "b9b1a6d8-c0be-41bf-98da-a91ca1389de8",
+		"_postman_id": "fb124fcc-bf9d-4931-8414-3cc261f703a6",
 		"name": "bri",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11201020"
 	},
 	"item": [
 		{
@@ -559,7 +560,7 @@
 					]
 				},
 				{
-					"name": "workflow",
+					"name": "Workflow",
 					"item": [
 						{
 							"name": "Update Workflow",
@@ -694,6 +695,129 @@
 									"path": [
 										"workflows",
 										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Workgroup",
+					"item": [
+						{
+							"name": "Update Workgroup",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"administratorIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\"],\n    \"securityPolicy\": \"sec1\",\n    \"privacyPolicy\": \"priv1\",\n    \"participantIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups/74ef3fa4-0858-427c-a185-df1753dc5dc6",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups",
+										"74ef3fa4-0858-427c-a185-df1753dc5dc6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Workgroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"administratorIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\"],\n    \"securityPolicy\": \"sec1\",\n    \"privacyPolicy\": \"priv1\",\n    \"participantIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\", \"92747004-9ff6-47ea-abf9-7dfaebd36d51\"],\n    \"worksteps\": [],\n    \"workflows\": []\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Workgroup",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups/222550cc-294f-47f5-ac13-fc6749ceef37",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups",
+										"222550cc-294f-47f5-ac13-fc6749ceef37"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Workgroup by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups/74ef3fa4-0858-427c-a185-df1753dc5dc6",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups",
+										"74ef3fa4-0858-427c-a185-df1753dc5dc6"
 									]
 								}
 							},
