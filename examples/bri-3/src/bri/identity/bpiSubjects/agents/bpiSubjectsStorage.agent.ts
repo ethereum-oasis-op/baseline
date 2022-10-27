@@ -39,10 +39,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
       },
     });
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.map(
-        bpiSubjectModel,
-        getType<BpiSubject>(),
-      ) as BpiSubject;
+      return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
     });
   }
 
