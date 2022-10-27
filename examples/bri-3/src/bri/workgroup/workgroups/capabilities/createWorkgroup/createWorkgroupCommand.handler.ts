@@ -18,7 +18,7 @@ export class CreateWorkgroupCommandHandler
         command.administratorIds,
       );
 
-    const participantsToConnect =
+    const workgroupParticipants =
       await this.agent.fetchWorkgroupParticipantsAndThrowIfNoneExist(
         command.participantIds,
       );
@@ -28,7 +28,7 @@ export class CreateWorkgroupCommandHandler
       workgroupAdministrators,
       command.securityPolicy,
       command.privacyPolicy,
-      participantsToConnect,
+      workgroupParticipants,
       [],
       [],
     );
