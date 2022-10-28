@@ -59,7 +59,7 @@ describe('WorkgroupsController', () => {
 
   beforeEach(async () => {
     mockWorkgroupStorageAgent = new MockWorkgroupStorageAgent();
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(new Mapper());
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule, SubjectModule],
