@@ -8,7 +8,7 @@ export class Workflow {
   @AutoMap()
   name: string;
 
-  @AutoMap()
+  @AutoMap(() => [Workstep])
   worksteps: Workstep[]; //TODO enforce workstep causal connection through collection order
 
   @AutoMap()

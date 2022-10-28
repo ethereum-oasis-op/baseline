@@ -104,7 +104,6 @@ describe('WorkflowsController', () => {
     it('should return the correct workflow if proper id passed ', async () => {
       // Arrange
       const workflowId = await createTestWorkflow();
-
       // Act
       const createdWorkflow = await workflowController.getWorkflowById(
         workflowId,
@@ -112,9 +111,9 @@ describe('WorkflowsController', () => {
 
       // Assert
       expect(createdWorkflow.id).toEqual(workflowId);
-      // expect(createdWorkflow.worksteps.map((ws) => ws.id)).toEqual(
-      //   workflowRequestDto.workstepIds,
-      // );
+      expect(createdWorkflow.worksteps.map((ws) => ws.id)).toEqual(
+        workflowRequestDto.workstepIds,
+      );
     });
   });
 
@@ -149,13 +148,13 @@ describe('WorkflowsController', () => {
       // Assert
       expect(workflows.length).toEqual(2);
       expect(workflows[0].id).toEqual(workflowId);
-      // expect(workflows[0].worksteps.map((ws) => ws.id)).toEqual(
-      //   workflowRequestDto.workstepIds,
-      // );
+      expect(workflows[0].worksteps.map((ws) => ws.id)).toEqual(
+        workflowRequestDto.workstepIds,
+      );
       expect(workflows[1].id).toEqual(newWorkflowId2);
-      // expect(workflows[1].worksteps.map((ws) => ws.id)).toEqual(
-      //   workflowRequestDto2.workstepIds,
-      // );
+      expect(workflows[1].worksteps.map((ws) => ws.id)).toEqual(
+        workflowRequestDto2.workstepIds,
+      );
     });
   });
 
@@ -211,9 +210,9 @@ describe('WorkflowsController', () => {
         workflowId,
       );
       expect(updatedWorkflow.id).toEqual(workflowId);
-      // expect(updatedWorkflow.worksteps.map((ws) => ws.id)).toEqual(
-      //   updateRequestDto.workstepIds,
-      // );
+      expect(updatedWorkflow.worksteps.map((ws) => ws.id)).toEqual(
+        updateRequestDto.workstepIds,
+      );
       expect(updatedWorkflow.workgroupId).toEqual(updateRequestDto.workgroupId);
       expect(updatedWorkflow.name).toEqual(updateRequestDto.name);
     });
