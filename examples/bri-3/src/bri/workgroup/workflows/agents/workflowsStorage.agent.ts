@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Workstep } from '../../worksteps/models/workstep';
@@ -6,6 +8,10 @@ import { Workflow } from '../models/workflow';
 
 @Injectable()
 export class WorkflowStorageAgent extends PrismaService {
+  constructor(@InjectMapper() private mapper: Mapper) {
+    super();
+  }
+
   async getWorkflowById(id: string): Promise<Workflow> {
     const workflowModel = await this.workflow.findUnique({
       where: { id: id },
@@ -16,22 +22,7 @@ export class WorkflowStorageAgent extends PrismaService {
       throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new Workflow(
-      workflowModel.id,
-      workflowModel.name,
-      workflowModel.worksteps.map((w) => {
-        return new Workstep(
-          w.id,
-          w.name,
-          w.version,
-          w.status,
-          w.workgroupId,
-          w.securityPolicy,
-          w.privacyPolicy,
-        );
-      }),
-      workflowModel.workgroupId,
-    );
+    return this.mapper.map(workflowModel, Workflow, Workflow);
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
@@ -39,22 +30,7 @@ export class WorkflowStorageAgent extends PrismaService {
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return new Workflow(
-        w.id,
-        w.name,
-        w.worksteps.map((ws) => {
-          return new Workstep(
-            ws.id,
-            ws.name,
-            ws.version,
-            ws.status,
-            ws.workgroupId,
-            ws.securityPolicy,
-            ws.privacyPolicy,
-          );
-        }),
-        w.workgroupId,
-      );
+      return this.mapper.map(w, Workflow, Workflow);
     });
   }
 
@@ -106,22 +82,7 @@ export class WorkflowStorageAgent extends PrismaService {
       },
     });
 
-    return new Workflow(
-      newWorkflowModel.id,
-      newWorkflowModel.name,
-      newWorkflowModel.worksteps.map((w) => {
-        return new Workstep(
-          w.id,
-          w.name,
-          w.version,
-          w.version,
-          w.workgroupId,
-          w.securityPolicy,
-          w.privacyPolicy,
-        );
-      }),
-      newWorkflowModel.workgroupId,
-    );
+    return this.mapper.map(newWorkflowModel, Workflow, Workflow);
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
@@ -145,22 +106,7 @@ export class WorkflowStorageAgent extends PrismaService {
       },
     });
 
-    return new Workflow(
-      updatedWorkflowModel.id,
-      updatedWorkflowModel.name,
-      updatedWorkflowModel.worksteps.map((ws) => {
-        return new Workstep(
-          ws.id,
-          ws.name,
-          ws.version,
-          ws.status,
-          ws.workgroupId,
-          ws.securityPolicy,
-          ws.privacyPolicy,
-        );
-      }),
-      updatedWorkflowModel.workgroupId,
-    );
+    return this.mapper.map(updatedWorkflowModel, Workflow, Workflow);
   }
 
   async deleteWorkflow(workflow: Workflow): Promise<void> {

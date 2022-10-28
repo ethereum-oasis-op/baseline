@@ -5,7 +5,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { NOT_FOUND_ERR_MESSAGE as SUBJECT_ACCOUNT_NOT_FOUND_ERR_MESSAGE } from '../../bpiSubjectAccounts/api/err.messages';
 import { AccountController } from './accounts.controller';
-import Mapper from '../../../utils/mapper';
 import { BpiAccountStorageAgent } from '../agents/bpiAccountsStorage.agent';
 import { BpiAccountAgent } from '../agents/bpiAccounts.agent';
 import { MockBpiAccountsStorageAgent } from '../agents/mockBpiAccountStorage.agent';
@@ -24,6 +23,12 @@ import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubj
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
+import { AccountsProfile } from '../subject.accounts.profile';
+import { Mapper } from '@automapper/core';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
+import { SubjectAccountsProfile } from '../../bpiSubjectAccounts/subjectAccounts.profile';
 
 describe('AccountController', () => {
   let accountController: AccountController;
@@ -31,12 +36,16 @@ describe('AccountController', () => {
   let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
 
   beforeEach(async () => {
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(new Mapper());
-    mockBpiSubjectAccountsStorageAgent = new MockBpiSubjectAccountsStorageAgent(
-      new Mapper(),
-    );
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
+    mockBpiSubjectAccountsStorageAgent =
+      new MockBpiSubjectAccountsStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [AccountController],
       providers: [
         CreateBpiAccountCommandHandler,
@@ -49,10 +58,13 @@ describe('AccountController', () => {
         BpiSubjectStorageAgent,
         BpiSubjectAccountAgent,
         BpiSubjectAccountStorageAgent,
+        SubjectsProfile,
+        SubjectAccountsProfile,
+        AccountsProfile,
       ],
     })
       .overrideProvider(BpiAccountStorageAgent)
-      .useValue(new MockBpiAccountsStorageAgent(new Mapper()))
+      .useValue(new MockBpiAccountsStorageAgent())
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(mockBpiSubjectAccountsStorageAgent)
       .overrideProvider(BpiSubjectStorageAgent)

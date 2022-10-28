@@ -16,20 +16,23 @@ import { CreateBpiMessageDto } from './dtos/request/createBpiMessage.dto';
 import { UpdateBpiMessageDto } from './dtos/request/updateBpiMessage.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
-import Mapper from '../../utils/mapper';
+import { Mapper } from '@automapper/core';
 import { MessageController } from './messages.controller';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { CommunicationProfile } from '../communicaton.profile';
+import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
 
 describe('MessageController', () => {
   let mController: MessageController;
-
   let mockBpiMessageStorageAgent: MockBpiMessageStorageAgent;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let existingBpiSubject1: BpiSubject;
   let existingBpiSubject2: BpiSubject;
 
   beforeEach(async () => {
-    mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent(new Mapper());
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(new Mapper());
+    mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
       new BpiSubject('', 'name', 'desc', BpiSubjectType.External, 'xyz'),
     );
@@ -38,7 +41,12 @@ describe('MessageController', () => {
     );
 
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [MessageController],
       providers: [
         BpiMessageAgent,
@@ -48,7 +56,8 @@ describe('MessageController', () => {
         GetBpiMessageByIdQueryHandler,
         BpiMessageStorageAgent,
         BpiSubjectStorageAgent,
-        Mapper,
+        SubjectsProfile,
+        CommunicationProfile,
       ],
     })
       .overrideProvider(BpiMessageStorageAgent)

@@ -8,7 +8,7 @@ import { GetAllBpiSubjectsQueryHandler } from './capabilities/getAllBpiSubjects/
 import { GetBpiSubjectByIdQueryHandler } from './capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
 import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
-import Mapper from '../../utils/mapper';
+import { SubjectsProfile } from './subjects.profile';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler,
@@ -28,7 +28,7 @@ export const QueryHandlers = [
     ...QueryHandlers,
     BpiSubjectAgent,
     BpiSubjectStorageAgent,
-    Mapper,
+    SubjectsProfile,
   ],
   exports: [BpiSubjectStorageAgent],
 })

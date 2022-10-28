@@ -18,10 +18,16 @@ import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 import { MockWorkstepStorageAgent } from '../../worksteps/agents/mockWorkstepsStorage.agent';
 import { Workstep } from '../../worksteps/models/workstep';
+import { Mapper } from '@automapper/core';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { WorkflowProfile } from '../workflow.profile';
+import { WorkstepProfile } from '../../worksteps/workstep.profile';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
   let mockWorkstepStorageAgent: MockWorkstepStorageAgent;
+  let mapper: Mapper;
 
   const workflowRequestDto = {
     name: 'name1',
@@ -52,9 +58,15 @@ describe('WorkflowsController', () => {
   };
 
   beforeEach(async () => {
-    mockWorkstepStorageAgent = new MockWorkstepStorageAgent();
+    mockWorkstepStorageAgent = new MockWorkstepStorageAgent(mapper);
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule, WorkstepModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+        WorkstepModule,
+      ],
       controllers: [WorkflowController],
       providers: [
         WorkflowAgent,
@@ -64,10 +76,12 @@ describe('WorkflowsController', () => {
         GetWorkflowByIdQueryHandler,
         GetAllWorkflowsQueryHandler,
         WorkflowStorageAgent,
+        WorkstepProfile,
+        WorkflowProfile,
       ],
     })
       .overrideProvider(WorkflowStorageAgent)
-      .useValue(new MockWorkflowStorageAgent())
+      .useValue(new MockWorkflowStorageAgent(mapper))
       .overrideProvider(WorkstepStorageAgent)
       .useValue(mockWorkstepStorageAgent)
       .compile();
@@ -90,7 +104,6 @@ describe('WorkflowsController', () => {
     it('should return the correct workflow if proper id passed ', async () => {
       // Arrange
       const workflowId = await createTestWorkflow();
-
       // Act
       const createdWorkflow = await workflowController.getWorkflowById(
         workflowId,

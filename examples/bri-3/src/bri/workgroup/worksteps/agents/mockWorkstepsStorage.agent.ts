@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
@@ -5,6 +7,8 @@ import { Workstep } from '../models/workstep';
 
 @Injectable()
 export class MockWorkstepStorageAgent {
+  constructor(@InjectMapper() private readonly mapper: Mapper) {}
+
   private workstepsStore: Workstep[] = [];
 
   async getWorkstepById(id: string): Promise<Workstep> {
@@ -42,7 +46,6 @@ export class MockWorkstepStorageAgent {
     );
 
     this.workstepsStore.push(createdWs);
-
     return Promise.resolve(createdWs);
   }
 

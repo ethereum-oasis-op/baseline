@@ -9,6 +9,7 @@ import { DeleteBpiSubjectAccountCommandHandler } from './capabilities/deleteBpiS
 import { GetAllBpiSubjectAccountsQueryHandler } from './capabilities/getAllBpiSubjectAccounts/getAllBpiSubjectAccountsQuery.handler';
 import { GetBpiSubjectAccountByIdQueryHandler } from './capabilities/getBpiSubjectAccountById/getBpiSubjectAccountByIdQuery.handler';
 import { UpdateBpiSubjectAccountCommandHandler } from './capabilities/updateBpiSubjectAccount/updateBpiSubjectAccountCommand.handler';
+import { SubjectAccountsProfile } from './subjectAccounts.profile';
 
 export const CommandHandlers = [
   CreateBpiSubjectAccountCommandHandler,
@@ -28,6 +29,7 @@ export const QueryHandlers = [
     ...QueryHandlers,
     BpiSubjectAccountAgent,
     BpiSubjectAccountStorageAgent,
+    SubjectAccountsProfile,
   ],
   exports: [BpiSubjectAccountAgent],
 })

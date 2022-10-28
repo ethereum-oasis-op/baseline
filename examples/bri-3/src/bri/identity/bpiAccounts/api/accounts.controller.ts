@@ -20,9 +20,6 @@ import { BpiAccountDto } from './dtos/response/bpiAccount.dto';
 export class AccountController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
-  // TODO: DTO validation
-  // TODO: Response DTOs
-  // TODO: DTO -> Command mapping
   @Get('/:id')
   async getBpiAccountById(@Param('id') id: string): Promise<BpiAccountDto> {
     return await this.queryBus.execute(new GetBpiAccountByIdQuery(id));

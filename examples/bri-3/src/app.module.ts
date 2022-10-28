@@ -1,3 +1,5 @@
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 import { Module } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CommunicationModule } from './bri/communication/communication.module';
@@ -13,6 +15,9 @@ import { LoggingModule } from './shared/logging/logging.module';
     TransactionModule,
     CommunicationModule,
     LoggingModule,
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
   ],
   providers: [PrismaService],
 })

@@ -28,6 +28,8 @@ model BpiAccount {
   id                      String              @id @default(uuid())
   nonce                   Int
   ownerBpiSubjectAccounts BpiSubjectAccount[]
+  SentTransactions Transaction[] @relation(name: "fromBpiAccount_fk")
+  ReceivedTransactions Transaction[] @relation(name: "toBpiAccount_fk")
 }
 
 model BpiSubjectAccount {
@@ -71,15 +73,17 @@ model Workgroup {
 }
 
 model Transaction {
-  id                 String @id
-  nonce              Int
+  id String @id
+  nonce Int
   workflowInstanceId String
   workstepInstanceId String
-  from               String // Add BpiAccount once #489 done
-  to                 String // Add BpiAccount once #489 done
-  payload            String
-  signature          String
-  status             Int
+  fromBpiAccountId String
+  FromBpiAccount BpiAccount @relation(fields: [fromBpiAccountId], references: [id], name: "fromBpiAccount_fk")
+  toBpiAccountId String
+  ToBpiAccount BpiAccount @relation(fields: [toBpiAccountId], references: [id], name: "toBpiAccount_fk")
+  payload String
+  signature String
+  status Int
 }
 
 model Message {

@@ -1,10 +1,8 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { NOT_FOUND_ERR_MESSAGE as SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../bpiSubjects/api/err.messages';
-import Mapper from '../../../utils/mapper';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { SubjectAccountController } from './subjectAccounts.controller';
 import { BpiSubjectAccountAgent } from '../agents/bpiSubjectAccounts.agent';
@@ -20,16 +18,26 @@ import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStor
 import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
+import { SubjectAccountsProfile } from '../subjectAccounts.profile';
+import { Mapper } from '@automapper/core';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
 
 describe('SubjectAccountController', () => {
   let subjectAccountController: SubjectAccountController;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
 
   beforeEach(async () => {
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent(new Mapper());
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
 
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [SubjectAccountController],
       providers: [
         BpiSubjectAccountAgent,
@@ -40,10 +48,12 @@ describe('SubjectAccountController', () => {
         DeleteBpiSubjectAccountCommandHandler,
         GetBpiSubjectAccountByIdQueryHandler,
         GetAllBpiSubjectAccountsQueryHandler,
+        SubjectsProfile,
+        SubjectAccountsProfile,
       ],
     })
       .overrideProvider(BpiSubjectAccountStorageAgent)
-      .useValue(new MockBpiSubjectAccountsStorageAgent(new Mapper()))
+      .useValue(new MockBpiSubjectAccountsStorageAgent())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockBpiSubjectStorageAgent)
       .compile();

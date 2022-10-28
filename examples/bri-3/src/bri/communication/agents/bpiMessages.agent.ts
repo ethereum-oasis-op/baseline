@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { BpiMessage } from '../models/bpiMessage';
 import { BpiMessageType } from '../models/bpiMessageType.enum';
-
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessageStorageAgent } from './bpiMessagesStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
@@ -51,14 +50,7 @@ export class BpiMessageAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new BpiMessage(
-      bpiMessageToUpdate.id,
-      bpiMessageToUpdate.from,
-      bpiMessageToUpdate.to,
-      bpiMessageToUpdate.content,
-      bpiMessageToUpdate.signature,
-      bpiMessageToUpdate.type,
-    );
+    return bpiMessageToUpdate;
   }
 
   public updateBpiMessage(

@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
@@ -9,6 +11,10 @@ import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectAccountStorageAgent extends PrismaService {
+  constructor(@InjectMapper() private readonly mapper: Mapper) {
+    super();
+  }
+
   async getBpiSubjectAccountById(id: string): Promise<BpiSubjectAccount> {
     const bpiSubjectAccountModel = await this.bpiSubjectAccount.findUnique({
       where: { id: id },
@@ -19,24 +25,18 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    const creatorBpiSubject = new BpiSubject(
-      bpiSubjectAccountModel.CreatorBpiSubject.id,
-      bpiSubjectAccountModel.CreatorBpiSubject.name,
-      bpiSubjectAccountModel.CreatorBpiSubject.description,
-      bpiSubjectAccountModel.CreatorBpiSubject.type,
-      bpiSubjectAccountModel.CreatorBpiSubject.publicKey,
-    );
-    const ownerBpiSubject = new BpiSubject(
-      bpiSubjectAccountModel.OwnerBpiSubject.id,
-      bpiSubjectAccountModel.OwnerBpiSubject.name,
-      bpiSubjectAccountModel.OwnerBpiSubject.description,
-      bpiSubjectAccountModel.OwnerBpiSubject.type,
-      bpiSubjectAccountModel.OwnerBpiSubject.publicKey,
-    );
-    return new BpiSubjectAccount( // TODO: Write generic mapper prismaModel -> domainObject
+    return new BpiSubjectAccount(
       bpiSubjectAccountModel.id,
-      creatorBpiSubject,
-      ownerBpiSubject,
+      this.mapper.map(
+        bpiSubjectAccountModel.CreatorBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
+      this.mapper.map(
+        bpiSubjectAccountModel.OwnerBpiSubject,
+        BpiSubject,
+        BpiSubject,
+      ),
     );
   }
 
@@ -47,20 +47,8 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     return bpiSubjectAccountsModels.map((bp) => {
       return new BpiSubjectAccount(
         bp.id,
-        new BpiSubject(
-          bp.CreatorBpiSubject.id,
-          bp.CreatorBpiSubject.name,
-          bp.CreatorBpiSubject.description,
-          bp.CreatorBpiSubject.type,
-          bp.CreatorBpiSubject.publicKey,
-        ),
-        new BpiSubject(
-          bp.OwnerBpiSubject.id,
-          bp.OwnerBpiSubject.name,
-          bp.OwnerBpiSubject.description,
-          bp.OwnerBpiSubject.type,
-          bp.OwnerBpiSubject.publicKey,
-        ),
+        this.mapper.map(bp.CreatorBpiSubject, BpiSubject, BpiSubject),
+        this.mapper.map(bp.OwnerBpiSubject, BpiSubject, BpiSubject),
       );
     });
   }
@@ -79,19 +67,15 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
 
     return new BpiSubjectAccount(
       newBpiSubjectAccountModel.id,
-      new BpiSubject(
-        newBpiSubjectAccountModel.CreatorBpiSubject.id,
-        newBpiSubjectAccountModel.CreatorBpiSubject.name,
-        newBpiSubjectAccountModel.CreatorBpiSubject.description,
-        newBpiSubjectAccountModel.CreatorBpiSubject.type,
-        newBpiSubjectAccountModel.CreatorBpiSubject.publicKey,
+      this.mapper.map(
+        newBpiSubjectAccountModel.CreatorBpiSubject,
+        BpiSubject,
+        BpiSubject,
       ),
-      new BpiSubject(
-        newBpiSubjectAccountModel.OwnerBpiSubject.id,
-        newBpiSubjectAccountModel.OwnerBpiSubject.name,
-        newBpiSubjectAccountModel.OwnerBpiSubject.description,
-        newBpiSubjectAccountModel.OwnerBpiSubject.type,
-        newBpiSubjectAccountModel.OwnerBpiSubject.publicKey,
+      this.mapper.map(
+        newBpiSubjectAccountModel.OwnerBpiSubject,
+        BpiSubject,
+        BpiSubject,
       ),
     );
   }
@@ -110,19 +94,15 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
 
     return new BpiSubjectAccount(
       newBpiSubjectAccountModel.id,
-      new BpiSubject(
-        newBpiSubjectAccountModel.CreatorBpiSubject.id,
-        newBpiSubjectAccountModel.CreatorBpiSubject.name,
-        newBpiSubjectAccountModel.CreatorBpiSubject.description,
-        newBpiSubjectAccountModel.CreatorBpiSubject.type,
-        newBpiSubjectAccountModel.CreatorBpiSubject.publicKey,
+      this.mapper.map(
+        newBpiSubjectAccountModel.CreatorBpiSubject,
+        BpiSubject,
+        BpiSubject,
       ),
-      new BpiSubject(
-        newBpiSubjectAccountModel.OwnerBpiSubject.id,
-        newBpiSubjectAccountModel.OwnerBpiSubject.name,
-        newBpiSubjectAccountModel.OwnerBpiSubject.description,
-        newBpiSubjectAccountModel.OwnerBpiSubject.type,
-        newBpiSubjectAccountModel.OwnerBpiSubject.publicKey,
+      this.mapper.map(
+        newBpiSubjectAccountModel.OwnerBpiSubject,
+        BpiSubject,
+        BpiSubject,
       ),
     );
   }

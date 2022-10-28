@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '..//api/err.messages';
@@ -5,26 +7,40 @@ import { Transaction } from '../models/transaction';
 
 @Injectable()
 export class TransactionStorageAgent extends PrismaService {
+  constructor(@InjectMapper() private autoMapper: Mapper) {
+    super();
+  }
+
+  async getAllTransactions(): Promise<Transaction[]> {
+    const transactionModels = await this.transaction.findMany({
+      include: { FromBpiAccount: true, ToBpiAccount: true },
+    });
+    return transactionModels.map((transactionModel) => {
+      return new Transaction(
+        transactionModel.id,
+        transactionModel.nonce,
+        transactionModel.workflowInstanceId,
+        transactionModel.workstepInstanceId,
+        null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
+        null, // TODO: transactionModel.to once BpiAccount in the prisma schema,
+        transactionModel.payload,
+        transactionModel.signature,
+        transactionModel.status,
+      );
+    });
+  }
+
   async getTransactionById(id: string): Promise<Transaction> {
     const transactionModel = await this.transaction.findUnique({
-      where: { id: id },
+      where: { id },
+      include: { FromBpiAccount: true, ToBpiAccount: true },
     });
 
     if (!transactionModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new Transaction(
-      transactionModel.id,
-      transactionModel.nonce,
-      transactionModel.workflowInstanceId,
-      transactionModel.workstepInstanceId,
-      null, // TODO: transactionModel.from once BpiAccount in the prisma schema,
-      null, // TODO: transactionModel.to once BpiAccount in the prisma schema,
-      transactionModel.payload,
-      transactionModel.signature,
-      transactionModel.status,
-    );
+    return this.autoMapper.map(transactionModel, Transaction, Transaction);
   }
 
   async createNewTransaction(transaction: Transaction): Promise<Transaction> {
@@ -34,29 +50,19 @@ export class TransactionStorageAgent extends PrismaService {
         nonce: transaction.nonce,
         workflowInstanceId: transaction.workflowInstanceId,
         workstepInstanceId: transaction.workstepInstanceId,
-        from: '', // TODO: transactionModel.from once BpiAccount in the prisma schema,
-        to: '', // TODO: transactionModel.to once BpiAccount in the prisma schema,
+        fromBpiAccountId: transaction.FromBpiAccount.id,
+        toBpiAccountId: transaction.ToBpiAccount.id,
         payload: transaction.payload,
         signature: transaction.signature,
         status: transaction.status,
       },
     });
 
-    return new Transaction(
-      newTransactionModel.id,
-      newTransactionModel.nonce,
-      newTransactionModel.workflowInstanceId,
-      newTransactionModel.workstepInstanceId,
-      null, // TODO: newTransactionModel.from once BpiAccount in the prisma schema,
-      null, // TODO: newTransactionModel.to once BpiAccount in the prisma schema,
-      newTransactionModel.payload,
-      newTransactionModel.signature,
-      newTransactionModel.status,
-    );
+    return this.autoMapper.map(newTransactionModel, Transaction, Transaction);
   }
 
   async updateTransaction(transaction: Transaction): Promise<Transaction> {
-    const newTransactionModel = await this.transaction.update({
+    const updatedTransactionModel = await this.transaction.update({
       where: { id: transaction.id },
       data: {
         payload: transaction.payload,
@@ -64,16 +70,10 @@ export class TransactionStorageAgent extends PrismaService {
       },
     });
 
-    return new Transaction(
-      newTransactionModel.id,
-      newTransactionModel.nonce,
-      newTransactionModel.workflowInstanceId,
-      newTransactionModel.workstepInstanceId,
-      null, // TODO: newTransactionModel.from once BpiAccount in the prisma schema,
-      null, // TODO: newTransactionModel.to once BpiAccount in the prisma schema,
-      newTransactionModel.payload,
-      newTransactionModel.signature,
-      newTransactionModel.status,
+    return this.autoMapper.map(
+      updatedTransactionModel,
+      Transaction,
+      Transaction,
     );
   }
 

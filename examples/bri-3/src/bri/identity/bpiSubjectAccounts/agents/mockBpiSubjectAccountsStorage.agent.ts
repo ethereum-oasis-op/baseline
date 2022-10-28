@@ -1,14 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import Mapper from '../../../utils/mapper';
 import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
-import { getType } from 'tst-reflect';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class MockBpiSubjectAccountsStorageAgent {
-  constructor(private readonly mapper: Mapper) {}
-
   private bpiSubjectAccountsStore: BpiSubjectAccount[] = [];
 
   async getBpiSubjectAccountById(id: string): Promise<BpiSubjectAccount> {
@@ -18,35 +16,21 @@ export class MockBpiSubjectAccountsStorageAgent {
     if (!bpiSubjectAccount) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.map(
-      bpiSubjectAccount,
-      getType<BpiSubjectAccount>(),
-    ) as BpiSubjectAccount;
+    return bpiSubjectAccount;
   }
 
   async getAllBpiSubjectAccounts(): Promise<BpiSubjectAccount[]> {
-    return Promise.resolve(
-      this.bpiSubjectAccountsStore.map(
-        (bpiSubjectAccount) =>
-          this.mapper.map(
-            bpiSubjectAccount,
-            getType<BpiSubjectAccount>(),
-          ) as BpiSubjectAccount,
-      ),
-    );
+    return Promise.resolve(this.bpiSubjectAccountsStore);
   }
 
   async createNewBpiSubjectAccount(
     bpiSubjectAccount: BpiSubjectAccount,
   ): Promise<BpiSubjectAccount> {
-    const createdBp = this.mapper.map(
-      new BpiSubjectAccount(
-        v4(),
-        bpiSubjectAccount.creatorBpiSubject,
-        bpiSubjectAccount.ownerBpiSubject,
-      ),
-      getType<BpiSubjectAccount>(),
-    ) as BpiSubjectAccount;
+    const createdBp = new BpiSubjectAccount(
+      v4(),
+      bpiSubjectAccount.creatorBpiSubject,
+      bpiSubjectAccount.ownerBpiSubject,
+    );
 
     this.bpiSubjectAccountsStore.push(createdBp);
     return Promise.resolve(createdBp);

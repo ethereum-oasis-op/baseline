@@ -2,18 +2,19 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { BpiMessageDto } from '../../api/dtos/response/bpiMessage.dto';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { GetBpiMessageByIdQuery } from './getBpiMessageById.query';
-import { getType } from 'tst-reflect';
-import Mapper from '../../../utils/mapper';
 import { NotFoundException } from '@nestjs/common';
 import { NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { BpiMessage } from '../../models/bpiMessage';
 
 @QueryHandler(GetBpiMessageByIdQuery)
 export class GetBpiMessageByIdQueryHandler
   implements IQueryHandler<GetBpiMessageByIdQuery>
 {
   constructor(
+    @InjectMapper() private mapper: Mapper,
     private readonly storageAgent: BpiMessageStorageAgent,
-    private readonly mapper: Mapper,
   ) {}
 
   async execute(query: GetBpiMessageByIdQuery) {
@@ -21,9 +22,6 @@ export class GetBpiMessageByIdQueryHandler
     if (!bpiMessage) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.map(
-      bpiMessage,
-      getType<BpiMessageDto>(),
-    ) as BpiMessageDto;
+    return this.mapper.map(bpiMessage, BpiMessage, BpiMessageDto);
   }
 }
