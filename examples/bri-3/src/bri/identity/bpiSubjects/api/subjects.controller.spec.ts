@@ -13,7 +13,6 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectController } from './subjects.controller';
-import { Mapper } from '@automapper/core';
 import { SubjectsProfile } from '../subjects.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';

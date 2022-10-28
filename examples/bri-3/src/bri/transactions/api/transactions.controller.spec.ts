@@ -14,7 +14,6 @@ import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { MockTransactionStorageAgent } from '../agents/mockTransactionStorage.agent';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
-import { Mapper } from '@automapper/core';
 import { TransactionsProfile } from '../transactions.profile';
 
 describe('TransactionController', () => {

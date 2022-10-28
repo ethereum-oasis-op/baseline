@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 
 @Injectable()
 export class MockBpiSubjectStorageAgent {
