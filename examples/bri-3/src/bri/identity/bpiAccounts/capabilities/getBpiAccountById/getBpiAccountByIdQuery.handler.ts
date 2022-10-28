@@ -1,8 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { BpiSubjectAccountDto } from '../../../bpiSubjectAccounts/api/dtos/response/bpiSubjectAccount.dto';
-import { BpiSubject } from '../../../bpiSubjects/models/bpiSubject';
 import { BpiAccountStorageAgent } from '../../agents/bpiAccountsStorage.agent';
 import { BpiAccountDto } from '../../api/dtos/response/bpiAccount.dto';
 import { BpiAccount } from '../../models/bpiAccount';

@@ -1,5 +1,3 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessage } from '../models/bpiMessage';

@@ -19,7 +19,6 @@ import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubj
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
 import { SubjectAccountsProfile } from '../subjectAccounts.profile';
-import { Mapper } from '@automapper/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
