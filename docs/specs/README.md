@@ -11,7 +11,7 @@ This folder contains the specifications for the Baseline protocol, a technique w
 
 The main goal of this folder is to provide accurate reference documentation for the aspects of the protocol that are independent of language or implementation. 
 
-In addition to describing the current state of th Baseline protocol, the specs folder serves as a coordination point and a venue to drive the development of the Baseline OASIS standards. 
+In addition to describing the current state of the Baseline protocol, the specs folder serves as a coordination point and a venue to drive the development of the Baseline OASIS standards. 
 
 ## Status
 
