@@ -21,7 +21,7 @@ export class MockBpiMessageStorageAgent {
   }
 
   async createNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
-    const createdBp = new BpiMessage(
+    const createdBpiMessage = new BpiMessage(
       bpiMessage.id,
       bpiMessage.FromBpiSubject,
       bpiMessage.ToBpiSubject,
@@ -30,22 +30,22 @@ export class MockBpiMessageStorageAgent {
       bpiMessage.type,
     );
 
-    this.bpiMessagesStore.push(createdBp);
-    return Promise.resolve(createdBp);
+    this.bpiMessagesStore.push(createdBpiMessage);
+    return Promise.resolve(createdBpiMessage);
   }
 
   async updateBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
-    const bpToUpdate = this.bpiMessagesStore.find(
+    const bpiMessageToUpdate = this.bpiMessagesStore.find(
       (bp) => bp.id === bpiMessage.id,
     );
-    Object.assign(bpToUpdate, bpiMessage) as BpiMessage;
-    return Promise.resolve(bpToUpdate);
+    Object.assign(bpiMessageToUpdate, bpiMessage) as BpiMessage;
+    return Promise.resolve(bpiMessageToUpdate);
   }
 
   async deleteBpiMessage(bpiMessage: BpiMessage): Promise<void> {
-    const bpToDeleteIndex = this.bpiMessagesStore.findIndex(
+    const bpiMessageToDeleteIndex = this.bpiMessagesStore.findIndex(
       (bp) => bp.id === bpiMessage.id,
     );
-    this.bpiMessagesStore.splice(bpToDeleteIndex, 1);
+    this.bpiMessagesStore.splice(bpiMessageToDeleteIndex, 1);
   }
 }
