@@ -15,10 +15,11 @@ import { WorkgroupController } from './workgroups.controller';
 import { MockBpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectType } from '../../../identity/bpiSubjects/models/bpiSubjectType.enum';
-import Mapper from '../../../utils/mapper';
 import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -62,7 +63,13 @@ describe('WorkgroupsController', () => {
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
 
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule, SubjectModule],
+      imports: [
+        CqrsModule, 
+        SubjectModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        })
+      ],
       controllers: [WorkgroupController],
       providers: [
         WorkgroupAgent,
