@@ -60,7 +60,7 @@ export class WorkgroupController {
   }
 
   @Delete('/:id')
-  async deleteWorkgroupCommand(@Param('id') id: string): Promise<void> {
+  async deleteWorkgroup(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(new DeleteWorkgroupCommand(id));
   }
 }
