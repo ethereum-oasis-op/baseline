@@ -64,11 +64,11 @@ describe('WorkgroupsController', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
-        CqrsModule, 
+        CqrsModule,
         SubjectModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
-        })
+        }),
       ],
       controllers: [WorkgroupController],
       providers: [
