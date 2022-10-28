@@ -21,7 +21,7 @@ Anyone can become a member or learn more about the Baseline Protocol through the
 
 ## **Teams**
 
-The Baseline Protocol has 3 teams, and several focused working groups within each, where anyone can join join the bi-weekly meetings and get involved in the efforts by [**signing up**](https://www.baseline-protocol.org/get-involved/)**.**&#x20;
+The Baseline Protocol has 3 teams, and several focused working groups within each, where anyone can join the bi-weekly meetings and get involved in the efforts by [**signing up**](https://www.baseline-protocol.org/get-involved/)**.**&#x20;
 
 > ### Baseline Core Devs
 >
@@ -97,6 +97,6 @@ The community is actively sharing updates from the open source work or adjacent 
 
 #### YouTube <a href="#youtube" id="youtube"></a>
 
-The Baseline Protocol initiative maintains a [**YouTube Channel**](https://www.youtube.com/playlist?list=PLxmhMSa49Q1CVwTdcUNeoqoME6GRwtSTA) **** that includes **** [**weekly streamed community sessions**](open-source-community.md#specifications-steering-committee-1), **** [**monthly general assemblies**](open-source-community.md#specifications-steering-committee-2), appearances of Baseline Protocol members, walkthroughs & demos, and more. Anyone can propose additions to the the channel or help create Baseline Protocol video assets by joining the **** [**Outreach Team**](open-source-community.md#teams), messaging in [**Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ), or **emailing at baseline-team@oasis-open.org.**
+The Baseline Protocol initiative maintains a [**YouTube Channel**](https://www.youtube.com/playlist?list=PLxmhMSa49Q1CVwTdcUNeoqoME6GRwtSTA) **** that includes **** [**weekly streamed community sessions**](open-source-community.md#specifications-steering-committee-1), **** [**monthly general assemblies**](open-source-community.md#specifications-steering-committee-2), appearances of Baseline Protocol members, walkthroughs & demos, and more. Anyone can propose additions to the channel or help create Baseline Protocol video assets by joining the **** [**Outreach Team**](open-source-community.md#teams), messaging in [**Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ), or **emailing at baseline-team@oasis-open.org.**
 
 ​
