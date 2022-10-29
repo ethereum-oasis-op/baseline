@@ -53,7 +53,6 @@ $ npm run start:prod
 ```bash
 # Manual testing - Export of the up-to-date Postman collection that can be used is located here: ./test/bri.postman_collection.json
 
-$ npm run build
 $ npm run start
 ```
 
