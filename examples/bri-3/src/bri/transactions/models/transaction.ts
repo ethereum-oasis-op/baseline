@@ -1,6 +1,6 @@
 import { TransactionStatus } from './transactionStatus.enum';
 import { AutoMap } from '@automapper/classes';
-import { BpiSubjectAccount } from 'src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
 export class Transaction {
   @AutoMap()
