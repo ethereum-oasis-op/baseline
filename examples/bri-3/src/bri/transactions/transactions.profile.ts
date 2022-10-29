@@ -26,7 +26,8 @@ export class TransactionsProfile extends AutomapperProfile {
           (d) => d.toBpiSubjectAccountId,
           mapFrom((s) => s.toBpiSubjectAccount.id),
         ),
-      );
+      ),
+        createMap(mapper, Transaction, Transaction);
     };
   }
 }
