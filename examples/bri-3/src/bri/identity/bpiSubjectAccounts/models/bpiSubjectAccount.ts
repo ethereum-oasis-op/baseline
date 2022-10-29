@@ -11,8 +11,10 @@ export class BpiSubjectAccount {
   @AutoMap(() => BpiSubject)
   ownerBpiSubject: BpiSubject;
 
+  @AutoMap()
   creatorBpiSubjectId: string;
 
+  @AutoMap()
   ownerBpiSubjectId: string;
 
   constructor(
@@ -22,8 +24,8 @@ export class BpiSubjectAccount {
   ) {
     this.id = id;
     this.creatorBpiSubject = creatorBpiSubject;
-    this.creatorBpiSubjectId = creatorBpiSubject.id;
+    this.creatorBpiSubjectId = creatorBpiSubject?.id;
     this.ownerBpiSubject = ownerBpiSubject;
-    this.ownerBpiSubjectId = ownerBpiSubject.id;
+    this.ownerBpiSubjectId = ownerBpiSubject?.id;
   }
 }

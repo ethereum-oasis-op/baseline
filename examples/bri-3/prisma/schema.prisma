@@ -35,8 +35,8 @@ model BpiSubjectAccount {
   creatorBpiSubjectId String
   ownerBpiSubjectId   String
   bpiAccounts         BpiAccount[]
-  CreatorBpiSubject   BpiSubject   @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
-  OwnerBpiSubject     BpiSubject   @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
+  creatorBpiSubject   BpiSubject   @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
+  ownerBpiSubject     BpiSubject   @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
   sentTransactions Transaction[] @relation(name: "fromBpiSubjectAccount_fk")
   receivedTransactions Transaction[] @relation(name: "toBpiSubjectAccount_fk")
 }
