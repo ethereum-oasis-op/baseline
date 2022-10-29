@@ -15,10 +15,10 @@ export class CreateTransactionDto {
   workstepInstanceId: string;
 
   @IsNotEmpty()
-  fromAccountId: string;
+  fromSubjectAccountId: string;
 
   @IsNotEmpty()
-  toAccountId: string;
+  toSubjectAccountId: string;
 
   @IsNotEmpty()
   payload: string;
