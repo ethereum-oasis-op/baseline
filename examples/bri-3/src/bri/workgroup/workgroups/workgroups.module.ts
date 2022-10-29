@@ -10,6 +10,7 @@ import { CreateWorkgroupCommandHandler } from './capabilities/createWorkgroup/cr
 import { DeleteWorkgroupCommandHandler } from './capabilities/deleteWorkgroup/deleteWorkgroupCommand.handler';
 import { GetWorkgroupByIdQueryHandler } from './capabilities/getWorkgroupById/getWorkgroupByIdQuery.handler';
 import { UpdateWorkgroupCommandHandler } from './capabilities/updateWorkgroup/updateWorkgroupCommand.handler';
+import { WorkgroupProfile } from './workgroups.profile';
 
 export const CommandHandlers = [
   CreateWorkgroupCommandHandler,
@@ -26,6 +27,7 @@ export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
     ...QueryHandlers,
     WorkgroupAgent,
     WorkgroupStorageAgent,
+    WorkgroupProfile,
   ],
 })
 export class WorkgroupModule {}
