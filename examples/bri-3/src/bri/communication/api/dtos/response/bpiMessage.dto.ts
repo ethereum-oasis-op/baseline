@@ -6,11 +6,11 @@ export class BpiMessageDto {
   @AutoMap()
   id: string;
 
-  @AutoMap()
-  from: BpiSubjectDto;
+  @AutoMap(() => BpiSubjectDto)
+  fromBpiSubject: BpiSubjectDto;
 
-  @AutoMap()
-  to: BpiSubjectDto;
+  @AutoMap(() => BpiSubjectDto)
+  toBpiSubject: BpiSubjectDto;
 
   @AutoMap()
   content: string;

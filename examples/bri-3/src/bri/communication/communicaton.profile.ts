@@ -12,19 +12,8 @@ export class CommunicationProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(
-        mapper,
-        BpiMessage,
-        BpiMessageDto,
-        forMember(
-          (d) => d.from,
-          mapFrom((s) => s.FromBpiSubject),
-        ),
-        forMember(
-          (d) => d.to,
-          mapFrom((s) => s.ToBpiSubject),
-        ),
-      );
+      createMap(mapper, BpiMessage, BpiMessageDto);
+      createMap(mapper, BpiMessage, BpiMessage);
     };
   }
 }
