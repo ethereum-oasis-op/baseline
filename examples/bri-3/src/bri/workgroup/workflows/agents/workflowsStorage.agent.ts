@@ -42,22 +42,7 @@ export class WorkflowStorageAgent extends PrismaService {
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return new Workflow(
-        w.id,
-        w.name,
-        w.worksteps.map((ws) => {
-          return new Workstep(
-            ws.id,
-            ws.name,
-            ws.version,
-            ws.status,
-            ws.workgroupId,
-            ws.securityPolicy,
-            ws.privacyPolicy,
-          );
-        }),
-        w.workgroupId,
-      );
+      return this.mapper.map(w, Workflow, Workflow);
     });
   }
 
