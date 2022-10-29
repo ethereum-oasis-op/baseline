@@ -28,8 +28,6 @@ model BpiAccount {
   id                      String              @id @default(uuid())
   nonce                   Int
   ownerBpiSubjectAccounts BpiSubjectAccount[]
-  SentTransactions Transaction[] @relation(name: "fromBpiAccount_fk")
-  ReceivedTransactions Transaction[] @relation(name: "toBpiAccount_fk")
 }
 
 model BpiSubjectAccount {
@@ -39,6 +37,8 @@ model BpiSubjectAccount {
   bpiAccounts         BpiAccount[]
   CreatorBpiSubject   BpiSubject   @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
   OwnerBpiSubject     BpiSubject   @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
+  sentTransactions Transaction[] @relation(name: "fromBpiSubjectAccount_fk")
+  receivedTransactions Transaction[] @relation(name: "toBpiSubjectAccount_fk")
 }
 
 model Workstep {
@@ -77,10 +77,10 @@ model Transaction {
   nonce Int
   workflowInstanceId String
   workstepInstanceId String
-  fromBpiAccountId String
-  FromBpiAccount BpiAccount @relation(fields: [fromBpiAccountId], references: [id], name: "fromBpiAccount_fk")
-  toBpiAccountId String
-  ToBpiAccount BpiAccount @relation(fields: [toBpiAccountId], references: [id], name: "toBpiAccount_fk")
+  fromBpiSubjectAccountId String
+  fromBpiSubjectAccount BpiSubjectAccount @relation(fields: [fromBpiSubjectAccountId], references: [id], name: "fromBpiSubjectAccount_fk")
+  toBpiSubjectAccountId String
+  toBpiSubjectAccount BpiSubjectAccount @relation(fields: [toBpiSubjectAccountId], references: [id], name: "toBpiSubjectAccount_fk")
   payload String
   signature String
   status Int
