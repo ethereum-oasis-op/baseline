@@ -9,10 +9,10 @@
     "prebuild": "rimraf dist",
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
-    "build": "npx ttsc",
+    "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node dist/src/main",
+    "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -39,10 +39,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "ts-node-dev": "^2.0.0",
     "tslog": "^3.3.4",
-    "tst-reflect": "^0.12.0",
-    "tst-reflect-transformer": "^0.12.1",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
