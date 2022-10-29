@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
-import { Workstep } from '../../../../worksteps/models/workstep';
-import { Workflow } from '../../../../workflows/models/workflow';
-import { BpiSubject } from '../../../../../identity/bpiSubjects/models/bpiSubject';
+import { BpiSubjectDto } from '../../../../../identity/bpiSubjects/api/dtos/response/bpiSubject.dto';
+import { WorkstepDto } from '../../../../../workgroup/worksteps/api/dtos/response/workstep.dto';
+import { WorkflowDto } from '../../../../../workgroup/workflows/api/dtos/response/workflow.dto';
 
 export class WorkgroupDto {
   @AutoMap()
@@ -10,8 +10,8 @@ export class WorkgroupDto {
   @AutoMap()
   name: string;
 
-  @AutoMap(() => [BpiSubject])
-  administrators: BpiSubject[];
+  @AutoMap(() => [BpiSubjectDto])
+  administrators: BpiSubjectDto[];
 
   @AutoMap()
   securityPolicy: string;
@@ -19,12 +19,12 @@ export class WorkgroupDto {
   @AutoMap()
   privacyPolicy: string;
 
-  @AutoMap(() => [BpiSubject])
-  participants: BpiSubject[];
+  @AutoMap(() => [BpiSubjectDto])
+  participants: BpiSubjectDto[];
 
-  @AutoMap(() => [Workstep])
-  worksteps: Workstep[];
+  @AutoMap(() => [WorkstepDto])
+  worksteps: WorkstepDto[];
 
-  @AutoMap(() => [Workflow])
-  workflows: Workflow[];
+  @AutoMap(() => [WorkflowDto])
+  workflows: WorkflowDto[];
 }

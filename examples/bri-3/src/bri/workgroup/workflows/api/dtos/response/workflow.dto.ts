@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { Workstep } from '../../../../worksteps/models/workstep';
+import { WorkstepDto } from '../../../../worksteps/api/dtos/response/workstep.dto';
 
 export class WorkflowDto {
   @AutoMap()
@@ -8,8 +8,8 @@ export class WorkflowDto {
   @AutoMap()
   name: string;
 
-  @AutoMap(() => [Workstep])
-  worksteps: Workstep[];
+  @AutoMap(() => [WorkstepDto])
+  worksteps: WorkstepDto[];
 
   @AutoMap()
   workgroupId: string;
