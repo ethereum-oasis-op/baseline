@@ -16,7 +16,7 @@ export class CreateBpiAccountCommandHandler
 
   async execute(command: CreateBpiAccountCommand) {
     const ownerBpiSubjectAccounts =
-      await this.subjectAccountAgent.getOwnerBpiSubjectAccountsAndThrowIfNotExist(
+      await this.subjectAccountAgent.getBpiSubjectAccountsAndThrowIfNotExist(
         command.ownerBpiSubjectAccountsIds,
       );
 
