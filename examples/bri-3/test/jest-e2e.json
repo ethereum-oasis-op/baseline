@@ -11,11 +11,6 @@
 		"experimentalDecorators": true,
 		"typeRoots": [
 			"../node_modules/@types"
-		],
-		"plugins": [
-			{
-				"transform": "tst-reflect-transformer"
-			}
 		]
 	},
 	"include": [

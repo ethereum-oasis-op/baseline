@@ -18,12 +18,7 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "useDefineForClassFields": true,
-    "allowJs": true,
-    "plugins": [
-      {
-          "transform": "tst-reflect-transformer"
-      }
-  ]
+    "allowJs": true
   },
   "ts-node": {
     "compiler": "ttypescript"
