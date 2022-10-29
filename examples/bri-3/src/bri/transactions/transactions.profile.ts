@@ -12,21 +12,7 @@ export class TransactionsProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(
-        mapper,
-        Transaction,
-        TransactionDto,
-
-        forMember(
-          (d) => d.fromBpiSubjectAccountId,
-          mapFrom((s) => s.fromBpiSubjectAccount.id),
-        ),
-
-        forMember(
-          (d) => d.toBpiSubjectAccountId,
-          mapFrom((s) => s.toBpiSubjectAccount.id),
-        ),
-      ),
+      createMap(mapper, Transaction, TransactionDto),
         createMap(mapper, Transaction, Transaction);
     };
   }
