@@ -15,10 +15,10 @@ export class TransactionDto {
   workstepInstanceId: string;
 
   @AutoMap()
-  from: string;
+  fromBpiSubjectAccountId: string;
 
   @AutoMap()
-  to: string;
+  toBpiSubjectAccountId: string;
 
   @AutoMap()
   payload: string;

@@ -1,6 +1,6 @@
-import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { TransactionStatus } from './transactionStatus.enum';
 import { AutoMap } from '@automapper/classes';
+import { BpiSubjectAccount } from 'src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
 export class Transaction {
   @AutoMap()
@@ -15,15 +15,15 @@ export class Transaction {
   @AutoMap()
   workstepInstanceId: string;
 
-  fromBpiAccountId: string;
+  fromBpiSubjectAccountId: string;
 
-  toBpiAccountId: string;
+  toBpiSubjectAccountId: string;
 
-  @AutoMap()
-  FromBpiAccount: BpiAccount;
+  @AutoMap(() => BpiSubjectAccount)
+  fromBpiSubjectAccount: BpiSubjectAccount;
 
-  @AutoMap()
-  ToBpiAccount: BpiAccount;
+  @AutoMap(() => BpiSubjectAccount)
+  toBpiSubjectAccount: BpiSubjectAccount;
 
   @AutoMap()
   payload: string;
@@ -39,8 +39,8 @@ export class Transaction {
     nonce: number,
     workflowInstanceId: string,
     workstepInstanceId: string,
-    from: BpiAccount,
-    to: BpiAccount,
+    fromBpiSubjectAccount: BpiSubjectAccount,
+    toBpiSubjectAccount: BpiSubjectAccount,
     payload: string,
     signature: string,
     status: TransactionStatus,
@@ -49,8 +49,10 @@ export class Transaction {
     this.nonce = nonce;
     this.workflowInstanceId = workflowInstanceId;
     this.workstepInstanceId = workstepInstanceId;
-    this.FromBpiAccount = from;
-    this.FromBpiAccount = to;
+    this.fromBpiSubjectAccount = fromBpiSubjectAccount;
+    this.fromBpiSubjectAccountId = fromBpiSubjectAccount.id;
+    this.toBpiSubjectAccount = toBpiSubjectAccount;
+    this.toBpiSubjectAccountId = toBpiSubjectAccount.id;
     this.payload = payload;
     this.signature = signature;
     this.status = status;
