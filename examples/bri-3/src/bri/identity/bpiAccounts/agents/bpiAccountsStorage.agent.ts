@@ -2,8 +2,6 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
-import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
-import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
 
@@ -33,16 +31,7 @@ export class BpiAccountStorageAgent extends PrismaService {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new BpiAccount(
-      bpiAccountModel.id,
-      bpiAccountModel.ownerBpiSubjectAccounts.map((o) => {
-        return new BpiSubjectAccount(
-          o.id,
-          this.mapper.map(o.creatorBpiSubject, BpiSubject, BpiSubject),
-          this.mapper.map(o.ownerBpiSubject, BpiSubject, BpiSubject),
-        );
-      }),
-    );
+    return this.mapper.map(bpiAccountModel, BpiAccount, BpiAccount);
   }
 
   async getAllBpiAccounts(): Promise<BpiAccount[]> {
@@ -58,16 +47,7 @@ export class BpiAccountStorageAgent extends PrismaService {
     });
 
     return bpiAccountModels.map((bp) => {
-      return new BpiAccount(
-        bp.id,
-        bp.ownerBpiSubjectAccounts.map((o) => {
-          return new BpiSubjectAccount(
-            o.id,
-            this.mapper.map(o.creatorBpiSubject, BpiSubject, BpiSubject),
-            this.mapper.map(o.ownerBpiSubject, BpiSubject, BpiSubject),
-          );
-        }),
-      );
+      return this.mapper.map(bp, BpiAccount, BpiAccount);
     });
   }
 
@@ -88,7 +68,7 @@ export class BpiAccountStorageAgent extends PrismaService {
       },
     });
 
-    return new BpiAccount(newBpiAccountModel.id, []);
+    return this.mapper.map(newBpiAccountModel, BpiAccount, BpiAccount);
   }
 
   async updateBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
@@ -99,7 +79,7 @@ export class BpiAccountStorageAgent extends PrismaService {
       },
     });
 
-    return new BpiAccount(newBpiAccountModel.id, []);
+    return this.mapper.map(newBpiAccountModel, BpiAccount, BpiAccount);
   }
 
   async deleteBpiAccount(bpiAccount: BpiAccount): Promise<void> {

@@ -13,6 +13,7 @@ export class AccountsProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, BpiAccount, BpiAccountDto);
+      createMap(mapper, BpiAccount, BpiAccount);
     };
   }
 }

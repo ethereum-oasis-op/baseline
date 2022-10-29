@@ -27,11 +27,7 @@ export class BpiMessageStorageAgent extends PrismaService {
     const bpiMessageModels = await this.message.findMany();
 
     return bpiMessageModels.map((bpiMessageModel) => {
-      return this.mapper.map(
-        bpiMessageModel,
-        BpiMessage,
-        BpiMessage,
-      ) as BpiMessage;
+      return this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
     });
   }
 
@@ -48,11 +44,7 @@ export class BpiMessageStorageAgent extends PrismaService {
       include: { FromBpiSubject: true, ToBpiSubject: true },
     });
 
-    return this.mapper.map(
-      newBpiMessageModel,
-      BpiMessage,
-      BpiMessage,
-    ) as BpiMessage;
+    return this.mapper.map(newBpiMessageModel, BpiMessage, BpiMessage);
   }
 
   async updateBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
@@ -68,11 +60,7 @@ export class BpiMessageStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(
-      updatedBpiMessageModel,
-      BpiMessage,
-      BpiMessage,
-    ) as BpiMessage;
+    return this.mapper.map(updatedBpiMessageModel, BpiMessage, BpiMessage);
   }
 
   async deleteBpiMessage(bpiMessage: BpiMessage): Promise<void> {
