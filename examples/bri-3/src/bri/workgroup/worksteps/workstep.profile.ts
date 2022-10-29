@@ -13,6 +13,7 @@ export class WorkstepProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, Workstep, WorkstepDto);
+      createMap(mapper, Workstep, Workstep);
     };
   }
 }
