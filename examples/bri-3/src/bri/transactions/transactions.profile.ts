@@ -18,13 +18,13 @@ export class TransactionsProfile extends AutomapperProfile {
         TransactionDto,
 
         forMember(
-          (d) => d.from,
-          mapFrom((s) => ''),
+          (d) => d.fromBpiSubjectAccountId,
+          mapFrom((s) => s.fromBpiSubjectAccount.id),
         ),
 
         forMember(
-          (d) => d.to,
-          mapFrom((s) => ''),
+          (d) => d.toBpiSubjectAccountId,
+          mapFrom((s) => s.toBpiSubjectAccount.id),
         ),
       );
     };

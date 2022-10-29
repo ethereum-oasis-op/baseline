@@ -12,7 +12,7 @@ import {
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
-import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
 @Injectable()
 export class TransactionAgent {
@@ -27,8 +27,8 @@ export class TransactionAgent {
     nonce: number,
     workflowInstanceId: string,
     workstepInstanceId: string,
-    from: BpiAccount,
-    to: BpiAccount,
+    fromBpiSubjectAccount: BpiSubjectAccount,
+    toBpiSubjectAccount: BpiSubjectAccount,
     payload: string,
     signature: string,
   ): Transaction {
@@ -37,8 +37,8 @@ export class TransactionAgent {
       nonce,
       workflowInstanceId,
       workstepInstanceId,
-      from,
-      to,
+      fromBpiSubjectAccount,
+      toBpiSubjectAccount,
       payload,
       signature,
       TransactionStatus.Initialized,
