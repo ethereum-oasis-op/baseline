@@ -1,9 +1,8 @@
 {
 	"info": {
-		"_postman_id": "fb124fcc-bf9d-4931-8414-3cc261f703a6",
+		"_postman_id": "607e989c-e69c-4f74-bff7-91b2f3803906",
 		"name": "bri",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11201020"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -48,7 +47,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"name\": \"hello2\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
+									"raw": "{\n    \"name\": \"hello\",\n    \"desc\": \"world\",\n    \"publicKey\": \"xyz\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -315,7 +314,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"creatorBpiSubjectId\": \"f48620d3-26c3-4bd0-a4b0-37b8800f4327\",\r\n    \"ownerBpiSubjectId\": \"206bd1f7-abec-4bee-9377-3b5fa879c148\"\r\n}",
+									"raw": "{\r\n    \"creatorBpiSubjectId\": \"a9556319-60be-4655-bf02-c087e16fc0d6\",\r\n    \"ownerBpiSubjectId\": \"e2b7fa4f-ffeb-41e2-851b-f642fbffa0d1\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -866,7 +865,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"123\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromAccountId\": \"1\",\n    \"toAccountId\": \"2\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
+							"raw": "{\n    \"id\": \"id\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromSubjectAccountId\": \"6e1eb6c9-3f97-466c-96e4-5cd3e531fc39\",\n    \"toSubjectAccountId\": \"3804b898-40e5-4941-8fc2-98166b56ecea\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -934,7 +933,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/transactions/123",
+							"raw": "http://localhost:3000/transactions/id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -942,7 +941,26 @@
 							"port": "3000",
 							"path": [
 								"transactions",
-								"123"
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions"
 							]
 						}
 					},
