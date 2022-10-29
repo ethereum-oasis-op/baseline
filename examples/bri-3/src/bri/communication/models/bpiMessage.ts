@@ -7,13 +7,13 @@ export class BpiMessage {
   id: string;
 
   @AutoMap()
-  FromBpiSubject: BpiSubject;
+  fromBpiSubject: BpiSubject;
 
   @AutoMap()
   fromBpiSubjectId: string;
 
   @AutoMap()
-  ToBpiSubject: BpiSubject;
+  toBpiSubject: BpiSubject;
 
   @AutoMap()
   toBpiSubjectId: string;
@@ -36,8 +36,8 @@ export class BpiMessage {
     type: BpiMessageType,
   ) {
     this.id = id;
-    this.FromBpiSubject = from;
-    this.ToBpiSubject = to;
+    this.fromBpiSubject = from;
+    this.toBpiSubject = to;
     this.content = content;
     this.signature = signature;
     this.type = type;

@@ -14,7 +14,7 @@ export class BpiMessageStorageAgent extends PrismaService {
   async getBpiMessageById(id: string): Promise<BpiMessage> {
     const bpiMessageModel = await this.message.findUnique({
       where: { id },
-      include: { FromBpiSubject: true, ToBpiSubject: true },
+      include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
     if (!bpiMessageModel) {
@@ -36,13 +36,13 @@ export class BpiMessageStorageAgent extends PrismaService {
     const newBpiMessageModel = await this.message.create({
       data: {
         id: bpiMessage.id,
-        fromBpiSubjectId: bpiMessage.FromBpiSubject.id,
-        toBpiSubjectId: bpiMessage.ToBpiSubject.id,
+        fromBpiSubjectId: bpiMessage.fromBpiSubject.id,
+        toBpiSubjectId: bpiMessage.toBpiSubject.id,
         content: bpiMessage.content,
         signature: bpiMessage.signature,
         type: bpiMessage.type,
       },
-      include: { FromBpiSubject: true, ToBpiSubject: true },
+      include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
     return this.mapper.map(newBpiMessageModel, BpiMessage, BpiMessage);
@@ -53,13 +53,13 @@ export class BpiMessageStorageAgent extends PrismaService {
       where: { id: bpiMessage.id },
       data: {
         id: bpiMessage.id,
-        fromBpiSubjectId: bpiMessage.FromBpiSubject.id,
-        toBpiSubjectId: bpiMessage.ToBpiSubject.id,
+        fromBpiSubjectId: bpiMessage.fromBpiSubject.id,
+        toBpiSubjectId: bpiMessage.toBpiSubject.id,
         content: bpiMessage.content,
         signature: bpiMessage.signature,
         type: bpiMessage.type,
       },
-      include: { FromBpiSubject: true, ToBpiSubject: true },
+      include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
     return this.mapper.map(updatedBpiMessageModel, BpiMessage, BpiMessage);
