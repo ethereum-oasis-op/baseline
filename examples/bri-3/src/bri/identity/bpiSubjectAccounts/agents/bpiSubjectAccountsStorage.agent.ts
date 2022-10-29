@@ -18,7 +18,7 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
   async getBpiSubjectAccountById(id: string): Promise<BpiSubjectAccount> {
     const bpiSubjectAccountModel = await this.bpiSubjectAccount.findUnique({
       where: { id: id },
-      include: { OwnerBpiSubject: true, CreatorBpiSubject: true },
+      include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
 
     if (!bpiSubjectAccountModel) {
@@ -28,12 +28,12 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     return new BpiSubjectAccount(
       bpiSubjectAccountModel.id,
       this.mapper.map(
-        bpiSubjectAccountModel.CreatorBpiSubject,
+        bpiSubjectAccountModel.creatorBpiSubject,
         BpiSubject,
         BpiSubject,
       ),
       this.mapper.map(
-        bpiSubjectAccountModel.OwnerBpiSubject,
+        bpiSubjectAccountModel.ownerBpiSubject,
         BpiSubject,
         BpiSubject,
       ),
@@ -42,13 +42,13 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
 
   async getAllBpiSubjectAccounts(): Promise<BpiSubjectAccount[]> {
     const bpiSubjectAccountsModels = await this.bpiSubjectAccount.findMany({
-      include: { OwnerBpiSubject: true, CreatorBpiSubject: true },
+      include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
     return bpiSubjectAccountsModels.map((bp) => {
       return new BpiSubjectAccount(
         bp.id,
-        this.mapper.map(bp.CreatorBpiSubject, BpiSubject, BpiSubject),
-        this.mapper.map(bp.OwnerBpiSubject, BpiSubject, BpiSubject),
+        this.mapper.map(bp.creatorBpiSubject, BpiSubject, BpiSubject),
+        this.mapper.map(bp.ownerBpiSubject, BpiSubject, BpiSubject),
       );
     });
   }
@@ -62,18 +62,18 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
         creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
         ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
       },
-      include: { OwnerBpiSubject: true, CreatorBpiSubject: true },
+      include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
 
     return new BpiSubjectAccount(
       newBpiSubjectAccountModel.id,
       this.mapper.map(
-        newBpiSubjectAccountModel.CreatorBpiSubject,
+        newBpiSubjectAccountModel.creatorBpiSubject,
         BpiSubject,
         BpiSubject,
       ),
       this.mapper.map(
-        newBpiSubjectAccountModel.OwnerBpiSubject,
+        newBpiSubjectAccountModel.ownerBpiSubject,
         BpiSubject,
         BpiSubject,
       ),
@@ -89,18 +89,18 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
         creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
         ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
       },
-      include: { OwnerBpiSubject: true, CreatorBpiSubject: true },
+      include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
 
     return new BpiSubjectAccount(
       newBpiSubjectAccountModel.id,
       this.mapper.map(
-        newBpiSubjectAccountModel.CreatorBpiSubject,
+        newBpiSubjectAccountModel.creatorBpiSubject,
         BpiSubject,
         BpiSubject,
       ),
       this.mapper.map(
-        newBpiSubjectAccountModel.OwnerBpiSubject,
+        newBpiSubjectAccountModel.ownerBpiSubject,
         BpiSubject,
         BpiSubject,
       ),

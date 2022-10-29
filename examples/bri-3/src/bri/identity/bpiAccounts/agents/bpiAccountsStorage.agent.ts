@@ -22,8 +22,8 @@ export class BpiAccountStorageAgent extends PrismaService {
       include: {
         ownerBpiSubjectAccounts: {
           include: {
-            CreatorBpiSubject: true,
-            OwnerBpiSubject: true,
+            creatorBpiSubject: true,
+            ownerBpiSubject: true,
           },
         },
       },
@@ -38,8 +38,8 @@ export class BpiAccountStorageAgent extends PrismaService {
       bpiAccountModel.ownerBpiSubjectAccounts.map((o) => {
         return new BpiSubjectAccount(
           o.id,
-          this.mapper.map(o.CreatorBpiSubject, BpiSubject, BpiSubject),
-          this.mapper.map(o.OwnerBpiSubject, BpiSubject, BpiSubject),
+          this.mapper.map(o.creatorBpiSubject, BpiSubject, BpiSubject),
+          this.mapper.map(o.ownerBpiSubject, BpiSubject, BpiSubject),
         );
       }),
     );
@@ -50,8 +50,8 @@ export class BpiAccountStorageAgent extends PrismaService {
       include: {
         ownerBpiSubjectAccounts: {
           include: {
-            CreatorBpiSubject: true,
-            OwnerBpiSubject: true,
+            creatorBpiSubject: true,
+            ownerBpiSubject: true,
           },
         },
       },
@@ -63,8 +63,8 @@ export class BpiAccountStorageAgent extends PrismaService {
         bp.ownerBpiSubjectAccounts.map((o) => {
           return new BpiSubjectAccount(
             o.id,
-            this.mapper.map(o.CreatorBpiSubject, BpiSubject, BpiSubject),
-            this.mapper.map(o.OwnerBpiSubject, BpiSubject, BpiSubject),
+            this.mapper.map(o.creatorBpiSubject, BpiSubject, BpiSubject),
+            this.mapper.map(o.ownerBpiSubject, BpiSubject, BpiSubject),
           );
         }),
       );
