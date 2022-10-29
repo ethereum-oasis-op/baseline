@@ -1,7 +1,6 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '..//api/err.messages';
 import { Transaction } from '../models/transaction';
@@ -17,32 +16,27 @@ export class TransactionStorageAgent extends PrismaService {
       include: { fromBpiSubjectAccount: true, toBpiSubjectAccount: true },
     });
     return transactionModels.map((transactionModel) => {
-      return new Transaction(
-        transactionModel.id,
-        transactionModel.nonce,
-        transactionModel.workflowInstanceId,
-        transactionModel.workstepInstanceId,
-        this.mapper.map(
-          transactionModel.fromBpiSubjectAccount,
-          BpiSubjectAccount,
-          BpiSubjectAccount,
-        ),
-        this.mapper.map(
-          transactionModel.toBpiSubjectAccount,
-          BpiSubjectAccount,
-          BpiSubjectAccount,
-        ),
-        transactionModel.payload,
-        transactionModel.signature,
-        transactionModel.status,
-      );
+      return this.mapper.map(transactionModel, Transaction, Transaction);
     });
   }
 
   async getTransactionById(id: string): Promise<Transaction> {
     const transactionModel = await this.transaction.findUnique({
       where: { id },
-      include: { fromBpiSubjectAccount: true, toBpiSubjectAccount: true },
+      include: {
+        fromBpiSubjectAccount: {
+          include: {
+            ownerBpiSubject: true,
+            creatorBpiSubject: true,
+          },
+        },
+        toBpiSubjectAccount: {
+          include: {
+            ownerBpiSubject: true,
+            creatorBpiSubject: true,
+          },
+        },
+      },
     });
 
     if (!transactionModel) {
@@ -59,11 +53,25 @@ export class TransactionStorageAgent extends PrismaService {
         nonce: transaction.nonce,
         workflowInstanceId: transaction.workflowInstanceId,
         workstepInstanceId: transaction.workstepInstanceId,
-        fromBpiSubjectAccountId: transaction.fromBpiSubjectAccount.id,
-        toBpiSubjectAccountId: transaction.toBpiSubjectAccount.id,
+        fromBpiSubjectAccountId: transaction.fromBpiSubjectAccountId,
+        toBpiSubjectAccountId: transaction.toBpiSubjectAccountId,
         payload: transaction.payload,
         signature: transaction.signature,
         status: transaction.status,
+      },
+      include: {
+        fromBpiSubjectAccount: {
+          include: {
+            ownerBpiSubject: true,
+            creatorBpiSubject: true,
+          },
+        },
+        toBpiSubjectAccount: {
+          include: {
+            ownerBpiSubject: true,
+            creatorBpiSubject: true,
+          },
+        },
       },
     });
 

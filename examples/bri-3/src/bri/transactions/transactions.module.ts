@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { SubjectAccountModule } from '../identity/bpiSubjectAccounts/subjectAccounts.module';
 import { TransactionAgent } from './agents/transactions.agent';
 import { TransactionStorageAgent } from './agents/transactionStorage.agent';
 import { TransactionController } from './api/transactions.controller';
@@ -22,7 +23,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, SubjectAccountModule],
   controllers: [TransactionController],
   providers: [
     ...CommandHandlers,
