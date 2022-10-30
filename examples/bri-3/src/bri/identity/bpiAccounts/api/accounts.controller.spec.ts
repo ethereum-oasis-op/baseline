@@ -23,7 +23,7 @@ import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubj
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
-import { AccountsProfile } from '../subject.accounts.profile';
+import { AccountsProfile } from '../accounts.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';

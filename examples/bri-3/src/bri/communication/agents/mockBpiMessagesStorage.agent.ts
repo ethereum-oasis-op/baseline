@@ -21,8 +21,8 @@ export class MockBpiMessageStorageAgent {
   async createNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
     const createdBpiMessage = new BpiMessage(
       bpiMessage.id,
-      bpiMessage.FromBpiSubject,
-      bpiMessage.ToBpiSubject,
+      bpiMessage.fromBpiSubject,
+      bpiMessage.toBpiSubject,
       bpiMessage.content,
       bpiMessage.signature,
       bpiMessage.type,

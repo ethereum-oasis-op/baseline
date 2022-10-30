@@ -25,18 +25,10 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new BpiSubjectAccount(
-      bpiSubjectAccountModel.id,
-      this.mapper.map(
-        bpiSubjectAccountModel.creatorBpiSubject,
-        BpiSubject,
-        BpiSubject,
-      ),
-      this.mapper.map(
-        bpiSubjectAccountModel.ownerBpiSubject,
-        BpiSubject,
-        BpiSubject,
-      ),
+    return this.mapper.map(
+      bpiSubjectAccountModel,
+      BpiSubjectAccount,
+      BpiSubjectAccount,
     );
   }
 
@@ -45,11 +37,7 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
       include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
     return bpiSubjectAccountsModels.map((bp) => {
-      return new BpiSubjectAccount(
-        bp.id,
-        this.mapper.map(bp.creatorBpiSubject, BpiSubject, BpiSubject),
-        this.mapper.map(bp.ownerBpiSubject, BpiSubject, BpiSubject),
-      );
+      return this.mapper.map(bp, BpiSubjectAccount, BpiSubjectAccount);
     });
   }
 
@@ -57,7 +45,6 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     bpiSubjectAccount: BpiSubjectAccount,
   ): Promise<BpiSubjectAccount> {
     const newBpiSubjectAccountModel = await this.bpiSubjectAccount.create({
-      // TODO: Write generic mapper domainObject -> prismaModel
       data: {
         creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
         ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
@@ -65,18 +52,10 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
       include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
 
-    return new BpiSubjectAccount(
-      newBpiSubjectAccountModel.id,
-      this.mapper.map(
-        newBpiSubjectAccountModel.creatorBpiSubject,
-        BpiSubject,
-        BpiSubject,
-      ),
-      this.mapper.map(
-        newBpiSubjectAccountModel.ownerBpiSubject,
-        BpiSubject,
-        BpiSubject,
-      ),
+    return this.mapper.map(
+      newBpiSubjectAccountModel,
+      BpiSubjectAccount,
+      BpiSubjectAccount,
     );
   }
 
@@ -92,18 +71,10 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
       include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
 
-    return new BpiSubjectAccount(
-      newBpiSubjectAccountModel.id,
-      this.mapper.map(
-        newBpiSubjectAccountModel.creatorBpiSubject,
-        BpiSubject,
-        BpiSubject,
-      ),
-      this.mapper.map(
-        newBpiSubjectAccountModel.ownerBpiSubject,
-        BpiSubject,
-        BpiSubject,
-      ),
+    return this.mapper.map(
+      newBpiSubjectAccountModel,
+      BpiSubjectAccount,
+      BpiSubjectAccount,
     );
   }
 

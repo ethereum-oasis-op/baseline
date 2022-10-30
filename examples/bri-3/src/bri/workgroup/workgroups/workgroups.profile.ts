@@ -1,18 +1,19 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { BpiAccountDto } from './api/dtos/response/bpiAccount.dto';
-import { BpiAccount } from './models/bpiAccount';
+import { Workgroup } from './models/workgroup';
+import { WorkgroupDto } from './api/dtos/response/workgroup.dto';
 
 @Injectable()
-export class AccountsProfile extends AutomapperProfile {
+export class WorkgroupProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, BpiAccount, BpiAccountDto);
+      createMap(mapper, Workgroup, Workgroup);
+      createMap(mapper, Workgroup, WorkgroupDto);
     };
   }
 }

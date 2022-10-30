@@ -1,14 +1,30 @@
-import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
-import { Workflow } from 'src/bri/workgroup/workflows/models/workflow';
-import { Workstep } from 'src/bri/workgroup/worksteps/models/workstep';
+import { AutoMap } from '@automapper/classes';
+import { BpiSubjectDto } from '../../../../../identity/bpiSubjects/api/dtos/response/bpiSubject.dto';
+import { WorkstepDto } from '../../../../../workgroup/worksteps/api/dtos/response/workstep.dto';
+import { WorkflowDto } from '../../../../../workgroup/workflows/api/dtos/response/workflow.dto';
 
-export interface WorkgroupDto {
+export class WorkgroupDto {
+  @AutoMap()
   id: string;
+
+  @AutoMap()
   name: string;
-  administrators: BpiSubject[];
+
+  @AutoMap(() => [BpiSubjectDto])
+  administrators: BpiSubjectDto[];
+
+  @AutoMap()
   securityPolicy: string;
+
+  @AutoMap()
   privacyPolicy: string;
-  participants: BpiSubject[];
-  worksteps: Workstep[];
-  workflows: Workflow[];
+
+  @AutoMap(() => [BpiSubjectDto])
+  participants: BpiSubjectDto[];
+
+  @AutoMap(() => [WorkstepDto])
+  worksteps: WorkstepDto[];
+
+  @AutoMap(() => [WorkflowDto])
+  workflows: WorkflowDto[];
 }

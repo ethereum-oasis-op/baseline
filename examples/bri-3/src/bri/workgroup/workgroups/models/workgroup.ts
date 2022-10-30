@@ -1,15 +1,31 @@
 import { Workstep } from '../../worksteps/models/workstep';
 import { Workflow } from '../../workflows/models/workflow';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
+import { AutoMap } from '@automapper/classes';
 
 export class Workgroup {
+  @AutoMap()
   id: string; // TODO: Add uuid after #491
+
+  @AutoMap()
   name: string;
+
+  @AutoMap(() => [BpiSubject])
   administrators: BpiSubject[];
+
+  @AutoMap()
   securityPolicy: string; //TODO Implement securityPolicy #485
+
+  @AutoMap()
   privacyPolicy: string; //TODO Implement privacyPolicy #485
+
+  @AutoMap(() => [BpiSubject])
   participants: BpiSubject[];
+
+  @AutoMap(() => [Workstep])
   worksteps: Workstep[];
+
+  @AutoMap(() => [Workflow])
   workflows: Workflow[];
 
   constructor(

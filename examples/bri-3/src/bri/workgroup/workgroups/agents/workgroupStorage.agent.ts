@@ -5,9 +5,15 @@ import { Workflow } from '../../workflows/models/workflow';
 import { Workstep } from '../../worksteps/models/workstep';
 import { Workgroup } from '../models/workgroup';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 @Injectable()
 export class WorkgroupStorageAgent extends PrismaService {
+  constructor(@InjectMapper() private mapper: Mapper) {
+    super();
+  }
+
   async getWorkgroupById(id: string): Promise<Workgroup> {
     const workgroupModel = await this.workgroup.findUnique({
       where: { id: id },
@@ -25,43 +31,7 @@ export class WorkgroupStorageAgent extends PrismaService {
       throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new Workgroup(
-      workgroupModel.id,
-      workgroupModel.name,
-      workgroupModel.administrators.map((a) => {
-        return new BpiSubject(a.id, a.name, a.description, a.type, a.publicKey);
-      }),
-      workgroupModel.securityPolicy,
-      workgroupModel.privacyPolicy,
-      workgroupModel.participants.map((p) => {
-        return new BpiSubject(p.id, p.name, p.description, p.type, p.publicKey);
-      }),
-      workgroupModel.worksteps.map((w) => {
-        return new Workstep(
-          w.id,
-          w.name,
-          w.version,
-          w.status,
-          w.workgroupId,
-          w.securityPolicy,
-          w.privacyPolicy,
-        );
-      }),
-      workgroupModel.workflows.map((w) => {
-        const worksteps = w.worksteps.map((ws) => {
-          return new Workstep(
-            ws.id,
-            ws.name,
-            ws.version,
-            ws.status,
-            ws.workgroupId,
-            ws.securityPolicy,
-            ws.privacyPolicy,
-          );
-        });
-        return new Workflow(w.id, w.name, worksteps, w.workgroupId);
-      }),
-    );
+    return this.mapper.map(workgroupModel, Workgroup, Workgroup);
   }
 
   async createNewWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -100,43 +70,7 @@ export class WorkgroupStorageAgent extends PrismaService {
       },
     });
 
-    return new Workgroup(
-      newWorkgroupModel.id,
-      newWorkgroupModel.name,
-      newWorkgroupModel.administrators.map((a) => {
-        return new BpiSubject(a.id, a.name, a.description, a.type, a.publicKey);
-      }),
-      newWorkgroupModel.securityPolicy,
-      newWorkgroupModel.privacyPolicy,
-      newWorkgroupModel.participants.map((p) => {
-        return new BpiSubject(p.id, p.name, p.description, p.type, p.publicKey);
-      }),
-      newWorkgroupModel.worksteps.map((w) => {
-        return new Workstep(
-          w.id,
-          w.name,
-          w.version,
-          w.status,
-          w.workgroupId,
-          w.securityPolicy,
-          w.privacyPolicy,
-        );
-      }),
-      newWorkgroupModel.workflows.map((w) => {
-        const worksteps = w.worksteps.map((ws) => {
-          return new Workstep(
-            ws.id,
-            ws.name,
-            ws.version,
-            ws.status,
-            ws.workgroupId,
-            ws.securityPolicy,
-            ws.privacyPolicy,
-          );
-        });
-        return new Workflow(w.id, w.name, worksteps, w.workgroupId);
-      }),
-    );
+    return this.mapper.map(newWorkgroupModel, Workgroup, Workgroup);
   }
 
   async updateWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -173,43 +107,7 @@ export class WorkgroupStorageAgent extends PrismaService {
       },
     });
 
-    return new Workgroup(
-      updatedWorkgroupModel.id,
-      updatedWorkgroupModel.name,
-      updatedWorkgroupModel.administrators.map((a) => {
-        return new BpiSubject(a.id, a.name, a.description, a.type, a.publicKey);
-      }),
-      updatedWorkgroupModel.securityPolicy,
-      updatedWorkgroupModel.privacyPolicy,
-      updatedWorkgroupModel.participants.map((p) => {
-        return new BpiSubject(p.id, p.name, p.description, p.type, p.publicKey);
-      }),
-      updatedWorkgroupModel.worksteps.map((w) => {
-        return new Workstep(
-          w.id,
-          w.name,
-          w.version,
-          w.status,
-          w.workgroupId,
-          w.securityPolicy,
-          w.privacyPolicy,
-        );
-      }),
-      updatedWorkgroupModel.workflows.map((w) => {
-        const worksteps = w.worksteps.map((ws) => {
-          return new Workstep(
-            ws.id,
-            ws.name,
-            ws.version,
-            ws.status,
-            ws.workgroupId,
-            ws.securityPolicy,
-            ws.privacyPolicy,
-          );
-        });
-        return new Workflow(w.id, w.name, worksteps, w.workgroupId);
-      }),
-    );
+    return this.mapper.map(updatedWorkgroupModel, Workgroup, Workgroup);
   }
 
   async deleteWorkgroup(workgroup: Workgroup): Promise<void> {
