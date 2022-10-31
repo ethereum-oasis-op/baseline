@@ -8,6 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Public } from 'src/bri/decorators/public-endpoint';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
 import { DeleteBpiSubjectCommand } from '../capabilities/deleteBpiSubject/deleteBpiSubject.command';
 import { GetAllBpiSubjectsQuery } from '../capabilities/getAllBpiSubjects/getAllBpiSubjects.query';
@@ -26,6 +27,7 @@ export class SubjectController {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
   }
 
+  @Public()
   @Get()
   async getAllBpiSubjects(): Promise<BpiSubjectDto[]> {
     return await this.queryBus.execute(new GetAllBpiSubjectsQuery());

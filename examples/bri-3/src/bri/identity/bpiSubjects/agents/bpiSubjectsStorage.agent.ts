@@ -27,6 +27,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.bpiSubject.findMany();
+    console.log('bpiSubjectModels', bpiSubjectModels);
     return bpiSubjectModels.map((bpiSubjectModel) => {
       return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
     });
