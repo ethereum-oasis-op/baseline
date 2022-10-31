@@ -11,8 +11,12 @@ export class ProofStorageAgent {
     await this.storageAgent.store(proof.payload);
   }
 
-  async verifyProofInShieldContract(proofToVerify: string): Promise<boolean> {
-    const verified = await this.storageAgent.verify(proofToVerify);
+  async verifyProofInShieldContract(
+    publicInputForProofVerification: string,
+  ): Promise<boolean> {
+    const verified = await this.storageAgent.verify(
+      publicInputForProofVerification,
+    );
     return verified;
   }
 }

@@ -16,7 +16,6 @@ export class CreateProofCommandHandler
     this.agent.throwIfProofInputInvalid(command.document);
 
     const newProof = this.agent.createNewProof(
-      command.id,
       null, // TODO: Fetch BpiAccount based on id ,
       command.document,
       command.signature,
