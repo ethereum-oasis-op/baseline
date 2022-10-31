@@ -12,7 +12,7 @@ export class ProofAgent {
   constructor(private storageAgent: ProofStorageAgent) {}
 
   public throwIfProofInputInvalid(document: string): boolean {
-    if (document == '') {
+    if (document === '') {
       throw new BadRequestException(INVALID_PROOF_INPUT);
     }
     return true;
