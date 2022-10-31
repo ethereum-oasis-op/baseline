@@ -7,7 +7,6 @@ describe('CreateProofDto', () => {
   it('should return error in case document not provided.', async () => {
     // Arrange
     const dto = {
-      id: '123',
       ownerAccountId: '123',
       signature: '123',
     };
@@ -43,7 +42,6 @@ describe('CreateProofDto', () => {
   it('should return no error if all required properties provided.', async () => {
     // Arrange
     const dto = {
-      id: '123',
       ownerAccountId: '123',
       document: '123',
       signature: '123',

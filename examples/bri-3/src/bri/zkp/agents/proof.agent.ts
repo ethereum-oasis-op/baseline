@@ -3,10 +3,10 @@ import {
   INVALID_PROOF_INPUT,
   NOT_FOUND_ERR_MESSAGE,
 } from '../api/err.messages';
+import { v4 as uuidv4 } from 'uuid';
 import { Proof } from '../models/proof';
 import { ProofStorageAgent } from './proofStorage.agent';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
-
 @Injectable()
 export class ProofAgent {
   constructor(private storageAgent: ProofStorageAgent) {}
@@ -19,7 +19,6 @@ export class ProofAgent {
   }
 
   public createNewProof(
-    id: string,
     owner: BpiAccount,
     document: string,
     signature: string,
@@ -27,7 +26,7 @@ export class ProofAgent {
     const payload =
       this.convertDocumentToPayloadAndThrowIfDocumentValidationFails(document);
 
-    return new Proof(id, owner, payload, signature);
+    return new Proof(uuidv4(), owner, payload, signature);
   }
 
   public async verifyDocumentWithProof(document: string): Promise<boolean> {

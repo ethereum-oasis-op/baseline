@@ -14,7 +14,6 @@ export class ProofController {
   async createProof(@Body() requestDto: CreateProofDto): Promise<ProofDto> {
     return await this.commandBus.execute(
       new CreateProofCommand(
-        requestDto.id,
         requestDto.ownerAccountId,
         requestDto.document,
         requestDto.signature,

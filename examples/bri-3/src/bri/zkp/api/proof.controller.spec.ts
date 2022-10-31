@@ -34,7 +34,6 @@ describe('ProofController', () => {
     it('should throw BadRequest if document parameter is empty', async () => {
       // Arrange
       const missingDocumentParam = {
-        id: '123',
         ownerAccountId: '123',
         document: '',
         signature: '123',
@@ -49,7 +48,6 @@ describe('ProofController', () => {
     it('should return the correct transaction if proper document passed ', async () => {
       // Arrange
       const requestDto = {
-        id: '123',
         ownerAccountId: 'from',
         document: 'document1',
         signature: 'signature',
@@ -59,7 +57,6 @@ describe('ProofController', () => {
       const createdProof = await controller.createProof(requestDto);
 
       // Assert
-      expect(createdProof.id).toEqual(requestDto.id);
       expect(createdProof.owner).toEqual(requestDto.ownerAccountId);
       expect(createdProof.payload).toEqual('document1'); // TODO: Add merkle root of document as payload
       expect(createdProof.signature).toEqual(requestDto.signature);
