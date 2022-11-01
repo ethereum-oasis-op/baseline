@@ -25,7 +25,12 @@ describe('CreateProofDto', () => {
 
   it('should return error in case signature not provided.', async () => {
     // Arrange
-    const dto = { document: 'this is a description' };
+    const dto = {
+      document: {
+        documentObjectType: 'document',
+        documentObjectInput: { input: 'This is a document' },
+      },
+    };
     const createProofDto = plainToInstance(CreateProofDto, dto);
 
     // Act
@@ -43,7 +48,10 @@ describe('CreateProofDto', () => {
     // Arrange
     const dto = {
       ownerAccountId: '123',
-      document: '123',
+      document: {
+        documentObjectType: 'document',
+        documentObjectInput: { input: 'This is a document' },
+      },
       signature: '123',
     };
     const createProofDto = plainToInstance(CreateProofDto, dto);

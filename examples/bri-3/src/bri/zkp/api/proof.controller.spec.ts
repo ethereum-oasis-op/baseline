@@ -1,7 +1,7 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INVALID_PROOF_INPUT, NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import { INVALID_PROOF_INPUT } from './err.messages';
 import { ProofController } from './proof.controller';
 import { ProofAgent } from '../agents/proof.agent';
 import { CreateProofCommandHandler } from '../capabilities/createProof/createProofCommand.handler';
@@ -35,7 +35,10 @@ describe('ProofController', () => {
       // Arrange
       const missingDocumentParam = {
         ownerAccountId: '123',
-        document: '',
+        document: {
+          documentObjectType: '',
+          documentObjectInput: {},
+        },
         signature: '123',
       };
 
@@ -49,7 +52,10 @@ describe('ProofController', () => {
       // Arrange
       const requestDto = {
         ownerAccountId: 'from',
-        document: 'document1',
+        document: {
+          documentObjectType: 'document',
+          documentObjectInput: { input: 'document1' },
+        },
         signature: 'signature',
       } as CreateProofDto;
 
@@ -67,7 +73,10 @@ describe('ProofController', () => {
     it('should throw BadRequest if document parameter is missing', async () => {
       // Arrange
       const missingDocumentParam = {
-        document: '',
+        document: {
+          documentObjectType: '',
+          documentObjectInput: {},
+        },
         signature: '123',
       };
 
@@ -80,7 +89,10 @@ describe('ProofController', () => {
     it('should perform the verification if document is provided', async () => {
       // Arrange
       const verifyRequestDto = {
-        document: 'document1',
+        document: {
+          documentObjectType: 'document',
+          documentObjectInput: { input: 'document1' },
+        },
         signature: '123',
       } as VerifyProofDto;
 

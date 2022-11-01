@@ -1,8 +1,9 @@
 import { IsNotEmpty } from 'class-validator';
+import DocumentObject from '../../../types/document';
 
 export class VerifyProofDto {
   @IsNotEmpty()
-  document: any;
+  document: DocumentObject;
 
   @IsNotEmpty()
   signature: string;

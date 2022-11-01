@@ -22,7 +22,12 @@ describe('VerifyProofDto', () => {
 
   it('should return error in case signature not provided.', async () => {
     // Arrange
-    const dto = { document: 'this is a description' };
+    const dto = {
+      document: {
+        documentObjectType: 'document',
+        documentObjectInput: { input: 'This is a document' },
+      },
+    };
     const verifyProofDto = plainToInstance(VerifyProofDto, dto);
 
     // Act
@@ -38,7 +43,13 @@ describe('VerifyProofDto', () => {
 
   it('should return no error if all required properties provided.', async () => {
     // Arrange
-    const dto = { document: 'this is a description', signature: '2323' };
+    const dto = {
+      document: {
+        documentObjectType: 'document',
+        documentObjectInput: { input: 'This is a document' },
+      },
+      signature: '2323',
+    };
     const verifyProofDto = plainToInstance(VerifyProofDto, dto);
 
     // Act
