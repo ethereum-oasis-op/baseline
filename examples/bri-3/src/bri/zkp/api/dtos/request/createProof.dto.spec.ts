@@ -26,13 +26,13 @@ describe('CreateProofDto', () => {
   it('should return error in case signature not provided.', async () => {
     // Arrange
     const dto = { document: 'this is a description' };
-    const verifyProofDto = plainToInstance(CreateProofDto, dto);
+    const createProofDto = plainToInstance(CreateProofDto, dto);
 
     // Act
-    const errors = await validate(verifyProofDto);
+    const errors = await validate(createProofDto);
 
     // Assert
-    expect(errors.length).toBe(1);
+    expect(errors.length).toBe(2);
     expect(errors[0].property).toEqual('signature');
     expect(errors[0].constraints.isNotEmpty).toContain(
       'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,

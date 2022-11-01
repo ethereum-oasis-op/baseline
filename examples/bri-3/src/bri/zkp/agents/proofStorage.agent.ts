@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BlockchainService } from '../../../../blockchain/blockchain.service';
+import { BlockchainService } from '../components/blockchain/blockchain.service';
 
 import { Proof } from '../models/proof';
 
