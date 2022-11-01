@@ -13,14 +13,22 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectController } from './subjects.controller';
-import Mapper from '../../../utils/mapper';
+import { SubjectsProfile } from '../subjects.profile';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [SubjectController],
       providers: [
         BpiSubjectAgent,
@@ -30,11 +38,11 @@ describe('SubjectController', () => {
         GetBpiSubjectByIdQueryHandler,
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
-        Mapper,
+        SubjectsProfile,
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(new MockBpiSubjectStorageAgent(new Mapper()))
+      .useValue(new MockBpiSubjectStorageAgent())
       .compile();
 
     sController = app.get<SubjectController>(SubjectController);
@@ -77,7 +85,7 @@ describe('SubjectController', () => {
   });
 
   describe('getAllBpiSubjects', () => {
-    it('should return emtpy array if not bpi subjects ', async () => {
+    it('should return empty array if no bpi subjects ', async () => {
       // Act
       const bpiSubjects = await sController.getAllBpiSubjects();
 
@@ -143,7 +151,8 @@ describe('SubjectController', () => {
       const response = await sController.createBpiSubject(requestDto);
 
       // Assert
-      expect(response.length).toEqual(36);
+      expect(uuidValidate(response));
+      expect(uuidVersion(response)).toEqual(4);
     });
   });
 

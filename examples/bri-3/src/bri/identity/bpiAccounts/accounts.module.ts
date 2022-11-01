@@ -1,7 +1,34 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { SubjectAccountModule } from '../bpiSubjectAccounts/subjectAccounts.module';
+import { BpiAccountAgent } from './agents/bpiAccounts.agent';
+import { BpiAccountStorageAgent } from './agents/bpiAccountsStorage.agent';
+import { AccountController } from './api/accounts.controller';
+import { CreateBpiAccountCommandHandler } from './capabilities/createBpiAccount/createBpiAccountCommand.handler';
+import { DeleteBpiAccountCommandHandler } from './capabilities/deleteBpiAccount/deleteBpiAccountCommand.handler';
+import { GetAllBpiAccountsQueryHandler } from './capabilities/getAllBpiAccounts/getAllBpiAccountQuery.handler';
+import { GetBpiAccountByIdQueryHandler } from './capabilities/getBpiAccountById/getBpiAccountByIdQuery.handler';
+import { UpdateBpiAccountCommandHandler } from './capabilities/updateBpiAccount/updateBpiAccountCommand.handler';
+import { AccountsProfile } from './accounts.profile';
 
+export const CommandHandlers = [
+  CreateBpiAccountCommandHandler,
+  UpdateBpiAccountCommandHandler,
+  DeleteBpiAccountCommandHandler,
+];
+export const QueryHandlers = [
+  GetBpiAccountByIdQueryHandler,
+  GetAllBpiAccountsQueryHandler,
+];
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, SubjectAccountModule],
+  controllers: [AccountController],
+  providers: [
+    ...CommandHandlers,
+    ...QueryHandlers,
+    BpiAccountAgent,
+    BpiAccountStorageAgent,
+    AccountsProfile,
+  ],
 })
 export class AccountModule {}

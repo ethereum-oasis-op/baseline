@@ -10,8 +10,8 @@ describe('CreateTransactionDto', () => {
       nonce: 123,
       workflowInstanceId: '123',
       workstepInstanceId: '123',
-      fromAccountId: '123',
-      toAccountId: '123',
+      fromSubjectAccountId: '123',
+      toSubjectAccountId: '123',
       payload: '123',
       signature: '123',
     };
@@ -35,8 +35,8 @@ describe('CreateTransactionDto', () => {
       nonce: 123,
       workflowInstanceId: '123',
       workstepInstanceId: '123',
-      fromAccountId: '123',
-      toAccountId: '123',
+      fromSubjectAccountId: '123',
+      toSubjectAccountId: '123',
       payload: '123',
       signature: '123',
     };

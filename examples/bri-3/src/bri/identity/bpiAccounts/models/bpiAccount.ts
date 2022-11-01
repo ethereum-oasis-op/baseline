@@ -1,11 +1,23 @@
-export class BpiAccount {
-  private id: string; // TODO: Add uuid after #491
-  private nonce: string;
-  private ownerBpiSubjectIds: string[];
+import { AutoMap } from '@automapper/classes';
+import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
 
-  constructor(id: string, nonce: string, ownerBpiSubjectIds: string[]) {
+export class BpiAccount {
+  @AutoMap()
+  id: string; // TODO: Add uuid after #491
+
+  @AutoMap()
+  nonce: number;
+
+  @AutoMap(() => [BpiSubjectAccount])
+  ownerBpiSubjectAccounts: BpiSubjectAccount[];
+
+  constructor(id: string, ownerBpiSubjectAccounts: BpiSubjectAccount[]) {
     this.id = id;
-    this.nonce = nonce;
-    this.ownerBpiSubjectIds = ownerBpiSubjectIds;
+    this.nonce = 0;
+    this.ownerBpiSubjectAccounts = ownerBpiSubjectAccounts;
+  }
+
+  public updateNonce(): void {
+    this.nonce++;
   }
 }

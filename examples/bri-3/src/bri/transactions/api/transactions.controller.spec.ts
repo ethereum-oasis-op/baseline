@@ -12,13 +12,62 @@ import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { MockTransactionStorageAgent } from '../agents/mockTransactionStorage.agent';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
+import { TransactionsProfile } from '../transactions.profile';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
+import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
+import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
+  let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
+  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
+
+  const createBpiSubjectAccount = async (id: string) => {
+    const ownerBpiSubject =
+      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        new BpiSubject(
+          '123',
+          'owner',
+          'desc',
+          BpiSubjectType.External,
+          'publicKey',
+        ),
+      );
+    const creatorBpiSubject =
+      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        new BpiSubject(
+          '321',
+          'creator',
+          'desc',
+          BpiSubjectType.External,
+          'publicKey',
+        ),
+      );
+
+    return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(
+      new BpiSubjectAccount(id, creatorBpiSubject, ownerBpiSubject),
+    );
+  };
 
   beforeEach(async () => {
+    mockBpiSubjectAccountsStorageAgent =
+      new MockBpiSubjectAccountsStorageAgent();
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [TransactionController],
       providers: [
         TransactionAgent,
@@ -27,10 +76,18 @@ describe('TransactionController', () => {
         DeleteTransactionCommandHandler,
         GetTransactionByIdQueryHandler,
         TransactionStorageAgent,
+        TransactionsProfile,
+        BpiSubjectAccountStorageAgent,
+        BpiSubjectAccountAgent,
+        BpiSubjectStorageAgent,
       ],
     })
       .overrideProvider(TransactionStorageAgent)
       .useValue(new MockTransactionStorageAgent())
+      .overrideProvider(BpiSubjectAccountStorageAgent)
+      .useValue(mockBpiSubjectAccountsStorageAgent)
+      .overrideProvider(BpiSubjectStorageAgent)
+      .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     controller = app.get<TransactionController>(TransactionController);
@@ -51,13 +108,16 @@ describe('TransactionController', () => {
 
     it('should return the correct transaction if proper id passed ', async () => {
       // Arrange
+      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const toBpiSubjectAccount = await createBpiSubjectAccount('321');
+
       const requestDto = {
         id: '123',
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
+        fromSubjectAccountId: fromBpiSubjectAccount.id,
+        toSubjectAccountId: toBpiSubjectAccount.id,
         payload: 'payload1',
         signature: 'signature',
       } as CreateTransactionDto;
@@ -78,8 +138,12 @@ describe('TransactionController', () => {
       expect(createdTransaction.workstepInstanceId).toEqual(
         requestDto.workstepInstanceId,
       );
-      expect(createdTransaction.from).toEqual(''); // TODO: Will be fixed with #489
-      expect(createdTransaction.to).toEqual(''); // TODO: Will be fixed with #489
+      expect(uuidValidate(createdTransaction.fromBpiSubjectAccountId));
+      expect(uuidVersion(createdTransaction.fromBpiSubjectAccountId)).toEqual(
+        4,
+      );
+      expect(uuidValidate(createdTransaction.toBpiSubjectAccountId));
+      expect(uuidVersion(createdTransaction.toBpiSubjectAccountId)).toEqual(4);
       expect(createdTransaction.payload).toEqual(requestDto.payload);
       expect(createdTransaction.signature).toEqual(requestDto.signature);
     });
@@ -88,13 +152,16 @@ describe('TransactionController', () => {
   describe('createTransaction', () => {
     it('should return new id from the created transaction when all params provided', async () => {
       // Arrange
+      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const toBpiSubjectAccount = await createBpiSubjectAccount('321');
+
       const requestDto = {
         id: '123',
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
+        fromSubjectAccountId: fromBpiSubjectAccount.id,
+        toSubjectAccountId: toBpiSubjectAccount.id,
         payload: 'payload1',
         signature: 'signature1',
       } as CreateTransactionDto;
@@ -124,13 +191,16 @@ describe('TransactionController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
+      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const toBpiSubjectAccount = await createBpiSubjectAccount('321');
+
       const createRequestDto = {
         id: '123',
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
+        fromSubjectAccountId: fromBpiSubjectAccount.id,
+        toSubjectAccountId: toBpiSubjectAccount.id,
         payload: 'payload1',
         signature: 'signature1',
       } as CreateTransactionDto;
@@ -167,13 +237,16 @@ describe('TransactionController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
+      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const toBpiSubjectAccount = await createBpiSubjectAccount('321');
+
       const createRequestDto = {
         id: '123',
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
-        fromAccountId: 'from',
-        toAccountId: 'to',
+        fromSubjectAccountId: fromBpiSubjectAccount.id,
+        toSubjectAccountId: toBpiSubjectAccount.id,
         payload: 'payload1',
         signature: 'signature1',
       } as CreateTransactionDto;

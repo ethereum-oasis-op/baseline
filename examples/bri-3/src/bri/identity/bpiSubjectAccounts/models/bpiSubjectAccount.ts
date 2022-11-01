@@ -1,10 +1,21 @@
+import { AutoMap } from '@automapper/classes';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 
 export class BpiSubjectAccount {
-  private id: string; // TODO: Add uuid after #491
-  private creatorBpiSubject: BpiSubject;
-  private ownerBpiSubject: BpiSubject;
-  private bpiAccounts: string[]; // TODO: Add as part of #489
+  @AutoMap()
+  id: string; // TODO: Add uuid after #491
+
+  @AutoMap(() => BpiSubject)
+  creatorBpiSubject: BpiSubject;
+
+  @AutoMap(() => BpiSubject)
+  ownerBpiSubject: BpiSubject;
+
+  @AutoMap()
+  creatorBpiSubjectId: string;
+
+  @AutoMap()
+  ownerBpiSubjectId: string;
 
   constructor(
     id: string,
@@ -13,6 +24,8 @@ export class BpiSubjectAccount {
   ) {
     this.id = id;
     this.creatorBpiSubject = creatorBpiSubject;
+    this.creatorBpiSubjectId = creatorBpiSubject?.id;
     this.ownerBpiSubject = ownerBpiSubject;
+    this.ownerBpiSubjectId = ownerBpiSubject?.id;
   }
 }

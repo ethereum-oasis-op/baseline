@@ -14,9 +14,15 @@ import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { WorkstepController } from './worksteps.controller';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { WorkstepProfile } from '../workstep.profile';
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
 
 describe('WorkstepController', () => {
   let wController: WorkstepController;
+  let mapper: Mapper;
+
   const requestDto = {
     name: 'name',
     version: 'version',
@@ -33,7 +39,12 @@ describe('WorkstepController', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [WorkstepController],
       providers: [
         WorkstepAgent,
@@ -43,10 +54,11 @@ describe('WorkstepController', () => {
         GetWorkstepByIdQueryHandler,
         GetAllWorkstepsQueryHandler,
         WorkstepStorageAgent,
+        WorkstepProfile,
       ],
     })
       .overrideProvider(WorkstepStorageAgent)
-      .useValue(new MockWorkstepStorageAgent())
+      .useValue(new MockWorkstepStorageAgent(mapper))
       .compile();
 
     wController = app.get<WorkstepController>(WorkstepController);

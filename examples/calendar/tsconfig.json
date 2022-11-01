@@ -1,0 +1,14 @@
+{
+	"extends": "./node_modules/@amaurym/tsconfig/tsconfig",
+	"compilerOptions": {
+		"jsx": "react",
+		"moduleResolution": "node",
+		"skipLibCheck": true,
+		"target": "es6",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"types": ["@types/node", "@types/chai", "@types/mocha"],
+		"typeRoots": ["./node_modules/@types", "./types"]
+	},
+	"exclude": ["node_modules", "build", "cache", "artifacts"]
+}

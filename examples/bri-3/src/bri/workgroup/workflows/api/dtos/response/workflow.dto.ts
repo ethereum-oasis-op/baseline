@@ -1,8 +1,16 @@
-import { Workstep } from 'src/bri/workgroup/worksteps/models/workstep';
+import { AutoMap } from '@automapper/classes';
+import { WorkstepDto } from '../../../../worksteps/api/dtos/response/workstep.dto';
 
-export interface WorkflowDto {
+export class WorkflowDto {
+  @AutoMap()
   id: string;
+
+  @AutoMap()
   name: string;
-  worksteps: Workstep[];
+
+  @AutoMap(() => [WorkstepDto])
+  worksteps: WorkstepDto[];
+
+  @AutoMap()
   workgroupId: string;
 }

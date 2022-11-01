@@ -9,6 +9,7 @@ import { DeleteWorkflowCommandHandler } from './capabilities/deleteWorkflow/dele
 import { GetAllWorkflowsQueryHandler } from './capabilities/getAllWorkflows/getAllWorkflowsQuery.handler';
 import { GetWorkflowByIdQueryHandler } from './capabilities/getWorkflowById/getWorkflowByIdQuery.handler';
 import { UpdateWorkflowCommandHandler } from './capabilities/updateWorkflow/updateWorkflowCommand.handler';
+import { WorkflowProfile } from './workflow.profile';
 
 export const CommandHandlers = [
   CreateWorkflowCommandHandler,
@@ -29,6 +30,8 @@ export const QueryHandlers = [
     ...QueryHandlers,
     WorkflowAgent,
     WorkflowStorageAgent,
+    WorkflowProfile,
   ],
+  exports: [WorkflowAgent, WorkflowStorageAgent],
 })
 export class WorkflowModule {}

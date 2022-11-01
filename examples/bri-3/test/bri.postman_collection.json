@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "b9b1a6d8-c0be-41bf-98da-a91ca1389de8",
+		"_postman_id": "607e989c-e69c-4f74-bff7-91b2f3803906",
 		"name": "bri",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -156,6 +156,241 @@
 									"path": [
 										"subjects",
 										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bpi Account",
+					"item": [
+						{
+							"name": "Get all Bpi Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bpi Account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"ownerBpiSubjectAccountsIds\": [\"c300973c-b1dc-407c-983f-853ceb869ef8\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/accounts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Bpi Account",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/accounts/6d05ef1f-6ff3-47eb-afba-2af1086fbb6e",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"6d05ef1f-6ff3-47eb-afba-2af1086fbb6e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/3c99e7eb-2f2f-44a2-bc5e-648f7a5f6e3a",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"3c99e7eb-2f2f-44a2-bc5e-648f7a5f6e3a"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/accounts/a38774cd-8f14-41bb-b9b5-4d9bda81a161",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"accounts",
+										"a38774cd-8f14-41bb-b9b5-4d9bda81a161"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bpi Subject Account",
+					"item": [
+						{
+							"name": "Get All Bpi Subject Accounts",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Bpi Subject Account",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"creatorBpiSubjectId\": \"a9556319-60be-4655-bf02-c087e16fc0d6\",\r\n    \"ownerBpiSubjectId\": \"e2b7fa4f-ffeb-41e2-851b-f642fbffa0d1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Bpi Subject Account",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Bpi Subject Account",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Bpi Subject Account",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/subjectAccounts/e0848ecf-5483-485b-9c7b-e715f815e6d5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"subjectAccounts",
+										"e0848ecf-5483-485b-9c7b-e715f815e6d5"
 									]
 								}
 							},
@@ -324,7 +559,7 @@
 					]
 				},
 				{
-					"name": "workflow",
+					"name": "Workflow",
 					"item": [
 						{
 							"name": "Update Workflow",
@@ -465,6 +700,129 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "Workgroup",
+					"item": [
+						{
+							"name": "Update Workgroup",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"administratorIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\"],\n    \"securityPolicy\": \"sec1\",\n    \"privacyPolicy\": \"priv1\",\n    \"participantIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\"]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups/74ef3fa4-0858-427c-a185-df1753dc5dc6",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups",
+										"74ef3fa4-0858-427c-a185-df1753dc5dc6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Workgroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"hello1\",\n    \"administratorIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\"],\n    \"securityPolicy\": \"sec1\",\n    \"privacyPolicy\": \"priv1\",\n    \"participantIds\": [\"2a74c458-8cf7-4209-8e54-82fa064efe25\", \"92747004-9ff6-47ea-abf9-7dfaebd36d51\"],\n    \"worksteps\": [],\n    \"workflows\": []\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Workgroup",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups/222550cc-294f-47f5-ac13-fc6749ceef37",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups",
+										"222550cc-294f-47f5-ac13-fc6749ceef37"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get specific Workgroup by id",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/workgroups/74ef3fa4-0858-427c-a185-df1753dc5dc6",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"workgroups",
+										"74ef3fa4-0858-427c-a185-df1753dc5dc6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		},
@@ -507,7 +865,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"123\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromAccountId\": \"1\",\n    \"toAccountId\": \"2\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
+							"raw": "{\n    \"id\": \"id\",\n    \"nonce\": 1,\n    \"workflowInstanceId\": \"1\",\n    \"workstepInstanceId\": \"1\",\n    \"fromSubjectAccountId\": \"6e1eb6c9-3f97-466c-96e4-5cd3e531fc39\",\n    \"toSubjectAccountId\": \"3804b898-40e5-4941-8fc2-98166b56ecea\",\n    \"payload\": \"xyz\",\n    \"signature\": \"sig\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -575,7 +933,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/transactions/123",
+							"raw": "http://localhost:3000/transactions/id",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -583,7 +941,26 @@
 							"port": "3000",
 							"path": [
 								"transactions",
-								"123"
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/transactions",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"transactions"
 							]
 						}
 					},

@@ -1,3 +1,5 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
@@ -5,6 +7,8 @@ import { Workflow } from '../models/workflow';
 
 @Injectable()
 export class MockWorkflowStorageAgent {
+  constructor(@InjectMapper() private readonly mapper: Mapper) {}
+
   private workflowsStore: Workflow[] = [];
 
   async getWorkflowById(id: string): Promise<Workflow> {

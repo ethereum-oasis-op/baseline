@@ -49,13 +49,7 @@ export class BpiSubjectAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return new BpiSubject(
-      bpiSubjectToUpdate.id,
-      bpiSubjectToUpdate.name,
-      bpiSubjectToUpdate.description,
-      bpiSubjectToUpdate.type,
-      bpiSubjectToUpdate.publicKey,
-    );
+    return bpiSubjectToUpdate;
   }
 
   public updateBpiSubject(

@@ -1,0 +1,18 @@
+{
+	"name": "scripts",
+	"version": "1.0.0",
+	"description": "",
+	"main": "fmt.ts",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"type": "module",
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"circomlibjs": "^0.1.7",
+		"ethers": "^5.7.0",
+		"fixed-merkle-tree": "^0.7.3",
+		"typescript": "^4.8.2"
+	}
+}

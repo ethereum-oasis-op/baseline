@@ -1,13 +1,31 @@
-import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
+import { AutoMap } from '@automapper/classes';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiMessageType } from './bpiMessageType.enum';
 
 export class BpiMessage {
-  private _id: string;
-  private _from: BpiSubject;
-  private _to: BpiSubject;
-  private _content: string;
-  private _signature: string;
-  private _type: BpiMessageType;
+  @AutoMap()
+  id: string;
+
+  @AutoMap()
+  fromBpiSubject: BpiSubject;
+
+  @AutoMap()
+  fromBpiSubjectId: string;
+
+  @AutoMap()
+  toBpiSubject: BpiSubject;
+
+  @AutoMap()
+  toBpiSubjectId: string;
+
+  @AutoMap()
+  content: string;
+
+  @AutoMap()
+  signature: string;
+
+  @AutoMap()
+  type: BpiMessageType;
 
   constructor(
     id: string,
@@ -17,43 +35,19 @@ export class BpiMessage {
     signature: string,
     type: BpiMessageType,
   ) {
-    this._id = id;
-    this._from = from;
-    this._to = to;
-    this._content = content;
-    this._signature = signature;
-    this._type = type;
-  }
-
-  public get id(): string {
-    return this._id;
-  }
-
-  public get from(): BpiSubject {
-    return this._from;
-  }
-
-  public get to(): BpiSubject {
-    return this._to;
-  }
-
-  public get content(): string {
-    return this._content;
-  }
-
-  public get signature(): string {
-    return this._signature;
-  }
-
-  public get type(): BpiMessageType {
-    return this._type;
+    this.id = id;
+    this.fromBpiSubject = from;
+    this.toBpiSubject = to;
+    this.content = content;
+    this.signature = signature;
+    this.type = type;
   }
 
   public updateContent(newContent: string): void {
-    this._content = newContent;
+    this.content = newContent;
   }
 
   public updateSignature(newSignature: string): void {
-    this._signature = newSignature;
+    this.signature = newSignature;
   }
 }
