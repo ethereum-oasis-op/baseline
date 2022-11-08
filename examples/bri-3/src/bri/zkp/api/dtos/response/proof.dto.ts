@@ -1,6 +1,7 @@
+import { BpiAccount } from '../../../../identity/bpiAccounts/models/bpiAccount';
 export interface ProofDto {
   id: string;
-  owner: string;
+  owner: BpiAccount;
   payload: string;
   signature: string;
 }

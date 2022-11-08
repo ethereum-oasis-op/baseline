@@ -13,7 +13,7 @@ export class VerifyProofCommandHandler
   ) {}
 
   async execute(command: VerifyProofCommand) {
-    this.agent.throwIfProofInputInvalid(command.document);
+    this.agent.throwErrorIfProofInputInvalid(command.document);
 
     const verified = await this.agent.verifyDocumentWithProof(command.document);
 

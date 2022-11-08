@@ -9,7 +9,7 @@ import DocumentObject from '../types/document';
 export class ProofAgent {
   constructor(private storageAgent: ProofStorageAgent) {}
 
-  public throwIfProofInputInvalid(document: DocumentObject): boolean {
+  public throwErrorIfProofInputInvalid(document: DocumentObject): boolean {
     if (!document.documentObjectType || !document.documentObjectInput) {
       throw new BadRequestException(INVALID_PROOF_INPUT);
     }
@@ -36,7 +36,7 @@ export class ProofAgent {
       this.convertDocumentToPayloadAndThrowIfDocumentValidationFails(
         document.documentObjectInput,
       );
-    const verified = await this.storageAgent.verifyProofInShieldContract(
+    const verified = await this.storageAgent.verifyProofOnchain(
       publicInputForProofVerfication,
     );
     return verified;

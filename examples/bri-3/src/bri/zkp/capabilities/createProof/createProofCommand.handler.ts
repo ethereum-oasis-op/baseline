@@ -13,7 +13,7 @@ export class CreateProofCommandHandler
   ) {}
 
   async execute(command: CreateProofCommand) {
-    this.agent.throwIfProofInputInvalid(command.document);
+    this.agent.throwErrorIfProofInputInvalid(command.document);
 
     const newProof = this.agent.createNewProof(
       null, // TODO: Fetch BpiAccount based on id ,
@@ -21,7 +21,7 @@ export class CreateProofCommandHandler
       command.signature,
     );
 
-    await this.storageAgent.storeProofInShieldContract(newProof);
+    await this.storageAgent.storeProofOnchain(newProof);
 
     return newProof.id;
   }

@@ -16,4 +16,4 @@ export const CommandHandlers = [
   controllers: [ProofController],
   providers: [...CommandHandlers, ProofAgent, ProofStorageAgent],
 })
-export class ProofModule {}
+export class ZKPModule {}

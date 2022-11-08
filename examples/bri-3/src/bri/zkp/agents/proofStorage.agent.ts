@@ -7,11 +7,11 @@ import { Proof } from '../models/proof';
 export class ProofStorageAgent {
   constructor(private storageAgent: BlockchainService) {}
 
-  async storeProofInShieldContract(proof: Proof): Promise<void> {
+  async storeProofOnchain(proof: Proof): Promise<void> {
     await this.storageAgent.store(proof.payload);
   }
 
-  async verifyProofInShieldContract(
+  async verifyProofOnchain(
     publicInputForProofVerification: string,
   ): Promise<boolean> {
     const verified = await this.storageAgent.verify(
