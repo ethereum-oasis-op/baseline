@@ -4,7 +4,7 @@ import { BpiSubjectAccount } from '../../../identity/bpiSubjectAccounts/models/b
 
 export class CreateAnchorHashCommand {
   constructor(
-    public readonly ownerAccountId: BpiSubjectAccount,
+    public readonly ownerAccount: BpiSubjectAccount,
     public readonly agreementState: BpiAccount,
     public readonly document: DocumentObject,
     public readonly signature: string,

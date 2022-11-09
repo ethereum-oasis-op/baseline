@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 
 export class AnchorHash {
@@ -6,7 +7,10 @@ export class AnchorHash {
   id: string;
 
   @AutoMap()
-  owner: BpiAccount;
+  owner: BpiSubjectAccount;
+
+  @AutoMap()
+  agreementState: BpiAccount;
 
   @AutoMap()
   hash: string;
@@ -14,9 +18,16 @@ export class AnchorHash {
   @AutoMap()
   signature: string;
 
-  constructor(id: string, owner: BpiAccount, hash: string, signature: string) {
+  constructor(
+    id: string,
+    owner: BpiSubjectAccount,
+    agreementState: BpiAccount,
+    hash: string,
+    signature: string,
+  ) {
     this.id = id;
     this.owner = owner;
+    this.agreementState = agreementState;
     this.hash = hash;
     this.signature = signature;
   }

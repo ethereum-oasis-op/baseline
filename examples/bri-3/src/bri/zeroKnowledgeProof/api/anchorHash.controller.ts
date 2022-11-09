@@ -16,7 +16,7 @@ export class AnchorHashController {
   ): Promise<AnchorHashDto> {
     return await this.commandBus.execute(
       new CreateAnchorHashCommand(
-        requestDto.ownerAccountId,
+        requestDto.ownerAccount,
         requestDto.agreementState,
         requestDto.document,
         requestDto.signature,

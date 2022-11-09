@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BlockchainService } from '../components/blockchain/blockchain.service';
 
 import { AnchorHash } from '../models/anchorHash';
+import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProofVerificationInput';
 
 @Injectable()
 export class AnchorHashStorageAgent {
@@ -12,14 +13,12 @@ export class AnchorHashStorageAgent {
   }
 
   async verifyAnchorHashOnchain(
-    publicWitnessForProofVerification: string,
-    proof?: string,
-    verificationKey?: string,
+    publicInputForProofVerification:
+      | string
+      | ZeroKnowledgeProofVerificationInput,
   ): Promise<boolean> {
     const verified = await this.storageAgent.verify(
-      publicWitnessForProofVerification,
-      proof,
-      verificationKey,
+      publicInputForProofVerification,
     );
     return verified;
   }

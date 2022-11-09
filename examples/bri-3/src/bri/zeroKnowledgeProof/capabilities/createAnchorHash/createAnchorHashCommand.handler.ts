@@ -16,7 +16,8 @@ export class CreateAnchorHashCommandHandler
     this.agent.throwErrorIfAnchorHashInputInvalid(command.document);
 
     const newAnchorHash = this.agent.createNewAnchorHash(
-      null, // TODO: Fetch BpiAccount based on id ,
+      command.ownerAccount,
+      command.agreementState,
       command.document,
       command.signature,
     );

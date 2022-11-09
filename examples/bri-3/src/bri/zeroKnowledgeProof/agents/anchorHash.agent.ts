@@ -6,6 +6,7 @@ import { AnchorHashStorageAgent } from './anchorHashStorage.agent';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { DocumentObject } from '../models/document';
 import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProofVerificationInput';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 @Injectable()
 export class AnchorHashAgent {
   constructor(private storageAgent: AnchorHashStorageAgent) {}
@@ -17,7 +18,8 @@ export class AnchorHashAgent {
   }
 
   public createNewAnchorHash(
-    owner: BpiAccount,
+    owner: BpiSubjectAccount,
+    agreementState: BpiAccount,
     document: DocumentObject,
     signature: string,
   ): AnchorHash {
@@ -25,7 +27,7 @@ export class AnchorHashAgent {
       document.documentObjectInput,
     );
 
-    return new AnchorHash(uuidv4(), owner, hash, signature);
+    return new AnchorHash(uuidv4(), owner, agreementState, hash, signature);
   }
 
   public async verifyDocumentWithAnchorHash(
@@ -33,16 +35,17 @@ export class AnchorHashAgent {
       | DocumentObject
       | ZeroKnowledgeProofVerificationInput,
   ): Promise<boolean> {
-    let publicInput;
+    let publicInputForProofVerification;
     if (inputForProofVerification instanceof DocumentObject) {
-      publicInput = this.convertDocumentToHashAndThrowIfDocumentValidationFails(
-        inputForProofVerification.documentObjectInput,
-      );
+      publicInputForProofVerification =
+        this.convertDocumentToHashAndThrowIfDocumentValidationFails(
+          inputForProofVerification.documentObjectInput,
+        );
     } else {
-      publicInput = inputForProofVerification;
+      publicInputForProofVerification = inputForProofVerification;
     }
     const verified = await this.storageAgent.verifyAnchorHashOnchain(
-      publicInput,
+      publicInputForProofVerification,
     );
     return verified;
   }
