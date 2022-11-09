@@ -5,6 +5,7 @@ import { AnchorHash } from '../models/anchorHash';
 import { AnchorHashStorageAgent } from './anchorHashStorage.agent';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { DocumentObject } from '../models/document';
+import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProofVerificationInput';
 @Injectable()
 export class AnchorHashAgent {
   constructor(private storageAgent: AnchorHashStorageAgent) {}
@@ -20,7 +21,7 @@ export class AnchorHashAgent {
     document: DocumentObject,
     signature: string,
   ): AnchorHash {
-    const hash = this.convertDocumentToPayloadAndThrowIfDocumentValidationFails(
+    const hash = this.convertDocumentToHashAndThrowIfDocumentValidationFails(
       document.documentObjectInput,
     );
 
@@ -28,26 +29,25 @@ export class AnchorHashAgent {
   }
 
   public async verifyDocumentWithAnchorHash(
-    document?: DocumentObject,
-    publicWitnessForProofVerification?: string,
-    proof?: string,
-    verificationKey?: string,
+    inputForProofVerification:
+      | DocumentObject
+      | ZeroKnowledgeProofVerificationInput,
   ): Promise<boolean> {
-    if (!publicWitnessForProofVerification) {
-      publicWitnessForProofVerification =
-        this.convertDocumentToPayloadAndThrowIfDocumentValidationFails(
-          document.documentObjectInput,
-        );
+    let publicInput;
+    if (inputForProofVerification instanceof DocumentObject) {
+      publicInput = this.convertDocumentToHashAndThrowIfDocumentValidationFails(
+        inputForProofVerification.documentObjectInput,
+      );
+    } else {
+      publicInput = inputForProofVerification;
     }
     const verified = await this.storageAgent.verifyAnchorHashOnchain(
-      publicWitnessForProofVerification,
-      proof,
-      verificationKey,
+      publicInput,
     );
     return verified;
   }
 
-  public convertDocumentToPayloadAndThrowIfDocumentValidationFails(
+  public convertDocumentToHashAndThrowIfDocumentValidationFails(
     document: object,
   ) {
     //TODO: Convert document into payload using merkleTree service

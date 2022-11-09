@@ -17,6 +17,7 @@ export class AnchorHashController {
     return await this.commandBus.execute(
       new CreateAnchorHashCommand(
         requestDto.ownerAccountId,
+        requestDto.agreementState,
         requestDto.document,
         requestDto.signature,
       ),
@@ -28,7 +29,10 @@ export class AnchorHashController {
     @Body() requestDto: VerifyAnchorHashDto,
   ): Promise<boolean> {
     return await this.commandBus.execute(
-      new VerifyAnchorHashCommand(requestDto.document, requestDto.signature),
+      new VerifyAnchorHashCommand(
+        requestDto.inputForProofVerification,
+        requestDto.signature,
+      ),
     );
   }
 }
