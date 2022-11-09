@@ -1,7 +1,7 @@
-import DocumentObject from '../../types/document';
+import { DocumentObject } from '../../models/document';
 import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
 
-export class CreateProofCommand {
+export class CreateAnchorHashCommand {
   constructor(
     public readonly ownerAccountId: BpiAccount,
     public readonly document: DocumentObject,

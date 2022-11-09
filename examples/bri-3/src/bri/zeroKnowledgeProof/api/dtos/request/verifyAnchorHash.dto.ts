@@ -1,7 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
-import DocumentObject from '../../../types/document';
+import { DocumentObject } from '../../../models/document';
 
-export class VerifyProofDto {
+export class VerifyAnchorHashDto {
   @IsNotEmpty()
   document: DocumentObject;
 

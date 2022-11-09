@@ -1,16 +1,19 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
-import { VerifyProofDto } from './verifyProof.dto';
+import { CreateAnchorHashDto } from './createAnchorHash.dto';
 
-describe('VerifyProofDto', () => {
+describe('CreateAnchorHashDto', () => {
   it('should return error in case document not provided.', async () => {
     // Arrange
-    const dto = { signature: '2323' };
-    const verifyProofDto = plainToInstance(VerifyProofDto, dto);
+    const dto = {
+      ownerAccountId: '123',
+      signature: '123',
+    };
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
     // Act
-    const errors = await validate(verifyProofDto);
+    const errors = await validate(createAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -28,13 +31,13 @@ describe('VerifyProofDto', () => {
         documentObjectInput: { input: 'This is a document' },
       },
     };
-    const verifyProofDto = plainToInstance(VerifyProofDto, dto);
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
     // Act
-    const errors = await validate(verifyProofDto);
+    const errors = await validate(createAnchorHashDto);
 
     // Assert
-    expect(errors.length).toBe(1);
+    expect(errors.length).toBe(2);
     expect(errors[0].property).toEqual('signature');
     expect(errors[0].constraints.isNotEmpty).toContain(
       'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
@@ -44,16 +47,17 @@ describe('VerifyProofDto', () => {
   it('should return no error if all required properties provided.', async () => {
     // Arrange
     const dto = {
+      ownerAccountId: '123',
       document: {
         documentObjectType: 'document',
         documentObjectInput: { input: 'This is a document' },
       },
-      signature: '2323',
+      signature: '123',
     };
-    const verifyProofDto = plainToInstance(VerifyProofDto, dto);
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
     // Act
-    const errors = await validate(verifyProofDto);
+    const errors = await validate(createAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(0);

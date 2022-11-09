@@ -1,7 +1,7 @@
 import { BpiAccount } from '../../../../identity/bpiAccounts/models/bpiAccount';
-export interface ProofDto {
+export interface AnchorHashDto {
   id: string;
   owner: BpiAccount;
-  payload: string;
+  hash: string;
   signature: string;
 }

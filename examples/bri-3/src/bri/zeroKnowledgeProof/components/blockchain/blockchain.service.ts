@@ -14,7 +14,11 @@ export class BlockchainService implements OnModuleInit {
     //TODO: store content-addressable hash on contract
   }
 
-  async verify(proof: string): Promise<boolean> {
+  async verify(
+    publicWitness: string,
+    proof: string,
+    verificationKey: string,
+  ): Promise<boolean> {
     //TODO: verify content-addressable hash exists in shield contract
     return true;
   }

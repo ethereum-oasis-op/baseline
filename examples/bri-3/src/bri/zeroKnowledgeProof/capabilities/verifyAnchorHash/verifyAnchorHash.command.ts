@@ -1,6 +1,6 @@
-import DocumentObject from '../../types/document';
+import { DocumentObject } from '../../models/document';
 
-export class VerifyProofCommand {
+export class VerifyAnchorHashCommand {
   constructor(
     public readonly document: DocumentObject,
     public readonly signature: string,
