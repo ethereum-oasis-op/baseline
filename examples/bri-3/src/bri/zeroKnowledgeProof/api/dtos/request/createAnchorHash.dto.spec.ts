@@ -4,10 +4,51 @@ import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/const
 import { CreateAnchorHashDto } from './createAnchorHash.dto';
 
 describe('CreateAnchorHashDto', () => {
+  it('should return error in case ownerAccount is not provided.', async () => {
+    // Arrange
+    const dto = {
+      agreementState: {},
+      document: {},
+      signature: '123',
+    };
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
+
+    // Act
+    const errors = await validate(createAnchorHashDto);
+
+    // Assert
+    expect(errors.length).toBe(1);
+    expect(errors[0].property).toEqual('ownerAccount');
+    expect(errors[0].constraints.isNotEmpty).toContain(
+      'ownerAccount ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+    );
+  });
+
+  it('should return error in case agreementState not provided.', async () => {
+    // Arrange
+    const dto = {
+      ownerAccount: '123',
+      document: {},
+      signature: '123',
+    };
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
+
+    // Act
+    const errors = await validate(createAnchorHashDto);
+
+    // Assert
+    expect(errors.length).toBe(1);
+    expect(errors[0].property).toEqual('agreementState');
+    expect(errors[0].constraints.isNotEmpty).toContain(
+      'agreementState ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+    );
+  });
+
   it('should return error in case document not provided.', async () => {
     // Arrange
     const dto = {
-      ownerAccountId: '123',
+      ownerAccount: {},
+      agreementState: {},
       signature: '123',
     };
     const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
@@ -26,6 +67,8 @@ describe('CreateAnchorHashDto', () => {
   it('should return error in case signature not provided.', async () => {
     // Arrange
     const dto = {
+      ownerAccount: {},
+      agreementState: {},
       document: {
         documentObjectType: 'document',
         documentObjectInput: { input: 'This is a document' },
@@ -37,7 +80,7 @@ describe('CreateAnchorHashDto', () => {
     const errors = await validate(createAnchorHashDto);
 
     // Assert
-    expect(errors.length).toBe(2);
+    expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('signature');
     expect(errors[0].constraints.isNotEmpty).toContain(
       'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
@@ -47,7 +90,8 @@ describe('CreateAnchorHashDto', () => {
   it('should return no error if all required properties provided.', async () => {
     // Arrange
     const dto = {
-      ownerAccountId: '123',
+      ownerAccount: {},
+      agreementState: {},
       document: {
         documentObjectType: 'document',
         documentObjectInput: { input: 'This is a document' },

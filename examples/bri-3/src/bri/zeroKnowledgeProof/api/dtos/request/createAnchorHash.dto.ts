@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { BpiSubjectAccount } from 'src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BpiSubjectAccount } from '../../../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiAccount } from '../../../../identity/bpiAccounts/models/bpiAccount';
 import { DocumentObject } from '../../../models/document';
 
