@@ -24,6 +24,6 @@ export class CreateAnchorHashCommandHandler
 
     await this.storageAgent.storeAnchorHashOnchain(newAnchorHash);
 
-    return newAnchorHash.id;
+    return newAnchorHash;
   }
 }

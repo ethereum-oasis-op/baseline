@@ -11,8 +11,16 @@ import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiS
 export class AnchorHashAgent {
   constructor(private storageAgent: AnchorHashStorageAgent) {}
 
-  public throwErrorIfAnchorHashInputInvalid(document: DocumentObject): void {
-    if (!document.documentObjectType || !document.documentObjectInput) {
+  public throwErrorIfAnchorHashInputInvalid(
+    inputForProofVerification:
+      | DocumentObject
+      | ZeroKnowledgeProofVerificationInput,
+  ): void {
+    if (
+      inputForProofVerification instanceof DocumentObject &&
+      (!inputForProofVerification.documentObjectInput ||
+        !inputForProofVerification.documentObjectType)
+    ) {
       throw new BadRequestException(INVALID_ANCHOR_HASH_INPUT);
     }
   }
@@ -23,9 +31,10 @@ export class AnchorHashAgent {
     document: DocumentObject,
     signature: string,
   ): AnchorHash {
-    const hash = this.convertDocumentToHashAndThrowIfDocumentValidationFails(
-      document.documentObjectInput,
-    );
+    const hash =
+      this.convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
+        document.documentObjectInput,
+      );
 
     return new AnchorHash(uuidv4(), owner, agreementState, hash, signature);
   }
@@ -38,7 +47,7 @@ export class AnchorHashAgent {
     let publicInputForProofVerification;
     if (inputForProofVerification instanceof DocumentObject) {
       publicInputForProofVerification =
-        this.convertDocumentToHashAndThrowIfDocumentValidationFails(
+        this.convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
           inputForProofVerification.documentObjectInput,
         );
     } else {
@@ -50,11 +59,11 @@ export class AnchorHashAgent {
     return verified;
   }
 
-  public convertDocumentToHashAndThrowIfDocumentValidationFails(
+  public convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
     document: object,
   ) {
     //TODO: Convert document into payload using merkleTree service
-    const hash = Object.keys(document)[0];
+    const hash = Object.values(document)[0];
     return hash;
   }
 }

@@ -9,6 +9,12 @@ import { VerifyAnchorHashCommandHandler } from '../capabilities/verifyAnchorHash
 import { AnchorHashStorageAgent } from '../agents/anchorHashStorage.agent';
 import { CreateAnchorHashDto } from './dtos/request/createAnchorHash.dto';
 import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
+import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BlockchainService } from '../components/blockchain/blockchain.service';
+import { DocumentObject } from '../models/document';
 
 describe('ProofController', () => {
   let controller: AnchorHashController;
@@ -22,6 +28,7 @@ describe('ProofController', () => {
         CreateAnchorHashCommandHandler,
         VerifyAnchorHashCommandHandler,
         AnchorHashStorageAgent,
+        BlockchainService,
       ],
     }).compile();
 
@@ -33,66 +40,101 @@ describe('ProofController', () => {
   describe('createAnchorHash', () => {
     it('should throw BadRequest if document parameter is empty', async () => {
       // Arrange
+      const mockBpiSubject = new BpiSubject(
+        '123',
+        '123',
+        '123',
+        BpiSubjectType.External,
+        '123',
+      );
+
+      const mockBpiSubjectAccount = new BpiSubjectAccount(
+        '123',
+        mockBpiSubject,
+        mockBpiSubject,
+      );
+
+      const mockBpiAccount = new BpiAccount('123', []);
+
+      const mockDocument = new DocumentObject('', {});
+
       const missingDocumentParam = {
-        ownerAccountId: {},
-        document: {
-          documentObjectType: '',
-          documentObjectInput: {},
-        },
+        ownerAccount: mockBpiSubjectAccount,
+        agreementState: mockBpiAccount,
+        document: mockDocument,
         signature: '123',
       };
 
       // Act and assert
-      expect(async () => {
+      await expect(async () => {
         await controller.createAnchorHash(missingDocumentParam);
       }).rejects.toThrow(new BadRequestException(INVALID_ANCHOR_HASH_INPUT));
     });
 
     it('should return the correct transaction if proper document passed ', async () => {
       // Arrange
+      const mockBpiSubject = new BpiSubject(
+        '123',
+        '123',
+        '123',
+        BpiSubjectType.External,
+        '123',
+      );
+
+      const mockBpiSubjectAccount = new BpiSubjectAccount(
+        '123',
+        mockBpiSubject,
+        mockBpiSubject,
+      );
+
+      const mockBpiAccount = new BpiAccount('123', []);
+
+      const mockDocument = new DocumentObject('document', {
+        input: 'document1',
+      });
+
       const requestDto = {
-        ownerAccountId: {},
-        document: {
-          documentObjectType: 'document',
-          documentObjectInput: { input: 'document1' },
-        },
+        ownerAccount: mockBpiSubjectAccount,
+        agreementState: mockBpiAccount,
+        document: mockDocument,
         signature: 'signature',
       } as CreateAnchorHashDto;
 
       // Act
       const anchorHash = await controller.createAnchorHash(requestDto);
+      console.log(anchorHash);
 
       // Assert
-      expect(anchorHash.owner).toEqual(requestDto.ownerAccountId);
+      expect(anchorHash.owner).toEqual(requestDto.ownerAccount);
       expect(anchorHash.hash).toEqual('document1'); // TODO: Add merkle root of document as payload
       expect(anchorHash.signature).toEqual(requestDto.signature);
     });
   });
 
   describe('verifyAnchorHash', () => {
-    it('should throw BadRequest if document parameter is missing', async () => {
+    it('should throw BadRequest if inputForProofVerification parameter is missing', async () => {
       // Arrange
+      const mockDocument = new DocumentObject('', {});
+
       const missingDocumentParam = {
-        document: {
-          documentObjectType: '',
-          documentObjectInput: {},
-        },
+        inputForProofVerification: mockDocument,
         signature: '123',
       };
 
       // Act and assert
-      expect(async () => {
+      await expect(async () => {
         await controller.verifyAnchorHash(missingDocumentParam);
       }).rejects.toThrow(new BadRequestException(INVALID_ANCHOR_HASH_INPUT));
     });
 
     it('should perform the verification if document is provided', async () => {
       // Arrange
+      const mockDocument = new DocumentObject('document', {
+        input: 'document1',
+      });
+
       const verifyRequestDto = {
-        document: {
-          documentObjectType: 'document',
-          documentObjectInput: { input: 'document1' },
-        },
+        inputForProofVerification: mockDocument,
         signature: '123',
       } as VerifyAnchorHashDto;
 
