@@ -1,5 +1,5 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
+import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { Transaction } from './models/transaction';
 import { TransactionDto } from './api/dtos/response/transaction.dto';
@@ -12,8 +12,8 @@ export class TransactionsProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, Transaction, TransactionDto),
-        createMap(mapper, Transaction, Transaction);
+      createMap(mapper, Transaction, TransactionDto);
+      createMap(mapper, Transaction, Transaction);
     };
   }
 }
