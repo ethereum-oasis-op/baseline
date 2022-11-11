@@ -38,6 +38,7 @@
     "bip39": "^3.0.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
+    "eslint-config-react-app": "^7.0.1",
     "ethers": "^5.7.2",
     "ew-precise-proofs-js": "^1.2.0",
     "passport": "^0.6.0",
