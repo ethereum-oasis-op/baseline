@@ -45,6 +45,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+    bpiSubject.publicKey = bpiSubject.publicKey.toLowerCase();
     const newBpiSubjectModel = await this.bpiSubject.create({
       data: bpiSubject,
     });

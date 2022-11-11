@@ -27,7 +27,6 @@ export class SubjectController {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
   }
 
-  @Public()
   @Get()
   async getAllBpiSubjects(): Promise<BpiSubjectDto[]> {
     return await this.queryBus.execute(new GetAllBpiSubjectsQuery());
