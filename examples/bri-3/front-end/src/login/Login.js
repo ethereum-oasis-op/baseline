@@ -21,7 +21,6 @@ const handleLogin = async () => {
 
     if (tokenRequest?.data?.access_token) {
       console.log(tokenRequest.data.access_token);
-      localStorage.setItem('token', tokenRequest.data.access_token);
     } else {
       console.log('No token');
     }
