@@ -6,7 +6,7 @@ import { VerifyCCSMAnchorCommand } from './verifyCCSMAnchor.command';
 export class VerifyCCSMAnchorCommandHandler
   implements ICommandHandler<VerifyCCSMAnchorCommand>
 {
-  constructor(private agent: CCSMAnchorAgent) {}
+  constructor(private readonly agent: CCSMAnchorAgent) {}
 
   async execute(command: VerifyCCSMAnchorCommand) {
     this.agent.throwErrorIfCCSMAnchorInputInvalid(

@@ -9,7 +9,7 @@ import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProo
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 @Injectable()
 export class CCSMAnchorAgent {
-  constructor(private storageAgent: CCSMAnchorStorageAgent) {}
+  constructor(private readonly storageAgent: CCSMAnchorStorageAgent) {}
 
   public throwErrorIfCCSMAnchorInputInvalid(
     inputForProofVerification:

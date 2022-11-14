@@ -6,7 +6,7 @@ import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProo
 
 @Injectable()
 export class CCSMAnchorStorageAgent {
-  constructor(private storageAgent: BlockchainService) {}
+  constructor(private readonly storageAgent: BlockchainService) {}
 
   async storeCCSMAnchorOnCCSM(proof: CCSMAnchor): Promise<void> {
     await this.storageAgent.store(proof.hash);

@@ -8,8 +8,8 @@ export class CreateCCSMAnchorCommandHandler
   implements ICommandHandler<CreateCCSMAnchorCommand>
 {
   constructor(
-    private agent: CCSMAnchorAgent,
-    private storageAgent: CCSMAnchorStorageAgent,
+    private readonly agent: CCSMAnchorAgent,
+    private readonly storageAgent: CCSMAnchorStorageAgent,
   ) {}
 
   async execute(command: CreateCCSMAnchorCommand) {
