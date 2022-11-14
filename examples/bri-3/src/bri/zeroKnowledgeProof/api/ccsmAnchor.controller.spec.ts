@@ -2,13 +2,13 @@ import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INVALID_ANCHOR_HASH_INPUT } from './err.messages';
-import { AnchorHashController } from './anchorHash.controller';
-import { AnchorHashAgent } from '../agents/anchorHash.agent';
-import { CreateAnchorHashCommandHandler } from '../capabilities/createAnchorHash/createAnchorHashCommand.handler';
-import { VerifyAnchorHashCommandHandler } from '../capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
-import { AnchorHashStorageAgent } from '../agents/anchorHashStorage.agent';
-import { CreateAnchorHashDto } from './dtos/request/createAnchorHash.dto';
-import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
+import { CCSMAnchorController } from './ccsmAnchor.controller';
+import { CCSMAnchorAgent } from '../agents/ccsmAnchor.agent';
+import { CreateCCSMAnchorCommandHandler } from '../capabilities/createCCSMAnchor/createCCSMAnchorCommand.handler';
+import { VerifyCCSMAnchorCommandHandler } from '../capabilities/verifyCCSMAnchor/verifyCCSMAnchorCommand.handler';
+import { CCSMAnchorStorageAgent } from '../agents/ccsmAnchorStorage.agent';
+import { CreateCCSMAnchorDto } from './dtos/request/createCCSMAnchor.dto';
+import { VerifyCCSMAnchorDto } from './dtos/request/verifyCCSMAnchor.dto';
 import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
@@ -17,27 +17,27 @@ import { BlockchainService } from '../components/blockchain/blockchain.service';
 import { DocumentObject } from '../models/document';
 
 describe('ProofController', () => {
-  let controller: AnchorHashController;
+  let controller: CCSMAnchorController;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [CqrsModule],
-      controllers: [AnchorHashController],
+      controllers: [CCSMAnchorController],
       providers: [
-        AnchorHashAgent,
-        CreateAnchorHashCommandHandler,
-        VerifyAnchorHashCommandHandler,
-        AnchorHashStorageAgent,
+        CCSMAnchorAgent,
+        CreateCCSMAnchorCommandHandler,
+        VerifyCCSMAnchorCommandHandler,
+        CCSMAnchorStorageAgent,
         BlockchainService,
       ],
     }).compile();
 
-    controller = app.get<AnchorHashController>(AnchorHashController);
+    controller = app.get<CCSMAnchorController>(CCSMAnchorController);
 
     await app.init();
   });
 
-  describe('createAnchorHash', () => {
+  describe('createCCSMAnchor', () => {
     it('should throw BadRequest if document parameter is empty', async () => {
       // Arrange
       const mockBpiSubject = new BpiSubject(
@@ -67,7 +67,7 @@ describe('ProofController', () => {
 
       // Act and assert
       await expect(async () => {
-        await controller.createAnchorHash(missingDocumentParam);
+        await controller.createCCSMAnchor(missingDocumentParam);
       }).rejects.toThrow(new BadRequestException(INVALID_ANCHOR_HASH_INPUT));
     });
 
@@ -98,20 +98,20 @@ describe('ProofController', () => {
         agreementState: mockBpiAccount,
         document: mockDocument,
         signature: 'signature',
-      } as CreateAnchorHashDto;
+      } as CreateCCSMAnchorDto;
 
       // Act
-      const anchorHash = await controller.createAnchorHash(requestDto);
-      console.log(anchorHash);
+      const ccsmAnchor = await controller.createCCSMAnchor(requestDto);
+      console.log(ccsmAnchor);
 
       // Assert
-      expect(anchorHash.owner).toEqual(requestDto.ownerAccount);
-      expect(anchorHash.hash).toEqual('document1'); // TODO: Add merkle root of document as payload
-      expect(anchorHash.signature).toEqual(requestDto.signature);
+      expect(ccsmAnchor.owner).toEqual(requestDto.ownerAccount);
+      expect(ccsmAnchor.hash).toEqual('document1'); // TODO: Add merkle root of document as payload
+      expect(ccsmAnchor.signature).toEqual(requestDto.signature);
     });
   });
 
-  describe('verifyAnchorHash', () => {
+  describe('verifyCCSMAnchor', () => {
     it('should throw BadRequest if inputForProofVerification parameter is missing', async () => {
       // Arrange
       const mockDocument = new DocumentObject('', {});
@@ -123,7 +123,7 @@ describe('ProofController', () => {
 
       // Act and assert
       await expect(async () => {
-        await controller.verifyAnchorHash(missingDocumentParam);
+        await controller.verifyCCSMAnchor(missingDocumentParam);
       }).rejects.toThrow(new BadRequestException(INVALID_ANCHOR_HASH_INPUT));
     });
 
@@ -136,10 +136,10 @@ describe('ProofController', () => {
       const verifyRequestDto = {
         inputForProofVerification: mockDocument,
         signature: '123',
-      } as VerifyAnchorHashDto;
+      } as VerifyCCSMAnchorDto;
 
       // Act
-      const verification = await controller.verifyAnchorHash(verifyRequestDto);
+      const verification = await controller.verifyCCSMAnchor(verifyRequestDto);
 
       // Assert
       expect(verification).toEqual(true);

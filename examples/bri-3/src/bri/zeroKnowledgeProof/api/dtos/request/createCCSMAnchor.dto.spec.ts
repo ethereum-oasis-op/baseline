@@ -1,9 +1,9 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
-import { CreateAnchorHashDto } from './createAnchorHash.dto';
+import { CreateCCSMAnchorDto } from './createCCSMAnchor.dto';
 
-describe('CreateAnchorHashDto', () => {
+describe('CreateCCSMAnchorDto', () => {
   it('should return error in case ownerAccount is not provided.', async () => {
     // Arrange
     const dto = {
@@ -11,10 +11,10 @@ describe('CreateAnchorHashDto', () => {
       document: {},
       signature: '123',
     };
-    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
+    const createCCSMAnchorDto = plainToInstance(CreateCCSMAnchorDto, dto);
 
     // Act
-    const errors = await validate(createAnchorHashDto);
+    const errors = await validate(createCCSMAnchorDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -31,10 +31,10 @@ describe('CreateAnchorHashDto', () => {
       document: {},
       signature: '123',
     };
-    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
+    const createCCSMAnchorDto = plainToInstance(CreateCCSMAnchorDto, dto);
 
     // Act
-    const errors = await validate(createAnchorHashDto);
+    const errors = await validate(createCCSMAnchorDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -51,10 +51,10 @@ describe('CreateAnchorHashDto', () => {
       agreementState: {},
       signature: '123',
     };
-    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
+    const createCCSMAnchorDto = plainToInstance(CreateCCSMAnchorDto, dto);
 
     // Act
-    const errors = await validate(createAnchorHashDto);
+    const errors = await validate(createCCSMAnchorDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -74,10 +74,10 @@ describe('CreateAnchorHashDto', () => {
         documentObjectInput: { input: 'This is a document' },
       },
     };
-    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
+    const createCCSMAnchorDto = plainToInstance(CreateCCSMAnchorDto, dto);
 
     // Act
-    const errors = await validate(createAnchorHashDto);
+    const errors = await validate(createCCSMAnchorDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -98,10 +98,10 @@ describe('CreateAnchorHashDto', () => {
       },
       signature: '123',
     };
-    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
+    const createCCSMAnchorDto = plainToInstance(CreateCCSMAnchorDto, dto);
 
     // Act
-    const errors = await validate(createAnchorHashDto);
+    const errors = await validate(createCCSMAnchorDto);
 
     // Assert
     expect(errors.length).toBe(0);

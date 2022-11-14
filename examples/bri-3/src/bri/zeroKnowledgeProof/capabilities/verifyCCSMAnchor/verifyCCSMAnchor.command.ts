@@ -1,7 +1,7 @@
 import { DocumentObject } from '../../models/document';
 import { ZeroKnowledgeProofVerificationInput } from '../../models/zeroKnowledgeProofVerificationInput';
 
-export class VerifyAnchorHashCommand {
+export class VerifyCCSMAnchorCommand {
   constructor(
     public readonly inputForProofVerification:
       | DocumentObject
