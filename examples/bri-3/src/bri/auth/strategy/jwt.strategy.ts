@@ -3,7 +3,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { jwtConstants } from '../constants';
 
-//use this to check if the user holds a valid jwt
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {

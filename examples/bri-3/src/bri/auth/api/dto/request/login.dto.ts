@@ -1,7 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 
 export class LoginDto {
-  //bip39 string signed from Metamask
+  @IsNotEmpty()
   message: string;
 
   @IsNotEmpty()

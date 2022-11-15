@@ -2,14 +2,22 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './api/auth.controller';
-import { AuthService } from './services/auth.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategy/jwt.strategy';
-import { LoginService } from './services/login.service';
 import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
+import { AuthAgent } from './agent/auth.agent';
+import { GenerateNonceCommandHandler } from './capabilities/generate-nonce/generate.nonce.command.handler';
+import { LoginCommandHandler } from './capabilities/login/login.command.handler';
+import { CqrsModule } from '@nestjs/cqrs';
+
+export const CommandHandlers = [
+  GenerateNonceCommandHandler,
+  LoginCommandHandler,
+];
 
 @Module({
   imports: [
+    CqrsModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
@@ -18,7 +26,7 @@ import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
     SubjectModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, LoginService],
-  exports: [AuthService],
+  providers: [...CommandHandlers, JwtStrategy, AuthAgent],
+  exports: [],
 })
 export class AuthModule {}

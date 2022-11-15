@@ -67,13 +67,14 @@ export class BpiSubjectStorageAgent extends PrismaService {
   }
 
   async getByPublicKey(publicKey: string): Promise<BpiSubject> {
-    console.log('publicKey', publicKey);
-    const bpiSubjectModel = await this.bpiSubject.findFirstOrThrow({
+    const bpiSubjectModel = await this.bpiSubject.findFirst({
       where: {
         publicKey: publicKey.toLowerCase(),
       },
     });
-    console.log('bpiSubjectModel', bpiSubjectModel);
+    if (!bpiSubjectModel) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
     return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
   }
 }

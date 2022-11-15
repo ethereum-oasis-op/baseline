@@ -4,8 +4,10 @@ import { SRI_BACKEND } from '../constants';
 const handleLogin = async () => {
   if (window.ethereum) {
     window.ethereum.enable();
-    const mnemonic = await axios.get(`${SRI_BACKEND}/auth/mnemonic`);
     const accounts = await window.ethereum.send('eth_requestAccounts');
+    const mnemonic = await axios.post(`${SRI_BACKEND}/auth/nonce`, {
+      publicKey: accounts.result[0],
+    });
     const signature = await window.ethereum.request({
       method: 'personal_sign',
       params: [mnemonic.data, accounts.result[0]],

@@ -1,21 +1,32 @@
-import { Controller, Get, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request } from '@nestjs/common';
 import { Public } from 'src/bri/decorators/public-endpoint';
-import { AuthService } from '../services/auth.service';
-import { generateMnemonic } from 'bip39';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { LoginDto } from './dto/request/login.dto';
+import { GenerateNonceDto } from './dto/request/generate.nonce.dto';
+import { LoginCommand } from '../capabilities/login/login.command';
+import { GenerateNonceCommand } from '../capabilities/generate-nonce/generate.nonce.command';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private commandBus: CommandBus) {}
 
   @Public()
   @Post('login')
-  async login(@Request() req) {
-    return this.authService.login(req.body);
+  async login(@Body() loginDto: LoginDto) {
+    return await this.commandBus.execute(
+      new LoginCommand(
+        loginDto.message,
+        loginDto.signature,
+        loginDto.publicKey,
+      ),
+    );
   }
 
   @Public()
-  @Get('mnemonic')
-  async mnemonic(@Request() req) {
-    return generateMnemonic();
+  @Post('nonce')
+  async nonce(@Body() generateNonceDto: GenerateNonceDto) {
+    return await this.commandBus.execute(
+      new GenerateNonceCommand(generateNonceDto.publicKey),
+    );
   }
 }

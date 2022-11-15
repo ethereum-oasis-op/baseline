@@ -17,6 +17,9 @@ export class BpiSubject {
   @AutoMap()
   publicKey: string;
 
+  @AutoMap()
+  loginNonce: string;
+
   constructor(
     id: string,
     name: string,
@@ -41,5 +44,9 @@ export class BpiSubject {
 
   public updatePublicKey(newPk: string): void {
     this.publicKey = newPk;
+  }
+
+  public updateLoginNonce(nonce: string): void {
+    this.loginNonce = nonce;
   }
 }
