@@ -25,20 +25,7 @@ The Technical Steering Committee (TSC) is accountable to the [Project Governance
 
 The group is responsible for reviewing and approving proper use of the grant funds, to ensure funds are allocated to valuable and appropriate work. The TSC meets regularly to set technical roadmaps and ensure progress of the community toward the ubiquitous implementation of the Baseline Protocol.
 
-On October 27, 2021, the following people were voted in as the TSC through October 2022.
-
-| Name                                                                              | Company                         |
-| --------------------------------------------------------------------------------- | ------------------------------- |
-| [**Dr. Andreas Freund**](https://www.linkedin.com/in/afconsultant/)               | ZK & L2 Leader, EEA L2 WG Chair |
-| [**Samrat Kishor**](https://www.linkedin.com/in/samratkishor/) **--** Chair       | Golden Next Ventures            |
-| ****[**Sonal Patel**](https://www.linkedin.com/in/sonalpatel13/)****              | ConsenSys Mesh                  |
-| [**Stefan Schmidt**](https://www.linkedin.com/in/stefschmidt/)                    | Unibright                       |
-| [**Mehran Shakeri**](https://www.linkedin.com/in/mehran-shakeri-8833b347/)        | SAP                             |
-| [**Luiz Soares**](./#your-project-governance-board)                               | WhitePrompt                     |
-| [**Kartheek Solipuram**](https://www.linkedin.com/in/kartheek-solipuram-62970a8/) | EY                              |
-| [**Cale Teeter**](https://www.linkedin.com/in/caleteeter/)                        | Microsoft                       |
-| [**Kyle Thomas**](https://www.linkedin.com/in/kylebthomas/)                       | Provide                         |
-| [**Jack Wiering**](https://www.linkedin.com/in/jackwiering1977/)                  | Unibright                       |
+The list of members for the TSC for the period from November 2022 to November 2023 can be [**found here**](https://github.com/eea-oasis/baseline/blob/main/TECHNICAL-STEERING-COMMITTEE.md).
 
 ## Standards Team
 
