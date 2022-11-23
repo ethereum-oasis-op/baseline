@@ -1,7 +1,7 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
-import { VerifyCcsmAnchorHashDto } from './verifyCcsmAnchorHash.dto';
+import { VerifyCcsmAnchorHashDto } from './testVerifyCcsmAnchorHash.dto';
 
 describe('VerifyCcsmAnchorHashDto', () => {
   it('should return error in case inputForProofVerification not provided.', async () => {
