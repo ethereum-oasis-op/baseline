@@ -6,7 +6,7 @@ import { VerifyCcsmAnchorHashDto } from './verifyCcsmAnchorHash.dto';
 describe('VerifyCcsmAnchorHashDto', () => {
   it('should return error in case inputForProofVerification not provided.', async () => {
     // Arrange
-    const dto: object = {};
+    const dto = {};
     const verifyCcsmAnchorHashDto = plainToInstance(
       VerifyCcsmAnchorHashDto,
       dto,
