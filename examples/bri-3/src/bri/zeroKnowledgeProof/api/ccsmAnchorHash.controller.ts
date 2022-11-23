@@ -1,21 +1,21 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateCcsmAnchorHashCommand } from '../capabilities/createCcsmAnchorHash/createCcsmAnchorHash.command';
-import { VerifyCcsmAnchorHashCommand } from '../capabilities/verifyCcsmAnchorHash/verifyCcsmAnchorHash.command';
-import { CreateCcsmAnchorHashDto } from './dtos/request/createCcsmAnchorHash.dto';
-import { VerifyCcsmAnchorHashDto } from './dtos/request/verifyCcsmAnchorHash.dto';
-import { CcsmAnchorHashDto } from './dtos/response/ccsmAnchorHash.dto';
+import { CreateCCSMAnchorHashCommand } from '../capabilities/createCCSMAnchorHash/createCCSMAnchorHash.command';
+import { VerifyCCSMAnchorHashCommand } from '../capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHash.command';
+import { CreateCCSMAnchorHashDto } from './dtos/request/createCCSMAnchorHash.dto';
+import { VerifyCCSMAnchorHashDto } from './dtos/request/verifyCCSMAnchorHash.dto';
+import { CCSMAnchorHashDto } from './dtos/response/ccsmAnchorHash.dto';
 
 @Controller('ccsmAnchorHash')
-export class CcsmAnchorHashController {
+export class CCSMAnchorHashController {
   constructor(private commandBus: CommandBus) {}
 
   @Post('/create')
-  async createCcsmAnchorHash(
-    @Body() requestDto: CreateCcsmAnchorHashDto,
-  ): Promise<CcsmAnchorHashDto> {
+  async createCCSMAnchorHash(
+    @Body() requestDto: CreateCCSMAnchorHashDto,
+  ): Promise<CCSMAnchorHashDto> {
     return await this.commandBus.execute(
-      new CreateCcsmAnchorHashCommand(
+      new CreateCCSMAnchorHashCommand(
         requestDto.ownerAccount,
         requestDto.document,
       ),
@@ -23,11 +23,11 @@ export class CcsmAnchorHashController {
   }
 
   @Post('/verify')
-  async verifyCcsmAnchorHash(
-    @Body() requestDto: VerifyCcsmAnchorHashDto,
+  async verifyCCSMAnchorHash(
+    @Body() requestDto: VerifyCCSMAnchorHashDto,
   ): Promise<boolean> {
     return await this.commandBus.execute(
-      new VerifyCcsmAnchorHashCommand(requestDto.inputForProofVerification),
+      new VerifyCCSMAnchorHashCommand(requestDto.inputForProofVerification),
     );
   }
 }

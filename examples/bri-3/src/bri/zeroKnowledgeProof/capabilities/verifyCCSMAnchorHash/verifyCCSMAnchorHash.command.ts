@@ -1,3 +1,3 @@
-export class VerifyCcsmAnchorHashCommand {
+export class VerifyCCSMAnchorHashCommand {
   constructor(public readonly inputForProofVerification: string) {}
 }

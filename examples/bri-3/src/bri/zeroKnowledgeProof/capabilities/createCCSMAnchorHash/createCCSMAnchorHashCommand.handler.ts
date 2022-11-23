@@ -1,27 +1,27 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CcsmAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
-import { CcsmAnchorHashStorageAgent } from '../../agents/ccsmAnchorHashStorage.agent';
-import { CreateCcsmAnchorHashCommand } from './createCcsmAnchorHash.command';
+import { CCSMAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
+import { CCSMAnchorHashStorageAgent } from '../../agents/ccsmAnchorHashStorage.agent';
+import { CreateCCSMAnchorHashCommand } from './createCCSMAnchorHash.command';
 
-@CommandHandler(CreateCcsmAnchorHashCommand)
-export class CreateCcsmAnchorHashCommandHandler
-  implements ICommandHandler<CreateCcsmAnchorHashCommand>
+@CommandHandler(CreateCCSMAnchorHashCommand)
+export class CreateCCSMAnchorHashCommandHandler
+  implements ICommandHandler<CreateCCSMAnchorHashCommand>
 {
   constructor(
-    private readonly agent: CcsmAnchorHashAgent,
-    private readonly storageAgent: CcsmAnchorHashStorageAgent,
+    private readonly agent: CCSMAnchorHashAgent,
+    private readonly storageAgent: CCSMAnchorHashStorageAgent,
   ) {}
 
-  async execute(command: CreateCcsmAnchorHashCommand) {
-    this.agent.throwErrorIfCcsmAnchorHashInputInvalid(command.document);
+  async execute(command: CreateCCSMAnchorHashCommand) {
+    this.agent.throwErrorIfCCSMAnchorHashInputInvalid(command.document);
 
-    const newCcsmAnchorHash = this.agent.createNewCcsmAnchorHash(
+    const newCCSMAnchorHash = this.agent.createNewCCSMAnchorHash(
       command.ownerAccount.id,
       command.document,
     );
 
-    await this.storageAgent.storeAnchorHashOnCcsm(newCcsmAnchorHash);
+    await this.storageAgent.storeAnchorHashOnCCSM(newCCSMAnchorHash);
 
-    return newCcsmAnchorHash;
+    return newCCSMAnchorHash;
   }
 }

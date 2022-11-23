@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 as uuidv4 } from 'uuid';
-import { CcsmAnchorHash } from '../models/ccsmAnchorHash';
+import { CCSMAnchorHash } from '../models/ccsmAnchorHash';
 
 @Injectable()
-export class CcsmAnchorHashAgent {
-  public throwErrorIfCcsmAnchorHashInputInvalid(
+export class CCSMAnchorHashAgent {
+  public throwErrorIfCCSMAnchorHashInputInvalid(
     inputForProofVerification: string,
   ): void {
     if (!inputForProofVerification) {
@@ -13,20 +13,20 @@ export class CcsmAnchorHashAgent {
     }
   }
 
-  public createNewCcsmAnchorHash(
+  public createNewCCSMAnchorHash(
     ownerId: string,
     document: string,
-  ): CcsmAnchorHash {
+  ): CCSMAnchorHash {
     const hash = this.convertDocumentToHash(document);
 
-    return new CcsmAnchorHash(uuidv4(), ownerId, hash);
+    return new CCSMAnchorHash(uuidv4(), ownerId, hash);
   }
 
-  public verifyCcsmAnchorHash(
-    CcsmAnchorHash: string,
+  public verifyCCSMAnchorHash(
+    CCSMAnchorHash: string,
     publicInputForProofVerification: string,
   ): boolean {
-    if (CcsmAnchorHash === publicInputForProofVerification) {
+    if (CCSMAnchorHash === publicInputForProofVerification) {
       return true;
     }
 

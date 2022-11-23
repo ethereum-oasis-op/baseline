@@ -1,21 +1,21 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
-import { CreateCcsmAnchorHashDto } from './createCcsmAnchorHash.dto';
+import { CreateCCSMAnchorHashDto } from './createCCSMAnchorHash.dto';
 
-describe('CreateCcsmAnchorHashDto', () => {
+describe('CreateCCSMAnchorHashDto', () => {
   it('should return error in case ownerAccount is not provided.', async () => {
     // Arrange
     const dto = {
       document: 'This is test document',
     };
-    const createCcsmAnchorHashDto = plainToInstance(
-      CreateCcsmAnchorHashDto,
+    const createCCSMAnchorHashDto = plainToInstance(
+      CreateCCSMAnchorHashDto,
       dto,
     );
 
     // Act
-    const errors = await validate(createCcsmAnchorHashDto);
+    const errors = await validate(createCCSMAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -30,13 +30,13 @@ describe('CreateCcsmAnchorHashDto', () => {
     const dto = {
       ownerAccount: {},
     };
-    const createCcsmAnchorHashDto = plainToInstance(
-      CreateCcsmAnchorHashDto,
+    const createCCSMAnchorHashDto = plainToInstance(
+      CreateCCSMAnchorHashDto,
       dto,
     );
 
     // Act
-    const errors = await validate(createCcsmAnchorHashDto);
+    const errors = await validate(createCCSMAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -52,13 +52,13 @@ describe('CreateCcsmAnchorHashDto', () => {
       ownerAccount: {},
       document: 'This test document',
     };
-    const createCcsmAnchorHashDto = plainToInstance(
-      CreateCcsmAnchorHashDto,
+    const createCCSMAnchorHashDto = plainToInstance(
+      CreateCCSMAnchorHashDto,
       dto,
     );
 
     // Act
-    const errors = await validate(createCcsmAnchorHashDto);
+    const errors = await validate(createCCSMAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(0);

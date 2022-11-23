@@ -1,20 +1,20 @@
 import { NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CcsmAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
-import { CcsmAnchorHashStorageAgent } from '../../agents/ccsmAnchorHashStorage.agent';
-import { VerifyCcsmAnchorHashCommand } from './verifyCcsmAnchorHash.command';
+import { CCSMAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
+import { CCSMAnchorHashStorageAgent } from '../../agents/ccsmAnchorHashStorage.agent';
+import { VerifyCCSMAnchorHashCommand } from './verifyCCSMAnchorHash.command';
 import { CCSM_ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
-@CommandHandler(VerifyCcsmAnchorHashCommand)
-export class VerifyCcsmAnchorHashCommandHandler
-  implements ICommandHandler<VerifyCcsmAnchorHashCommand>
+@CommandHandler(VerifyCCSMAnchorHashCommand)
+export class VerifyCCSMAnchorHashCommandHandler
+  implements ICommandHandler<VerifyCCSMAnchorHashCommand>
 {
   constructor(
-    private readonly agent: CcsmAnchorHashAgent,
-    private readonly storageAgent: CcsmAnchorHashStorageAgent,
+    private readonly agent: CCSMAnchorHashAgent,
+    private readonly storageAgent: CCSMAnchorHashStorageAgent,
   ) {}
 
-  async execute(command: VerifyCcsmAnchorHashCommand) {
-    this.agent.throwErrorIfCcsmAnchorHashInputInvalid(
+  async execute(command: VerifyCCSMAnchorHashCommand) {
+    this.agent.throwErrorIfCCSMAnchorHashInputInvalid(
       command.inputForProofVerification,
     );
 
@@ -23,17 +23,17 @@ export class VerifyCcsmAnchorHashCommandHandler
         command.inputForProofVerification,
       );
 
-    const CcsmAnchorHash = await this.storageAgent.getAnchorHashFromCcsm(
+    const CCSMAnchorHash = await this.storageAgent.getAnchorHashFromCCSM(
       publicInputForProofVerification,
     );
 
-    if (!CcsmAnchorHash) {
+    if (!CCSMAnchorHash) {
       throw new NotFoundException(CCSM_ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE);
     }
 
-    //Verify Ccsm Anchor hash
-    const verified = this.agent.verifyCcsmAnchorHash(
-      CcsmAnchorHash,
+    //Verify CCSM Anchor hash
+    const verified = this.agent.verifyCCSMAnchorHash(
+      CCSMAnchorHash,
       publicInputForProofVerification,
     );
 
