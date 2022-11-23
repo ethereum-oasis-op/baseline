@@ -17,9 +17,7 @@ export class CcsmAnchorHashController {
     return await this.commandBus.execute(
       new CreateCcsmAnchorHashCommand(
         requestDto.ownerAccount,
-        requestDto.agreementState,
         requestDto.document,
-        requestDto.signature,
       ),
     );
   }
@@ -29,10 +27,7 @@ export class CcsmAnchorHashController {
     @Body() requestDto: VerifyCcsmAnchorHashDto,
   ): Promise<boolean> {
     return await this.commandBus.execute(
-      new VerifyCcsmAnchorHashCommand(
-        requestDto.inputForProofVerification,
-        requestDto.signature,
-      ),
+      new VerifyCcsmAnchorHashCommand(requestDto.inputForProofVerification),
     );
   }
 }

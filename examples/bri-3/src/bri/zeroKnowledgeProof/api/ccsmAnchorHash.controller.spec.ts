@@ -2,11 +2,11 @@ import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INVALID_ANCHOR_HASH_INPUT } from './err.messages';
-import { CcsmAnchorHashController } from './ccsmAnchorHashHash.controller';
-import { CcsmAnchorHashAgent } from '../agents/ccsmAnchorHashHash.agent';
+import { CcsmAnchorHashController } from './ccsmAnchorHash.controller';
+import { CcsmAnchorHashAgent } from '../agents/ccsmAnchorHash.agent';
 import { CreateCcsmAnchorHashCommandHandler } from '../capabilities/createCcsmAnchorHash/createCcsmAnchorHashCommand.handler';
 import { VerifyCcsmAnchorHashCommandHandler } from '../capabilities/verifyCcsmAnchorHash/verifyCcsmAnchorHashCommand.handler';
-import { CcsmAnchorHashStorageAgent } from '../agents/ccsmAnchorHashHashStorage.agent';
+import { CcsmAnchorHashStorageAgent } from '../agents/ccsmAnchorHashStorage.agent';
 import { CreateCcsmAnchorHashDto } from './dtos/request/createCcsmAnchorHash.dto';
 import { VerifyCcsmAnchorHashDto } from './dtos/request/verifyCcsmAnchorHash.dto';
 import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
@@ -14,7 +14,6 @@ import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../components/blockchain/blockchain.service';
-import { DocumentObject } from '../models/document';
 
 describe('ProofController', () => {
   let controller: CcsmAnchorHashController;
@@ -54,15 +53,11 @@ describe('ProofController', () => {
         mockBpiSubject,
       );
 
-      const mockBpiAccount = new BpiAccount('123', []);
-
-      const mockDocument = new DocumentObject('', {});
+      const mockDocument = '';
 
       const missingDocumentParam = {
         ownerAccount: mockBpiSubjectAccount,
-        agreementState: mockBpiAccount,
         document: mockDocument,
-        signature: '123',
       };
 
       // Act and assert
@@ -87,17 +82,11 @@ describe('ProofController', () => {
         mockBpiSubject,
       );
 
-      const mockBpiAccount = new BpiAccount('123', []);
-
-      const mockDocument = new DocumentObject('document', {
-        input: 'document1',
-      });
+      const mockDocument = 'This is test document';
 
       const requestDto = {
         ownerAccount: mockBpiSubjectAccount,
-        agreementState: mockBpiAccount,
         document: mockDocument,
-        signature: 'signature',
       } as CreateCcsmAnchorHashDto;
 
       // Act
@@ -105,20 +94,18 @@ describe('ProofController', () => {
       console.log(ccsmAnchorHash);
 
       // Assert
-      expect(ccsmAnchorHash.owner).toEqual(requestDto.ownerAccount);
-      expect(ccsmAnchorHash.hash).toEqual('document1'); // TODO: Add merkle root of document as payload
-      expect(ccsmAnchorHash.signature).toEqual(requestDto.signature);
+      expect(ccsmAnchorHash.ownerId).toEqual(requestDto.ownerAccount.id);
+      expect(ccsmAnchorHash.hash).toEqual('This is test document'); // TODO: Add merkle root of document as payload
     });
   });
 
   describe('verifyCcsmAnchorHash', () => {
     it('should throw BadRequest if inputForProofVerification parameter is missing', async () => {
       // Arrange
-      const mockDocument = new DocumentObject('', {});
+      const mockDocument = '';
 
       const missingDocumentParam = {
         inputForProofVerification: mockDocument,
-        signature: '123',
       };
 
       // Act and assert
@@ -129,13 +116,10 @@ describe('ProofController', () => {
 
     it('should perform the verification if document is provided', async () => {
       // Arrange
-      const mockDocument = new DocumentObject('document', {
-        input: 'document1',
-      });
+      const mockDocument = 'This is test document';
 
       const verifyRequestDto = {
         inputForProofVerification: mockDocument,
-        signature: '123',
       } as VerifyCcsmAnchorHashDto;
 
       // Act
