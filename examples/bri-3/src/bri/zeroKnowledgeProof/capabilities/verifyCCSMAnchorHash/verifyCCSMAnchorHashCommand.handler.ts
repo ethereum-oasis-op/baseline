@@ -1,19 +1,19 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CCSMAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
-import { VerifyCCSMAnchorHashCommand } from './verifyCCSMAnchorHash.command';
+import { CcsmAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
+import { VerifyCcsmAnchorHashCommand } from './verifyCcsmAnchorHash.command';
 
-@CommandHandler(VerifyCCSMAnchorHashCommand)
-export class VerifyCCSMAnchorHashCommandHandler
-  implements ICommandHandler<VerifyCCSMAnchorHashCommand>
+@CommandHandler(VerifyCcsmAnchorHashCommand)
+export class VerifyCcsmAnchorHashCommandHandler
+  implements ICommandHandler<VerifyCcsmAnchorHashCommand>
 {
-  constructor(private readonly agent: CCSMAnchorHashAgent) {}
+  constructor(private readonly agent: CcsmAnchorHashAgent) {}
 
-  async execute(command: VerifyCCSMAnchorHashCommand) {
-    this.agent.throwErrorIfCCSMAnchorHashInputInvalid(
+  async execute(command: VerifyCcsmAnchorHashCommand) {
+    this.agent.throwErrorIfCcsmAnchorHashInputInvalid(
       command.inputForProofVerification,
     );
 
-    const verified = await this.agent.verifyDocumentWithCCSMAnchorHash(
+    const verified = await this.agent.verifyDocumentWithCcsmAnchorHash(
       command.inputForProofVerification,
     );
 

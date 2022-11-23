@@ -1,17 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 as uuidv4 } from 'uuid';
-import { CCSMAnchorHash } from '../models/ccsmAnchorHash';
-import { CCSMAnchorHashStorageAgent } from './ccsmAnchorHashStorage.agent';
-import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
-import { DocumentObject } from '../models/document';
-import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProofVerificationInput';
-import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { CcsmAnchorHash } from '../models/ccsmAnchorHash';
+import { CcsmAnchorHashStorageAgent } from './ccsmAnchorHashStorage.agent';
 @Injectable()
-export class CCSMAnchorHashAgent {
-  constructor(private readonly storageAgent: CCSMAnchorHashStorageAgent) {}
+export class CcsmAnchorHashAgent {
+  constructor(private readonly storageAgent: CcsmAnchorHashStorageAgent) {}
 
-  public throwErrorIfCCSMAnchorHashInputInvalid(
+  public throwErrorIfCcsmAnchorHashInputInvalid(
     inputForProofVerification:
       | DocumentObject
       | ZeroKnowledgeProofVerificationInput,
@@ -25,21 +21,19 @@ export class CCSMAnchorHashAgent {
     }
   }
 
-  public createNewCCSMAnchorHash(
-    owner: BpiSubjectAccount,
-    agreementState: BpiAccount,
+  public createNewCcsmAnchorHash(
+    ownerId: string,
     document: DocumentObject,
-    signature: string,
-  ): CCSMAnchorHash {
+  ): CcsmAnchorHash {
     const hash =
       this.convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
         document.documentObjectInput,
       );
 
-    return new CCSMAnchorHash(uuidv4(), owner, agreementState, hash, signature);
+    return new CcsmAnchorHash(uuidv4(), ownerId, hash);
   }
 
-  public async verifyDocumentWithCCSMAnchorHash(
+  public async verifyDocumentWithCcsmAnchorHash(
     inputForProofVerification:
       | DocumentObject
       | ZeroKnowledgeProofVerificationInput,
@@ -53,7 +47,7 @@ export class CCSMAnchorHashAgent {
     } else {
       publicInputForProofVerification = inputForProofVerification;
     }
-    const verified = await this.storageAgent.verifyCCSMAnchorHashOnCCSM(
+    const verified = await this.storageAgent.verifyCcsmAnchorHashOnCcsm(
       publicInputForProofVerification,
     );
     return verified;

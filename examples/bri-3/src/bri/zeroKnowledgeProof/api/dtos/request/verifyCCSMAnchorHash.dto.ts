@@ -2,7 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 import { ZeroKnowledgeProofVerificationInput } from '../../../models/zeroKnowledgeProofVerificationInput';
 import { DocumentObject } from '../../../models/document';
 
-export class VerifyCCSMAnchorHashDto {
+export class VerifyCcsmAnchorHashDto {
   @IsNotEmpty()
   inputForProofVerification:
     | DocumentObject

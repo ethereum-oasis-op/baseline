@@ -4,7 +4,7 @@ import { BpiAccount } from '../../../../identity/bpiAccounts/models/bpiAccount';
 import { DocumentObject } from '../../../models/document';
 
 // TODO: Revisit validations rules once we move into business logic implementation
-export class CreateCCSMAnchorHashDto {
+export class CreateCcsmAnchorHashDto {
   @IsNotEmpty()
   ownerAccount: BpiSubjectAccount;
 

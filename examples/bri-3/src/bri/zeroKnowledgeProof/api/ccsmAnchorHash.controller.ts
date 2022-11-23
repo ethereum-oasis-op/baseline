@@ -1,21 +1,21 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { CreateCCSMAnchorHashCommand } from '../capabilities/createCCSMAnchorHash/createCCSMAnchorHash.command';
-import { VerifyCCSMAnchorHashCommand } from '../capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHash.command';
-import { CreateCCSMAnchorHashDto } from './dtos/request/createCCSMAnchorHash.dto';
-import { VerifyCCSMAnchorHashDto } from './dtos/request/verifyCCSMAnchorHash.dto';
-import { CCSMAnchorHashDto } from './dtos/response/ccsmAnchorHash.dto';
+import { CreateCcsmAnchorHashCommand } from '../capabilities/createCcsmAnchorHash/createCcsmAnchorHash.command';
+import { VerifyCcsmAnchorHashCommand } from '../capabilities/verifyCcsmAnchorHash/verifyCcsmAnchorHash.command';
+import { CreateCcsmAnchorHashDto } from './dtos/request/createCcsmAnchorHash.dto';
+import { VerifyCcsmAnchorHashDto } from './dtos/request/verifyCcsmAnchorHash.dto';
+import { CcsmAnchorHashDto } from './dtos/response/ccsmAnchorHash.dto';
 
 @Controller('ccsmAnchorHash')
-export class CCSMAnchorHashController {
+export class CcsmAnchorHashController {
   constructor(private commandBus: CommandBus) {}
 
   @Post('/create')
-  async createCCSMAnchorHash(
-    @Body() requestDto: CreateCCSMAnchorHashDto,
-  ): Promise<CCSMAnchorHashDto> {
+  async createCcsmAnchorHash(
+    @Body() requestDto: CreateCcsmAnchorHashDto,
+  ): Promise<CcsmAnchorHashDto> {
     return await this.commandBus.execute(
-      new CreateCCSMAnchorHashCommand(
+      new CreateCcsmAnchorHashCommand(
         requestDto.ownerAccount,
         requestDto.agreementState,
         requestDto.document,
@@ -25,11 +25,11 @@ export class CCSMAnchorHashController {
   }
 
   @Post('/verify')
-  async verifyCCSMAnchorHash(
-    @Body() requestDto: VerifyCCSMAnchorHashDto,
+  async verifyCcsmAnchorHash(
+    @Body() requestDto: VerifyCcsmAnchorHashDto,
   ): Promise<boolean> {
     return await this.commandBus.execute(
-      new VerifyCCSMAnchorHashCommand(
+      new VerifyCcsmAnchorHashCommand(
         requestDto.inputForProofVerification,
         requestDto.signature,
       ),
