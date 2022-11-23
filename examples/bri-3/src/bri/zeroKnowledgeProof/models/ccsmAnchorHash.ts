@@ -7,28 +7,14 @@ export class CCSMAnchorHash {
   id: string;
 
   @AutoMap()
-  owner: BpiSubjectAccount;
-
-  @AutoMap()
-  agreementState: BpiAccount;
+  ownerId: string;
 
   @AutoMap()
   hash: string;
 
-  @AutoMap()
-  signature: string;
-
-  constructor(
-    id: string,
-    owner: BpiSubjectAccount,
-    agreementState: BpiAccount,
-    hash: string,
-    signature: string,
-  ) {
+  constructor(id: string, ownerId: string, hash: string) {
     this.id = id;
-    this.owner = owner;
-    this.agreementState = agreementState;
+    this.ownerId = ownerId;
     this.hash = hash;
-    this.signature = signature;
   }
 }
