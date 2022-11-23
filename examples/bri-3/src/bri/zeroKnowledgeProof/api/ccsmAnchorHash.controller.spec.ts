@@ -13,7 +13,7 @@ import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
-import { BlockchainService } from '../components/blockchain/blockchain.service';
+import { BlockchainService } from '../services/blockchain/blockchain.service';
 
 describe('ProofController', () => {
   let controller: CcsmAnchorHashController;

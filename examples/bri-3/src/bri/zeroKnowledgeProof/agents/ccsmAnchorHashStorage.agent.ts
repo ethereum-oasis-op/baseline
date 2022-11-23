@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { BlockchainService } from '../components/blockchain/blockchain.service';
+import { BlockchainService } from '../services/blockchain/blockchain.service';
 
 import { CcsmAnchorHash } from '../models/ccsmAnchorHash';
 
