@@ -1,5 +1,4 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import { ZeroKnowledgeProofVerificationInput } from '../../models/zeroKnowledgeProofVerificationInput';
 
 @Injectable()
 export class BlockchainService implements OnModuleInit {
@@ -11,16 +10,12 @@ export class BlockchainService implements OnModuleInit {
     //TODO: deploy contract
   }
 
-  async store(proof: string) {
+  async store(anchorHash: string) {
     //TODO: store content-addressable hash on contract
   }
 
-  async verify(
-    publicInputForProofVerification:
-      | string
-      | ZeroKnowledgeProofVerificationInput,
-  ): Promise<boolean> {
-    //TODO: verify content-addressable hash exists in shield contract
-    return true;
+  async get(publicInputForProofVerification: string): Promise<string> {
+    //TODO: returns the content-addressable hash if it exists on contract
+    return publicInputForProofVerification;
   }
 }

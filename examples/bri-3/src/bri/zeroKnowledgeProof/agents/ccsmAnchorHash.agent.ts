@@ -2,62 +2,40 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 as uuidv4 } from 'uuid';
 import { CcsmAnchorHash } from '../models/ccsmAnchorHash';
-import { CcsmAnchorHashStorageAgent } from './ccsmAnchorHashStorage.agent';
+
 @Injectable()
 export class CcsmAnchorHashAgent {
-  constructor(private readonly storageAgent: CcsmAnchorHashStorageAgent) {}
-
   public throwErrorIfCcsmAnchorHashInputInvalid(
-    inputForProofVerification:
-      | DocumentObject
-      | ZeroKnowledgeProofVerificationInput,
+    inputForProofVerification: string,
   ): void {
-    if (
-      inputForProofVerification instanceof DocumentObject &&
-      (!inputForProofVerification.documentObjectInput ||
-        !inputForProofVerification.documentObjectType)
-    ) {
+    if (!inputForProofVerification) {
       throw new BadRequestException(INVALID_ANCHOR_HASH_INPUT);
     }
   }
 
   public createNewCcsmAnchorHash(
     ownerId: string,
-    document: DocumentObject,
+    document: string,
   ): CcsmAnchorHash {
-    const hash =
-      this.convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
-        document.documentObjectInput,
-      );
+    const hash = this.convertDocumentToHash(document);
 
     return new CcsmAnchorHash(uuidv4(), ownerId, hash);
   }
 
-  public async verifyDocumentWithCcsmAnchorHash(
-    inputForProofVerification:
-      | DocumentObject
-      | ZeroKnowledgeProofVerificationInput,
+  public async verifyCcsmAnchorHash(
+    CcsmAnchorHash: string,
+    publicInputForProofVerification: string,
   ): Promise<boolean> {
-    let publicInputForProofVerification;
-    if (inputForProofVerification instanceof DocumentObject) {
-      publicInputForProofVerification =
-        this.convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
-          inputForProofVerification.documentObjectInput,
-        );
-    } else {
-      publicInputForProofVerification = inputForProofVerification;
+    if (CcsmAnchorHash === publicInputForProofVerification) {
+      return true;
     }
-    const verified = await this.storageAgent.verifyCcsmAnchorHashOnCcsm(
-      publicInputForProofVerification,
-    );
-    return verified;
+
+    return false;
   }
 
-  public convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
-    document: object,
-  ) {
+  public convertDocumentToHash(document: string) {
     //TODO: Convert document into payload using merkleTree service
-    const hash = Object.values(document)[0];
+    const hash = document;
     return hash;
   }
 }

@@ -20,7 +20,7 @@ export class CreateCcsmAnchorHashCommandHandler
       command.document,
     );
 
-    await this.storageAgent.storeCcsmAnchorHashOnCcsm(newCcsmAnchorHash);
+    await this.storageAgent.storeAnchorHashOnCcsm(newCcsmAnchorHash);
 
     return newCcsmAnchorHash;
   }
