@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 
-export class CCSMAnchor {
+export class CCSMAnchorHash {
   @AutoMap()
   id: string;
 

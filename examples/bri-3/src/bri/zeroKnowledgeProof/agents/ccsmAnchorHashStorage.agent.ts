@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { BlockchainService } from '../components/blockchain/blockchain.service';
 
-import { CCSMAnchor } from '../models/ccsmAnchor';
+import { CCSMAnchorHash } from '../models/ccsmAnchorHash';
 import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProofVerificationInput';
 
 @Injectable()
-export class CCSMAnchorStorageAgent {
+export class CCSMAnchorHashStorageAgent {
   constructor(private readonly storageAgent: BlockchainService) {}
 
-  async storeCCSMAnchorOnCCSM(proof: CCSMAnchor): Promise<void> {
+  async storeCCSMAnchorHashOnCCSM(proof: CCSMAnchorHash): Promise<void> {
     await this.storageAgent.store(proof.hash);
   }
 
-  async verifyCCSMAnchorOnCCSM(
+  async verifyCCSMAnchorHashOnCCSM(
     publicInputForProofVerification:
       | string
       | ZeroKnowledgeProofVerificationInput,

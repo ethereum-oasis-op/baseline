@@ -1,19 +1,23 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CCSMAnchorAgent } from './agents/ccsmAnchor.agent';
-import { CCSMAnchorStorageAgent } from './agents/ccsmAnchorStorage.agent';
-import { CCSMAnchorController } from './api/ccsmAnchor.controller';
-import { CreateCCSMAnchorCommandHandler } from './capabilities/createCCSMAnchor/createCCSMAnchorCommand.handler';
-import { VerifyCCSMAnchorCommandHandler } from './capabilities/verifyCCSMAnchor/verifyCCSMAnchorCommand.handler';
+import { CCSMAnchorHashAgent } from './agents/ccsmAnchorHash.agent';
+import { CCSMAnchorHashStorageAgent } from './agents/ccsmAnchorHashStorage.agent';
+import { CCSMAnchorHashController } from './api/ccsmAnchorHash.controller';
+import { CreateCCSMAnchorHashCommandHandler } from './capabilities/createCCSMAnchorHash/createCCSMAnchorHashCommand.handler';
+import { VerifyCCSMAnchorHashCommandHandler } from './capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHashCommand.handler';
 
 export const CommandHandlers = [
-  CreateCCSMAnchorCommandHandler,
-  VerifyCCSMAnchorCommandHandler,
+  CreateCCSMAnchorHashCommandHandler,
+  VerifyCCSMAnchorHashCommandHandler,
 ];
 
 @Module({
   imports: [CqrsModule],
-  controllers: [CCSMAnchorController],
-  providers: [...CommandHandlers, CCSMAnchorAgent, CCSMAnchorStorageAgent],
+  controllers: [CCSMAnchorHashController],
+  providers: [
+    ...CommandHandlers,
+    CCSMAnchorHashAgent,
+    CCSMAnchorHashStorageAgent,
+  ],
 })
 export class ZeroKnowledgeProofModule {}

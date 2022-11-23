@@ -1,16 +1,19 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
-import { VerifyCCSMAnchorDto } from './verifyCCSMAnchor.dto';
+import { VerifyCCSMAnchorHashDto } from './verifyCCSMAnchorHash.dto';
 
-describe('VerifyCCSMAnchorDto', () => {
+describe('VerifyCCSMAnchorHashDto', () => {
   it('should return error in case inputForProofVerification not provided.', async () => {
     // Arrange
     const dto = { signature: '2323' };
-    const verifyCCSMAnchorDto = plainToInstance(VerifyCCSMAnchorDto, dto);
+    const verifyCCSMAnchorHashDto = plainToInstance(
+      VerifyCCSMAnchorHashDto,
+      dto,
+    );
 
     // Act
-    const errors = await validate(verifyCCSMAnchorDto);
+    const errors = await validate(verifyCCSMAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -28,10 +31,13 @@ describe('VerifyCCSMAnchorDto', () => {
         documentObjectInput: { input: 'This is a document' },
       },
     };
-    const verifyCCSMAnchorDto = plainToInstance(VerifyCCSMAnchorDto, dto);
+    const verifyCCSMAnchorHashDto = plainToInstance(
+      VerifyCCSMAnchorHashDto,
+      dto,
+    );
 
     // Act
-    const errors = await validate(verifyCCSMAnchorDto);
+    const errors = await validate(verifyCCSMAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -50,10 +56,13 @@ describe('VerifyCCSMAnchorDto', () => {
       },
       signature: '2323',
     };
-    const verifyCCSMAnchorDto = plainToInstance(VerifyCCSMAnchorDto, dto);
+    const verifyCCSMAnchorHashDto = plainToInstance(
+      VerifyCCSMAnchorHashDto,
+      dto,
+    );
 
     // Act
-    const errors = await validate(verifyCCSMAnchorDto);
+    const errors = await validate(verifyCCSMAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(0);

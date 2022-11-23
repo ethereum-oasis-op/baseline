@@ -1,17 +1,17 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 as uuidv4 } from 'uuid';
-import { CCSMAnchor } from '../models/ccsmAnchor';
-import { CCSMAnchorStorageAgent } from './ccsmAnchorStorage.agent';
+import { CCSMAnchorHash } from '../models/ccsmAnchorHash';
+import { CCSMAnchorHashStorageAgent } from './ccsmAnchorHashStorage.agent';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { DocumentObject } from '../models/document';
 import { ZeroKnowledgeProofVerificationInput } from '../models/zeroKnowledgeProofVerificationInput';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 @Injectable()
-export class CCSMAnchorAgent {
-  constructor(private readonly storageAgent: CCSMAnchorStorageAgent) {}
+export class CCSMAnchorHashAgent {
+  constructor(private readonly storageAgent: CCSMAnchorHashStorageAgent) {}
 
-  public throwErrorIfCCSMAnchorInputInvalid(
+  public throwErrorIfCCSMAnchorHashInputInvalid(
     inputForProofVerification:
       | DocumentObject
       | ZeroKnowledgeProofVerificationInput,
@@ -25,21 +25,21 @@ export class CCSMAnchorAgent {
     }
   }
 
-  public createNewCCSMAnchor(
+  public createNewCCSMAnchorHash(
     owner: BpiSubjectAccount,
     agreementState: BpiAccount,
     document: DocumentObject,
     signature: string,
-  ): CCSMAnchor {
+  ): CCSMAnchorHash {
     const hash =
       this.convertDocumentToHashAndThrowErrorIfDocumentValidationFails(
         document.documentObjectInput,
       );
 
-    return new CCSMAnchor(uuidv4(), owner, agreementState, hash, signature);
+    return new CCSMAnchorHash(uuidv4(), owner, agreementState, hash, signature);
   }
 
-  public async verifyDocumentWithCCSMAnchor(
+  public async verifyDocumentWithCCSMAnchorHash(
     inputForProofVerification:
       | DocumentObject
       | ZeroKnowledgeProofVerificationInput,
@@ -53,7 +53,7 @@ export class CCSMAnchorAgent {
     } else {
       publicInputForProofVerification = inputForProofVerification;
     }
-    const verified = await this.storageAgent.verifyCCSMAnchorOnCCSM(
+    const verified = await this.storageAgent.verifyCCSMAnchorHashOnCCSM(
       publicInputForProofVerification,
     );
     return verified;

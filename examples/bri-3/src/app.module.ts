@@ -8,7 +8,6 @@ import { TransactionModule } from './bri/transactions/transactions.module';
 import { ZeroKnowledgeProofModule } from './bri/zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { LoggingModule } from './shared/logging/logging.module';
-import { BlockchainService } from '../src/bri/zeroKnowledgeProof/components/blockchain/blockchain.service';
 
 @Module({
   imports: [
@@ -22,6 +21,6 @@ import { BlockchainService } from '../src/bri/zeroKnowledgeProof/components/bloc
       strategyInitializer: classes(),
     }),
   ],
-  providers: [PrismaService, BlockchainService],
+  providers: [PrismaService],
 })
 export class AppModule {}
