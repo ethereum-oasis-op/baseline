@@ -22,10 +22,10 @@ export class CcsmAnchorHashAgent {
     return new CcsmAnchorHash(uuidv4(), ownerId, hash);
   }
 
-  public async verifyCcsmAnchorHash(
+  public verifyCcsmAnchorHash(
     CcsmAnchorHash: string,
     publicInputForProofVerification: string,
-  ): Promise<boolean> {
+  ): boolean {
     if (CcsmAnchorHash === publicInputForProofVerification) {
       return true;
     }

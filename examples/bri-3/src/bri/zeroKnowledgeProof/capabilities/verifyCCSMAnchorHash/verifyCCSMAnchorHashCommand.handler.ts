@@ -32,7 +32,7 @@ export class VerifyCcsmAnchorHashCommandHandler
     }
 
     //Verify Ccsm Anchor hash
-    const verified = await this.agent.verifyCcsmAnchorHash(
+    const verified = this.agent.verifyCcsmAnchorHash(
       CcsmAnchorHash,
       publicInputForProofVerification,
     );
