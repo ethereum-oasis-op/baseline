@@ -1,15 +1,7 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class BlockchainService implements OnModuleInit {
-  async onModuleInit() {
-    // TODO: connect to blockchain
-  }
-
-  async deploy(contract: any) {
-    //TODO: deploy contract
-  }
-
+export class BlockchainService {
   async store(anchorHash: string) {
     //TODO: store content-addressable hash on contract
   }

@@ -1,8 +1,9 @@
+import { NotFoundException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CcsmAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
 import { CcsmAnchorHashStorageAgent } from '../../agents/ccsmAnchorHashStorage.agent';
 import { VerifyCcsmAnchorHashCommand } from './verifyCcsmAnchorHash.command';
-
+import { CCSM_ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
 @CommandHandler(VerifyCcsmAnchorHashCommand)
 export class VerifyCcsmAnchorHashCommandHandler
   implements ICommandHandler<VerifyCcsmAnchorHashCommand>
@@ -17,16 +18,18 @@ export class VerifyCcsmAnchorHashCommandHandler
       command.inputForProofVerification,
     );
 
-    //Create public input for proof verification
-    const hash = this.agent.convertDocumentToHash(
-      command.inputForProofVerification,
-    );
-    const publicInputForProofVerification = hash;
+    const publicInputForProofVerification =
+      this.agent.createPublicInputForProofVerification(
+        command.inputForProofVerification,
+      );
 
-    //Get Anchor hash if it exists on Ccsm
     const CcsmAnchorHash = await this.storageAgent.getAnchorHashFromCcsm(
       publicInputForProofVerification,
     );
+
+    if (!CcsmAnchorHash) {
+      throw new NotFoundException(CCSM_ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE);
+    }
 
     //Verify Ccsm Anchor hash
     const verified = await this.agent.verifyCcsmAnchorHash(

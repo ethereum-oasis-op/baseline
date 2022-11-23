@@ -33,6 +33,14 @@ export class CcsmAnchorHashAgent {
     return false;
   }
 
+  public createPublicInputForProofVerification(
+    inputForProofVerification: string,
+  ): string {
+    const hash = this.convertDocumentToHash(inputForProofVerification);
+    const publicInputForProofVerification = hash;
+    return publicInputForProofVerification;
+  }
+
   public convertDocumentToHash(document: string) {
     //TODO: Convert document into payload using merkleTree service
     const hash = document;
