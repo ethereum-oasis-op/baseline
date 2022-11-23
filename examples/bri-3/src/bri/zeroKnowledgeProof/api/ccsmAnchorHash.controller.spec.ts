@@ -11,7 +11,6 @@ import { CreateCcsmAnchorHashDto } from './dtos/request/createCcsmAnchorHash.dto
 import { VerifyCcsmAnchorHashDto } from './dtos/request/verifyCcsmAnchorHash.dto';
 import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
 
