@@ -90,7 +90,6 @@ describe('ProofController', () => {
 
       // Act
       const ccsmAnchorHash = await controller.createCCSMAnchorHash(requestDto);
-      console.log(ccsmAnchorHash);
 
       // Assert
       expect(ccsmAnchorHash.ownerId).toEqual(requestDto.ownerAccount.id);
