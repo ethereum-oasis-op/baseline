@@ -8,13 +8,13 @@ export class CCSMAnchorHashStorageAgent {
   constructor(private readonly storageAgent: BlockchainService) {}
 
   async storeAnchorHashOnCCSM(CCSMAnchorHash: CCSMAnchorHash): Promise<void> {
-    await this.storageAgent.store(CCSMAnchorHash.hash);
+    await this.storageAgent.write(CCSMAnchorHash.hash);
   }
 
   async getAnchorHashFromCCSM(
     publicInputForProofVerification: string,
   ): Promise<string> {
-    const CCSMAnchorHash = await this.storageAgent.get(
+    const CCSMAnchorHash = await this.storageAgent.read(
       publicInputForProofVerification,
     );
     return CCSMAnchorHash;
