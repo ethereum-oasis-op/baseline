@@ -11,25 +11,21 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     const { message, signature, publicKey } = command;
 
     const bpiSubject = await this.authAgent.getBpiSubjectByPublicKey(publicKey);
-    if (
-      bpiSubject &&
-      bpiSubject.publicKey === publicKey &&
-      bpiSubject.loginNonce === message
-    ) {
-      if (this.authAgent.verify(message, signature, publicKey)) {
-        const bpiSubject = await this.authAgent.getBpiSubjectByPublicKey(
-          publicKey,
-        );
-        const payload = {
-          username: bpiSubject.name,
-          sub: bpiSubject.id,
-        };
-        bpiSubject.loginNonce = '';
-        await this.authAgent.updateLoginNonce(bpiSubject);
-        return this.authAgent.generateJwt(payload);
-      }
+    if (bpiSubject.loginNonce !== message) {
       throw new Error(errorMessage.USER_NOT_AUTHORIZED);
     }
-    throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+    const verifySignature = this.authAgent.verify(
+      message,
+      signature,
+      publicKey,
+    );
+    if (!verifySignature) {
+      throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+    }
+    const payload = {
+      username: bpiSubject.name,
+      sub: bpiSubject.id,
+    };
+    return this.authAgent.generateJwt(payload);
   }
 }

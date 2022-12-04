@@ -11,8 +11,9 @@ export class AuthAgent {
     private jwtService: JwtService,
   ) {}
 
-  async verify(message: string, signature: string, publicKey: string) {
-    return ethers.utils.verifyMessage(message, signature) === publicKey;
+  verify(message: string, signature: string, publicKey: string) {
+    const utilsVerify = ethers.utils.verifyMessage(message, signature);
+    return utilsVerify.toLowerCase() === publicKey;
   }
 
   async getBpiSubjectByPublicKey(publicKey: string) {
