@@ -15,12 +15,8 @@ export class GenerateNonceCommandHandler
       command.publicKey,
     );
 
-    if (!bpiSubject.loginNonce || bpiSubject.loginNonce === '') {
-      bpiSubject.loginNonce = v4();
-      await this.authAgent.updateLoginNonce(bpiSubject);
-      return bpiSubject.loginNonce;
-    } else {
-      throw new Error(errorMessage.RELOGIN_FAILED);
-    }
+    bpiSubject.loginNonce = v4();
+    await this.authAgent.updateLoginNonce(bpiSubject);
+    return bpiSubject.loginNonce;
   }
 }

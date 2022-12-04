@@ -3,7 +3,6 @@ import axios from 'axios';
 const handleLogin = async () => {
   // TODO: handle situations like account switch in metamask
   if (window.ethereum) {
-    console.log('env ', process.env.REACT_APP_SRI_BACKEND);
     window.ethereum.enable();
     const accounts = await window.ethereum.send('eth_requestAccounts');
     const nonceDto = {
