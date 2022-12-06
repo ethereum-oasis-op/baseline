@@ -1,8 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { PrismaService } from '../../../../../prisma/prisma.service';
-import { Workflow } from '../../workflows/models/workflow';
-import { Workstep } from '../../worksteps/models/workstep';
 import { Workgroup } from '../models/workgroup';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { InjectMapper } from '@automapper/nestjs';
