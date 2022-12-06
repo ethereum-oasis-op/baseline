@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const handleLogin = async () => {
-  // TODO: handle situations like account switch in metamask
+  // TODO: handle situations like account switch in metamask or when wallet is initially lockd
   if (window.ethereum) {
     window.ethereum.enable();
     const accounts = await window.ethereum.send('eth_requestAccounts');

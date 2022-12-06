@@ -9,7 +9,7 @@ import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { LoggingModule } from './shared/logging/logging.module';
 import { AuthModule } from './bri/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './bri/auth/guards/sri-jwt.guard';
+import { JwtAuthGuard } from './bri/auth/guards/jwt.guard';
 
 @Module({
   imports: [
