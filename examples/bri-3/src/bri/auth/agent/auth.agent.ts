@@ -17,10 +17,11 @@ export class AuthAgent {
   }
 
   async getBpiSubjectByPublicKey(publicKey: string) {
-    return this.bpiSubjectStorageAgent.getByPublicKey(publicKey);
+    return this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(publicKey);
   }
 
   async updateLoginNonce(bpiSubject: BpiSubject) {
+    bpiSubject.updateLoginNonce();
     return this.bpiSubjectStorageAgent.updateBpiSubject(bpiSubject);
   }
 

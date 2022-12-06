@@ -25,10 +25,10 @@ import { JwtAuthGuard } from './bri/auth/guards/sri-jwt.guard';
   ],
   providers: [
     PrismaService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}

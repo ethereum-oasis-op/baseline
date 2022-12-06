@@ -14,6 +14,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     if (bpiSubject.loginNonce !== message) {
       throw new Error(errorMessage.USER_NOT_AUTHORIZED);
     }
+
     const verifySignature = this.authAgent.verify(
       message,
       signature,
@@ -22,10 +23,11 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     if (!verifySignature) {
       throw new Error(errorMessage.USER_NOT_AUTHORIZED);
     }
-    const payload = {
+
+    const jwtPayload = {
       username: bpiSubject.name,
       sub: bpiSubject.id,
     };
-    return this.authAgent.generateJwt(payload);
+    return this.authAgent.generateJwt(jwtPayload);
   }
 }
