@@ -37,8 +37,6 @@ export class VerifyCCSMAnchorHashCommandHandler
       publicInputForProofVerification,
     );
 
-    //Check if the
-
     return verified;
   }
 }
