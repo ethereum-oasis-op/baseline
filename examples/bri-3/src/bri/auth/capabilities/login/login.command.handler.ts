@@ -24,10 +24,18 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
       throw new Error(errorMessage.USER_NOT_AUTHORIZED);
     }
 
-    const jwtPayload = {
-      username: bpiSubject.name,
-      sub: bpiSubject.id,
+    const serviceUrl = process.env.SERVICE_URL;
+    const subjectDid = `did:ethr:0x5:${publicKey}`;
+    const now = Math.floor(Date.now() / 1000);
+    const accessTokenExpirationTime = 60 * 60 * 1000; // 60 mins
+    const didJwtPayload = {
+      aud: serviceUrl,
+      sub: subjectDid,
+      exp: `${now + Math.floor(accessTokenExpirationTime / 1000)}`,
+      nbf: `${now}`,
+      iat: `${now}`,
     };
-    return this.authAgent.generateJwt(jwtPayload);
+
+    return this.authAgent.generateDidJwt(didJwtPayload);
   }
 }
