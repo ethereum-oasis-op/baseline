@@ -24,6 +24,12 @@
       "react-app/jest"
     ]
   },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    },
+    "transformIgnorePatterns": ["node_modules/(?!@axios)/"]
+  },
   "browserslist": {
     "production": [
       ">0.2%",

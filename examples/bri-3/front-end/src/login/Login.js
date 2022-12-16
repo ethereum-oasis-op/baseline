@@ -34,5 +34,5 @@ const handleLogin = async () => {
 };
 
 export default function Login() {
-  return <button onClick={handleLogin}>Login</button>;
+  return <button  data-testid="login" onClick={handleLogin}>Login</button>;
 }
