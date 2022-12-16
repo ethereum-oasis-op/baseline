@@ -13,7 +13,7 @@
     "web-vitals": "^3.1.0"
   },
   "scripts": {
-    "start": "cross-env PORT=3001 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -28,7 +28,9 @@
     "transform": {
       "^.+\\.[t|j]sx?$": "babel-jest"
     },
-    "transformIgnorePatterns": ["node_modules/(?!@axios)/"]
+    "transformIgnorePatterns": [
+      "node_modules/(?!@axios)/"
+    ]
   },
   "browserslist": {
     "production": [
@@ -41,8 +43,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3"
   }
 }

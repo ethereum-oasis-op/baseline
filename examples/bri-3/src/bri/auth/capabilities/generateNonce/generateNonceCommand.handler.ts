@@ -1,5 +1,5 @@
 import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
-import { GenerateNonceCommand } from './generate.nonce.command';
+import { GenerateNonceCommand } from './generateNonceCommand';
 import { AuthAgent } from '../../agent/auth.agent';
 
 @CommandHandler(GenerateNonceCommand)

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const handleLogin = async () => {
-  // TODO: handle situations like account switch in metamask or when wallet is initially lockd
+  // TODO: handle situations like account switch in metamask or when wallet is initially locked
   if (window.ethereum) {
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     const nonceDto = {
