@@ -4,10 +4,12 @@ import { IS_PUBLIC_ENDPOINT_KEY } from 'src/bri/decorators/public-endpoint';
 import { Resolver } from 'did-resolver';
 import { getResolver } from 'ethr-did-resolver';
 import { verifyJWT } from 'did-jwt';
+import { LoggingService } from 'src/shared/logging/logging.service';
+import { didResolverProviderConfig } from '../constants';
 
 @Injectable()
 export class DidJwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(private reflector: Reflector, private log: LoggingService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(
@@ -21,22 +23,15 @@ export class DidJwtAuthGuard implements CanActivate {
     try {
       const token = this.getToken(request);
       const verified = await this.verifyJwt(token);
-      console.log('jwt verification result ', verified);
       return verified.verified;
     } catch (e) {
-      console.log('jwt verification error ', e);
+      this.log.logError(`Jwt verification error: ${e}`);
       return false;
     }
   }
 
   private async getDidResolver() {
-    const rpcUrl = process.env.GOERLI_RPC_URL;
-
-    const providerConfig = {
-      networks: [{ name: '0x5', rpcUrl }],
-    };
-
-    const ethrDidResolver = getResolver(providerConfig);
+    const ethrDidResolver = getResolver(didResolverProviderConfig);
     return new Resolver(ethrDidResolver);
   }
 
@@ -46,8 +41,6 @@ export class DidJwtAuthGuard implements CanActivate {
     const resolver = await this.getDidResolver();
 
     const verified = await verifyJWT(jwt, { audience: serviceUrl, resolver });
-
-    console.log('verified ', verified);
 
     const now = Math.floor(Date.now() / 1000);
     if (verified.payload.exp < now) throw new Error('Token expired!');
