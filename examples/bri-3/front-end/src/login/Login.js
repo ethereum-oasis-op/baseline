@@ -1,23 +1,22 @@
 import axios from 'axios';
 
 const handleLogin = async () => {
-  // TODO: handle situations like account switch in metamask or when wallet is initially lockd
+  // TODO: handle situations like account switch in metamask or when wallet is initially locked
   if (window.ethereum) {
-    window.ethereum.enable();
-    const accounts = await window.ethereum.send('eth_requestAccounts');
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     const nonceDto = {
-      publicKey: accounts.result[0]
+      publicKey: accounts[0]
     };
     const nonce = await axios.post(`${process.env.REACT_APP_SRI_BACKEND}/auth/nonce`, nonceDto);
     const signature = await window.ethereum.request({
       method: 'personal_sign',
-      params: [nonce.data, accounts.result[0]],
+      params: [nonce.data, accounts[0]],
     });
 
     const loginDto = {
       message: nonce.data,
       signature,
-      publicKey: accounts.result[0],
+      publicKey: accounts[0],
     };
 
     const tokenRequest = await axios.post(`${process.env.REACT_APP_SRI_BACKEND}/auth/login`, loginDto);
@@ -35,5 +34,5 @@ const handleLogin = async () => {
 };
 
 export default function Login() {
-  return <button onClick={handleLogin}>Login</button>;
+  return <button  data-testid="login" onClick={handleLogin}>Login</button>;
 }

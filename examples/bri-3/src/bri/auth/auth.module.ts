@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './api/auth.controller';
 import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
 import { AuthAgent } from './agent/auth.agent';
-import { GenerateNonceCommandHandler } from './capabilities/generate-nonce/generate.nonce.command.handler';
+import { GenerateNonceCommandHandler } from './capabilities/generateNonce/generateNonceCommand.handler';
 import { LoginCommandHandler } from './capabilities/login/login.command.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 

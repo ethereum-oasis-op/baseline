@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_ENDPOINT_KEY } from 'src/bri/decorators/public-endpoint';
+import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from 'src/bri/decorators/public-endpoint';
 import { Resolver } from 'did-resolver';
 import { getResolver } from 'ethr-did-resolver';
 import { verifyJWT } from 'did-jwt';
@@ -13,7 +13,7 @@ export class DidJwtAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(
-      IS_PUBLIC_ENDPOINT_KEY,
+      IS_PUBLIC_ENDPOINT_METADATA_KEY,
       [context.getHandler(), context.getClass()],
     );
     if (isPublic) {
