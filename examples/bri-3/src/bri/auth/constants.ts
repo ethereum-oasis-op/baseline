@@ -1,5 +1,5 @@
 export const jwtConstants = {
-  expiresIn: '3600s',
+  expiresIn: 60 * 60 * 1000, // 60 min
 };
 
 export const errorMessage = {

@@ -43,8 +43,12 @@ export class DidJwtAuthGuard implements CanActivate {
     const verified = await verifyJWT(jwt, { audience: serviceUrl, resolver });
 
     const now = Math.floor(Date.now() / 1000);
-    if (verified.payload.exp < now) throw new Error('Token expired!');
-    if (verified.payload.nbf > now) throw new Error('Token invalid!');
+    if (verified.payload.exp < now) {
+      throw new Error('Token expired!');
+    }
+    if (verified.payload.nbf > now) {
+      throw new Error('Token invalid!');
+    }
 
     return verified;
   }

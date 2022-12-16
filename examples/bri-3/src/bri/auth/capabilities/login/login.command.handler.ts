@@ -1,7 +1,7 @@
 import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
 import { LoginCommand } from './login.command';
 import { AuthAgent } from '../../agent/auth.agent';
-import { errorMessage } from '../../constants';
+import { errorMessage, jwtConstants } from '../../constants';
 
 @CommandHandler(LoginCommand)
 export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
@@ -27,11 +27,10 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
     const serviceUrl = process.env.SERVICE_URL;
     const subjectDid = `did:ethr:0x5:${publicKey}`;
     const now = Math.floor(Date.now() / 1000);
-    const accessTokenExpirationTime = 60 * 60 * 1000; // 60 mins
     const didJwtPayload = {
       aud: serviceUrl,
       sub: subjectDid,
-      exp: `${now + Math.floor(accessTokenExpirationTime / 1000)}`,
+      exp: `${now + Math.floor(jwtConstants.expiresIn / 1000)}`,
       nbf: `${now}`,
       iat: `${now}`,
     };
