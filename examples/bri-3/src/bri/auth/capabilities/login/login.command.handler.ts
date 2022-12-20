@@ -1,7 +1,7 @@
 import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
 import { LoginCommand } from './login.command';
 import { AuthAgent } from '../../agent/auth.agent';
-import { errorMessage } from '../../constants';
+import { errorMessage, jwtConstants } from '../../constants';
 
 @CommandHandler(LoginCommand)
 export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
@@ -24,10 +24,17 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
       throw new Error(errorMessage.USER_NOT_AUTHORIZED);
     }
 
-    const jwtPayload = {
-      username: bpiSubject.name,
-      sub: bpiSubject.id,
+    const serviceUrl = process.env.SERVICE_URL;
+    const subjectDid = `did:ethr:0x5:${publicKey}`;
+    const now = Math.floor(Date.now() / 1000);
+    const didJwtPayload = {
+      aud: serviceUrl,
+      sub: subjectDid,
+      exp: `${now + Math.floor(jwtConstants.expiresIn / 1000)}`,
+      nbf: `${now}`,
+      iat: `${now}`,
     };
-    return this.authAgent.generateJwt(jwtPayload);
+
+    return this.authAgent.generateDidJwt(didJwtPayload);
   }
 }
