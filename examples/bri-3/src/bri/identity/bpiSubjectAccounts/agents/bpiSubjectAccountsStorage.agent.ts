@@ -2,7 +2,6 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
-import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 
