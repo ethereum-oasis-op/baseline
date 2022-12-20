@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CommunicationModule } from './bri/communication/communication.module';
 import { IdentityModule } from './bri/identity/identity.module';
 import { TransactionModule } from './bri/transactions/transactions.module';
+import { ZeroKnowledgeProofModule } from './bri/zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { LoggingModule } from './shared/logging/logging.module';
 
@@ -14,6 +15,7 @@ import { LoggingModule } from './shared/logging/logging.module';
     WorkgroupsModule,
     TransactionModule,
     CommunicationModule,
+    ZeroKnowledgeProofModule,
     LoggingModule,
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
