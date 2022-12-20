@@ -4,7 +4,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { LoginDto } from './dto/request/login.dto';
 import { GenerateNonceDto } from './dto/request/generate.nonce.dto';
 import { LoginCommand } from '../capabilities/login/login.command';
-import { GenerateNonceCommand } from '../capabilities/generate-nonce/generate.nonce.command';
+import { GenerateNonceCommand } from '../capabilities/generateNonce/generateNonceCommand';
 
 @Controller('auth')
 export class AuthController {

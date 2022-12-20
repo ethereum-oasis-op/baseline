@@ -7,5 +7,4 @@ export const jwtConstants = {
 export const errorMessage = {
   USER_NOT_AUTHORIZED: 'User not authorized',
   USER_NOT_FOUND: 'User not found',
-  RELOGIN_FAILED: 'Attempt to re-login failed',
 };

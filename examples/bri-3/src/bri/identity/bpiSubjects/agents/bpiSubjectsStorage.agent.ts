@@ -66,7 +66,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
     });
   }
 
-  async getByPublicKey(publicKey: string): Promise<BpiSubject> {
+  async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.bpiSubject.findFirst({
       where: {
         publicKey: publicKey.toLowerCase(),

@@ -54,7 +54,7 @@ export class TransactionAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    if (transactionToUpdate.status != TransactionStatus.Initialized) {
+    if (transactionToUpdate.status !== TransactionStatus.Initialized) {
       throw new BadRequestException(UPDATE_WRONG_STATUS_ERR_MESSAGE);
     }
 
@@ -79,8 +79,8 @@ export class TransactionAgent {
     }
 
     if (
-      transactionToDelete.status == TransactionStatus.Processing ||
-      transactionToDelete.status == TransactionStatus.Executed
+      transactionToDelete.status === TransactionStatus.Processing ||
+      transactionToDelete.status === TransactionStatus.Executed
     ) {
       throw new BadRequestException(DELETE_WRONG_STATUS_ERR_MESSAGE);
     }

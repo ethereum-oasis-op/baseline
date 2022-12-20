@@ -1091,5 +1091,41 @@
 				}
 			]
 		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvMyIsInN1YiI6ImE5NTU2MzE5LTYwYmUtNDY1NS1iZjAyLWMwODdlMTZmYzBkNiIsImlhdCI6MTY3MDMxNjM0NiwiZXhwIjoxNjcwMzE5OTQ2fQ.fnGw-yn3LuNZMOeAZ-OI3DH9vWr4KI64kKnlcDReraw"
+		}
 	]
 }
