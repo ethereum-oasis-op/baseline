@@ -19,7 +19,7 @@ export const CommandHandlers = [
     ...CommandHandlers,
     CCSMAnchorHashAgent,
     CCSMAnchorHashStorageAgent,
-    BlockchainService
+    BlockchainService,
   ],
 })
 export class ZeroKnowledgeProofModule {}

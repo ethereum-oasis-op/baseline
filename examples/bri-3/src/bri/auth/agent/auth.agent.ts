@@ -13,8 +13,15 @@ export class AuthAgent {
     private jwtService: JwtService,
   ) {}
 
-  throwIfSignatureVerificationFails(message: string, signature: string, publicKey: string) {
-    const publicKeyFromSignature = ethers.utils.verifyMessage(message, signature);
+  throwIfSignatureVerificationFails(
+    message: string,
+    signature: string,
+    publicKey: string,
+  ) {
+    const publicKeyFromSignature = ethers.utils.verifyMessage(
+      message,
+      signature,
+    );
 
     if (publicKeyFromSignature.toLowerCase() !== publicKey) {
       throw new Error(errorMessage.USER_NOT_AUTHORIZED);
@@ -44,7 +51,7 @@ export class AuthAgent {
   async generateDidJwt(bpiSubject: BpiSubject) {
     const serviceUrl = process.env.SERVICE_URL;
     const now = Math.floor(Date.now() / 1000);
-    
+
     const didJwtPayload = {
       aud: serviceUrl,
       sub: bpiSubject.getBpiSubjectDid(),
