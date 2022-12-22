@@ -5,6 +5,7 @@ import { CCSMAnchorHashStorageAgent } from './agents/ccsmAnchorHashStorage.agent
 import { CCSMAnchorHashController } from './api/ccsmAnchorHash.controller';
 import { CreateCCSMAnchorHashCommandHandler } from './capabilities/createCCSMAnchorHash/createCCSMAnchorHashCommand.handler';
 import { VerifyCCSMAnchorHashCommandHandler } from './capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHashCommand.handler';
+import { BlockchainService } from './services/blockchain/blockchain.service';
 
 export const CommandHandlers = [
   CreateCCSMAnchorHashCommandHandler,
@@ -18,6 +19,7 @@ export const CommandHandlers = [
     ...CommandHandlers,
     CCSMAnchorHashAgent,
     CCSMAnchorHashStorageAgent,
+    BlockchainService
   ],
 })
 export class ZeroKnowledgeProofModule {}
