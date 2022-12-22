@@ -50,4 +50,8 @@ export class BpiSubject {
   public updateLoginNonce(): void {
     this.loginNonce = v4();
   }
+
+  public getBpiSubjectDid(): string {
+    return `did:ethr:0x5:${this.publicKey}`;
+  }
 }
