@@ -96,3 +96,10 @@ model Message {
   signature        String
   type             Int
 }
+
+model ContentAddressableHash {
+  id               Int     @id @default(autoincrement())
+  document         String
+
+   @@index(fields: [document], name: "contentAddressableHashIndex", type: Hash) 
+}
