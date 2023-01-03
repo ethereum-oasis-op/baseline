@@ -22,7 +22,7 @@ model BpiSubject {
   receivedMessages          Message[]                    @relation(name: "toBpiSubject_fk")
   administratedWorkgroups    Workgroup[]                 @relation(name: "administratorSubjects")
   participatingWorkgroups    Workgroup[]                 @relation(name: "participantSubjects")
-  ownedAnchorHash           AnchorHash[]                 @relation(name: "ownerBpiSubject_fk")
+  ownedCCSMAnchorHash       CCSMAnchorHash[]             @relation(name: "ownerBpiSubject_fk")
 }
 
 model BpiAccount {
@@ -98,7 +98,7 @@ model Message {
   type             Int
 }
 
-model AnchorHash {
+model CCSMAnchorHash {
   id                Int        @id @default(autoincrement())
   ownerBpiSubjectId String
   ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")    
