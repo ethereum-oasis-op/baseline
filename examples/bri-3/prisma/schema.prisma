@@ -21,7 +21,8 @@ model BpiSubject {
   sentMessages              Message[]                    @relation(name: "fromBpiSubject_fk")
   receivedMessages          Message[]                    @relation(name: "toBpiSubject_fk")
   administratedWorkgroups    Workgroup[]                 @relation(name: "administratorSubjects")
-  participatingWorkgroups    Workgroup[]                 @relation(name: "participantSubjects") 
+  participatingWorkgroups    Workgroup[]                 @relation(name: "participantSubjects")
+  ownedAnchorHash           AnchorHash[]                 @relation(name: "ownerBpiSubject_fk")
 }
 
 model BpiAccount {
@@ -97,9 +98,10 @@ model Message {
   type             Int
 }
 
-model ContentAddressableHash {
-  id               Int     @id @default(autoincrement())
-  document         String
-
-   @@index(fields: [document], name: "contentAddressableHashIndex", type: Hash) 
+model AnchorHash {
+  id                Int        @id @default(autoincrement())
+  ownerBpiSubjectId String
+  ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")    
+  hash              Bytes      
 }
+
