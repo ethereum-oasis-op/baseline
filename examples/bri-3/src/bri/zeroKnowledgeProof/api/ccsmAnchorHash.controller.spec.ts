@@ -14,6 +14,8 @@ import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
 import { CCSMAnchorHashLocalStorageAgent } from '../agents/ccsmAnchorHashLocalStorage.agent';
+import { CCSMAnchorHashProfile } from '../ccsmAnchorHash.profile';
+import { DocumentProfile } from '../document.profile';
 
 describe('ProofController', () => {
   let controller: CCSMAnchorHashController;
@@ -29,6 +31,8 @@ describe('ProofController', () => {
         CCSMAnchorHashStorageAgent,
         CCSMAnchorHashLocalStorageAgent,
         BlockchainService,
+        CCSMAnchorHashProfile,
+        DocumentProfile,
       ],
     }).compile();
 
@@ -94,7 +98,9 @@ describe('ProofController', () => {
       const ccsmAnchorHash = await controller.createCCSMAnchorHash(requestDto);
 
       // Assert
-      expect(ccsmAnchorHash.ownerId).toEqual(requestDto.ownerAccount.id);
+      expect(ccsmAnchorHash.ownerBpiSubjectId).toEqual(
+        requestDto.ownerAccount.id,
+      );
       expect(ccsmAnchorHash.hash).toEqual('This is test document'); // TODO: Add merkle root of document as payload
     });
   });

@@ -1,5 +1,6 @@
 export class CCSMAnchorHashDto {
   id: string;
-  ownerId: string;
+  ownerBpiSubjectId: string;
   hash: string;
+  documentId: string;
 }
