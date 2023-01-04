@@ -16,6 +16,7 @@ model BpiSubject {
   description               String
   type                      Int
   publicKey                 String
+  loginNonce                String                       @default("")
   ownedBpiSubjectAccounts   BpiSubjectAccount[]          @relation(name: "ownerBpiSubject_fk")
   createdBpiSubjectAccounts BpiSubjectAccount[]          @relation(name: "creatorBpiSubject_fk")
   sentMessages              Message[]                    @relation(name: "fromBpiSubject_fk")

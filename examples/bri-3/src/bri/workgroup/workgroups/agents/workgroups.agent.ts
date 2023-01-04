@@ -25,11 +25,11 @@ export class WorkgroupAgent {
       administratorIds,
     );
 
-    if (administratorIds.length != bpiSubjects.length) {
+    if (administratorIds.length !== bpiSubjects.length) {
       throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
-    bpiSubjects.map((bp) => {
+    bpiSubjects.forEach((bp) => {
       if (!administratorIds.includes(bp.id)) {
         throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
       }
@@ -45,11 +45,11 @@ export class WorkgroupAgent {
       participantIds,
     );
 
-    if (participantIds.length != bpiSubjects.length) {
+    if (participantIds.length !== bpiSubjects.length) {
       throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
-    bpiSubjects.map((bp) => {
+    bpiSubjects.forEach((bp) => {
       if (!participantIds.includes(bp.id)) {
         throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
       }

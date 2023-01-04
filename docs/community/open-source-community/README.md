@@ -54,13 +54,9 @@ The General Assembly is a monthly meeting that replaces the first Baseline Show 
 
 ## Communications: Connecting with Community Members <a href="#communications-connecting-with-each-other-directly" id="communications-connecting-with-each-other-directly"></a>
 
-### **Slack / Discord / Telegram** <a href="#slack-discourse-telegram" id="slack-discourse-telegram"></a>
+### **Slack Channel** <a href="#slack-discourse-telegram" id="slack-discourse-telegram"></a>
 
-The Baseline Protocol initiative maintains a[ **Slack channel** ](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ)as the primary mode of communication, that is public and moderated. The Slack has various channels for the teams, and others like introductions, business inquiries, grads and research, zero knowledge chat, and more.&#x20;
-
-A bridge is set up between [**Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ), [**Telegram**](https://t.me/baselineprotocol), and [**Discord**](https://discord.gg/NE8AYD7)**,** which allows members to send messages and read what anyone posts regardless of which platform is being used.&#x20;
-
-In Slack, use the #03-community-chat channel to broadcast to Slack, Discord and Telegram. In Discord, use the #general channel. In Telegram, just use the main /baselineprotocol thread.
+The Baseline Protocol initiative maintains a[ **Slack channel** ](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ)as the primary mode of communication, that is public and moderated. The Slack has various channels for community members to discuss and collaborate, with specified channels for introductions, business inquiries, grads and research, zero knowledge chat, and more.&#x20;
 
 ### Community Email <a href="#members-directory" id="members-directory"></a>
 

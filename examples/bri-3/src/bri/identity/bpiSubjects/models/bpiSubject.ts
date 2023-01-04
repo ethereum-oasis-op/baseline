@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { v4 } from 'uuid';
 import { BpiSubjectType } from './bpiSubjectType.enum';
 
 export class BpiSubject {
@@ -16,6 +17,9 @@ export class BpiSubject {
 
   @AutoMap()
   publicKey: string;
+
+  @AutoMap()
+  loginNonce: string;
 
   constructor(
     id: string,
@@ -41,5 +45,9 @@ export class BpiSubject {
 
   public updatePublicKey(newPk: string): void {
     this.publicKey = newPk;
+  }
+
+  public updateLoginNonce(): void {
+    this.loginNonce = v4();
   }
 }
