@@ -13,6 +13,7 @@ import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
+import { CCSMAnchorHashLocalStorageAgent } from '../agents/ccsmAnchorHashLocalStorage.agent';
 
 describe('ProofController', () => {
   let controller: CCSMAnchorHashController;
@@ -26,6 +27,7 @@ describe('ProofController', () => {
         CreateCCSMAnchorHashCommandHandler,
         VerifyCCSMAnchorHashCommandHandler,
         CCSMAnchorHashStorageAgent,
+        CCSMAnchorHashLocalStorageAgent,
         BlockchainService,
       ],
     }).compile();

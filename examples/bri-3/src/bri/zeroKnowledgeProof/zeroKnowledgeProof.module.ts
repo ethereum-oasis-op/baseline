@@ -2,9 +2,11 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { CCSMAnchorHashAgent } from './agents/ccsmAnchorHash.agent';
 import { CCSMAnchorHashStorageAgent } from './agents/ccsmAnchorHashStorage.agent';
+import { CCSMAnchorHashLocalStorageAgent } from './agents/ccsmAnchorHashLocalStorage.agent';
 import { CCSMAnchorHashController } from './api/ccsmAnchorHash.controller';
 import { CreateCCSMAnchorHashCommandHandler } from './capabilities/createCCSMAnchorHash/createCCSMAnchorHashCommand.handler';
 import { VerifyCCSMAnchorHashCommandHandler } from './capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHashCommand.handler';
+import { BlockchainService } from './services/blockchain/blockchain.service';
 
 export const CommandHandlers = [
   CreateCCSMAnchorHashCommandHandler,
@@ -18,6 +20,8 @@ export const CommandHandlers = [
     ...CommandHandlers,
     CCSMAnchorHashAgent,
     CCSMAnchorHashStorageAgent,
+    CCSMAnchorHashLocalStorageAgent,
+    BlockchainService,
   ],
 })
 export class ZeroKnowledgeProofModule {}
