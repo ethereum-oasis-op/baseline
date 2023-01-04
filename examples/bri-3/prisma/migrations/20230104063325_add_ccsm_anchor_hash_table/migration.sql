@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "CCSMAnchorHash" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "ownerBpiSubjectId" TEXT NOT NULL,
     "hash" BYTEA NOT NULL,
 

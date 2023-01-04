@@ -98,20 +98,9 @@ model Message {
   type             Int
 }
 
-model Document {
-  id                Int        @id @default(autoincrement())
-  hash              CCSMAnchorHash?  @relation(name: "document_fk") 
-  document          String  
-}
-
 model CCSMAnchorHash {
-  id                Int        @id @default(autoincrement())
+  id                String        @id @default(uuid()) 
   ownerBpiSubjectId String
   ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")    
-  hash              Bytes
-  documentId        Int        @unique
-  document          Document   @relation(fields: [documentId], references: [id], name: "document_fk")
-      
+  hash              Bytes    
 }
-
-
