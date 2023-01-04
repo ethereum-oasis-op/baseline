@@ -108,7 +108,7 @@ model CCSMAnchorHash {
   id                String        @id @default(uuid()) 
   ownerBpiSubjectId String
   ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")    
-  hash              Bytes
+  hash              String
   documentId        Int        @unique
   document          Document   @relation(fields: [documentId], references: [id], name: "document_fk")    
 }
