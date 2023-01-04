@@ -1,4 +1,4 @@
-import cryto from 'crypto';
+import * as crypto from 'crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 as uuidv4 } from 'uuid';
@@ -43,7 +43,7 @@ export class CCSMAnchorHashAgent {
   }
 
   public convertTextToHash(text: string) {
-    const hash = cryto.createHash('sha256').update(text).digest('base64');
+    const hash = crypto.createHash('sha256').update(text).digest('base64');
     return hash;
   }
 }

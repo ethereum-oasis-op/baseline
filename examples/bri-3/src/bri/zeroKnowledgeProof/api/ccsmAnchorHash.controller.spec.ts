@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 import { BadRequestException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
@@ -7,6 +8,8 @@ import { CCSMAnchorHashAgent } from '../agents/ccsmAnchorHash.agent';
 import { CreateCCSMAnchorHashCommandHandler } from '../capabilities/createCCSMAnchorHash/createCCSMAnchorHashCommand.handler';
 import { VerifyCCSMAnchorHashCommandHandler } from '../capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHashCommand.handler';
 import { CCSMAnchorHashStorageAgent } from '../agents/ccsmAnchorHashStorage.agent';
+import { MockCCSMAnchorHashLocalStorageAgent } from '../agents/mockCCSMAnchorHashLocalStorage.agent';
+import { AutomapperModule } from '@automapper/nestjs';
 import { CreateCCSMAnchorHashDto } from './dtos/request/createCCSMAnchorHash.dto';
 import { VerifyCCSMAnchorHashDto } from './dtos/request/verifyCCSMAnchorHash.dto';
 import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
@@ -16,13 +19,55 @@ import { BlockchainService } from '../services/blockchain/blockchain.service';
 import { CCSMAnchorHashLocalStorageAgent } from '../agents/ccsmAnchorHashLocalStorage.agent';
 import { CCSMAnchorHashProfile } from '../ccsmAnchorHash.profile';
 import { DocumentProfile } from '../document.profile';
+import { classes } from '@automapper/classes';
+import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
+import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
+import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 describe('ProofController', () => {
   let controller: CCSMAnchorHashController;
+  let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
+  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
+
+  const createBpiSubjectAccount = async (id: string) => {
+    const ownerBpiSubject =
+      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        new BpiSubject(
+          '123',
+          'owner',
+          'desc',
+          BpiSubjectType.External,
+          'publicKey',
+        ),
+      );
+    const creatorBpiSubject =
+      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        new BpiSubject(
+          '321',
+          'creator',
+          'desc',
+          BpiSubjectType.External,
+          'publicKey',
+        ),
+      );
+
+    return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(
+      new BpiSubjectAccount(id, creatorBpiSubject, ownerBpiSubject),
+    );
+  };
 
   beforeEach(async () => {
+    mockBpiSubjectAccountsStorageAgent =
+      new MockBpiSubjectAccountsStorageAgent();
+    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
-      imports: [CqrsModule],
+      imports: [
+        CqrsModule,
+        AutomapperModule.forRoot({
+          strategyInitializer: classes(),
+        }),
+      ],
       controllers: [CCSMAnchorHashController],
       providers: [
         CCSMAnchorHashAgent,
@@ -34,7 +79,14 @@ describe('ProofController', () => {
         CCSMAnchorHashProfile,
         DocumentProfile,
       ],
-    }).compile();
+    })
+      .overrideProvider(CCSMAnchorHashLocalStorageAgent)
+      .useValue(new MockCCSMAnchorHashLocalStorageAgent())
+      .overrideProvider(BpiSubjectAccountStorageAgent)
+      .useValue(mockBpiSubjectAccountsStorageAgent)
+      .overrideProvider(BpiSubjectStorageAgent)
+      .useValue(mockBpiSubjectStorageAgent)
+      .compile();
 
     controller = app.get<CCSMAnchorHashController>(CCSMAnchorHashController);
 
@@ -96,12 +148,16 @@ describe('ProofController', () => {
 
       // Act
       const ccsmAnchorHash = await controller.createCCSMAnchorHash(requestDto);
+      const hash = crypto
+        .createHash('sha256')
+        .update(mockDocument)
+        .digest('base64');
 
       // Assert
       expect(ccsmAnchorHash.ownerBpiSubjectId).toEqual(
         requestDto.ownerAccount.id,
       );
-      expect(ccsmAnchorHash.hash).toEqual('This is test document'); // TODO: Add merkle root of document as payload
+      expect(ccsmAnchorHash.hash).toEqual(hash);
     });
   });
 
