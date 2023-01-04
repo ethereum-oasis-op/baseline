@@ -5,14 +5,23 @@ export class CCSMAnchorHash {
   id: string;
 
   @AutoMap()
-  ownerId: string;
+  ownerBpiSubjectId: string;
 
   @AutoMap()
   hash: string;
 
-  constructor(id: string, ownerId: string, hash: string) {
+  @AutoMap()
+  documentId: number;
+
+  constructor(
+    id: string,
+    ownerBpiSubjectId: string,
+    hash: string,
+    documentId: number,
+  ) {
     this.id = id;
-    this.ownerId = ownerId;
+    this.ownerBpiSubjectId = ownerBpiSubjectId;
     this.hash = hash;
+    this.documentId = documentId;
   }
 }

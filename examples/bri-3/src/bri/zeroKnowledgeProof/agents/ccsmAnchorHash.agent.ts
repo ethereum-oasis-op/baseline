@@ -1,7 +1,9 @@
+import cryto from 'crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 as uuidv4 } from 'uuid';
 import { CCSMAnchorHash } from '../models/ccsmAnchorHash';
+import { Document } from '../models/document';
 
 @Injectable()
 export class CCSMAnchorHashAgent {
@@ -15,11 +17,11 @@ export class CCSMAnchorHashAgent {
 
   public createNewCCSMAnchorHash(
     ownerId: string,
-    document: string,
+    document: Document,
   ): CCSMAnchorHash {
-    const hash = this.convertDocumentToHash(document);
+    const hash = this.convertTextToHash(document.text);
 
-    return new CCSMAnchorHash(uuidv4(), ownerId, hash);
+    return new CCSMAnchorHash(uuidv4(), ownerId, hash, document.id);
   }
 
   public verifyCCSMAnchorHash(
@@ -36,13 +38,12 @@ export class CCSMAnchorHashAgent {
   public createPublicInputForProofVerification(
     inputForProofVerification: string,
   ): string {
-    const hash = this.convertDocumentToHash(inputForProofVerification);
+    const hash = this.convertTextToHash(inputForProofVerification);
     return hash;
   }
 
-  public convertDocumentToHash(document: string) {
-    //TODO: Convert document into payload using merkleTree service
-    const hash = document;
+  public convertTextToHash(document: string) {
+    const hash = cryto.createHash('sha256').update(document).digest('base64');
     return hash;
   }
 }

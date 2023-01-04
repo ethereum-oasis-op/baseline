@@ -99,16 +99,16 @@ model Message {
 }
 
 model Document {
-  id                Int        @id @default(autoincrement())
-  hash              CCSMAnchorHash?  @relation(name: "document_fk") 
-  text              String  
+  id                      Int        @id @default(autoincrement())
+  contentAddressableHash  CCSMAnchorHash?  @relation(name: "document_fk") 
+  text                    String  
 }
 
 model CCSMAnchorHash {
-  id                String        @id @default(uuid()) 
+  id                String     @id @default(uuid()) 
   ownerBpiSubjectId String
   ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")    
-  hash              String
+  hash              String     @unique
   documentId        Int        @unique
-  document          Document   @relation(fields: [documentId], references: [id], name: "document_fk")    
+  document          Document   @relation(fields: [documentId], references: [id], name: "document_fk") 
 }
