@@ -23,13 +23,12 @@ export class CreateCCSMAnchorHashCommandHandler
       command.document,
     );
 
-    const newCCSMAnchorHash = this.agent.createNewCCSMAnchorHash(
+    const newCCSMAnchorHash = await this.agent.createNewCCSMAnchorHash(
       command.ownerAccount.id,
       newDocument,
     );
 
-    const newCCSMAnchorHashModel =
-      this.localStorageAgent.createNewCCSMAnchorHash(newCCSMAnchorHash);
+    await this.localStorageAgent.createNewCCSMAnchorHash(newCCSMAnchorHash);
 
     await this.ccsmStorageAgent.storeAnchorHashOnCCSM(newCCSMAnchorHash);
 

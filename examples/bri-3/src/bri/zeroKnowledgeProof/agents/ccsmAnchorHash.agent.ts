@@ -42,8 +42,8 @@ export class CCSMAnchorHashAgent {
     return hash;
   }
 
-  public convertTextToHash(document: string) {
-    const hash = cryto.createHash('sha256').update(document).digest('base64');
+  public convertTextToHash(text: string) {
+    const hash = cryto.createHash('sha256').update(text).digest('base64');
     return hash;
   }
 }
