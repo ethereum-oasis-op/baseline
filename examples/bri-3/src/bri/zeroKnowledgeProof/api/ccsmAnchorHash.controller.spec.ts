@@ -30,33 +30,6 @@ describe('ProofController', () => {
   let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
 
-  const createBpiSubjectAccount = async (id: string) => {
-    const ownerBpiSubject =
-      await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '123',
-          'owner',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
-      );
-    const creatorBpiSubject =
-      await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '321',
-          'creator',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
-      );
-
-    return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(
-      new BpiSubjectAccount(id, creatorBpiSubject, ownerBpiSubject),
-    );
-  };
-
   beforeEach(async () => {
     mockBpiSubjectAccountsStorageAgent =
       new MockBpiSubjectAccountsStorageAgent();
