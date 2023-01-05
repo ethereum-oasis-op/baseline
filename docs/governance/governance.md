@@ -72,9 +72,9 @@ To gain and retain Maintainer permissions and status, Baseline Maintainers are r
 <li>Contribute in ways that substantially improve the quality of the project and the experience of people who use it</li></ul>
 
   
-#### How to stop being a Baseline Core Developer or Maintainer?
+#### How to stop being a Baseline Maintainer?
 <ul>
-<li>To step away from being a Baseline Core Developer, you can notify the other core developers you would like to relinquish your core developer status</li>
+<li>To step away from being a Baseline Maintainer, notify the other Maintainers or TSC members that you would like to relinquish your Baseline Maintainer status</li>
 <li>Miss three consecutive Core Developer meetings without prior notice</li>
 <li>Stop reviewing PR's, responding to messages, and/or responding to e-mails</li>
 <li>Disrespectful towards anyone in the community and/or involved in the project</li>
