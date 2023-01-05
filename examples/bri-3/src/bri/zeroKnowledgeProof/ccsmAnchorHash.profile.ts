@@ -12,8 +12,8 @@ export class CCSMAnchorHashProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, CCSMAnchorHash, CCSMAnchorHash);
       createMap(mapper, CCSMAnchorHash, CCSMAnchorHashDto);
+      createMap(mapper, CCSMAnchorHash, CCSMAnchorHash);
     };
   }
 }

@@ -12,8 +12,8 @@ export class DocumentProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, Document, Document);
       createMap(mapper, Document, DocumentDto);
+      createMap(mapper, Document, Document);
     };
   }
 }

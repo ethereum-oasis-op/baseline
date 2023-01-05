@@ -14,14 +14,15 @@ import { GetDocumentByCCSMAnchorHashQueryHandler } from './capabilities/getDocum
 export const CommandHandlers = [
   CreateCCSMAnchorHashCommandHandler,
   VerifyCCSMAnchorHashCommandHandler,
-  GetDocumentByCCSMAnchorHashQueryHandler,
 ];
 
+export const QueryHandlers = [GetDocumentByCCSMAnchorHashQueryHandler];
 @Module({
   imports: [CqrsModule],
   controllers: [CCSMAnchorHashController],
   providers: [
     ...CommandHandlers,
+    ...QueryHandlers,
     CCSMAnchorHashAgent,
     CCSMAnchorHashStorageAgent,
     CCSMAnchorHashLocalStorageAgent,

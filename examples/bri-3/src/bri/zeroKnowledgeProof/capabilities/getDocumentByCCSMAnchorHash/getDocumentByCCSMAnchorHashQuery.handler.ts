@@ -26,6 +26,8 @@ export class GetDocumentByCCSMAnchorHashQueryHandler
       throw new NotFoundException(DOCUMENT_NOT_FOUND_ERR_MESSAGE);
     }
 
+    console.log(document);
+
     return this.mapper.map(document, Document, DocumentDto);
   }
 }

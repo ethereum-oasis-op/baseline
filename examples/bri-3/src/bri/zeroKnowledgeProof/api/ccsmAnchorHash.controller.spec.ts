@@ -1,8 +1,12 @@
 import * as crypto from 'crypto';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { INVALID_ANCHOR_HASH_INPUT } from './err.messages';
+import {
+  CCSM_ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE,
+  DOCUMENT_NOT_FOUND_ERR_MESSAGE,
+  INVALID_ANCHOR_HASH_INPUT,
+} from './err.messages';
 import { CCSMAnchorHashController } from './ccsmAnchorHash.controller';
 import { CCSMAnchorHashAgent } from '../agents/ccsmAnchorHash.agent';
 import { CreateCCSMAnchorHashCommandHandler } from '../capabilities/createCCSMAnchorHash/createCCSMAnchorHashCommand.handler';
@@ -66,6 +70,59 @@ describe('ProofController', () => {
     controller = app.get<CCSMAnchorHashController>(CCSMAnchorHashController);
 
     await app.init();
+  });
+
+  describe('getDocumentByCCSMAnchorHash', () => {
+    it('should throw NotFound if non existent ccsmAnchorHash is passed', () => {
+      // Arrange
+      const nonExistentHash = '123';
+
+      // Act and assert
+      expect(async () => {
+        await controller.getDocumentByCCSMAnchorHash(nonExistentHash);
+      }).rejects.toThrow(
+        new NotFoundException(CCSM_ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE),
+      );
+    });
+
+    it('should return the correct document if proper ccsmAnchorHash is passed ', async () => {
+      // Arrange
+      const mockBpiSubject = new BpiSubject(
+        '123',
+        '123',
+        '123',
+        BpiSubjectType.External,
+        '123',
+      );
+
+      const mockBpiSubjectAccount = new BpiSubjectAccount(
+        '123',
+        mockBpiSubject,
+        mockBpiSubject,
+      );
+
+      const mockDocument = 'This is test document';
+
+      const requestDto = {
+        ownerAccount: mockBpiSubjectAccount,
+        document: mockDocument,
+      } as CreateCCSMAnchorHashDto;
+
+      const ccsmAnchorHash = await controller.createCCSMAnchorHash(requestDto);
+      const hash = crypto
+        .createHash('sha256')
+        .update(mockDocument)
+        .digest('base64');
+
+      // Act
+      const document = await controller.getDocumentByCCSMAnchorHash(hash);
+
+      console.log('DTO : ' + JSON.stringify(document));
+
+      // Assert
+      expect(document.id).toEqual(ccsmAnchorHash.documentId);
+      expect(document.text).toEqual('This is test document');
+    });
   });
 
   describe('createCCSMAnchorHash', () => {

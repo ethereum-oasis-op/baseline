@@ -19,6 +19,8 @@ export class MockCCSMAnchorHashLocalStorageAgent {
     const document = this.documentsStore.find(
       (document) => document.id === ccsmAnchorHash.documentId,
     );
+
+    document.contentAddressableHash = ccsmAnchorHash;
     return document;
   }
 
