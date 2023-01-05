@@ -48,7 +48,40 @@ The “call for objections” or the vote must be conducted during a live TSC me
 
 ### Maintainers: <a href="#maintainers" id="maintainers"></a>
 
-Contributors who have the ability to commit code and contributions to a repo's main branch on the Baseline Protocol. A Contributor may become a Maintainer by a majority approval of the existing Maintainers. The initial number of maintainers required to merge a pull request to master in the github repo shall be three, but may be amended to no fewer than two by a simple majority of the maintainers.
+To gain and retain Maintainer permissions and status, Baseline Maintainers are required to comply with the following
+
+#### How to become a Baseline Maintainer?
+<ul>
+<li>Being an active Baseline Core Developer by first attending at least 2 consecutive bi-weekly meetings</li>
+<li>Making a contribution to the Baseline Protocol through pull requests, roadmap contributions, etc.</li>
+<li>Then completing the Pull_Request_Template in its entirety to add user’s Github ID to the Code Owners file.</li>
+<li>The current Maintainers (listed Code Owners) will be assigned to review the Pull Request, and the PR will be merged once two Maintainers approve the request.</li>
+<li>If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC by informing Oasis or a TSC member .</li></ul>
+
+#### What is expected of Baseline Maintainers?
+<ul>
+<li>Attendance Policy: Maintainers must notify the 'maintainer' Slack group or a community leader if unable to attend a Baseline Core Devs session. If a Maintainer misses three consecutive meetings without prior notice, a community member will submit a PR to remove the member's GitHub ID from the Code Owners File</li>
+<li>If a Maintainer is removed due to the attendance policy and wants to recommit, they must attend 2 consecutive Core Dev sessions, notify the group of intent to re-commit, then submit the PR to be added back to the Code Owners File</li>
+<li>The initial number of maintainers required to merge a pull request to the main repository in Github is three, but may be amended to no fewer than two by a simple majority of the maintainers.</li>
+<li>Timely review of Pull Requests</li>
+<li>Follow branch, PR, code, project style, and testing guidelines</li>
+<li>Be reliable in completing issues to which they have been assigned</li>
+<li>Demonstrate competency in software development or specification writing</li>
+<li>Have a high degree of understanding of the project architecture</li>
+<li>Be welcoming to others in the community who are using or interested in the protocol</li>
+<li>Contribute in ways that substantially improve the quality of the project and the experience of people who use it</li></ul>
+
+  
+#### How to stop being a Baseline Core Developer or Maintainer?
+<ul>
+<li>To step away from being a Baseline Core Developer, you can notify the other core developers you would like to relinquish your core developer status</li>
+<li>Miss three consecutive Core Developer meetings without prior notice</li>
+<li>Stop reviewing PR's, responding to messages, and/or responding to e-mails</li>
+<li>Disrespectful towards anyone in the community and/or involved in the project</li>
+<li>Disruptive to the general process of maintaining the project, meetings, discussions, issues, or other</li></ul>
+
+Two-thirds of all current Maintainers constitute a quorum for a meeting involving a question of removal. A simple majority vote from Maintainers is required to remove a Maintainer, but the TSC may be brought in to arbitrate if the Baseline Maintainer to be removed or any other Baseline Maintainer wishes to dispute the action.
+
 
 ### Contributors: <a href="#contributors" id="contributors"></a>
 
