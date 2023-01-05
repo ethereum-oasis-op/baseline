@@ -18,19 +18,19 @@ export class WorkgroupAgent {
     private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
   ) {}
 
-  public async fetchWorkgroupAdministratorsAndThrowIfNoneExist(
-    administratorIds: string[],
+  public async fetchBpiSubjectsByIdAndThrowIfNoneExist(
+    bpiSubjectIds: string[],
   ): Promise<BpiSubject[]> {
     const bpiSubjects = await this.bpiSubjectStorageAgent.getBpiSubjectsById(
-      administratorIds,
+      bpiSubjectIds,
     );
 
-    if (administratorIds.length !== bpiSubjects.length) {
+    if (bpiSubjectIds.length !== bpiSubjects.length) {
       throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
     bpiSubjects.forEach((bp) => {
-      if (!administratorIds.includes(bp.id)) {
+      if (!bpiSubjectIds.includes(bp.id)) {
         throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
       }
     });
@@ -38,19 +38,22 @@ export class WorkgroupAgent {
     return bpiSubjects;
   }
 
-  public async fetchWorkgroupParticipantsAndThrowIfNoneExist(
-    participantIds: string[],
+  public async fetchBpiSubjectsByPublicKeyAndThrowIfNoneExist(
+    bpiSubjectPublicKeys: string[],
   ): Promise<BpiSubject[]> {
-    const bpiSubjects = await this.bpiSubjectStorageAgent.getBpiSubjectsById(
-      participantIds,
-    );
+    let bpiSubjects: BpiSubject[];
+    bpiSubjectPublicKeys.forEach(async (publicKey) => {
+      const bpiSubject =
+        await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(publicKey);
+      bpiSubjects.push(bpiSubject);
+    });
 
-    if (participantIds.length !== bpiSubjects.length) {
+    if (bpiSubjectPublicKeys.length !== bpiSubjects.length) {
       throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
     bpiSubjects.forEach((bp) => {
-      if (!participantIds.includes(bp.id)) {
+      if (!bpiSubjectPublicKeys.includes(bp.id)) {
         throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
       }
     });
