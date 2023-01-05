@@ -9,10 +9,12 @@ import { VerifyCCSMAnchorHashCommandHandler } from './capabilities/verifyCCSMAnc
 import { BlockchainService } from './services/blockchain/blockchain.service';
 import { CCSMAnchorHashProfile } from './ccsmAnchorHash.profile';
 import { DocumentProfile } from './document.profile';
+import { GetDocumentByCCSMAnchorHashQueryHandler } from './capabilities/getDocumentByCCSMAnchorHash/getDocumentByCCSMAnchorHashQuery.handler';
 
 export const CommandHandlers = [
   CreateCCSMAnchorHashCommandHandler,
   VerifyCCSMAnchorHashCommandHandler,
+  GetDocumentByCCSMAnchorHashQueryHandler,
 ];
 
 @Module({

@@ -24,6 +24,7 @@ import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAcc
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { GetDocumentByCCSMAnchorHashQueryHandler } from '../capabilities/getDocumentByCCSMAnchorHash/getDocumentByCCSMAnchorHashQuery.handler';
 
 describe('ProofController', () => {
   let controller: CCSMAnchorHashController;
@@ -46,6 +47,7 @@ describe('ProofController', () => {
         CCSMAnchorHashAgent,
         CreateCCSMAnchorHashCommandHandler,
         VerifyCCSMAnchorHashCommandHandler,
+        GetDocumentByCCSMAnchorHashQueryHandler,
         CCSMAnchorHashStorageAgent,
         CCSMAnchorHashLocalStorageAgent,
         BlockchainService,
