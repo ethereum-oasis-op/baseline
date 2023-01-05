@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCCSMAnchorHashCommand } from '../capabilities/createCCSMAnchorHash/createCCSMAnchorHash.command';
 import { VerifyCCSMAnchorHashCommand } from '../capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHash.command';
+import { GetDocumentByCCSMAnchorHashQuery } from '../capabilities/getDocumentByCCSMAnchorHash/getDocumentByCCSMAnchorHash.query';
 import { CreateCCSMAnchorHashDto } from './dtos/request/createCCSMAnchorHash.dto';
 import { VerifyCCSMAnchorHashDto } from './dtos/request/verifyCCSMAnchorHash.dto';
 import { CCSMAnchorHashDto } from './dtos/response/ccsmAnchorHash.dto';
