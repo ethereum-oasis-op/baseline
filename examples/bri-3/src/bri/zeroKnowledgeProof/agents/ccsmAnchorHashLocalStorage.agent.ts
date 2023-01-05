@@ -78,9 +78,15 @@ export class CCSMAnchorHashLocalStorageAgent extends PrismaService {
     return this.mapper.map(newDocumentModel, Document, Document);
   }
 
-  async deleteCCSMAnchorHash(CCSMAnchorHash: CCSMAnchorHash): Promise<void> {
+  async deleteCCSMAnchorHash(ccsmAnchorHash: CCSMAnchorHash): Promise<void> {
     await this.cCSMAnchorHash.delete({
-      where: { id: CCSMAnchorHash.id },
+      where: { id: ccsmAnchorHash.id },
+    });
+  }
+
+  async deleteDocument(document: Document): Promise<void> {
+    await this.document.delete({
+      where: { id: document.id },
     });
   }
 }

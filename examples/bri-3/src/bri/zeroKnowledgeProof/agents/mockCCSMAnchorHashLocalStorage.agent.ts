@@ -46,10 +46,17 @@ export class MockCCSMAnchorHashLocalStorageAgent {
     return Promise.resolve(createdDocument);
   }
 
-  async deleteTransaction(ccsmAnchorHash: CCSMAnchorHash): Promise<void> {
+  async deleteCCSMAnchorHash(ccsmAnchorHash: CCSMAnchorHash): Promise<void> {
     const hashToDeleteIndex = this.ccsmAnchorHashesStore.findIndex(
       (hash) => hash.id === ccsmAnchorHash.id,
     );
     this.ccsmAnchorHashesStore.splice(hashToDeleteIndex, 1);
+  }
+
+  async deleteDocument(document: Document): Promise<void> {
+    const documentToDeleteIndex = this.documentsStore.findIndex(
+      (doc) => doc.id === document.id,
+    );
+    this.documentsStore.splice(documentToDeleteIndex, 1);
   }
 }
