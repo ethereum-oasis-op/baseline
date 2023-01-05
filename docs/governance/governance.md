@@ -50,7 +50,7 @@ The “call for objections” or the vote must be conducted during a live TSC me
 
 To gain and retain Maintainer permissions and status, Baseline Maintainers are required to comply with the following
 
-#### How to become a Baseline Maintainer?
+#### Becoming a Baseline Maintainer
 <ul>
 <li>Being an active Baseline Core Developer by first attending at least 2 consecutive bi-weekly meetings</li>
 <li>Making a contribution to the Baseline Protocol through pull requests, roadmap contributions, etc.</li>
@@ -58,7 +58,7 @@ To gain and retain Maintainer permissions and status, Baseline Maintainers are r
 <li>The current Maintainers (listed Code Owners) will be assigned to review the Pull Request, and the PR will be merged once two Maintainers approve the request.</li>
 <li>If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC by informing Oasis or a TSC member .</li></ul>
 
-#### What is expected of Baseline Maintainers?
+#### Expectations
 <ul>
 <li>Attendance Policy: Maintainers must notify the 'maintainer' Slack group or a community leader if unable to attend a Baseline Core Devs session. If a Maintainer misses three consecutive meetings without prior notice, a community member will submit a PR to remove the member's GitHub ID from the Code Owners File</li>
 <li>If a Maintainer is removed due to the attendance policy and wants to recommit, they must attend 2 consecutive Core Dev sessions, notify the group of intent to re-commit, then submit the PR to be added back to the Code Owners File</li>
@@ -72,7 +72,7 @@ To gain and retain Maintainer permissions and status, Baseline Maintainers are r
 <li>Contribute in ways that substantially improve the quality of the project and the experience of people who use it</li></ul>
 
   
-#### How to stop being a Baseline Maintainer?
+#### Removal
 <ul>
 <li>To step away from being a Baseline Maintainer, notify the other Maintainers or TSC members that you would like to relinquish your Baseline Maintainer status</li>
 <li>Miss three consecutive Core Developer meetings without prior notice</li>
