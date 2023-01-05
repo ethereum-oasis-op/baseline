@@ -38,8 +38,7 @@ export class CCSMAnchorHashAgent {
   public createPublicInputForProofVerification(
     inputForProofVerification: string,
   ): string {
-    const hash = this.convertTextToHash(inputForProofVerification);
-    return hash;
+    return this.convertTextToHash(inputForProofVerification);
   }
 
   public convertTextToHash(text: string) {

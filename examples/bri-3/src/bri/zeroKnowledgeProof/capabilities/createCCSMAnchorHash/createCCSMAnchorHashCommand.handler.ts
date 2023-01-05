@@ -3,8 +3,6 @@ import { CCSMAnchorHashAgent } from '../../agents/ccsmAnchorHash.agent';
 import { CCSMAnchorHashStorageAgent } from '../../agents/ccsmAnchorHashStorage.agent';
 import { CCSMAnchorHashLocalStorageAgent } from '../../agents/ccsmAnchorHashLocalStorage.agent';
 import { CreateCCSMAnchorHashCommand } from './createCCSMAnchorHash.command';
-import { Document } from '../../models/document';
-import { CCSMAnchorHash } from '../../models/ccsmAnchorHash';
 
 @CommandHandler(CreateCCSMAnchorHashCommand)
 export class CreateCCSMAnchorHashCommandHandler
