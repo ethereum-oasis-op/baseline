@@ -14,12 +14,12 @@ export class UpdateWorkgroupCommandHandler
 
   async execute(command: UpdateWorkgroupCommand) {
     const adminstratorsToUpdate =
-      await this.agent.fetchWorkgroupAdministratorsAndThrowIfNoneExist(
+      await this.agent.fetchBpiSubjectsByIdAndThrowIfNoneExist(
         command.administratorIds,
       );
 
     const participantsToUpdate =
-      await this.agent.fetchWorkgroupParticipantsAndThrowIfNoneExist(
+      await this.agent.fetchBpiSubjectsByIdAndThrowIfNoneExist(
         command.participantIds,
       );
 
