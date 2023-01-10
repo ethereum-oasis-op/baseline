@@ -14,13 +14,13 @@ export class CreateWorkgroupCommandHandler
 
   async execute(command: CreateWorkgroupCommand) {
     const workgroupAdministrators =
-      await this.agent.fetchWorkgroupAdministratorsAndThrowIfNoneExist(
-        command.administratorIds,
+      await this.agent.fetchBpiSubjectsByPublicKeyAndThrowIfNoneExist(
+        command.administratorPublicKeys,
       );
 
     const workgroupParticipants =
-      await this.agent.fetchWorkgroupParticipantsAndThrowIfNoneExist(
-        command.participantIds,
+      await this.agent.fetchBpiSubjectsByPublicKeyAndThrowIfNoneExist(
+        command.participantPublicKeys,
       );
 
     const newWorkgroupCandidate = this.agent.createNewWorkgroup(
