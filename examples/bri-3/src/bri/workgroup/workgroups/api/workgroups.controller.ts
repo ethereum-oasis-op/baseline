@@ -6,15 +6,13 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
+import { Headers } from '@nestjs/common/decorators';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { DidJwtAuthGuard } from 'src/bri/auth/guards/didJwt.guard';
 import { CreateWorkgroupCommand } from '../capabilities/createWorkgroup/createWorkgroup.command';
 import { DeleteWorkgroupCommand } from '../capabilities/deleteWorkgroup/deleteWorkgroup.command';
 import { GetWorkgroupByIdQuery } from '../capabilities/getWorkgroupById/getWorkgroupById.query';
 import { UpdateWorkgroupCommand } from '../capabilities/updateWorkgroup/updateWorkgroup.command';
-import { JWT } from './decorators/jwt.decorator';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
@@ -31,15 +29,14 @@ export class WorkgroupController {
   @Post()
   async createWorkgroup(
     @Body() requestDto: CreateWorkgroupDto,
-    @JWT() jwt: any, //TODO replace with JWT type from its module
+    @Headers('authorization') accessToken: string, //TODO replace with JWT type from its module
   ): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkgroupCommand(
+        accessToken,
         requestDto.name,
-        jwt.publicKey, //TODO decode jwt and retrieve bpisubjectbyId
         requestDto.securityPolicy, //TODO will be made default once secPolicy Implemented
         requestDto.privacyPolicy, //TODO will be made default once priPolicy Implemented
-        jwt.publicKey, //TODO defaults to creator
         requestDto.workstepIds,
         requestDto.workflowIds,
       ),
