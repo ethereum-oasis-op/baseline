@@ -4,7 +4,6 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import {
   CCSM_ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE,
-  DOCUMENT_NOT_FOUND_ERR_MESSAGE,
   INVALID_ANCHOR_HASH_INPUT,
 } from './err.messages';
 import { CCSMAnchorHashController } from './ccsmAnchorHash.controller';
@@ -116,8 +115,6 @@ describe('ProofController', () => {
 
       // Act
       const document = await controller.getDocumentByCCSMAnchorHash(hash);
-
-      console.log('DTO : ' + JSON.stringify(document));
 
       // Assert
       expect(document.id).toEqual(ccsmAnchorHash.documentId);
