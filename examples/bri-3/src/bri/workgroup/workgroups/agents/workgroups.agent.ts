@@ -38,27 +38,19 @@ export class WorkgroupAgent {
     return bpiSubjects;
   }
 
-  public async fetchBpiSubjectsByPublicKeyAndThrowIfNoneExist(
-    bpiSubjectPublicKeys: string[],
-  ): Promise<BpiSubject[]> {
-    let bpiSubjects: BpiSubject[];
-    bpiSubjectPublicKeys.forEach(async (publicKey) => {
-      const bpiSubject =
-        await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(publicKey);
-      bpiSubjects.push(bpiSubject);
-    });
+  public async fetchBpiSubjectByPublicKeyAndThrowIfNoneExist(
+    bpiSubjectPublicKey: string,
+  ): Promise<BpiSubject> {
+    const bpiSubject =
+      await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
+        bpiSubjectPublicKey,
+      );
 
-    if (bpiSubjectPublicKeys.length !== bpiSubjects.length) {
+    if (!bpiSubject) {
       throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
-    bpiSubjects.forEach((bp) => {
-      if (!bpiSubjectPublicKeys.includes(bp.id)) {
-        throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
-      }
-    });
-
-    return bpiSubjects;
+    return bpiSubject;
   }
 
   public createNewWorkgroup(
