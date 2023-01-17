@@ -19,9 +19,19 @@ export class CreateBpiSubjectAccountCommandHandler
         command.ownerBpiSubjectId,
       );
 
+    //TODO get policies from db to pass to create below
+    const authenticationPolicy = '';
+    const authorizationPolicy = '';
+    const verifiableCredential = '';
+    const recoveryKey = '';
+
     const newBpiSubjectAccountCandidate = this.agent.createNewBpiSubjectAccount(
       creatorBpiSubject,
       ownerBpiSubject,
+      authenticationPolicy,
+      authorizationPolicy,
+      verifiableCredential,
+      recoveryKey,
     );
 
     const newBpiSubjectAccount =
