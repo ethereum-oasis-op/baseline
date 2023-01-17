@@ -100,6 +100,10 @@ describe('AccountController', () => {
       '123',
       creatorBpiSubject,
       ownerBpiSubject,
+      'sample policy',
+      'sample policy',
+      'sample key',
+      'sample vc',
     );
 
     return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(
