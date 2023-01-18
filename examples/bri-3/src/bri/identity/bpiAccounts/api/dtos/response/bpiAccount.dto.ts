@@ -10,4 +10,13 @@ export class BpiAccountDto {
 
   @AutoMap(() => [BpiSubjectAccountDto])
   ownerBpiSubjectAccounts: BpiSubjectAccountDto[];
+
+  @AutoMap()
+  authorizationCondition: string;
+
+  @AutoMap()
+  stateObjectProverSystem: string;
+
+  @AutoMap()
+  stateObjectStorage: string;
 }
