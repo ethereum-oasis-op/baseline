@@ -29,6 +29,9 @@ model BpiAccount {
   id                      String              @id @default(uuid())
   nonce                   Int
   ownerBpiSubjectAccounts BpiSubjectAccount[]
+  authorizationCondition  String              //Placeholder R251
+  stateObjectProverSystem String              //Placeholder R251
+  stateObjectSTorage      String              //Placeholder R251
 }
 
 model BpiSubjectAccount {
