@@ -26,9 +26,6 @@ describe('WorkgroupsController', () => {
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let mockWorkgroupStorageAgent: MockWorkgroupStorageAgent;
 
-  const tokenHeader =
-    'bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NksifQ.eyJpYXQiOiIxNjczNjM5MjU4IiwiZXhwIjoiMTY3MzY0Mjg1OCIsImF1ZCI6ImJyaS0zIiwic3ViIjoiZGlkOmV0aHI6MHg1OjB4OWEzNjc0NGJjZDdmYjViNDE1NTBlNDcxOWZmZWE4YjFiOGM2YTdiZSIsIm5iZiI6IjE2NzM2MzkyNTgiLCJpc3MiOiJkaWQ6ZXRocjoweDU6MHg5YTM2NzQ0YkNEN2ZiNWI0MTU1MGU0NzE5RkZlQThCMUI4YzZBN2JFIn0.QGYu6ztAnKCO0FXyn-Cu6LzZRQ-QGECZgm8AZletj8G-nW7KyuTNnsLD2hQ1TROAd-t02r-e5xhbDSkXMmdZVQ';
-
   const workgroupRequestDto = {
     name: 'name',
     securityPolicy: 'sec',
@@ -43,7 +40,7 @@ describe('WorkgroupsController', () => {
       'name',
       'desc',
       BpiSubjectType.External,
-      '0x9a36744bCD7fb5b41550e4719FFeA8B1B8c6A7bE',
+      'pubkey',
     );
     return await mockBpiSubjectStorageAgent.createNewBpiSubject(newBpiSubject);
   };
@@ -52,7 +49,7 @@ describe('WorkgroupsController', () => {
     await createTestBpiSubject();
     const workgroupId = await workgroupController.createWorkgroup(
       workgroupRequestDto,
-      tokenHeader,
+      'pubkey',
     );
     return workgroupId;
   };

@@ -74,4 +74,18 @@ export class BpiSubjectAgent {
 
     return bpiSubjectToDelete;
   }
+
+  public async fetchBpiSubjectsByIdAndThrowIfNoneExist(
+    bpiSubjectIds: string[],
+  ): Promise<BpiSubject[]> {
+    const bpiSubjects = await this.storageAgent.getBpiSubjectsById(
+      bpiSubjectIds,
+    );
+
+    if (bpiSubjectIds.length !== bpiSubjects.length) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return bpiSubjects;
+  }
 }
