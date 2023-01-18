@@ -7,12 +7,12 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Headers } from '@nestjs/common/decorators';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateWorkgroupCommand } from '../capabilities/createWorkgroup/createWorkgroup.command';
 import { DeleteWorkgroupCommand } from '../capabilities/deleteWorkgroup/deleteWorkgroup.command';
 import { GetWorkgroupByIdQuery } from '../capabilities/getWorkgroupById/getWorkgroupById.query';
 import { UpdateWorkgroupCommand } from '../capabilities/updateWorkgroup/updateWorkgroup.command';
+import { PublicKey } from '../../../decorators/public-key';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
@@ -29,14 +29,14 @@ export class WorkgroupController {
   @Post()
   async createWorkgroup(
     @Body() requestDto: CreateWorkgroupDto,
-    @Headers('authorization') accessToken: string, //TODO replace with JWT type from its module
+    @PublicKey() publicKey: string,
   ): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkgroupCommand(
-        accessToken,
+        publicKey,
         requestDto.name,
-        requestDto.securityPolicy, //TODO will be made default once secPolicy Implemented
-        requestDto.privacyPolicy, //TODO will be made default once priPolicy Implemented
+        requestDto.securityPolicy,
+        requestDto.privacyPolicy, //TODO Implement privacy policy #573
         requestDto.workstepIds,
         requestDto.workflowIds,
       ),

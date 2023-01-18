@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { BpiSubjectStorageAgent } from '../../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WorkgroupAgent } from '../../agents/workgroups.agent';
 import { WorkgroupStorageAgent } from '../../agents/workgroupStorage.agent';
 import { UpdateWorkgroupCommand } from './updateWorkgroup.command';
@@ -9,17 +10,18 @@ export class UpdateWorkgroupCommandHandler
 {
   constructor(
     private agent: WorkgroupAgent,
-    private storageAgent: WorkgroupStorageAgent,
+    private workgroupStorageAgent: WorkgroupStorageAgent,
+    private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
   ) {}
 
   async execute(command: UpdateWorkgroupCommand) {
     const adminstratorsToUpdate =
-      await this.agent.fetchBpiSubjectsByIdAndThrowIfNoneExist(
+      await this.bpiSubjectStorageAgent.getBpiSubjectsById(
         command.administratorIds,
       );
 
     const participantsToUpdate =
-      await this.agent.fetchBpiSubjectsByIdAndThrowIfNoneExist(
+      await this.bpiSubjectStorageAgent.getBpiSubjectsById(
         command.participantIds,
       );
 
@@ -37,6 +39,6 @@ export class UpdateWorkgroupCommandHandler
       participantsToUpdate,
     );
 
-    await this.storageAgent.updateWorkgroup(workgroupToUpdate);
+    await this.workgroupStorageAgent.updateWorkgroup(workgroupToUpdate);
   }
 }

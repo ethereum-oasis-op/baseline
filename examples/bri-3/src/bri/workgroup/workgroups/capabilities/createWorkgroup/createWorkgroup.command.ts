@@ -1,6 +1,6 @@
 export class CreateWorkgroupCommand {
   constructor(
-    public readonly accessToken: string,
+    public readonly publicKey: string,
     public readonly name: string,
     public readonly securityPolicy: string,
     public readonly privacyPolicy: string,
