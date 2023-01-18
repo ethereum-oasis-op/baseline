@@ -31,7 +31,7 @@ model BpiAccount {
   ownerBpiSubjectAccounts BpiSubjectAccount[]
   authorizationCondition  String              //Placeholder R251
   stateObjectProverSystem String              //Placeholder R251
-  stateObjectSTorage      String              //Placeholder R251
+  stateObjectStorage      String              //Placeholder R251
 }
 
 model BpiSubjectAccount {
