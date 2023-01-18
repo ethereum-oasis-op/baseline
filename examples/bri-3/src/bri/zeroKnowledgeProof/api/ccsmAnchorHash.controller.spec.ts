@@ -50,6 +50,10 @@ describe('ProofController', () => {
         '123',
         mockBpiSubject,
         mockBpiSubject,
+        'sample policy',
+        'sample policy',
+        'sample key',
+        'sample vc',
       );
 
       const mockDocument = '';
@@ -79,6 +83,10 @@ describe('ProofController', () => {
         '123',
         mockBpiSubject,
         mockBpiSubject,
+        'sample policy',
+        'sample policy',
+        'sample key',
+        'sample vc',
       );
 
       const mockDocument = 'This is test document';

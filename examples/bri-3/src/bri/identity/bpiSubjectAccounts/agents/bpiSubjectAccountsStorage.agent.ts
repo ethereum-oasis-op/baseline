@@ -47,6 +47,10 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
       data: {
         creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
         ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
+        authenticationPolicy: bpiSubjectAccount.authenticationPolicy,
+        authorizationPolicy: bpiSubjectAccount.authorizationPolicy,
+        verifiableCredential: bpiSubjectAccount.verifiableCredential,
+        recoveryKey: bpiSubjectAccount.recoveryKey,
       },
       include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
@@ -66,6 +70,10 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
       data: {
         creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
         ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
+        authenticationPolicy: bpiSubjectAccount.authenticationPolicy,
+        authorizationPolicy: bpiSubjectAccount.authorizationPolicy,
+        verifiableCredential: bpiSubjectAccount.verifiableCredential,
+        recoveryKey: bpiSubjectAccount.recoveryKey,
       },
       include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });

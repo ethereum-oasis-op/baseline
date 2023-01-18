@@ -53,7 +53,15 @@ describe('TransactionController', () => {
       );
 
     return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(
-      new BpiSubjectAccount(id, creatorBpiSubject, ownerBpiSubject),
+      new BpiSubjectAccount(
+        id,
+        creatorBpiSubject,
+        ownerBpiSubject,
+        'sample',
+        'sample',
+        'sample',
+        'sample',
+      ),
     );
   };
 

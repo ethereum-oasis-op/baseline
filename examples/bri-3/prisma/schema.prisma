@@ -32,9 +32,13 @@ model BpiAccount {
 }
 
 model BpiSubjectAccount {
-  id                  String       @id @default(uuid())
-  creatorBpiSubjectId String
-  ownerBpiSubjectId   String
+  id                        String       @id @default(uuid())
+  creatorBpiSubjectId       String
+  ownerBpiSubjectId         String
+  authenticationPolicy      String      //Placeholder R80
+  authorizationPolicy       String      //Placeholder R80
+  verifiableCredential      String      //Placeholder R80
+  recoveryKey               String      //Placeholder R80
   bpiAccounts         BpiAccount[]
   creatorBpiSubject   BpiSubject   @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
   ownerBpiSubject     BpiSubject   @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")

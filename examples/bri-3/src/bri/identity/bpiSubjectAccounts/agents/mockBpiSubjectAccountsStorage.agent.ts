@@ -28,6 +28,10 @@ export class MockBpiSubjectAccountsStorageAgent {
       v4(),
       bpiSubjectAccount.creatorBpiSubject,
       bpiSubjectAccount.ownerBpiSubject,
+      bpiSubjectAccount.authenticationPolicy,
+      bpiSubjectAccount.authorizationPolicy,
+      bpiSubjectAccount.verifiableCredential,
+      bpiSubjectAccount.recoveryKey,
     );
 
     this.bpiSubjectAccountsStore.push(createdBp);

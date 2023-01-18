@@ -89,6 +89,10 @@ describe('SubjectAccountController', () => {
     const subjectAccountDto = {
       creatorBpiSubjectId: creatorBpiSubject.id,
       ownerBpiSubjectId: ownerBpiSubject.id,
+      authenticationPoliy: 'sample',
+      authorizationPolicy: 'sample',
+      verifiableCredential: 'sample',
+      recoveryKey: 'sample',
     } as CreateBpiSubjectAccountDto;
 
     const bpiSubjectAccountId =
@@ -220,9 +224,14 @@ describe('SubjectAccountController', () => {
         );
       const ownerBpiSubjectId = 'not-existing-id';
 
+      //Sample data provided
       const requestDto = {
         creatorBpiSubjectId: creatorBpiSubject.id,
         ownerBpiSubjectId: ownerBpiSubjectId,
+        authenticationPoliy: 'sample',
+        authorizationPolicy: 'sample',
+        verifiableCredential: 'sample',
+        recoveryKey: 'sample',
       } as CreateBpiSubjectAccountDto;
 
       // Act and assert
