@@ -13,11 +13,7 @@ This reference implementation is being built from scratch and will contain a lim
 
  * Entry point for developers to get to know the protocol, and start contributing in an iterative and atomic fashion
 
- * Basis for the Baseline SDK
-
  * Set an example of how to build an open-source project under the Baseline protocol in regard to transparency, community participation and collaboration
-
- * First vendor-agnostic implementation of the protocol.
 
 ## Prerequisites
 
