@@ -6,7 +6,6 @@ import {
 import { v4 } from 'uuid';
 import { BpiSubject } from '../models/bpiSubject';
 import { BpiSubjectType } from '../models/bpiSubjectType.enum';
-
 import {
   NAME_EMPTY_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
@@ -73,19 +72,5 @@ export class BpiSubjectAgent {
     }
 
     return bpiSubjectToDelete;
-  }
-
-  public async fetchBpiSubjectsByIdAndThrowIfNoneExist(
-    bpiSubjectIds: string[],
-  ): Promise<BpiSubject[]> {
-    const bpiSubjects = await this.storageAgent.getBpiSubjectsById(
-      bpiSubjectIds,
-    );
-
-    if (bpiSubjectIds.length !== bpiSubjects.length) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    }
-
-    return bpiSubjects;
   }
 }
