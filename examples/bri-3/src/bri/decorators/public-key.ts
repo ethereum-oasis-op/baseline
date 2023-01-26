@@ -6,6 +6,7 @@ import {
 import { decodeJWT } from 'did-jwt';
 import { TOKEN_NOT_FOUND } from '../shared/constants';
 
+//TODO implement command using request-context - retrieve bpiSubject by publicKey
 export const PublicKey = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
