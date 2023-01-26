@@ -9,7 +9,7 @@ export class CreateWorkgroupCommandHandler
   implements ICommandHandler<CreateWorkgroupCommand>
 {
   constructor(
-    private agent: WorkgroupAgent,
+    private workgroupAgent: WorkgroupAgent,
     private workgroupStorageAgent: WorkgroupStorageAgent,
     private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
   ) {}
@@ -20,7 +20,7 @@ export class CreateWorkgroupCommandHandler
         command.publicKey,
       );
 
-    const newWorkgroupCandidate = this.agent.createNewWorkgroup(
+    const newWorkgroupCandidate = this.workgroupAgent.createNewWorkgroup(
       command.name,
       [workgroupCreator],
       command.securityPolicy,
