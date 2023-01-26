@@ -33,7 +33,7 @@ export class WorkgroupController {
   ): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkgroupCommand(
-        publicKey,
+        publicKey, //TODO implement command using request-context - retrieve bpiSubject by publicKey
         requestDto.name,
         requestDto.securityPolicy,
         requestDto.privacyPolicy, //TODO Implement privacy policy #573

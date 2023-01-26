@@ -51,6 +51,20 @@ export class BpiSubjectAgent {
     return bpiSubjectToUpdate;
   }
 
+  public async fetchUpdateCandidatesAndThrowIfNoneExist(
+    ids: string[],
+  ): Promise<BpiSubject[]> {
+    const bpiSubjects = await this.storageAgent.getBpiSubjectsById(ids);
+
+    bpiSubjects.forEach((bp) => {
+      if (!ids.includes(bp.id)) {
+        throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      }
+    });
+
+    return bpiSubjects;
+  }
+
   public updateBpiSubject(
     bpiSubjectToUpdate: BpiSubject,
     name: string,
