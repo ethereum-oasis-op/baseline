@@ -20,6 +20,7 @@ import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -69,6 +70,7 @@ describe('WorkgroupsController', () => {
       controllers: [WorkgroupController],
       providers: [
         WorkgroupAgent,
+        BpiSubjectAgent,
         CreateWorkgroupCommandHandler,
         UpdateWorkgroupCommandHandler,
         DeleteWorkgroupCommandHandler,

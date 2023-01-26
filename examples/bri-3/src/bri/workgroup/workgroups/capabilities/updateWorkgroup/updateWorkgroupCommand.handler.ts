@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BpiSubjectStorageAgent } from '../../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubjectAgent } from '../../../../identity/bpiSubjects/agents/bpiSubjects.agent';
 import { WorkgroupAgent } from '../../agents/workgroups.agent';
 import { WorkgroupStorageAgent } from '../../agents/workgroupStorage.agent';
 import { UpdateWorkgroupCommand } from './updateWorkgroup.command';
@@ -9,28 +9,28 @@ export class UpdateWorkgroupCommandHandler
   implements ICommandHandler<UpdateWorkgroupCommand>
 {
   constructor(
-    private agent: WorkgroupAgent,
+    private workgroupAgent: WorkgroupAgent,
     private workgroupStorageAgent: WorkgroupStorageAgent,
-    private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
+    private bpiSubjectAgent: BpiSubjectAgent,
   ) {}
 
   async execute(command: UpdateWorkgroupCommand) {
     const adminstratorsToUpdate =
-      await this.bpiSubjectStorageAgent.getBpiSubjectsById(
+      await this.bpiSubjectAgent.fetchUpdateCandidatesAndThrowIfValidationFails(
         command.administratorIds,
       );
 
     const participantsToUpdate =
-      await this.bpiSubjectStorageAgent.getBpiSubjectsById(
+      await this.bpiSubjectAgent.fetchUpdateCandidatesAndThrowIfValidationFails(
         command.participantIds,
       );
 
     const workgroupToUpdate =
-      await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
+      await this.workgroupAgent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.id,
       );
 
-    this.agent.updateWorkgroup(
+    this.workgroupAgent.updateWorkgroup(
       workgroupToUpdate,
       command.name,
       adminstratorsToUpdate,

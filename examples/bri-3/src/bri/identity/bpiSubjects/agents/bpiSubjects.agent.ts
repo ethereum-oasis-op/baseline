@@ -51,16 +51,14 @@ export class BpiSubjectAgent {
     return bpiSubjectToUpdate;
   }
 
-  public async fetchUpdateCandidatesAndThrowIfNoneExist(
+  public async fetchUpdateCandidatesAndThrowIfValidationFails(
     ids: string[],
   ): Promise<BpiSubject[]> {
     const bpiSubjects = await this.storageAgent.getBpiSubjectsById(ids);
 
-    bpiSubjects.forEach((bp) => {
-      if (!ids.includes(bp.id)) {
-        throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-      }
-    });
+    if (ids.length != bpiSubjects.length) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
 
     return bpiSubjects;
   }
