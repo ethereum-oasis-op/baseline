@@ -29,19 +29,19 @@ model BpiAccount {
   id                      String                    @id @default(uuid())
   nonce                   Int     
   ownerBpiSubjectAccounts BpiSubjectAccount[]     
-  authorizationCondition  String                    //Placeholder R251
-  stateObjectProverSystem String                    //Placeholder R251
-  stateObjectStorage      String                    //Placeholder R251
+  authorizationCondition  String                    @default("") //Placeholder R251
+  stateObjectProverSystem String                    @default("") //Placeholder R251
+  stateObjectStorage      String                    @default("") //Placeholder R251
 }
 
 model BpiSubjectAccount {
   id                        String            @id @default(uuid())
   creatorBpiSubjectId       String    
   ownerBpiSubjectId         String    
-  authenticationPolicy      String            //Placeholder R80
-  authorizationPolicy       String            //Placeholder R80
-  verifiableCredential      String            //Placeholder R80
-  recoveryKey               String            //Placeholder R80
+  authenticationPolicy      String            @default("") //Placeholder R80
+  authorizationPolicy       String            @default("") //Placeholder R80
+  verifiableCredential      String            @default("") //Placeholder R80
+  recoveryKey               String            @default("") //Placeholder R80
   bpiAccounts               BpiAccount[]    
   creatorBpiSubject         BpiSubject        @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
   ownerBpiSubject           BpiSubject        @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
