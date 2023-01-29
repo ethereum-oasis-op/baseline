@@ -23,6 +23,14 @@ model BpiSubject {
   receivedMessages            Message[]              @relation(name: "toBpiSubject_fk")
   administratedWorkgroups     Workgroup[]            @relation(name: "administratorSubjects")
   participatingWorkgroups     Workgroup[]            @relation(name: "participantSubjects") 
+  roles                       BpiSubjectRole[]       
+}
+
+model BpiSubjectRole {
+  id                          String                 @id @default(uuid())
+  name                        String
+  description                 String
+  bpiSubjects                 BpiSubject[]           
 }
 
 model BpiAccount {
