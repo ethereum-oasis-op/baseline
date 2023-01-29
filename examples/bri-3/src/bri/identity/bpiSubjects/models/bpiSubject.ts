@@ -1,6 +1,5 @@
 import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
-import { BpiSubjectType } from './bpiSubjectType.enum';
 
 export enum BpiSubjectRoleName {
   INTERNAL_BPI_SUBJECT = 'INTERNAL_BPI_SUBJECT',
@@ -35,9 +34,6 @@ export class BpiSubject {
   description: string;
 
   @AutoMap()
-  type: BpiSubjectType;
-
-  @AutoMap()
   publicKey: string;
 
   @AutoMap()
@@ -50,14 +46,12 @@ export class BpiSubject {
     id: string,
     name: string,
     description: string,
-    type: BpiSubjectType,
     publicKey: string,
     roles: BpiSubjectRole[],
   ) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.type = type;
     this.publicKey = publicKey;
     this.roles = roles;
   }

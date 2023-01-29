@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { BpiSubject, BpiSubjectRoleName } from '../models/bpiSubject';
-import { BpiSubjectType } from '../models/bpiSubjectType.enum';
 
 import {
   NAME_EMPTY_ERR_MESSAGE,
@@ -33,14 +32,7 @@ export class BpiSubjectAgent {
     const externalRole = await this.storageAgent.getBpiSubjectRoleByName(
       BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT,
     );
-    return new BpiSubject(
-      v4(),
-      name,
-      description,
-      BpiSubjectType.External,
-      publicKey,
-      [externalRole],
-    );
+    return new BpiSubject(v4(), name, description, publicKey, [externalRole]);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(

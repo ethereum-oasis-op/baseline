@@ -14,7 +14,6 @@ model BpiSubject {
   id                          String                 @id @default(uuid())
   name                        String
   description                 String
-  type                        Int
   publicKey                   String
   loginNonce                  String                 @default("")
   ownedBpiSubjectAccounts     BpiSubjectAccount[]    @relation(name: "ownerBpiSubject_fk")

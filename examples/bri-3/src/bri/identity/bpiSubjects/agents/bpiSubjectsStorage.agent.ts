@@ -70,7 +70,6 @@ export class BpiSubjectStorageAgent extends PrismaService {
         description: bpiSubject.description,
         loginNonce: bpiSubject.loginNonce,
         publicKey: bpiSubject.publicKey,
-        type: bpiSubject.type,
         roles: {
           connect: bpiSubject.roles.map((r) => {
             return {
@@ -93,7 +92,6 @@ export class BpiSubjectStorageAgent extends PrismaService {
         description: bpiSubject.description,
         loginNonce: bpiSubject.loginNonce,
         publicKey: bpiSubject.publicKey,
-        type: bpiSubject.type,
         roles: {
           connect: bpiSubject.roles,
         },

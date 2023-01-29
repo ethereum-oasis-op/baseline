@@ -35,7 +35,6 @@ export class MockBpiSubjectStorageAgent {
       v4(),
       bpiSubject.name,
       bpiSubject.description,
-      bpiSubject.type,
       bpiSubject.publicKey,
       bpiSubject.roles,
     );
