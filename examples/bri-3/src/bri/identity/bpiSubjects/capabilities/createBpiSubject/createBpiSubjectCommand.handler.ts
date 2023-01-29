@@ -15,7 +15,7 @@ export class CreateBpiSubjectCommandHandler
   async execute(command: CreateBpiSubjectCommand) {
     this.agent.throwIfCreateBpiSubjectInputInvalid(command.name);
 
-    const newBpiSubjectCandidate = this.agent.createNewExternalBpiSubject(
+    const newBpiSubjectCandidate = await this.agent.createNewExternalBpiSubject(
       command.name,
       command.description,
       command.publicKey,

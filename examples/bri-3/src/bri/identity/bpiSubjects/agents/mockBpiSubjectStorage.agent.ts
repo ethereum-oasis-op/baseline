@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
-import { BpiSubject } from '../models/bpiSubject';
+import { BpiSubject, BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubject';
 
 @Injectable()
 export class MockBpiSubjectStorageAgent {
@@ -37,6 +37,7 @@ export class MockBpiSubjectStorageAgent {
       bpiSubject.description,
       bpiSubject.type,
       bpiSubject.publicKey,
+      bpiSubject.roles,
     );
 
     this.bpiSubjectsStore.push(createdBp);

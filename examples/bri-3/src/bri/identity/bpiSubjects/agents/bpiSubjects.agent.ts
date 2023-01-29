@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { v4 } from 'uuid';
-import { BpiSubject } from '../models/bpiSubject';
+import { BpiSubject, BpiSubjectRoleName } from '../models/bpiSubject';
 import { BpiSubjectType } from '../models/bpiSubjectType.enum';
 
 import {
@@ -25,17 +25,21 @@ export class BpiSubjectAgent {
     }
   }
 
-  public createNewExternalBpiSubject(
+  public async createNewExternalBpiSubject(
     name: string,
     description: string,
     publicKey: string,
-  ): BpiSubject {
+  ): Promise<BpiSubject> {
+    const externalRole = await this.storageAgent.getBpiSubjectRoleByName(
+      BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT,
+    );
     return new BpiSubject(
       v4(),
       name,
       description,
       BpiSubjectType.External,
       publicKey,
+      [externalRole],
     );
   }
 

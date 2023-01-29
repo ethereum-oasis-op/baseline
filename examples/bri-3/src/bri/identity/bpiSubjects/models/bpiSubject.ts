@@ -2,6 +2,28 @@ import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
 import { BpiSubjectType } from './bpiSubjectType.enum';
 
+export enum BpiSubjectRoleName {
+  INTERNAL_BPI_SUBJECT = 'INTERNAL_BPI_SUBJECT',
+  EXTERNAL_BPI_SUBJECT = 'EXTERNAL_BPI_SUBJECT',
+}
+
+export class BpiSubjectRole {
+  @AutoMap()
+  id: string; // TODO: Add uuid after #491
+
+  @AutoMap()
+  name: BpiSubjectRoleName;
+
+  @AutoMap()
+  description: string;
+
+  constructor(id: string, name: BpiSubjectRoleName, description: string) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+  }
+}
+
 export class BpiSubject {
   @AutoMap()
   id: string; // TODO: Add uuid after #491
@@ -21,18 +43,23 @@ export class BpiSubject {
   @AutoMap()
   loginNonce: string;
 
+  @AutoMap()
+  roles: BpiSubjectRole[];
+
   constructor(
     id: string,
     name: string,
     description: string,
     type: BpiSubjectType,
     publicKey: string,
+    roles: BpiSubjectRole[],
   ) {
     this.id = id;
     this.name = name;
     this.description = description;
     this.type = type;
     this.publicKey = publicKey;
+    this.roles = roles;
   }
 
   public updateName(newName: string): void {
