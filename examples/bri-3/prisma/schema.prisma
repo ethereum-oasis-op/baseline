@@ -28,7 +28,7 @@ model BpiSubject {
 
 model BpiSubjectRole {
   id                          String                 @id @default(uuid())
-  name                        String
+  name                        String                 @unique
   description                 String
   bpiSubjects                 BpiSubject[]           
 }

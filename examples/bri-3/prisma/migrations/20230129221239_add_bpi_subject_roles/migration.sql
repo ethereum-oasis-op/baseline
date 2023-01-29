@@ -14,6 +14,9 @@ CREATE TABLE "_BpiSubjectToBpiSubjectRole" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "BpiSubjectRole_name_key" ON "BpiSubjectRole"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "_BpiSubjectToBpiSubjectRole_AB_unique" ON "_BpiSubjectToBpiSubjectRole"("A", "B");
 
 -- CreateIndex
