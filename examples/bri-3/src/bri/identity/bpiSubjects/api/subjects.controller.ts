@@ -9,6 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { AbilityFactory } from 'src/bri/ability/ability.factory';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
 import { DeleteBpiSubjectCommand } from '../capabilities/deleteBpiSubject/deleteBpiSubject.command';
 import { GetAllBpiSubjectsQuery } from '../capabilities/getAllBpiSubjects/getAllBpiSubjects.query';
@@ -17,10 +18,15 @@ import { UpdateBpiSubjectCommand } from '../capabilities/updateBpiSubject/update
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
+import { ForbiddenError } from '@casl/ability';
 
 @Controller('subjects')
 export class SubjectController {
-  constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
+  constructor(
+    private commandBus: CommandBus,
+    private queryBus: QueryBus,
+    private abilityFactory: AbilityFactory,
+  ) {}
 
   @Get('/:id')
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
@@ -37,6 +43,11 @@ export class SubjectController {
     @Req() req,
     @Body() requestDto: CreateBpiSubjectDto,
   ): Promise<string> {
+    // TODO: move to some sort of guard or decorator
+    const ability = this.abilityFactory.defineAbilityFor(req.bpiSubject);
+    // TODO: this is not returning 403 but 500 for some reason
+    ForbiddenError.from(ability).throwUnlessCan('manage', 'BpiSubject');
+
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
         requestDto.name,

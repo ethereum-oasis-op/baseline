@@ -39,7 +39,7 @@ export class BpiSubject {
   @AutoMap()
   loginNonce: string;
 
-  @AutoMap()
+  @AutoMap(() => [BpiSubjectRole])
   roles: BpiSubjectRole[];
 
   constructor(

@@ -4,6 +4,7 @@ import {
   AbilityClass,
   AbilityBuilder,
 } from '@casl/ability';
+import { Injectable } from '@nestjs/common';
 import {
   BpiSubject,
   BpiSubjectRoleName,
@@ -36,19 +37,22 @@ const rolePermissions: Record<Roles, DefinePermissions> = {
   },
 };
 
-export function defineAbilityFor(bpiSubject: BpiSubject): AppAbility {
-  const builder = new AbilityBuilder(Ability as AbilityClass<AppAbility>);
+@Injectable()
+export class AbilityFactory {
+  defineAbilityFor(bpiSubject: BpiSubject): AppAbility {
+    const builder = new AbilityBuilder(Ability as AbilityClass<AppAbility>);
+    // TODO: fix diff way of naming same roles...
+    const role = bpiSubject.roles.find(
+      (r) => r.name === BpiSubjectRoleName.INTERNAL_BPI_SUBJECT,
+    )
+      ? 'internal'
+      : 'external';
+    if (typeof rolePermissions[role] === 'function') {
+      rolePermissions[role](bpiSubject, builder);
+    } else {
+      throw new Error(`Trying to use unknown role "${role}"`);
+    }
 
-  const role = bpiSubject.roles.find(
-    (r) => r.name === BpiSubjectRoleName.INTERNAL_BPI_SUBJECT,
-  )
-    ? 'internal'
-    : 'external';
-  if (typeof rolePermissions[role] === 'function') {
-    rolePermissions[role](bpiSubject, builder);
-  } else {
-    throw new Error(`Trying to use unknown role "${role}"`);
+    return builder.build();
   }
-
-  return builder.build();
 }

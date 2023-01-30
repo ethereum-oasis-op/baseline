@@ -9,6 +9,7 @@ import { GetBpiSubjectByIdQueryHandler } from './capabilities/getBpiSubjectById/
 import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
 import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
 import { SubjectsProfile } from './subjects.profile';
+import { AbilityModule } from 'src/bri/ability/ability.module';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler,
@@ -21,7 +22,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, AbilityModule],
   controllers: [SubjectController],
   providers: [
     ...CommandHandlers,
