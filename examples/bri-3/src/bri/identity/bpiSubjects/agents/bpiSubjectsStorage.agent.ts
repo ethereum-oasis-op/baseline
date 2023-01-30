@@ -111,6 +111,9 @@ export class BpiSubjectStorageAgent extends PrismaService {
       where: {
         publicKey: publicKey.toLowerCase(),
       },
+      include: {
+        roles: true,
+      },
     });
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);

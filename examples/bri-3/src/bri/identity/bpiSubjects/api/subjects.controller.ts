@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
@@ -33,6 +34,7 @@ export class SubjectController {
 
   @Post()
   async createBpiSubject(
+    @Req() req,
     @Body() requestDto: CreateBpiSubjectDto,
   ): Promise<string> {
     return await this.commandBus.execute(

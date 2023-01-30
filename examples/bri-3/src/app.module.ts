@@ -11,6 +11,7 @@ import { LoggingModule } from './shared/logging/logging.module';
 import { AuthModule } from './bri/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
+import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
       strategyInitializer: classes(),
     }),
     AuthModule,
+    SubjectModule,
   ],
   providers: [
     PrismaService,

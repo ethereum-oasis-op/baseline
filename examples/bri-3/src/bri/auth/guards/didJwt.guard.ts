@@ -6,10 +6,15 @@ import { getResolver } from 'ethr-did-resolver';
 import { verifyJWT } from 'did-jwt';
 import { LoggingService } from 'src/shared/logging/logging.service';
 import { didResolverProviderConfig } from '../constants';
+import { BpiSubjectStorageAgent } from 'src/bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 @Injectable()
 export class DidJwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector, private log: LoggingService) {}
+  constructor(
+    private reflector: Reflector,
+    private log: LoggingService,
+    private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(
@@ -23,6 +28,14 @@ export class DidJwtAuthGuard implements CanActivate {
     try {
       const token = this.getToken(request);
       const verified = await this.verifyJwt(token);
+      // TODO: we need to use did instead of public key in db
+      // a bit hacky way to attach bpiSubject to current request
+      const bpiSubject =
+        await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
+          verified.payload.sub.substring(13),
+        );
+      const req = context.switchToHttp().getRequest();
+      req.bpiSubject = bpiSubject;
       return verified.verified;
     } catch (e) {
       this.log.logError(`Jwt verification error: ${e}`);
