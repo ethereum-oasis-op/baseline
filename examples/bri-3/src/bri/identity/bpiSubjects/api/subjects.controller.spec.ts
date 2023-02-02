@@ -74,6 +74,30 @@ describe('SubjectController', () => {
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
+    it('external subject should not be able to create new subjects', async () => {
+      // Arange
+      const mockReqBpiSubject = {
+        bpiSubject: {
+          roles: [
+            {
+              name: BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT,
+            },
+          ],
+        },
+      };
+
+      const requestDto = {
+        name: 'name',
+        desc: 'desc',
+        publicKey: 'publicKey',
+      } as CreateBpiSubjectDto;
+
+      // Act and assert
+      expect(async () => {
+        await sController.createBpiSubject(mockReqBpiSubject, requestDto);
+      }).rejects.toThrow('Cannot execute "manage" on "BpiSubject"');
+    });
+
     it('should return the correct bpi subject if proper id passed ', async () => {
       // Arrange
       const requestDto = {
