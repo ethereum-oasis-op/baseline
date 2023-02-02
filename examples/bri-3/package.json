@@ -43,6 +43,7 @@
     "ethers": "^5.7.2",
     "ethr-did-resolver": "^8.0.0",
     "ew-precise-proofs-js": "^1.2.0",
+    "nats": "^2.11.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
