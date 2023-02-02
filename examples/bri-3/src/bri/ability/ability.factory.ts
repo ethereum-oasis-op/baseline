@@ -26,13 +26,12 @@ type DefinePermissions = (
   user: BpiSubject,
   builder: AbilityBuilder<AppAbility>,
 ) => void;
-type Roles = 'internal' | 'external';
 
-const rolePermissions: Record<Roles, DefinePermissions> = {
-  external(bpiSubject, { can }) {
+const rolePermissions: Record<BpiSubjectRoleName, DefinePermissions> = {
+  [BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT](bpiSubject, { can }) {
     can('read', 'BpiSubject');
   },
-  internal(bpiSubject, { can }) {
+  [BpiSubjectRoleName.INTERNAL_BPI_SUBJECT](bpiSubject, { can }) {
     can('manage', 'all');
   },
 };
@@ -41,18 +40,13 @@ const rolePermissions: Record<Roles, DefinePermissions> = {
 export class AbilityFactory {
   defineAbilityFor(bpiSubject: BpiSubject): AppAbility {
     const builder = new AbilityBuilder(Ability as AbilityClass<AppAbility>);
-    // TODO: fix diff way of naming same roles...
-    const role = bpiSubject.roles.find(
-      (r) => r.name === BpiSubjectRoleName.INTERNAL_BPI_SUBJECT,
-    )
-      ? 'internal'
-      : 'external';
+    // this is just for start, once there are more roles, this should be modified a bit
+    const role = bpiSubject.roles[0]?.name;
     if (typeof rolePermissions[role] === 'function') {
       rolePermissions[role](bpiSubject, builder);
     } else {
       throw new Error(`Trying to use unknown role "${role}"`);
     }
-
     return builder.build();
   }
 }
