@@ -93,7 +93,11 @@ export class BpiSubjectStorageAgent extends PrismaService {
         loginNonce: bpiSubject.loginNonce,
         publicKey: bpiSubject.publicKey,
         roles: {
-          connect: bpiSubject.roles,
+          connect: bpiSubject.roles.map((r) => {
+            return {
+              id: r.id,
+            };
+          }),
         },
       },
     });
