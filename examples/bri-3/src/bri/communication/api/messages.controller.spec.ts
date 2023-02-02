@@ -11,7 +11,6 @@ import { MockBpiMessageStorageAgent } from '../agents/mockBpiMessagesStorage.age
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { CreateBpiMessageDto } from './dtos/request/createBpiMessage.dto';
 import { UpdateBpiMessageDto } from './dtos/request/updateBpiMessage.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
@@ -33,10 +32,10 @@ describe('MessageController', () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name', 'desc', BpiSubjectType.External, 'xyz'),
+      new BpiSubject('', 'name', 'desc', 'xyz', []),
     );
     existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name2', 'desc2', BpiSubjectType.External, 'xyz2'),
+      new BpiSubject('', 'name2', 'desc2', 'xyz2', []),
     );
 
     const app: TestingModule = await Test.createTestingModule({

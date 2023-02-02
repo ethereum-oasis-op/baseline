@@ -17,10 +17,21 @@ import { SubjectsProfile } from '../subjects.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { AbilityFactory } from '../../../ability/ability.factory';
+import { AbilityModule } from '../../../ability/ability.module';
+import { BpiSubjectRoleName } from '../models/bpiSubject';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
-
+  const mockReqBpiSubject = {
+    bpiSubject: {
+      roles: [
+        {
+          name: BpiSubjectRoleName.INTERNAL_BPI_SUBJECT,
+        },
+      ],
+    },
+  };
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -28,6 +39,7 @@ describe('SubjectController', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        AbilityModule,
       ],
       controllers: [SubjectController],
       providers: [
@@ -39,6 +51,7 @@ describe('SubjectController', () => {
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
         SubjectsProfile,
+        AbilityFactory,
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
@@ -69,7 +82,10 @@ describe('SubjectController', () => {
         publicKey: 'publicKey',
       } as CreateBpiSubjectDto;
 
-      const newBpiSubjectId = await sController.createBpiSubject(requestDto);
+      const newBpiSubjectId = await sController.createBpiSubject(
+        mockReqBpiSubject,
+        requestDto,
+      );
 
       // Act
       const createdBpiSubject = await sController.getBpiSubjectById(
@@ -100,14 +116,20 @@ describe('SubjectController', () => {
         desc: 'desc1',
         publicKey: 'publicKey1',
       } as CreateBpiSubjectDto;
-      const newBpiSubjectId1 = await sController.createBpiSubject(requestDto1);
+      const newBpiSubjectId1 = await sController.createBpiSubject(
+        mockReqBpiSubject,
+        requestDto1,
+      );
 
       const requestDto2 = {
         name: 'name2',
         desc: 'desc2',
         publicKey: 'publicKey2',
       } as CreateBpiSubjectDto;
-      const newBpiSubjectId2 = await sController.createBpiSubject(requestDto2);
+      const newBpiSubjectId2 = await sController.createBpiSubject(
+        mockReqBpiSubject,
+        requestDto2,
+      );
 
       // Act
       const bpiSubjects = await sController.getAllBpiSubjects();
@@ -135,7 +157,7 @@ describe('SubjectController', () => {
 
       // Act and assert
       expect(async () => {
-        await sController.createBpiSubject(requestDto);
+        await sController.createBpiSubject(mockReqBpiSubject, requestDto);
       }).rejects.toThrow(new BadRequestException(NAME_EMPTY_ERR_MESSAGE));
     });
 
@@ -148,7 +170,10 @@ describe('SubjectController', () => {
       } as CreateBpiSubjectDto;
 
       // Act
-      const response = await sController.createBpiSubject(requestDto);
+      const response = await sController.createBpiSubject(
+        mockReqBpiSubject,
+        requestDto,
+      );
 
       // Assert
       expect(uuidValidate(response));
@@ -180,6 +205,7 @@ describe('SubjectController', () => {
         publicKey: 'publicKey1',
       } as CreateBpiSubjectDto;
       const newBpiSubjectId = await sController.createBpiSubject(
+        mockReqBpiSubject,
         createRequestDto,
       );
       const updateRequestDto = {
@@ -221,6 +247,7 @@ describe('SubjectController', () => {
         publicKey: 'publicKey1',
       } as CreateBpiSubjectDto;
       const newBpiSubjectId = await sController.createBpiSubject(
+        mockReqBpiSubject,
         createRequestDto,
       );
 

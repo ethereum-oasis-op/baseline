@@ -17,7 +17,6 @@ import { CreateBpiSubjectAccountDto } from './dtos/request/createBpiSubjectAccou
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
 import { SubjectAccountsProfile } from '../subjectAccounts.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
@@ -67,23 +66,11 @@ describe('SubjectAccountController', () => {
   const createBpiSubjectAccount = async () => {
     const ownerBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '123',
-          'owner',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
+        new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
       );
     const creatorBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '321',
-          'creator',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
+        new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
       );
 
     const subjectAccountDto = {
@@ -187,13 +174,7 @@ describe('SubjectAccountController', () => {
       // Arrange
       const ownerBpiSubject =
         await mockBpiSubjectStorageAgent.createNewBpiSubject(
-          new BpiSubject(
-            '123',
-            'owner',
-            'desc',
-            BpiSubjectType.External,
-            'publicKey',
-          ),
+          new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
         );
       const creatorBpiSubjectId = 'not-existing-id';
 
@@ -214,13 +195,7 @@ describe('SubjectAccountController', () => {
       // Arrange
       const creatorBpiSubject =
         await mockBpiSubjectStorageAgent.createNewBpiSubject(
-          new BpiSubject(
-            '123',
-            'creator',
-            'desc',
-            BpiSubjectType.External,
-            'publicKey',
-          ),
+          new BpiSubject('123', 'creator', 'desc', 'publicKey', []),
         );
       const ownerBpiSubjectId = 'not-existing-id';
 
