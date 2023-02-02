@@ -1,21 +1,18 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../shared/constants';
-import { CreateCCSMAnchorHashDto } from './createCCSMAnchorHash.dto';
+import { CreateAnchorHashDto } from './createAnchorHash.dto';
 
-describe('CreateCCSMAnchorHashDto', () => {
+describe('CreateAnchorHashDto', () => {
   it('should return error in case ownerAccount is not provided.', async () => {
     // Arrange
     const dto = {
-      document: 'This is test document',
+      state: 'This is test state',
     };
-    const createCCSMAnchorHashDto = plainToInstance(
-      CreateCCSMAnchorHashDto,
-      dto,
-    );
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
     // Act
-    const errors = await validate(createCCSMAnchorHashDto);
+    const errors = await validate(createAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(1);
@@ -25,24 +22,21 @@ describe('CreateCCSMAnchorHashDto', () => {
     );
   });
 
-  it('should return error in case document not provided.', async () => {
+  it('should return error in case state is not provided.', async () => {
     // Arrange
     const dto = {
       ownerAccount: {},
     };
-    const createCCSMAnchorHashDto = plainToInstance(
-      CreateCCSMAnchorHashDto,
-      dto,
-    );
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
     // Act
-    const errors = await validate(createCCSMAnchorHashDto);
+    const errors = await validate(createAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('document');
+    expect(errors[0].property).toEqual('state');
     expect(errors[0].constraints.isNotEmpty).toContain(
-      'document ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+      'state ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
@@ -50,15 +44,12 @@ describe('CreateCCSMAnchorHashDto', () => {
     // Arrange
     const dto = {
       ownerAccount: {},
-      document: 'This test document',
+      state: 'This is test state',
     };
-    const createCCSMAnchorHashDto = plainToInstance(
-      CreateCCSMAnchorHashDto,
-      dto,
-    );
+    const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
     // Act
-    const errors = await validate(createCCSMAnchorHashDto);
+    const errors = await validate(createAnchorHashDto);
 
     // Assert
     expect(errors.length).toBe(0);

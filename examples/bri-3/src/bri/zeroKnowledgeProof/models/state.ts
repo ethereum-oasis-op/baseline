@@ -1,23 +1,23 @@
 import { AutoMap } from '@automapper/classes';
-import { CCSMAnchorHash } from './ccsmAnchorHash';
+import { AnchorHash } from './anchorHash';
 
-export class Document {
+export class State {
   @AutoMap()
   id: number;
 
   @AutoMap()
-  text: string;
+  content: string;
 
   @AutoMap()
-  contentAddressableHash?: CCSMAnchorHash;
+  contentAddressableHash?: AnchorHash;
 
   constructor(
     id: number,
-    text: string,
-    contentAddressableHash?: CCSMAnchorHash,
+    content: string,
+    contentAddressableHash?: AnchorHash,
   ) {
     this.id = id;
-    this.text = text;
+    this.content = content;
     this.contentAddressableHash = contentAddressableHash;
   }
 }

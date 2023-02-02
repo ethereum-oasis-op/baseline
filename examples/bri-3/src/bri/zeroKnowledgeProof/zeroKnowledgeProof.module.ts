@@ -1,31 +1,31 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CCSMAnchorHashAgent } from './agents/ccsmAnchorHash.agent';
-import { CCSMAnchorHashStorageAgent } from './agents/ccsmAnchorHashStorage.agent';
-import { CCSMAnchorHashLocalStorageAgent } from './agents/ccsmAnchorHashLocalStorage.agent';
-import { CCSMAnchorHashController } from './api/ccsmAnchorHash.controller';
-import { CreateCCSMAnchorHashCommandHandler } from './capabilities/createCCSMAnchorHash/createCCSMAnchorHashCommand.handler';
-import { VerifyCCSMAnchorHashCommandHandler } from './capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHashCommand.handler';
+import { AnchorHashAgent } from './agents/AnchorHash.agent';
+import { AnchorHashCCSMStorageAgent } from './agents/AnchorHashCCSMStorage.agent';
+import { AnchorHashStorageAgent } from './agents/AnchorHashStorage.agent';
+import { AnchorHashController } from './api/anchorHash.controller';
+import { CreateAnchorHashCommandHandler } from './capabilities/createAnchorHash/createAnchorHashCommand.handler';
+import { VerifyAnchorHashCommandHandler } from './capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
 import { BlockchainService } from './services/blockchain/blockchain.service';
-import { CCSMAnchorHashProfile } from './ccsmAnchorHash.profile';
-import { DocumentProfile } from './document.profile';
+import { AnchorHashProfile } from './AnchorHash.profile';
+import { StateProfile } from './state.profile';
 
 export const CommandHandlers = [
-  CreateCCSMAnchorHashCommandHandler,
-  VerifyCCSMAnchorHashCommandHandler,
+  CreateAnchorHashCommandHandler,
+  VerifyAnchorHashCommandHandler,
 ];
 
 @Module({
   imports: [CqrsModule],
-  controllers: [CCSMAnchorHashController],
+  controllers: [AnchorHashController],
   providers: [
     ...CommandHandlers,
-    CCSMAnchorHashAgent,
-    CCSMAnchorHashStorageAgent,
-    CCSMAnchorHashLocalStorageAgent,
+    AnchorHashAgent,
+    AnchorHashStorageAgent,
+    AnchorHashCCSMStorageAgent,
     BlockchainService,
-    CCSMAnchorHashProfile,
-    DocumentProfile,
+    AnchorHashProfile,
+    StateProfile,
   ],
 })
 export class ZeroKnowledgeProofModule {}

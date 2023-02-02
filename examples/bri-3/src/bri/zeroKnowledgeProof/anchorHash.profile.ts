@@ -1,19 +1,19 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { Document } from './models/document';
-import { DocumentDto } from './api/dtos/response/document.dto';
+import { AnchorHash } from './models/AnchorHash';
+import { AnchorHashDto } from './api/dtos/response/anchorHash.dto';
 
 @Injectable()
-export class DocumentProfile extends AutomapperProfile {
+export class AnchorHashProfile extends AutomapperProfile {
   constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, Document, Document);
-      createMap(mapper, Document, DocumentDto);
+      createMap(mapper, AnchorHash, AnchorHash);
+      createMap(mapper, AnchorHash, AnchorHashDto);
     };
   }
 }
