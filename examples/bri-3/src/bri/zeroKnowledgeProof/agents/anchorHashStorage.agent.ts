@@ -62,10 +62,10 @@ export class AnchorHashStorageAgent extends PrismaService {
     return this.mapper.map(newAnchorHashModel, AnchorHash, AnchorHash);
   }
 
-  async createNewState(text: string): Promise<State> {
+  async createNewState(content: string): Promise<State> {
     const newStateModel = await this.state.create({
       data: {
-        text: text,
+        content: content,
       },
     });
 

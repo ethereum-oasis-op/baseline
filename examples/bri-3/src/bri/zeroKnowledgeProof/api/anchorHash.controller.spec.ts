@@ -4,11 +4,11 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { INVALID_ANCHOR_HASH_INPUT } from './err.messages';
 import { AnchorHashController } from './anchorHash.controller';
-import { AnchorHashAgent } from '../agents/AnchorHash.agent';
+import { AnchorHashAgent } from '../agents/anchorHash.agent';
 import { CreateAnchorHashCommandHandler } from '../capabilities/createAnchorHash/createAnchorHashCommand.handler';
 import { VerifyAnchorHashCommandHandler } from '../capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
-import { AnchorHashStorageAgent } from '../agents/AnchorHashStorage.agent';
-import { MockAnchorHashLocalStorageAgent } from '../agents/mockAnchorHashLocalStorage.agent';
+import { AnchorHashStorageAgent } from '../agents/anchorHashStorage.agent';
+import { MockAnchorHashStorageAgent } from '../agents/mockAnchorHashStorage.agent';
 import { AutomapperModule } from '@automapper/nestjs';
 import { CreateAnchorHashDto } from './dtos/request/createAnchorHash.dto';
 import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
@@ -16,8 +16,8 @@ import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
-import { AnchorHashLocalStorageAgent } from '../agents/AnchorHashLocalStorage.agent';
-import { AnchorHashProfile } from '../AnchorHash.profile';
+import { AnchorHashCCSMStorageAgent } from '../agents/anchorHashCCSMStorage.agent';
+import { AnchorHashProfile } from '../anchorHash.profile';
 import { StateProfile } from '../state.profile';
 import { classes } from '@automapper/classes';
 import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
@@ -47,14 +47,14 @@ describe('ProofController', () => {
         CreateAnchorHashCommandHandler,
         VerifyAnchorHashCommandHandler,
         AnchorHashStorageAgent,
-        AnchorHashLocalStorageAgent,
+        AnchorHashCCSMStorageAgent,
         BlockchainService,
         AnchorHashProfile,
         StateProfile,
       ],
     })
-      .overrideProvider(AnchorHashLocalStorageAgent)
-      .useValue(new MockAnchorHashLocalStorageAgent())
+      .overrideProvider(AnchorHashStorageAgent)
+      .useValue(new MockAnchorHashStorageAgent())
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(mockBpiSubjectAccountsStorageAgent)
       .overrideProvider(BpiSubjectStorageAgent)

@@ -1,7 +1,7 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { AnchorHash } from './models/AnchorHash';
+import { AnchorHash } from './models/anchorHash';
 import { AnchorHashDto } from './api/dtos/response/anchorHash.dto';
 
 @Injectable()

@@ -6,7 +6,7 @@ import { CreateAnchorHashDto } from './dtos/request/createAnchorHash.dto';
 import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
 import { AnchorHashDto } from './dtos/response/anchorHash.dto';
 
-@Controller('ccsmAnchorHash')
+@Controller('anchorHash')
 export class AnchorHashController {
   constructor(private commandBus: CommandBus) {}
 
