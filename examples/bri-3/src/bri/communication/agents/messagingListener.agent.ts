@@ -1,16 +1,18 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, OnModuleInit } from "@nestjs/common";
 import { CommandBus } from "@nestjs/cqrs";
 import { IMessagingClient } from "../messagingClients/messagingClient.interface";
 
 @Injectable()
-export class MessagingListenerAgent {
+export class MessagingListenerAgent implements OnModuleInit {
 
     constructor(
         @Inject('IMessagingClient') private readonly messagingClient: IMessagingClient, 
         private commandBus: CommandBus ) {
+    }
 
-        this.messagingClient.subscribe("general", this.onNewMessageReceived)
-        this.messagingClient.subscribe("soldier", this.onNewMessageReceived)
+    async onModuleInit() {
+        this.messagingClient.subscribe("general", this.onNewMessageReceived);
+        this.messagingClient.subscribe("soldier", this.onNewMessageReceived);
     }
 
     private onNewMessageReceived(message: string): void {
