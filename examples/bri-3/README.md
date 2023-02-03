@@ -74,6 +74,14 @@ $ npm run test
 $ comming soon
 ```
 
+## Trying out NATS messaging
+
+Install NATS client from here: https://github.com/nats-io/natscli
+
+nats context add local --description "Localhost"
+
+nats pub general "<message>"
+
 ## Architecture
 
 BRI-3 is written in Typescript.
