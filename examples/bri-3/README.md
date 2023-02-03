@@ -38,7 +38,7 @@ $ npm run prisma:migrate:dev # migrate the db to latest state
 
 # Messaging
 
-$ docker run -d nats
+$ docker run -p 4222:4222 -d nats 
 ```
 
 ## Running the app
