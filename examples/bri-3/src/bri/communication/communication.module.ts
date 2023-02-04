@@ -11,6 +11,7 @@ import { MessageController } from './api/messages.controller';
 import { CreateBpiMessageCommandHandler } from './capabilities/createBpiMessage/createBpiMessageCommand.handler';
 import { DeleteBpiMessageCommandHandler } from './capabilities/deleteBpiMessage/deleteBpiMessageCommand.handler';
 import { GetBpiMessageByIdQueryHandler } from './capabilities/getBpiMessageById/getBpiMessageByIdQuery.handler';
+import { ProcessInboundMessageCommandHandler } from './capabilities/processInboundMessage/processInboundMessageCommand.handler';
 import { UpdateBpiMessageCommandHandler } from './capabilities/updateBpiMessage/updateBpiMessageCommand.handler';
 import { CommunicationProfile } from './communicaton.profile';
 
@@ -18,6 +19,7 @@ export const CommandHandlers = [
   CreateBpiMessageCommandHandler,
   UpdateBpiMessageCommandHandler,
   DeleteBpiMessageCommandHandler,
+  ProcessInboundMessageCommandHandler
 ];
 export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
 
