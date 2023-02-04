@@ -1,20 +1,23 @@
+import { Injectable } from "@nestjs/common";
 import { connect, StringCodec } from "nats";
+import { LoggingService } from "src/shared/logging/logging.service";
 import { IMessagingClient } from "./messagingClient.interface";
 
+@Injectable()
 export class NatsMessagingClient implements IMessagingClient {
 
-    constructor() { }
+    constructor(private log: LoggingService) { }
 
     async subscribe(channelName: string, callback: (message: string) => void) {
         const sc = StringCodec();
-        const nc = await connect({ servers: "localhost:4222" }); // TODO: Read from config
-        console.log("Connected NatsMessagingClient to: " + nc.getServer());
+        const nc = await connect({ servers: process.env.BPI_NATS_SERVER_URL });
+        this.log.logInfo("Connected NatsMessagingClient to: " + nc.getServer());
 
-        const s1 = nc.subscribe(channelName);
+        const subscription = nc.subscribe(channelName);
 
-        for await (const m of s1) {
-            const messageContent = sc.decode(m.data);
-            console.log(`${s1.getSubject()}: [${s1.getProcessed()}] : ${messageContent}`);
+        for await (const message of subscription) {
+            const messageContent = sc.decode(message.data);
+            this.log.logInfo(`${subscription.getSubject()}: [${subscription.getProcessed()}] : ${messageContent}`);
             callback(messageContent);
         }
     }
