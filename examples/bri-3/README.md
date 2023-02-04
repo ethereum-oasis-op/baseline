@@ -78,9 +78,12 @@ $ comming soon
 
 Install NATS client from here: https://github.com/nats-io/natscli
 
-nats context add local --description "Localhost"
+Run the following commands in the terminal: 
+```bash
 
-nats pub general "<message>"
+nats context add local --description "Localhost" # adds localhost server to nats cli
+
+nats pub general "<message>" # publishes new message on the general subject
 
 ## Architecture
 
