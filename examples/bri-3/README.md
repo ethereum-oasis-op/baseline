@@ -76,14 +76,18 @@ $ comming soon
 
 ## Trying out NATS messaging
 
+
 Install NATS client from here: https://github.com/nats-io/natscli
 
 Run the following commands in the terminal: 
 ```bash
 
-nats context add local --description "Localhost" # adds localhost server to nats cli
+$ nats context add local --description "Localhost" # adds localhost server to nats cli
 
-nats pub general "<message>" # publishes new message on the general subject
+$ nats pub general "<message>" # publishes new message on the general subject
+
+```
+Observe the log messages in the terminal where the app is running.
 
 ## Architecture
 
