@@ -12,23 +12,22 @@ export class DidJwtAuthGuard implements CanActivate {
   constructor(private reflector: Reflector, private log: LoggingService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    return true;
-    // const isPublic = this.reflector.getAllAndOverride<boolean>(
-    //   IS_PUBLIC_ENDPOINT_METADATA_KEY,
-    //   [context.getHandler(), context.getClass()],
-    // );
-    // if (isPublic) {
-    //   return true;
-    // }
-    // const request = this.getRequest<any>(context);
-    // try {
-    //   const token = this.getToken(request);
-    //   const verified = await this.verifyJwt(token);
-    //   return verified.verified;
-    // } catch (e) {
-    //   this.log.logError(`Jwt verification error: ${e}`);
-    //   return false;
-    // }
+    const isPublic = this.reflector.getAllAndOverride<boolean>(
+      IS_PUBLIC_ENDPOINT_METADATA_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+    if (isPublic) {
+      return true;
+    }
+    const request = this.getRequest<any>(context);
+    try {
+      const token = this.getToken(request);
+      const verified = await this.verifyJwt(token);
+      return verified.verified;
+    } catch (e) {
+      this.log.logError(`Jwt verification error: ${e}`);
+      return false;
+    }
   }
 
   private async getDidResolver() {
