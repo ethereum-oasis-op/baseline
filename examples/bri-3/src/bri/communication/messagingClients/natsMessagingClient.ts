@@ -8,7 +8,7 @@ export class NatsMessagingClient implements IMessagingClient {
 
     constructor(private log: LoggingService) { }
 
-    async subscribe(channelName: string, callback: (message: string) => void) {
+    async subscribe(channelName: string, callback: (message: string) => void): Promise<void> {
         const sc = StringCodec();
         const nc = await connect({ servers: process.env.BPI_NATS_SERVER_URL });
         this.log.logInfo("Connected NatsMessagingClient to: " + nc.getServer());
@@ -22,7 +22,11 @@ export class NatsMessagingClient implements IMessagingClient {
         }
     }
 
-    publish(channelName: string, message: string): void {
-        throw new Error("Method not implemented.");
+    async publish(channelName: string, message: string): Promise<void> {
+        const sc = StringCodec();
+        const nc = await connect({ servers: process.env.BPI_NATS_SERVER_URL });
+        
+        nc.publish(channelName, sc.encode(message));
+        await nc.drain(); // TODO: Investigate further if it is neccesary to close the connection here
     }
 }

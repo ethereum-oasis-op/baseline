@@ -5,7 +5,7 @@ import { ProcessInboundMessageCommand } from "../capabilities/processInboundMess
 import { IMessagingClient } from "../messagingClients/messagingClient.interface";
 
 @Injectable()
-export class MessagingListenerAgent implements OnModuleInit {
+export class MessagingAgent implements OnModuleInit {
 
     constructor(
         @Inject('IMessagingClient') private readonly messagingClient: IMessagingClient, 
@@ -15,12 +15,16 @@ export class MessagingListenerAgent implements OnModuleInit {
     
     async onModuleInit() {
         this.messagingClient.subscribe("general", this.onNewMessageReceived.bind(this));
-        this.messagingClient.subscribe("soldier", this.onNewMessageReceived.bind(this));
     }
 
-    private onNewMessageReceived(message: string): void {
+    
+    async publishMessage(channelName: string, message: string): Promise<void> {
+        await this.messagingClient.publish(channelName, message);
+    }
+
+    private onNewMessageReceived(rawMessage: string): void {
         // TODO: Could we make this log service implicitly print the caller class?
-        this.log.logInfo(`MessagingListenerAgent: New raw message received: ${message}. Disptaching ProcessInboundMessageCommand`);
-        this.commandBus.execute(new ProcessInboundMessageCommand(message));
+        this.log.logInfo(`MessagingListenerAgent: New raw message received: ${rawMessage}. Disptaching ProcessInboundMessageCommand`);
+        this.commandBus.execute(new ProcessInboundMessageCommand(rawMessage));
     }
 }

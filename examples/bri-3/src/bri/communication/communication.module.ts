@@ -6,7 +6,7 @@ import { SubjectsProfile } from '../identity/bpiSubjects/subjects.profile';
 import { NatsMessagingClient } from './/messagingClients/natsMessagingClient';
 import { BpiMessageAgent } from './agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from './agents/bpiMessagesStorage.agent';
-import { MessagingListenerAgent } from './agents/messagingListener.agent';
+import { MessagingAgent } from './agents/messaging.agent';
 import { MessageController } from './api/messages.controller';
 import { CreateBpiMessageCommandHandler } from './capabilities/createBpiMessage/createBpiMessageCommand.handler';
 import { DeleteBpiMessageCommandHandler } from './capabilities/deleteBpiMessage/deleteBpiMessageCommand.handler';
@@ -31,7 +31,7 @@ export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
     ...QueryHandlers,
     BpiMessageAgent,
     BpiMessageStorageAgent,
-    MessagingListenerAgent,
+    MessagingAgent,
     SubjectsProfile,
     CommunicationProfile,
     {
