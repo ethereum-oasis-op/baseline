@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { LoggingService } from 'src/shared/logging/logging.service';
+import { LoggingService } from '../../../shared/logging/logging.service';
 import { ProcessInboundMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
 

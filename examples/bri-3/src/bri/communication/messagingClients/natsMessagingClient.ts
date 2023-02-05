@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { connect, StringCodec } from 'nats';
-import { LoggingService } from 'src/shared/logging/logging.service';
+import { LoggingService } from '../../../shared/logging/logging.service';
 import { IMessagingClient } from './messagingClient.interface';
 
 @Injectable()

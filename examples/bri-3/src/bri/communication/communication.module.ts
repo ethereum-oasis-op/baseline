@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { LoggingModule } from 'src/shared/logging/logging.module';
+import { LoggingModule } from '../../shared/logging/logging.module';
 import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
 import { SubjectsProfile } from '../identity/bpiSubjects/subjects.profile';
 import { NatsMessagingClient } from './/messagingClients/natsMessagingClient';

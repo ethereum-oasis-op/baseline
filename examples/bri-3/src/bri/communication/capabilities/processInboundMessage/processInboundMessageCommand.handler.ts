@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LoggingService } from 'src/shared/logging/logging.service';
+import { LoggingService } from '../../../../shared/logging/logging.service';
 import { ProcessInboundMessageCommand } from './processInboundMessage.command';
 
 @CommandHandler(ProcessInboundMessageCommand)
