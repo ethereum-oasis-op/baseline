@@ -11,7 +11,7 @@ export class CreateBpiMessageCommandHandler
   constructor(
     private readonly agent: BpiMessageAgent,
     private readonly storageAgent: BpiMessageStorageAgent,
-    private readonly messagingAgent: MessagingAgent
+    private readonly messagingAgent: MessagingAgent,
   ) {}
 
   async execute(command: CreateBpiMessageCommand) {
@@ -35,7 +35,7 @@ export class CreateBpiMessageCommandHandler
     );
 
     // TODO: This is purely for example purposes. Will be expanded on as part of upcoming issues related to messaging.
-    await this.messagingAgent.publishMessage("general", newBpiMessage.content);
+    await this.messagingAgent.publishMessage('general', newBpiMessage.content);
 
     return newBpiMessage.id;
   }

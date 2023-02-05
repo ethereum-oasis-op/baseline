@@ -1,5 +1,3 @@
 export class ProcessInboundMessageCommand {
-  constructor(
-    public readonly rawMessage: string
-  ) {}
+  constructor(public readonly rawMessage: string) {}
 }

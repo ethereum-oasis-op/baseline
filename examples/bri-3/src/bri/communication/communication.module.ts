@@ -19,7 +19,7 @@ export const CommandHandlers = [
   CreateBpiMessageCommandHandler,
   UpdateBpiMessageCommandHandler,
   DeleteBpiMessageCommandHandler,
-  ProcessInboundMessageCommandHandler
+  ProcessInboundMessageCommandHandler,
 ];
 export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
 
@@ -36,8 +36,8 @@ export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
     CommunicationProfile,
     {
       provide: 'IMessagingClient',
-      useClass: NatsMessagingClient // TODO: This is the place where we would inject different clients based on configuration (i.e. RabbitMQ client)
-    }
+      useClass: NatsMessagingClient, // TODO: This is the place where we would inject different clients based on configuration (i.e. RabbitMQ client)
+    },
   ],
 })
 export class CommunicationModule {}
