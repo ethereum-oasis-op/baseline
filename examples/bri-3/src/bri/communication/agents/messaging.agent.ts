@@ -1,11 +1,11 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnApplicationBootstrap, OnModuleInit } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { ProcessInboundMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
 
 @Injectable()
-export class MessagingAgent implements OnModuleInit {
+export class MessagingAgent implements OnApplicationBootstrap {
   constructor(
     @Inject('IMessagingClient')
     private readonly messagingClient: IMessagingClient,
@@ -13,7 +13,7 @@ export class MessagingAgent implements OnModuleInit {
     private readonly log: LoggingService,
   ) {}
 
-  async onModuleInit() {
+  async onApplicationBootstrap() {
     this.messagingClient.subscribe(
       'general',
       this.onNewMessageReceived.bind(this),
