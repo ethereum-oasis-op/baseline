@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  OnApplicationBootstrap,
-} from '@nestjs/common';
+import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { ProcessInboundMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
