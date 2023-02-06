@@ -65,11 +65,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
     bpiSubject.publicKey = bpiSubject.publicKey.toLowerCase();
     const newBpiSubjectModel = await this.bpiSubject.create({
       data: {
-        id: bpiSubject.id,
-        name: bpiSubject.name,
-        description: bpiSubject.description,
-        loginNonce: bpiSubject.loginNonce,
-        publicKey: bpiSubject.publicKey,
+        ...bpiSubject,
         roles: {
           connect: bpiSubject.roles.map((r) => {
             return {
@@ -87,11 +83,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
     const updatedBpiSubjectModel = await this.bpiSubject.update({
       where: { id: bpiSubject.id },
       data: {
-        id: bpiSubject.id,
-        name: bpiSubject.name,
-        description: bpiSubject.description,
-        loginNonce: bpiSubject.loginNonce,
-        publicKey: bpiSubject.publicKey,
+        ...bpiSubject,
         roles: {
           connect: bpiSubject.roles.map((r) => {
             return {
