@@ -1,13 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
-import {
-  BpiSubject,
-  BpiSubjectRole,
-  BpiSubjectRoleName,
-} from '../models/bpiSubject';
+import { BpiSubject } from '../models/bpiSubject';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
+import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application

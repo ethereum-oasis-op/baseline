@@ -19,7 +19,7 @@ import { classes } from '@automapper/classes';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { AbilityFactory } from '../../../ability/ability.factory';
 import { AbilityModule } from '../../../ability/ability.module';
-import { BpiSubjectRoleName } from '../models/bpiSubject';
+import { BpiSubjectRoleName } from '../models/bpiSubjectRole';
 
 describe('SubjectController', () => {
   let sController: SubjectController;

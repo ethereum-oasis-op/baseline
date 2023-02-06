@@ -5,10 +5,8 @@ import {
   AbilityBuilder,
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
-import {
-  BpiSubject,
-  BpiSubjectRoleName,
-} from '../identity/bpiSubjects/models/bpiSubject';
+import { BpiSubject } from '../identity/bpiSubjects/models/bpiSubject';
+import { BpiSubjectRoleName } from '../identity/bpiSubjects/models/bpiSubjectRole';
 
 const actions = ['manage', 'read'] as const;
 const subjects = ['BpiSubject', 'all'] as const;
