@@ -18,6 +18,7 @@ export class CreateAnchorHashCommandHandler
     const newAnchorHash = await this.agent.hashTheStateAndCreateNewAnchorHash(
       command.ownerAccount.id,
       command.state,
+      command.signature,
     );
 
     await this.storageAgent.storeNewAnchorHash(newAnchorHash);

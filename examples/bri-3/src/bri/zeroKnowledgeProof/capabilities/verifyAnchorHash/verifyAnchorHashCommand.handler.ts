@@ -18,6 +18,8 @@ export class VerifyAnchorHashCommandHandler
       command.inputForProofVerification,
     );
 
+    this.agent.throwErrorIfSignatureIsInvalid(command.signature);
+
     const publicInputForProofVerification =
       this.agent.createPublicInputForProofVerification(
         command.inputForProofVerification,
@@ -35,6 +37,7 @@ export class VerifyAnchorHashCommandHandler
     const verified = this.agent.verifyAnchorHash(
       anchorHash,
       publicInputForProofVerification,
+      command.signature,
     );
 
     return verified;
