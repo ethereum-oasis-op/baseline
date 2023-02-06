@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from 'src/bri/decorators/public-endpoint';
 import { Resolver } from 'did-resolver';
 import { getResolver } from 'ethr-did-resolver';
-import { verifyJWT } from 'did-jwt';
+import { JWTVerified, verifyJWT } from 'did-jwt';
 import { LoggingService } from 'src/shared/logging/logging.service';
 import { didResolverProviderConfig } from '../constants';
 import { BpiSubjectStorageAgent } from 'src/bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
@@ -28,19 +28,26 @@ export class DidJwtAuthGuard implements CanActivate {
     try {
       const token = this.getToken(request);
       const verified = await this.verifyJwt(token);
-      // TODO: we need to use did instead of public key in db
-      // a bit hacky way to attach bpiSubject to current request
-      const bpiSubject =
-        await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
-          verified.payload.sub.substring(13),
-        );
-      const req = context.switchToHttp().getRequest();
-      req.bpiSubject = bpiSubject;
+      await this.attachBpiSubjectToCurrentRequestContext(verified, context);
       return verified.verified;
     } catch (e) {
       this.log.logError(`Jwt verification error: ${e}`);
       return false;
     }
+  }
+
+  private async attachBpiSubjectToCurrentRequestContext(
+    verified: JWTVerified,
+    context: ExecutionContext,
+  ) {
+    // TODO: store did in bpi subject and remove constant
+    const didSubstrLength = 13;
+    const bpiSubject =
+      await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
+        verified.payload.sub.substring(didSubstrLength),
+      );
+    const req = context.switchToHttp().getRequest();
+    req.bpiSubject = bpiSubject;
   }
 
   private async getDidResolver() {
