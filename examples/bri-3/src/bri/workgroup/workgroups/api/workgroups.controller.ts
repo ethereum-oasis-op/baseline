@@ -12,6 +12,7 @@ import { CreateWorkgroupCommand } from '../capabilities/createWorkgroup/createWo
 import { DeleteWorkgroupCommand } from '../capabilities/deleteWorkgroup/deleteWorkgroup.command';
 import { GetWorkgroupByIdQuery } from '../capabilities/getWorkgroupById/getWorkgroupById.query';
 import { UpdateWorkgroupCommand } from '../capabilities/updateWorkgroup/updateWorkgroup.command';
+import { PublicKey } from '../../../decorators/public-key';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
@@ -28,14 +29,14 @@ export class WorkgroupController {
   @Post()
   async createWorkgroup(
     @Body() requestDto: CreateWorkgroupDto,
+    @PublicKey() publicKey: string,
   ): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkgroupCommand(
+        publicKey, //TODO implement command using request-context - retrieve bpiSubject by publicKey
         requestDto.name,
-        requestDto.administratorIds,
         requestDto.securityPolicy,
-        requestDto.privacyPolicy,
-        requestDto.participantIds,
+        requestDto.privacyPolicy, //TODO Implement privacy policy #573
         requestDto.workstepIds,
         requestDto.workflowIds,
       ),

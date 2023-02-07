@@ -33,6 +33,16 @@ export class MockBpiSubjectStorageAgent {
     return new BpiSubjectRole('123', roleName, '');
   }
 
+  async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
+    const bpiSubject = this.bpiSubjectsStore.find(
+      (bp) => bp.publicKey.toLowerCase() === publicKey,
+    );
+    if (!bpiSubject) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+    return bpiSubject;
+  }
+
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     return Promise.resolve(this.bpiSubjectsStore);
   }

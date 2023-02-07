@@ -19,19 +19,17 @@ import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
-
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let mockWorkgroupStorageAgent: MockWorkgroupStorageAgent;
 
   const workgroupRequestDto = {
     name: 'name',
-    administratorIds: [],
     securityPolicy: 'sec',
     privacyPolicy: 'priv',
-    participantIds: [],
     workstepIds: [],
     workflowIds: [],
   } as CreateWorkgroupDto;
@@ -48,11 +46,10 @@ describe('WorkgroupsController', () => {
   };
 
   const createTestWorkgroup = async (): Promise<string> => {
-    const newBpiSubject = await createTestBpiSubject();
-    workgroupRequestDto.administratorIds = [newBpiSubject.id];
-    workgroupRequestDto.participantIds = [newBpiSubject.id];
+    await createTestBpiSubject();
     const workgroupId = await workgroupController.createWorkgroup(
       workgroupRequestDto,
+      'pubkey',
     );
     return workgroupId;
   };
@@ -72,6 +69,7 @@ describe('WorkgroupsController', () => {
       controllers: [WorkgroupController],
       providers: [
         WorkgroupAgent,
+        BpiSubjectAgent,
         CreateWorkgroupCommandHandler,
         UpdateWorkgroupCommandHandler,
         DeleteWorkgroupCommandHandler,
@@ -113,12 +111,6 @@ describe('WorkgroupsController', () => {
 
       // Assert
       expect(createdWorkgroup.id).toEqual(newWorkgroupId);
-      expect(createdWorkgroup.administrators.map((ws) => ws.id)).toEqual(
-        workgroupRequestDto.administratorIds,
-      );
-      expect(createdWorkgroup.participants.map((ws) => ws.id)).toEqual(
-        workgroupRequestDto.participantIds,
-      );
     });
   });
 

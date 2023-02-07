@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workstep } from '../models/workstep';
-import { LoggingService } from '../../../../../src/shared/logging/logging.service';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 
@@ -11,10 +10,7 @@ import { Mapper } from '@automapper/core';
 // does not have to care about the ORM.
 @Injectable()
 export class WorkstepStorageAgent extends PrismaService {
-  constructor(
-    @InjectMapper() private readonly mapper: Mapper,
-    private log: LoggingService,
-  ) {
+  constructor(@InjectMapper() private readonly mapper: Mapper) {
     super();
   }
 
@@ -22,7 +18,6 @@ export class WorkstepStorageAgent extends PrismaService {
     const workstepModel = await this.workstep.findUnique({ where: { id } });
 
     if (!workstepModel) {
-      this.log.logError(NOT_FOUND_ERR_MESSAGE);
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 

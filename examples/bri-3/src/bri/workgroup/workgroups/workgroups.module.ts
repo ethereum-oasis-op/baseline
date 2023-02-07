@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { AuthModule } from 'src/bri/auth/auth.module';
+import { BpiSubjectAgent } from '../../identity/bpiSubjects/agents/bpiSubjects.agent';
 import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
 import { WorkflowModule } from '../workflows/workflows.module';
 import { WorkstepModule } from '../worksteps/worksteps.module';
@@ -20,7 +22,13 @@ export const CommandHandlers = [
 
 export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
 @Module({
-  imports: [CqrsModule, SubjectModule, WorkstepModule, WorkflowModule],
+  imports: [
+    CqrsModule,
+    SubjectModule,
+    WorkstepModule,
+    WorkflowModule,
+    AuthModule,
+  ],
   controllers: [WorkgroupController],
   providers: [
     ...CommandHandlers,
@@ -28,6 +36,7 @@ export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
     WorkgroupAgent,
     WorkgroupStorageAgent,
     WorkgroupProfile,
+    BpiSubjectAgent,
   ],
 })
 export class WorkgroupModule {}

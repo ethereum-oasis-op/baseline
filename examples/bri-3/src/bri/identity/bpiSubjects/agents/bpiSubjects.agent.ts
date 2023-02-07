@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { BpiSubject } from '../models/bpiSubject';
-
 import {
   NAME_EMPTY_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
@@ -47,6 +46,18 @@ export class BpiSubjectAgent {
     }
 
     return bpiSubjectToUpdate;
+  }
+
+  public async fetchUpdateCandidatesAndThrowIfValidationFails(
+    ids: string[],
+  ): Promise<BpiSubject[]> {
+    const bpiSubjects = await this.storageAgent.getBpiSubjectsById(ids);
+
+    if (ids.length != bpiSubjects.length) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return bpiSubjects;
   }
 
   public updateBpiSubject(
