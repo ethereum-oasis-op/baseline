@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 
-export class CCSMAnchorHash {
+export class AnchorHash {
   @AutoMap()
   id: string;
 
@@ -10,18 +10,9 @@ export class CCSMAnchorHash {
   @AutoMap()
   hash: string;
 
-  @AutoMap()
-  documentId: number;
-
-  constructor(
-    id: string,
-    ownerBpiSubjectId: string,
-    hash: string,
-    documentId: number,
-  ) {
+  constructor(id: string, ownerBpiSubjectId: string, hash: string) {
     this.id = id;
     this.ownerBpiSubjectId = ownerBpiSubjectId;
     this.hash = hash;
-    this.documentId = documentId;
   }
 }

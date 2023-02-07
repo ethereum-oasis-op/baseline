@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 
-export class CCSMAnchorHashDto {
+export class AnchorHashDto {
   @AutoMap()
   id: string;
 
@@ -9,7 +9,4 @@ export class CCSMAnchorHashDto {
 
   @AutoMap()
   hash: string;
-
-  @AutoMap()
-  documentId: string;
 }
