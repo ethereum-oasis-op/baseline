@@ -1,16 +1,16 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LoggingService } from '../../../../shared/logging/logging.service';
-import { ProcessInboundMessageCommand } from './processInboundMessage.command';
+import { ProcessInboundBpiMessageCommand } from './processInboundMessage.command';
 
-@CommandHandler(ProcessInboundMessageCommand)
+@CommandHandler(ProcessInboundBpiMessageCommand)
 export class ProcessInboundMessageCommandHandler
-  implements ICommandHandler<ProcessInboundMessageCommand>
+  implements ICommandHandler<ProcessInboundBpiMessageCommand>
 {
   constructor(private readonly log: LoggingService) {}
 
-  async execute(command: ProcessInboundMessageCommand) {
+  async execute(command: ProcessInboundBpiMessageCommand) {
     this.log.logInfo(
-      `ProcessInboundMessageCommandHandler: I will be responsible to process this raw message ${command.rawMessage}`,
+      `ProcessInboundMessageCommandHandler: Processing BPI message with id ${command.bpiMessage.id}`,
     );
   }
 }
