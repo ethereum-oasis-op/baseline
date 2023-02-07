@@ -37,11 +37,11 @@ export class NatsMessagingClient
       return;
     }
 
-    const sc = StringCodec();
+    const stringCodec = StringCodec();
     const subscription = this.natsConn.subscribe(channelName);
 
     for await (const message of subscription) {
-      const messageContent = sc.decode(message.data);
+      const messageContent = stringCodec.decode(message.data);
       this.logger.logInfo(
         `${subscription.getSubject()}: [${subscription.getProcessed()}] : ${messageContent}`,
       );
@@ -55,8 +55,7 @@ export class NatsMessagingClient
       return;
     }
 
-    const sc = StringCodec();
-    this.natsConn.publish(channelName, sc.encode(message));
+    this.natsConn.publish(channelName, StringCodec().encode(message));
   }
 
   private isNatsConnClosed(): boolean {
