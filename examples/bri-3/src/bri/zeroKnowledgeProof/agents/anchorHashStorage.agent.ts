@@ -1,10 +1,8 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { AnchorHash } from '../models/anchorHash';
-import { State } from '../models/state';
-import { ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 
 @Injectable()
 export class AnchorHashStorageAgent extends PrismaService {
@@ -12,48 +10,17 @@ export class AnchorHashStorageAgent extends PrismaService {
     super();
   }
 
-  async getStateByAnchorHash(hash: string): Promise<State> {
-    const anchorHashModel = await this.anchorHash.findUnique({
-      where: { hash },
-      include: {
-        ownerBpiSubject: {
-          include: {
-            ownedAnchorHash: true,
-          },
-        },
-        state: {
-          include: {
-            contentAddressableHash: true,
-          },
-        },
-      },
-    });
-
-    if (!anchorHashModel) {
-      throw new NotFoundException(ANCHOR_HASH_NOT_FOUND_ERR_MESSAGE);
-    }
-
-    const stateModel = anchorHashModel.state;
-    return this.mapper.map(stateModel, State, State);
-  }
-
-  async createNewAnchorHash(anchorHash: AnchorHash): Promise<AnchorHash> {
+  async storeNewAnchorHash(anchorHash: AnchorHash): Promise<AnchorHash> {
     const newAnchorHashModel = await this.anchorHash.create({
       data: {
         id: anchorHash.id,
         ownerBpiSubjectId: anchorHash.ownerBpiSubjectId,
         hash: anchorHash.hash,
-        stateId: anchorHash.stateId,
       },
       include: {
         ownerBpiSubject: {
           include: {
             ownedAnchorHash: true,
-          },
-        },
-        state: {
-          include: {
-            contentAddressableHash: true,
           },
         },
       },
@@ -62,25 +29,9 @@ export class AnchorHashStorageAgent extends PrismaService {
     return this.mapper.map(newAnchorHashModel, AnchorHash, AnchorHash);
   }
 
-  async createNewState(content: string): Promise<State> {
-    const newStateModel = await this.state.create({
-      data: {
-        content: content,
-      },
-    });
-
-    return this.mapper.map(newStateModel, State, State);
-  }
-
   async deleteAnchorHash(AnchorHash: AnchorHash): Promise<void> {
     await this.anchorHash.delete({
       where: { id: AnchorHash.id },
-    });
-  }
-
-  async deleteState(state: State): Promise<void> {
-    await this.state.delete({
-      where: { id: state.id },
     });
   }
 }

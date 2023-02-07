@@ -99,17 +99,9 @@ model Message {
   type             Int
 }
 
-model State {
-  id                      Int        @id @default(autoincrement())
-  contentAddressableHash  AnchorHash?  @relation(name: "state_fk") 
-  content                    String  
-}
-
 model AnchorHash {
   id                String     @id @default(uuid()) 
   ownerBpiSubjectId String
   ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")    
   hash              String     @unique
-  stateId        Int        @unique
-  state          State   @relation(fields: [stateId], references: [id], name: "state_fk") 
 }

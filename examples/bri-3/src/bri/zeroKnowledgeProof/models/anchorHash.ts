@@ -10,18 +10,9 @@ export class AnchorHash {
   @AutoMap()
   hash: string;
 
-  @AutoMap()
-  stateId: number;
-
-  constructor(
-    id: string,
-    ownerBpiSubjectId: string,
-    hash: string,
-    stateId: number,
-  ) {
+  constructor(id: string, ownerBpiSubjectId: string, hash: string) {
     this.id = id;
     this.ownerBpiSubjectId = ownerBpiSubjectId;
     this.hash = hash;
-    this.stateId = stateId;
   }
 }
