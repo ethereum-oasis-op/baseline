@@ -34,9 +34,6 @@ export class CreateBpiMessageCommandHandler
       newBpiMessageCandidate,
     );
 
-    // TODO: This is purely for example purposes. Will be expanded on as part of upcoming issues related to messaging.
-    // await this.messagingAgent.publishMessage('general', newBpiMessage.content);
-
     return newBpiMessage.id;
   }
 }
