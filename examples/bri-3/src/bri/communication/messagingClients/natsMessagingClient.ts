@@ -13,8 +13,12 @@ export class NatsMessagingClient
 
   async onModuleInit() {
     try {
-      this.natsConn = await connect({ servers: process.env.BPI_NATS_SERVER_URL });
-      this.logger.logInfo('Connected to nats server: ' + this.natsConn.getServer());
+      this.natsConn = await connect({
+        servers: process.env.BPI_NATS_SERVER_URL,
+      });
+      this.logger.logInfo(
+        'Connected to nats server: ' + this.natsConn.getServer(),
+      );
     } catch (err) {
       this.logger.logWarn(
         `Error: ${err} connecting to nats server at: ${process.env.BPI_NATS_SERVER_URL}`,
@@ -33,7 +37,9 @@ export class NatsMessagingClient
     callback: (message: string) => void,
   ): Promise<void> {
     if (this.isNatsConnClosed()) {
-      this.logger.logWarn(`Trying to subscribe without an open nats connection`);
+      this.logger.logWarn(
+        `Trying to subscribe without an open nats connection`,
+      );
       return;
     }
 
@@ -61,4 +67,4 @@ export class NatsMessagingClient
   private isNatsConnClosed(): boolean {
     return !this.natsConn || this.natsConn.isClosed();
   }
- }
+}
