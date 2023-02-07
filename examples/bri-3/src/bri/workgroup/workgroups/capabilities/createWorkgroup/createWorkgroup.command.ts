@@ -1,6 +1,8 @@
+import { BpiSubject } from '../../../../identity/bpiSubjects/models/bpiSubject';
+
 export class CreateWorkgroupCommand {
   constructor(
-    public readonly publicKey: string,
+    public readonly bpiSubject: BpiSubject,
     public readonly name: string,
     public readonly securityPolicy: string,
     public readonly privacyPolicy: string,
