@@ -27,7 +27,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
   private onNewMessageReceived(rawMessage: string): void {
     // TODO: Could we make this log service implicitly print the caller class?
     this.log.logInfo(
-      `MessagingListenerAgent: New raw message received: ${rawMessage}. Disptaching ProcessInboundMessageCommand`,
+      `MessagingListenerAgent: New raw message received: ${rawMessage}. Dispatching ProcessInboundMessageCommand`,
     );
     this.commandBus.execute(new ProcessInboundMessageCommand(rawMessage));
   }
