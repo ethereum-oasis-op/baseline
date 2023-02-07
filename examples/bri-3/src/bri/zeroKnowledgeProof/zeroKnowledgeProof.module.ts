@@ -8,7 +8,6 @@ import { CreateAnchorHashCommandHandler } from './capabilities/createAnchorHash/
 import { VerifyAnchorHashCommandHandler } from './capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
 import { BlockchainService } from './services/blockchain/blockchain.service';
 import { AnchorHashProfile } from './anchorHash.profile';
-import { StateProfile } from './state.profile';
 
 export const CommandHandlers = [
   CreateAnchorHashCommandHandler,
@@ -25,7 +24,6 @@ export const CommandHandlers = [
     AnchorHashCCSMStorageAgent,
     BlockchainService,
     AnchorHashProfile,
-    StateProfile,
   ],
 })
 export class ZeroKnowledgeProofModule {}

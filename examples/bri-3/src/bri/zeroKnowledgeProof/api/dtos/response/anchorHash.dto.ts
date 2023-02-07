@@ -9,7 +9,4 @@ export class AnchorHashDto {
 
   @AutoMap()
   hash: string;
-
-  @AutoMap()
-  stateId: string;
 }

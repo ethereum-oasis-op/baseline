@@ -18,7 +18,6 @@ import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiS
 import { BlockchainService } from '../services/blockchain/blockchain.service';
 import { AnchorHashCCSMStorageAgent } from '../agents/anchorHashCCSMStorage.agent';
 import { AnchorHashProfile } from '../anchorHash.profile';
-import { StateProfile } from '../state.profile';
 import { classes } from '@automapper/classes';
 import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
@@ -50,7 +49,6 @@ describe('ProofController', () => {
         AnchorHashCCSMStorageAgent,
         BlockchainService,
         AnchorHashProfile,
-        StateProfile,
       ],
     })
       .overrideProvider(AnchorHashStorageAgent)

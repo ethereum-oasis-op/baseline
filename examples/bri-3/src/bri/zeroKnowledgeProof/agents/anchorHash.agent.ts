@@ -3,7 +3,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 as uuidv4 } from 'uuid';
 import { AnchorHash } from '../models/anchorHash';
-import { State } from '../models/state';
 
 @Injectable()
 export class AnchorHashAgent {
@@ -17,11 +16,11 @@ export class AnchorHashAgent {
 
   public hashTheStateAndCreateNewAnchorHash(
     ownerId: string,
-    state: State,
+    state: string,
   ): AnchorHash {
-    const hash = this.convertTextToHash(state.content);
+    const hash = this.convertTextToHash(state);
 
-    return new AnchorHash(uuidv4(), ownerId, hash, state.id);
+    return new AnchorHash(uuidv4(), ownerId, hash);
   }
 
   public verifyAnchorHash(
