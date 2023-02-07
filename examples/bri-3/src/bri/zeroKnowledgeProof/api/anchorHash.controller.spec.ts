@@ -16,7 +16,7 @@ import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
-import { AnchorHashCCSMStorageAgent } from '../agents/anchorHashCCSMStorage.agent';
+import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
 import { AnchorHashProfile } from '../anchorHash.profile';
 import { classes } from '@automapper/classes';
 import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
@@ -46,7 +46,7 @@ describe('ProofController', () => {
         CreateAnchorHashCommandHandler,
         VerifyAnchorHashCommandHandler,
         AnchorHashStorageAgent,
-        AnchorHashCCSMStorageAgent,
+        AnchorHashCcsmStorageAgent,
         BlockchainService,
         AnchorHashProfile,
       ],

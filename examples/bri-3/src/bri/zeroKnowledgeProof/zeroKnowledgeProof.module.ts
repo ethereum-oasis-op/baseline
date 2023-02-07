@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { AnchorHashAgent } from './agents/anchorHash.agent';
-import { AnchorHashCCSMStorageAgent } from './agents/anchorHashCCSMStorage.agent';
+import { AnchorHashCcsmStorageAgent } from './agents/anchorHashCcsmStorage.agent';
 import { AnchorHashStorageAgent } from './agents/anchorHashStorage.agent';
 import { AnchorHashController } from './api/anchorHash.controller';
 import { CreateAnchorHashCommandHandler } from './capabilities/createAnchorHash/createAnchorHashCommand.handler';
@@ -21,7 +21,7 @@ export const CommandHandlers = [
     ...CommandHandlers,
     AnchorHashAgent,
     AnchorHashStorageAgent,
-    AnchorHashCCSMStorageAgent,
+    AnchorHashCcsmStorageAgent,
     BlockchainService,
     AnchorHashProfile,
   ],

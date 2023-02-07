@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AnchorHashAgent } from '../../agents/anchorHash.agent';
 import { AnchorHashStorageAgent } from '../../agents/anchorHashStorage.agent';
-import { AnchorHashCCSMStorageAgent } from '../../agents/anchorHashCCSMStorage.agent';
+import { AnchorHashCcsmStorageAgent } from '../../agents/anchorHashCcsmStorage.agent';
 import { CreateAnchorHashCommand } from './createAnchorHash.command';
 
 @CommandHandler(CreateAnchorHashCommand)
@@ -11,7 +11,7 @@ export class CreateAnchorHashCommandHandler
   constructor(
     private readonly agent: AnchorHashAgent,
     private readonly storageAgent: AnchorHashStorageAgent,
-    private readonly ccsmStorageAgent: AnchorHashCCSMStorageAgent,
+    private readonly ccsmStorageAgent: AnchorHashCcsmStorageAgent,
   ) {}
 
   async execute(command: CreateAnchorHashCommand) {
@@ -22,7 +22,7 @@ export class CreateAnchorHashCommandHandler
 
     await this.storageAgent.storeNewAnchorHash(newAnchorHash);
 
-    await this.ccsmStorageAgent.storeAnchorHashOnCCSM(newAnchorHash);
+    await this.ccsmStorageAgent.storeAnchorHashOnCcsm(newAnchorHash);
 
     return newAnchorHash;
   }
