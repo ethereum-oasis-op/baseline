@@ -9,7 +9,6 @@ import { VerifyCCSMAnchorHashCommandHandler } from '../capabilities/verifyCCSMAn
 import { CCSMAnchorHashStorageAgent } from '../agents/ccsmAnchorHashStorage.agent';
 import { CreateCCSMAnchorHashDto } from './dtos/request/createCCSMAnchorHash.dto';
 import { VerifyCCSMAnchorHashDto } from './dtos/request/verifyCCSMAnchorHash.dto';
-import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
@@ -38,13 +37,7 @@ describe('ProofController', () => {
   describe('createCCSMAnchorHash', () => {
     it('should throw BadRequest if document parameter is empty', async () => {
       // Arrange
-      const mockBpiSubject = new BpiSubject(
-        '123',
-        '123',
-        '123',
-        BpiSubjectType.External,
-        '123',
-      );
+      const mockBpiSubject = new BpiSubject('123', '123', '123', '123', []);
 
       const mockBpiSubjectAccount = new BpiSubjectAccount(
         '123',
@@ -71,13 +64,7 @@ describe('ProofController', () => {
 
     it('should return the correct transaction if proper document passed ', async () => {
       // Arrange
-      const mockBpiSubject = new BpiSubject(
-        '123',
-        '123',
-        '123',
-        BpiSubjectType.External,
-        '123',
-      );
+      const mockBpiSubject = new BpiSubject('123', '123', '123', '123', []);
 
       const mockBpiSubjectAccount = new BpiSubjectAccount(
         '123',

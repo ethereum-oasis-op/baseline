@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
-import { BpiSubjectType } from './bpiSubjectType.enum';
+import { BpiSubjectRole } from './bpiSubjectRole';
 
 export class BpiSubject {
   @AutoMap()
@@ -13,26 +13,26 @@ export class BpiSubject {
   description: string;
 
   @AutoMap()
-  type: BpiSubjectType;
-
-  @AutoMap()
   publicKey: string;
 
   @AutoMap()
   loginNonce: string;
 
+  @AutoMap(() => [BpiSubjectRole])
+  roles: BpiSubjectRole[];
+
   constructor(
     id: string,
     name: string,
     description: string,
-    type: BpiSubjectType,
     publicKey: string,
+    roles: BpiSubjectRole[],
   ) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.type = type;
     this.publicKey = publicKey;
+    this.roles = roles;
   }
 
   public updateName(newName: string): void {

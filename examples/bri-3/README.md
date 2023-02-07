@@ -35,6 +35,7 @@ $ create a .env file based on the .env.sample # provide a connection string for 
 $ npm install # install project dependencies
 $ npm run prisma:generate # generate the prisma client 
 $ npm run prisma:migrate:dev # migrate the db to latest state
+$ npx prisma db seed # seed db
 
 # Messaging
 

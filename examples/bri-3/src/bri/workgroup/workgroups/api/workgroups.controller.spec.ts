@@ -14,7 +14,6 @@ import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupController } from './workgroups.controller';
 import { MockBpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
@@ -36,13 +35,7 @@ describe('WorkgroupsController', () => {
   } as CreateWorkgroupDto;
 
   const createTestBpiSubject = async () => {
-    const newBpiSubject = new BpiSubject(
-      '123',
-      'name',
-      'desc',
-      BpiSubjectType.External,
-      'pubkey',
-    );
+    const newBpiSubject = new BpiSubject('123', 'name', 'desc', 'pubkey', []);
     return await mockBpiSubjectStorageAgent.createNewBpiSubject(newBpiSubject);
   };
 
