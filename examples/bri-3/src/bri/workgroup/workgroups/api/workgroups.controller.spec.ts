@@ -40,10 +40,10 @@ describe('WorkgroupsController', () => {
   };
 
   const createTestWorkgroup = async (): Promise<string> => {
-    await createTestBpiSubject();
+    const bpiSubject = await createTestBpiSubject();
     const workgroupId = await workgroupController.createWorkgroup(
+      { bpiSubject },
       workgroupRequestDto,
-      'pubkey',
     );
     return workgroupId;
   };
