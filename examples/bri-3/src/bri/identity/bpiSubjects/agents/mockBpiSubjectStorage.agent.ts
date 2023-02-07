@@ -1,11 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
-import {
-  BpiSubject,
-  BpiSubjectRole,
-  BpiSubjectRoleName,
-} from '../models/bpiSubject';
+import { BpiSubject } from '../models/bpiSubject';
+import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
 
 @Injectable()
 export class MockBpiSubjectStorageAgent {
