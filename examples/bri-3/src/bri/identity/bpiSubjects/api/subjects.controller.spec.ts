@@ -17,8 +17,8 @@ import { SubjectsProfile } from '../subjects.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { AbilityFactory } from '../../../ability/ability.factory';
-import { AbilityModule } from '../../../ability/ability.module';
+import { AbilityFactory } from '../../../authz/ability.factory';
+import { AuthzModule } from '../../../authz/authz.module';
 import { BpiSubjectRoleName } from '../models/bpiSubjectRole';
 
 describe('SubjectController', () => {
@@ -39,7 +39,7 @@ describe('SubjectController', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
-        AbilityModule,
+        AuthzModule,
       ],
       controllers: [SubjectController],
       providers: [

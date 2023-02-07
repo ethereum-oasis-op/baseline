@@ -5,4 +5,4 @@ import { AbilityFactory } from './ability.factory';
   providers: [AbilityFactory],
   exports: [AbilityFactory],
 })
-export class AbilityModule {}
+export class AuthzModule {}

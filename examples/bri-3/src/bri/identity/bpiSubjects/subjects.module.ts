@@ -9,7 +9,7 @@ import { GetBpiSubjectByIdQueryHandler } from './capabilities/getBpiSubjectById/
 import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
 import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
 import { SubjectsProfile } from './subjects.profile';
-import { AbilityModule } from '../../ability/ability.module';
+import { AuthzModule } from '../../authz/authz.module';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler,
@@ -22,7 +22,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, AbilityModule],
+  imports: [CqrsModule, AuthzModule],
   controllers: [SubjectController],
   providers: [
     ...CommandHandlers,
