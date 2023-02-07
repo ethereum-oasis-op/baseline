@@ -7,17 +7,17 @@ import { IMessagingClient } from './messagingClient.interface';
 export class NatsMessagingClient
   implements IMessagingClient, OnModuleInit, OnModuleDestroy
 {
-  private natsConn: NatsConnection;
+  private natsConnection: NatsConnection;
 
   constructor(private readonly logger: LoggingService) {}
 
   async onModuleInit() {
     try {
-      this.natsConn = await connect({
+      this.natsConnection = await connect({
         servers: process.env.BPI_NATS_SERVER_URL,
       });
       this.logger.logInfo(
-        'Connected to nats server: ' + this.natsConn.getServer(),
+        'Connected to nats server: ' + this.natsConnection.getServer(),
       );
     } catch (err) {
       this.logger.logWarn(
@@ -27,8 +27,8 @@ export class NatsMessagingClient
   }
 
   async onModuleDestroy() {
-    if (!this.isNatsConnClosed()) {
-      await this.natsConn.drain();
+    if (!this.isNatsConnectionClosed()) {
+      await this.natsConnection.drain();
     }
   }
 
@@ -36,7 +36,7 @@ export class NatsMessagingClient
     channelName: string,
     callback: (message: string) => void,
   ): Promise<void> {
-    if (this.isNatsConnClosed()) {
+    if (this.isNatsConnectionClosed()) {
       this.logger.logWarn(
         `Trying to subscribe without an open nats connection`,
       );
@@ -44,7 +44,7 @@ export class NatsMessagingClient
     }
 
     const stringCodec = StringCodec();
-    const subscription = this.natsConn.subscribe(channelName);
+    const subscription = this.natsConnection.subscribe(channelName);
 
     for await (const message of subscription) {
       const messageContent = stringCodec.decode(message.data);
@@ -56,15 +56,15 @@ export class NatsMessagingClient
   }
 
   async publish(channelName: string, message: string): Promise<void> {
-    if (this.isNatsConnClosed()) {
+    if (this.isNatsConnectionClosed()) {
       this.logger.logWarn(`Trying to publish without an open nats connection`);
       return;
     }
 
-    this.natsConn.publish(channelName, StringCodec().encode(message));
+    this.natsConnection.publish(channelName, StringCodec().encode(message));
   }
 
-  private isNatsConnClosed(): boolean {
-    return !this.natsConn || this.natsConn.isClosed();
+  private isNatsConnectionClosed(): boolean {
+    return !this.natsConnection || this.natsConnection.isClosed();
   }
 }
