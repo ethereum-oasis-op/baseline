@@ -35,13 +35,7 @@ describe('WorkgroupsController', () => {
   } as CreateWorkgroupDto;
 
   const createTestBpiSubject = async () => {
-    const newBpiSubject = new BpiSubject(
-      '123',
-      'name',
-      'desc',
-      'publicKey',
-      [],
-    );
+    const newBpiSubject = new BpiSubject('123', 'name', 'desc', 'pubkey', []);
     return await mockBpiSubjectStorageAgent.createNewBpiSubject(newBpiSubject);
   };
 
