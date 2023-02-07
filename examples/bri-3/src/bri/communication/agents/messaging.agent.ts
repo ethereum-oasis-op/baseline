@@ -10,7 +10,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     @Inject('IMessagingClient')
     private readonly messagingClient: IMessagingClient,
     private readonly commandBus: CommandBus,
-    private readonly log: LoggingService,
+    private readonly logger: LoggingService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -25,7 +25,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
   }
 
   private onNewMessageReceived(rawMessage: string): void {
-    this.log.logInfo(
+    this.logger.logInfo(
       `MessagingListenerAgent: New raw message received: ${rawMessage}. Dispatching ProcessInboundMessageCommand`,
     );
     this.commandBus.execute(new ProcessInboundMessageCommand(rawMessage));

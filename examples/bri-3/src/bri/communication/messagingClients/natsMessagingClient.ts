@@ -7,24 +7,24 @@ import { IMessagingClient } from './messagingClient.interface';
 export class NatsMessagingClient
   implements IMessagingClient, OnModuleInit, OnModuleDestroy
 {
-  private nc: NatsConnection;
+  private natsConn: NatsConnection;
 
-  constructor(private readonly log: LoggingService) {}
+  constructor(private readonly logger: LoggingService) {}
 
   async onModuleInit() {
     try {
-      this.nc = await connect({ servers: process.env.BPI_NATS_SERVER_URL });
-      this.log.logInfo('Connected to nats server: ' + this.nc.getServer());
+      this.natsConn = await connect({ servers: process.env.BPI_NATS_SERVER_URL });
+      this.logger.logInfo('Connected to nats server: ' + this.natsConn.getServer());
     } catch (err) {
-      this.log.logWarn(
+      this.logger.logWarn(
         `Error: ${err} connecting to nats server at: ${process.env.BPI_NATS_SERVER_URL}`,
       );
     }
   }
 
   async onModuleDestroy() {
-    if (this.nc && !this.nc.isClosed()) {
-      await this.nc.drain();
+    if (!this.isNatsConnClosed()) {
+      await this.natsConn.drain();
     }
   }
 
@@ -32,17 +32,17 @@ export class NatsMessagingClient
     channelName: string,
     callback: (message: string) => void,
   ): Promise<void> {
-    if (!this.nc || this.nc.isClosed()) {
-      this.log.logWarn(`Trying to subscribe without an open nats connection`);
+    if (this.isNatsConnClosed()) {
+      this.logger.logWarn(`Trying to subscribe without an open nats connection`);
       return;
     }
 
     const sc = StringCodec();
-    const subscription = this.nc.subscribe(channelName);
+    const subscription = this.natsConn.subscribe(channelName);
 
     for await (const message of subscription) {
       const messageContent = sc.decode(message.data);
-      this.log.logInfo(
+      this.logger.logInfo(
         `${subscription.getSubject()}: [${subscription.getProcessed()}] : ${messageContent}`,
       );
       callback(messageContent);
@@ -50,12 +50,16 @@ export class NatsMessagingClient
   }
 
   async publish(channelName: string, message: string): Promise<void> {
-    if (!this.nc || this.nc.isClosed()) {
-      this.log.logWarn(`Trying to publish without an open nats connection`);
+    if (this.isNatsConnClosed()) {
+      this.logger.logWarn(`Trying to publish without an open nats connection`);
       return;
     }
 
     const sc = StringCodec();
-    this.nc.publish(channelName, sc.encode(message));
+    this.natsConn.publish(channelName, sc.encode(message));
   }
-}
+
+  private isNatsConnClosed(): boolean {
+    return !this.natsConn || this.natsConn.isClosed();
+  }
+ }
