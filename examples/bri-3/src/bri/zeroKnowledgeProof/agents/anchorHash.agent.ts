@@ -26,10 +26,10 @@ export class AnchorHashAgent {
   }
 
   public verifyAnchorHash(
-    AnchorHash: string,
+    anchorHash: string,
     publicInputForProofVerification: string,
   ): boolean {
-    if (AnchorHash === publicInputForProofVerification) {
+    if (anchorHash === publicInputForProofVerification) {
       return true;
     }
 
