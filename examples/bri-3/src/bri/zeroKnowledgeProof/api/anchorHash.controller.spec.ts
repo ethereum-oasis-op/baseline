@@ -65,35 +65,6 @@ describe('ProofController', () => {
   });
 
   describe('createAnchorHash', () => {
-    it('should throw BadRequest if state parameter is empty', async () => {
-      // Arrange
-      const mockBpiSubject = new BpiSubject(
-        '123',
-        '123',
-        '123',
-        BpiSubjectType.External,
-        '123',
-      );
-
-      const mockBpiSubjectAccount = new BpiSubjectAccount(
-        '123',
-        mockBpiSubject,
-        mockBpiSubject,
-      );
-
-      const mockState = '';
-
-      const missingStateParam = {
-        ownerAccount: mockBpiSubjectAccount,
-        state: mockState,
-      };
-
-      // Act and assert
-      await expect(async () => {
-        await controller.createAnchorHash(missingStateParam);
-      }).rejects.toThrow(new BadRequestException(INVALID_ANCHOR_HASH_INPUT));
-    });
-
     it('should return the correct transaction if proper state passed ', async () => {
       // Arrange
       const mockBpiSubject = new BpiSubject(
