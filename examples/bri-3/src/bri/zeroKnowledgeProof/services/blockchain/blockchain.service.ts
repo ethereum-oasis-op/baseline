@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class BlockchainService {
-  async write(ccsmAnchorHash: string) {
+  async write(anchorHash: string) {
     //TODO: store content-addressable hash on contract
   }
 
