@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/biswashreedey/IdeaProjects/baseline/examples/bri-3/src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts/Ccsm.sol": {
+      "lastModificationDate": 1675841513573,
+      "contentHash": "16a006e7a2e65fd740ed06234054a305",
+      "sourceName": "src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts/Ccsm.sol",
+      "solcConfig": {
+        "version": "0.8.17",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.17"
+      ],
+      "artifacts": [
+        "Ccsm"
+      ]
+    }
+  }
+}
