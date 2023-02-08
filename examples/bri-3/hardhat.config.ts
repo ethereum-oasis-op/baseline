@@ -18,8 +18,6 @@ module.exports = {
     tests: './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/test',
     artifacts:
       './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts',
-    scripts:
-      './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/scripts',
   },
   mocha: {
     timeout: 40000,

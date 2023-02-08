@@ -10,7 +10,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "hardhat:compile": "npx hardhat compile",
-    "hardhat:deploy": "npx hardhat process.ENV.CCSM_NETWORK ./src/bri/zeroKnowledgeProof/services/blockchain/ethereum/scripts/deploy.ts",
+    "hardhat:deploy": "npx hardhat run --network ganache ./src/bri/zeroKnowledgeProof/services/blockchain/ethereum/scripts/deploy.ts",
     "hardhat:test": "npx hardhat test",
     "hardhat": "npx hardhat run",
     "build": "nest build",
