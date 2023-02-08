@@ -5,8 +5,8 @@ import '@nomiclabs/hardhat-ganache';
 module.exports = {
   networks: {
     ganache: {
-      chainId: 5777,
-      url: 'http://127.0.0.1:7545',
+      chainId: 1337,
+      url: 'http://127.0.0.1:8545',
     },
   },
   solidity: {
