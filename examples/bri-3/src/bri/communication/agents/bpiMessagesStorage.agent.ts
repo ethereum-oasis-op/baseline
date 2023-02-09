@@ -32,7 +32,7 @@ export class BpiMessageStorageAgent extends PrismaService {
     });
   }
 
-  async createNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
+  async storeNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
     const newBpiMessageModel = await this.message.create({
       data: {
         id: bpiMessage.id,
