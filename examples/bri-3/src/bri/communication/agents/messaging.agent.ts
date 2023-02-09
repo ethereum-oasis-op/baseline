@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { isUuid } from 'uuidv4';
+import { validate } from 'uuid';
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
@@ -62,15 +62,15 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return [newBpiMessageCandidate, errors];
     }
     
-    if (!isUuid(newBpiMessageCandidate.id)) {
+    if (!validate(newBpiMessageCandidate.id)) {
       errors.push(`id ${newBpiMessageCandidate.id} is not a valid UUID`);
     }
 
-    if (!isUuid(newBpiMessageCandidate.fromBpiSubjectId)) {
+    if (!validate(newBpiMessageCandidate.fromBpiSubjectId)) {
       errors.push(`fromBpiSubjectId ${newBpiMessageCandidate.fromBpiSubjectId} is not a valid UUID`);
     }
 
-    if (!isUuid(newBpiMessageCandidate.toBpiSubjectId)) {
+    if (!validate(newBpiMessageCandidate.toBpiSubjectId)) {
       errors.push(`toBpiSubjectId ${newBpiMessageCandidate.toBpiSubjectId} is not a valid UUID`);
     }
 
