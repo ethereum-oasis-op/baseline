@@ -28,6 +28,7 @@
     "@automapper/classes": "^8.7.6",
     "@automapper/core": "^8.7.6",
     "@automapper/nestjs": "^8.7.6",
+    "@casl/ability": "^6.3.3",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/cqrs": "^9.0.1",
@@ -45,6 +46,7 @@
     "ethers": "^5.7.2",
     "ethr-did-resolver": "^8.0.0",
     "ew-precise-proofs-js": "^1.2.0",
+    "nats": "^2.11.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
     "reflect-metadata": "^0.1.13",
@@ -97,5 +99,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   }
 }

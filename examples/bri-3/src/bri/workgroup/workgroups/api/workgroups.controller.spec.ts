@@ -14,45 +14,35 @@ import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupController } from './workgroups.controller';
 import { MockBpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
+import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
-
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let mockWorkgroupStorageAgent: MockWorkgroupStorageAgent;
 
   const workgroupRequestDto = {
     name: 'name',
-    administratorIds: [],
     securityPolicy: 'sec',
     privacyPolicy: 'priv',
-    participantIds: [],
     workstepIds: [],
     workflowIds: [],
   } as CreateWorkgroupDto;
 
   const createTestBpiSubject = async () => {
-    const newBpiSubject = new BpiSubject(
-      '123',
-      'name',
-      'desc',
-      BpiSubjectType.External,
-      'publicKey',
-    );
+    const newBpiSubject = new BpiSubject('123', 'name', 'desc', 'pubkey', []);
     return await mockBpiSubjectStorageAgent.createNewBpiSubject(newBpiSubject);
   };
 
   const createTestWorkgroup = async (): Promise<string> => {
-    const newBpiSubject = await createTestBpiSubject();
-    workgroupRequestDto.administratorIds = [newBpiSubject.id];
-    workgroupRequestDto.participantIds = [newBpiSubject.id];
+    const bpiSubject = await createTestBpiSubject();
     const workgroupId = await workgroupController.createWorkgroup(
+      { bpiSubject },
       workgroupRequestDto,
     );
     return workgroupId;
@@ -73,6 +63,7 @@ describe('WorkgroupsController', () => {
       controllers: [WorkgroupController],
       providers: [
         WorkgroupAgent,
+        BpiSubjectAgent,
         CreateWorkgroupCommandHandler,
         UpdateWorkgroupCommandHandler,
         DeleteWorkgroupCommandHandler,
@@ -114,12 +105,6 @@ describe('WorkgroupsController', () => {
 
       // Assert
       expect(createdWorkgroup.id).toEqual(newWorkgroupId);
-      expect(createdWorkgroup.administrators.map((ws) => ws.id)).toEqual(
-        workgroupRequestDto.administratorIds,
-      );
-      expect(createdWorkgroup.participants.map((ws) => ws.id)).toEqual(
-        workgroupRequestDto.participantIds,
-      );
     });
   });
 

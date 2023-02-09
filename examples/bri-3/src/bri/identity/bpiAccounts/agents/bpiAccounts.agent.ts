@@ -18,8 +18,17 @@ export class BpiAccountAgent {
 
   public createNewBpiAccount(
     ownerBpiSubjectAccounts: BpiSubjectAccount[],
+    authorizationCondition: string,
+    stateObjectProverSystem: string,
+    stateObjectStorage: string,
   ): BpiAccount {
-    return new BpiAccount(v4(), ownerBpiSubjectAccounts);
+    return new BpiAccount(
+      v4(),
+      ownerBpiSubjectAccounts,
+      authorizationCondition,
+      stateObjectProverSystem,
+      stateObjectStorage,
+    );
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(

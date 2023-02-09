@@ -1,26 +1,29 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { LoggingModule } from '../../../shared/logging/logging.module';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
+import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
 import { BpiMessageAgent } from '../agents/bpiMessages.agent';
+import { BpiMessageStorageAgent } from '../agents/bpiMessagesStorage.agent';
+import { MessagingAgent } from '../agents/messaging.agent';
+import { MockBpiMessageStorageAgent } from '../agents/mockBpiMessagesStorage.agent';
 import { CreateBpiMessageCommandHandler } from '../capabilities/createBpiMessage/createBpiMessageCommand.handler';
 import { DeleteBpiMessageCommandHandler } from '../capabilities/deleteBpiMessage/deleteBpiMessageCommand.handler';
 import { GetBpiMessageByIdQueryHandler } from '../capabilities/getBpiMessageById/getBpiMessageByIdQuery.handler';
 import { UpdateBpiMessageCommandHandler } from '../capabilities/updateBpiMessage/updateBpiMessageCommand.handler';
-import { BpiMessageStorageAgent } from '../agents/bpiMessagesStorage.agent';
-import { MockBpiMessageStorageAgent } from '../agents/mockBpiMessagesStorage.agent';
-import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
-import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
+import { CommunicationModule } from '../communication.module';
+import { CommunicationProfile } from '../communicaton.profile';
+import { NatsMessagingClient } from '../messagingClients/natsMessagingClient';
 import { CreateBpiMessageDto } from './dtos/request/createBpiMessage.dto';
 import { UpdateBpiMessageDto } from './dtos/request/updateBpiMessage.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
-import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
 import { MessageController } from './messages.controller';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
-import { CommunicationProfile } from '../communicaton.profile';
-import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
 
 describe('MessageController', () => {
   let mController: MessageController;
@@ -33,15 +36,17 @@ describe('MessageController', () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name', 'desc', BpiSubjectType.External, 'xyz'),
+      new BpiSubject('', 'name', 'desc', 'xyz', []),
     );
     existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name2', 'desc2', BpiSubjectType.External, 'xyz2'),
+      new BpiSubject('', 'name2', 'desc2', 'xyz2', []),
     );
 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
+        CommunicationModule,
+        LoggingModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
@@ -55,6 +60,11 @@ describe('MessageController', () => {
         GetBpiMessageByIdQueryHandler,
         BpiMessageStorageAgent,
         BpiSubjectStorageAgent,
+        MessagingAgent,
+        {
+          provide: 'IMessagingClient',
+          useClass: NatsMessagingClient,
+        },
         SubjectsProfile,
         CommunicationProfile,
       ],

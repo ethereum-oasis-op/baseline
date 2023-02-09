@@ -8,32 +8,22 @@ export class CreateWorkgroupCommandHandler
   implements ICommandHandler<CreateWorkgroupCommand>
 {
   constructor(
-    private agent: WorkgroupAgent,
-    private storageAgent: WorkgroupStorageAgent,
+    private workgroupAgent: WorkgroupAgent,
+    private workgroupStorageAgent: WorkgroupStorageAgent,
   ) {}
 
   async execute(command: CreateWorkgroupCommand) {
-    const workgroupAdministrators =
-      await this.agent.fetchWorkgroupAdministratorsAndThrowIfNoneExist(
-        command.administratorIds,
-      );
-
-    const workgroupParticipants =
-      await this.agent.fetchWorkgroupParticipantsAndThrowIfNoneExist(
-        command.participantIds,
-      );
-
-    const newWorkgroupCandidate = this.agent.createNewWorkgroup(
+    const newWorkgroupCandidate = this.workgroupAgent.createNewWorkgroup(
       command.name,
-      workgroupAdministrators,
+      [command.bpiSubject],
       command.securityPolicy,
       command.privacyPolicy,
-      workgroupParticipants,
+      [command.bpiSubject],
       [],
       [],
     );
 
-    const newWorkgroup = await this.storageAgent.createNewWorkgroup(
+    const newWorkgroup = await this.workgroupStorageAgent.createNewWorkgroup(
       newWorkgroupCandidate,
     );
 

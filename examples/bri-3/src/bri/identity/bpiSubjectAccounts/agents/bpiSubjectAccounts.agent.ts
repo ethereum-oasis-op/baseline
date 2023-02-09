@@ -55,8 +55,20 @@ export class BpiSubjectAccountAgent {
   public createNewBpiSubjectAccount(
     creatorBpiSubject: BpiSubject,
     ownerBpiSubject: BpiSubject,
+    authenticationPolicy: string,
+    authorizationPolicy: string,
+    verifiableCredential: string,
+    recoveryKey: string,
   ): BpiSubjectAccount {
-    return new BpiSubjectAccount(v4(), creatorBpiSubject, ownerBpiSubject);
+    return new BpiSubjectAccount(
+      v4(),
+      creatorBpiSubject,
+      ownerBpiSubject,
+      authenticationPolicy,
+      authorizationPolicy,
+      verifiableCredential,
+      recoveryKey,
+    );
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(

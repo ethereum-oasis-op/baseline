@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateWorkgroupCommand } from '../capabilities/createWorkgroup/createWorkgroup.command';
@@ -27,15 +28,15 @@ export class WorkgroupController {
 
   @Post()
   async createWorkgroup(
+    @Req() req,
     @Body() requestDto: CreateWorkgroupDto,
   ): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkgroupCommand(
+        req.bpiSubject,
         requestDto.name,
-        requestDto.administratorIds,
         requestDto.securityPolicy,
-        requestDto.privacyPolicy,
-        requestDto.participantIds,
+        requestDto.privacyPolicy, //TODO Implement privacy policy #573
         requestDto.workstepIds,
         requestDto.workflowIds,
       ),
