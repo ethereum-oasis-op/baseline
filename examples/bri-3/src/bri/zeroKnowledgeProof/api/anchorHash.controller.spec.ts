@@ -81,7 +81,7 @@ describe('ProofController', () => {
         mockBpiSubject,
       );
 
-      const mockState = 'This is test state';
+      const mockState = 'This is a test state';
 
       const requestDto = {
         ownerAccount: mockBpiSubjectAccount,
