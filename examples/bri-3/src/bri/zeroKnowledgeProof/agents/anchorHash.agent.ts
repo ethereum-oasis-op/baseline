@@ -9,8 +9,6 @@ export class AnchorHashAgent {
   public throwErrorIfAnchorHashInputInvalid(
     inputForProofVerification: string,
   ): void {
-    // This is just an example, these fields will be validated on the DTO validation layer
-    // This validation would check internal business rules (i.e. type of input must match the proof verification method used)
     if (!inputForProofVerification) {
       throw new BadRequestException(INVALID_ANCHOR_HASH_INPUT);
     }
