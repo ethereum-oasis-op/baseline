@@ -39,7 +39,6 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
-    "crypto": "^1.0.1",
     "did-jwt": "^6.10.1",
     "did-resolver": "^4.0.1",
     "eslint-config-react-app": "^7.0.1",

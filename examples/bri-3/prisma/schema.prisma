@@ -22,7 +22,8 @@ model BpiSubject {
   receivedMessages            Message[]              @relation(name: "toBpiSubject_fk")
   administratedWorkgroups     Workgroup[]            @relation(name: "administratorSubjects")
   participatingWorkgroups     Workgroup[]            @relation(name: "participantSubjects") 
-  roles                       BpiSubjectRole[]       
+  roles                       BpiSubjectRole[]
+  ownedAnchorHashes           AnchorHash[]          @relation(name: "anchorHashOwnerBpiSubject_fk")       
 }
 
 model BpiSubjectRole {
@@ -115,6 +116,6 @@ model Message {
 model AnchorHash {
   id                String     @id @default(uuid()) 
   ownerBpiSubjectId String
-  ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")    
+  ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "anchorHashOwnerBpiSubject_fk")    
   hash              String     @unique
 }
