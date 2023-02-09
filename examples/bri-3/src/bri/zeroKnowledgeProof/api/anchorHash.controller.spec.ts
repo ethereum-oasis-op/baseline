@@ -21,7 +21,7 @@ import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiS
 import { BlockchainService } from '../services/blockchain/blockchain.service';
 import { AnchorHashProfile } from '../anchorHash.profile';
 import { classes } from '@automapper/classes';
-import { AnchorHashCcsmStorageAgent } from '../agents/ahStorage.agent';
+import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
 
 describe('ProofController', () => {
   let controller: AnchorHashController;
