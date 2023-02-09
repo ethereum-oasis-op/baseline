@@ -55,7 +55,7 @@ describe('ProofController', () => {
   });
 
   describe('createAnchorHash', () => {
-    it('should return the correct transaction if proper state passed ', async () => {
+    it('should return the correct hash if proper state passed ', async () => {
       // Arrange
       const mockBpiSubjectRole = new BpiSubjectRole(
         '123',
