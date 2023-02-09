@@ -30,7 +30,7 @@ export class CreateBpiMessageCommandHandler
       command.type,
     );
 
-    const newBpiMessage = await this.storageAgent.createNewBpiMessage(
+    const newBpiMessage = await this.storageAgent.storeNewBpiMessage(
       newBpiMessageCandidate,
     );
 
