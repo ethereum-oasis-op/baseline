@@ -12,27 +12,21 @@ import { MockAnchorHashStorageAgent } from '../agents/mockAnchorHashStorage.agen
 import { AutomapperModule } from '@automapper/nestjs';
 import { CreateAnchorHashDto } from './dtos/request/createAnchorHash.dto';
 import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
-import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
+import {
+  BpiSubjectRole,
+  BpiSubjectRoleName,
+} from '../../identity/bpiSubjects/models/bpiSubjectRole';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
-import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
 import { AnchorHashProfile } from '../anchorHash.profile';
 import { classes } from '@automapper/classes';
-import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
-import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
-import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
-import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
 
 describe('ProofController', () => {
   let controller: AnchorHashController;
-  let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
-  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
 
   beforeEach(async () => {
-    mockBpiSubjectAccountsStorageAgent =
-      new MockBpiSubjectAccountsStorageAgent();
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -53,10 +47,6 @@ describe('ProofController', () => {
     })
       .overrideProvider(AnchorHashStorageAgent)
       .useValue(new MockAnchorHashStorageAgent())
-      .overrideProvider(BpiSubjectAccountStorageAgent)
-      .useValue(mockBpiSubjectAccountsStorageAgent)
-      .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     controller = app.get<AnchorHashController>(AnchorHashController);
@@ -65,20 +55,26 @@ describe('ProofController', () => {
   });
 
   describe('createAnchorHash', () => {
-    it('should return the correct transaction if proper state passed ', async () => {
+    it('should return the correct hash if proper state passed ', async () => {
       // Arrange
-      const mockBpiSubject = new BpiSubject(
+      const mockBpiSubjectRole = new BpiSubjectRole(
         '123',
-        '123',
-        '123',
-        BpiSubjectType.External,
+        BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT,
         '123',
       );
+
+      const mockBpiSubject = new BpiSubject('123', '123', '123', '123', [
+        mockBpiSubjectRole,
+      ]);
 
       const mockBpiSubjectAccount = new BpiSubjectAccount(
         '123',
         mockBpiSubject,
         mockBpiSubject,
+        '123',
+        '123',
+        '123',
+        '123',
       );
 
       const mockState = 'This is test state';

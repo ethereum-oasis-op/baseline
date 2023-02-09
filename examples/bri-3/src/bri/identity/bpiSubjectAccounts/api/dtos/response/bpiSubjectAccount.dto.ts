@@ -10,4 +10,20 @@ export class BpiSubjectAccountDto {
 
   @AutoMap(() => BpiSubjectDto)
   ownerBpiSubject: BpiSubjectDto;
+
+  //Placeholder
+  @AutoMap(() => BpiSubjectDto)
+  authenticationPolicy: string;
+
+  //Placeholder
+  @AutoMap(() => BpiSubjectDto)
+  authorizationPolicy: string;
+
+  //Placeholder
+  @AutoMap(() => BpiSubjectDto)
+  verifiableCredential: string;
+
+  //Placeholder
+  @AutoMap(() => BpiSubjectDto)
+  recoveryKey: string;
 }

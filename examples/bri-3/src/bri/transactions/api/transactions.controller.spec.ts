@@ -19,7 +19,6 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
@@ -33,27 +32,23 @@ describe('TransactionController', () => {
   const createBpiSubjectAccount = async (id: string) => {
     const ownerBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '123',
-          'owner',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
+        new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
       );
     const creatorBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '321',
-          'creator',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
+        new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
       );
 
     return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(
-      new BpiSubjectAccount(id, creatorBpiSubject, ownerBpiSubject),
+      new BpiSubjectAccount(
+        id,
+        creatorBpiSubject,
+        ownerBpiSubject,
+        'sample',
+        'sample',
+        'sample',
+        'sample',
+      ),
     );
   };
 

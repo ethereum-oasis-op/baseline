@@ -21,7 +21,6 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
 import { AccountsProfile } from '../accounts.profile';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -78,28 +77,20 @@ describe('AccountController', () => {
   const createBpiSubjectAccount = async () => {
     const ownerBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '123',
-          'owner',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
+        new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
       );
     const creatorBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
-        new BpiSubject(
-          '321',
-          'creator',
-          'desc',
-          BpiSubjectType.External,
-          'publicKey',
-        ),
+        new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
       );
     const bpiSubjectAccount = new BpiSubjectAccount(
       '123',
       creatorBpiSubject,
       ownerBpiSubject,
+      'sample policy',
+      'sample policy',
+      'sample key',
+      'sample vc',
     );
 
     return mockBpiSubjectAccountsStorageAgent.createNewBpiSubjectAccount(

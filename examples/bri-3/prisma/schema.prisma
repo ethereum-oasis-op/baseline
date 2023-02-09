@@ -11,36 +11,49 @@ datasource db {
 }
 
 model BpiSubject {
-  id                        String                       @id @default(uuid())
-  name                      String
-  description               String
-  type                      Int
-  publicKey                 String
-  loginNonce                String                       @default("")
-  ownedBpiSubjectAccounts   BpiSubjectAccount[]          @relation(name: "ownerBpiSubject_fk")
-  createdBpiSubjectAccounts BpiSubjectAccount[]          @relation(name: "creatorBpiSubject_fk")
-  sentMessages              Message[]                    @relation(name: "fromBpiSubject_fk")
-  receivedMessages          Message[]                    @relation(name: "toBpiSubject_fk")
-  administratedWorkgroups    Workgroup[]                 @relation(name: "administratorSubjects")
-  participatingWorkgroups    Workgroup[]                 @relation(name: "participantSubjects")
-  ownedAnchorHash            AnchorHash[]             @relation(name: "ownerBpiSubject_fk")
+  id                          String                 @id @default(uuid())
+  name                        String
+  description                 String
+  publicKey                   String
+  loginNonce                  String                 @default("")
+  ownedBpiSubjectAccounts     BpiSubjectAccount[]    @relation(name: "ownerBpiSubject_fk")
+  createdBpiSubjectAccounts   BpiSubjectAccount[]    @relation(name: "creatorBpiSubject_fk")
+  sentMessages                Message[]              @relation(name: "fromBpiSubject_fk")
+  receivedMessages            Message[]              @relation(name: "toBpiSubject_fk")
+  administratedWorkgroups     Workgroup[]            @relation(name: "administratorSubjects")
+  participatingWorkgroups     Workgroup[]            @relation(name: "participantSubjects") 
+  roles                       BpiSubjectRole[]       
+}
+
+model BpiSubjectRole {
+  id                          String                 @id @default(uuid())
+  name                        String                 @unique
+  description                 String
+  bpiSubjects                 BpiSubject[]           
 }
 
 model BpiAccount {
-  id                      String              @id @default(uuid())
-  nonce                   Int
-  ownerBpiSubjectAccounts BpiSubjectAccount[]
+  id                      String                    @id @default(uuid())
+  nonce                   Int     
+  ownerBpiSubjectAccounts BpiSubjectAccount[]     
+  authorizationCondition  String                    @default("") //Placeholder R251
+  stateObjectProverSystem String                    @default("") //Placeholder R251
+  stateObjectStorage      String                    @default("") //Placeholder R251
 }
 
 model BpiSubjectAccount {
-  id                  String       @id @default(uuid())
-  creatorBpiSubjectId String
-  ownerBpiSubjectId   String
-  bpiAccounts         BpiAccount[]
-  creatorBpiSubject   BpiSubject   @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
-  ownerBpiSubject     BpiSubject   @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
-  sentTransactions Transaction[] @relation(name: "fromBpiSubjectAccount_fk")
-  receivedTransactions Transaction[] @relation(name: "toBpiSubjectAccount_fk")
+  id                        String            @id @default(uuid())
+  creatorBpiSubjectId       String    
+  ownerBpiSubjectId         String    
+  authenticationPolicy      String            @default("") //Placeholder R80
+  authorizationPolicy       String            @default("") //Placeholder R80
+  verifiableCredential      String            @default("") //Placeholder R80
+  recoveryKey               String            @default("") //Placeholder R80
+  bpiAccounts               BpiAccount[]    
+  creatorBpiSubject         BpiSubject        @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
+  ownerBpiSubject           BpiSubject        @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
+  sentTransactions          Transaction[]     @relation(name: "fromBpiSubjectAccount_fk")
+  receivedTransactions      Transaction[]     @relation(name: "toBpiSubjectAccount_fk")
 }
 
 model Workstep {

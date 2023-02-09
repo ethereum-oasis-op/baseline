@@ -22,6 +22,9 @@ export class CreateBpiAccountCommandHandler
 
     const newBpiSubjectCandidate = this.accountAgent.createNewBpiAccount(
       ownerBpiSubjectAccounts,
+      'sample authorization condition',
+      'sample state object prover system',
+      'sample state object storage',
     );
 
     const newBpiSubject = await this.accountStorageAgent.createNewBpiAccount(

@@ -5,58 +5,13 @@ import { Workstep } from '../../worksteps/models/workstep';
 
 import { uuid } from 'uuidv4';
 import { Workgroup } from '../models/workgroup';
-import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WorkgroupStorageAgent } from './workgroupStorage.agent';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
-import { NOT_FOUND_ERR_MESSAGE as BPISUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../../identity/bpiSubjects/api/err.messages';
 
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class WorkgroupAgent {
-  constructor(
-    private workgroupStorageAgent: WorkgroupStorageAgent,
-    private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
-  ) {}
-
-  public async fetchWorkgroupAdministratorsAndThrowIfNoneExist(
-    administratorIds: string[],
-  ): Promise<BpiSubject[]> {
-    const bpiSubjects = await this.bpiSubjectStorageAgent.getBpiSubjectsById(
-      administratorIds,
-    );
-
-    if (administratorIds.length !== bpiSubjects.length) {
-      throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
-    }
-
-    bpiSubjects.forEach((bp) => {
-      if (!administratorIds.includes(bp.id)) {
-        throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
-      }
-    });
-
-    return bpiSubjects;
-  }
-
-  public async fetchWorkgroupParticipantsAndThrowIfNoneExist(
-    participantIds: string[],
-  ): Promise<BpiSubject[]> {
-    const bpiSubjects = await this.bpiSubjectStorageAgent.getBpiSubjectsById(
-      participantIds,
-    );
-
-    if (participantIds.length !== bpiSubjects.length) {
-      throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
-    }
-
-    bpiSubjects.forEach((bp) => {
-      if (!participantIds.includes(bp.id)) {
-        throw new NotFoundException(BPISUBJECT_NOT_FOUND_ERR_MESSAGE);
-      }
-    });
-
-    return bpiSubjects;
-  }
+  constructor(private workgroupStorageAgent: WorkgroupStorageAgent) {}
 
   public createNewWorkgroup(
     name: string,
