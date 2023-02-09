@@ -20,8 +20,8 @@ import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
 import { AnchorHashProfile } from '../anchorHash.profile';
-import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
 import { classes } from '@automapper/classes';
+import { AnchorHashCcsmStorageAgent } from '../agents/ahStorage.agent';
 
 describe('ProofController', () => {
   let controller: AnchorHashController;

@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AnchorHashAgent } from '../../agents/anchorHash.agent';
 import { AnchorHashStorageAgent } from '../../agents/anchorHashStorage.agent';
-import { AnchorHashCcsmStorageAgent } from '../../agents/anchorHashCcsmStorage.agent';
+import { AnchorHashCcsmStorageAgent } from '../../agents/ahStorage.agent';
 import { CreateAnchorHashCommand } from './createAnchorHash.command';
 
 @CommandHandler(CreateAnchorHashCommand)
