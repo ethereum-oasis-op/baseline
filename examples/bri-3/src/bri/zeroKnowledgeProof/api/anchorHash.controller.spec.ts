@@ -22,20 +22,11 @@ import { BlockchainService } from '../services/blockchain/blockchain.service';
 import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
 import { AnchorHashProfile } from '../anchorHash.profile';
 import { classes } from '@automapper/classes';
-import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
-import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
-import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
-import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 describe('ProofController', () => {
   let controller: AnchorHashController;
-  let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
-  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
 
   beforeEach(async () => {
-    mockBpiSubjectAccountsStorageAgent =
-      new MockBpiSubjectAccountsStorageAgent();
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -56,10 +47,6 @@ describe('ProofController', () => {
     })
       .overrideProvider(AnchorHashStorageAgent)
       .useValue(new MockAnchorHashStorageAgent())
-      .overrideProvider(BpiSubjectAccountStorageAgent)
-      .useValue(mockBpiSubjectAccountsStorageAgent)
-      .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     controller = app.get<AnchorHashController>(AnchorHashController);
