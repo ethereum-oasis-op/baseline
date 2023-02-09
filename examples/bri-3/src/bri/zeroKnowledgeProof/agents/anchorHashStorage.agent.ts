@@ -20,7 +20,7 @@ export class AnchorHashStorageAgent extends PrismaService {
       include: {
         ownerBpiSubject: {
           include: {
-            ownedAnchorHash: true,
+            ownedAnchorHashes: true,
           },
         },
       },
