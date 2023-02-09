@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import fs from 'fs';
+import * as fs from 'fs';
 
 async function deployCcsmContract() {
   const Ccsm = await ethers.getContractFactory('Ccsm');
@@ -7,6 +7,9 @@ async function deployCcsmContract() {
 
   await ccsm.deployed();
 
+  console.log(
+    `The contract has been deployed to ${ccsm.address} on the ${ccsm.provider}`,
+  );
   await storeDeployedCcsmContractAddress(ccsm.address);
 }
 
@@ -15,13 +18,18 @@ async function storeDeployedCcsmContractAddress(contractAddress: string) {
     contractAddress: contractAddress,
   });
 
-  fs.appendFile('ccsmContractAddress.json', ccsmAddress, (err) => {
-    if (err) {
-      console.error(err);
-      return;
-    }
-    //file written successfully
-  });
+  console.log(ccsmAddress);
+
+  fs.writeFile(
+    './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts/ccsmContractAddress.json',
+    ccsmAddress,
+    (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+    },
+  );
 }
 
 deployCcsmContract().catch((error) => {

@@ -1,12 +1,13 @@
 /** @type import('hardhat/config').HardhatUserConfig */
-import '@nomiclabs/hardhat-ethers';
 import '@nomiclabs/hardhat-ganache';
+import '@nomiclabs/hardhat-ethers';
 
 module.exports = {
+  default: 'ganache',
   networks: {
     ganache: {
       chainId: 1337,
-      url: 'http://127.0.0.1:8545',
+      url: 'http://127.0.0.1:7545',
     },
   },
   solidity: {
@@ -17,9 +18,6 @@ module.exports = {
       './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts',
     tests: './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/test',
     artifacts:
-      './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts',
-  },
-  mocha: {
-    timeout: 40000,
+      './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts/artifacts',
   },
 };

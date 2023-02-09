@@ -1,28 +1,16 @@
-import { ethers, Contract } from 'ethers';
+import { ethers } from 'hardhat';
 import { readFile } from 'fs/promises';
 
 export class EthereumService {
-  private ccsmContract: Contract;
+  private ccsmContract;
 
   constructor() {
-    this.connectToCcsm();
+    this.connectToCcsmContract();
   }
 
-  private async connectToCcsm() {
-    // If you don't specify a //url//, Ethers connects to the default
-    // (i.e. ``http:/\/localhost:8545``) Specify georli url here
-    const ccsmProvider = new ethers.providers.JsonRpcProvider(
-      process.env.CCSM_PROVIDER_URL,
-    );
-
+  private async connectToCcsmContract() {
     const ccsmContractAddress = await this.getDeployedCcsmContractAddress();
-    const ccsmContractAbi = await this.getDeployedCcsmContractAbi();
-
-    this.ccsmContract = new ethers.Contract(
-      ccsmContractAddress,
-      ccsmContractAbi,
-      ccsmProvider,
-    );
+    this.ccsmContract = ethers.getContractAt('Ccsm', ccsmContractAddress);
   }
 
   async storeAnchorHash(anchorHash: string) {
@@ -41,17 +29,12 @@ export class EthereumService {
   }
 
   private async getDeployedCcsmContractAddress(): Promise<string> {
-    return JSON.parse((await readFile('./ccsmContractAddress.json')).toString())
-      .contractAddress;
-  }
-
-  private async getDeployedCcsmContractAbi(): Promise<any> {
     return JSON.parse(
       (
         await readFile(
-          './artifacts/src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts/Ccsm.sol/Ccsm.json',
+          './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts/ccsmContractAddress.json',
         )
       ).toString(),
-    ).abi;
+    ).contractAddress;
   }
 }
