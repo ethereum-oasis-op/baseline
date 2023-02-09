@@ -1,16 +1,34 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LoggingService } from '../../../../shared/logging/logging.service';
+import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
+import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { ProcessInboundBpiMessageCommand } from './processInboundMessage.command';
 
 @CommandHandler(ProcessInboundBpiMessageCommand)
 export class ProcessInboundMessageCommandHandler
   implements ICommandHandler<ProcessInboundBpiMessageCommand>
 {
-  constructor(private readonly log: LoggingService) {}
+  constructor(
+    private readonly agent: BpiMessageAgent,
+    private readonly storageAgent: BpiMessageStorageAgent) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
-    this.log.logInfo(
-      `ProcessInboundMessageCommandHandler: Processing BPI message with id ${command.bpiMessage.id}`,
+    const { fromBpiSubject, toBpiSubject } =
+      await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
+        command.bpiMessage.fromBpiSubjectId,
+        command.bpiMessage.toBpiSubjectId,
+      );
+
+    const newBpiMessageCandidate = this.agent.createNewBpiMessage(
+      command.bpiMessage.id,
+      fromBpiSubject,
+      toBpiSubject,
+      command.bpiMessage.content,
+      command.bpiMessage.signature,
+      command.bpiMessage.type,
+    );
+
+    await this.storageAgent.storeNewBpiMessage(
+      newBpiMessageCandidate,
     );
   }
 }
