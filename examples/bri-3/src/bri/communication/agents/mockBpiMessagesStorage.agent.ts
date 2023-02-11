@@ -18,7 +18,7 @@ export class MockBpiMessageStorageAgent {
     return Promise.resolve(this.bpiMessagesStore);
   }
 
-  async createNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
+  async storeNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
     const createdBpiMessage = new BpiMessage(
       bpiMessage.id,
       bpiMessage.fromBpiSubject,
