@@ -50,7 +50,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
         newBpiMessageCandidate.id,
         newBpiMessageCandidate.from,
         newBpiMessageCandidate.to,
-        newBpiMessageCandidate.content,
+        JSON.stringify(newBpiMessageCandidate.content),
         newBpiMessageCandidate.signature,
         newBpiMessageCandidate.type,
       ),
@@ -86,11 +86,9 @@ export class MessagingAgent implements OnApplicationBootstrap {
       );
     }
 
-    try {
-      this.parseJsonOrThrow(newBpiMessageCandidate.content);
-    } catch (e) {
+    if (!newBpiMessageCandidate.content || typeof newBpiMessageCandidate.content !== "object") {
       errors.push(
-        `content: ${newBpiMessageCandidate.content} is not valid JSON. Error: ${e}`,
+        `content: ${newBpiMessageCandidate.content} is not valid JSON.`,
       );
     }
 
