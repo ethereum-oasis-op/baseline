@@ -36,7 +36,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
       this.validateBpiMessageFormat(rawMessage);
 
     if (validationErrors.length > 0) {
-      this.logger.logWarn(
+      this.logger.logError(
         `MessagingListenerAgent: Failed parsing message into Bpi Message. Errors: ${validationErrors.join(
           '; ',
         )}`,
@@ -64,7 +64,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     let newBpiMessageCandidate: CreateBpiMessageDto;
 
     try {
-      newBpiMessageCandidate = JSON.parse(rawMessage); // TODO: Make it more robust (i.e JSON.parse(123) does not throw)
+      newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
     } catch (e) {
       errors.push(`${rawMessage} is not valid JSON. Error: ${e}`);
       return [newBpiMessageCandidate, errors];
@@ -87,7 +87,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     try {
-      JSON.parse(newBpiMessageCandidate.content); // TODO: Make it more robust (i.e JSON.parse(123) does not throw)
+      this.parseJsonOrThrow(newBpiMessageCandidate.content);
     } catch (e) {
       errors.push(
         `content: ${newBpiMessageCandidate.content} is not valid JSON. Error: ${e}`,
@@ -107,4 +107,15 @@ export class MessagingAgent implements OnApplicationBootstrap {
 
     return [newBpiMessageCandidate, errors];
   }
+
+  private parseJsonOrThrow(jsonString: string) {
+    // https://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string
+    const o = JSON.parse(jsonString);
+    
+    if (o && typeof o === "object") {
+      return o;
+    }
+
+    throw new Error(`String ${jsonString} is a valid JSON primitive but not a proper JSON document.`);
+  };
 }
