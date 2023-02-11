@@ -4,45 +4,45 @@ import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { ProcessInboundBpiMessageCommand } from './processInboundMessage.command';
 
+// Difference between this and the create bpi message command handler is that this does not
+// want to stop the execution flow by throwing a nestjs exception which would result in 404 in case of an API call
 @CommandHandler(ProcessInboundBpiMessageCommand)
 export class ProcessInboundMessageCommandHandler
   implements ICommandHandler<ProcessInboundBpiMessageCommand>
 {
   constructor(
     private readonly agent: BpiMessageAgent,
-    private readonly storageAgent: BpiMessageStorageAgent) {}
+    private readonly storageAgent: BpiMessageStorageAgent,
+  ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
     let dbFromBpiSubject: BpiSubject;
     let dbToBpiSubject: BpiSubject;
-    
+
     try {
       const { fromBpiSubject, toBpiSubject } =
         await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
-          command.bpiMessage.fromBpiSubjectId,
-          command.bpiMessage.toBpiSubjectId,
+          command.from,
+          command.to,
         );
-      
-        // TODO: Better way to map this
-        dbFromBpiSubject = fromBpiSubject;
-        dbToBpiSubject = toBpiSubject;
+
+      // TODO: Better way to map this
+      dbFromBpiSubject = fromBpiSubject;
+      dbToBpiSubject = toBpiSubject;
     } catch (e) {
       // TODO: Log and ignore message
       return;
     }
-    
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(
-      command.bpiMessage.id,
+      command.id,
       dbFromBpiSubject,
       dbToBpiSubject,
-      command.bpiMessage.content,
-      command.bpiMessage.signature,
-      command.bpiMessage.type,
+      command.content,
+      command.signature,
+      command.type,
     );
 
-    await this.storageAgent.storeNewBpiMessage(
-      newBpiMessageCandidate,
-    );
+    await this.storageAgent.storeNewBpiMessage(newBpiMessageCandidate);
   }
 }
