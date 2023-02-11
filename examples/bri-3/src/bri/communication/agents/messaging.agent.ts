@@ -57,7 +57,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     );
   }
 
-  private validateBpiMessageFormat(
+  public validateBpiMessageFormat(
     rawMessage: string,
   ): [CreateBpiMessageDto, string[]] {
     const errors: string[] = [];
@@ -76,13 +76,13 @@ export class MessagingAgent implements OnApplicationBootstrap {
 
     if (!validate(newBpiMessageCandidate.from)) {
       errors.push(
-        `fromBpiSubjectId ${newBpiMessageCandidate.from} is not a valid UUID`,
+        `from ${newBpiMessageCandidate.from} is not a valid UUID`,
       );
     }
 
     if (!validate(newBpiMessageCandidate.to)) {
       errors.push(
-        `toBpiSubjectId ${newBpiMessageCandidate.to} is not a valid UUID`,
+        `to ${newBpiMessageCandidate.to} is not a valid UUID`,
       );
     }
 
