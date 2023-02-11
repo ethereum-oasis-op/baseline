@@ -1,5 +1,12 @@
-import { BpiMessage } from '../../models/bpiMessage';
+import { BpiMessageType } from '../../models/bpiMessageType.enum';
 
 export class ProcessInboundBpiMessageCommand {
-  constructor(public readonly bpiMessage: BpiMessage) {}
+  constructor(
+    public readonly id: string,
+    public readonly from: string,
+    public readonly to: string,
+    public readonly content: string,
+    public readonly signature: string,
+    public readonly type: BpiMessageType,
+  ) {}
 }
