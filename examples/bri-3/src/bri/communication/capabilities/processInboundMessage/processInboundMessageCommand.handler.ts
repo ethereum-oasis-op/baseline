@@ -1,11 +1,12 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
+import { LoggingService } from 'src/shared/logging/logging.service';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { ProcessInboundBpiMessageCommand } from './processInboundMessage.command';
 
-// Difference between this and the create bpi message command handler is that this does not
-// want to stop the execution flow by throwing a nestjs exception which would result in 404 in case of an API call
+// Difference between this and the create bpi message command handler is that this one does not
+// want to stop the execution flow by throwing a nestjs exception (which results in 404 response in the other handler)
 @CommandHandler(ProcessInboundBpiMessageCommand)
 export class ProcessInboundMessageCommandHandler
   implements ICommandHandler<ProcessInboundBpiMessageCommand>
@@ -13,6 +14,7 @@ export class ProcessInboundMessageCommandHandler
   constructor(
     private readonly agent: BpiMessageAgent,
     private readonly storageAgent: BpiMessageStorageAgent,
+    private readonly logger: LoggingService,
   ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
@@ -26,7 +28,9 @@ export class ProcessInboundMessageCommandHandler
           command.to,
         );
     } catch (e) {
-      // TODO: Log and ignore message
+      this.logger.logError(
+        `ProcessInboundMessageCommandHandler: Exception: ${e} while processing inbound message`,
+      );
       return;
     }
 
