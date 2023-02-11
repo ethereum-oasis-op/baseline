@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
-import { LoggingService } from 'src/shared/logging/logging.service';
+import { LoggingService } from '../../../../shared/logging/logging.service';
+import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { ProcessInboundBpiMessageCommand } from './processInboundMessage.command';
