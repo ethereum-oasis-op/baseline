@@ -16,19 +16,15 @@ export class ProcessInboundMessageCommandHandler
   ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
-    let dbFromBpiSubject: BpiSubject;
-    let dbToBpiSubject: BpiSubject;
+    let fromBpiSubject: BpiSubject;
+    let toBpiSubject: BpiSubject;
 
     try {
-      const { fromBpiSubject, toBpiSubject } =
+      [fromBpiSubject, toBpiSubject] =
         await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
           command.from,
           command.to,
         );
-
-      // TODO: Better way to map this
-      dbFromBpiSubject = fromBpiSubject;
-      dbToBpiSubject = toBpiSubject;
     } catch (e) {
       // TODO: Log and ignore message
       return;
@@ -36,8 +32,8 @@ export class ProcessInboundMessageCommandHandler
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(
       command.id,
-      dbFromBpiSubject,
-      dbToBpiSubject,
+      fromBpiSubject,
+      toBpiSubject,
       command.content,
       command.signature,
       command.type,
