@@ -16,17 +16,14 @@ export class BpiMessageAgent {
   public async getFromAndToSubjectsAndThrowIfNotExist(
     fromBpiSubjectId: string,
     toBpiSubjectId: string,
-  ) {
+  ): Promise<[BpiSubject, BpiSubject]> {
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       toBpiSubjectId,
     );
-    return {
-      fromBpiSubject,
-      toBpiSubject,
-    };
+    return [fromBpiSubject, toBpiSubject];
   }
 
   public createNewBpiMessage(
