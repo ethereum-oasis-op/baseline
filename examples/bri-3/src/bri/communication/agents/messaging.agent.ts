@@ -75,18 +75,17 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     if (!validate(newBpiMessageCandidate.from)) {
-      errors.push(
-        `from ${newBpiMessageCandidate.from} is not a valid UUID`,
-      );
+      errors.push(`from ${newBpiMessageCandidate.from} is not a valid UUID`);
     }
 
     if (!validate(newBpiMessageCandidate.to)) {
-      errors.push(
-        `to ${newBpiMessageCandidate.to} is not a valid UUID`,
-      );
+      errors.push(`to ${newBpiMessageCandidate.to} is not a valid UUID`);
     }
 
-    if (!newBpiMessageCandidate.content || typeof newBpiMessageCandidate.content !== "object") {
+    if (
+      !newBpiMessageCandidate.content ||
+      typeof newBpiMessageCandidate.content !== 'object'
+    ) {
       errors.push(
         `content: ${newBpiMessageCandidate.content} is not valid JSON.`,
       );
@@ -109,11 +108,13 @@ export class MessagingAgent implements OnApplicationBootstrap {
   private parseJsonOrThrow(jsonString: string) {
     // https://stackoverflow.com/questions/3710204/how-to-check-if-a-string-is-a-valid-json-string
     const o = JSON.parse(jsonString);
-    
-    if (o && typeof o === "object") {
+
+    if (o && typeof o === 'object') {
       return o;
     }
 
-    throw new Error(`String ${jsonString} is a valid JSON primitive but not a proper JSON document.`);
-  };
+    throw new Error(
+      `String ${jsonString} is a valid JSON primitive but not a proper JSON document.`,
+    );
+  }
 }
