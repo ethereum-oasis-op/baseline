@@ -47,7 +47,6 @@
     "eslint-config-react-app": "^7.0.1",
     "ethr-did-resolver": "^8.0.0",
     "ew-precise-proofs-js": "^1.2.0",
-    "fs": "^0.0.1-security",
     "nats": "^2.11.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",

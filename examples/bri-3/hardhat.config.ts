@@ -3,7 +3,6 @@ import '@nomiclabs/hardhat-ganache';
 import '@nomiclabs/hardhat-ethers';
 
 module.exports = {
-  default: 'ganache',
   networks: {
     ganache: {
       chainId: 1337,
