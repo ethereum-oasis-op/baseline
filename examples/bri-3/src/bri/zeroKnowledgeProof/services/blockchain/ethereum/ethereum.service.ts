@@ -6,9 +6,7 @@ import { Injectable } from '@nestjs/common';
 export class EthereumService {
   async deployContract() {
     const ccsmContract = await ethers.getContractFactory('Ccsm');
-
     const deployedCcsmContract = await ccsmContract.deploy();
-
     await this.storeDeployedContractAddress(deployedCcsmContract.address);
   }
 

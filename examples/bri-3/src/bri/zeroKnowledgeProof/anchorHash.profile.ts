@@ -12,13 +12,8 @@ export class AnchorHashProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-<<<<<<< HEAD:examples/bri-3/src/bri/zeroKnowledgeProof/document.profile.ts
-      createMap(mapper, Document, DocumentDto);
-      createMap(mapper, Document, Document);
-=======
       createMap(mapper, AnchorHash, AnchorHash);
       createMap(mapper, AnchorHash, AnchorHashDto);
->>>>>>> dcace9af79f4e81b8c11472bf870f23e6d9d9f0b:examples/bri-3/src/bri/zeroKnowledgeProof/anchorHash.profile.ts
     };
   }
 }
