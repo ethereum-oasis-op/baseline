@@ -2,13 +2,12 @@ import { HardhatUserConfig } from 'hardhat/config';
 import '@nomiclabs/hardhat-ethers';
 import '@nomicfoundation/hardhat-toolbox';
 import 'dotenv/config';
-import 'hardhat-change-network';
 
 const config: HardhatUserConfig = {
-  defaultNetwork: 'goerli',
+  defaultNetwork: process.env.CCSM_NETWORK,
   networks: {
     goerli: {
-      url: 'https://eth-goerli.g.alchemy.com/v2/bvik-_IDWOeJhYuqhc981klKE-r6IRCk',
+      url: `${process.env.ALCHEMY_URL}`,
       accounts: [`0x${process.env.GOERLI_PRIVATE_KEY}`],
     },
   },

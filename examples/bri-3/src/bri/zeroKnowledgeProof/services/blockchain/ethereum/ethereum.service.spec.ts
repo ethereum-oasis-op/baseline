@@ -1,11 +1,9 @@
 import { EthereumService } from './ethereum.service';
-import * as hre from 'hardhat';
 
 describe('Ethereum services', () => {
   let ccsm: EthereumService;
 
   beforeAll(async () => {
-    hre.changeNetwork('hardhat');
     ccsm = new EthereumService();
     await ccsm.deployContract();
   });
