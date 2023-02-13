@@ -4,7 +4,9 @@ import '@nomicfoundation/hardhat-toolbox';
 import 'dotenv/config';
 
 const config: HardhatUserConfig = {
-  defaultNetwork: process.env.CCSM_NETWORK,
+  defaultNetwork: process.env.CCSM_NETWORK
+    ? process.env.CCSM_NETWORK
+    : 'hardhat',
   networks: {
     goerli: {
       url: `${process.env.ALCHEMY_URL}`,
