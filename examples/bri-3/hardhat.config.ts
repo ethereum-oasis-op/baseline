@@ -1,12 +1,19 @@
-/** @type import('hardhat/config').HardhatUserConfig */
+import { HardhatUserConfig } from 'hardhat/config';
 import '@nomiclabs/hardhat-ganache';
 import '@nomiclabs/hardhat-ethers';
+import '@nomicfoundation/hardhat-toolbox';
+import 'dotenv/config';
+import 'hardhat-change-network';
 
-module.exports = {
+const config: HardhatUserConfig = {
+  defaultNetwork: process.env.CCSM_NETWORK,
   networks: {
+    goerli: {
+      url: 'https://eth-goerli.g.alchemy.com/v2/bvik-_IDWOeJhYuqhc981klKE-r6IRCk',
+      accounts: [`0x${process.env.GOERLI_PRIVATE_KEY}`],
+    },
     ganache: {
-      chainId: 1337,
-      url: 'http://127.0.0.1:7545',
+      url: 'http://127.0.0.1:8545',
     },
   },
   solidity: {
@@ -15,8 +22,9 @@ module.exports = {
   paths: {
     sources:
       './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts',
-    tests: './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/test',
     artifacts:
       './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts/artifacts',
   },
 };
+
+export default config;

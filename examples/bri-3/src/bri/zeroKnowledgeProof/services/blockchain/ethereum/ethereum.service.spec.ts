@@ -1,19 +1,45 @@
-import { deployCcsmContract } from './scripts/deploy';
 import { EthereumService } from './ethereum.service';
+import * as hre from 'hardhat';
 
 describe('Ethereum services', () => {
   let ccsm: EthereumService;
-  beforeAll(async () => {
-    await deployCcsmContract();
-    ccsm = new EthereumService();
-  });
-  describe('setAnchorHash', () => {
-    it('should set anchor hash in the mapping and return true', async () => {
-      await ccsm.storeAnchorHash('anchorHash');
 
-      expect(await ccsm.verifyIfAnchorHashExists('anchorHash')).toEqual(
-        'anchorHash',
+  beforeAll(async () => {
+    hre.changeNetwork('hardhat');
+    ccsm = new EthereumService();
+    await ccsm.deployContract();
+  });
+
+  describe('storeAnchorHash', () => {
+    it('should set anchor hash in the mapping and return true', async () => {
+      //Arrange
+      const ccsmContract = await ccsm.connectToContract();
+
+      //Act
+      await ccsm.storeAnchorHash('anchorHash1');
+
+      //Assert
+      expect(await ccsmContract.anchorHashStore('anchorHash1')).toEqual(true);
+    });
+  });
+
+  describe('verifyIfAnchorHashExists', () => {
+    it('should return the anchor hash if it exists', async () => {
+      //Act
+      await ccsm.storeAnchorHash('anchorHash2');
+
+      //Assert
+      expect(await ccsm.verifyIfAnchorHashExists('anchorHash2')).toEqual(
+        'anchorHash2',
       );
+    });
+
+    it('should return null if anchor hash does not exists', async () => {
+      //Act
+      await ccsm.storeAnchorHash('');
+
+      //Assert
+      expect(await ccsm.verifyIfAnchorHashExists('anchorHash3')).toEqual('');
     });
   });
 });
