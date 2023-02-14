@@ -57,14 +57,19 @@ export class WorkgroupAgent {
     securityPolicy: string,
     privacyPolicy: string,
     participants: BpiSubject[],
-    status: WorkgroupStatus,
   ) {
     workgroupToUpdate.updateName(name);
     workgroupToUpdate.updateAdministrators(administrator);
     workgroupToUpdate.updateSecurityPolicy(securityPolicy);
     workgroupToUpdate.updatePrivacyPolicy(privacyPolicy);
     workgroupToUpdate.updateParticipants(participants);
-    workgroupToUpdate.updateStatus(status);
+  }
+
+  public archiveWorkgroup(
+    workgroupToArchive: Workgroup,
+    status: WorkgroupStatus,
+  ) {
+    workgroupToArchive.updateStatus(status);
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(

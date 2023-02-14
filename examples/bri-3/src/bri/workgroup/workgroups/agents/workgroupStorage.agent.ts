@@ -93,7 +93,6 @@ export class WorkgroupStorageAgent extends PrismaService {
         participants: {
           set: participantIds,
         },
-        status: workgroup.status,
       },
       include: {
         worksteps: true,
@@ -106,6 +105,25 @@ export class WorkgroupStorageAgent extends PrismaService {
     });
 
     return this.mapper.map(updatedWorkgroupModel, Workgroup, Workgroup);
+  }
+
+  async archiveWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
+    const archivedWorkgroupModel = await this.workgroup.update({
+      where: { id: workgroup.id },
+      data: {
+        status: workgroup.status,
+      },
+      include: {
+        worksteps: true,
+        administrators: true,
+        participants: true,
+        workflows: {
+          include: { worksteps: true },
+        },
+      },
+    });
+
+    return this.mapper.map(archivedWorkgroupModel, Workgroup, Workgroup);
   }
 
   async deleteWorkgroup(workgroup: Workgroup): Promise<void> {
