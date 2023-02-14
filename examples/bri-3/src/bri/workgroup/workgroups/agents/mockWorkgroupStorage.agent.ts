@@ -25,7 +25,6 @@ export class MockWorkgroupStorageAgent {
       workgroup.participants,
       workgroup.worksteps,
       workgroup.workflows,
-      workgroup.status,
     );
 
     this.workgroupsStore.push(createdWg);
@@ -38,6 +37,14 @@ export class MockWorkgroupStorageAgent {
     );
     Object.assign(wgToUpdate, workgroup);
     return Promise.resolve(wgToUpdate);
+  }
+
+  async archiveWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
+    const wgToArchive = this.workgroupsStore.find(
+      (wg) => wg.id === workgroup.id,
+    );
+    Object.assign(wgToArchive, workgroup);
+    return Promise.resolve(wgToArchive);
   }
 
   async deleteWorkgroup(workgroup: Workgroup): Promise<void> {
