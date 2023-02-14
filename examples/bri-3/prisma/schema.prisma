@@ -86,7 +86,7 @@ model Workgroup {
   participants   BpiSubject[] @relation(name: "participantSubjects")
   workflows      Workflow[]
   worksteps      Workstep[]
-  status         Status       @default(Active)
+  status         Status       @default(ACTIVE)
 }
 
 model Transaction {
@@ -122,6 +122,6 @@ model AnchorHash {
 }
 
 enum Status {
-  Active
-  Archived
+  ACTIVE
+  ARCHIVED
 }
