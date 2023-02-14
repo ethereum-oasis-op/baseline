@@ -13,6 +13,8 @@ import { CreateWorkgroupCommand } from '../capabilities/createWorkgroup/createWo
 import { DeleteWorkgroupCommand } from '../capabilities/deleteWorkgroup/deleteWorkgroup.command';
 import { GetWorkgroupByIdQuery } from '../capabilities/getWorkgroupById/getWorkgroupById.query';
 import { UpdateWorkgroupCommand } from '../capabilities/updateWorkgroup/updateWorkgroup.command';
+import { ArchiveWorkgroupCommand } from '../capabilities/archiveWorkgroup/archiveWorkgroup.command';
+import { WorkgroupStatus } from '../models/workgroup';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
@@ -57,6 +59,13 @@ export class WorkgroupController {
         requestDto.privacyPolicy,
         requestDto.participantIds,
       ),
+    );
+  }
+
+  @Put('archive/:id')
+  async archiveWorkgroup(@Param('id') id: string): Promise<void> {
+    return await this.commandBus.execute(
+      new ArchiveWorkgroupCommand(id, WorkgroupStatus.ARCHIVED),
     );
   }
 
