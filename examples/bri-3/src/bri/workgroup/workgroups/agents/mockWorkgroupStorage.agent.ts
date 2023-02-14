@@ -25,6 +25,7 @@ export class MockWorkgroupStorageAgent {
       workgroup.participants,
       workgroup.worksteps,
       workgroup.workflows,
+      workgroup.status,
     );
 
     this.workgroupsStore.push(createdWg);
