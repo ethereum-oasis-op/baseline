@@ -14,7 +14,6 @@ import { DeleteWorkgroupCommand } from '../capabilities/deleteWorkgroup/deleteWo
 import { GetWorkgroupByIdQuery } from '../capabilities/getWorkgroupById/getWorkgroupById.query';
 import { UpdateWorkgroupCommand } from '../capabilities/updateWorkgroup/updateWorkgroup.command';
 import { ArchiveWorkgroupCommand } from '../capabilities/archiveWorkgroup/archiveWorkgroup.command';
-import { WorkgroupStatus } from '../models/workgroup';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
