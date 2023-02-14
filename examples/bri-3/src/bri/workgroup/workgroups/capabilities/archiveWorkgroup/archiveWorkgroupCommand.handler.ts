@@ -18,7 +18,7 @@ export class ArchiveWorkgroupCommandHandler
         command.id,
       );
 
-    this.workgroupAgent.archiveWorkgroup(workgroupToArchive, command.status);
+    this.workgroupAgent.archiveWorkgroup(workgroupToArchive);
 
     await this.workgroupStorageAgent.archiveWorkgroup(workgroupToArchive);
   }

@@ -64,9 +64,7 @@ export class WorkgroupController {
 
   @Put('archive/:id')
   async archiveWorkgroup(@Param('id') id: string): Promise<void> {
-    return await this.commandBus.execute(
-      new ArchiveWorkgroupCommand(id, WorkgroupStatus.ARCHIVED),
-    );
+    return await this.commandBus.execute(new ArchiveWorkgroupCommand(id));
   }
 
   @Delete('/:id')

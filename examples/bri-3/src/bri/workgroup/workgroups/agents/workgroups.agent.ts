@@ -63,11 +63,8 @@ export class WorkgroupAgent {
     workgroupToUpdate.updateParticipants(participants);
   }
 
-  public archiveWorkgroup(
-    workgroupToArchive: Workgroup,
-    status: WorkgroupStatus,
-  ) {
-    workgroupToArchive.updateStatus(status);
+  public archiveWorkgroup(workgroupToArchive: Workgroup) {
+    workgroupToArchive.updateStatus(WorkgroupStatus.ARCHIVED);
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
