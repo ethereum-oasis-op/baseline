@@ -20,6 +20,8 @@ import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
+import { ArchiveWorkgroupCommandHandler } from '../capabilities/archiveWorkgroup/archiveWorkgroupCommand.handler';
+import { WorkgroupStatus } from '../models/workgroup';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -66,6 +68,7 @@ describe('WorkgroupsController', () => {
         BpiSubjectAgent,
         CreateWorkgroupCommandHandler,
         UpdateWorkgroupCommandHandler,
+        ArchiveWorkgroupCommandHandler,
         DeleteWorkgroupCommandHandler,
         GetWorkgroupByIdQueryHandler,
         WorkgroupStorageAgent,
@@ -175,6 +178,35 @@ describe('WorkgroupsController', () => {
         updateRequestDto.participantIds,
       );
       expect(updatedWorkgroup.name).toEqual(updateRequestDto.name);
+    });
+  });
+
+  describe('archiveWorkgroup', () => {
+    it('should throw NotFound if non existent id passed', async () => {
+      // Arrange
+      const nonExistentId = '123';
+
+      // Act and assert
+      expect(async () => {
+        await workgroupController.archiveWorkgroup(nonExistentId);
+      }).rejects.toThrow(
+        new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
+      );
+    });
+
+    it('should perform the update if existing id passed', async () => {
+      // Arrange
+      const newWorkgroupId = await createTestWorkgroup();
+
+      // Act
+      await workgroupController.archiveWorkgroup(newWorkgroupId);
+
+      // Assert
+      const archivedWorkgroup = await workgroupController.getWorkgroupById(
+        newWorkgroupId,
+      );
+      expect(archivedWorkgroup.id).toEqual(newWorkgroupId);
+      expect(archivedWorkgroup.status).toEqual(WorkgroupStatus.ARCHIVED);
     });
   });
 

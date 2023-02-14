@@ -44,7 +44,6 @@ export class Workgroup {
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
-    status: WorkgroupStatus,
   ) {
     this.id = id;
     this.name = name;
@@ -54,7 +53,6 @@ export class Workgroup {
     this.participants = participants;
     this.worksteps = worksteps;
     this.workflows = workflows;
-    this.status = status;
   }
 
   public updateName(newName: string): void {

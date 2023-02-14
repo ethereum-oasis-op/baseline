@@ -21,7 +21,6 @@ export class WorkgroupAgent {
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
-    status: WorkgroupStatus,
   ): Workgroup {
     return new Workgroup(
       uuid(),
@@ -32,7 +31,6 @@ export class WorkgroupAgent {
       participants,
       worksteps,
       workflows,
-      status,
     );
   }
 
