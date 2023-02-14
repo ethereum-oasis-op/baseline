@@ -3,6 +3,10 @@ import { Workflow } from '../../workflows/models/workflow';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { AutoMap } from '@automapper/classes';
 
+export enum WorkgroupStatus {
+  ACTIVE = 'ACTIVE',
+  ARCHIVED = 'ARCHIVED',
+}
 export class Workgroup {
   @AutoMap()
   id: string; // TODO: Add uuid after #491
@@ -28,6 +32,9 @@ export class Workgroup {
   @AutoMap(() => [Workflow])
   workflows: Workflow[];
 
+  @AutoMap()
+  status: WorkgroupStatus;
+
   constructor(
     id: string,
     name: string,
@@ -37,6 +44,7 @@ export class Workgroup {
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
+    status: WorkgroupStatus,
   ) {
     this.id = id;
     this.name = name;
@@ -46,6 +54,7 @@ export class Workgroup {
     this.participants = participants;
     this.worksteps = worksteps;
     this.workflows = workflows;
+    this.status = status;
   }
 
   public updateName(newName: string): void {
