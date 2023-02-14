@@ -76,4 +76,8 @@ export class Workgroup {
   public updateParticipants(newParticipants: BpiSubject[]): void {
     this.participants = newParticipants;
   }
+
+  public updateStatus(newStatus: WorkgroupStatus): void {
+    this.status = newStatus;
+  }
 }

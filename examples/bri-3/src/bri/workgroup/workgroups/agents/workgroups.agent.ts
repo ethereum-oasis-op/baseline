@@ -4,7 +4,7 @@ import { Workflow } from '../../workflows/models/workflow';
 import { Workstep } from '../../worksteps/models/workstep';
 
 import { uuid } from 'uuidv4';
-import { Workgroup } from '../models/workgroup';
+import { Workgroup, WorkgroupStatus } from '../models/workgroup';
 import { WorkgroupStorageAgent } from './workgroupStorage.agent';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 
@@ -21,6 +21,7 @@ export class WorkgroupAgent {
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
+    status: WorkgroupStatus,
   ): Workgroup {
     return new Workgroup(
       uuid(),
@@ -31,6 +32,7 @@ export class WorkgroupAgent {
       participants,
       worksteps,
       workflows,
+      status,
     );
   }
 
@@ -55,12 +57,14 @@ export class WorkgroupAgent {
     securityPolicy: string,
     privacyPolicy: string,
     participants: BpiSubject[],
+    status: WorkgroupStatus,
   ) {
     workgroupToUpdate.updateName(name);
     workgroupToUpdate.updateAdministrators(administrator);
     workgroupToUpdate.updateSecurityPolicy(securityPolicy);
     workgroupToUpdate.updatePrivacyPolicy(privacyPolicy);
     workgroupToUpdate.updateParticipants(participants);
+    workgroupToUpdate.updateStatus(status);
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
