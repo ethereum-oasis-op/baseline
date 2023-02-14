@@ -85,6 +85,7 @@ model Workgroup {
   participants   BpiSubject[] @relation(name: "participantSubjects")
   workflows      Workflow[]
   worksteps      Workstep[]
+  status         Status       @default(Active)
 }
 
 model Transaction {
@@ -110,4 +111,9 @@ model Message {
   content          String
   signature        String
   type             Int
+}
+
+enum Status {
+  Active
+  Archived
 }
