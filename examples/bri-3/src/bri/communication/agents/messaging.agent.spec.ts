@@ -1,17 +1,13 @@
-import { CreateBpiMessageDto } from '../api/dtos/request/createBpiMessage.dto';
 import { MessagingAgent } from './messaging.agent';
 
 describe('Messaging Agent', () => {
   it('Should return error when validating incorrect JSON raw message', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage = 'test';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [resultDto, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
@@ -24,15 +20,12 @@ describe('Messaging Agent', () => {
 
   it('Should return error when validating correct JSON raw message with invalid GUID in id field', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage =
       '{ "id": "pakakoto", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 0}';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
@@ -42,15 +35,12 @@ describe('Messaging Agent', () => {
 
   it('Should return error when validating correct JSON raw message with invalid GUID in from field', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "7123", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 0}';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
@@ -60,15 +50,12 @@ describe('Messaging Agent', () => {
 
   it('Should return error when validating correct JSON raw message with invalid GUID in to field', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "msm24", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 0}';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
@@ -78,15 +65,12 @@ describe('Messaging Agent', () => {
 
   it('Should return error when validating correct JSON raw message with content field not valid JSON', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": 123, "signature": "xyz", "type": 0}';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
@@ -96,15 +80,12 @@ describe('Messaging Agent', () => {
 
   it('Should return error when validating correct JSON raw message with signature field empty', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "", "type": 0}';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
@@ -114,15 +95,12 @@ describe('Messaging Agent', () => {
 
   it('Should return error when validating correct JSON raw message with message type not being info', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 1}';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
@@ -132,15 +110,12 @@ describe('Messaging Agent', () => {
 
   it('Should return no errors and create message dto when validating correct JSON raw message', () => {
     // Arrange
-    let resultDto: CreateBpiMessageDto;
-    let validationErrors: string[] = [];
-
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 0}';
 
     // Act
     const messagingAgent = new MessagingAgent(null, null, null);
-    [resultDto, validationErrors] =
+    const [resultDto, validationErrors] =
       messagingAgent.validateBpiMessageFormat(rawMessage);
 
     // Assert
