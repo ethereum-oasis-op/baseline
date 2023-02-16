@@ -17,7 +17,8 @@ export class AnchorHashAgent {
     }
   }
 
-  public throwErrorIfSignatureIsInvalid(signature: string): void {
+  public verifyAnchorHashSignature(signature: string): void {
+    //TODO add signature verification methods
     if (!signature) {
       throw new BadRequestException(INVALID_SIGNATURE);
     }
@@ -36,9 +37,8 @@ export class AnchorHashAgent {
   public verifyAnchorHash(
     anchorHash: string,
     publicInputForProofVerification: string,
-    signature: string,
   ): boolean {
-    if (anchorHash === publicInputForProofVerification && signature) {
+    if (anchorHash === publicInputForProofVerification) {
       return true;
     }
 

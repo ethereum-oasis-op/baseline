@@ -10,6 +10,7 @@ export class MockAnchorHashStorageAgent {
       anchorHash.id,
       anchorHash.ownerBpiSubjectId,
       anchorHash.hash,
+      anchorHash.signature,
     );
 
     this.anchorHashesStore.push(createdHash);

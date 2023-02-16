@@ -16,6 +16,7 @@ export class AnchorHashStorageAgent extends PrismaService {
         id: anchorHash.id,
         ownerBpiSubjectId: anchorHash.ownerBpiSubjectId,
         hash: anchorHash.hash,
+        signature: anchorHash.signature,
       },
       include: {
         ownerBpiSubject: {
