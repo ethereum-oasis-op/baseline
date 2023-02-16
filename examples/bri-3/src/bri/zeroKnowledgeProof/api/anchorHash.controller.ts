@@ -1,6 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { AnchorHashAgent } from '../agents/anchorHash.agent';
 import { CreateAnchorHashCommand } from '../capabilities/createAnchorHash/createAnchorHash.command';
 import { VerifyAnchorHashCommand } from '../capabilities/verifyAnchorHash/verifyAnchorHash.command';
 import { CreateAnchorHashDto } from './dtos/request/createAnchorHash.dto';
@@ -9,10 +8,7 @@ import { AnchorHashDto } from './dtos/response/anchorHash.dto';
 
 @Controller('anchorHash')
 export class AnchorHashController {
-  constructor(
-    private commandBus: CommandBus,
-    private anchorHashAgent: AnchorHashAgent,
-  ) {}
+  constructor(private commandBus: CommandBus) {}
 
   @Post('/create')
   async createAnchorHash(
