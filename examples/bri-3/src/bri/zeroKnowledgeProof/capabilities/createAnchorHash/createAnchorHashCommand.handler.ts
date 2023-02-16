@@ -15,7 +15,7 @@ export class CreateAnchorHashCommandHandler
   ) {}
 
   async execute(command: CreateAnchorHashCommand) {
-    const newAnchorHash = await this.agent.hashTheStateAndCreateNewAnchorHash(
+    const newAnchorHash = this.agent.hashTheStateAndCreateNewAnchorHash(
       command.ownerAccount.id,
       command.state,
       command.signature,

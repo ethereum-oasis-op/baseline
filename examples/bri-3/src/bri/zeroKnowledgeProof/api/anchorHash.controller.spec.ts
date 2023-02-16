@@ -104,6 +104,7 @@ describe('ProofController', () => {
 
       const missingStateParam = {
         inputForProofVerification: mockState,
+        signature: 'This is test signature',
       };
 
       // Act and assert
@@ -115,9 +116,11 @@ describe('ProofController', () => {
     it('should perform the verification if state is provided', async () => {
       // Arrange
       const mockState = 'This is test state';
+      const mockSignature = 'This is test signature';
 
       const verifyRequestDto = {
         inputForProofVerification: mockState,
+        signature: mockSignature,
       } as VerifyAnchorHashDto;
 
       // Act
