@@ -9,4 +9,8 @@ export class CreateAnchorHashDto {
   @IsNotEmpty()
   @IsString()
   state: string;
+
+  @IsNotEmpty()
+  @IsString()
+  signature: string;
 }

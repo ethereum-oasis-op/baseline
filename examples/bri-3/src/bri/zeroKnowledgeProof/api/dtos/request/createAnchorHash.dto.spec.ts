@@ -8,6 +8,7 @@ describe('CreateAnchorHashDto', () => {
     // Arrange
     const dto = {
       state: 'This is test state',
+      signature: 'This is test signature',
     };
     const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
@@ -26,6 +27,7 @@ describe('CreateAnchorHashDto', () => {
     // Arrange
     const dto = {
       ownerAccount: {},
+      signature: 'This is test signature',
     };
     const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 
@@ -45,6 +47,7 @@ describe('CreateAnchorHashDto', () => {
     const dto = {
       ownerAccount: {},
       state: 'This is test state',
+      signature: 'This is test signature',
     };
     const createAnchorHashDto = plainToInstance(CreateAnchorHashDto, dto);
 

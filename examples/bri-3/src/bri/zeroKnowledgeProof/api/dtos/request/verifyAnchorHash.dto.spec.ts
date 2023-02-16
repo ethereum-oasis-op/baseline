@@ -6,7 +6,9 @@ import { VerifyAnchorHashDto } from './verifyAnchorHash.dto';
 describe('VerifyAnchorHashDto', () => {
   it('should return error in case inputForProofVerification not provided.', async () => {
     // Arrange
-    const dto = {};
+    const dto = {
+      signature: 'This is test signature',
+    };
     const verifyAnchorHashDto = plainToInstance(VerifyAnchorHashDto, dto);
 
     // Act
@@ -24,6 +26,7 @@ describe('VerifyAnchorHashDto', () => {
     // Arrange
     const dto = {
       inputForProofVerification: 'This is test state',
+      signature: 'This is test signature',
     };
     const verifyAnchorHashDto = plainToInstance(VerifyAnchorHashDto, dto);
 

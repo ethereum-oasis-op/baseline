@@ -4,4 +4,8 @@ export class VerifyAnchorHashDto {
   @IsNotEmpty()
   @IsString()
   inputForProofVerification: string;
+
+  @IsNotEmpty()
+  @IsString()
+  signature: string;
 }
