@@ -84,7 +84,7 @@ export class DidJwtAuthGuard implements CanActivate {
     if (!authorization || Array.isArray(authorization)) {
       throw new Error('Invalid Authorization Header');
     }
-    const [_, token] = authorization.split(' ');
+    const [, token] = authorization.split(' ');
     return token;
   }
 }
