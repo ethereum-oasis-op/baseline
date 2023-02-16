@@ -118,4 +118,5 @@ model AnchorHash {
   ownerBpiSubjectId String
   ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "anchorHashOwnerBpiSubject_fk")    
   hash              String     @unique
+  signature         String     @unique
 }
