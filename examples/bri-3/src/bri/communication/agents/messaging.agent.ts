@@ -62,7 +62,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     rawMessage: string,
   ): [CreateBpiMessageDto, string[]] {
     const errors: string[] = [];
-    let newBpiMessageCandidate: CreateBpiMessageDto; // Switch to BpiMessage instead of DTO
+    let newBpiMessageCandidate: CreateBpiMessageDto; // TODO: Switch to BpiMessage instead of DTO
 
     try {
       newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
