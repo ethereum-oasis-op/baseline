@@ -8,6 +8,7 @@ import { ProcessInboundBpiMessageCommand } from './processInboundMessage.command
 
 // Difference between this and the create bpi message command handler is that this one does not
 // want to stop the execution flow by throwing a nestjs exception (which results in 404 response in the other handler)
+// TODO: Consider using a NestJs Saga or another command dispatch to avoid code duplication
 @CommandHandler(ProcessInboundBpiMessageCommand)
 export class ProcessInboundMessageCommandHandler
   implements ICommandHandler<ProcessInboundBpiMessageCommand>
