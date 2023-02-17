@@ -5,6 +5,7 @@ import { LoggingService } from '../../../shared/logging/logging.service';
 import { CreateBpiMessageDto } from '../api/dtos/request/createBpiMessage.dto';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
+import { BpiMessage } from '../models/bpiMessage';
 import { BpiMessageType } from '../models/bpiMessageType.enum';
 
 @Injectable()
@@ -23,17 +24,17 @@ export class MessagingAgent implements OnApplicationBootstrap {
     );
   }
 
-  async publishMessage(channelName: string, message: string): Promise<void> {
+  public async publishMessage(channelName: string, message: string): Promise<void> {
     await this.messagingClient.publish(channelName, message);
   }
 
-  private onNewMessageReceived(rawMessage: string): void {
+  public async onNewMessageReceived(rawMessage: string): Promise<void> {
     this.logger.logInfo(
       `MessagingListenerAgent: New raw message received: ${rawMessage}. Trying to parse into a Bpi Message`,
     );
 
     const [newBpiMessageCandidate, validationErrors] =
-      this.validateBpiMessageFormat(rawMessage);
+      this.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     if (validationErrors.length > 0) {
       this.logger.logError(
@@ -45,7 +46,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return;
     }
 
-    this.commandBus.execute(
+    await this.commandBus.execute(
       new ProcessInboundBpiMessageCommand(
         newBpiMessageCandidate.id,
         newBpiMessageCandidate.from,
@@ -57,11 +58,11 @@ export class MessagingAgent implements OnApplicationBootstrap {
     );
   }
 
-  public validateBpiMessageFormat(
+  public tryDeserializeToBpiMessageCandidate(
     rawMessage: string,
   ): [CreateBpiMessageDto, string[]] {
     const errors: string[] = [];
-    let newBpiMessageCandidate: CreateBpiMessageDto;
+    let newBpiMessageCandidate: CreateBpiMessageDto; // Switch to BpiMessage instead of DTO
 
     try {
       newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
@@ -103,6 +104,10 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     return [newBpiMessageCandidate, errors];
+  }
+
+  public serializeBpiMessage(bpiMessage: BpiMessage): string {
+    return JSON.stringify(bpiMessage);
   }
 
   private parseJsonOrThrow(jsonString: string) {

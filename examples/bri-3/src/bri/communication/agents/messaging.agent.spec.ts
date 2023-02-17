@@ -13,7 +13,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [resultDto, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(resultDto).toBeUndefined();
@@ -30,7 +30,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(validationErrors.length).toBe(1);
@@ -44,7 +44,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(validationErrors.length).toBe(1);
@@ -58,7 +58,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(validationErrors.length).toBe(1);
@@ -72,7 +72,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(validationErrors.length).toBe(1);
@@ -86,7 +86,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(validationErrors.length).toBe(1);
@@ -100,7 +100,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(validationErrors.length).toBe(1);
@@ -114,7 +114,7 @@ describe('Messaging Agent', () => {
 
     // Act
     const [resultDto, validationErrors] =
-      messagingAgent.validateBpiMessageFormat(rawMessage);
+      messagingAgent.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     // Assert
     expect(validationErrors.length).toBe(0);
