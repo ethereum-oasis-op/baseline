@@ -15,6 +15,8 @@ export class CreateBpiMessageCommandHandler
   ) {}
 
   async execute(command: CreateBpiMessageCommand) {
+    // TODO: Validate Bpi Message Id unique
+
     const [fromBpiSubject, toBpiSubject] =
       await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
         command.from,
