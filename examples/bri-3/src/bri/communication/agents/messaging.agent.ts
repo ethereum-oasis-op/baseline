@@ -1,8 +1,11 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { validate } from 'uuid';
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { CreateBpiMessageDto } from '../api/dtos/request/createBpiMessage.dto';
+import { BpiMessageDto } from '../api/dtos/response/bpiMessage.dto';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
 import { BpiMessage } from '../models/bpiMessage';
@@ -14,6 +17,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     @Inject('IMessagingClient')
     private readonly messagingClient: IMessagingClient,
     private readonly commandBus: CommandBus,
+    @InjectMapper() private mapper: Mapper,
     private readonly logger: LoggingService,
   ) {}
 
@@ -110,7 +114,8 @@ export class MessagingAgent implements OnApplicationBootstrap {
   }
 
   public serializeBpiMessage(bpiMessage: BpiMessage): string {
-    return JSON.stringify(bpiMessage);
+    const bpiMessageDto = this.mapper.map(bpiMessage, BpiMessage, BpiMessageDto);
+    return JSON.stringify(bpiMessageDto);
   }
 
   private parseJsonOrThrow(jsonString: string) {
