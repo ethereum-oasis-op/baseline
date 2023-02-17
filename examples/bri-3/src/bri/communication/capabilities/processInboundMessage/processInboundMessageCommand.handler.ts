@@ -24,7 +24,7 @@ export class ProcessInboundMessageCommandHandler
     let toBpiSubject: BpiSubject;
 
     // TODO: Use an agent method that does not throw in case of invalid from and to
-    // but instead returns false 
+    // but instead returns false
     try {
       [fromBpiSubject, toBpiSubject] =
         await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
@@ -49,13 +49,15 @@ export class ProcessInboundMessageCommandHandler
       command.type,
     );
 
-    const newBpiMessage = await this.storageAgent.storeNewBpiMessage(newBpiMessageCandidate);
+    const newBpiMessage = await this.storageAgent.storeNewBpiMessage(
+      newBpiMessageCandidate,
+    );
 
     // TODO: This is naive as it publishes to a channel anyone who can auth with the NATS server can subscribe to.
     // Wiil be improved by introducing NATS authz to allow only the recipient Bpi Subject to listen on this channel
     await this.messagingAgent.publishMessage(
       toBpiSubject.publicKey,
-      this.messagingAgent.serializeBpiMessage(newBpiMessage));
-
+      this.messagingAgent.serializeBpiMessage(newBpiMessage),
+    );
   }
 }

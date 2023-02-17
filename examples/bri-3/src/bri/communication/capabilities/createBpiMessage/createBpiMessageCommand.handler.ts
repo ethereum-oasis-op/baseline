@@ -40,7 +40,8 @@ export class CreateBpiMessageCommandHandler
     // Wiil be improved by introducing NATS authz to allow only the recipient Bpi Subject to listen on this channel
     await this.messagingAgent.publishMessage(
       toBpiSubject.publicKey,
-      this.messagingAgent.serializeBpiMessage(newBpiMessage));
+      this.messagingAgent.serializeBpiMessage(newBpiMessage),
+    );
 
     return newBpiMessage.id;
   }

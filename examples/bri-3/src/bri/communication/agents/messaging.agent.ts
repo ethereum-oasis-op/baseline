@@ -24,7 +24,10 @@ export class MessagingAgent implements OnApplicationBootstrap {
     );
   }
 
-  public async publishMessage(channelName: string, message: string): Promise<void> {
+  public async publishMessage(
+    channelName: string,
+    message: string,
+  ): Promise<void> {
     await this.messagingClient.publish(channelName, message);
   }
 
