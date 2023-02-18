@@ -3,7 +3,7 @@ import { MessagingAgent } from './messaging.agent';
 let messagingAgent: MessagingAgent;
 
 beforeAll(async () => {
-  messagingAgent = new MessagingAgent(null, null, null);
+  messagingAgent = new MessagingAgent(null, null, null, null);
 });
 
 describe('Messaging Agent', () => {
