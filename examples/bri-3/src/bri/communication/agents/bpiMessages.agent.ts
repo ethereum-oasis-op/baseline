@@ -63,7 +63,7 @@ export class BpiMessageAgent {
 
     if (existingBpiMessage) {
       this.logger.logError(
-        `ProcessInboundMessageCommandHandler: BPI Message with id: ${existingBpiMessage.id} already exists.`,
+        `BpiMessageAgent: BPI Message with id: ${existingBpiMessage.id} already exists.`,
       );
 
       return [false, null, null];
@@ -75,7 +75,7 @@ export class BpiMessageAgent {
 
     if (!fromBpiSubject) {
       this.logger.logError(
-        `ProcessInboundMessageCommandHandler: From Bpi Subjects do not exist.`,
+        `BpiMessageAgent: From Bpi Subjects do not exist.`,
       );
 
       return [false, null, null];
@@ -87,7 +87,7 @@ export class BpiMessageAgent {
 
     if (!fromBpiSubject) {
       this.logger.logError(
-        `ProcessInboundMessageCommandHandler: To Bpi Subject do not exist.`,
+        `BpiMessageAgent: To Bpi Subject do not exist.`,
       );
 
       return [false, null, null];
