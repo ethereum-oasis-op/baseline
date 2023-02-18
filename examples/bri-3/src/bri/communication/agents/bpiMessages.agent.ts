@@ -1,8 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import {
+  BPI_MESSAGE_ALREADY_EXISTS,
+  NOT_FOUND_ERR_MESSAGE,
+} from '../api/err.messages';
 import { BpiMessage } from '../models/bpiMessage';
 import { BpiMessageType } from '../models/bpiMessageType.enum';
 import { BpiMessageStorageAgent } from './bpiMessagesStorage.agent';
@@ -15,10 +22,18 @@ export class BpiMessageAgent {
     private readonly logger: LoggingService,
   ) {}
 
-  public async getFromAndToSubjectsAndThrowIfNotExist(
+  public async validateNewBpiMessageAgainstExistingBpiEntitiesWithThrow(
+    messageId: string,
     fromBpiSubjectId: string,
     toBpiSubjectId: string,
   ): Promise<[BpiSubject, BpiSubject]> {
+    const existingBpiMessage =
+      await this.bpiMessageStorageAgent.getBpiMessageById(messageId);
+
+    if (existingBpiMessage) {
+      throw new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS);
+    }
+
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
