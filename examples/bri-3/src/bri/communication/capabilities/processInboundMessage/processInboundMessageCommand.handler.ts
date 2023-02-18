@@ -1,5 +1,4 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LoggingService } from '../../../../shared/logging/logging.service';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../../agents/messaging.agent';
@@ -16,28 +15,17 @@ export class ProcessInboundMessageCommandHandler
     private readonly agent: BpiMessageAgent,
     private readonly storageAgent: BpiMessageStorageAgent,
     private readonly messagingAgent: MessagingAgent,
-    private readonly logger: LoggingService,
   ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
-    const existingBpiMessage = await this.storageAgent.getBpiMessageById(
-      command.id,
-    );
-
-    if (existingBpiMessage) {
-      this.logger.logError(
-        `ProcessInboundMessageCommandHandler: BPI Message with id: ${existingBpiMessage.id} already exists.`,
+    const [isValid, fromBpiSubject, toBpiSubject] =
+      await this.agent.validateNewBpiMessageAgainstExistingBpiEntities(
+        command.id,
+        command.from,
+        command.to,
       );
-      return;
-    }
 
-    const [fromBpiSubject, toBpiSubject] =
-      await this.agent.getFromAndToSubjects(command.from, command.to);
-
-    if (!fromBpiSubject || !toBpiSubject) {
-      this.logger.logError(
-        `ProcessInboundMessageCommandHandler: From and\or To Bpi Subjects do not exist.`,
-      );
+    if (!isValid) {
       return;
     }
 
@@ -57,7 +45,7 @@ export class ProcessInboundMessageCommandHandler
     );
 
     // TODO: This is naive as it publishes to a channel anyone who can auth with the NATS server can subscribe to.
-    // Wiil be improved by introducing NATS authz to allow only the recipient Bpi Subject to listen on this channel
+    // Wiil be improved by introducing NATS authz to allow only the recipient Bpi Subject to listen on this channel (#648)
     await this.messagingAgent.publishMessage(
       toBpiSubject.publicKey,
       this.messagingAgent.serializeBpiMessage(newBpiMessage),
