@@ -1,16 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { LoggingService } from '../../../shared/logging/logging.service';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessage } from '../models/bpiMessage';
 import { BpiMessageType } from '../models/bpiMessageType.enum';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessageStorageAgent } from './bpiMessagesStorage.agent';
-import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 @Injectable()
 export class BpiMessageAgent {
   constructor(
     private bpiMessageStorageAgent: BpiMessageStorageAgent,
     private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
+    private readonly logger: LoggingService,
   ) {}
 
   public async getFromAndToSubjectsAndThrowIfNotExist(
@@ -36,19 +38,47 @@ export class BpiMessageAgent {
     return [fromBpiSubject, toBpiSubject];
   }
 
-  public async getFromAndToSubjects(
+  public async validateNewBpiMessageAgainstExistingBpiEntities(
+    messageId: string,
     fromBpiSubjectId: string,
     toBpiSubjectId: string,
-  ): Promise<[BpiSubject, BpiSubject]> {
+  ): Promise<[boolean, BpiSubject, BpiSubject]> {
+    const existingBpiMessage =
+      await this.bpiMessageStorageAgent.getBpiMessageById(messageId);
+
+    if (existingBpiMessage) {
+      this.logger.logError(
+        `ProcessInboundMessageCommandHandler: BPI Message with id: ${existingBpiMessage.id} already exists.`,
+      );
+
+      return [false, null, null];
+    }
+
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
+
+    if (!fromBpiSubject) {
+      this.logger.logError(
+        `ProcessInboundMessageCommandHandler: From Bpi Subjects do not exist.`,
+      );
+
+      return [false, null, null];
+    }
 
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       toBpiSubjectId,
     );
 
-    return [fromBpiSubject, toBpiSubject];
+    if (!fromBpiSubject) {
+      this.logger.logError(
+        `ProcessInboundMessageCommandHandler: To Bpi Subject do not exist.`,
+      );
+
+      return [false, null, null];
+    }
+
+    return [true, fromBpiSubject, toBpiSubject];
   }
 
   public createNewBpiMessage(
