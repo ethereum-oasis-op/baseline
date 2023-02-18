@@ -1,9 +1,7 @@
-import { BadRequestException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../../agents/messaging.agent';
-import { BPI_MESSAGE_ALREADY_EXISTS } from '../../api/err.messages';
 import { CreateBpiMessageCommand } from './createBpiMessage.command';
 
 @CommandHandler(CreateBpiMessageCommand)
@@ -17,16 +15,9 @@ export class CreateBpiMessageCommandHandler
   ) {}
 
   async execute(command: CreateBpiMessageCommand) {
-    const existingBpiMessage = await this.storageAgent.getBpiMessageById(
-      command.id,
-    );
-
-    if (existingBpiMessage) {
-      throw new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS);
-    }
-
     const [fromBpiSubject, toBpiSubject] =
-      await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
+      await this.agent.validateNewBpiMessageAgainstExistingBpiEntitiesWithThrow(
+        command.id,
         command.from,
         command.to,
       );
