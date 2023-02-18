@@ -21,7 +21,16 @@ export class ProcessInboundMessageCommandHandler
   ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
-    // TODO: Validate Bpi Message Id unique
+    const existingBpiMessage = await this.storageAgent.getBpiMessageById(
+      command.id,
+    );
+
+    if (existingBpiMessage) {
+      this.logger.logError(
+        `ProcessInboundMessageCommandHandler: BPI Message with id: ${existingBpiMessage.id} already exists.`,
+      );
+      return;
+    }
 
     let fromBpiSubject: BpiSubject;
     let toBpiSubject: BpiSubject;
