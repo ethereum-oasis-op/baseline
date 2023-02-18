@@ -22,7 +22,7 @@ export class ProcessInboundMessageCommandHandler
 
   async execute(command: ProcessInboundBpiMessageCommand) {
     // TODO: Validate Bpi Message Id unique
-    
+
     let fromBpiSubject: BpiSubject;
     let toBpiSubject: BpiSubject;
 

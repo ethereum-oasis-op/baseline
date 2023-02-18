@@ -114,7 +114,11 @@ export class MessagingAgent implements OnApplicationBootstrap {
   }
 
   public serializeBpiMessage(bpiMessage: BpiMessage): string {
-    const bpiMessageDto = this.mapper.map(bpiMessage, BpiMessage, BpiMessageDto);
+    const bpiMessageDto = this.mapper.map(
+      bpiMessage,
+      BpiMessage,
+      BpiMessageDto,
+    );
     return JSON.stringify(bpiMessageDto);
   }
 

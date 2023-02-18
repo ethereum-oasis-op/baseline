@@ -20,9 +20,13 @@ import { UpdateBpiMessageCommandHandler } from '../capabilities/updateBpiMessage
 import { CommunicationModule } from '../communication.module';
 import { CommunicationProfile } from '../communicaton.profile';
 import { NatsMessagingClient } from '../messagingClients/natsMessagingClient';
+import { BpiMessage } from '../models/bpiMessage';
 import { CreateBpiMessageDto } from './dtos/request/createBpiMessage.dto';
 import { UpdateBpiMessageDto } from './dtos/request/updateBpiMessage.dto';
-import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import {
+  BPI_MESSAGE_ALREADY_EXISTS,
+  NOT_FOUND_ERR_MESSAGE,
+} from './err.messages';
 import { MessageController } from './messages.controller';
 
 describe('MessageController', () => {
@@ -31,6 +35,7 @@ describe('MessageController', () => {
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let existingBpiSubject1: BpiSubject;
   let existingBpiSubject2: BpiSubject;
+  let existingBpiMessage1: BpiMessage;
 
   beforeEach(async () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
@@ -40,6 +45,17 @@ describe('MessageController', () => {
     );
     existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
       new BpiSubject('', 'name2', 'desc2', 'xyz2', []),
+    );
+
+    existingBpiMessage1 = await mockBpiMessageStorageAgent.storeNewBpiMessage(
+      new BpiMessage(
+        'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
+        existingBpiSubject1,
+        existingBpiSubject2,
+        'hello world',
+        'xyz',
+        0,
+      ),
     );
 
     const app: TestingModule = await Test.createTestingModule({
@@ -118,6 +134,23 @@ describe('MessageController', () => {
   });
 
   describe('createBpiMessage', () => {
+    it('should throw BadRequest if existing bpi message id provided in id field', () => {
+      // Arrange
+      const requestDto = {
+        id: 'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
+        from: existingBpiSubject1.id,
+        to: existingBpiSubject2.id,
+        content: 'hello world',
+        signature: 'xyz',
+        type: 1,
+      } as CreateBpiMessageDto;
+
+      // Act and assert
+      expect(async () => {
+        await mController.createBpiMessage(requestDto);
+      }).rejects.toThrow(new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS));
+    });
+
     it('should throw BadRequest non existent bpi subject id provided in from field', () => {
       // Arrange
       const requestDto = {
