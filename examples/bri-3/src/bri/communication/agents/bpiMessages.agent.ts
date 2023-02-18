@@ -20,9 +20,19 @@ export class BpiMessageAgent {
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
+
+    if (!fromBpiSubject) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    };
+
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       toBpiSubjectId,
     );
+
+    if (!toBpiSubject) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    };
+
     return [fromBpiSubject, toBpiSubject];
   }
 
