@@ -38,9 +38,19 @@ export class BpiSubjectAccountAgent {
     const creatorBpiSubject = await this.subjectStorageAgent.getBpiSubjectById(
       creatorBpiSubjectId,
     );
+
+    if (!creatorBpiSubject) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    };
+
     const ownerBpiSubject = await this.subjectStorageAgent.getBpiSubjectById(
       ownerBpiSubjectId,
     );
+
+    if (!ownerBpiSubject) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    };
+
     return {
       creatorBpiSubject,
       ownerBpiSubject,
