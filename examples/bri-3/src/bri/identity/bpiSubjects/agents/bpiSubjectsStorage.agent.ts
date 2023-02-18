@@ -22,7 +22,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
 
     if (!bpiSubjectModel) {
       return null;
-    };
+    }
 
     return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
   }

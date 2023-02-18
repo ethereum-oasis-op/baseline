@@ -23,7 +23,7 @@ export class BpiMessageAgent {
 
     if (!fromBpiSubject) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    };
+    }
 
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       toBpiSubjectId,
@@ -31,7 +31,22 @@ export class BpiMessageAgent {
 
     if (!toBpiSubject) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    };
+    }
+
+    return [fromBpiSubject, toBpiSubject];
+  }
+
+  public async getFromAndToSubjects(
+    fromBpiSubjectId: string,
+    toBpiSubjectId: string,
+  ): Promise<[BpiSubject, BpiSubject]> {
+    const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
+      fromBpiSubjectId,
+    );
+
+    const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
+      toBpiSubjectId,
+    );
 
     return [fromBpiSubject, toBpiSubject];
   }
