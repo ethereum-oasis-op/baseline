@@ -41,7 +41,7 @@ export class ProcessInboundMessageCommandHandler
       return;
     }
 
-    // TODO: Validate the signature and the pk of the sender
+    // TODO: #649 - Validate the signature and the pk of the sender
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(
       command.id,
