@@ -9,7 +9,7 @@ export class MockBpiMessageStorageAgent {
   async getBpiMessageById(id: string): Promise<BpiMessage> {
     const bpiMessage = this.bpiMessagesStore.find((bp) => bp.id === id);
     if (!bpiMessage) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      return null;
     }
     return bpiMessage;
   }

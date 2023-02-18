@@ -1,8 +1,7 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessage } from '../models/bpiMessage';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class BpiMessageStorageAgent extends PrismaService {
     });
 
     if (!bpiMessageModel) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      return null;
     }
 
     return this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);

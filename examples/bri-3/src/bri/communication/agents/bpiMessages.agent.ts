@@ -43,7 +43,6 @@ export class BpiMessageAgent {
     const bpiMessageToUpdate: BpiMessage =
       await this.bpiMessageStorageAgent.getBpiMessageById(id);
 
-    // TODO: throw should not happen in the storage agent
     if (!bpiMessageToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
