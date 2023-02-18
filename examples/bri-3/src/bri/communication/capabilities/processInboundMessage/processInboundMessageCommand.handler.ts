@@ -1,6 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { LoggingService } from '../../../../shared/logging/logging.service';
-import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../../agents/messaging.agent';
@@ -32,20 +31,12 @@ export class ProcessInboundMessageCommandHandler
       return;
     }
 
-    let fromBpiSubject: BpiSubject;
-    let toBpiSubject: BpiSubject;
+    const [fromBpiSubject, toBpiSubject] =
+      await this.agent.getFromAndToSubjects(command.from, command.to);
 
-    // TODO: Use an agent method that does not throw in case of invalid from and to
-    // but instead returns false
-    try {
-      [fromBpiSubject, toBpiSubject] =
-        await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
-          command.from,
-          command.to,
-        );
-    } catch (e) {
+    if (!fromBpiSubject || !toBpiSubject) {
       this.logger.logError(
-        `ProcessInboundMessageCommandHandler: Exception: ${e} while processing inbound message`,
+        `ProcessInboundMessageCommandHandler: From and\or To Bpi Subjects do not exist.`,
       );
       return;
     }

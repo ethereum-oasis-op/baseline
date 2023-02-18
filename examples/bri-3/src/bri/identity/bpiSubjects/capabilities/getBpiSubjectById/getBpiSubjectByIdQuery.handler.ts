@@ -22,7 +22,7 @@ export class GetBpiSubjectByIdQueryHandler
 
     if (!bpiSubject) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    };
+    }
 
     return this.autoMapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
   }
