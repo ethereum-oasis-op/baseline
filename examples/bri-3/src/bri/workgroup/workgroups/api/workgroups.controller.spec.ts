@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
@@ -15,7 +15,10 @@ import { WorkgroupController } from './workgroups.controller';
 import { MockBpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import {
+  WORKGROUP_NOT_FOUND_ERR_MESSAGE,
+  WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE,
+} from './err.messages';
 import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
@@ -191,6 +194,20 @@ describe('WorkgroupsController', () => {
         await workgroupController.archiveWorkgroup(nonExistentId);
       }).rejects.toThrow(
         new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
+      );
+    });
+
+    it('should throw BadRequest if workgroupToArchive status is not active', async () => {
+      // Arrange
+      const newWorkgroupId = await createTestWorkgroup();
+
+      await workgroupController.archiveWorkgroup(newWorkgroupId);
+
+      // Act and assert
+      expect(async () => {
+        await workgroupController.archiveWorkgroup(newWorkgroupId);
+      }).rejects.toThrow(
+        new BadRequestException(WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE),
       );
     });
 
