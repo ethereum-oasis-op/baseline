@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
 import { Workflow } from '../../workflows/models/workflow';
 import { Workstep } from '../../worksteps/models/workstep';
@@ -64,6 +69,13 @@ export class WorkgroupAgent {
   }
 
   public archiveWorkgroup(workgroupToArchive: Workgroup) {
+    if (workgroupToArchive.status != WorkgroupStatus.ACTIVE) {
+      throw new HttpException(
+        { statusCode: 500, message: 'Internal Server Error' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
     workgroupToArchive.updateStatus(WorkgroupStatus.ARCHIVED);
   }
 
