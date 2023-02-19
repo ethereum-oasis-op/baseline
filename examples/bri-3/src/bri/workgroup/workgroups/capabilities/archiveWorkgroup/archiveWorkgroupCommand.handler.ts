@@ -20,6 +20,6 @@ export class ArchiveWorkgroupCommandHandler
 
     this.workgroupAgent.archiveWorkgroup(workgroupToArchive);
 
-    await this.workgroupStorageAgent.archiveWorkgroup(workgroupToArchive);
+    await this.workgroupStorageAgent.updateWorkgroup(workgroupToArchive);
   }
 }

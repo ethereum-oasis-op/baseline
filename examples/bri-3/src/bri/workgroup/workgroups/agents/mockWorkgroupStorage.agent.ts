@@ -39,14 +39,6 @@ export class MockWorkgroupStorageAgent {
     return Promise.resolve(wgToUpdate);
   }
 
-  async archiveWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
-    const wgToArchive = this.workgroupsStore.find(
-      (wg) => wg.id === workgroup.id,
-    );
-    Object.assign(wgToArchive, workgroup);
-    return Promise.resolve(wgToArchive);
-  }
-
   async deleteWorkgroup(workgroup: Workgroup): Promise<void> {
     const wgToDeleteIndex = this.workgroupsStore.findIndex(
       (wg) => wg.id === workgroup.id,
