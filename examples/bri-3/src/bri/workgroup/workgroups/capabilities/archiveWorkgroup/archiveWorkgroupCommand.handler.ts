@@ -14,7 +14,7 @@ export class ArchiveWorkgroupCommandHandler
 
   async execute(command: ArchiveWorkgroupCommand) {
     const workgroupToArchive =
-      await this.workgroupAgent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
+      await this.workgroupAgent.fetchArchiveCandidateAndThrowIfArchiveValidationFails(
         command.id,
       );
 

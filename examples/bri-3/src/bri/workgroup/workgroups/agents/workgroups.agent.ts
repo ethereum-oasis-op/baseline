@@ -1,6 +1,5 @@
 import {
-  HttpException,
-  HttpStatus,
+  BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,7 +10,10 @@ import { Workstep } from '../../worksteps/models/workstep';
 import { uuid } from 'uuidv4';
 import { Workgroup, WorkgroupStatus } from '../models/workgroup';
 import { WorkgroupStorageAgent } from './workgroupStorage.agent';
-import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import {
+  WORKGROUP_NOT_FOUND_ERR_MESSAGE,
+  WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE,
+} from '../api/err.messages';
 
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
@@ -68,14 +70,24 @@ export class WorkgroupAgent {
     workgroupToUpdate.updateParticipants(participants);
   }
 
-  public archiveWorkgroup(workgroupToArchive: Workgroup) {
-    if (workgroupToArchive.status != WorkgroupStatus.ACTIVE) {
-      throw new HttpException(
-        { statusCode: 500, message: 'Internal Server Error' },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+  public async fetchArchiveCandidateAndThrowIfArchiveValidationFails(
+    id: string,
+  ): Promise<Workgroup> {
+    const workgroupToArchive =
+      await this.workgroupStorageAgent.getWorkgroupById(id);
+
+    if (!workgroupToArchive) {
+      throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
     }
 
+    if (workgroupToArchive.status != WorkgroupStatus.ACTIVE) {
+      throw new BadRequestException(WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE);
+    }
+
+    return workgroupToArchive;
+  }
+
+  public archiveWorkgroup(workgroupToArchive: Workgroup) {
     workgroupToArchive.updateStatus(WorkgroupStatus.ARCHIVED);
   }
 
