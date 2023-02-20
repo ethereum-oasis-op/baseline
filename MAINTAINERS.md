@@ -18,13 +18,7 @@ They can/should also contribute in the following ways:
 
 Code and Systems maintainers
 
-- [Sam Stokes](https://github.com/bitwiseguy)
-- [Kartheek Solipuram](https://github.com/skarred14)
-- [Kyle Thomas](https://github.com/kthomas)
-- [Tomasz Stanczak](https://github.com/tkstanczak)
-- [Lucas Rodriguez Benitez](https://github.com/LucasRodriguez)
-- [Anais Ofranc](https://github.com/Consianimis)
-- [Hamza Tokuchi](https://github.com/Meuko) - [BlockLab](https://www.blocklab.nl/)
+Please see the [CODEOWNERS file](./.github/CODEOWNERS) in this repo for the most up to date list of Baseline maintainers
 
 # How to become a maintainer?
 
