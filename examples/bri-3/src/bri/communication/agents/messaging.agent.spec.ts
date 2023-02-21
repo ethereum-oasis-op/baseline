@@ -23,7 +23,7 @@ describe('Messaging Agent', () => {
     );
   });
 
-  it('Should return error when validating correct JSON raw message with invalid GUID in id field', () => {
+  it('Should return error when validating correct JSON raw message with invalid UUID in id field', () => {
     // Arrange
     const rawMessage =
       '{ "id": "pakakoto", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 0}';
@@ -37,7 +37,7 @@ describe('Messaging Agent', () => {
     expect(validationErrors[0]).toEqual('id pakakoto is not a valid UUID');
   });
 
-  it('Should return error when validating correct JSON raw message with invalid GUID in from field', () => {
+  it('Should return error when validating correct JSON raw message with invalid UUID in from field', () => {
     // Arrange
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "7123", "to": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 0}';
@@ -51,7 +51,7 @@ describe('Messaging Agent', () => {
     expect(validationErrors[0]).toEqual('from 7123 is not a valid UUID');
   });
 
-  it('Should return error when validating correct JSON raw message with invalid GUID in to field', () => {
+  it('Should return error when validating correct JSON raw message with invalid UUID in to field', () => {
     // Arrange
     const rawMessage =
       '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "from": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "to": "msm24", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 0}';
