@@ -122,8 +122,7 @@ describe('Messaging Agent', () => {
     expect(resultDto.id).toEqual('0a3dd67c-c031-4b50-95df-0bc5fc1c78b5');
     expect(resultDto.from).toEqual('71302cec-0a38-469a-a4e5-f58bdfc4ab32');
     expect(resultDto.to).toEqual('76cdd901-d87d-4c87-b572-155afe45c128');
-    // TODO: Find a fix for the escape character
-    // expect(resultDto.content).toEqual("{ \"testProp\": \"testValue\" }");
+    expect(resultDto.content).toEqual({ testProp: 'testValue' });
     expect(resultDto.signature).toEqual('xyz');
     expect(resultDto.type).toEqual(0);
   });
