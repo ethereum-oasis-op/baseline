@@ -34,7 +34,7 @@ describe('Messaging Agent', () => {
 
     // Assert
     expect(validationErrors.length).toBe(1);
-    expect(validationErrors[0]).toEqual('id pakakoto is not a valid UUID');
+    expect(validationErrors[0]).toEqual('id: pakakoto is not a valid UUID');
   });
 
   it('Should return error when validating correct JSON raw message with invalid UUID in from field', () => {
@@ -48,7 +48,7 @@ describe('Messaging Agent', () => {
 
     // Assert
     expect(validationErrors.length).toBe(1);
-    expect(validationErrors[0]).toEqual('from 7123 is not a valid UUID');
+    expect(validationErrors[0]).toEqual('from: 7123 is not a valid UUID');
   });
 
   it('Should return error when validating correct JSON raw message with invalid UUID in to field', () => {
@@ -62,7 +62,7 @@ describe('Messaging Agent', () => {
 
     // Assert
     expect(validationErrors.length).toBe(1);
-    expect(validationErrors[0]).toEqual('to msm24 is not a valid UUID');
+    expect(validationErrors[0]).toEqual('to: msm24 is not a valid UUID');
   });
 
   it('Should return error when validating correct JSON raw message with content field not valid JSON', () => {
@@ -104,7 +104,7 @@ describe('Messaging Agent', () => {
 
     // Assert
     expect(validationErrors.length).toBe(1);
-    expect(validationErrors[0]).toEqual('type is unknown 1');
+    expect(validationErrors[0]).toEqual('type: 1 is unknown');
   });
 
   it('Should return no errors and create message dto when validating correct JSON raw message', () => {
