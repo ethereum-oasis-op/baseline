@@ -71,15 +71,15 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     if (!validate(newBpiMessageCandidate.id)) {
-      errors.push(`id ${newBpiMessageCandidate.id} is not a valid UUID`);
+      errors.push(`id: ${newBpiMessageCandidate.id} is not a valid UUID`);
     }
 
     if (!validate(newBpiMessageCandidate.from)) {
-      errors.push(`from ${newBpiMessageCandidate.from} is not a valid UUID`);
+      errors.push(`from: ${newBpiMessageCandidate.from} is not a valid UUID`);
     }
 
     if (!validate(newBpiMessageCandidate.to)) {
-      errors.push(`to ${newBpiMessageCandidate.to} is not a valid UUID`);
+      errors.push(`to: ${newBpiMessageCandidate.to} is not a valid UUID`);
     }
 
     if (
@@ -99,7 +99,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     if (newBpiMessageCandidate.type !== BpiMessageType.Info) {
-      errors.push(`type is unknown ${newBpiMessageCandidate.type}`);
+      errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
     }
 
     return [newBpiMessageCandidate, errors];
