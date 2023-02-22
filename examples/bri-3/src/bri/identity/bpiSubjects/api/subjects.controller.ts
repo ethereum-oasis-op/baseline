@@ -6,10 +6,8 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { AbilityFactory } from '../../../authz/ability.factory';
 import { CreateBpiSubjectCommand } from '../capabilities/createBpiSubject/createBpiSubject.command';
 import { DeleteBpiSubjectCommand } from '../capabilities/deleteBpiSubject/deleteBpiSubject.command';
 import { GetAllBpiSubjectsQuery } from '../capabilities/getAllBpiSubjects/getAllBpiSubjects.query';
@@ -19,15 +17,10 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 import { CheckAuthz } from '../../../authz/guards/authz.decorator';
-import { AuthzGuard } from 'src/bri/authz/guards/authz.guard';
 
 @Controller('subjects')
 export class SubjectController {
-  constructor(
-    private commandBus: CommandBus,
-    private queryBus: QueryBus,
-    private abilityFactory: AbilityFactory,
-  ) {}
+  constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Get('/:id')
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
@@ -41,7 +34,6 @@ export class SubjectController {
 
   @Post()
   @CheckAuthz({ action: 'manage', subject: 'BpiSubject' })
-  @UseGuards(AuthzGuard)
   async createBpiSubject(
     @Body() requestDto: CreateBpiSubjectDto,
   ): Promise<string> {

@@ -1,4 +1,4 @@
-import { ForbiddenError } from '@casl/ability/dist/types/ForbiddenError';
+import { ForbiddenError } from '@casl/ability';
 import {
   CanActivate,
   ExecutionContext,
