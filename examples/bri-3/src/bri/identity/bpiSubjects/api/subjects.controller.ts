@@ -19,6 +19,7 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 import { ForbiddenError } from '@casl/ability';
+import { CheckAuthz } from '../../../authz/guards/authz.decorator';
 
 @Controller('subjects')
 export class SubjectController {
@@ -39,6 +40,7 @@ export class SubjectController {
   }
 
   @Post()
+  @CheckAuthz({ action: 'manage', subject: 'BpiSubject' })
   async createBpiSubject(
     @Req() req,
     @Body() requestDto: CreateBpiSubjectDto,
