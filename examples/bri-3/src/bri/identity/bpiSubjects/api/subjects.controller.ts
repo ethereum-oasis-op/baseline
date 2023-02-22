@@ -6,7 +6,7 @@ import {
   Param,
   Post,
   Put,
-  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { AbilityFactory } from '../../../authz/ability.factory';
@@ -18,8 +18,8 @@ import { UpdateBpiSubjectCommand } from '../capabilities/updateBpiSubject/update
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
-import { ForbiddenError } from '@casl/ability';
 import { CheckAuthz } from '../../../authz/guards/authz.decorator';
+import { AuthzGuard } from 'src/bri/authz/guards/authz.guard';
 
 @Controller('subjects')
 export class SubjectController {
@@ -41,15 +41,10 @@ export class SubjectController {
 
   @Post()
   @CheckAuthz({ action: 'manage', subject: 'BpiSubject' })
+  @UseGuards(AuthzGuard)
   async createBpiSubject(
-    @Req() req,
     @Body() requestDto: CreateBpiSubjectDto,
   ): Promise<string> {
-    // TODO: move to some sort of guard or decorator
-    const ability = this.abilityFactory.defineAbilityFor(req.bpiSubject);
-    // TODO: this is not returning 403 but 500 for some reason
-    ForbiddenError.from(ability).throwUnlessCan('manage', 'BpiSubject');
-
     return await this.commandBus.execute(
       new CreateBpiSubjectCommand(
         requestDto.name,
