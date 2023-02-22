@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workgroup } from '../models/workgroup';
 
@@ -17,7 +17,7 @@ export class MockWorkgroupStorageAgent {
 
   async createNewWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
     const createdWg = new Workgroup(
-      uuidv4(),
+      v4(),
       workgroup.name,
       workgroup.administrators,
       workgroup.securityPolicy,

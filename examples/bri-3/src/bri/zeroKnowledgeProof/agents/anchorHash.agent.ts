@@ -4,7 +4,7 @@ import {
   INVALID_ANCHOR_HASH_INPUT,
   INVALID_SIGNATURE,
 } from '../api/err.messages';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 import { AnchorHash } from '../models/anchorHash';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class AnchorHashAgent {
   ): AnchorHash {
     const hash = this.convertTextToHash(state);
 
-    return new AnchorHash(uuidv4(), ownerId, hash, signature);
+    return new AnchorHash(v4(), ownerId, hash, signature);
   }
 
   public verifyAnchorHash(

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Workstep } from '../../worksteps/models/workstep';
 import { Workflow } from '../models/workflow';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 import {
   WORKFLOW_NOT_FOUND_ERR_MESSAGE,
   WORKSTEP_NOT_FOUND_ERR_MESSAGE,
@@ -35,7 +35,7 @@ export class WorkflowAgent {
     worksteps: Workstep[],
     workgroupId: string,
   ): Workflow {
-    return new Workflow(uuidv4(), name, worksteps, workgroupId);
+    return new Workflow(v4(), name, worksteps, workgroupId);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
