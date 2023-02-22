@@ -17,7 +17,7 @@ import { SubjectsProfile } from '../subjects.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { AbilityFactory } from '../../../authz/ability.factory';
+import { AuthzFactory } from '../../../authz/authz.factory';
 import { AuthzModule } from '../../../authz/authz.module';
 
 describe('SubjectController', () => {
@@ -41,7 +41,7 @@ describe('SubjectController', () => {
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
         SubjectsProfile,
-        AbilityFactory,
+        AuthzFactory,
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)

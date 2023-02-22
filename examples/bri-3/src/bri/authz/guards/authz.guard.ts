@@ -6,14 +6,14 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AbilityFactory } from '../ability.factory';
+import { AuthzFactory } from '../authz.factory';
 import { CHECK_AUTHZ, IRequirement } from './authz.decorator';
 
 @Injectable()
 export class AuthzGuard implements CanActivate {
   constructor(
     private reflector: Reflector,
-    private abilityFactory: AbilityFactory,
+    private authzFactory: AuthzFactory,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -22,11 +22,11 @@ export class AuthzGuard implements CanActivate {
       [];
 
     const req = context.switchToHttp().getRequest();
-    const ability = this.abilityFactory.defineAbilityFor(req.bpiSubject);
+    const authz = this.authzFactory.buildAuthzFor(req.bpiSubject);
 
     try {
       for (const requirement of requirements) {
-        ForbiddenError.from(ability).throwUnlessCan(
+        ForbiddenError.from(authz).throwUnlessCan(
           requirement.action,
           requirement.subject,
         );
