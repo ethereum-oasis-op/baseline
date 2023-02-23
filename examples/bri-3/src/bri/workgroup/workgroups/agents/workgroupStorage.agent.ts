@@ -93,6 +93,7 @@ export class WorkgroupStorageAgent extends PrismaService {
         participants: {
           set: participantIds,
         },
+        status: workgroup.status,
       },
       include: {
         worksteps: true,

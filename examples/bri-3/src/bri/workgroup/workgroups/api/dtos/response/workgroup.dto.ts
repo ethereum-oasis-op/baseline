@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { BpiSubjectDto } from '../../../../../identity/bpiSubjects/api/dtos/response/bpiSubject.dto';
 import { WorkstepDto } from '../../../../../workgroup/worksteps/api/dtos/response/workstep.dto';
 import { WorkflowDto } from '../../../../../workgroup/workflows/api/dtos/response/workflow.dto';
+import { WorkgroupStatus } from '../../../models/workgroup';
 
 export class WorkgroupDto {
   @AutoMap()
@@ -27,4 +28,7 @@ export class WorkgroupDto {
 
   @AutoMap(() => [WorkflowDto])
   workflows: WorkflowDto[];
+
+  @AutoMap()
+  status: WorkgroupStatus;
 }

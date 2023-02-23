@@ -21,6 +21,7 @@ export class GetWorkgroupByIdQueryHandler
       participants: workgroup.participants,
       worksteps: workgroup.worksteps,
       workflows: workgroup.workflows,
+      status: workgroup.status,
     } as WorkgroupDto;
   }
 }
