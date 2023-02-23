@@ -137,7 +137,7 @@ describe('MessageController', () => {
     it('should throw BadRequest if existing bpi message id provided in id field', () => {
       // Arrange
       const requestDto = {
-        id: 'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
+        id: existingBpiMessage1.id,
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
