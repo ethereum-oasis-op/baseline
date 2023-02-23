@@ -74,9 +74,7 @@ export class BpiMessageAgent {
     );
 
     if (!fromBpiSubject) {
-      this.logger.logError(
-        `BpiMessageAgent: From Bpi Subjects do not exist.`,
-      );
+      this.logger.logError(`BpiMessageAgent: From Bpi Subjects do not exist.`);
 
       return [false, null, null];
     }
@@ -86,9 +84,7 @@ export class BpiMessageAgent {
     );
 
     if (!fromBpiSubject) {
-      this.logger.logError(
-        `BpiMessageAgent: To Bpi Subject do not exist.`,
-      );
+      this.logger.logError(`BpiMessageAgent: To Bpi Subject do not exist.`);
 
       return [false, null, null];
     }
