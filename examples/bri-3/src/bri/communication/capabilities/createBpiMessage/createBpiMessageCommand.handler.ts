@@ -15,12 +15,15 @@ export class CreateBpiMessageCommandHandler
   ) {}
 
   async execute(command: CreateBpiMessageCommand) {
-    const [fromBpiSubject, toBpiSubject] =
-      await this.agent.validateNewBpiMessageAgainstExistingBpiEntitiesWithThrow(
-        command.id,
-        command.from,
-        command.to,
-      );
+    await this.agent.throwIfBpiMessageIdExists(command.id);
+
+    const fromBpiSubject = await this.agent.fetchBpiSubjectAndThrowIfNotExists(
+      command.from,
+    );
+
+    const toBpiSubject = await this.agent.fetchBpiSubjectAndThrowIfNotExists(
+      command.to,
+    );
 
     // TODO: #649 - Validate the signature and the pk of the sender
 

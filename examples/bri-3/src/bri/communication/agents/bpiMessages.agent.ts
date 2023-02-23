@@ -22,35 +22,27 @@ export class BpiMessageAgent {
     private readonly logger: LoggingService,
   ) {}
 
-  public async validateNewBpiMessageAgainstExistingBpiEntitiesWithThrow(
-    messageId: string,
-    fromBpiSubjectId: string,
-    toBpiSubjectId: string,
-  ): Promise<[BpiSubject, BpiSubject]> {
+  public async throwIfBpiMessageIdExists(messageId: string) {
     const existingBpiMessage =
       await this.bpiMessageStorageAgent.getBpiMessageById(messageId);
 
     if (existingBpiMessage) {
       throw new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS(messageId));
     }
+  }
 
-    const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
-      fromBpiSubjectId,
+  public async fetchBpiSubjectAndThrowIfNotExists(
+    bpiSubjectId: string,
+  ): Promise<BpiSubject> {
+    const bpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
+      bpiSubjectId,
     );
 
-    if (!fromBpiSubject) {
+    if (!bpiSubject) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
-      toBpiSubjectId,
-    );
-
-    if (!toBpiSubject) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    }
-
-    return [fromBpiSubject, toBpiSubject];
+    return bpiSubject;
   }
 
   public async validateNewBpiMessageAgainstExistingBpiEntities(

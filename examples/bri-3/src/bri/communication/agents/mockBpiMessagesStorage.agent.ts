@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { Injectable } from '@nestjs/common';
 import { BpiMessage } from '../models/bpiMessage';
 
 @Injectable()
