@@ -1,20 +1,24 @@
 import { AutoMap } from '@automapper/classes';
+import { MerkleTree } from '../../zeroKnowledgeProof/services/merkleTree/merkleTree';
 
 export class StateObject {
   @AutoMap()
-  id: string; // TODO: Add uuid after #491
+  id: string;
 
   @AutoMap()
-  proof: string;
+  curve: string;
 
   @AutoMap()
-  document: string;
+  hashFunction: string;
 
   @AutoMap()
   proverSystem: string;
 
   @AutoMap()
-  storage: string;
+  Witness: MerkleProofWitness;
+
+  @AutoMap()
+  stateTrie: MerkleTree;
 
   constructor(
     id: string,
@@ -24,9 +28,9 @@ export class StateObject {
     storage: string,
   ) {
     this.id = id;
-    this.proof = proof;
-    this.document = document;
+    this.curve = proof;
+    this.hashFunction = document;
     this.proverSystem = proverSystem;
-    this.storage = storage;
+    this.Witness = storage;
   }
 }
