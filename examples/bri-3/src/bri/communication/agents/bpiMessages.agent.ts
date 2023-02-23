@@ -45,11 +45,7 @@ export class BpiMessageAgent {
     return bpiSubject;
   }
 
-  public async validateNewBpiMessageAgainstExistingBpiEntities(
-    messageId: string,
-    fromBpiSubjectId: string,
-    toBpiSubjectId: string,
-  ): Promise<[boolean, BpiSubject, BpiSubject]> {
+  public async bpiMessageIdAlreadyExists(messageId: string): Promise<boolean> {
     const existingBpiMessage =
       await this.bpiMessageStorageAgent.getBpiMessageById(messageId);
 
@@ -58,30 +54,35 @@ export class BpiMessageAgent {
         `BpiMessageAgent: BPI Message with id: ${existingBpiMessage.id} already exists.`,
       );
 
-      return [false, null, null];
+      return true;
     }
 
+    return false;
+  }
+
+  public async fetchFromAndToBpiSubjects(
+    fromBpiSubjectId: string,
+    toBpiSubjectId: string,
+  ): Promise<[BpiSubject, BpiSubject]> {
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
 
     if (!fromBpiSubject) {
       this.logger.logError(`BpiMessageAgent: From Bpi Subjects do not exist.`);
-
-      return [false, null, null];
+      return [null, null];
     }
 
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       toBpiSubjectId,
     );
 
-    if (!fromBpiSubject) {
+    if (!toBpiSubject) {
       this.logger.logError(`BpiMessageAgent: To Bpi Subject do not exist.`);
-
-      return [false, null, null];
+      return [null, null];
     }
 
-    return [true, fromBpiSubject, toBpiSubject];
+    return [fromBpiSubject, toBpiSubject];
   }
 
   public createNewBpiMessage(

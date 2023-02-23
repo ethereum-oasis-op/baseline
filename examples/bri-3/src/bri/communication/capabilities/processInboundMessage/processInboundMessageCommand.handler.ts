@@ -18,14 +18,14 @@ export class ProcessInboundMessageCommandHandler
   ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
-    const [isValid, fromBpiSubject, toBpiSubject] =
-      await this.agent.validateNewBpiMessageAgainstExistingBpiEntities(
-        command.id,
-        command.from,
-        command.to,
-      );
+    if (this.agent.bpiMessageIdAlreadyExists(command.id)) {
+      return;
+    }
 
-    if (!isValid) {
+    const [fromBpiSubject, toBpiSubject] =
+      await this.agent.fetchFromAndToBpiSubjects(command.from, command.to);
+
+    if (!fromBpiSubject || !toBpiSubject) {
       return;
     }
 
