@@ -35,7 +35,7 @@ describe('MessageController', () => {
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let existingBpiSubject1: BpiSubject;
   let existingBpiSubject2: BpiSubject;
-  let existingBpiMessage1: BpiMessage;
+  let existingBpiMessage: BpiMessage;
 
   beforeEach(async () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
@@ -47,7 +47,7 @@ describe('MessageController', () => {
       new BpiSubject('', 'name2', 'desc2', 'xyz2', []),
     );
 
-    existingBpiMessage1 = await mockBpiMessageStorageAgent.storeNewBpiMessage(
+    existingBpiMessage = await mockBpiMessageStorageAgent.storeNewBpiMessage(
       new BpiMessage(
         'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
         existingBpiSubject1,
@@ -137,7 +137,7 @@ describe('MessageController', () => {
     it('should throw BadRequest if existing bpi message id provided in id field', () => {
       // Arrange
       const requestDto = {
-        id: existingBpiMessage1.id,
+        id: existingBpiMessage.id,
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
