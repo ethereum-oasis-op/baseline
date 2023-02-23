@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { MerkleTree } from '../../zeroKnowledgeProof/services/merkleTree/merkleTree';
+import { MerkleProofWitness } from './merkleProofWItness';
 
 export class StateObject {
   @AutoMap()
@@ -15,7 +16,7 @@ export class StateObject {
   proverSystem: string;
 
   @AutoMap()
-  Witness: MerkleProofWitness;
+  witness: MerkleProofWitness;
 
   @AutoMap()
   stateTrie: MerkleTree;
@@ -25,12 +26,12 @@ export class StateObject {
     proof: string,
     document: string,
     proverSystem: string,
-    storage: string,
+    witness: MerkleProofWitness,
   ) {
     this.id = id;
     this.curve = proof;
     this.hashFunction = document;
     this.proverSystem = proverSystem;
-    this.Witness = storage;
+    this.witness = witness;
   }
 }

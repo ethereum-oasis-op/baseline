@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
+import { Leaf } from './leaf';
 
-export class StateObject {
+export class MerkleProofWitness {
   @AutoMap()
   id: string;
 
