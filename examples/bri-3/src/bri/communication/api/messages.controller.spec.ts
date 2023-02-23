@@ -148,7 +148,9 @@ describe('MessageController', () => {
       // Act and assert
       expect(async () => {
         await mController.createBpiMessage(requestDto);
-      }).rejects.toThrow(new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS));
+      }).rejects.toThrow(
+        new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS(requestDto.id)),
+      );
     });
 
     it('should throw BadRequest non existent bpi subject id provided in from field', () => {

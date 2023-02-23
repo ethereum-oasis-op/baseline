@@ -31,7 +31,7 @@ export class BpiMessageAgent {
       await this.bpiMessageStorageAgent.getBpiMessageById(messageId);
 
     if (existingBpiMessage) {
-      throw new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS);
+      throw new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS(messageId));
     }
 
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
