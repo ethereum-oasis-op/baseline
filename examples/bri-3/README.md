@@ -86,7 +86,7 @@ Run the following commands in the terminal:
 $ nats context add local --description "Localhost" # adds localhost server to nats cli
 
 $ nats pub general "<message>" # publishes new message on the general subject
-# Example message format: "{ \"id\": \"0a3dd67c-c031-4b50-95df-0bc5fc1c78b5\", \"from\": \"71302cec-0a38-469a-a4e5-f58bdfc4ab32\", \"to\": \"76cdd901-d87d-4c87-b572-155afe45c128\", \"content\": { \"testProp\":\"testValue\" }, \"signature\": \"xyz\", \"type\": 0}"
+# Example message format: "{ \"id\": \"0a3dd67c-c031-4b50-95df-0bc5fc1c78b5\", \"fromBpiSubjectId\": \"71302cec-0a38-469a-a4e5-f58bdfc4ab32\", \"toBpiSubjectId\": \"76cdd901-d87d-4c87-b572-155afe45c128\", \"content\": { \"testProp\":\"testValue\" }, \"signature\": \"xyz\", \"type\": 0}"
 
 ```
 Observe the log messages in the terminal where the app is running.

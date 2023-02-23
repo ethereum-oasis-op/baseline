@@ -4,7 +4,6 @@ import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { validate } from 'uuid';
 import { LoggingService } from '../../../shared/logging/logging.service';
-import { CreateBpiMessageDto } from '../api/dtos/request/createBpiMessage.dto';
 import { BpiMessageDto } from '../api/dtos/response/bpiMessage.dto';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
@@ -56,8 +55,8 @@ export class MessagingAgent implements OnApplicationBootstrap {
     await this.commandBus.execute(
       new ProcessInboundBpiMessageCommand(
         newBpiMessageCandidate.id,
-        newBpiMessageCandidate.from,
-        newBpiMessageCandidate.to,
+        newBpiMessageCandidate.fromBpiSubjectId,
+        newBpiMessageCandidate.toBpiSubjectId,
         JSON.stringify(newBpiMessageCandidate.content),
         newBpiMessageCandidate.signature,
         newBpiMessageCandidate.type,
@@ -67,9 +66,9 @@ export class MessagingAgent implements OnApplicationBootstrap {
 
   public tryDeserializeToBpiMessageCandidate(
     rawMessage: string,
-  ): [CreateBpiMessageDto, string[]] {
+  ): [BpiMessage, string[]] {
     const errors: string[] = [];
-    let newBpiMessageCandidate: CreateBpiMessageDto; // TODO: Switch to BpiMessage instead of DTO
+    let newBpiMessageCandidate: BpiMessage;
 
     try {
       newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
@@ -82,12 +81,16 @@ export class MessagingAgent implements OnApplicationBootstrap {
       errors.push(`id: ${newBpiMessageCandidate.id} is not a valid UUID`);
     }
 
-    if (!validate(newBpiMessageCandidate.from)) {
-      errors.push(`from: ${newBpiMessageCandidate.from} is not a valid UUID`);
+    if (!validate(newBpiMessageCandidate.fromBpiSubjectId)) {
+      errors.push(
+        `from: ${newBpiMessageCandidate.fromBpiSubjectId} is not a valid UUID`,
+      );
     }
 
-    if (!validate(newBpiMessageCandidate.to)) {
-      errors.push(`to: ${newBpiMessageCandidate.to} is not a valid UUID`);
+    if (!validate(newBpiMessageCandidate.toBpiSubjectId)) {
+      errors.push(
+        `to: ${newBpiMessageCandidate.toBpiSubjectId} is not a valid UUID`,
+      );
     }
 
     if (
