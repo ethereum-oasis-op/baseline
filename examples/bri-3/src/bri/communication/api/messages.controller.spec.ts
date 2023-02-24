@@ -21,6 +21,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { CommunicationProfile } from '../communicaton.profile';
 import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
+import { TEST_VALUES } from 'src/bri/shared/constants';
 
 describe('MessageController', () => {
   let mController: MessageController;
@@ -33,7 +34,13 @@ describe('MessageController', () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name', 'desc', BpiSubjectType.External, 'xyz'),
+      new BpiSubject(
+        '',
+        TEST_VALUES.name,
+        TEST_VALUES.description,
+        BpiSubjectType.External,
+        TEST_VALUES.publicKey,
+      ),
     );
     existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
       new BpiSubject('', 'name2', 'desc2', BpiSubjectType.External, 'xyz2'),
@@ -73,7 +80,7 @@ describe('MessageController', () => {
   describe('getBpiMessageById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -84,11 +91,11 @@ describe('MessageController', () => {
     it('should return the correct bpi subject if proper id passed ', async () => {
       // Arrange
       const requestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature: 'xyz',
+        content: TEST_VALUES.content,
+        signature: TEST_VALUES.signature,
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -111,11 +118,11 @@ describe('MessageController', () => {
     it('should throw BadRequest non existent bpi subject id provided in from field', () => {
       // Arrange
       const requestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         from: 'nonexistent',
         to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature: 'xyz',
+        content: TEST_VALUES.content,
+        signature: TEST_VALUES.signature,
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -130,11 +137,11 @@ describe('MessageController', () => {
     it('should return new uuid from the created bpi subject when all params provided', async () => {
       // Arrange
       const requestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature: 'xyz',
+        content: TEST_VALUES.content,
+        signature: TEST_VALUES.signature,
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -149,11 +156,11 @@ describe('MessageController', () => {
   describe('updateBpiMessage', () => {
     it('should throw NotFound if non existent id passed', async () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       const requestDto = {
-        content: 'this is content',
-        signature: 'xyz',
+        content: TEST_VALUES.content,
+        signature: TEST_VALUES.signature,
       } as UpdateBpiMessageDto;
 
       // Act and assert
@@ -165,11 +172,11 @@ describe('MessageController', () => {
     it('should perform the update if existing id passed', async () => {
       // Arrange
       const createRequestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature: 'xyz',
+        content: TEST_VALUES.content,
+        signature: TEST_VALUES.signature,
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -178,8 +185,8 @@ describe('MessageController', () => {
       );
 
       const updateRequestDto = {
-        content: 'this is content2',
-        signature: 'xyz2',
+        content: TEST_VALUES.content2,
+        signature: TEST_VALUES.signature2,
       } as UpdateBpiMessageDto;
 
       // Act
@@ -199,7 +206,7 @@ describe('MessageController', () => {
   describe('deleteBpiMessage', () => {
     it('should throw NotFound if non existent id passed', async () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await mController.deleteBpiMessage(nonExistentId);
@@ -209,11 +216,11 @@ describe('MessageController', () => {
     it('should perform the delete if existing id passed', async () => {
       // Arrange
       const createRequestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature: 'xyz',
+        content: TEST_VALUES.content,
+        signature: TEST_VALUES.signature,
         type: 1,
       } as CreateBpiMessageDto;
 
