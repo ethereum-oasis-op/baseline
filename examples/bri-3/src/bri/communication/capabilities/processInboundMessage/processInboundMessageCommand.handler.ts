@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { AuthAgent } from '../../../auth/agent/auth.agent';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../../agents/messaging.agent';
@@ -15,6 +16,7 @@ export class ProcessInboundMessageCommandHandler
     private readonly agent: BpiMessageAgent,
     private readonly storageAgent: BpiMessageStorageAgent,
     private readonly messagingAgent: MessagingAgent,
+    private readonly authAgent: AuthAgent,
   ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
@@ -29,7 +31,15 @@ export class ProcessInboundMessageCommandHandler
       return;
     }
 
-    // TODO: #649 - Validate the signature and the pk of the sender
+    const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
+      command.content,
+      command.signature,
+      fromBpiSubject.publicKey,
+    );
+
+    if (!isSignatureValid) {
+      return;
+    }
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(
       command.id,

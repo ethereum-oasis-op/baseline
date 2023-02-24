@@ -5,27 +5,43 @@ import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectStorageAgent } from '../../../bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { createJWT, ES256KSigner, hexToBytes } from 'did-jwt';
 import { errorMessage, jwtConstants } from '../constants';
+import { LoggingService } from 'src/shared/logging/logging.service';
 
 @Injectable()
 export class AuthAgent {
   constructor(
     private readonly bpiSubjectStorageAgent: BpiSubjectStorageAgent,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
+    private readonly logger: LoggingService,
   ) {}
 
   throwIfSignatureVerificationFails(
     message: string,
     signature: string,
     publicKey: string,
-  ) {
+  ): void {
+    if (!this.verifySignatureAgainstPublicKey(message, signature, publicKey)) {
+      throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+    }
+  }
+
+  verifySignatureAgainstPublicKey(
+    message: string,
+    signature: string,
+    publicKey: string,
+  ): boolean {
     const publicKeyFromSignature = ethers.utils.verifyMessage(
       message,
       signature,
     );
 
-    if (publicKeyFromSignature.toLowerCase() !== publicKey) {
-      throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+    const isValid = publicKeyFromSignature.toLowerCase() === publicKey;
+
+    if (!isValid) {
+      this.logger.logWarn(`Signature: ${signature} invalid.`);
     }
+
+    return isValid;
   }
 
   async getBpiSubjectByPublicKey(publicKey: string) {
