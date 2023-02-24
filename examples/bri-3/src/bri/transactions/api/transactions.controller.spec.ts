@@ -24,6 +24,7 @@ import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiS
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { TEST_VALUES } from 'src/bri/shared/constants';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -34,9 +35,9 @@ describe('TransactionController', () => {
     const ownerBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
         new BpiSubject(
-          '123',
+          TEST_VALUES.id,
           'owner',
-          'desc',
+          TEST_VALUES.description,
           BpiSubjectType.External,
           'publicKey',
         ),
@@ -46,7 +47,7 @@ describe('TransactionController', () => {
         new BpiSubject(
           '321',
           'creator',
-          'desc',
+          TEST_VALUES.description,
           BpiSubjectType.External,
           'publicKey',
         ),
@@ -106,7 +107,7 @@ describe('TransactionController', () => {
   describe('getTransactionById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -116,11 +117,13 @@ describe('TransactionController', () => {
 
     it('should return the correct transaction if proper id passed ', async () => {
       // Arrange
-      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const fromBpiSubjectAccount = await createBpiSubjectAccount(
+        TEST_VALUES.id,
+      );
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
       const requestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
@@ -160,11 +163,13 @@ describe('TransactionController', () => {
   describe('createTransaction', () => {
     it('should return new id from the created transaction when all params provided', async () => {
       // Arrange
-      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const fromBpiSubjectAccount = await createBpiSubjectAccount(
+        TEST_VALUES.id,
+      );
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
       const requestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
@@ -185,7 +190,7 @@ describe('TransactionController', () => {
   describe('updateTransaction', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       const requestDto = {
         payload: 'payload2',
         signature: 'signature2',
@@ -199,11 +204,13 @@ describe('TransactionController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const fromBpiSubjectAccount = await createBpiSubjectAccount(
+        TEST_VALUES.id,
+      );
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
       const createRequestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
@@ -236,7 +243,7 @@ describe('TransactionController', () => {
   describe('deleteTransaction', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await controller.deleteTransaction(nonExistentId);
@@ -245,11 +252,13 @@ describe('TransactionController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
+      const fromBpiSubjectAccount = await createBpiSubjectAccount(
+        TEST_VALUES.id,
+      );
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
       const createRequestDto = {
-        id: '123',
+        id: TEST_VALUES.id,
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
