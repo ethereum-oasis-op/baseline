@@ -23,6 +23,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { WorkflowProfile } from '../workflow.profile';
 import { WorkstepProfile } from '../../worksteps/workstep.profile';
+import { TEST_VALUES } from 'src/bri/shared/constants';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
@@ -37,8 +38,8 @@ describe('WorkflowsController', () => {
 
   const createTestWorkstep = async () => {
     const newWorkstep = new Workstep(
-      '123',
-      'name',
+      TEST_VALUES.id,
+      TEST_VALUES.name,
       'version',
       'status',
       'wgid',
@@ -93,7 +94,7 @@ describe('WorkflowsController', () => {
   describe('getWorkflowById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -178,7 +179,7 @@ describe('WorkflowsController', () => {
   describe('updateWorkflow', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       const requestDto: UpdateWorkflowDto = {
         name: 'name1',
         workstepIds: ['worsktep1'],
@@ -221,7 +222,7 @@ describe('WorkflowsController', () => {
   describe('deleteWorkflow', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await workflowController.deleteWorkflow(nonExistentId);
