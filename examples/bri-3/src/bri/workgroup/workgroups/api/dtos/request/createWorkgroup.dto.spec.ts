@@ -6,8 +6,8 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case name not provided.', async () => {
     // Arrange
     const dto = {
-      securityPolicy: 'sec',
-      privacyPolicy: 'priv',
+      securityPolicy: TEST_VALUES.securityPolicy,
+      privacyPolicy: TEST_VALUES.privacyPolicy,
       worksteps: [],
       workflows: [],
     };
@@ -18,7 +18,7 @@ describe('CreateWorkgroupDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('name');
+    expect(errors[0].property).toEqual(TEST_VALUES.name);
     expect(errors[0].constraints.isNotEmpty).toContain(
       'name should not be empty',
     );
@@ -27,8 +27,8 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case securityPolicy not provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
-      privacyPolicy: 'priv',
+      name: [TEST_VALUES.name],
+      privacyPolicy: TEST_VALUES.privacyPolicy,
       worksteps: [],
       workflows: [],
     };
@@ -48,8 +48,8 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case privacyPolicy not provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
-      securityPolicy: 'sec',
+      name: [TEST_VALUES.name],
+      securityPolicy: TEST_VALUES.securityPolicy,
       worksteps: [],
       workflows: [],
     };
@@ -69,9 +69,9 @@ describe('CreateWorkgroupDto', () => {
   it('should return no error if all required properties provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
-      privacyPolicy: 'priv',
-      securityPolicy: 'sec',
+      name: [TEST_VALUES.name],
+      privacyPolicy: TEST_VALUES.privacyPolicy,
+      securityPolicy: TEST_VALUES.securityPolicy,
       worksteps: [],
       workflows: [],
     };
