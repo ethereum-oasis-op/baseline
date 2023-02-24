@@ -53,7 +53,7 @@ describe('SubjectController', () => {
   describe('getBpiSubjectById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -64,8 +64,8 @@ describe('SubjectController', () => {
     it('should return the correct bpi subject if proper id passed ', async () => {
       // Arrange
       const requestDto = {
-        name: 'name',
-        desc: 'desc',
+        name: TEST_VALUES.name,
+        desc: TEST_VALUES.description,
         publicKey: 'publicKey',
       } as CreateBpiSubjectDto;
 
@@ -129,7 +129,7 @@ describe('SubjectController', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
       const requestDto = {
-        desc: 'desc',
+        desc: TEST_VALUES.description,
         publicKey: 'publicKey',
       } as CreateBpiSubjectDto;
 
@@ -142,8 +142,8 @@ describe('SubjectController', () => {
     it('should return new uuid from the created bpi subject when all params provided', async () => {
       // Arrange
       const requestDto = {
-        name: 'name',
-        desc: 'desc',
+        name: TEST_VALUES.name,
+        desc: TEST_VALUES.description,
         publicKey: 'publicKey',
       } as CreateBpiSubjectDto;
 
@@ -159,10 +159,10 @@ describe('SubjectController', () => {
   describe('updateBpiSubject', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       const requestDto = {
-        name: 'name',
-        desc: 'desc',
+        name: TEST_VALUES.name,
+        desc: TEST_VALUES.description,
         publicKey: 'publicKey',
       } as UpdateBpiSubjectDto;
 
@@ -206,7 +206,7 @@ describe('SubjectController', () => {
   describe('deleteBpiSubject', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await sController.deleteBpiSubject(nonExistentId);
