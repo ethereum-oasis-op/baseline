@@ -28,6 +28,7 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
 import { SubjectAccountsProfile } from '../../bpiSubjectAccounts/subjectAccounts.profile';
+import { TEST_VALUES } from 'src/bri/shared/constants';
 
 describe('AccountController', () => {
   let accountController: AccountController;
@@ -79,25 +80,25 @@ describe('AccountController', () => {
     const ownerBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
         new BpiSubject(
-          '123',
-          'owner',
-          'desc',
+          TEST_VALUES.ownerId,
+          TEST_VALUES.ownerName,
+          TEST_VALUES.description,
           BpiSubjectType.External,
-          'publicKey',
+          TEST_VALUES.publicKey,
         ),
       );
     const creatorBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
         new BpiSubject(
-          '321',
-          'creator',
-          'desc',
+          TEST_VALUES.creatorId,
+          TEST_VALUES.creatorName,
+          TEST_VALUES.description,
           BpiSubjectType.External,
-          'publicKey',
+          TEST_VALUES.publicKey,
         ),
       );
     const bpiSubjectAccount = new BpiSubjectAccount(
-      '123',
+      TEST_VALUES.id,
       creatorBpiSubject,
       ownerBpiSubject,
       'sample policy',
@@ -122,7 +123,7 @@ describe('AccountController', () => {
   describe('getBpiAccountById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -212,7 +213,7 @@ describe('AccountController', () => {
     it('should throw BadRequest if non existent owner provided', async () => {
       // Arrange
       const requestDto = {
-        ownerBpiSubjectAccountsIds: ['123'],
+        ownerBpiSubjectAccountsIds: [TEST_VALUES.id],
       } as CreateBpiAccountDto;
 
       // Act and assert
@@ -237,7 +238,7 @@ describe('AccountController', () => {
   describe('deleteBpiAccount', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await accountController.deleteBpiAccount(nonExistentId);
