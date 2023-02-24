@@ -21,6 +21,7 @@ import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
+import { TEST_VALUES } from '../../../shared/constants';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -28,20 +29,20 @@ describe('WorkgroupsController', () => {
   let mockWorkgroupStorageAgent: MockWorkgroupStorageAgent;
 
   const workgroupRequestDto = {
-    name: 'name',
-    securityPolicy: 'sec',
-    privacyPolicy: 'priv',
+    name: TEST_VALUES.name,
+    securityPolicy: TEST_VALUES.securityPolicy,
+    privacyPolicy: TEST_VALUES.privacyPolicy,
     workstepIds: [],
     workflowIds: [],
   } as CreateWorkgroupDto;
 
   const createTestBpiSubject = async () => {
     const newBpiSubject = new BpiSubject(
-      '123',
-      'name',
-      'desc',
+      TEST_VALUES.id,
+      TEST_VALUES.name,
+      TEST_VALUES.description,
       BpiSubjectType.External,
-      'pubkey',
+      TEST_VALUES.publicKey,
     );
     return await mockBpiSubjectStorageAgent.createNewBpiSubject(newBpiSubject);
   };
@@ -50,7 +51,7 @@ describe('WorkgroupsController', () => {
     await createTestBpiSubject();
     const workgroupId = await workgroupController.createWorkgroup(
       workgroupRequestDto,
-      'pubkey',
+      TEST_VALUES.publicKey,
     );
     return workgroupId;
   };
@@ -91,7 +92,7 @@ describe('WorkgroupsController', () => {
   describe('getWorkgroupById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -133,14 +134,14 @@ describe('WorkgroupsController', () => {
   describe('updateWorkgroup', () => {
     it('should throw NotFound if non existent id passed', async () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       const newBpiSubject = await createTestBpiSubject();
 
       const requestDto: UpdateWorkgroupDto = {
-        name: 'name',
+        name: TEST_VALUES.name,
         administratorIds: [newBpiSubject.id],
-        securityPolicy: 'sec',
-        privacyPolicy: 'priv',
+        securityPolicy: TEST_VALUES.securityPolicy,
+        privacyPolicy: TEST_VALUES.privacyPolicy,
         participantIds: [newBpiSubject.id],
       };
 
@@ -157,10 +158,10 @@ describe('WorkgroupsController', () => {
       const newBpiSubject = await createTestBpiSubject();
       const newWorkgroupId = await createTestWorkgroup();
       const updateRequestDto: UpdateWorkgroupDto = {
-        name: 'name',
+        name: TEST_VALUES.name,
         administratorIds: [newBpiSubject.id],
-        securityPolicy: 'sec',
-        privacyPolicy: 'priv',
+        securityPolicy: TEST_VALUES.securityPolicy,
+        privacyPolicy: TEST_VALUES.privacyPolicy,
         participantIds: [newBpiSubject.id],
       };
 
@@ -188,7 +189,7 @@ describe('WorkgroupsController', () => {
   describe('deleteWorkgroup', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await workgroupController.deleteWorkgroup(nonExistentId);
