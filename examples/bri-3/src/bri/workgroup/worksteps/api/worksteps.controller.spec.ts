@@ -24,7 +24,7 @@ describe('WorkstepController', () => {
   let mapper: Mapper;
 
   const requestDto = {
-    name: 'name',
+    name: TEST_VALUES.name,
     version: 'version',
     status: 'status',
     workgroupId: 'wgid',
@@ -69,7 +69,7 @@ describe('WorkstepController', () => {
   describe('getWorkstepById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -159,9 +159,9 @@ describe('WorkstepController', () => {
   describe('updateWorkstep', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       const requestDto: UpdateWorkstepDto = {
-        name: 'name',
+        name: TEST_VALUES.name,
         version: 'version',
         status: 'status',
         workgroupId: 'wgid',
@@ -209,7 +209,7 @@ describe('WorkstepController', () => {
   describe('deleteWorkstep', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await wController.deleteWorkstep(nonExistentId);
