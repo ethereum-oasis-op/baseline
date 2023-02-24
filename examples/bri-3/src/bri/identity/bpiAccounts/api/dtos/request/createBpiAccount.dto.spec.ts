@@ -23,7 +23,7 @@ describe('CreateBpiAccountDto', () => {
   it('should return no error if all required properties provided.', async () => {
     // Arrange
     const dto = {
-      ownerBpiSubjectAccountsIds: ['123'],
+      ownerBpiSubjectAccountsIds: [TEST_VALUES.id],
     };
     const createBpiAccountDto = plainToInstance(CreateBpiAccountDto, dto);
 
