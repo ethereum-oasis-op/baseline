@@ -1,6 +1,7 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { UpdateWorkflowDto } from './updateWorkflow.dto';
+import { TEST_VALUES } from 'src/bri/shared/constants';
 
 describe('UpdateWorkflowDto', () => {
   it('should return error in case name not provided.', async () => {
@@ -13,7 +14,7 @@ describe('UpdateWorkflowDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('name');
+    expect(errors[0].property).toEqual(TEST_VALUES.name);
     expect(errors[0].constraints.isNotEmpty).toContain(
       'name should not be empty',
     );
