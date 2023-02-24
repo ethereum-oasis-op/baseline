@@ -1,9 +1,6 @@
 import * as crypto from 'crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import {
-  INVALID_ANCHOR_HASH_INPUT,
-  INVALID_SIGNATURE,
-} from '../api/err.messages';
+import { INVALID_ANCHOR_HASH_INPUT } from '../api/err.messages';
 import { v4 } from 'uuid';
 import { AnchorHash } from '../models/anchorHash';
 
