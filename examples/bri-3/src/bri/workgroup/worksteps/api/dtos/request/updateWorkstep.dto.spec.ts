@@ -14,7 +14,7 @@ describe('UpdateWorkstepDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('name');
+    expect(errors[0].property).toEqual(TEST_VALUES.name);
     expect(errors[0].constraints.isNotEmpty).toContain(
       'name ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
