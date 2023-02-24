@@ -7,8 +7,8 @@ describe('CreateWorkgroupDto', () => {
     // Arrange
     const dto = {
       administratorIds: ['1'],
-      securityPolicy: 'sec',
-      privacyPolicy: 'priv',
+      securityPolicy: TEST_VALUES.securityPolicy,
+      privacyPolicy: TEST_VALUES.privacyPolicy,
       participantIds: ['subject'],
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
@@ -18,7 +18,7 @@ describe('CreateWorkgroupDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('name');
+    expect(errors[0].property).toEqual(TEST_VALUES.name);
     expect(errors[0].constraints.isNotEmpty).toContain(
       'name should not be empty',
     );
@@ -27,9 +27,9 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case administrators not provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
-      securityPolicy: 'sec',
-      privacyPolicy: 'priv',
+      name: [TEST_VALUES.name],
+      securityPolicy: TEST_VALUES.securityPolicy,
+      privacyPolicy: TEST_VALUES.privacyPolicy,
       participantIds: ['subject'],
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
@@ -48,9 +48,9 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case securityPolicy not provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
+      name: [TEST_VALUES.name],
       administratorIds: ['1'],
-      privacyPolicy: 'priv',
+      privacyPolicy: TEST_VALUES.privacyPolicy,
       participantIds: ['subject'],
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
@@ -69,9 +69,9 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case privacyPolicy not provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
+      name: [TEST_VALUES.name],
       administratorIds: ['1'],
-      securityPolicy: 'sec',
+      securityPolicy: TEST_VALUES.securityPolicy,
       participantIds: ['subject'],
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
@@ -90,10 +90,10 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case participantIds not provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
+      name: [TEST_VALUES.name],
       administratorIds: ['1'],
-      privacyPolicy: 'priv',
-      securityPolicy: 'sec',
+      privacyPolicy: TEST_VALUES.privacyPolicy,
+      securityPolicy: TEST_VALUES.securityPolicy,
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
 
@@ -111,10 +111,10 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case an empty administratorIds array is provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
+      name: [TEST_VALUES.name],
       administratorIds: [],
-      privacyPolicy: 'priv',
-      securityPolicy: 'sec',
+      privacyPolicy: TEST_VALUES.privacyPolicy,
+      securityPolicy: TEST_VALUES.securityPolicy,
       participantIds: ['1'],
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
@@ -133,10 +133,10 @@ describe('CreateWorkgroupDto', () => {
   it('should return error in case an empty participantIds array is provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
+      name: [TEST_VALUES.name],
       administratorIds: ['1'],
-      privacyPolicy: 'priv',
-      securityPolicy: 'sec',
+      privacyPolicy: TEST_VALUES.privacyPolicy,
+      securityPolicy: TEST_VALUES.securityPolicy,
       participantIds: [],
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
@@ -155,10 +155,10 @@ describe('CreateWorkgroupDto', () => {
   it('should return no error if all required properties provided.', async () => {
     // Arrange
     const dto = {
-      name: ['name'],
+      name: [TEST_VALUES.name],
       administratorIds: ['1'],
-      privacyPolicy: 'priv',
-      securityPolicy: 'sec',
+      privacyPolicy: TEST_VALUES.privacyPolicy,
+      securityPolicy: TEST_VALUES.securityPolicy,
       participantIds: ['1'],
     };
     const updateWorkgroupDto = plainToInstance(UpdateWorkgroupDto, dto);
