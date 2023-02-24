@@ -23,7 +23,7 @@ describe('merkleTree', () => {
     const nameLeaf = merkleTree.leaves[1];
 
     expect(companyLeaf.key).toEqual('company');
-    expect(nameLeaf.key).toEqual('name');
+    expect(nameLeaf.key).toEqual(TEST_VALUES.name);
 
     const companyLeafValue = Buffer.from(
       companyLeaf.value,
