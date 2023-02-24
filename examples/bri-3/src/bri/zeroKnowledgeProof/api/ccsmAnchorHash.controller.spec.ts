@@ -13,6 +13,7 @@ import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
+import { TEST_VALUES } from 'src/bri/shared/constants';
 
 describe('ProofController', () => {
   let controller: CCSMAnchorHashController;
@@ -39,15 +40,15 @@ describe('ProofController', () => {
     it('should throw BadRequest if document parameter is empty', async () => {
       // Arrange
       const mockBpiSubject = new BpiSubject(
-        '123',
-        '123',
-        '123',
+        TEST_VALUES.id,
+        TEST_VALUES.id,
+        TEST_VALUES.id,
         BpiSubjectType.External,
-        '123',
+        TEST_VALUES.id,
       );
 
       const mockBpiSubjectAccount = new BpiSubjectAccount(
-        '123',
+        TEST_VALUES.id,
         mockBpiSubject,
         mockBpiSubject,
         'sample policy',
@@ -72,15 +73,15 @@ describe('ProofController', () => {
     it('should return the correct transaction if proper document passed ', async () => {
       // Arrange
       const mockBpiSubject = new BpiSubject(
-        '123',
-        '123',
-        '123',
+        TEST_VALUES.id,
+        TEST_VALUES.id,
+        TEST_VALUES.id,
         BpiSubjectType.External,
-        '123',
+        TEST_VALUES.id,
       );
 
       const mockBpiSubjectAccount = new BpiSubjectAccount(
-        '123',
+        TEST_VALUES.id,
         mockBpiSubject,
         mockBpiSubject,
         'sample policy',
