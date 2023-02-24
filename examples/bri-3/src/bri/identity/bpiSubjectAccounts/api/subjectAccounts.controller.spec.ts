@@ -22,6 +22,7 @@ import { SubjectAccountsProfile } from '../subjectAccounts.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
+import { TEST_VALUES } from 'src/bri/shared/constants';
 
 describe('SubjectAccountController', () => {
   let subjectAccountController: SubjectAccountController;
@@ -68,21 +69,21 @@ describe('SubjectAccountController', () => {
     const ownerBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
         new BpiSubject(
-          '123',
-          'owner',
-          'desc',
+          TEST_VALUES.ownerId,
+          TEST_VALUES.ownerName,
+          TEST_VALUES.description,
           BpiSubjectType.External,
-          'publicKey',
+          TEST_VALUES.publicKey,
         ),
       );
     const creatorBpiSubject =
       await mockBpiSubjectStorageAgent.createNewBpiSubject(
         new BpiSubject(
-          '321',
-          'creator',
-          'desc',
+          TEST_VALUES.creatorId,
+          TEST_VALUES.creatorName,
+          TEST_VALUES.description,
           BpiSubjectType.External,
-          'publicKey',
+          TEST_VALUES.publicKey,
         ),
       );
 
@@ -107,7 +108,7 @@ describe('SubjectAccountController', () => {
   describe('getBpiSubjectAccountById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
 
       // Act and assert
       expect(async () => {
@@ -188,11 +189,11 @@ describe('SubjectAccountController', () => {
       const ownerBpiSubject =
         await mockBpiSubjectStorageAgent.createNewBpiSubject(
           new BpiSubject(
-            '123',
-            'owner',
-            'desc',
+            TEST_VALUES.id,
+            TEST_VALUES.ownerName,
+            TEST_VALUES.description,
             BpiSubjectType.External,
-            'publicKey',
+            TEST_VALUES.publicKey,
           ),
         );
       const creatorBpiSubjectId = 'not-existing-id';
@@ -215,11 +216,11 @@ describe('SubjectAccountController', () => {
       const creatorBpiSubject =
         await mockBpiSubjectStorageAgent.createNewBpiSubject(
           new BpiSubject(
-            '123',
-            'creator',
-            'desc',
+            TEST_VALUES.creatorId,
+            TEST_VALUES.creatorName,
+            TEST_VALUES.description,
             BpiSubjectType.External,
-            'publicKey',
+            TEST_VALUES.publicKey,
           ),
         );
       const ownerBpiSubjectId = 'not-existing-id';
@@ -255,7 +256,7 @@ describe('SubjectAccountController', () => {
   describe('deleteBpiSubjectAccount', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
-      const nonExistentId = '123';
+      const nonExistentId = TEST_VALUES.id;
       // Act and assert
       expect(async () => {
         await subjectAccountController.deleteBpiSubjectAccount(nonExistentId);
