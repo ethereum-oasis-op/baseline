@@ -24,8 +24,6 @@ export class VerifyAnchorHashCommandHandler
         command.inputForProofVerification,
       );
 
-    this.agent.verifyAnchorHashSignature(command.signature);
-
     const anchorHash = await this.ccsmStorageAgent.getAnchorHashFromCcsm(
       publicInputForProofVerification,
     );

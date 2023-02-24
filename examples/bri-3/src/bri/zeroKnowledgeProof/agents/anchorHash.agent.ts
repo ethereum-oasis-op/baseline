@@ -17,13 +17,6 @@ export class AnchorHashAgent {
     }
   }
 
-  public verifyAnchorHashSignature(signature: string): void {
-    //TODO add signature verification methods
-    if (!signature) {
-      throw new BadRequestException(INVALID_SIGNATURE);
-    }
-  }
-
   public hashTheStateAndCreateNewAnchorHash(
     ownerId: string,
     state: string,
