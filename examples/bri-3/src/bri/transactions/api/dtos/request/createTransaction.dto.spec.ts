@@ -8,12 +8,12 @@ describe('CreateTransactionDto', () => {
     // Arrange
     const dto = {
       nonce: 123,
-      workflowInstanceId: '123',
-      workstepInstanceId: '123',
-      fromSubjectAccountId: '123',
-      toSubjectAccountId: '123',
-      payload: '123',
-      signature: '123',
+      workflowInstanceId: TEST_VALUES.id,
+      workstepInstanceId: TEST_VALUES.id,
+      fromSubjectAccountId: TEST_VALUES.id,
+      toSubjectAccountId: TEST_VALUES.id,
+      payload: TEST_VALUES.id,
+      signature: TEST_VALUES.id,
     };
     const createTransactionDto = plainToInstance(CreateTransactionDto, dto);
 
@@ -31,14 +31,14 @@ describe('CreateTransactionDto', () => {
   it('should return no error if all required properties provided.', async () => {
     // Arrange
     const dto = {
-      id: '123',
+      id: TEST_VALUES.id,
       nonce: 123,
-      workflowInstanceId: '123',
-      workstepInstanceId: '123',
-      fromSubjectAccountId: '123',
-      toSubjectAccountId: '123',
-      payload: '123',
-      signature: '123',
+      workflowInstanceId: TEST_VALUES.id,
+      workstepInstanceId: TEST_VALUES.id,
+      fromSubjectAccountId: TEST_VALUES.id,
+      toSubjectAccountId: TEST_VALUES.id,
+      payload: TEST_VALUES.id,
+      signature: TEST_VALUES.id,
     };
     const createTransactionDto = plainToInstance(CreateTransactionDto, dto);
 
