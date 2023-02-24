@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ethers } from 'ethers';
-import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectStorageAgent } from '../../../bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { createJWT, ES256KSigner, hexToBytes } from 'did-jwt';
+import { ethers } from 'ethers';
+import { BpiSubjectStorageAgent } from '../../../bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubject } from '../../../bri/identity/bpiSubjects/models/bpiSubject';
+import { LoggingService } from '../../../shared/logging/logging.service';
 import { errorMessage, jwtConstants } from '../constants';
-import { LoggingService } from 'src/shared/logging/logging.service';
 
 @Injectable()
 export class AuthAgent {

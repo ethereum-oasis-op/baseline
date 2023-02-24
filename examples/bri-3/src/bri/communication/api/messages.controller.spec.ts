@@ -4,6 +4,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggingModule } from '../../../shared/logging/logging.module';
+import { AuthModule } from '../../auth/auth.module';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
@@ -25,7 +26,7 @@ import { CreateBpiMessageDto } from './dtos/request/createBpiMessage.dto';
 import { UpdateBpiMessageDto } from './dtos/request/updateBpiMessage.dto';
 import {
   BPI_MESSAGE_ALREADY_EXISTS,
-  NOT_FOUND_ERR_MESSAGE,
+  NOT_FOUND_ERR_MESSAGE
 } from './err.messages';
 import { MessageController } from './messages.controller';
 
@@ -61,6 +62,7 @@ describe('MessageController', () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
+        AuthModule,
         CommunicationModule,
         LoggingModule,
         AutomapperModule.forRoot({
