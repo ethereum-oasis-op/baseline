@@ -56,7 +56,13 @@ describe('MessageController', () => {
       ),
     );
     existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name2', 'desc2', 'xyz2', []),
+      new BpiSubject(
+        '',
+        'name2',
+        'desc2',
+        '0xF58e44db895C0fa1ca97d68E2F9123B187b789d4',
+        [],
+      ),
     );
 
     existingBpiMessage = await mockBpiMessageStorageAgent.storeNewBpiMessage(
@@ -193,7 +199,27 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: 'invalid signature',
+        signature: 'invalid format signature',
+        type: 1,
+      } as CreateBpiMessageDto;
+
+      // Act and assert
+      expect(async () => {
+        await mController.createBpiMessage(requestDto);
+      }).rejects.toThrow(
+        new UnauthorizedException(errorMessage.USER_NOT_AUTHORIZED),
+      );
+    });
+
+    it('should throw Unauthorized if signature with valid format that does not fit with the public key of the sender is provided', () => {
+      // Arrange
+      const requestDto = {
+        id: '123',
+        from: existingBpiSubject1.id,
+        to: existingBpiSubject2.id,
+        content: 'hello world',
+        signature:
+          '0xb377f459b07873ed407c3d1a4904051f3384e02906a7ca0abd5bfe7b3349ee71194179801ad449c118281bd4772cfe3f272455f86ae8dfae59a5c00c1d762d2b1b',
         type: 1,
       } as CreateBpiMessageDto;
 
