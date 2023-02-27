@@ -34,7 +34,8 @@ export class MessagingAgent implements OnApplicationBootstrap {
     await this.messagingClient.publish(channelName, message);
   }
 
-  public async onNewMessageReceived(rawMessage: string): Promise<void> {
+  // TODO: Add unit tests for this method
+  public async onNewMessageReceived(rawMessage: string): Promise<boolean> {
     this.logger.logInfo(
       `MessagingListenerAgent: New raw message received: ${rawMessage}. Trying to parse into a Bpi Message`,
     );
@@ -49,10 +50,10 @@ export class MessagingAgent implements OnApplicationBootstrap {
         )}`,
       );
 
-      return;
+      return false;
     }
 
-    await this.commandBus.execute(
+    return await this.commandBus.execute(
       new ProcessInboundBpiMessageCommand(
         newBpiMessageCandidate.id,
         newBpiMessageCandidate.fromBpiSubjectId,
