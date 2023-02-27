@@ -42,7 +42,7 @@ describe('MessageController', () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name', 'desc', 'xyz', []),
+      new BpiSubject('', 'name', 'desc', '0x08872e27BC5d78F1FC4590803369492868A1FCCb', []),
     );
     existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
       new BpiSubject('', 'name2', 'desc2', 'xyz2', []),
@@ -116,7 +116,7 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: 'xyz',
+        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -181,7 +181,7 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: 'xyz',
+        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -216,7 +216,7 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: 'xyz',
+        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -260,7 +260,7 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: 'xyz',
+        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 
