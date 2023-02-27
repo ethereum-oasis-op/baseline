@@ -1,6 +1,10 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggingModule } from '../../../shared/logging/logging.module';
@@ -8,6 +12,7 @@ import { AuthModule } from '../../auth/auth.module';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
+import { errorMessage } from '../../auth/constants';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
 import { BpiMessageAgent } from '../agents/bpiMessages.agent';
@@ -26,7 +31,7 @@ import { CreateBpiMessageDto } from './dtos/request/createBpiMessage.dto';
 import { UpdateBpiMessageDto } from './dtos/request/updateBpiMessage.dto';
 import {
   BPI_MESSAGE_ALREADY_EXISTS,
-  NOT_FOUND_ERR_MESSAGE
+  NOT_FOUND_ERR_MESSAGE,
 } from './err.messages';
 import { MessageController } from './messages.controller';
 
@@ -42,7 +47,13 @@ describe('MessageController', () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
-      new BpiSubject('', 'name', 'desc', '0x08872e27BC5d78F1FC4590803369492868A1FCCb', []),
+      new BpiSubject(
+        '',
+        'name',
+        'desc',
+        '0x08872e27BC5d78F1FC4590803369492868A1FCCb',
+        [],
+      ),
     );
     existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
       new BpiSubject('', 'name2', 'desc2', 'xyz2', []),
@@ -116,7 +127,8 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
+        signature:
+          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -174,6 +186,25 @@ describe('MessageController', () => {
       );
     });
 
+    it('should throw Unauthorized if signature with invalid format provided', () => {
+      // Arrange
+      const requestDto = {
+        id: '123',
+        from: existingBpiSubject1.id,
+        to: existingBpiSubject2.id,
+        content: 'hello world',
+        signature: 'invalid signature',
+        type: 1,
+      } as CreateBpiMessageDto;
+
+      // Act and assert
+      expect(async () => {
+        await mController.createBpiMessage(requestDto);
+      }).rejects.toThrow(
+        new UnauthorizedException(errorMessage.USER_NOT_AUTHORIZED),
+      );
+    });
+
     it('should return new uuid from the created bpi subject when all params provided', async () => {
       // Arrange
       const requestDto = {
@@ -181,7 +212,8 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
+        signature:
+          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -216,7 +248,8 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
+        signature:
+          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 
@@ -260,7 +293,8 @@ describe('MessageController', () => {
         from: existingBpiSubject1.id,
         to: existingBpiSubject2.id,
         content: 'hello world',
-        signature: '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
+        signature:
+          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
 

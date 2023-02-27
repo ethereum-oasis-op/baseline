@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { createJWT, ES256KSigner, hexToBytes } from 'did-jwt';
 import { ethers } from 'ethers';
@@ -23,24 +27,32 @@ export class AuthAgent {
     publicKey: string,
   ): void {
     if (!this.verifySignatureAgainstPublicKey(message, signature, publicKey)) {
-      throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+      throw new UnauthorizedException(errorMessage.USER_NOT_AUTHORIZED);
     }
   }
 
   verifySignatureAgainstPublicKey(
     message: string,
     signature: string,
-    publicKey: string,
+    senderPublicKey: string,
   ): boolean {
-    const publicKeyFromSignature = ethers.utils.verifyMessage(
-      message,
-      signature,
-    );
+    let publicKeyFromSignature = '';
 
-    const isValid = publicKeyFromSignature === publicKey;
+    try {
+      publicKeyFromSignature = ethers.utils.verifyMessage(message, signature);
+    } catch (error) {
+      this.logger.logError(
+        `Error validating signature: ${signature} for message ${message}. Error: ${error}}`,
+      );
+      return false;
+    }
+
+    const isValid = publicKeyFromSignature === senderPublicKey;
 
     if (!isValid) {
-      this.logger.logWarn(`Signature: ${signature} invalid.`);
+      this.logger.logWarn(
+        `Signature: ${signature} for public key ${senderPublicKey} is invalid.`,
+      );
     }
 
     return isValid;
