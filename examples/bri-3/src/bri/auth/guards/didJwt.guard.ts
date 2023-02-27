@@ -1,12 +1,12 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from 'src/bri/decorators/public-endpoint';
+import { JWTVerified, verifyJWT } from 'did-jwt';
 import { Resolver } from 'did-resolver';
 import { getResolver } from 'ethr-did-resolver';
-import { JWTVerified, verifyJWT } from 'did-jwt';
-import { LoggingService } from 'src/shared/logging/logging.service';
+import { LoggingService } from '../../../shared/logging/logging.service';
+import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from '../../decorators/public-endpoint';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { didResolverProviderConfig } from '../constants';
-import { BpiSubjectStorageAgent } from 'src/bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 @Injectable()
 export class DidJwtAuthGuard implements CanActivate {
