@@ -15,7 +15,13 @@ export const CommandHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, PassportModule, JwtModule, SubjectModule, LoggingModule],
+  imports: [
+    CqrsModule,
+    PassportModule,
+    JwtModule,
+    SubjectModule,
+    LoggingModule,
+  ],
   controllers: [AuthController],
   providers: [...CommandHandlers, AuthAgent],
   exports: [AuthAgent],
