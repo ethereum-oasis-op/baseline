@@ -15,6 +15,8 @@ export class AuthAgent {
     private readonly logger: LoggingService,
   ) {}
 
+  // TODO: Move into a separate service once signature verification
+  // capabilities grow
   throwIfSignatureVerificationFails(
     message: string,
     signature: string,
@@ -35,7 +37,7 @@ export class AuthAgent {
       signature,
     );
 
-    const isValid = publicKeyFromSignature.toLowerCase() === publicKey;
+    const isValid = publicKeyFromSignature === publicKey;
 
     if (!isValid) {
       this.logger.logWarn(`Signature: ${signature} invalid.`);
