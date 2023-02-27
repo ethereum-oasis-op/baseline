@@ -8,11 +8,11 @@ import {
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { LoggingModule } from '../../../shared/logging/logging.module';
+import { USER_NOT_AUTHORIZED } from '../../auth/api/err.messages';
 import { AuthModule } from '../../auth/auth.module';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
-import { errorMessage } from '../../auth/constants';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
 import { BpiMessageAgent } from '../agents/bpiMessages.agent';
@@ -206,9 +206,7 @@ describe('MessageController', () => {
       // Act and assert
       expect(async () => {
         await mController.createBpiMessage(requestDto);
-      }).rejects.toThrow(
-        new UnauthorizedException(errorMessage.USER_NOT_AUTHORIZED),
-      );
+      }).rejects.toThrow(new UnauthorizedException(USER_NOT_AUTHORIZED));
     });
 
     it('should throw Unauthorized if signature with valid format that does not fit with the public key of the sender is provided', () => {
@@ -226,9 +224,7 @@ describe('MessageController', () => {
       // Act and assert
       expect(async () => {
         await mController.createBpiMessage(requestDto);
-      }).rejects.toThrow(
-        new UnauthorizedException(errorMessage.USER_NOT_AUTHORIZED),
-      );
+      }).rejects.toThrow(new UnauthorizedException(USER_NOT_AUTHORIZED));
     });
 
     it('should return new uuid from the created bpi subject when all params provided', async () => {

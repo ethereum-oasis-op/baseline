@@ -1,15 +1,12 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { createJWT, ES256KSigner, hexToBytes } from 'did-jwt';
 import { ethers } from 'ethers';
 import { BpiSubjectStorageAgent } from '../../../bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { BpiSubject } from '../../../bri/identity/bpiSubjects/models/bpiSubject';
 import { LoggingService } from '../../../shared/logging/logging.service';
-import { errorMessage, jwtConstants } from '../constants';
+import { USER_NOT_AUTHORIZED } from '../api/err.messages';
+import { jwtConstants } from '../constants';
 
 @Injectable()
 export class AuthAgent {
@@ -27,7 +24,7 @@ export class AuthAgent {
     publicKey: string,
   ): void {
     if (!this.verifySignatureAgainstPublicKey(message, signature, publicKey)) {
-      throw new UnauthorizedException(errorMessage.USER_NOT_AUTHORIZED);
+      throw new UnauthorizedException(USER_NOT_AUTHORIZED);
     }
   }
 
@@ -64,7 +61,7 @@ export class AuthAgent {
 
   throwIfLoginNonceMismatch(bpiSubject: BpiSubject, nonce: string) {
     if (bpiSubject.loginNonce !== nonce) {
-      throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+      throw new Error(USER_NOT_AUTHORIZED);
     }
   }
 
