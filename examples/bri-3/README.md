@@ -85,8 +85,8 @@ Run the following commands in the terminal:
 
 $ nats context add local --description "Localhost" # adds localhost server to nats cli
 
-$ nats pub general "<message>" # publishes new message on the general subject
-# Example message format: "{ \"id\": \"0a3dd67c-c031-4b50-95df-0bc5fc1c78b5\", \"fromBpiSubjectId\": \"71302cec-0a38-469a-a4e5-f58bdfc4ab32\", \"toBpiSubjectId\": \"76cdd901-d87d-4c87-b572-155afe45c128\", \"content\": { \"testProp\":\"testValue\" }, \"signature\": \"xyz\", \"type\": 0}"
+$ nats pub general "<message>" # publishes new message on the general subject. Assumes two bpi subjects are added to the db with proper PKs.
+# Example message format: "{ \"id\": \"0a3dd67c-c031-4b50-95df-0bc5fc1c78b5\", \"fromBpiSubjectId\": \"71302cec-0a38-469a-a4e5-f58bdfc4ab32\", \"toBpiSubjectId\": \"76cdd901-d87d-4c87-b572-155afe45c128\", \"content\": { \"testProp\":\"testValue\" }, \"signature\": \"0x69c0237bf86c34df000d04b0c1cc1ed037cb3910e2bc8fbef5b01628317f625d70bf83aba5ee5963b2e9e68b3074f61503d3b7ffb2b6caff7e447e7253089b1c1c\", \"type\": 0}"
 
 ```
 Observe the log messages in the terminal where the app is running.

@@ -20,15 +20,15 @@ export class ProcessInboundMessageCommandHandler
   ) {}
 
   async execute(command: ProcessInboundBpiMessageCommand) {
-    if (this.agent.bpiMessageIdAlreadyExists(command.id)) {
-      return;
+    if (await this.agent.bpiMessageIdAlreadyExists(command.id)) {
+      return false;
     }
 
     const [fromBpiSubject, toBpiSubject] =
       await this.agent.fetchFromAndToBpiSubjects(command.from, command.to);
 
     if (!fromBpiSubject || !toBpiSubject) {
-      return;
+      return false;
     }
 
     const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
@@ -38,7 +38,7 @@ export class ProcessInboundMessageCommandHandler
     );
 
     if (!isSignatureValid) {
-      return;
+      return false;
     }
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(
@@ -60,5 +60,7 @@ export class ProcessInboundMessageCommandHandler
       toBpiSubject.publicKey,
       this.messagingAgent.serializeBpiMessage(newBpiMessage),
     );
+
+    return true;
   }
 }
