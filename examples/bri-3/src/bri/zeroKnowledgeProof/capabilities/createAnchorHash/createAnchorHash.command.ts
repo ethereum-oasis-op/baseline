@@ -1,8 +1,8 @@
 import { BpiSubjectAccount } from '../../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
-export class CreateCCSMAnchorHashCommand {
+export class CreateAnchorHashCommand {
   constructor(
     public readonly ownerAccount: BpiSubjectAccount,
-    public readonly document: string,
+    public readonly state: string,
   ) {}
 }

@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
@@ -14,14 +14,17 @@ import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupController } from './workgroups.controller';
 import { MockBpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import {
+  WORKGROUP_NOT_FOUND_ERR_MESSAGE,
+  WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE,
+} from './err.messages';
 import { SubjectModule } from '../../../identity/bpiSubjects/subjects.module';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
 import { TEST_VALUES } from '../../../shared/constants';
+import { ArchiveWorkgroupCommandHandler } from '../capabilities/archiveWorkgroup/archiveWorkgroupCommand.handler';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -48,8 +51,9 @@ describe('WorkgroupsController', () => {
   };
 
   const createTestWorkgroup = async (): Promise<string> => {
-    await createTestBpiSubject();
+    const bpiSubject = await createTestBpiSubject();
     const workgroupId = await workgroupController.createWorkgroup(
+      { bpiSubject },
       workgroupRequestDto,
       TEST_VALUES.publicKey,
     );
@@ -74,6 +78,7 @@ describe('WorkgroupsController', () => {
         BpiSubjectAgent,
         CreateWorkgroupCommandHandler,
         UpdateWorkgroupCommandHandler,
+        ArchiveWorkgroupCommandHandler,
         DeleteWorkgroupCommandHandler,
         GetWorkgroupByIdQueryHandler,
         WorkgroupStorageAgent,
@@ -183,6 +188,49 @@ describe('WorkgroupsController', () => {
         updateRequestDto.participantIds,
       );
       expect(updatedWorkgroup.name).toEqual(updateRequestDto.name);
+    });
+  });
+
+  describe('archiveWorkgroup', () => {
+    it('should throw NotFound if non existent id passed', async () => {
+      // Arrange
+      const nonExistentId = '123';
+
+      // Act and assert
+      expect(async () => {
+        await workgroupController.archiveWorkgroup(nonExistentId);
+      }).rejects.toThrow(
+        new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
+      );
+    });
+
+    it('should throw BadRequest if workgroupToArchive status is not active', async () => {
+      // Arrange
+      const newWorkgroupId = await createTestWorkgroup();
+
+      await workgroupController.archiveWorkgroup(newWorkgroupId);
+
+      // Act and assert
+      expect(async () => {
+        await workgroupController.archiveWorkgroup(newWorkgroupId);
+      }).rejects.toThrow(
+        new BadRequestException(WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE),
+      );
+    });
+
+    it('should perform the update if existing id passed', async () => {
+      // Arrange
+      const newWorkgroupId = await createTestWorkgroup();
+
+      // Act
+      await workgroupController.archiveWorkgroup(newWorkgroupId);
+
+      // Assert
+      const archivedWorkgroup = await workgroupController.getWorkgroupById(
+        newWorkgroupId,
+      );
+      expect(archivedWorkgroup.id).toEqual(newWorkgroupId);
+      expect(archivedWorkgroup.status).toEqual(WorkgroupStatus.ARCHIVED);
     });
   });
 

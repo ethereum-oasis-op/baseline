@@ -17,7 +17,6 @@ import { CreateBpiSubjectAccountDto } from './dtos/request/createBpiSubjectAccou
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../bpiSubjects/models/bpiSubjectType.enum';
 import { SubjectAccountsProfile } from '../subjectAccounts.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';

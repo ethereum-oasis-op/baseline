@@ -6,13 +6,14 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateWorkgroupCommand } from '../capabilities/createWorkgroup/createWorkgroup.command';
 import { DeleteWorkgroupCommand } from '../capabilities/deleteWorkgroup/deleteWorkgroup.command';
 import { GetWorkgroupByIdQuery } from '../capabilities/getWorkgroupById/getWorkgroupById.query';
 import { UpdateWorkgroupCommand } from '../capabilities/updateWorkgroup/updateWorkgroup.command';
-import { PublicKey } from '../../../decorators/public-key';
+import { ArchiveWorkgroupCommand } from '../capabilities/archiveWorkgroup/archiveWorkgroup.command';
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
@@ -28,12 +29,12 @@ export class WorkgroupController {
 
   @Post()
   async createWorkgroup(
+    @Req() req,
     @Body() requestDto: CreateWorkgroupDto,
-    @PublicKey() publicKey: string,
   ): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkgroupCommand(
-        publicKey, //TODO implement command using request-context - retrieve bpiSubject by publicKey
+        req.bpiSubject,
         requestDto.name,
         requestDto.securityPolicy,
         requestDto.privacyPolicy, //TODO Implement privacy policy #573
@@ -58,6 +59,11 @@ export class WorkgroupController {
         requestDto.participantIds,
       ),
     );
+  }
+
+  @Put('archive/:id')
+  async archiveWorkgroup(@Param('id') id: string): Promise<void> {
+    return await this.commandBus.execute(new ArchiveWorkgroupCommand(id));
   }
 
   @Delete('/:id')

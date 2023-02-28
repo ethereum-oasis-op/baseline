@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class VerifyCCSMAnchorHashDto {
+export class VerifyAnchorHashDto {
   @IsNotEmpty()
   @IsString()
   inputForProofVerification: string;

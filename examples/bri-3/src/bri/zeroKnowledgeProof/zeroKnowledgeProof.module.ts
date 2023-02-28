@@ -1,25 +1,29 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CCSMAnchorHashAgent } from './agents/ccsmAnchorHash.agent';
-import { CCSMAnchorHashStorageAgent } from './agents/ccsmAnchorHashStorage.agent';
-import { CCSMAnchorHashController } from './api/ccsmAnchorHash.controller';
-import { CreateCCSMAnchorHashCommandHandler } from './capabilities/createCCSMAnchorHash/createCCSMAnchorHashCommand.handler';
-import { VerifyCCSMAnchorHashCommandHandler } from './capabilities/verifyCCSMAnchorHash/verifyCCSMAnchorHashCommand.handler';
+import { AnchorHashAgent } from './agents/anchorHash.agent';
+import { AnchorHashCcsmStorageAgent } from './agents/anchorHashCcsmStorage.agent';
+import { AnchorHashStorageAgent } from './agents/anchorHashStorage.agent';
+import { AnchorHashController } from './api/anchorHash.controller';
+import { CreateAnchorHashCommandHandler } from './capabilities/createAnchorHash/createAnchorHashCommand.handler';
+import { VerifyAnchorHashCommandHandler } from './capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
 import { BlockchainService } from './services/blockchain/blockchain.service';
+import { AnchorHashProfile } from './anchorHash.profile';
 
 export const CommandHandlers = [
-  CreateCCSMAnchorHashCommandHandler,
-  VerifyCCSMAnchorHashCommandHandler,
+  CreateAnchorHashCommandHandler,
+  VerifyAnchorHashCommandHandler,
 ];
 
 @Module({
   imports: [CqrsModule],
-  controllers: [CCSMAnchorHashController],
+  controllers: [AnchorHashController],
   providers: [
     ...CommandHandlers,
-    CCSMAnchorHashAgent,
-    CCSMAnchorHashStorageAgent,
+    AnchorHashAgent,
+    AnchorHashStorageAgent,
+    AnchorHashCcsmStorageAgent,
     BlockchainService,
+    AnchorHashProfile,
   ],
 })
 export class ZeroKnowledgeProofModule {}

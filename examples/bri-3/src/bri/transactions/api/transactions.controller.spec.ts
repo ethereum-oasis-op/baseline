@@ -19,7 +19,6 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectType } from '../../identity/bpiSubjects/models/bpiSubjectType.enum';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';

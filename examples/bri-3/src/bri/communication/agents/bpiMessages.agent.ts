@@ -16,17 +16,14 @@ export class BpiMessageAgent {
   public async getFromAndToSubjectsAndThrowIfNotExist(
     fromBpiSubjectId: string,
     toBpiSubjectId: string,
-  ) {
+  ): Promise<[BpiSubject, BpiSubject]> {
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       toBpiSubjectId,
     );
-    return {
-      fromBpiSubject,
-      toBpiSubject,
-    };
+    return [fromBpiSubject, toBpiSubject];
   }
 
   public createNewBpiMessage(
@@ -46,6 +43,7 @@ export class BpiMessageAgent {
     const bpiMessageToUpdate: BpiMessage =
       await this.bpiMessageStorageAgent.getBpiMessageById(id);
 
+    // TODO: throw should not happen in the storage agent
     if (!bpiMessageToUpdate) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }

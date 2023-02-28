@@ -14,7 +14,6 @@ model BpiSubject {
   id                          String                 @id @default(uuid())
   name                        String
   description                 String
-  type                        Int
   publicKey                   String
   loginNonce                  String                 @default("")
   ownedBpiSubjectAccounts     BpiSubjectAccount[]    @relation(name: "ownerBpiSubject_fk")
@@ -23,6 +22,15 @@ model BpiSubject {
   receivedMessages            Message[]              @relation(name: "toBpiSubject_fk")
   administratedWorkgroups     Workgroup[]            @relation(name: "administratorSubjects")
   participatingWorkgroups     Workgroup[]            @relation(name: "participantSubjects") 
+  roles                       BpiSubjectRole[]
+  ownedAnchorHashes           AnchorHash[]          @relation(name: "anchorHashOwnerBpiSubject_fk")       
+}
+
+model BpiSubjectRole {
+  id                          String                 @id @default(uuid())
+  name                        String                 @unique
+  description                 String
+  bpiSubjects                 BpiSubject[]           
 }
 
 model BpiAccount {
@@ -78,6 +86,7 @@ model Workgroup {
   participants   BpiSubject[] @relation(name: "participantSubjects")
   workflows      Workflow[]
   worksteps      Workstep[]
+  status         WorkgroupStatus       @default(ACTIVE)
 }
 
 model Transaction {
@@ -103,4 +112,16 @@ model Message {
   content          String
   signature        String
   type             Int
+}
+
+model AnchorHash {
+  id                String     @id @default(uuid()) 
+  ownerBpiSubjectId String
+  ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "anchorHashOwnerBpiSubject_fk")    
+  hash              String     @unique
+}
+
+enum WorkgroupStatus {
+  ACTIVE
+  ARCHIVED
 }
