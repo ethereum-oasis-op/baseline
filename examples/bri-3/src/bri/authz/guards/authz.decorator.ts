@@ -4,7 +4,7 @@ export const CHECK_AUTHZ = 'check_authz';
 
 export interface IRequirement {
   action: any;
-  subject: any;
+  subject?: any;
 }
 
 export const CheckAuthz = (...requirements: IRequirement[]) =>

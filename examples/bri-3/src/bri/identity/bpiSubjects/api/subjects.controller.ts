@@ -23,17 +23,19 @@ export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Get('/:id')
+  @CheckAuthz({ action: 'read' })
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
   }
 
   @Get()
+  @CheckAuthz({ action: 'read' })
   async getAllBpiSubjects(): Promise<BpiSubjectDto[]> {
     return await this.queryBus.execute(new GetAllBpiSubjectsQuery());
   }
 
   @Post()
-  @CheckAuthz({ action: 'manage', subject: 'BpiSubject' })
+  @CheckAuthz({ action: 'create' })
   async createBpiSubject(
     @Body() requestDto: CreateBpiSubjectDto,
   ): Promise<string> {
@@ -47,6 +49,7 @@ export class SubjectController {
   }
 
   @Put('/:id')
+  @CheckAuthz({ action: 'update' })
   async updateBpiSubject(
     @Param('id') id: string,
     @Body() requestDto: UpdateBpiSubjectDto,
@@ -62,6 +65,7 @@ export class SubjectController {
   }
 
   @Delete('/:id')
+  @CheckAuthz({ action: 'delete' })
   async deleteBpiSubject(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(new DeleteBpiSubjectCommand(id));
   }
