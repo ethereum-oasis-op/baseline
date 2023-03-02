@@ -25,26 +25,25 @@ export class AuthzGuard implements CanActivate {
       [];
 
     const req = context.switchToHttp().getRequest();
-    const bpiSubjectToAccessId = req.params.id;
-
-    // if there is subject id in request route, we get it from database and check
-    // if logged in user can perform specified action on it
-    // if there is no subject, we can assume that subject is 'all'
-    const bpiSubjectToAccess = bpiSubjectToAccessId
-      ? subject(
-          'BpiSubject',
-          await this.prisma.bpiSubject.findUnique({
-            where: { id: bpiSubjectToAccessId },
-          }),
-        )
-      : 'all';
+    const subjectToAccessId = req.params.id;
     const authz = this.authzFactory.buildAuthzFor(req.bpiSubject);
 
     try {
       for (const requirement of requirements) {
+        // if there is subject id in request route, we get it from database and check
+        // if logged in user can perform specified action on it
+        // if there is no subject, we can assume that subject is 'all'
+        const subjectToAccess = subjectToAccessId
+          ? subject(
+              requirement.type,
+              await this.prisma[requirement.type].findUnique({
+                where: { id: subjectToAccessId },
+              }),
+            )
+          : 'all';
         ForbiddenError.from(authz).throwUnlessCan(
           requirement.action,
-          bpiSubjectToAccess,
+          subjectToAccess,
         );
       }
       return true;
