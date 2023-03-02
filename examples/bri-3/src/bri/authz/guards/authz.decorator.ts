@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common';
 
-export const CHECK_AUTHZ = 'check_authz';
+export const CHECK_AUTHZ_METADATA_KEY = 'check_authz';
 
 export interface IRequirement {
   action: string;
@@ -8,4 +8,4 @@ export interface IRequirement {
 }
 
 export const CheckAuthz = (...requirements: IRequirement[]) =>
-  SetMetadata(CHECK_AUTHZ, requirements);
+  SetMetadata(CHECK_AUTHZ_METADATA_KEY, requirements);
