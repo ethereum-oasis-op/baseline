@@ -34,8 +34,8 @@ const rolePermissions: Record<BpiSubjectRoleName, DefinePermissions> = {
 };
 
 @Injectable()
-export class AbilityFactory {
-  defineAbilityFor(bpiSubject: BpiSubject): AppAbility {
+export class AuthzFactory {
+  buildAuthzFor(bpiSubject: BpiSubject): AppAbility {
     const builder = new AbilityBuilder(PureAbility as AbilityClass<AppAbility>);
     // this is just for start, once there are more roles, this should be modified a bit
     const role = bpiSubject.roles[0]?.name;

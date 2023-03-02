@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AbilityFactory } from './ability.factory';
+import { AuthzFactory } from './authz.factory';
 
 @Module({
-  providers: [AbilityFactory],
-  exports: [AbilityFactory],
+  providers: [AuthzFactory],
+  exports: [AuthzFactory],
 })
 export class AuthzModule {}

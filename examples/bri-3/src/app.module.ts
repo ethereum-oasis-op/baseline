@@ -12,6 +12,8 @@ import { AuthModule } from './bri/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
 import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
+import { AuthzGuard } from './bri/authz/guards/authz.guard';
+import { AuthzModule } from './bri/authz/authz.module';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
       strategyInitializer: classes(),
     }),
     AuthModule,
+    AuthzModule,
     SubjectModule,
   ],
   providers: [
@@ -32,6 +35,10 @@ import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
     {
       provide: APP_GUARD,
       useClass: DidJwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthzGuard,
     },
   ],
 })
