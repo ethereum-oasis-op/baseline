@@ -25,13 +25,20 @@ type DefinePermissions = (
 ) => void;
 
 const rolePermissions: Record<BpiSubjectRoleName, DefinePermissions> = {
-  [BpiSubjectRoleName.INTERNAL_BPI_SUBJECT](bpiSubject, { can }) {
+  [BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT](bpiSubject, { can }) {
     can('manage', 'all');
   },
-  [BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT](bpiSubject, { can }) {
+  [BpiSubjectRoleName.INTERNAL_BPI_SUBJECT](bpiSubject, { can }) {
     can('read', 'BpiSubject', { id: bpiSubject.id });
     can('update', 'BpiSubject', { id: bpiSubject.id });
     can('delete', 'BpiSubject', { id: bpiSubject.id });
+
+    const onlyWorkgroupAdmin = {
+      administrators: { some: { id: bpiSubject.id } },
+    };
+    can('read', 'Workgroup', onlyWorkgroupAdmin);
+    can('update', 'Workgroup', onlyWorkgroupAdmin);
+    can('delete', 'Workgroup', onlyWorkgroupAdmin);
   },
 };
 

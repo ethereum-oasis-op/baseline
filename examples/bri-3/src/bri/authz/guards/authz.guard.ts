@@ -11,6 +11,14 @@ import { AuthzFactory } from '../authz.factory';
 import { CHECK_AUTHZ, IRequirement } from './authz.decorator';
 import { subject } from '@casl/ability';
 
+// helper map to know which relations to include in generic prisma query
+const prismaTypeToQueryIncludeMap = {
+  BpiSubject: {},
+  Workgroup: {
+    administrators: true,
+  },
+};
+
 @Injectable()
 export class AuthzGuard implements CanActivate {
   constructor(
@@ -38,6 +46,7 @@ export class AuthzGuard implements CanActivate {
               requirement.type,
               await this.prisma[requirement.type].findUnique({
                 where: { id: subjectToAccessId },
+                include: prismaTypeToQueryIncludeMap[requirement.type],
               }),
             )
           : 'all';
