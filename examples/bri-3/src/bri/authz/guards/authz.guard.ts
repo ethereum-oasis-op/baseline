@@ -8,8 +8,9 @@ import {
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from 'prisma/prisma.service';
 import { AuthzFactory } from '../authz.factory';
-import { CHECK_AUTHZ, IRequirement } from './authz.decorator';
+import { CHECK_AUTHZ_METADATA_KEY, IRequirement } from './authz.decorator';
 import { subject } from '@casl/ability';
+import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from '../../decorators/public-endpoint';
 
 // helper map to know which relations to include in generic prisma query
 const prismaTypeToQueryIncludeMap = {
@@ -28,9 +29,18 @@ export class AuthzGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.get<boolean>(
+      IS_PUBLIC_ENDPOINT_METADATA_KEY,
+      context.getHandler(),
+    );
+    if (isPublic) {
+      return true;
+    }
     const requirements =
-      this.reflector.get<IRequirement[]>(CHECK_AUTHZ, context.getHandler()) ||
-      [];
+      this.reflector.get<IRequirement[]>(
+        CHECK_AUTHZ_METADATA_KEY,
+        context.getHandler(),
+      ) || [];
 
     const req = context.switchToHttp().getRequest();
     const subjectToAccessId = req.params.id;
