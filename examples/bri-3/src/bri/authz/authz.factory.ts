@@ -1,14 +1,8 @@
-import {
-  ForcedSubject,
-  AbilityClass,
-  AbilityBuilder,
-  PureAbility,
-  subject,
-} from '@casl/ability';
+import { AbilityBuilder, PureAbility } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { BpiSubjectRoleName } from '../identity/bpiSubjects/models/bpiSubjectRole';
 import { BpiSubject as BpiSubjectModel } from '../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubject, Workgroup, Prisma } from '@prisma/client';
+import { BpiSubject, Workgroup, Workflow, Workstep } from '@prisma/client';
 import { createPrismaAbility, PrismaQuery, Subjects } from '@casl/prisma';
 
 type AppSubjects =
@@ -16,6 +10,8 @@ type AppSubjects =
   | Subjects<{
       BpiSubject: BpiSubject;
       Workgroup: Workgroup;
+      Workstep: Workstep;
+      Workflow: Workflow;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
@@ -39,6 +35,17 @@ const rolePermissions: Record<BpiSubjectRoleName, DefinePermissions> = {
     can('read', 'Workgroup', onlyWorkgroupAdmin);
     can('update', 'Workgroup', onlyWorkgroupAdmin);
     can('delete', 'Workgroup', onlyWorkgroupAdmin);
+
+    const onlyWorkgroupAdminOfAssociatedWorkgroup = {
+      workgroup: { is: { administrators: { some: { id: bpiSubject.id } } } },
+    };
+    can('read', 'Workflow', onlyWorkgroupAdminOfAssociatedWorkgroup);
+    can('update', 'Workflow', onlyWorkgroupAdminOfAssociatedWorkgroup);
+    can('delete', 'Workflow', onlyWorkgroupAdminOfAssociatedWorkgroup);
+
+    can('read', 'Workstep', onlyWorkgroupAdminOfAssociatedWorkgroup);
+    can('update', 'Workstep', onlyWorkgroupAdminOfAssociatedWorkgroup);
+    can('delete', 'Workstep', onlyWorkgroupAdminOfAssociatedWorkgroup);
   },
 };
 
