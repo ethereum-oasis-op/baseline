@@ -1,4 +1,4 @@
-import { ForbiddenError } from '@casl/ability';
+import { ForbiddenError, subject } from '@casl/ability';
 import {
   CanActivate,
   ExecutionContext,
@@ -9,7 +9,6 @@ import { Reflector } from '@nestjs/core';
 import { PrismaService } from 'prisma/prisma.service';
 import { AuthzFactory } from '../authz.factory';
 import { CHECK_AUTHZ_METADATA_KEY, IRequirement } from './authz.decorator';
-import { subject } from '@casl/ability';
 import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from '../../decorators/public-endpoint';
 
 // helper map to know which relations to include in generic prisma query
@@ -17,6 +16,16 @@ const prismaTypeToQueryIncludeMap = {
   BpiSubject: {},
   Workgroup: {
     administrators: true,
+  },
+  Workflow: {
+    workgroup: {
+      include: { administrators: true },
+    },
+  },
+  Workstep: {
+    workgroup: {
+      include: { administrators: true },
+    },
   },
 };
 
