@@ -2,7 +2,13 @@ import { AbilityBuilder, PureAbility } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { BpiSubjectRoleName } from '../identity/bpiSubjects/models/bpiSubjectRole';
 import { BpiSubject as BpiSubjectModel } from '../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubject, Workgroup, Workflow, Workstep } from '@prisma/client';
+import {
+  BpiSubject,
+  BpiSubjectAccount,
+  Workgroup,
+  Workflow,
+  Workstep,
+} from '@prisma/client';
 import { createPrismaAbility, PrismaQuery, Subjects } from '@casl/prisma';
 
 type AppSubjects =
@@ -12,6 +18,7 @@ type AppSubjects =
       Workgroup: Workgroup;
       Workstep: Workstep;
       Workflow: Workflow;
+      BpiSubjectAccount: BpiSubjectAccount;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
@@ -46,6 +53,10 @@ const rolePermissions: Record<BpiSubjectRoleName, DefinePermissions> = {
     can('read', 'Workstep', onlyWorkgroupAdminOfAssociatedWorkgroup);
     can('update', 'Workstep', onlyWorkgroupAdminOfAssociatedWorkgroup);
     can('delete', 'Workstep', onlyWorkgroupAdminOfAssociatedWorkgroup);
+
+    can('read', 'BpiSubjectAccount', { ownerBpiSubjectId: bpiSubject.id });
+    can('update', 'BpiSubjectAccount', { ownerBpiSubjectId: bpiSubject.id });
+    can('delete', 'BpiSubjectAccount', { ownerBpiSubjectId: bpiSubject.id });
   },
 };
 
