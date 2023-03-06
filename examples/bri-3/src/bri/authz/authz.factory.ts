@@ -5,6 +5,7 @@ import { BpiSubject as BpiSubjectModel } from '../identity/bpiSubjects/models/bp
 import {
   BpiSubject,
   BpiSubjectAccount,
+  BpiAccount,
   Workgroup,
   Workflow,
   Workstep,
@@ -19,6 +20,7 @@ type AppSubjects =
       Workstep: Workstep;
       Workflow: Workflow;
       BpiSubjectAccount: BpiSubjectAccount;
+      BpiAccount: BpiAccount;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
@@ -57,6 +59,13 @@ const rolePermissions: Record<BpiSubjectRoleName, DefinePermissions> = {
     can('read', 'BpiSubjectAccount', { ownerBpiSubjectId: bpiSubject.id });
     can('update', 'BpiSubjectAccount', { ownerBpiSubjectId: bpiSubject.id });
     can('delete', 'BpiSubjectAccount', { ownerBpiSubjectId: bpiSubject.id });
+
+    const onlyOwnerOfAssociatedBpiSubjectAccounts = {
+      ownerBpiSubjectAccounts: { some: { ownerBpiSubjectId: bpiSubject.id } },
+    };
+    can('read', 'BpiAccount', onlyOwnerOfAssociatedBpiSubjectAccounts);
+    can('update', 'BpiAccount', onlyOwnerOfAssociatedBpiSubjectAccounts);
+    can('delete', 'BpiAccount', onlyOwnerOfAssociatedBpiSubjectAccounts);
   },
 };
 

@@ -27,6 +27,13 @@ const prismaTypeToQueryIncludeMap = {
       include: { administrators: true },
     },
   },
+  BpiAccount: {
+    ownerBpiSubjectAccounts: {
+      include: {
+        ownerBpiSubject: true,
+      },
+    },
+  },
 };
 
 @Injectable()
