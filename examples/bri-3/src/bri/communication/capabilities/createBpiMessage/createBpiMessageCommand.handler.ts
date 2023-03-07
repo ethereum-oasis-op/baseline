@@ -46,8 +46,6 @@ export class CreateBpiMessageCommandHandler
       newBpiMessageCandidate,
     );
 
-    // TODO: This is naive as it publishes to a channel anyone who can auth with the NATS server can subscribe to.
-    // Will be improved by introducing NATS authz to allow only the recipient Bpi Subject to listen on this channel (#648)
     await this.messagingAgent.publishMessage(
       toBpiSubject.publicKey,
       this.messagingAgent.serializeBpiMessage(newBpiMessage),
