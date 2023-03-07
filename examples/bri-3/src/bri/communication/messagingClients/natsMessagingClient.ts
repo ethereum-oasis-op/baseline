@@ -15,6 +15,8 @@ export class NatsMessagingClient
     try {
       this.natsConnection = await connect({
         servers: process.env.BPI_NATS_SERVER_URL,
+        user: process.env.BPI_NATS_SERVER_USER,
+        pass: process.env.BPI_NATS_SERVER_PASS
       });
       this.logger.logInfo(
         'Connected to nats server: ' + this.natsConnection.getServer(),
