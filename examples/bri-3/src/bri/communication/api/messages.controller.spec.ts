@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { EncryptionModule } from '../../../shared/encryption/encryption.module';
 import { LoggingModule } from '../../../shared/logging/logging.module';
 import { INVALID_SIGNATURE } from '../../auth/api/err.messages';
 import { AuthModule } from '../../auth/auth.module';
@@ -42,6 +43,12 @@ describe('MessageController', () => {
   let existingBpiSubject1: BpiSubject;
   let existingBpiSubject2: BpiSubject;
   let existingBpiMessage: BpiMessage;
+
+  beforeAll(() => {
+    process.env.BPI_ENCRYPTION_KEY_K_PARAM =
+      'yzkXp3vY_AZQ3YfLv9GMRTYkjUOpn9x18gPkoFvoUxQ';
+    process.env.BPI_ENCRYPTION_KEY_KTY_PARAM = 'oct';
+  });
 
   beforeEach(async () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
@@ -82,6 +89,7 @@ describe('MessageController', () => {
         AuthModule,
         CommunicationModule,
         LoggingModule,
+        EncryptionModule,
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
