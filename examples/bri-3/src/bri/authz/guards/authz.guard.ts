@@ -60,7 +60,15 @@ export class AuthzGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest();
     const subjectToAccessId = req.params.id;
-    const authz = this.authzFactory.buildAuthzFor(req.bpiSubject);
+    const bpiSubjectToCheckAuthzFor = this.prisma.bpiSubject.findUnique({
+      where: {
+        id: req.bpiSubject.id,
+      },
+      include: {
+        roles: true,
+      },
+    });
+    const authz = this.authzFactory.buildAuthzFor(bpiSubjectToCheckAuthzFor);
 
     try {
       for (const requirement of requirements) {
