@@ -15,8 +15,8 @@ describe('Encryption Service', () => {
     const testContent = 'Liftbois are real';
 
     // Act
-    var encryptedContent = await encryptionService.encrypt(testContent);
-    var decrytedContent = await encryptionService.decrypt(encryptedContent);
+    const encryptedContent = await encryptionService.encrypt(testContent);
+    const decrytedContent = await encryptionService.decrypt(encryptedContent);
 
     // Assert
     expect(decrytedContent).toEqual(testContent);

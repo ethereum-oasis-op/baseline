@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as jose from 'jose';
-import { initialize } from 'passport';
 
 @Injectable()
 export class EncryptionService {
-  constructor() {}
-
   async encrypt(content: string): Promise<string> {
     const jwe = await new jose.CompactEncrypt(new TextEncoder().encode(content))
       .setProtectedHeader({ alg: 'dir', enc: 'A128CBC-HS256' })
@@ -20,7 +17,7 @@ export class EncryptionService {
   }
 
   async decrypt(jwe: string): Promise<string> {
-    const { plaintext, protectedHeader } = await jose.compactDecrypt(
+    const { plaintext } = await jose.compactDecrypt(
       jwe,
       await jose.importJWK({
         k: process.env.BPI_ENCRYPTION_KEY_K_PARAM,
