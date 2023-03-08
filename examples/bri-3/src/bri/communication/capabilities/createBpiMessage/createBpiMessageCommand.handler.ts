@@ -15,7 +15,7 @@ export class CreateBpiMessageCommandHandler
     private readonly storageAgent: BpiMessageStorageAgent,
     private readonly messagingAgent: MessagingAgent,
     private readonly authAgent: AuthAgent,
-    private readonly cryptoService: EncryptionService
+    private readonly cryptoService: EncryptionService,
   ) {}
 
   async execute(command: CreateBpiMessageCommand) {
@@ -44,7 +44,9 @@ export class CreateBpiMessageCommandHandler
       command.type,
     );
 
-    newBpiMessageCandidate.content = await this.cryptoService.encrypt(newBpiMessageCandidate.content);
+    newBpiMessageCandidate.content = await this.cryptoService.encrypt(
+      newBpiMessageCandidate.content,
+    );
 
     const newBpiMessage = await this.storageAgent.storeNewBpiMessage(
       newBpiMessageCandidate,

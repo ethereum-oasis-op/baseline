@@ -26,7 +26,13 @@ export const CommandHandlers = [
 export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
 
 @Module({
-  imports: [CqrsModule, AuthModule, SubjectModule, LoggingModule, EncryptionModule],
+  imports: [
+    CqrsModule,
+    AuthModule,
+    SubjectModule,
+    LoggingModule,
+    EncryptionModule,
+  ],
   controllers: [MessageController],
   providers: [
     ...CommandHandlers,

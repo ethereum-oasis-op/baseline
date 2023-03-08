@@ -17,7 +17,7 @@ export class GetBpiMessageByIdQueryHandler
   constructor(
     @InjectMapper() private mapper: Mapper,
     private readonly storageAgent: BpiMessageStorageAgent,
-    private readonly cryptoService: EncryptionService
+    private readonly cryptoService: EncryptionService,
   ) {}
 
   async execute(query: GetBpiMessageByIdQuery) {
@@ -26,7 +26,7 @@ export class GetBpiMessageByIdQueryHandler
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
     var dto = this.mapper.map(bpiMessage, BpiMessage, BpiMessageDto);
-    
+
     dto.content = await this.cryptoService.decrypt(dto.content);
 
     return dto;
