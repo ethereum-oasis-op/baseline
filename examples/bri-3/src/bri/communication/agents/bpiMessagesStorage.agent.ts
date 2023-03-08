@@ -8,8 +8,9 @@ import { BpiMessage } from '../models/bpiMessage';
 @Injectable()
 export class BpiMessageStorageAgent extends PrismaService {
   constructor(
-    @InjectMapper() private mapper: Mapper, 
-    private readonly encryptionService: EncryptionService) {
+    @InjectMapper() private mapper: Mapper,
+    private readonly encryptionService: EncryptionService,
+  ) {
     super();
   }
 
@@ -23,9 +24,11 @@ export class BpiMessageStorageAgent extends PrismaService {
       return null;
     }
 
-    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage); 
-    bpiMessage.updateContent(await this.encryptionService.decrypt(bpiMessage.content));
-    
+    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
+    bpiMessage.updateContent(
+      await this.encryptionService.decrypt(bpiMessage.content),
+    );
+
     return bpiMessage;
   }
 
