@@ -9,6 +9,8 @@ import {
   Workgroup,
   Workflow,
   Workstep,
+  Transaction,
+  Message,
 } from '@prisma/client';
 import { createPrismaAbility, PrismaQuery, Subjects } from '@casl/prisma';
 
@@ -21,6 +23,8 @@ type AppSubjects =
       Workflow: Workflow;
       BpiSubjectAccount: BpiSubjectAccount;
       BpiAccount: BpiAccount;
+      Transaction: Transaction;
+      Message: Message;
     }>;
 export type AppAbility = PureAbility<[string, AppSubjects], PrismaQuery>;
 
