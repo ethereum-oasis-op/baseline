@@ -1,7 +1,6 @@
 import { AbilityBuilder, PureAbility } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { BpiSubjectRoleName } from '../identity/bpiSubjects/models/bpiSubjectRole';
-import { BpiSubject as BpiSubjectModel } from '../identity/bpiSubjects/models/bpiSubject';
 import {
   BpiSubject,
   BpiSubjectAccount,
@@ -11,6 +10,7 @@ import {
   Workstep,
   Transaction,
   Message,
+  BpiSubjectRole,
 } from '@prisma/client';
 import { createPrismaAbility, PrismaQuery, Subjects } from '@casl/prisma';
 
@@ -75,7 +75,9 @@ const rolePermissions: Record<BpiSubjectRoleName, DefinePermissions> = {
 
 @Injectable()
 export class AuthzFactory {
-  buildAuthzFor(bpiSubject: BpiSubjectModel): AppAbility {
+  buildAuthzFor(
+    bpiSubject: BpiSubject & { roles: BpiSubjectRole[] },
+  ): AppAbility {
     const builder = new AbilityBuilder<AppAbility>(createPrismaAbility);
     // this is just for start, once there are more roles, this should be modified a bit
     const role = bpiSubject.roles[0]?.name;
