@@ -1,5 +1,4 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EncryptionService } from '../../../../shared/encryption/encryption.service';
 import { AuthAgent } from '../../../auth/agent/auth.agent';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
@@ -15,7 +14,6 @@ export class CreateBpiMessageCommandHandler
     private readonly storageAgent: BpiMessageStorageAgent,
     private readonly messagingAgent: MessagingAgent,
     private readonly authAgent: AuthAgent,
-    private readonly cryptoService: EncryptionService,
   ) {}
 
   async execute(command: CreateBpiMessageCommand) {
@@ -42,10 +40,6 @@ export class CreateBpiMessageCommandHandler
       command.content,
       command.signature,
       command.type,
-    );
-
-    newBpiMessageCandidate.content = await this.cryptoService.encrypt(
-      newBpiMessageCandidate.content,
     );
 
     const newBpiMessage = await this.storageAgent.storeNewBpiMessage(

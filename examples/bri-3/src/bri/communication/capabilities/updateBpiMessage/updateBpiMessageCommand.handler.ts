@@ -1,5 +1,4 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { EncryptionService } from '../../../../shared/encryption/encryption.service';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { BpiMessage } from '../../models/bpiMessage';
@@ -12,7 +11,6 @@ export class UpdateBpiMessageCommandHandler
   constructor(
     private agent: BpiMessageAgent,
     private storageAgent: BpiMessageStorageAgent,
-    private cryptoService: EncryptionService,
   ) {}
 
   async execute(command: UpdateBpiMessageCommand) {
@@ -25,10 +23,6 @@ export class UpdateBpiMessageCommandHandler
       bpiMessageToUpdate,
       command.content,
       command.signature,
-    );
-
-    bpiMessageToUpdate.content = await this.cryptoService.encrypt(
-      bpiMessageToUpdate.content,
     );
 
     return await this.storageAgent.updateBpiMessage(bpiMessageToUpdate);
