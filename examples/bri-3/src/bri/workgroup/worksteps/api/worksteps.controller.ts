@@ -38,7 +38,7 @@ export class WorkstepController {
   }
 
   @Post()
-  @CheckAuthz({ action: 'manage', type: 'Workstep' })
+  @CheckAuthz({ action: 'create', type: 'Workstep' })
   async createWorkstep(@Body() requestDto: CreateWorkstepDto): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkstepCommand(

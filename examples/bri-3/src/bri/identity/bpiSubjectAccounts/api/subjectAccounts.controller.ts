@@ -39,7 +39,7 @@ export class SubjectAccountController {
   }
 
   @Post()
-  @CheckAuthz({ action: 'manage', type: 'BpiSubjectAccount' })
+  @CheckAuthz({ action: 'create', type: 'BpiSubjectAccount' })
   async createBpiSubjectAccount(
     @Body() requestDto: CreateBpiSubjectAccountDto,
   ): Promise<string> {

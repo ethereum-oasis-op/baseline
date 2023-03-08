@@ -30,7 +30,7 @@ export class WorkgroupController {
   }
 
   @Post()
-  @CheckAuthz({ action: 'manage', type: 'Workgroup' })
+  @CheckAuthz({ action: 'create', type: 'Workgroup' })
   async createWorkgroup(
     @Req() req,
     @Body() requestDto: CreateWorkgroupDto,

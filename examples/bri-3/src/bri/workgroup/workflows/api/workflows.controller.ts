@@ -35,7 +35,7 @@ export class WorkflowController {
   }
 
   @Post()
-  @CheckAuthz({ action: 'manage', type: 'Workflow' })
+  @CheckAuthz({ action: 'create', type: 'Workflow' })
   async createWorkflow(@Body() requestDto: CreateWorkflowDto): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkflowCommand(

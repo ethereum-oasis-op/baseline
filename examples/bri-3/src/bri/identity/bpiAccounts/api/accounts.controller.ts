@@ -34,7 +34,7 @@ export class AccountController {
   }
 
   @Post()
-  @CheckAuthz({ action: 'manage', type: 'BpiAccount' })
+  @CheckAuthz({ action: 'create', type: 'BpiAccount' })
   async createBpiAccount(
     @Body() requestDto: CreateBpiAccountDto,
   ): Promise<string> {
