@@ -17,6 +17,7 @@ import { ArchiveWorkgroupCommand } from '../capabilities/archiveWorkgroup/archiv
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
+import { CheckAuthz } from '../../../authz/guards/authz.decorator';
 
 @Controller('workgroups')
 export class WorkgroupController {
@@ -62,6 +63,7 @@ export class WorkgroupController {
   }
 
   @Put('archive/:id')
+  @CheckAuthz({ action: 'manage', subject: 'BpiSubject' })
   async archiveWorkgroup(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(new ArchiveWorkgroupCommand(id));
   }

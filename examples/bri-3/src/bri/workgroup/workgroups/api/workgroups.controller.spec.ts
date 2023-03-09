@@ -25,6 +25,8 @@ import { classes } from '@automapper/classes';
 import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
 import { ArchiveWorkgroupCommandHandler } from '../capabilities/archiveWorkgroup/archiveWorkgroupCommand.handler';
 import { WorkgroupStatus } from '../models/workgroup';
+import { AuthzFactory } from '../../../authz/authz.factory';
+import { AuthzModule } from '../../../authz/authz.module';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -64,6 +66,7 @@ describe('WorkgroupsController', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        AuthzModule,
       ],
       controllers: [WorkgroupController],
       providers: [
@@ -75,6 +78,7 @@ describe('WorkgroupsController', () => {
         DeleteWorkgroupCommandHandler,
         GetWorkgroupByIdQueryHandler,
         WorkgroupStorageAgent,
+        AuthzFactory,
       ],
     })
       .overrideProvider(WorkgroupStorageAgent)
