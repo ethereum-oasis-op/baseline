@@ -72,6 +72,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "28.1.2",
+    "jest-mock-extended": "^3.0.3",
     "prettier": "^2.3.2",
     "prisma": "^4.4.0",
     "source-map-support": "^0.5.20",
