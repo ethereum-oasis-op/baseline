@@ -1,19 +1,26 @@
 import { AutoMap } from '@automapper/classes';
-import MerkleTree from 'merkletreejs';
 
-export class BinaryHashTree {
+export class BpiMerkleTree {
   @AutoMap()
   id: string;
 
   @AutoMap()
-  merkleTree: MerkleTree;
+  leaves: string[];
 
-  constructor(id: string, merkleTree: MerkleTree) {
+  @AutoMap()
+  hashFunction: unknown;
+
+  constructor(id: string, leaves: string[], hashFunction: unknown) {
     this.id = id;
-    this.merkleTree = merkleTree;
+    this.leaves = leaves;
+    this.hashFunction = hashFunction;
   }
 
-  public updateMerkleTree(newMerkleTree: MerkleTree): void {
-    this.merkleTree = newMerkleTree;
+  public updateLeaves(newLeaves: string[]): void {
+    this.leaves = newLeaves;
+  }
+
+  public updateHashFunction(newHashFunction: unknown): void {
+    this.hashFunction = newHashFunction;
   }
 }
