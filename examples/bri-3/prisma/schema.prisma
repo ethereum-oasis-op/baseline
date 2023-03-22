@@ -121,6 +121,12 @@ model AnchorHash {
   hash              String     @unique
 }
 
+model MerkleTree {
+  id                String @id @default(uuid())
+  leaves            String[] 
+  hashFunction      String
+}
+
 enum WorkgroupStatus {
   ACTIVE
   ARCHIVED
