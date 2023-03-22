@@ -1,31 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ethers } from 'ethers';
-import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectStorageAgent } from '../../../bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { createJWT, ES256KSigner, hexToBytes } from 'did-jwt';
-import { errorMessage, jwtConstants } from '../constants';
+import { ethers } from 'ethers';
+import { BpiSubjectStorageAgent } from '../../../bri/identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubject } from '../../../bri/identity/bpiSubjects/models/bpiSubject';
+import { LoggingService } from '../../../shared/logging/logging.service';
+import { INVALID_SIGNATURE, USER_NOT_AUTHORIZED } from '../api/err.messages';
+import { jwtConstants } from '../constants';
 
 @Injectable()
 export class AuthAgent {
   constructor(
     private readonly bpiSubjectStorageAgent: BpiSubjectStorageAgent,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
+    private readonly logger: LoggingService,
   ) {}
 
+  // TODO: Move into a separate service once signature verification
+  // capabilities grow
   throwIfSignatureVerificationFails(
     message: string,
     signature: string,
     publicKey: string,
-  ) {
-    const publicKeyFromSignature = ethers.utils.verifyMessage(
-      message,
-      signature,
-    );
-
-    if (publicKeyFromSignature.toLowerCase() !== publicKey) {
-      throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+  ): void {
+    if (!this.verifySignatureAgainstPublicKey(message, signature, publicKey)) {
+      throw new UnauthorizedException(INVALID_SIGNATURE);
     }
+  }
+
+  verifySignatureAgainstPublicKey(
+    message: string,
+    signature: string,
+    senderPublicKey: string,
+  ): boolean {
+    let publicKeyFromSignature = '';
+
+    try {
+      publicKeyFromSignature = ethers.utils.verifyMessage(message, signature);
+    } catch (error) {
+      this.logger.logError(
+        `Error validating signature: ${signature} for message ${message}. Error: ${error}}`,
+      );
+      return false;
+    }
+
+    const isValid = publicKeyFromSignature === senderPublicKey;
+
+    if (!isValid) {
+      this.logger.logWarn(
+        `Signature: ${signature} for public key ${senderPublicKey} is invalid.`,
+      );
+    }
+
+    return isValid;
   }
 
   async getBpiSubjectByPublicKey(publicKey: string) {
@@ -34,7 +61,7 @@ export class AuthAgent {
 
   throwIfLoginNonceMismatch(bpiSubject: BpiSubject, nonce: string) {
     if (bpiSubject.loginNonce !== nonce) {
-      throw new Error(errorMessage.USER_NOT_AUTHORIZED);
+      throw new Error(USER_NOT_AUTHORIZED);
     }
   }
 

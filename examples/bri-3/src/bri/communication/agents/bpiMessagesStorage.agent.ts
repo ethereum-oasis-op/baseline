@@ -1,13 +1,16 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { EncryptionService } from '../../../shared/encryption/encryption.service';
 import { BpiMessage } from '../models/bpiMessage';
 
 @Injectable()
 export class BpiMessageStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
+  constructor(
+    @InjectMapper() private mapper: Mapper,
+    private readonly encryptionService: EncryptionService,
+  ) {
     super();
   }
 
@@ -18,10 +21,15 @@ export class BpiMessageStorageAgent extends PrismaService {
     });
 
     if (!bpiMessageModel) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      return null;
     }
 
-    return this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
+    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
+    bpiMessage.updateContent(
+      await this.encryptionService.decrypt(bpiMessage.content),
+    );
+
+    return bpiMessage;
   }
 
   async getAllBpiMessages(): Promise<BpiMessage[]> {
@@ -38,7 +46,7 @@ export class BpiMessageStorageAgent extends PrismaService {
         id: bpiMessage.id,
         fromBpiSubjectId: bpiMessage.fromBpiSubject.id,
         toBpiSubjectId: bpiMessage.toBpiSubject.id,
-        content: bpiMessage.content,
+        content: await this.encryptionService.encrypt(bpiMessage.content),
         signature: bpiMessage.signature,
         type: bpiMessage.type,
       },
@@ -55,7 +63,7 @@ export class BpiMessageStorageAgent extends PrismaService {
         id: bpiMessage.id,
         fromBpiSubjectId: bpiMessage.fromBpiSubject.id,
         toBpiSubjectId: bpiMessage.toBpiSubject.id,
-        content: bpiMessage.content,
+        content: await this.encryptionService.encrypt(bpiMessage.content),
         signature: bpiMessage.signature,
         type: bpiMessage.type,
       },

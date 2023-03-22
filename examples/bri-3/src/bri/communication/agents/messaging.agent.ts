@@ -1,10 +1,13 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { validate } from 'uuid';
 import { LoggingService } from '../../../shared/logging/logging.service';
-import { CreateBpiMessageDto } from '../api/dtos/request/createBpiMessage.dto';
+import { BpiMessageDto } from '../api/dtos/response/bpiMessage.dto';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
+import { BpiMessage } from '../models/bpiMessage';
 import { BpiMessageType } from '../models/bpiMessageType.enum';
 
 @Injectable()
@@ -13,6 +16,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
     @Inject('IMessagingClient')
     private readonly messagingClient: IMessagingClient,
     private readonly commandBus: CommandBus,
+    @InjectMapper() private mapper: Mapper,
     private readonly logger: LoggingService,
   ) {}
 
@@ -23,17 +27,21 @@ export class MessagingAgent implements OnApplicationBootstrap {
     );
   }
 
-  async publishMessage(channelName: string, message: string): Promise<void> {
+  public async publishMessage(
+    channelName: string,
+    message: string,
+  ): Promise<void> {
     await this.messagingClient.publish(channelName, message);
   }
 
-  private onNewMessageReceived(rawMessage: string): void {
+  // TODO: Add unit tests for this method
+  public async onNewMessageReceived(rawMessage: string): Promise<boolean> {
     this.logger.logInfo(
       `MessagingListenerAgent: New raw message received: ${rawMessage}. Trying to parse into a Bpi Message`,
     );
 
     const [newBpiMessageCandidate, validationErrors] =
-      this.validateBpiMessageFormat(rawMessage);
+      this.tryDeserializeToBpiMessageCandidate(rawMessage);
 
     if (validationErrors.length > 0) {
       this.logger.logError(
@@ -42,14 +50,14 @@ export class MessagingAgent implements OnApplicationBootstrap {
         )}`,
       );
 
-      return;
+      return false;
     }
 
-    this.commandBus.execute(
+    return await this.commandBus.execute(
       new ProcessInboundBpiMessageCommand(
         newBpiMessageCandidate.id,
-        newBpiMessageCandidate.from,
-        newBpiMessageCandidate.to,
+        newBpiMessageCandidate.fromBpiSubjectId,
+        newBpiMessageCandidate.toBpiSubjectId,
         JSON.stringify(newBpiMessageCandidate.content),
         newBpiMessageCandidate.signature,
         newBpiMessageCandidate.type,
@@ -57,11 +65,11 @@ export class MessagingAgent implements OnApplicationBootstrap {
     );
   }
 
-  public validateBpiMessageFormat(
+  public tryDeserializeToBpiMessageCandidate(
     rawMessage: string,
-  ): [CreateBpiMessageDto, string[]] {
+  ): [BpiMessage, string[]] {
     const errors: string[] = [];
-    let newBpiMessageCandidate: CreateBpiMessageDto;
+    let newBpiMessageCandidate: BpiMessage;
 
     try {
       newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
@@ -74,12 +82,16 @@ export class MessagingAgent implements OnApplicationBootstrap {
       errors.push(`id: ${newBpiMessageCandidate.id} is not a valid UUID`);
     }
 
-    if (!validate(newBpiMessageCandidate.from)) {
-      errors.push(`from: ${newBpiMessageCandidate.from} is not a valid UUID`);
+    if (!validate(newBpiMessageCandidate.fromBpiSubjectId)) {
+      errors.push(
+        `from: ${newBpiMessageCandidate.fromBpiSubjectId} is not a valid UUID`,
+      );
     }
 
-    if (!validate(newBpiMessageCandidate.to)) {
-      errors.push(`to: ${newBpiMessageCandidate.to} is not a valid UUID`);
+    if (!validate(newBpiMessageCandidate.toBpiSubjectId)) {
+      errors.push(
+        `to: ${newBpiMessageCandidate.toBpiSubjectId} is not a valid UUID`,
+      );
     }
 
     if (
@@ -103,6 +115,15 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     return [newBpiMessageCandidate, errors];
+  }
+
+  public serializeBpiMessage(bpiMessage: BpiMessage): string {
+    const bpiMessageDto = this.mapper.map(
+      bpiMessage,
+      BpiMessage,
+      BpiMessageDto,
+    );
+    return JSON.stringify(bpiMessageDto);
   }
 
   private parseJsonOrThrow(jsonString: string) {

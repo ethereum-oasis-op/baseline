@@ -19,6 +19,7 @@ export class GetBpiSubjectByIdQueryHandler
 
   async execute(query: GetBpiSubjectByIdQuery) {
     const bpiSubject = await this.storageAgent.getBpiSubjectById(query.id);
+
     if (!bpiSubject) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }

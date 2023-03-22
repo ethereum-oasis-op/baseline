@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { EncryptionModule } from '../../shared/encryption/encryption.module';
 import { LoggingModule } from '../../shared/logging/logging.module';
+import { AuthModule } from '../auth/auth.module';
 import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
 import { SubjectsProfile } from '../identity/bpiSubjects/subjects.profile';
 import { NatsMessagingClient } from './/messagingClients/natsMessagingClient';
@@ -24,7 +26,13 @@ export const CommandHandlers = [
 export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
 
 @Module({
-  imports: [CqrsModule, SubjectModule, LoggingModule],
+  imports: [
+    CqrsModule,
+    AuthModule,
+    SubjectModule,
+    LoggingModule,
+    EncryptionModule,
+  ],
   controllers: [MessageController],
   providers: [
     ...CommandHandlers,

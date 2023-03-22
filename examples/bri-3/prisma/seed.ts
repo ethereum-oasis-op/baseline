@@ -19,6 +19,7 @@ async function main() {
       description: 'External Bpi Subject',
     },
   });
+  // TODO: Add Bpi Subjects needed for messaging as well as any other entities needed to have a local instance up and running
 }
 main()
   .then(async () => {
