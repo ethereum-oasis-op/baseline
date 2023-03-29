@@ -121,10 +121,9 @@ model AnchorHash {
   hash              String     @unique
 }
 
-model MerkleTree {
+model BpiMerkleTree {
   id                String @id @default(uuid())
-  leaves            String[] 
-  hashFunction      String
+  merkleTree        String
 }
 
 enum WorkgroupStatus {
