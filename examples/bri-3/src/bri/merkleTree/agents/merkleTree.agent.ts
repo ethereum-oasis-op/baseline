@@ -1,38 +1,46 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import MerkleTree from 'merkletreejs';
 import { v4 } from 'uuid';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
-import { BpiMerkleTree } from '../models/merkleTree';
+import { BpiMerkleTree } from '../models/bpiMerkleTree';
 import { MerkleTreeStorageAgent } from './merkleTreeStorage.agent';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class MerkleTreeAgent {
   constructor(private storageAgent: MerkleTreeStorageAgent) {}
   public createNewMerkleTree(
     leaves: string[],
-    hashFunction: unknown,
+    hashFunction: string,
   ): BpiMerkleTree {
-    return new BpiMerkleTree(v4(), leaves, hashFunction);
+    const hashHelper = (data: any): Buffer => {
+      return crypto.createHash(hashFunction).update(data).digest();
+    };
+
+    const hashedLeaves = leaves.map((x) => hashHelper(x));
+
+    return new BpiMerkleTree(v4(), new MerkleTree(hashedLeaves, hashHelper));
   }
 
   public updateMerkleTree(
     merkleTreeToUpdate: BpiMerkleTree,
     leaves: string[],
-    hashFunction: unknown,
+    hashFunction: string,
   ) {
-    merkleTreeToUpdate.updateLeaves(leaves);
-    merkleTreeToUpdate.updateHashFunction(hashFunction);
+    const hashHelper = (data: any): Buffer => {
+      return crypto.createHash(hashFunction).update(data).digest();
+    };
+
+    const hashedLeaves = leaves.map((x) => hashHelper(x));
+
+    merkleTreeToUpdate.updateMerkleTree(hashedLeaves, hashHelper);
   }
 
   public async fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
     id: string,
   ): Promise<BpiMerkleTree> {
-    const bpiSubjectToUpdate: BpiMerkleTree =
+    const merkleTreeCandidate: BpiMerkleTree =
       await this.storageAgent.getMerkleTreeById(id);
 
-    if (!bpiSubjectToUpdate) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    }
-
-    return bpiSubjectToUpdate;
+    return merkleTreeCandidate;
   }
 }
