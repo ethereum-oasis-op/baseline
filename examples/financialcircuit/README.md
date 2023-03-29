@@ -87,10 +87,10 @@ It conceals the quotes
 Counter parties don't know each other quotes.
 
 ## Test
-Verifier smart contract was deployed on Rinkeby for tests purpose. Here is the Etherscan link:
+Verifier smart contract is deployed to Polygon Mumbai for testing purposes. Here is the Polygonscan link:
 https://mumbai.polygonscan.com/address/0x14e1d3c53a42b64dde5e78b069bbd295270117b9#code
 
-You can use remix to test it since Etherscan form to Write parameters didin't work with 2 dymension array.
+You can use [Remix](https://remix.ethereum.org/) to test it since Polygonscan form to Write parameters didn't work with 2 dimension array.
 
 For test # 7, Test 7 - Cpt1 Quote: 93 - Cpt2 Quote: 98 - Cpt3 Quote: 94 - Initiator Party selects the smallest integer quote
 you need the values below to test the Verifier:
