@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { PrismaService } from '../../../../prisma/prisma.service';
-import { BpiMerkleTree } from '../models/merkleTree';
+import MerkleTree from 'merkletreejs';
+import { BpiMerkleTree } from '../models/bpiMerkleTree';
 
 @Injectable()
 export class MerkleTreeStorageAgent extends PrismaService {
@@ -11,7 +12,7 @@ export class MerkleTreeStorageAgent extends PrismaService {
   }
 
   async getMerkleTreeById(id: string): Promise<BpiMerkleTree> {
-    const merkleTreeModel = await this.merkleTree.findUnique({
+    const merkleTreeModel = await this.bpiMerkleTree.findUnique({
       where: { id },
     });
 
@@ -19,35 +20,52 @@ export class MerkleTreeStorageAgent extends PrismaService {
       return null;
     }
 
-    return this.mapper.map(merkleTreeModel, BpiMerkleTree, BpiMerkleTree);
+    const merkleTree = new BpiMerkleTree(
+      merkleTreeModel.id,
+      MerkleTree.unmarshalTree(merkleTreeModel.merkleTree),
+    );
+    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 
   async createNewMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    const newMerkleTreeModel = await this.merkleTree.create({
+    const treeIn = {
+      id: merkleTree.id,
+      merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
+    };
+    const newMerkleTreeModel = await this.bpiMerkleTree.create({
       data: {
-        ...merkleTree,
+        ...treeIn,
       },
     });
 
-    return this.mapper.map(newMerkleTreeModel, BpiMerkleTree, BpiMerkleTree);
+    const treeOut = {
+      id: newMerkleTreeModel.id,
+      merkleTree: MerkleTree.unmarshalTree(merkleTree.merkleTree),
+    };
+    return this.mapper.map(treeOut, BpiMerkleTree, BpiMerkleTree);
   }
 
   async updateMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    const updatedMerkleTreeModel = await this.merkleTree.update({
+    const treeIn = {
+      id: merkleTree.id,
+      merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
+    };
+    const updatedMerkleTreeModel = await this.bpiMerkleTree.update({
       where: { id: merkleTree.id },
       data: {
-        ...merkleTree,
+        ...treeIn,
       },
     });
-    return this.mapper.map(
-      updatedMerkleTreeModel,
-      BpiMerkleTree,
-      BpiMerkleTree,
-    );
+
+    const treeOut = {
+      id: updatedMerkleTreeModel.id,
+      merkleTree: MerkleTree.unmarshalTree(merkleTree.merkleTree),
+    };
+    return this.mapper.map(treeOut, BpiMerkleTree, BpiMerkleTree);
   }
 
   async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<void> {
-    await this.merkleTree.delete({
+    await this.bpiMerkleTree.delete({
       where: { id: merkleTree.id },
     });
   }
