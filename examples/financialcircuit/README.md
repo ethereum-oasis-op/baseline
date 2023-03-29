@@ -88,7 +88,7 @@ Counter parties don't know each other quotes.
 
 ## Test
 Verifier smart contract was deployed on Rinkeby for tests purpose. Here is the Etherscan link:
-https://rinkeby.etherscan.io/address/0xad6ba91bd376050e807b67cd2ff83a638b3095c2#code
+https://mumbai.polygonscan.com/address/0x14e1d3c53a42b64dde5e78b069bbd295270117b9#code
 
 You can use remix to test it since Etherscan form to Write parameters didin't work with 2 dymension array.
 
