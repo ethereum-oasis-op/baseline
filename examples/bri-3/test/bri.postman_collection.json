@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "23da0214-5606-4a7b-a410-297ae21c0d76",
+		"_postman_id": "9901faf2-1db5-4e4c-921b-b5f43ea33cf8",
 		"name": "bri",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11201020"
 	},
 	"item": [
 		{
@@ -1147,6 +1148,129 @@
 							"path": [
 								"auth",
 								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Merkle Tree",
+			"item": [
+				{
+					"name": "Create Merkle Tree",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"leaves\": [\"a\", \"b\", \"c\"],\n    \"hashFunction\": \"sha256\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/merkle",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"merkle"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Merkle Tree By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/merkle/7c2a351a-fd43-468c-a75d-64a0d1b54b8a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"merkle",
+								"7c2a351a-fd43-468c-a75d-64a0d1b54b8a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Merkle Tree",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/merkle/d5262706-bb63-4681-ba3e-9bba41960c1a",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"merkle",
+								"d5262706-bb63-4681-ba3e-9bba41960c1a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Merkle Tree",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"22530de2-f368-4d26-808a-787a1528adbd\",\n    \"name\": \"hello3\",\n    \"desc\": \"world2\",\n    \"publicKey\": \"xyz2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/merkle/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"merkle",
+								"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
 							]
 						}
 					},
