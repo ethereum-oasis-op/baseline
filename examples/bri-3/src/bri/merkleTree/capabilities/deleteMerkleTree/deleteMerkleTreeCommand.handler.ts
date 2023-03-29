@@ -17,6 +17,6 @@ export class DeleteMerkleTreeCommandHandler
       await this.agent.fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
         command.id,
       );
-    await this.storageAgent.deleteMerkleTree(merkleTreeToDelete.id);
+    await this.storageAgent.deleteMerkleTree(merkleTreeToDelete);
   }
 }
