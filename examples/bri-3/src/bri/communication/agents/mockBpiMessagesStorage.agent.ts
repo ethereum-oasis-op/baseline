@@ -1,5 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { Injectable } from '@nestjs/common';
 import { BpiMessage } from '../models/bpiMessage';
 
 @Injectable()
@@ -9,7 +8,7 @@ export class MockBpiMessageStorageAgent {
   async getBpiMessageById(id: string): Promise<BpiMessage> {
     const bpiMessage = this.bpiMessagesStore.find((bp) => bp.id === id);
     if (!bpiMessage) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      return null;
     }
     return bpiMessage;
   }
@@ -18,7 +17,7 @@ export class MockBpiMessageStorageAgent {
     return Promise.resolve(this.bpiMessagesStore);
   }
 
-  async createNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
+  async storeNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
     const createdBpiMessage = new BpiMessage(
       bpiMessage.id,
       bpiMessage.fromBpiSubject,

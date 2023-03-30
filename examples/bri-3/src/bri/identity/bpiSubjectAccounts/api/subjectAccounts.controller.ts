@@ -8,6 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CheckAuthz } from '../../../authz/guards/authz.decorator';
 import { CreateBpiSubjectAccountCommand } from '../capabilities/createBpiSubjectAccount/createBpiSubjectAccount.command';
 import { DeleteBpiSubjectAccountCommand } from '../capabilities/deleteBpiSubjectAccount/deleteBpiSubjectAccount.command';
 import { GetAllBpiSubjectAccountsQuery } from '../capabilities/getAllBpiSubjectAccounts/getAllBpiSubjectAccounts.query';
@@ -24,6 +25,7 @@ export class SubjectAccountController {
   // TODO: Response DTOs
   // TODO: DTO -> Command mapping
   @Get('/:id')
+  @CheckAuthz({ action: 'read', type: 'BpiSubjectAccount' })
   async getBpiSubjectAccountById(
     @Param('id') id: string,
   ): Promise<BpiSubjectAccountDto> {
@@ -31,11 +33,13 @@ export class SubjectAccountController {
   }
 
   @Get()
+  @CheckAuthz({ action: 'read', type: 'BpiSubjectAccount' })
   async getAllBpiSubjectAccounts(): Promise<BpiSubjectAccountDto[]> {
     return await this.queryBus.execute(new GetAllBpiSubjectAccountsQuery());
   }
 
   @Post()
+  @CheckAuthz({ action: 'create', type: 'BpiSubjectAccount' })
   async createBpiSubjectAccount(
     @Body() requestDto: CreateBpiSubjectAccountDto,
   ): Promise<string> {
@@ -48,6 +52,7 @@ export class SubjectAccountController {
   }
 
   @Put('/:id')
+  @CheckAuthz({ action: 'update', type: 'BpiSubjectAccount' })
   async updateBpiSubjectAccount(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(
       new UpdateBpiSubjectAccountCommand(id),
@@ -55,6 +60,7 @@ export class SubjectAccountController {
   }
 
   @Delete('/:id')
+  @CheckAuthz({ action: 'delete', type: 'BpiSubjectAccount' })
   async deleteBpiSubjectAccount(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(
       new DeleteBpiSubjectAccountCommand(id),

@@ -1,32 +1,88 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { LoggingService } from '../../../shared/logging/logging.service';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import {
+  BPI_MESSAGE_ALREADY_EXISTS,
+  NOT_FOUND_ERR_MESSAGE,
+} from '../api/err.messages';
 import { BpiMessage } from '../models/bpiMessage';
 import { BpiMessageType } from '../models/bpiMessageType.enum';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiMessageStorageAgent } from './bpiMessagesStorage.agent';
-import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 
 @Injectable()
 export class BpiMessageAgent {
   constructor(
     private bpiMessageStorageAgent: BpiMessageStorageAgent,
     private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
+    private readonly logger: LoggingService,
   ) {}
 
-  public async getFromAndToSubjectsAndThrowIfNotExist(
+  public async throwIfBpiMessageIdExists(messageId: string) {
+    const existingBpiMessage =
+      await this.bpiMessageStorageAgent.getBpiMessageById(messageId);
+
+    if (existingBpiMessage) {
+      throw new BadRequestException(BPI_MESSAGE_ALREADY_EXISTS(messageId));
+    }
+  }
+
+  public async fetchBpiSubjectAndThrowIfNotExists(
+    bpiSubjectId: string,
+  ): Promise<BpiSubject> {
+    const bpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
+      bpiSubjectId,
+    );
+
+    if (!bpiSubject) {
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return bpiSubject;
+  }
+
+  public async bpiMessageIdAlreadyExists(messageId: string): Promise<boolean> {
+    const existingBpiMessage =
+      await this.bpiMessageStorageAgent.getBpiMessageById(messageId);
+
+    if (existingBpiMessage) {
+      this.logger.logError(
+        `BpiMessageAgent: BPI Message with id: ${existingBpiMessage.id} already exists.`,
+      );
+
+      return true;
+    }
+
+    return false;
+  }
+
+  public async fetchFromAndToBpiSubjects(
     fromBpiSubjectId: string,
     toBpiSubjectId: string,
-  ) {
+  ): Promise<[BpiSubject, BpiSubject]> {
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
+
+    if (!fromBpiSubject) {
+      this.logger.logError(`BpiMessageAgent: From Bpi Subjects do not exist.`);
+      return [null, null];
+    }
+
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       toBpiSubjectId,
     );
-    return {
-      fromBpiSubject,
-      toBpiSubject,
-    };
+
+    if (!toBpiSubject) {
+      this.logger.logError(`BpiMessageAgent: To Bpi Subject do not exist.`);
+      return [null, null];
+    }
+
+    return [fromBpiSubject, toBpiSubject];
   }
 
   public createNewBpiMessage(

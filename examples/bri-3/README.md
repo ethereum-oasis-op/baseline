@@ -37,10 +37,11 @@ $ npm run prisma:generate # generate the prisma client
 $ npm run prisma:migrate:dev # migrate the db to latest state
 $ npx prisma db seed # seed db
 
-# Messaging
-
-$ docker run -p 4222:4222 -d nats 
 ```
+
+## Messaging
+
+Relevant information can be found in ./docs/nats/nats-configuration.md
 
 ## Running the app
 
@@ -74,21 +75,6 @@ $ npm run test
 
 $ comming soon
 ```
-
-## Trying out NATS messaging
-
-
-Install NATS client from here: https://github.com/nats-io/natscli
-
-Run the following commands in the terminal: 
-```bash
-
-$ nats context add local --description "Localhost" # adds localhost server to nats cli
-
-$ nats pub general "<message>" # publishes new message on the general subject
-
-```
-Observe the log messages in the terminal where the app is running.
 
 ## Architecture
 

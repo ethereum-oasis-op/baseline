@@ -1,4 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { AuthAgent } from '../../../auth/agent/auth.agent';
 import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../../agents/messaging.agent';
@@ -12,14 +13,25 @@ export class CreateBpiMessageCommandHandler
     private readonly agent: BpiMessageAgent,
     private readonly storageAgent: BpiMessageStorageAgent,
     private readonly messagingAgent: MessagingAgent,
+    private readonly authAgent: AuthAgent,
   ) {}
 
   async execute(command: CreateBpiMessageCommand) {
-    const { fromBpiSubject, toBpiSubject } =
-      await this.agent.getFromAndToSubjectsAndThrowIfNotExist(
-        command.from,
-        command.to,
-      );
+    await this.agent.throwIfBpiMessageIdExists(command.id);
+
+    const fromBpiSubject = await this.agent.fetchBpiSubjectAndThrowIfNotExists(
+      command.from,
+    );
+
+    const toBpiSubject = await this.agent.fetchBpiSubjectAndThrowIfNotExists(
+      command.to,
+    );
+
+    this.authAgent.throwIfSignatureVerificationFails(
+      command.content,
+      command.signature,
+      fromBpiSubject.publicKey,
+    );
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(
       command.id,
@@ -30,8 +42,13 @@ export class CreateBpiMessageCommandHandler
       command.type,
     );
 
-    const newBpiMessage = await this.storageAgent.createNewBpiMessage(
+    const newBpiMessage = await this.storageAgent.storeNewBpiMessage(
       newBpiMessageCandidate,
+    );
+
+    await this.messagingAgent.publishMessage(
+      toBpiSubject.publicKey,
+      this.messagingAgent.serializeBpiMessage(newBpiMessage),
     );
 
     return newBpiMessage.id;
