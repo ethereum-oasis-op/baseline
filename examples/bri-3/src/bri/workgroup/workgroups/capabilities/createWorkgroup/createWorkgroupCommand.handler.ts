@@ -1,5 +1,4 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BpiSubjectStorageAgent } from '../../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { WorkgroupAgent } from '../../agents/workgroups.agent';
 import { WorkgroupStorageAgent } from '../../agents/workgroupStorage.agent';
 import { CreateWorkgroupCommand } from './createWorkgroup.command';
@@ -11,21 +10,15 @@ export class CreateWorkgroupCommandHandler
   constructor(
     private workgroupAgent: WorkgroupAgent,
     private workgroupStorageAgent: WorkgroupStorageAgent,
-    private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
   ) {}
 
   async execute(command: CreateWorkgroupCommand) {
-    const workgroupCreator =
-      await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
-        command.publicKey,
-      );
-
     const newWorkgroupCandidate = this.workgroupAgent.createNewWorkgroup(
       command.name,
-      [workgroupCreator],
+      [command.bpiSubject],
       command.securityPolicy,
       command.privacyPolicy,
-      [workgroupCreator],
+      [command.bpiSubject],
       [],
       [],
     );

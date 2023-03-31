@@ -17,10 +17,11 @@ import { SubjectsProfile } from '../subjects.profile';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { AuthzFactory } from '../../../authz/authz.factory';
+import { AuthzModule } from '../../../authz/authz.module';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
-
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -28,6 +29,7 @@ describe('SubjectController', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        AuthzModule,
       ],
       controllers: [SubjectController],
       providers: [
@@ -39,6 +41,7 @@ describe('SubjectController', () => {
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
         SubjectsProfile,
+        AuthzFactory,
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)

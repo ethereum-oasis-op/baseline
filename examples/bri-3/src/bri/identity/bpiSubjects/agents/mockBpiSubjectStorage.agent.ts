@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
+import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
 
 @Injectable()
 export class MockBpiSubjectStorageAgent {
@@ -26,6 +27,12 @@ export class MockBpiSubjectStorageAgent {
     return Promise.resolve(bpiSubjects);
   }
 
+  async getBpiSubjectRoleByName(
+    roleName: BpiSubjectRoleName,
+  ): Promise<BpiSubjectRole> {
+    return new BpiSubjectRole('123', roleName, '');
+  }
+
   async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
     const bpiSubject = this.bpiSubjectsStore.find(
       (bp) => bp.publicKey.toLowerCase() === publicKey,
@@ -41,12 +48,20 @@ export class MockBpiSubjectStorageAgent {
   }
 
   async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+    if (!bpiSubject.roles || !bpiSubject.roles.length) {
+      const role = new BpiSubjectRole(
+        '321',
+        BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT,
+        'mock role',
+      );
+      bpiSubject.roles = [role];
+    }
     const createdBp = new BpiSubject(
       v4(),
       bpiSubject.name,
       bpiSubject.description,
-      bpiSubject.type,
       bpiSubject.publicKey,
+      bpiSubject.roles,
     );
 
     this.bpiSubjectsStore.push(createdBp);

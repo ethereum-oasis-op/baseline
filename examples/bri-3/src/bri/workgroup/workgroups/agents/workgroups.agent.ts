@@ -1,12 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BpiSubject } from 'src/bri/identity/bpiSubjects/models/bpiSubject';
 import { Workflow } from '../../workflows/models/workflow';
 import { Workstep } from '../../worksteps/models/workstep';
 
 import { uuid } from 'uuidv4';
-import { Workgroup } from '../models/workgroup';
+import { Workgroup, WorkgroupStatus } from '../models/workgroup';
 import { WorkgroupStorageAgent } from './workgroupStorage.agent';
-import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import {
+  WORKGROUP_NOT_FOUND_ERR_MESSAGE,
+  WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE,
+} from '../api/err.messages';
 
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
@@ -61,6 +68,27 @@ export class WorkgroupAgent {
     workgroupToUpdate.updateSecurityPolicy(securityPolicy);
     workgroupToUpdate.updatePrivacyPolicy(privacyPolicy);
     workgroupToUpdate.updateParticipants(participants);
+  }
+
+  public async fetchArchiveCandidateAndThrowIfArchiveValidationFails(
+    id: string,
+  ): Promise<Workgroup> {
+    const workgroupToArchive =
+      await this.workgroupStorageAgent.getWorkgroupById(id);
+
+    if (!workgroupToArchive) {
+      throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
+    }
+
+    if (workgroupToArchive.status != WorkgroupStatus.ACTIVE) {
+      throw new BadRequestException(WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE);
+    }
+
+    return workgroupToArchive;
+  }
+
+  public archiveWorkgroup(workgroupToArchive: Workgroup) {
+    workgroupToArchive.updateStatus(WorkgroupStatus.ARCHIVED);
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(

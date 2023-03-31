@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "607e989c-e69c-4f74-bff7-91b2f3803906",
+		"_postman_id": "23da0214-5606-4a7b-a410-297ae21c0d76",
 		"name": "bri",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -1007,7 +1007,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"id\": \"123\",\n  \"from\": \"eb6ab5d2-fe0e-4c74-b6e2-343f16eface4\",\n  \"to\": \"cf77044d-dd3c-42b6-98dc-5d15ef769eb8\",\n  \"content\": \"hello world\",\n  \"signature\": \"xyz\",\n  \"type\": 1\n}",
+							"raw": "{\n  \"id\": \"0319f2a6-fd71-474d-8ae0-55f70c03a3f3\",\n  \"from\": \"71302cec-0a38-469a-a4e5-f58bdfc4ab32\",\n  \"to\": \"76cdd901-d87d-4c87-b572-155afe45c128\",\n  \"content\": \"{\\\"testProp\\\":\\\"testValue\\\"}\",\n  \"signature\": \"0x69c0237bf86c34df000d04b0c1cc1ed037cb3910e2bc8fbef5b01628317f625d70bf83aba5ee5963b2e9e68b3074f61503d3b7ffb2b6caff7e447e7253089b1c1c\",\n  \"type\": 0\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1075,7 +1075,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/messages/123",
+							"raw": "http://localhost:3000/messages/0319f2a6-fd71-474d-8ae0-55f70c03a3f3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1083,7 +1083,70 @@
 							"port": "3000",
 							"path": [
 								"messages",
-								"123"
+								"0319f2a6-fd71-474d-8ae0-55f70c03a3f3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get Login Nonce",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"publicKey\": \"sig\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/nonce",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"nonce"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"msg\",\n    \"signature\": \"sig\",\n    \"publicKey\": \"pk\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"auth",
+								"login"
 							]
 						}
 					},

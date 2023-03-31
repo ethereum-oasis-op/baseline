@@ -8,6 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { CheckAuthz } from '../../../authz/guards/authz.decorator';
 import { CreateWorkstepCommand } from '../capabilities/createWorkstep/createWorkstep.command';
 import { DeleteWorkstepCommand } from '../capabilities/deleteWorkstep/deleteWorkstep.command';
 import { GetAllWorkstepsQuery } from '../capabilities/getAllWorksteps/getAllWorksteps.query';
@@ -25,16 +26,19 @@ export class WorkstepController {
   // TODO: Response DTOs
   // TODO: DTO -> Command mapping
   @Get('/:id')
+  @CheckAuthz({ action: 'read', type: 'Workstep' })
   async getWorkstepById(@Param('id') id: string): Promise<WorkstepDto> {
     return await this.queryBus.execute(new GetWorkstepByIdQuery(id));
   }
 
   @Get()
+  @CheckAuthz({ action: 'read', type: 'Workstep' })
   async getAllWorksteps(): Promise<WorkstepDto[]> {
     return await this.queryBus.execute(new GetAllWorkstepsQuery());
   }
 
   @Post()
+  @CheckAuthz({ action: 'create', type: 'Workstep' })
   async createWorkstep(@Body() requestDto: CreateWorkstepDto): Promise<string> {
     return await this.commandBus.execute(
       new CreateWorkstepCommand(
@@ -49,6 +53,7 @@ export class WorkstepController {
   }
 
   @Put('/:id')
+  @CheckAuthz({ action: 'update', type: 'Workstep' })
   async updateWorkstep(
     @Param('id') id: string,
     @Body() requestDto: UpdateWorkstepDto,
@@ -67,6 +72,7 @@ export class WorkstepController {
   }
 
   @Delete('/:id')
+  @CheckAuthz({ action: 'delete', type: 'Workstep' })
   async deleteWorkstep(@Param('id') id: string): Promise<void> {
     return await this.commandBus.execute(new DeleteWorkstepCommand(id));
   }
