@@ -7,7 +7,7 @@ export class LoggingService {
 
   constructor() {
     this._logger = new Logger({
-      ignoreStackLevels: 4
+      ignoreStackLevels: 4,
     });
   }
 
