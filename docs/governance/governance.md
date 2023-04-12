@@ -38,7 +38,7 @@ TSC members who miss two consective TSC meetings without prior notice will lose 
 
 #### Removal
 
-A TSC member is eligible to lose their seat upon for violating the Code of Conduct through a simple majority vote of TSC members that are not being considered for removal.
+A TSC member is eligible to lose their seat for violating the Code of Conduct through a simple majority vote of TSC members that are not being considered for removal.
 
 
 After removal, a special election shall be governed by Oasis for the vacant seat among contributors. The seat will be up for re-election at the next regular election cycle.
