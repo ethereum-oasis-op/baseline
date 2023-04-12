@@ -36,7 +36,7 @@ The TSC's members are elected annually in September/October, concluding on the l
 
 A TSC member is eligible to lose their seat upon missing two consecutive TSC meetings or three total during a period between elections, or for violating the Code of Conduct.
 
-If a TSC member does not comply with the attendance policy, a simple majority vote for removal is conducted by Oasis for the remaining TSC members that are not being considered for removal to vote.
+If a TSC member does not comply with the attendance policy, a simple majority vote of the remaining TSC members that are not being considered for removal is sufficient to remove the TSC member.
 If the TSC member is voted to retain their seat, they must attend the remaining TSC meetings for the year (with exceptions for emergencies that are communicated to the TSC chairs) or will be removed.
 
 After removal, a special election shall be governed by Oasis for the vacant seat among contributors. The seat will be up for re-election at the next regular election cycle.
