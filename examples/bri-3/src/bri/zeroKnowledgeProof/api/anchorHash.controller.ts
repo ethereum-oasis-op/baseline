@@ -10,7 +10,6 @@ import { AnchorHashDto } from './dtos/response/anchorHash.dto';
 export class AnchorHashController {
   constructor(private commandBus: CommandBus) {}
 
-  @Post('/create')
   async createAnchorHash(
     @Body() requestDto: CreateAnchorHashDto,
   ): Promise<AnchorHashDto> {
