@@ -112,7 +112,7 @@ describe('TransactionController', () => {
       const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
-      const transaction = new Transaction(
+      const existingTransaction = new Transaction(
         '123',
         1,
         '42',
@@ -124,31 +124,33 @@ describe('TransactionController', () => {
         TransactionStatus.Initialized,
       );
       transactionStorageAgentMock.getTransactionById.mockResolvedValueOnce(
-        transaction,
+        existingTransaction,
       );
 
       // Act
-      const createdTransaction = await controller.getTransactionById(
-        transaction.id,
+      const fetchedTransaction = await controller.getTransactionById(
+        existingTransaction.id,
       );
 
       // Assert
-      expect(createdTransaction.id).toEqual(transaction.id);
-      expect(createdTransaction.nonce).toEqual(transaction.nonce);
-      expect(createdTransaction.workflowInstanceId).toEqual(
-        transaction.workflowInstanceId,
+      expect(fetchedTransaction.id).toEqual(existingTransaction.id);
+      expect(fetchedTransaction.nonce).toEqual(existingTransaction.nonce);
+      expect(fetchedTransaction.workflowInstanceId).toEqual(
+        existingTransaction.workflowInstanceId,
       );
-      expect(createdTransaction.workstepInstanceId).toEqual(
-        transaction.workstepInstanceId,
+      expect(fetchedTransaction.workstepInstanceId).toEqual(
+        existingTransaction.workstepInstanceId,
       );
-      expect(uuidValidate(createdTransaction.fromBpiSubjectAccountId));
-      expect(uuidVersion(createdTransaction.fromBpiSubjectAccountId)).toEqual(
+      expect(uuidValidate(fetchedTransaction.fromBpiSubjectAccountId));
+      expect(uuidVersion(fetchedTransaction.fromBpiSubjectAccountId)).toEqual(
         4,
       );
-      expect(uuidValidate(createdTransaction.toBpiSubjectAccountId));
-      expect(uuidVersion(createdTransaction.toBpiSubjectAccountId)).toEqual(4);
-      expect(createdTransaction.payload).toEqual(transaction.payload);
-      expect(createdTransaction.signature).toEqual(transaction.signature);
+      expect(uuidValidate(fetchedTransaction.toBpiSubjectAccountId));
+      expect(uuidVersion(fetchedTransaction.toBpiSubjectAccountId)).toEqual(4);
+      expect(fetchedTransaction.payload).toEqual(existingTransaction.payload);
+      expect(fetchedTransaction.signature).toEqual(
+        existingTransaction.signature,
+      );
     });
   });
 
