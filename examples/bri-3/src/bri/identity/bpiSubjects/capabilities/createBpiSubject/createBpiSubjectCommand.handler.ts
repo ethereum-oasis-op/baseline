@@ -21,7 +21,7 @@ export class CreateBpiSubjectCommandHandler
       command.publicKey,
     );
 
-    const newBpiSubject = await this.storageAgent.createNewBpiSubject(
+    const newBpiSubject = await this.storageAgent.storeNewBpiSubject(
       newBpiSubjectCandidate,
     );
 

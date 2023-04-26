@@ -46,7 +46,7 @@ export class TransactionStorageAgent extends PrismaService {
     return this.mapper.map(transactionModel, Transaction, Transaction);
   }
 
-  async createNewTransaction(transaction: Transaction): Promise<Transaction> {
+  async storeNewTransaction(transaction: Transaction): Promise<Transaction> {
     const newTransactionModel = await this.transaction.create({
       data: {
         id: transaction.id,

@@ -42,7 +42,7 @@ export class WorkstepStorageAgent extends PrismaService {
     });
   }
 
-  async createNewWorkstep(workstep: Workstep): Promise<Workstep> {
+  async storeNewWorkstep(workstep: Workstep): Promise<Workstep> {
     const newWorkstepModel = await this.workstep.create({
       data: workstep,
     });

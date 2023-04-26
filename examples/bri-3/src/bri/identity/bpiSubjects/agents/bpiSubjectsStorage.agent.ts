@@ -59,7 +59,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
     return this.mapper.map(bpiSubjectRole, BpiSubjectRole, BpiSubjectRole);
   }
 
-  async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+  async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     bpiSubject.publicKey = bpiSubject.publicKey.toLowerCase();
     const newBpiSubjectModel = await this.bpiSubject.create({
       data: {
