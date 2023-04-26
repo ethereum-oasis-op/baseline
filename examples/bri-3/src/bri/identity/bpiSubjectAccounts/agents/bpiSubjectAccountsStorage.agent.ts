@@ -40,7 +40,7 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     });
   }
 
-  async createNewBpiSubjectAccount(
+  async storeNewBpiSubjectAccount(
     bpiSubjectAccount: BpiSubjectAccount,
   ): Promise<BpiSubjectAccount> {
     const newBpiSubjectAccountModel = await this.bpiSubjectAccount.create({

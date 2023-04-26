@@ -24,7 +24,7 @@ export class CreateWorkflowCommandHandler
       command.workgroupId,
     );
 
-    const newWorkflow = await this.storageAgent.createNewWorkflow(
+    const newWorkflow = await this.storageAgent.storeNewWorkflow(
       newWorkflowCandidate,
     );
 

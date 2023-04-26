@@ -35,7 +35,7 @@ export class CreateBpiSubjectAccountCommandHandler
     );
 
     const newBpiSubjectAccount =
-      await this.storageAgent.createNewBpiSubjectAccount(
+      await this.storageAgent.storeNewBpiSubjectAccount(
         newBpiSubjectAccountCandidate,
       );
 
