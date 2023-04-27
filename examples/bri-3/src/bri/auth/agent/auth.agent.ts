@@ -44,7 +44,7 @@ export class AuthAgent {
       return false;
     }
 
-    const isValid = publicKeyFromSignature === senderPublicKey;
+    const isValid = publicKeyFromSignature.toLowerCase() === senderPublicKey;
 
     if (!isValid) {
       this.logger.logWarn(
