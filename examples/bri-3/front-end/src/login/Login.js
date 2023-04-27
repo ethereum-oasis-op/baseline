@@ -1,38 +1,69 @@
 import axios from 'axios';
+import { React, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Card, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const handleLogin = async () => {
-  // TODO: handle situations like account switch in metamask or when wallet is initially locked
-  if (window.ethereum) {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    const nonceDto = {
-      publicKey: accounts[0]
-    };
-    const nonce = await axios.post(`${process.env.REACT_APP_SRI_BACKEND}/auth/nonce`, nonceDto);
-    const signature = await window.ethereum.request({
-      method: 'personal_sign',
-      params: [nonce.data, accounts[0]],
-    });
-
-    const loginDto = {
-      message: nonce.data,
-      signature,
-      publicKey: accounts[0],
-    };
-
-    const tokenRequest = await axios.post(`${process.env.REACT_APP_SRI_BACKEND}/auth/login`, loginDto);
-
-    // TODO: add toast library and show success/failure login with error messages
-    // TODO: add logged in user details on UI
-    if (tokenRequest?.data?.access_token) {
-      console.log(tokenRequest.data.access_token);
-    } else {
-      console.log('No token');
-    }
-  } else {
-    throw new Error('No MM found. Please install Metamask');
-  }
-};
 
 export default function Login() {
-  return <button  data-testid="login" onClick={handleLogin}>Login</button>;
+  const [data, setData] = useState({
+    publicKey: '',
+    token: ''
+  });
+
+  const handleLogin = async () => {
+    try {
+    // TODO: handle situations like account switch in metamask or when wallet is initially locked
+    if (window.ethereum) {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const nonceDto = {
+        publicKey: accounts[0]
+      };
+      const nonce = await axios.post(`${process.env.REACT_APP_SRI_BACKEND}/auth/nonce`, nonceDto);
+      const signature = await window.ethereum.request({
+        method: 'personal_sign',
+        params: [nonce.data, accounts[0]],
+      });
+
+      const loginDto = {
+        message: nonce.data,
+        signature,
+        publicKey: accounts[0],
+      };
+
+      const tokenRequest = await axios.post(`${process.env.REACT_APP_SRI_BACKEND}/auth/login`, loginDto);
+
+      // [Done] TODO: add toast library and show success/failure login with error messages
+      // [Done] TODO: add logged in user details on UI
+      if (tokenRequest?.data?.access_token) {
+        const publicKey = accounts[0];
+        const token = tokenRequest.data.access_token;
+        setData({ publicKey, token });
+        toast.success('Success!');
+        // console.log(tokenRequest.data.access_token);
+
+      } else {
+        // console.log('No token');
+        toast.error('No token.');
+      }
+    } else {
+      throw new Error('No MM found. Please install Metamask');
+    }
+  } catch(error) {
+    toast.error(error.message);
+  };
+}
+  
+  return (
+    <>
+      <ToastContainer />
+      <p>Welcome back 🎉 !</p> <br />
+      <Button data-testid="login" onClick={handleLogin}>Login</Button> <br />
+      <Card style={{textAlign:'left', width: '50rem', fontSize: 16, color: 'white', backgroundColor: 'transparent', border: 'transparent', padding: '10px'}}> 
+        {data.publicKey && <Card.Text><b>Current Public Key: </b>{data.publicKey}</Card.Text>}
+        {data.token && <Card.Text><b>Your Access Token: </b>{data.token}</Card.Text>}
+      </Card>
+    </>
+  )
 }
