@@ -34,10 +34,12 @@ describe('Workgroup administration', () => {
         publicKey: '0x08872e27BC5d78F1FC4590803369492868A1FCCb'
       })
 
+    var accesstoken = JSON.parse(loginResponse.text)['access_token'];
     // create two bpi subjects
 
     const createdBpiSubject1Id = await request(app.getHttpServer())
       .post('/subjects')
+      .set('Authorization', `Bearer ${accesstoken}`)
       .send({
         name: 'External Bpi Subject 1',
         desc: 'A test Bpi subject',
@@ -46,6 +48,7 @@ describe('Workgroup administration', () => {
     
     const createdBpiSubject2Id = await request(app.getHttpServer())
       .post('/subjects')
+      .set('Authorization', `Bearer ${accesstoken}`)
       .send({
         name: 'External Bpi Subject 2',
         desc: 'Another test Bpi subject',
@@ -56,6 +59,7 @@ describe('Workgroup administration', () => {
 
     const createdWorkgroupId = await request(app.getHttpServer())
       .post('/workgroups')
+      .set('Authorization', `Bearer ${accesstoken}`)
       .send({
         name: 'Test workgroup',
         securityPolicy: 'secPol',
@@ -64,13 +68,15 @@ describe('Workgroup administration', () => {
     
      await request(app.getHttpServer())
       .put(`/workgroups/${createdWorkgroupId}`)
+      .set('Authorization', `Bearer ${accesstoken}`)
       .send({
         participantIds: [createdBpiSubject1Id, createdBpiSubject2Id]
       })
       .expect(200);
   
     var res = await request(app.getHttpServer())
-      .get('/workgroups/${createdWorkgroupId}`)')
+      .get(`/workgroups/${createdWorkgroupId}`)
+      .set('Authorization', `Bearer ${accesstoken}`)
       .expect(200);
       
     // verify participants
