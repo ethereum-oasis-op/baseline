@@ -34,17 +34,13 @@ export default function Login() {
 
       const tokenRequest = await axios.post(`${process.env.REACT_APP_SRI_BACKEND}/auth/login`, loginDto);
 
-      // [Done] TODO: add toast library and show success/failure login with error messages
-      // [Done] TODO: add logged in user details on UI
       if (tokenRequest?.data?.access_token) {
         const publicKey = accounts[0];
         const token = tokenRequest.data.access_token;
         setData({ publicKey, token });
         toast.success('Success!');
-        // console.log(tokenRequest.data.access_token);
 
       } else {
-        // console.log('No token');
         toast.error('No token.');
       }
     } else {
