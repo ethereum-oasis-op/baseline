@@ -25,33 +25,9 @@ describe('Workgroup administration', () => {
     const createdBpiSubject1Id = await createABpiSubjectAndReturnId('External Bpi Subject 1', app, accessToken);
     const createdBpiSubject2Id = await createABpiSubjectAndReturnId('External Bpi Subject 2', app, accessToken);
     
-    // Create a workgroup
+    const createdWorkgroupId = await createAWorkgroupAndReturnId(app, accessToken);
 
-    const createdWorkgroupResponse = await request(app.getHttpServer())
-      .post('/workgroups')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        name: 'Test workgroup',
-        securityPolicy: 'secPol',
-        privacyPolicy: 'privPol'
-      })
-      .expect(201);
-    
-    const createdWorkgroupId = createdWorkgroupResponse.text;
-
-    // Update workgroup with the bpi subjects created in previous steps
-    
-     await request(app.getHttpServer())
-      .put(`/workgroups/${createdWorkgroupId}`)
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        name: 'Test workgroup',
-        administratorIds: [createdBpiSubject1Id],
-        securityPolicy: 'secPol',
-        privacyPolicy: 'privPol',
-        participantIds: [createdBpiSubject1Id, createdBpiSubject2Id]
-      })
-      .expect(200);
+    await updateWorkgroupAdminsAndParticipants(createdWorkgroupId, [createdBpiSubject1Id], [createdBpiSubject1Id, createdBpiSubject2Id], app, accessToken)
     
     // Verify these Bpi subjects are participants of the created workgroup
   
@@ -105,4 +81,37 @@ async function createABpiSubjectAndReturnId(bpiSubjectName: string, app: INestAp
     .expect(201);
     
   return createdBpiSubject1Response.text;
+}
+
+async function createAWorkgroupAndReturnId(app: INestApplication, accessToken: string): Promise<string> {
+  const createdWorkgroupResponse = await request(app.getHttpServer())
+    .post('/workgroups')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      name: 'Test workgroup',
+      securityPolicy: 'Dummy security policy',
+      privacyPolicy: 'Dummy privacy policy'
+    })
+    .expect(201);
+    
+    return createdWorkgroupResponse.text;
+}
+
+async function updateWorkgroupAdminsAndParticipants(
+  workgroupId: string, 
+  administratorIds: string[], 
+  participantIds: string[], 
+  app: INestApplication, 
+  accessToken: string): Promise<void> {
+  await request(app.getHttpServer())
+    .put(`/workgroups/${workgroupId}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      name: 'Test workgroup',
+      administratorIds: administratorIds,
+      securityPolicy: 'Dummy security policy',
+      privacyPolicy: 'Dummy privacy policy',
+      participantIds: participantIds
+    })
+    .expect(200);
 }
