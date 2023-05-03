@@ -18,7 +18,7 @@ describe('Workgroup administration', () => {
     await app.init();
   });
 
-  it('Logs in an internal Bpi Subject, creates a Workgroup and two Bpi Subjects and adds them as participants to the Workgroup', async () => {    
+  it('Logs in an internal Bpi Subject, creates two Bpi Subjects and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {    
     
     const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(app);
 
@@ -27,16 +27,14 @@ describe('Workgroup administration', () => {
     
     const createdWorkgroupId = await createAWorkgroupAndReturnId(app, accessToken);
 
-    await updateWorkgroupAdminsAndParticipants(createdWorkgroupId, [createdBpiSubject1Id], [createdBpiSubject1Id, createdBpiSubject2Id], app, accessToken)
+    await updateWorkgroupAdminsAndParticipants(
+      createdWorkgroupId, 
+      [createdBpiSubject1Id], 
+      [createdBpiSubject1Id, createdBpiSubject2Id], 
+      app, 
+      accessToken)
     
-    // Verify these Bpi subjects are participants of the created workgroup
-  
-    const getWorkgroupResponse = await request(app.getHttpServer())
-      .get(`/workgroups/${createdWorkgroupId}`)
-      .set('Authorization', `Bearer ${accessToken}`)
-      .expect(200);
-      
-    const resultWorkgroup = JSON.parse(getWorkgroupResponse.text);
+    const resultWorkgroup = await fetchWorkgroup(createdWorkgroupId, app, accessToken); 
 
     expect(resultWorkgroup.participants.length).toBe(2);
     expect(resultWorkgroup.participants[0].id).toEqual(createdBpiSubject1Id);
@@ -114,4 +112,16 @@ async function updateWorkgroupAdminsAndParticipants(
       participantIds: participantIds
     })
     .expect(200);
+}
+
+async function fetchWorkgroup(
+  workgroupId: string, 
+  app: INestApplication, 
+  accessToken: string): Promise<any> {
+    const getWorkgroupResponse = await request(app.getHttpServer())
+    .get(`/workgroups/${workgroupId}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect(200);
+    
+  return JSON.parse(getWorkgroupResponse.text);
 }
