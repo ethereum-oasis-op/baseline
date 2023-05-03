@@ -22,31 +22,9 @@ describe('Workgroup administration', () => {
     
     const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(app);
 
-    // Create two new bpi subjects
-    const createdBpiSubject1Response = await request(app.getHttpServer())
-      .post('/subjects')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        name: 'External Bpi Subject 1',
-        desc: 'A test Bpi Subject',
-        publicKey: 'Bpi Subject 1 dummy public key'
-      })
-      .expect(201);
+    const createdBpiSubject1Id = await createABpiSubjectAndReturnId('External Bpi Subject 1', app, accessToken);
+    const createdBpiSubject2Id = await createABpiSubjectAndReturnId('External Bpi Subject 2', app, accessToken);
     
-    const createdBpiSubject1Id = createdBpiSubject1Response.text;
-    
-    const createdBpiSubject2Response = await request(app.getHttpServer())
-      .post('/subjects')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        name: 'External Bpi Subject 2',
-        desc: 'Another test Bpi subject',
-        publicKey: 'Bpi Subject 2 dummy public key'
-      })
-      .expect(201);
-    
-    const createdBpiSubject2Id = createdBpiSubject2Response.text;
-
     // Create a workgroup
 
     const createdWorkgroupResponse = await request(app.getHttpServer())
@@ -113,4 +91,18 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(app: INestApplica
     .expect(201);
 
   return JSON.parse(loginResponse.text)['access_token'];
+}
+
+async function createABpiSubjectAndReturnId(bpiSubjectName: string, app: INestApplication, accessToken: string): Promise<string> {
+  const createdBpiSubject1Response = await request(app.getHttpServer())
+    .post('/subjects')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      name: bpiSubjectName,
+      desc: 'A test Bpi Subject',
+      publicKey: 'Bpi Subject dummy public key'
+    })
+    .expect(201);
+    
+  return createdBpiSubject1Response.text;
 }
