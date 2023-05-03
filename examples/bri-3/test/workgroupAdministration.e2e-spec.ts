@@ -4,6 +4,8 @@ import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { ethers } from 'ethers';
 
+jest.setTimeout(20000);
+
 describe('Workgroup administration', () => {
   let app: INestApplication;
 
@@ -37,7 +39,7 @@ describe('Workgroup administration', () => {
     var accesstoken = JSON.parse(loginResponse.text)['access_token'];
     // create two bpi subjects
 
-    const createdBpiSubject1Id = await request(app.getHttpServer())
+    const createdBpiSubject1Response = await request(app.getHttpServer())
       .post('/subjects')
       .set('Authorization', `Bearer ${accesstoken}`)
       .send({
@@ -45,8 +47,11 @@ describe('Workgroup administration', () => {
         desc: 'A test Bpi subject',
         publicKey: 'todo'
       })
+      .expect(201);
     
-    const createdBpiSubject2Id = await request(app.getHttpServer())
+    const createdBpiSubject1Id = createdBpiSubject1Response.text;
+    
+    const createdBpiSubject2Response = await request(app.getHttpServer())
       .post('/subjects')
       .set('Authorization', `Bearer ${accesstoken}`)
       .send({
@@ -54,10 +59,13 @@ describe('Workgroup administration', () => {
         desc: 'Another test Bpi subject',
         publicKey: 'todo'
       })
+      .expect(201);
+    
+    const createdBpiSubject2Id = createdBpiSubject2Response.text;
 
     // create workgroup
 
-    const createdWorkgroupId = await request(app.getHttpServer())
+    const createdWorkgroupResponse = await request(app.getHttpServer())
       .post('/workgroups')
       .set('Authorization', `Bearer ${accesstoken}`)
       .send({
@@ -65,22 +73,35 @@ describe('Workgroup administration', () => {
         securityPolicy: 'secPol',
         privacyPolicy: 'privPol'
       })
+      .expect(201);
+    
+    const createdWorkgroupId = createdWorkgroupResponse.text;
+
+    // update workgroup with participants
     
      await request(app.getHttpServer())
       .put(`/workgroups/${createdWorkgroupId}`)
       .set('Authorization', `Bearer ${accesstoken}`)
       .send({
+        name: 'Test workgroup',
+        administratorIds: [createdBpiSubject1Id],
+        securityPolicy: 'secPol',
+        privacyPolicy: 'privPol',
         participantIds: [createdBpiSubject1Id, createdBpiSubject2Id]
       })
       .expect(200);
   
-    var res = await request(app.getHttpServer())
+    const getWorkgroupResponse = await request(app.getHttpServer())
       .get(`/workgroups/${createdWorkgroupId}`)
       .set('Authorization', `Bearer ${accesstoken}`)
       .expect(200);
       
     // verify participants
 
-    return res;
+    const resultWorkgroup = JSON.parse(getWorkgroupResponse.text);
+
+    expect(resultWorkgroup.participants.length).toBe(2);
+    expect(resultWorkgroup.participants[0].id).toEqual(createdBpiSubject1Id);
+    expect(resultWorkgroup.participants[1].id).toEqual(createdBpiSubject2Id);
   });
 });
