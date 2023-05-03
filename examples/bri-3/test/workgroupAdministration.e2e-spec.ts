@@ -76,7 +76,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
   const signer = new ethers.Wallet(internalBpiSubjectPrivateKey, null);
   const signature = await signer.signMessage(nonceResponse.text);
 
-  var loginResponse = await request(app.getHttpServer())
+  const loginResponse = await request(app.getHttpServer())
     .post('/auth/login')
     .send({
       message: nonceResponse.text,
