@@ -73,7 +73,7 @@ $ npm run test
 ```bash
 # e2e testing - .e2e.spec files located in ./test folder
 # before running the tests, make sure that the database is properly populated with the seed.ts command (explained above)
-# and make sure that the .env file contains correct values DID login (as explained in the .env.sample)
+# and make sure that the .env file contains correct values for DID login to work (as explained in the .env.sample)
 
 $ npm run test:e2e
 ```
