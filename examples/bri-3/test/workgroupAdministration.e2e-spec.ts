@@ -18,23 +18,40 @@ describe('Workgroup administration', () => {
     await app.init();
   });
 
-  it('Logs in an internal Bpi Subject, creates two Bpi Subjects and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {    
-    
-    const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(app);
+  it('Logs in an internal Bpi Subject, creates two Bpi Subjects and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
+    const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(
+      app,
+    );
 
-    const createdBpiSubject1Id = await createABpiSubjectAndReturnId('External Bpi Subject 1', app, accessToken);
-    const createdBpiSubject2Id = await createABpiSubjectAndReturnId('External Bpi Subject 2', app, accessToken);
-    
-    const createdWorkgroupId = await createAWorkgroupAndReturnId(app, accessToken);
+    const createdBpiSubject1Id = await createABpiSubjectAndReturnId(
+      'External Bpi Subject 1',
+      app,
+      accessToken,
+    );
+    const createdBpiSubject2Id = await createABpiSubjectAndReturnId(
+      'External Bpi Subject 2',
+      app,
+      accessToken,
+    );
+
+    const createdWorkgroupId = await createAWorkgroupAndReturnId(
+      app,
+      accessToken,
+    );
 
     await updateWorkgroupAdminsAndParticipants(
-      createdWorkgroupId, 
-      [createdBpiSubject1Id], 
-      [createdBpiSubject1Id, createdBpiSubject2Id], 
-      app, 
-      accessToken)
-    
-    const resultWorkgroup = await fetchWorkgroup(createdWorkgroupId, app, accessToken); 
+      createdWorkgroupId,
+      [createdBpiSubject1Id],
+      [createdBpiSubject1Id, createdBpiSubject2Id],
+      app,
+      accessToken,
+    );
+
+    const resultWorkgroup = await fetchWorkgroup(
+      createdWorkgroupId,
+      app,
+      accessToken,
+    );
 
     expect(resultWorkgroup.participants.length).toBe(2);
     expect(resultWorkgroup.participants[0].id).toEqual(createdBpiSubject1Id);
@@ -42,14 +59,18 @@ describe('Workgroup administration', () => {
   });
 });
 
-async function loginAsInternalBpiSubjectAndReturnAnAccessToken(app: INestApplication): Promise<string> {
+async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
+  app: INestApplication,
+): Promise<string> {
   // These two values must be inline with the value for the bpiAdmin from seed.ts
-  const internalBpiSubjectPublicKey = '0x08872e27BC5d78F1FC4590803369492868A1FCCb';
-  const internalBpiSubjectPrivateKey = '2c95d82bcd8851bd3a813c50afafb025228bf8d237e8fd37ba4adba3a7596d58';
+  const internalBpiSubjectPublicKey =
+    '0x08872e27BC5d78F1FC4590803369492868A1FCCb';
+  const internalBpiSubjectPrivateKey =
+    '2c95d82bcd8851bd3a813c50afafb025228bf8d237e8fd37ba4adba3a7596d58';
 
   const nonceResponse = await request(app.getHttpServer())
     .post('/auth/nonce')
-    .send({publicKey: internalBpiSubjectPublicKey})
+    .send({ publicKey: internalBpiSubjectPublicKey })
     .expect(201);
 
   const signer = new ethers.Wallet(internalBpiSubjectPrivateKey, null);
@@ -60,47 +81,55 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(app: INestApplica
     .send({
       message: nonceResponse.text,
       signature: signature,
-      publicKey: internalBpiSubjectPublicKey
+      publicKey: internalBpiSubjectPublicKey,
     })
     .expect(201);
 
   return JSON.parse(loginResponse.text)['access_token'];
 }
 
-async function createABpiSubjectAndReturnId(bpiSubjectName: string, app: INestApplication, accessToken: string): Promise<string> {
+async function createABpiSubjectAndReturnId(
+  bpiSubjectName: string,
+  app: INestApplication,
+  accessToken: string,
+): Promise<string> {
   const createdBpiSubject1Response = await request(app.getHttpServer())
     .post('/subjects')
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
       name: bpiSubjectName,
       desc: 'A test Bpi Subject',
-      publicKey: 'Bpi Subject dummy public key'
+      publicKey: 'Bpi Subject dummy public key',
     })
     .expect(201);
-    
+
   return createdBpiSubject1Response.text;
 }
 
-async function createAWorkgroupAndReturnId(app: INestApplication, accessToken: string): Promise<string> {
+async function createAWorkgroupAndReturnId(
+  app: INestApplication,
+  accessToken: string,
+): Promise<string> {
   const createdWorkgroupResponse = await request(app.getHttpServer())
     .post('/workgroups')
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
       name: 'Test workgroup',
       securityPolicy: 'Dummy security policy',
-      privacyPolicy: 'Dummy privacy policy'
+      privacyPolicy: 'Dummy privacy policy',
     })
     .expect(201);
-    
-    return createdWorkgroupResponse.text;
+
+  return createdWorkgroupResponse.text;
 }
 
 async function updateWorkgroupAdminsAndParticipants(
-  workgroupId: string, 
-  administratorIds: string[], 
-  participantIds: string[], 
-  app: INestApplication, 
-  accessToken: string): Promise<void> {
+  workgroupId: string,
+  administratorIds: string[],
+  participantIds: string[],
+  app: INestApplication,
+  accessToken: string,
+): Promise<void> {
   await request(app.getHttpServer())
     .put(`/workgroups/${workgroupId}`)
     .set('Authorization', `Bearer ${accessToken}`)
@@ -109,19 +138,20 @@ async function updateWorkgroupAdminsAndParticipants(
       administratorIds: administratorIds,
       securityPolicy: 'Dummy security policy',
       privacyPolicy: 'Dummy privacy policy',
-      participantIds: participantIds
+      participantIds: participantIds,
     })
     .expect(200);
 }
 
 async function fetchWorkgroup(
-  workgroupId: string, 
-  app: INestApplication, 
-  accessToken: string): Promise<any> {
-    const getWorkgroupResponse = await request(app.getHttpServer())
+  workgroupId: string,
+  app: INestApplication,
+  accessToken: string,
+): Promise<any> {
+  const getWorkgroupResponse = await request(app.getHttpServer())
     .get(`/workgroups/${workgroupId}`)
     .set('Authorization', `Bearer ${accessToken}`)
     .expect(200);
-    
+
   return JSON.parse(getWorkgroupResponse.text);
 }
