@@ -33,10 +33,9 @@ describe('TransactionController', () => {
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
 
   const createBpiSubjectAccount = async (id: string) => {
-    const ownerBpiSubject =
-      await mockBpiSubjectStorageAgent.storeNewBpiSubject(
-        new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
-      );
+    const ownerBpiSubject = await mockBpiSubjectStorageAgent.storeNewBpiSubject(
+      new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
+    );
     const creatorBpiSubject =
       await mockBpiSubjectStorageAgent.storeNewBpiSubject(
         new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
