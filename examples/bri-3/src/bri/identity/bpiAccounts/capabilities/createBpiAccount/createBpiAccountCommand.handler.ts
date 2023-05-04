@@ -27,7 +27,7 @@ export class CreateBpiAccountCommandHandler
       'sample state object storage',
     );
 
-    const newBpiSubject = await this.accountStorageAgent.createNewBpiAccount(
+    const newBpiSubject = await this.accountStorageAgent.storeNewBpiAccount(
       newBpiSubjectCandidate,
     );
     return newBpiSubject.id;

@@ -45,7 +45,7 @@ describe('WorkflowsController', () => {
       'secPolicy',
       'privPolicy',
     );
-    return await mockWorkstepStorageAgent.createNewWorkstep(newWorkstep);
+    return await mockWorkstepStorageAgent.storeNewWorkstep(newWorkstep);
   };
 
   const createTestWorkflow = async (): Promise<string> => {

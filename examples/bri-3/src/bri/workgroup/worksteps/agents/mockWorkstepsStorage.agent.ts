@@ -34,7 +34,7 @@ export class MockWorkstepStorageAgent {
     return Promise.resolve(worksteps);
   }
 
-  async createNewWorkstep(workstep: Workstep): Promise<Workstep> {
+  async storeNewWorkstep(workstep: Workstep): Promise<Workstep> {
     const createdWs = new Workstep(
       uuidv4(),
       workstep.name,
