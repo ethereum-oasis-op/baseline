@@ -65,11 +65,11 @@ describe('SubjectAccountController', () => {
 
   const createBpiSubjectAccount = async () => {
     const ownerBpiSubject =
-      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+      await mockBpiSubjectStorageAgent.storeNewBpiSubject(
         new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
       );
     const creatorBpiSubject =
-      await mockBpiSubjectStorageAgent.createNewBpiSubject(
+      await mockBpiSubjectStorageAgent.storeNewBpiSubject(
         new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
       );
 
@@ -173,7 +173,7 @@ describe('SubjectAccountController', () => {
     it('should throw BadRequest if non existent creator provided', async () => {
       // Arrange
       const ownerBpiSubject =
-        await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        await mockBpiSubjectStorageAgent.storeNewBpiSubject(
           new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
         );
       const creatorBpiSubjectId = 'not-existing-id';
@@ -194,7 +194,7 @@ describe('SubjectAccountController', () => {
     it('should throw BadRequest if non existent owner provided', async () => {
       // Arrange
       const creatorBpiSubject =
-        await mockBpiSubjectStorageAgent.createNewBpiSubject(
+        await mockBpiSubjectStorageAgent.storeNewBpiSubject(
           new BpiSubject('123', 'creator', 'desc', 'publicKey', []),
         );
       const ownerBpiSubjectId = 'not-existing-id';
