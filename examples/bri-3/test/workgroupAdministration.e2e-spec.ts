@@ -18,17 +18,17 @@ describe('Workgroup administration', () => {
     await app.init();
   });
 
-  it('Logs in an internal Bpi Subject, creates two Bpi Subjects and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
+  it('Logs in an internal Bpi Subject, creates two external Bpi Subjects and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
     const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(
       app,
     );
 
-    const createdBpiSubject1Id = await createABpiSubjectAndReturnId(
+    const createdBpiSubject1Id = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject 1',
       app,
       accessToken,
     );
-    const createdBpiSubject2Id = await createABpiSubjectAndReturnId(
+    const createdBpiSubject2Id = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject 2',
       app,
       accessToken,
@@ -63,6 +63,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
   app: INestApplication,
 ): Promise<string> {
   // These two values must be inline with the value for the bpiAdmin from seed.ts
+  // These values are used for testing purposes only
   const internalBpiSubjectPublicKey =
     '0x08872e27BC5d78F1FC4590803369492868A1FCCb';
   const internalBpiSubjectPrivateKey =
@@ -88,12 +89,12 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
   return JSON.parse(loginResponse.text)['access_token'];
 }
 
-async function createABpiSubjectAndReturnId(
+async function createExternalBpiSubjectAndReturnId(
   bpiSubjectName: string,
   app: INestApplication,
   accessToken: string,
 ): Promise<string> {
-  const createdBpiSubject1Response = await request(app.getHttpServer())
+  const createdBpiSubjectResponse = await request(app.getHttpServer())
     .post('/subjects')
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
@@ -103,7 +104,7 @@ async function createABpiSubjectAndReturnId(
     })
     .expect(201);
 
-  return createdBpiSubject1Response.text;
+  return createdBpiSubjectResponse.text;
 }
 
 async function createAWorkgroupAndReturnId(
