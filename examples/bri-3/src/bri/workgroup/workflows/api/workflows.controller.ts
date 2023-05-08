@@ -17,6 +17,7 @@ import { UpdateWorkflowCommand } from '../capabilities/updateWorkflow/updateWork
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkflowDto } from './dtos/response/workflow.dto';
+import { Workflow } from '../models/workflow';
 
 @Controller('workflows')
 export class WorkflowController {
@@ -51,7 +52,7 @@ export class WorkflowController {
   async updateWorkflow(
     @Param('id') id: string,
     @Body() requestDto: UpdateWorkflowDto,
-  ): Promise<void> {
+  ): Promise<Workflow> {
     return await this.commandBus.execute(
       new UpdateWorkflowCommand(
         id,

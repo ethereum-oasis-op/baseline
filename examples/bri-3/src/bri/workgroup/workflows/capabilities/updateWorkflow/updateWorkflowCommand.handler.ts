@@ -30,6 +30,6 @@ export class UpdateWorkflowCommandHandler
       command.workgroupId,
     );
 
-    await this.storageAgent.updateWorkflow(workflowToUpdate);
+    return await this.storageAgent.updateWorkflow(workflowToUpdate);
   }
 }
