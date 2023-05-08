@@ -15,9 +15,7 @@ import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
-import { MockWorkstepStorageAgent } from '../../worksteps/agents/mockWorkstepsStorage.agent';
 import { Workstep } from '../../worksteps/models/workstep';
-import { Mapper } from '@automapper/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { WorkflowProfile } from '../workflow.profile';
@@ -29,8 +27,6 @@ import { uuid } from 'uuidv4';
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
   let workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent>;
-  let mockWorkstepStorageAgent: MockWorkstepStorageAgent;
-  let mapper: Mapper;
 
   const createTestWorkstep = () => {
     return new Workstep(
@@ -50,7 +46,6 @@ describe('WorkflowsController', () => {
   };
 
   beforeEach(async () => {
-    mockWorkstepStorageAgent = new MockWorkstepStorageAgent(mapper);
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -75,7 +70,7 @@ describe('WorkflowsController', () => {
       .overrideProvider(WorkflowStorageAgent)
       .useValue(mockDeep<WorkflowStorageAgent>())
       .overrideProvider(WorkstepStorageAgent)
-      .useValue(mockWorkstepStorageAgent)
+      .useValue(mockDeep<WorkstepStorageAgent>())
       .compile();
 
     workflowController = app.get<WorkflowController>(WorkflowController);
