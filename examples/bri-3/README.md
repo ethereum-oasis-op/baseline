@@ -49,7 +49,7 @@ Can be found in ./env.sample. Explanation:
 
 ```bash
 DATABASE_URL="postgresql://postgres:example@localhost:5432/postgres" # DB connection string
-GOERLI_RPC_URL="" # Any GOERLI RPC url i.e. "https://rpc.ankr.com/eth_goerli". This is used to resolve dids.
+GOERLI_RPC_URL="" # Any GOERLI RPC url i.e. "https://rpc.ankr.com/eth_goerli". This is used to resolve dids
 GOERLI_SERVICE_DID="did:ethr:0x5:<bpi_operator_public_key>" # bpi_operator_public_key = public key of the bpi operator that represents the issuer of the JWT token
 GOERLI_SERVICE_SIGNER_PRIVATE_KEY="<bpi_operator_private_key>" # bpi_operator_private_key = private key of the bpi operator that is used to sign the issued JWT token
 SERVICE_URL="bri-3" # JWT token audience
