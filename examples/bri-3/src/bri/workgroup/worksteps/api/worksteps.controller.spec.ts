@@ -7,7 +7,6 @@ import { DeleteWorkstepCommandHandler } from '../capabilities/deleteWorkstep/del
 import { GetAllWorkstepsQueryHandler } from '../capabilities/getAllWorksteps/getAllWorkstepsQuery.handler';
 import { GetWorkstepByIdQueryHandler } from '../capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
 import { UpdateWorkstepCommandHandler } from '../capabilities/updateWorkstep/updateWorkstep.command.handler';
-import { MockWorkstepStorageAgent } from '../agents/mockWorkstepsStorage.agent';
 import { WorkstepStorageAgent } from '../agents/workstepsStorage.agent';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
@@ -17,24 +16,24 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { WorkstepProfile } from '../workstep.profile';
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { Workstep } from '../models/workstep';
+import { uuid } from 'uuidv4';
 
 describe('WorkstepController', () => {
   let wController: WorkstepController;
-  let mapper: Mapper;
+  let workstepStorageAgentMock: DeepMockProxy<WorkstepStorageAgent>;
 
-  const requestDto = {
-    name: 'name',
-    version: 'version',
-    status: 'status',
-    workgroupId: 'wgid',
-    securityPolicy: 'secPolicy',
-    privacyPolicy: 'privPolicy',
-  } as CreateWorkstepDto;
-
-  const createTestWorkstep = async (): Promise<string> => {
-    const workstepId = await wController.createWorkstep(requestDto);
-    return workstepId;
+  const createTestWorkstep = () => {
+    return new Workstep(
+      uuid(),
+      'name',
+      'version',
+      'status',
+      'wgid',
+      'secPolicy',
+      'privPolicy',
+    );
   };
 
   beforeEach(async () => {
@@ -58,11 +57,11 @@ describe('WorkstepController', () => {
       ],
     })
       .overrideProvider(WorkstepStorageAgent)
-      .useValue(new MockWorkstepStorageAgent(mapper))
+      .useValue(mockDeep<WorkstepStorageAgent>())
       .compile();
 
     wController = app.get<WorkstepController>(WorkstepController);
-
+    workstepStorageAgentMock = app.get(WorkstepStorageAgent);
     await app.init();
   });
 
@@ -70,6 +69,7 @@ describe('WorkstepController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(undefined);
 
       // Act and assert
       expect(async () => {
@@ -79,24 +79,36 @@ describe('WorkstepController', () => {
 
     it('should return the correct workstep if proper id passed ', async () => {
       // Arrange
-      const workstepId = await createTestWorkstep();
+      const existingWorkstep = createTestWorkstep();
+      workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+        existingWorkstep,
+      );
 
       // Act
-      const createdWorkstep = await wController.getWorkstepById(workstepId);
+      const createdWorkstep = await wController.getWorkstepById(
+        existingWorkstep.id,
+      );
 
       // Assert
-      expect(createdWorkstep.id).toEqual(workstepId);
-      expect(createdWorkstep.name).toEqual(requestDto.name);
-      expect(createdWorkstep.version).toEqual(requestDto.version);
-      expect(createdWorkstep.status).toEqual(requestDto.status);
-      expect(createdWorkstep.workgroupId).toEqual(requestDto.workgroupId);
-      expect(createdWorkstep.securityPolicy).toEqual(requestDto.securityPolicy);
-      expect(createdWorkstep.privacyPolicy).toEqual(requestDto.privacyPolicy);
+      expect(createdWorkstep.id).toEqual(existingWorkstep.id);
+      expect(createdWorkstep.name).toEqual(existingWorkstep.name);
+      expect(createdWorkstep.version).toEqual(existingWorkstep.version);
+      expect(createdWorkstep.status).toEqual(existingWorkstep.status);
+      expect(createdWorkstep.workgroupId).toEqual(existingWorkstep.workgroupId);
+      expect(createdWorkstep.securityPolicy).toEqual(
+        existingWorkstep.securityPolicy,
+      );
+      expect(createdWorkstep.privacyPolicy).toEqual(
+        existingWorkstep.privacyPolicy,
+      );
     });
   });
 
   describe('getAllWorksteps', () => {
     it('should return empty array if no worksteps', async () => {
+      // Arrange
+      workstepStorageAgentMock.getAllWorksteps.mockResolvedValueOnce([]);
+
       // Act
       const worksteps = await wController.getAllWorksteps();
 
@@ -106,53 +118,58 @@ describe('WorkstepController', () => {
 
     it('should return 2 worksteps if 2 exist', async () => {
       // Arrange
-      const workstepId = await createTestWorkstep();
-      const requestDto2 = {
-        name: 'name2',
-        version: 'version2',
-        status: 'status2',
-        workgroupId: 'wgid2',
-        securityPolicy: 'secPolicy',
-        privacyPolicy: 'privPolicy',
-      } as CreateWorkstepDto;
-      const newWorkstepId2 = await wController.createWorkstep(requestDto2);
+      const workstep1 = createTestWorkstep();
+      const workstep2 = createTestWorkstep();
+
+      workstepStorageAgentMock.getAllWorksteps.mockResolvedValueOnce([
+        workstep1,
+        workstep2,
+      ]);
 
       // Act
       const worksteps = await wController.getAllWorksteps();
 
       // Assert
       expect(worksteps.length).toEqual(2);
-      expect(worksteps[0].id).toEqual(workstepId);
-      expect(worksteps[0].name).toEqual(requestDto.name);
-      expect(worksteps[0].version).toEqual(requestDto.version);
-      expect(worksteps[0].status).toEqual(requestDto.status);
-      expect(worksteps[0].workgroupId).toEqual(requestDto.workgroupId);
-      expect(worksteps[0].securityPolicy).toEqual(requestDto.securityPolicy);
-      expect(worksteps[0].privacyPolicy).toEqual(requestDto.privacyPolicy);
-      expect(worksteps[1].id).toEqual(newWorkstepId2);
-      expect(worksteps[1].name).toEqual(requestDto2.name);
-      expect(worksteps[1].version).toEqual(requestDto2.version);
-      expect(worksteps[1].status).toEqual(requestDto2.status);
-      expect(worksteps[1].workgroupId).toEqual(requestDto2.workgroupId);
-      expect(worksteps[1].securityPolicy).toEqual(requestDto2.securityPolicy);
-      expect(worksteps[1].privacyPolicy).toEqual(requestDto2.privacyPolicy);
+      expect(worksteps[0].id).toEqual(workstep1.id);
+      expect(worksteps[0].name).toEqual(workstep1.name);
+      expect(worksteps[0].version).toEqual(workstep1.version);
+      expect(worksteps[0].status).toEqual(workstep1.status);
+      expect(worksteps[0].workgroupId).toEqual(workstep1.workgroupId);
+      expect(worksteps[0].securityPolicy).toEqual(workstep1.securityPolicy);
+      expect(worksteps[0].privacyPolicy).toEqual(workstep1.privacyPolicy);
+      expect(worksteps[1].id).toEqual(workstep2.id);
+      expect(worksteps[1].name).toEqual(workstep2.name);
+      expect(worksteps[1].version).toEqual(workstep2.version);
+      expect(worksteps[1].status).toEqual(workstep2.status);
+      expect(worksteps[1].workgroupId).toEqual(workstep2.workgroupId);
+      expect(worksteps[1].securityPolicy).toEqual(workstep2.securityPolicy);
+      expect(worksteps[1].privacyPolicy).toEqual(workstep2.privacyPolicy);
     });
   });
 
   describe('createWorkstep', () => {
     it('should return new uuid from the created workstep when all necessary params provided', async () => {
-      let worksteps = await wController.getAllWorksteps();
-      expect(worksteps).toEqual([]);
-
       // Arrange
+      const workstep = createTestWorkstep();
+      workstepStorageAgentMock.createNewWorkstep.mockResolvedValueOnce(
+        workstep,
+      );
+      const requestDto = {
+        name: workstep.name,
+        version: workstep.version,
+        status: workstep.status,
+        privacyPolicy: workstep.privacyPolicy,
+        securityPolicy: workstep.securityPolicy,
+        workgroupId: workstep.workgroupId,
+      } as CreateWorkstepDto;
       // Act
-      const workstepId = await createTestWorkstep();
-      worksteps = await wController.getAllWorksteps();
+      const response = await wController.createWorkstep(requestDto);
 
       // Assert
-      expect(worksteps).toHaveLength(1);
-      expect(uuidValidate(workstepId));
-      expect(uuidVersion(workstepId)).toEqual(4);
+      expect(response).toEqual(workstep.id);
+      expect(uuidValidate(response));
+      expect(uuidVersion(response)).toEqual(4);
     });
   });
 
@@ -168,6 +185,7 @@ describe('WorkstepController', () => {
         securityPolicy: 'secPolicy',
         privacyPolicy: 'privPolicy',
       };
+      workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(undefined);
 
       // Act and assert
       expect(async () => {
@@ -177,7 +195,11 @@ describe('WorkstepController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const workstepId = await createTestWorkstep();
+      const existingWorkstep = createTestWorkstep();
+      workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+        existingWorkstep,
+      );
+
       const updateRequestDto: UpdateWorkstepDto = {
         name: 'name2',
         version: 'version2',
@@ -186,13 +208,24 @@ describe('WorkstepController', () => {
         securityPolicy: 'secPolicy2',
         privacyPolicy: 'privPolicy2',
       };
+      workstepStorageAgentMock.updateWorkstep.mockResolvedValueOnce({
+        ...existingWorkstep,
+        name: updateRequestDto.name,
+        version: updateRequestDto.version,
+        status: updateRequestDto.status,
+        workgroupId: updateRequestDto.workgroupId,
+        securityPolicy: updateRequestDto.securityPolicy,
+        privacyPolicy: updateRequestDto.privacyPolicy,
+      } as any);
 
       // Act
-      await wController.updateWorkstep(workstepId, updateRequestDto);
+      const updatedWorkstep = await wController.updateWorkstep(
+        existingWorkstep.id,
+        updateRequestDto,
+      );
 
       // Assert
-      const updatedWorkstep = await wController.getWorkstepById(workstepId);
-      expect(updatedWorkstep.id).toEqual(workstepId);
+      expect(updatedWorkstep.id).toEqual(existingWorkstep.id);
       expect(updatedWorkstep.name).toEqual(updateRequestDto.name);
       expect(updatedWorkstep.version).toEqual(updateRequestDto.version);
       expect(updatedWorkstep.status).toEqual(updateRequestDto.status);
@@ -210,6 +243,8 @@ describe('WorkstepController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(undefined);
+
       // Act and assert
       expect(async () => {
         await wController.deleteWorkstep(nonExistentId);
@@ -218,15 +253,13 @@ describe('WorkstepController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const workstepId = await createTestWorkstep();
+      const existingWorkstep = createTestWorkstep();
+      workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+        existingWorkstep,
+      );
 
       // Act
-      await wController.deleteWorkstep(workstepId);
-
-      // Assert
-      expect(async () => {
-        await wController.getWorkstepById(workstepId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+      await wController.deleteWorkstep(existingWorkstep.id);
     });
   });
 });

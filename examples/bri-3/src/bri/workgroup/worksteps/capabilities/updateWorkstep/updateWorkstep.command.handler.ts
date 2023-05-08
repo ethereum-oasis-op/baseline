@@ -28,6 +28,6 @@ export class UpdateWorkstepCommandHandler
       command.privacyPolicy,
     );
 
-    await this.storageAgent.updateWorkstep(workstepToUpdate);
+    return await this.storageAgent.updateWorkstep(workstepToUpdate);
   }
 }

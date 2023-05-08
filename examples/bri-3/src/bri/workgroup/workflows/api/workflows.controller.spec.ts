@@ -202,7 +202,6 @@ describe('WorkflowsController', () => {
         workstepIds: existingWorkflow.worksteps.map((ws) => ws.id),
         workgroupId: 'workgroupId2',
       };
-
       workflowStorageAgentMock.updateWorkflow.mockResolvedValueOnce({
         ...existingWorkflow,
         workgroupId: updateRequestDto.workgroupId,
