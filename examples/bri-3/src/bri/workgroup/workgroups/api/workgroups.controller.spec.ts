@@ -26,6 +26,7 @@ import { ArchiveWorkgroupCommandHandler } from '../capabilities/archiveWorkgroup
 import { Workgroup, WorkgroupStatus } from '../models/workgroup';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { uuid } from 'uuidv4';
+import { WorkgroupProfile } from '../workgroups.profile';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -75,6 +76,7 @@ describe('WorkgroupsController', () => {
         DeleteWorkgroupCommandHandler,
         GetWorkgroupByIdQueryHandler,
         WorkgroupStorageAgent,
+        WorkgroupProfile,
       ],
     })
       .overrideProvider(WorkgroupStorageAgent)

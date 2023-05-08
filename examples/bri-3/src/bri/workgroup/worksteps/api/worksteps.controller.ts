@@ -17,7 +17,6 @@ import { UpdateWorkstepCommand } from '../capabilities/updateWorkstep/updateWork
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { WorkstepDto } from './dtos/response/workstep.dto';
-import { Workstep } from '../models/workstep';
 
 @Controller('worksteps')
 export class WorkstepController {
@@ -58,7 +57,7 @@ export class WorkstepController {
   async updateWorkstep(
     @Param('id') id: string,
     @Body() requestDto: UpdateWorkstepDto,
-  ): Promise<Workstep> {
+  ): Promise<WorkstepDto> {
     return await this.commandBus.execute(
       new UpdateWorkstepCommand(
         id,
