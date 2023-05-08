@@ -18,6 +18,7 @@ import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupDto } from './dtos/response/workgroup.dto';
 import { CheckAuthz } from '../../../authz/guards/authz.decorator';
+import { Workgroup } from '../models/workgroup';
 
 @Controller('workgroups')
 export class WorkgroupController {
@@ -52,7 +53,7 @@ export class WorkgroupController {
   async updateWorkgroup(
     @Param('id') id: string,
     @Body() requestDto: UpdateWorkgroupDto,
-  ): Promise<void> {
+  ): Promise<Workgroup> {
     return await this.commandBus.execute(
       new UpdateWorkgroupCommand(
         id,
@@ -67,7 +68,7 @@ export class WorkgroupController {
 
   @Put('archive/:id')
   @CheckAuthz({ action: 'delete', type: 'Workgroup' })
-  async archiveWorkgroup(@Param('id') id: string): Promise<void> {
+  async archiveWorkgroup(@Param('id') id: string): Promise<Workgroup> {
     return await this.commandBus.execute(new ArchiveWorkgroupCommand(id));
   }
 

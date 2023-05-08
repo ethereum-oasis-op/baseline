@@ -39,6 +39,6 @@ export class UpdateWorkgroupCommandHandler
       participantsToUpdate,
     );
 
-    await this.workgroupStorageAgent.updateWorkgroup(workgroupToUpdate);
+    return await this.workgroupStorageAgent.updateWorkgroup(workgroupToUpdate);
   }
 }

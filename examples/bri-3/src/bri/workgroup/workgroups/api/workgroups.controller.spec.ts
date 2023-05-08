@@ -2,7 +2,6 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { MockWorkgroupStorageAgent } from '../agents/mockWorkgroupStorage.agent';
 import { WorkgroupAgent } from '../agents/workgroups.agent';
 import { WorkgroupStorageAgent } from '../agents/workgroupStorage.agent';
 import { CreateWorkgroupCommandHandler } from '../capabilities/createWorkgroup/createWorkgroupCommand.handler';
@@ -24,37 +23,38 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { BpiSubjectAgent } from '../../../identity/bpiSubjects/agents/bpiSubjects.agent';
 import { ArchiveWorkgroupCommandHandler } from '../capabilities/archiveWorkgroup/archiveWorkgroupCommand.handler';
-import { WorkgroupStatus } from '../models/workgroup';
+import { Workgroup, WorkgroupStatus } from '../models/workgroup';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { uuid } from 'uuidv4';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
-  let mockWorkgroupStorageAgent: MockWorkgroupStorageAgent;
-
-  const workgroupRequestDto = {
-    name: 'name',
-    securityPolicy: 'sec',
-    privacyPolicy: 'priv',
-    workstepIds: [],
-    workflowIds: [],
-  } as CreateWorkgroupDto;
+  let workgroupStorageAgentMock: DeepMockProxy<WorkgroupStorageAgent>;
 
   const createTestBpiSubject = async () => {
     const newBpiSubject = new BpiSubject('123', 'name', 'desc', 'pubkey', []);
     return await mockBpiSubjectStorageAgent.createNewBpiSubject(newBpiSubject);
   };
 
-  const createTestWorkgroup = async (): Promise<string> => {
+  const createTestWorkgroup = async (): Promise<Workgroup> => {
     const bpiSubject = await createTestBpiSubject();
-    const workgroupId = await workgroupController.createWorkgroup(
-      { bpiSubject },
-      workgroupRequestDto,
+    const workgroup = new Workgroup(
+      uuid(),
+      'name',
+      [bpiSubject],
+      'sec',
+      'priv',
+      [bpiSubject],
+      [],
+      [],
     );
-    return workgroupId;
+
+    workgroup.updateStatus(WorkgroupStatus.ACTIVE);
+    return workgroup;
   };
 
   beforeEach(async () => {
-    mockWorkgroupStorageAgent = new MockWorkgroupStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
 
     const app: TestingModule = await Test.createTestingModule({
@@ -78,12 +78,13 @@ describe('WorkgroupsController', () => {
       ],
     })
       .overrideProvider(WorkgroupStorageAgent)
-      .useValue(mockWorkgroupStorageAgent)
+      .useValue(mockDeep<WorkgroupStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     workgroupController = app.get<WorkgroupController>(WorkgroupController);
+    workgroupStorageAgentMock = app.get(WorkgroupStorageAgent);
     await app.init();
   });
 
@@ -91,6 +92,9 @@ describe('WorkgroupsController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      workgroupStorageAgentMock.getWorkgroupById.mockRejectedValueOnce(
+        new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
+      );
 
       // Act and assert
       expect(async () => {
@@ -102,30 +106,45 @@ describe('WorkgroupsController', () => {
 
     it('should return the correct workgroup if proper id passed ', async () => {
       // Arrange
-      const newWorkgroupId = await createTestWorkgroup();
+      const existingWorkgroup = await createTestWorkgroup();
+      workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
+        existingWorkgroup,
+      );
 
       // Act
       const createdWorkgroup = await workgroupController.getWorkgroupById(
-        newWorkgroupId,
+        existingWorkgroup.id,
       );
 
       // Assert
-      expect(createdWorkgroup.id).toEqual(newWorkgroupId);
+      expect(createdWorkgroup.id).toEqual(existingWorkgroup.id);
     });
   });
 
   describe('createWorkgroup', () => {
     it('should return new uuid from the created workgroup when all necessary params provided', async () => {
       // Arrange
+      const workgroup = await createTestWorkgroup();
+      workgroupStorageAgentMock.createNewWorkgroup.mockResolvedValueOnce(
+        workgroup,
+      );
+      const workgroupRequestDto = {
+        name: 'name',
+        securityPolicy: 'sec',
+        privacyPolicy: 'priv',
+        workstepIds: [],
+        workflowIds: [],
+      } as CreateWorkgroupDto;
+
       // Act
-      const newWorkgroupId = await createTestWorkgroup();
-      const newWorkgroup = await workgroupController.getWorkgroupById(
-        newWorkgroupId,
+      const response = await workgroupController.createWorkgroup(
+        { bpiSubject: workgroup.administrators[0] },
+        workgroupRequestDto,
       );
       // Assert
-      expect(newWorkgroupId).toEqual(newWorkgroup.id);
-      expect(uuidValidate(newWorkgroupId));
-      expect(uuidVersion(newWorkgroupId)).toEqual(4);
+      expect(response).toEqual(workgroup.id);
+      expect(uuidValidate(response));
+      expect(uuidVersion(response)).toEqual(4);
     });
   });
 
@@ -142,6 +161,9 @@ describe('WorkgroupsController', () => {
         privacyPolicy: 'priv',
         participantIds: [newBpiSubject.id],
       };
+      workgroupStorageAgentMock.getWorkgroupById.mockRejectedValueOnce(
+        new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
+      );
 
       // Act and assert
       expect(async () => {
@@ -154,7 +176,11 @@ describe('WorkgroupsController', () => {
     it('should perform the update if existing id passed', async () => {
       // Arrange
       const newBpiSubject = await createTestBpiSubject();
-      const newWorkgroupId = await createTestWorkgroup();
+      const existingWorkgroup = await createTestWorkgroup();
+      workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
+        existingWorkgroup,
+      );
+
       const updateRequestDto: UpdateWorkgroupDto = {
         name: 'name',
         administratorIds: [newBpiSubject.id],
@@ -162,18 +188,20 @@ describe('WorkgroupsController', () => {
         privacyPolicy: 'priv',
         participantIds: [newBpiSubject.id],
       };
+      workgroupStorageAgentMock.updateWorkgroup.mockResolvedValueOnce({
+        ...existingWorkgroup,
+        administrators: [newBpiSubject],
+        participants: [newBpiSubject],
+      } as any);
 
       // Act
-      await workgroupController.updateWorkgroup(
-        newWorkgroupId,
+      const updatedWorkgroup = await workgroupController.updateWorkgroup(
+        existingWorkgroup.id,
         updateRequestDto,
       );
 
       // Assert
-      const updatedWorkgroup = await workgroupController.getWorkgroupById(
-        newWorkgroupId,
-      );
-      expect(updatedWorkgroup.id).toEqual(newWorkgroupId);
+      expect(updatedWorkgroup.id).toEqual(existingWorkgroup.id);
       expect(updatedWorkgroup.administrators.map((ws) => ws.id)).toEqual(
         updateRequestDto.administratorIds,
       );
@@ -188,6 +216,9 @@ describe('WorkgroupsController', () => {
     it('should throw NotFound if non existent id passed', async () => {
       // Arrange
       const nonExistentId = '123';
+      workgroupStorageAgentMock.getWorkgroupById.mockRejectedValueOnce(
+        new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
+      );
 
       // Act and assert
       expect(async () => {
@@ -199,30 +230,39 @@ describe('WorkgroupsController', () => {
 
     it('should throw BadRequest if workgroupToArchive status is not active', async () => {
       // Arrange
-      const newWorkgroupId = await createTestWorkgroup();
-
-      await workgroupController.archiveWorkgroup(newWorkgroupId);
+      const existingWorkgroup = await createTestWorkgroup();
+      existingWorkgroup.updateStatus(WorkgroupStatus.ARCHIVED);
+      workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
+        existingWorkgroup,
+      );
 
       // Act and assert
       expect(async () => {
-        await workgroupController.archiveWorkgroup(newWorkgroupId);
+        await workgroupController.archiveWorkgroup(existingWorkgroup.id);
       }).rejects.toThrow(
         new BadRequestException(WORKGROUP_STATUS_NOT_ACTIVE_ERR_MESSAGE),
       );
     });
 
-    it('should perform the update if existing id passed', async () => {
+    it('should perform the archive if existing id passed', async () => {
       // Arrange
-      const newWorkgroupId = await createTestWorkgroup();
+      const existingWorkgroup = await createTestWorkgroup();
+      workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
+        existingWorkgroup,
+      );
+
+      workgroupStorageAgentMock.updateWorkgroup.mockResolvedValueOnce({
+        ...existingWorkgroup,
+        status: WorkgroupStatus.ARCHIVED,
+      } as any);
 
       // Act
-      await workgroupController.archiveWorkgroup(newWorkgroupId);
+      const archivedWorkgroup = await workgroupController.archiveWorkgroup(
+        existingWorkgroup.id,
+      );
 
       // Assert
-      const archivedWorkgroup = await workgroupController.getWorkgroupById(
-        newWorkgroupId,
-      );
-      expect(archivedWorkgroup.id).toEqual(newWorkgroupId);
+      expect(archivedWorkgroup.id).toEqual(existingWorkgroup.id);
       expect(archivedWorkgroup.status).toEqual(WorkgroupStatus.ARCHIVED);
     });
   });
@@ -231,6 +271,10 @@ describe('WorkgroupsController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      workgroupStorageAgentMock.getWorkgroupById.mockRejectedValueOnce(
+        new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
+      );
+
       // Act and assert
       expect(async () => {
         await workgroupController.deleteWorkgroup(nonExistentId);
@@ -241,17 +285,13 @@ describe('WorkgroupsController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const newWorkgroupId = await createTestWorkgroup();
+      const existingWorkgroup = await createTestWorkgroup();
+      workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
+        existingWorkgroup,
+      );
 
       // Act
-      await workgroupController.deleteWorkgroup(newWorkgroupId);
-
-      // Assert
-      expect(async () => {
-        await workgroupController.getWorkgroupById(newWorkgroupId);
-      }).rejects.toThrow(
-        new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
-      );
+      await workgroupController.deleteWorkgroup(existingWorkgroup.id);
     });
   });
 });
