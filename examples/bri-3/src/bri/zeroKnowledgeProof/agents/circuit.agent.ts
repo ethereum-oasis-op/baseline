@@ -12,6 +12,7 @@ export class CircuitAgent {
   }
 
   public async verifyProof(witness: Witness): Promise<boolean> {
-    return await this.circuitAgent.verifyProof(witness);
+    const isVerified = await this.circuitAgent.verifyProof(witness);
+    return isVerified;
   }
 }
