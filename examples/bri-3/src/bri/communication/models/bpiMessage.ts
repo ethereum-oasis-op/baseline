@@ -50,4 +50,12 @@ export class BpiMessage {
   public updateSignature(newSignature: string): void {
     this.signature = newSignature;
   }
+
+  public isInfoMessage(): boolean {
+    return this.type === BpiMessageType.Info;
+  }
+
+  public isTransactionMessage(): boolean {
+    return this.type === BpiMessageType.Transaction;
+  }
 }

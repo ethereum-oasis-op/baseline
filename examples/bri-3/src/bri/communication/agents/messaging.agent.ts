@@ -8,7 +8,6 @@ import { BpiMessageDto } from '../api/dtos/response/bpiMessage.dto';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
 import { BpiMessage } from '../models/bpiMessage';
-import { BpiMessageType } from '../models/bpiMessageType.enum';
 
 @Injectable()
 export class MessagingAgent implements OnApplicationBootstrap {
@@ -53,16 +52,22 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return false;
     }
 
-    return await this.commandBus.execute(
-      new ProcessInboundBpiMessageCommand(
-        newBpiMessageCandidate.id,
-        newBpiMessageCandidate.fromBpiSubjectId,
-        newBpiMessageCandidate.toBpiSubjectId,
-        JSON.stringify(newBpiMessageCandidate.content),
-        newBpiMessageCandidate.signature,
-        newBpiMessageCandidate.type,
-      ),
-    );
+    if (newBpiMessageCandidate.isInfoMessage()) {
+      return await this.commandBus.execute(
+        new ProcessInboundBpiMessageCommand(
+          newBpiMessageCandidate.id,
+          newBpiMessageCandidate.fromBpiSubjectId,
+          newBpiMessageCandidate.toBpiSubjectId,
+          JSON.stringify(newBpiMessageCandidate.content),
+          newBpiMessageCandidate.signature,
+          newBpiMessageCandidate.type,
+        ),
+      );
+    }
+
+    if (newBpiMessageCandidate.isTransactionMessage()) {
+      // TODO: Process transaction command
+    }
   }
 
   public tryDeserializeToBpiMessageCandidate(
@@ -76,6 +81,14 @@ export class MessagingAgent implements OnApplicationBootstrap {
     } catch (e) {
       errors.push(`${rawMessage} is not valid JSON. Error: ${e}`);
       return [newBpiMessageCandidate, errors];
+    }
+
+    if (
+      !newBpiMessageCandidate.isInfoMessage() &&
+      !newBpiMessageCandidate.isTransactionMessage()
+    ) {
+      errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
+      return [null, errors];
     }
 
     if (!validate(newBpiMessageCandidate.id)) {
@@ -110,8 +123,8 @@ export class MessagingAgent implements OnApplicationBootstrap {
       errors.push('signature is empty');
     }
 
-    if (newBpiMessageCandidate.type !== BpiMessageType.Info) {
-      errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
+    if (newBpiMessageCandidate.isTransactionMessage()) {
+      // TODO: Perform additional transaction specific validation once #669 is done
     }
 
     return [newBpiMessageCandidate, errors];
