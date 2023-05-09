@@ -1,12 +1,32 @@
+import snarkjs from 'snarkjs';
 export class SnarkjsCircuitService {
   public async createProof(inputs: object) {
     const provingKey = await this.getProvingKey();
-    return { proof: 'proof', publicInput: 'publicInput' };
+
+    const { proof, publicSignals } = await snarkjs.groth16.fullProve(
+      inputs,
+      provingKey,
+    );
+
+    const verificationKey = await this.getVerificationKey();
+
+    const witness = {
+      proof,
+      publicInputs: publicSignals,
+      verificationKey,
+    };
+
+    return witness;
   }
 
   public async verifyProof(proof, publicInputs): Promise<boolean> {
     const verificationKey = await this.getVerificationKey();
-    return true;
+    const isVerified = await snarkjs.groth16.verify(
+      verificationKey,
+      publicInputs,
+      proof,
+    );
+    return isVerified;
   }
 
   private async getProvingKey(): Promise<string> {

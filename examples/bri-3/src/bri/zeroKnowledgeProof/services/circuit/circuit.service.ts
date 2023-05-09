@@ -5,10 +5,10 @@ import { SnarkjsCircuitService } from './snarkjs/snarkjs';
 export class CircuitService {
   constructor(private readonly circuit: SnarkjsCircuitService) {}
   async createProof(inputs: object) {
-    return { proof: 'proof', publicInput: 'publicInput' };
+    return await this.circuit.createProof(inputs);
   }
 
   async verifyProof(proof, publicInputs): Promise<boolean> {
-    return true;
+    return await this.circuit.verifyProof(proof, publicInputs);
   }
 }

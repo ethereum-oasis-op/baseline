@@ -6,8 +6,8 @@ export class CircuitAgent {
   constructor(private readonly circuitAgent: CircuitService) {}
 
   public async createProof(inputs: object): Promise<any> {
-    const { proof, publicInput } = await this.circuitAgent.createProof(inputs);
-    return { proof, publicInput };
+    const witness = await this.circuitAgent.createProof(inputs);
+    return witness;
   }
 
   public async verifyProof(proof, publicInput): Promise<boolean> {
