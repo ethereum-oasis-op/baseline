@@ -21,8 +21,6 @@ export class SnarkjsCircuitService {
   }
 
   public async verifyProof(witness: Witness): Promise<boolean> {
-    const verificationKey = await this.getVerificationKey();
-
     const isVerified = await snarkjs.groth16.verify(
       witness.verificationKey,
       witness.publicInput,
