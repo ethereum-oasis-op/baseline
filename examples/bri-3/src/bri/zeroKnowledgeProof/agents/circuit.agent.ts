@@ -5,8 +5,8 @@ import { CircuitService } from '../services/circuit/circuit.service';
 export class CircuitAgent {
   constructor(private readonly circuitAgent: CircuitService) {}
 
-  public async createProof(): Promise<any> {
-    const { proof, publicInput } = await this.circuitAgent.createProof();
+  public async createProof(inputs: object): Promise<any> {
+    const { proof, publicInput } = await this.circuitAgent.createProof(inputs);
     return { proof, publicInput };
   }
 

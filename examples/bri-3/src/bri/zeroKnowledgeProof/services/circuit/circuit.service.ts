@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { SnarkjsCircuitService } from './snarkjs/snarkjs';
 
 @Injectable()
 export class CircuitService {
-  async createProof() {
+  constructor(private readonly circuit: SnarkjsCircuitService) {}
+  async createProof(inputs: object) {
     return { proof: 'proof', publicInput: 'publicInput' };
   }
 
-  async verifyProof(proof, publicInputs, verificationKey?): Promise<boolean> {
+  async verifyProof(proof, publicInputs): Promise<boolean> {
     return true;
   }
 }
