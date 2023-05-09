@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SnarkjsCircuitService } from './snarkjs/snarkjs';
+import { Witness } from '../../models/witness';
 
 @Injectable()
 export class CircuitService {
@@ -8,7 +9,7 @@ export class CircuitService {
     return await this.circuit.createProof(inputs);
   }
 
-  async verifyProof(proof, publicInputs): Promise<boolean> {
-    return await this.circuit.verifyProof(proof, publicInputs);
+  async verifyProof(witness: Witness): Promise<boolean> {
+    return await this.circuit.verifyProof(witness);
   }
 }

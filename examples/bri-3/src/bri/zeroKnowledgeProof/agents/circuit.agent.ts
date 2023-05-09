@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { CircuitService } from '../services/circuit/circuit.service';
+import { Witness } from '../models/witness';
 
 @Injectable()
 export class CircuitAgent {
   constructor(private readonly circuitAgent: CircuitService) {}
 
-  public async createProof(inputs: object): Promise<any> {
-    const witness = await this.circuitAgent.createProof(inputs);
+  public async createProof(input: any): Promise<Witness> {
+    const witness = await this.circuitAgent.createProof(input);
     return witness;
   }
 
-  public async verifyProof(proof, publicInput): Promise<boolean> {
-    return await this.circuitAgent.verifyProof(proof, publicInput);
+  public async verifyProof(witness: Witness): Promise<boolean> {
+    return await this.circuitAgent.verifyProof(witness);
   }
 }
