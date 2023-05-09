@@ -30,9 +30,20 @@ A quorum of two-thirds of the TSC members can conduct any vote required of the T
 
 No legal entity (or set of entities controlled by a single party) shall hold more than three seats out of eleven (or two seats out of seven or nine) on the TSC during any given period.
 
-A TSC member is eligible to lose their seat upon missing two consecutive TSC meetings or three total during a period between elections. Removal is completed by a simple majority vote of the remaining TSC members that are not being considered for removal. The PGB of the Ethereum-OASIS project has the option to consider extenuating circumstances and determine whether or not to remove a member, if the TSC itself cannot come to a determination. After removal, a special election of the vacant seat shall be held among contributors. The seat will be up for re-election at the next regular election cycle.
+The TSC's members are elected annually in September/October, concluding on the last day of that month, with the first elections held in September, 2020. The period for nominations will be announced no less than 30 days prior to elections. The method and management of the nominating process and the elections will be communicated to the community by the various [channels](../../community/open-source-community.md#communications-connecting-with-each-other-directly) in that timeframe.
 
-The TSC's members are elected annually in September/October, concluding on the last day of that month, with the first elections held in September, 2020. The period for nominations will be announced no less than 30 days prior to elections. The method and management of the nominating process and the elections will be communicated to the community by the various [channels](../../community/open-source-community.md#communications-connecting-with-each-other-directly) in that timeframe
+#### Attendance Policy
+
+TSC members who miss two consective TSC meetings without prior notice will lose their voting right at the end of the second meeting missed and will not be counted towards quorum in a TSC meeting. However, they shall retain all other rights, privileges, and obligations afforded to TSC members. A TSC member who has lost voting rights by missing two meetings may regain voting rights by (a) declaring to the Chair their desire to regain voting rights and then (b) attending two consecutive meetings of the PGB. Their rights will be restored at the end of the second meeting.
+
+#### Removal
+
+A TSC member is eligible to lose their seat for violating the Code of Conduct through a simple majority vote of TSC members that are not being considered for removal.
+
+
+After removal, a special election shall be governed by Oasis for the vacant seat among contributors. The seat will be up for re-election at the next regular election cycle.
+
+The PGB of the Ethereum-OASIS project has the option to consider extenuating circumstances and determine whether or not to remove a member, if the TSC itself cannot come to a determination.
 
 #### TSC Rules for Mid-term Member Replacements <a href="#replacements" id="replacements"></a>
 

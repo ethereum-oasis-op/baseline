@@ -11,7 +11,6 @@ import { GetTransactionByIdQueryHandler } from '../capabilities/getTransactionBy
 import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
-import { MockTransactionStorageAgent } from '../agents/mockTransactionStorage.agent';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { TransactionsProfile } from '../transactions.profile';
@@ -23,9 +22,13 @@ import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiS
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { Transaction } from '../models/transaction';
+import { TransactionStatus } from '../models/transactionStatus.enum';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
+  let transactionStorageAgentMock: DeepMockProxy<TransactionStorageAgent>;
   let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
 
@@ -78,7 +81,7 @@ describe('TransactionController', () => {
       ],
     })
       .overrideProvider(TransactionStorageAgent)
-      .useValue(new MockTransactionStorageAgent())
+      .useValue(mockDeep<TransactionStorageAgent>())
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(mockBpiSubjectAccountsStorageAgent)
       .overrideProvider(BpiSubjectStorageAgent)
@@ -86,7 +89,7 @@ describe('TransactionController', () => {
       .compile();
 
     controller = app.get<TransactionController>(TransactionController);
-
+    transactionStorageAgentMock = app.get(TransactionStorageAgent);
     await app.init();
   });
 
@@ -94,6 +97,9 @@ describe('TransactionController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      transactionStorageAgentMock.getTransactionById.mockResolvedValueOnce(
+        undefined,
+      );
 
       // Act and assert
       expect(async () => {
@@ -106,41 +112,45 @@ describe('TransactionController', () => {
       const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
-      const requestDto = {
-        id: '123',
-        nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
-        fromSubjectAccountId: fromBpiSubjectAccount.id,
-        toSubjectAccountId: toBpiSubjectAccount.id,
-        payload: 'payload1',
-        signature: 'signature',
-      } as CreateTransactionDto;
-
-      const newTransactionId = await controller.createTransaction(requestDto);
+      const existingTransaction = new Transaction(
+        '123',
+        1,
+        '42',
+        '24',
+        fromBpiSubjectAccount,
+        toBpiSubjectAccount,
+        'payload1',
+        'signature',
+        TransactionStatus.Initialized,
+      );
+      transactionStorageAgentMock.getTransactionById.mockResolvedValueOnce(
+        existingTransaction,
+      );
 
       // Act
-      const createdTransaction = await controller.getTransactionById(
-        newTransactionId,
+      const fetchedTransaction = await controller.getTransactionById(
+        existingTransaction.id,
       );
 
       // Assert
-      expect(createdTransaction.id).toEqual(requestDto.id);
-      expect(createdTransaction.nonce).toEqual(requestDto.nonce);
-      expect(createdTransaction.workflowInstanceId).toEqual(
-        requestDto.workflowInstanceId,
+      expect(fetchedTransaction.id).toEqual(existingTransaction.id);
+      expect(fetchedTransaction.nonce).toEqual(existingTransaction.nonce);
+      expect(fetchedTransaction.workflowInstanceId).toEqual(
+        existingTransaction.workflowInstanceId,
       );
-      expect(createdTransaction.workstepInstanceId).toEqual(
-        requestDto.workstepInstanceId,
+      expect(fetchedTransaction.workstepInstanceId).toEqual(
+        existingTransaction.workstepInstanceId,
       );
-      expect(uuidValidate(createdTransaction.fromBpiSubjectAccountId));
-      expect(uuidVersion(createdTransaction.fromBpiSubjectAccountId)).toEqual(
+      expect(uuidValidate(fetchedTransaction.fromBpiSubjectAccountId));
+      expect(uuidVersion(fetchedTransaction.fromBpiSubjectAccountId)).toEqual(
         4,
       );
-      expect(uuidValidate(createdTransaction.toBpiSubjectAccountId));
-      expect(uuidVersion(createdTransaction.toBpiSubjectAccountId)).toEqual(4);
-      expect(createdTransaction.payload).toEqual(requestDto.payload);
-      expect(createdTransaction.signature).toEqual(requestDto.signature);
+      expect(uuidValidate(fetchedTransaction.toBpiSubjectAccountId));
+      expect(uuidVersion(fetchedTransaction.toBpiSubjectAccountId)).toEqual(4);
+      expect(fetchedTransaction.payload).toEqual(existingTransaction.payload);
+      expect(fetchedTransaction.signature).toEqual(
+        existingTransaction.signature,
+      );
     });
   });
 
@@ -161,6 +171,22 @@ describe('TransactionController', () => {
         signature: 'signature1',
       } as CreateTransactionDto;
 
+      const expectedTransaction = new Transaction(
+        requestDto.id,
+        requestDto.nonce,
+        requestDto.workflowInstanceId,
+        requestDto.workstepInstanceId,
+        fromBpiSubjectAccount,
+        toBpiSubjectAccount,
+        requestDto.payload,
+        requestDto.signature,
+        TransactionStatus.Initialized,
+      );
+
+      transactionStorageAgentMock.createNewTransaction.mockResolvedValueOnce(
+        expectedTransaction,
+      );
+
       // Act
       const response = await controller.createTransaction(requestDto);
 
@@ -178,6 +204,9 @@ describe('TransactionController', () => {
         signature: 'signature2',
       } as UpdateTransactionDto;
 
+      transactionStorageAgentMock.updateTransaction.mockRejectedValueOnce(
+        undefined,
+      );
       // Act and assert
       expect(async () => {
         await controller.updateTransaction(nonExistentId, requestDto);
@@ -189,32 +218,40 @@ describe('TransactionController', () => {
       const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
-      const createRequestDto = {
-        id: '123',
-        nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
-        fromSubjectAccountId: fromBpiSubjectAccount.id,
-        toSubjectAccountId: toBpiSubjectAccount.id,
-        payload: 'payload1',
-        signature: 'signature1',
-      } as CreateTransactionDto;
-      const newTransactionId = await controller.createTransaction(
-        createRequestDto,
+      const existingTransaction = new Transaction(
+        '123',
+        1,
+        '42',
+        '24',
+        fromBpiSubjectAccount,
+        toBpiSubjectAccount,
+        'payload1',
+        'signature',
+        TransactionStatus.Initialized,
       );
+      transactionStorageAgentMock.getTransactionById.mockResolvedValueOnce(
+        existingTransaction,
+      );
+
       const updateRequestDto = {
         payload: 'payload2',
         signature: 'signature2',
       } as UpdateTransactionDto;
 
+      transactionStorageAgentMock.updateTransaction.mockResolvedValueOnce({
+        ...existingTransaction,
+        payload: updateRequestDto.payload,
+        signature: updateRequestDto.signature,
+      } as any);
+
       // Act
-      await controller.updateTransaction(newTransactionId, updateRequestDto);
+      const updatedTransaction = await controller.updateTransaction(
+        existingTransaction.id,
+        updateRequestDto,
+      );
 
       // Assert
-      const updatedTransaction = await controller.getTransactionById(
-        newTransactionId,
-      );
-      expect(updatedTransaction.id).toEqual(newTransactionId);
+      expect(updatedTransaction.id).toEqual(existingTransaction.id);
       expect(updatedTransaction.payload).toEqual(updateRequestDto.payload);
       expect(updatedTransaction.signature).toEqual(updateRequestDto.signature);
     });
@@ -224,6 +261,9 @@ describe('TransactionController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      transactionStorageAgentMock.deleteTransaction.mockRejectedValueOnce(
+        undefined,
+      );
       // Act and assert
       expect(async () => {
         await controller.deleteTransaction(nonExistentId);
@@ -235,27 +275,23 @@ describe('TransactionController', () => {
       const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
       const toBpiSubjectAccount = await createBpiSubjectAccount('321');
 
-      const createRequestDto = {
-        id: '123',
-        nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
-        fromSubjectAccountId: fromBpiSubjectAccount.id,
-        toSubjectAccountId: toBpiSubjectAccount.id,
-        payload: 'payload1',
-        signature: 'signature1',
-      } as CreateTransactionDto;
-      const newTransactionId = await controller.createTransaction(
-        createRequestDto,
+      const existingTransaction = new Transaction(
+        '123',
+        1,
+        '42',
+        '24',
+        fromBpiSubjectAccount,
+        toBpiSubjectAccount,
+        'payload1',
+        'signature',
+        TransactionStatus.Initialized,
+      );
+      transactionStorageAgentMock.getTransactionById.mockResolvedValueOnce(
+        existingTransaction,
       );
 
       // Act
-      await controller.deleteTransaction(newTransactionId);
-
-      // Assert
-      expect(async () => {
-        await controller.getTransactionById(newTransactionId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+      await controller.deleteTransaction(existingTransaction.id);
     });
   });
 });
