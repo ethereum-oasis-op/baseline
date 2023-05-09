@@ -5,8 +5,8 @@ import { Witness } from '../../models/witness';
 @Injectable()
 export class CircuitService {
   constructor(private readonly circuit: SnarkjsCircuitService) {}
-  async createProof(inputs: object) {
-    return await this.circuit.createProof(inputs);
+  async createProof(input: object) {
+    return await this.circuit.createProof(input);
   }
 
   async verifyProof(witness: Witness): Promise<boolean> {
