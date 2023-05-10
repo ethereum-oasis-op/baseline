@@ -4,7 +4,7 @@ import { ICircuitService } from '../circuit.interface';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
-  public async createProof(input: object) {
+  public async createProof(input: object): Promise<Witness> {
     const witness = {
       proof: 'proof',
       publicInput: 'publicInput',
