@@ -1,7 +1,9 @@
-export class Witness {
-  proof: any;
+import { Proof } from './proof';
 
-  publicInput?: any;
+export class Witness {
+  proof: Proof;
+
+  publicInput?: string[];
 
   verificationKey: string;
 }
