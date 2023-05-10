@@ -1,5 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
-export class SnarkjsCircuitService {
+import { ICircuitService } from '../circuit.interface';
+
+@Injectable()
+export class SnarkjsCircuitService implements ICircuitService {
   public async createProof(input: object) {
     const witness = {
       proof: 'proof',

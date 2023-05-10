@@ -7,6 +7,7 @@ import { AnchorHashController } from './api/anchorHash.controller';
 import { VerifyAnchorHashCommandHandler } from './capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
 import { BlockchainService } from './services/blockchain/blockchain.service';
 import { AnchorHashProfile } from './anchorHash.profile';
+import { SnarkjsCircuitService } from './services/circuit/snarkjs/snarkjs';
 
 export const CommandHandlers = [VerifyAnchorHashCommandHandler];
 
@@ -20,6 +21,10 @@ export const CommandHandlers = [VerifyAnchorHashCommandHandler];
     AnchorHashCcsmStorageAgent,
     BlockchainService,
     AnchorHashProfile,
+    {
+      provide: 'ICircuitService',
+      useClass: SnarkjsCircuitService,
+    },
   ],
 })
 export class ZeroKnowledgeProofModule {}
