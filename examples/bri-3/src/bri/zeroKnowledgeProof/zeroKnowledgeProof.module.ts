@@ -7,7 +7,7 @@ import { AnchorHashController } from './api/anchorHash.controller';
 import { VerifyAnchorHashCommandHandler } from './capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
 import { BlockchainService } from './services/blockchain/blockchain.service';
 import { AnchorHashProfile } from './anchorHash.profile';
-import { SnarkjsCircuitService } from './services/circuit/snarkjs/snarkjs';
+import { SnarkjsCircuitService } from './services/circuit/snarkjs/snarkjs.service';
 
 export const CommandHandlers = [VerifyAnchorHashCommandHandler];
 
