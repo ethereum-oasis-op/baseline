@@ -8,8 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Login() {
   const [data, setData] = useState({
-    publicKey: '',
-    token: ''
+    publicKey: ''
   });
 
   const handleLogin = async () => {
@@ -36,8 +35,8 @@ export default function Login() {
 
       if (tokenRequest?.data?.access_token) {
         const publicKey = accounts[0];
-        const token = tokenRequest.data.access_token;
-        setData({ publicKey, token });
+        setData({ publicKey });
+        console.log(tokenRequest.data.access_token);
         toast.success('Success!');
 
       } else {
@@ -58,7 +57,6 @@ export default function Login() {
       <Button data-testid="login" onClick={handleLogin}>Login</Button> <br />
       <Card style={{textAlign:'left', width: '50rem', fontSize: 16, color: 'white', backgroundColor: 'transparent', border: 'transparent', padding: '10px'}}> 
         {data.publicKey && <Card.Text><b>Current Public Key: </b>{data.publicKey}</Card.Text>}
-        {data.token && <Card.Text><b>Your Access Token: </b>{data.token}</Card.Text>}
       </Card>
     </>
   )
