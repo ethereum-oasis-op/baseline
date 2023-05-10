@@ -1,6 +1,8 @@
+import { Proof } from '../../models/proof';
 import { Witness } from '../../models/witness';
 
 export interface ICircuitService {
-  createProof(input: object): Promise<Witness>;
-  verifyProof(witness: Witness): Promise<boolean>;
+  createWitness(input: object): Promise<Witness>;
+  createProof(witness: Witness): Promise<Proof>;
+  verifyProof(proof: Proof, witness: Witness): Promise<boolean>;
 }
