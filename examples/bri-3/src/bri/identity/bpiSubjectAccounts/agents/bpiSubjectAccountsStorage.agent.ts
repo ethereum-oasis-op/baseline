@@ -21,7 +21,7 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     });
 
     if (!bpiSubjectAccountModel) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      return null;
     }
 
     return this.mapper.map(

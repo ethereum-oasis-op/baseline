@@ -93,10 +93,10 @@ describe('Messaging Agent', () => {
     expect(validationErrors[0]).toEqual('signature is empty');
   });
 
-  it('Should return error when validating correct JSON raw message with message type not being info', () => {
+  it('Should return error when validating correct JSON raw message with message type not being known', () => {
     // Arrange
     const rawMessage =
-      '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "fromBpiSubjectId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "toBpiSubjectId": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 1}';
+      '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "fromBpiSubjectId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "toBpiSubjectId": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 2}';
 
     // Act
     const [, validationErrors] =
@@ -104,7 +104,7 @@ describe('Messaging Agent', () => {
 
     // Assert
     expect(validationErrors.length).toBe(1);
-    expect(validationErrors[0]).toEqual('type: 1 is unknown');
+    expect(validationErrors[0]).toEqual('type: 2 is unknown');
   });
 
   it('Should return no errors and create message dto when validating correct JSON raw message', () => {

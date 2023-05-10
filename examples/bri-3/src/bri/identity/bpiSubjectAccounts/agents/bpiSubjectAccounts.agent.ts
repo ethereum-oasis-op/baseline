@@ -18,7 +18,7 @@ export class BpiSubjectAccountAgent {
 
   public async getBpiSubjectAccountsAndThrowIfNotExist(
     subjectAccountIds: string[],
-  ) {
+  ): Promise<BpiSubjectAccount[]> {
     const subjectAccounts: BpiSubjectAccount[] = [];
 
     for (const subjectAccountId of subjectAccountIds) {
@@ -26,11 +26,34 @@ export class BpiSubjectAccountAgent {
         await this.subjectAccountStorageAgent.getBpiSubjectAccountById(
           subjectAccountId,
         );
+
+      if (subjectAccount == null) {
+        throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      }
+
       subjectAccounts.push(subjectAccount);
     }
 
     return subjectAccounts;
   }
+
+  public async getBpiSubjectAccounts(subjectAccountIds: string[]): Promise<BpiSubjectAccount[]> {
+    const subjectAccounts: BpiSubjectAccount[] = [];
+
+    for (const subjectAccountId of subjectAccountIds) {
+      const subjectAccount =
+        await this.subjectAccountStorageAgent.getBpiSubjectAccountById(
+          subjectAccountId,
+        );
+
+      if (subjectAccount !== null) {
+        subjectAccounts.push(subjectAccount);
+      }
+    }
+
+    return subjectAccounts;
+  }
+
 
   public async getCreatorAndOwnerSubjectsAndThrowIfNotExist(
     creatorBpiSubjectId: string,
