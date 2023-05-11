@@ -53,7 +53,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return false;
     }
 
-    if (newBpiMessageCandidate.isInfoMessage) {
+    if (newBpiMessageCandidate.isInfoMessage()) {
       return await this.commandBus.execute(
         new ProcessInboundBpiMessageCommand(
           newBpiMessageCandidate.id,
@@ -66,17 +66,17 @@ export class MessagingAgent implements OnApplicationBootstrap {
       );
     }
 
-    if (newBpiMessageCandidate.isTransactionMessage) {
+    if (newBpiMessageCandidate.isTransactionMessage()) {
       return await this.commandBus.execute(
         new ProcessInboundBpiTransactionCommand(
           newBpiMessageCandidate.id,
           1, // TODO: #669 Nonce
-          "TODO: #669 workflowInstanceId",
-          "TODO: #669 workstepInstanceId",
-          "TODO: #669 fromBpiSubjectAccountId",
-          "TODO: #669 toBpiSubjectAccountId",
+          'TODO: #669 workflowInstanceId',
+          'TODO: #669 workstepInstanceId',
+          'TODO: #669 fromBpiSubjectAccountId',
+          'TODO: #669 toBpiSubjectAccountId',
           JSON.stringify(newBpiMessageCandidate.content),
-          newBpiMessageCandidate.signature
+          newBpiMessageCandidate.signature,
         ),
       );
     }
@@ -89,15 +89,23 @@ export class MessagingAgent implements OnApplicationBootstrap {
     let newBpiMessageCandidate: BpiMessage;
 
     try {
-      newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
+      const newBpiMessageProps = this.parseJsonOrThrow(rawMessage);
+      newBpiMessageCandidate = new BpiMessage(
+        newBpiMessageProps.id,
+        newBpiMessageProps.fromBpiSubjectId,
+        newBpiMessageProps.toBpiSubjectId,
+        newBpiMessageProps.content,
+        newBpiMessageProps.signature,
+        newBpiMessageProps.type,
+      );
     } catch (e) {
       errors.push(`${rawMessage} is not valid JSON. Error: ${e}`);
       return [newBpiMessageCandidate, errors];
     }
 
     if (
-      !newBpiMessageCandidate.isInfoMessage &&
-      !newBpiMessageCandidate.isTransactionMessage
+      !newBpiMessageCandidate.isInfoMessage() &&
+      !newBpiMessageCandidate.isTransactionMessage()
     ) {
       errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
       return [null, errors];
@@ -135,7 +143,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
       errors.push('signature is empty');
     }
 
-    if (newBpiMessageCandidate.isTransactionMessage) {
+    if (newBpiMessageCandidate.isTransactionMessage()) {
       // TODO: Perform additional transaction specific validation once #669 is done
     }
 

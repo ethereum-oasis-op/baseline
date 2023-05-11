@@ -17,7 +17,7 @@ import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiS
 @Injectable()
 export class TransactionAgent {
   constructor(private storageAgent: TransactionStorageAgent) {}
- 
+
   public throwIfCreateTransactionInputInvalid() {
     // TODO: This is a placeholder, we will add validation rules as we move forward with business logic implementation
     return true;

@@ -25,7 +25,10 @@ export class ProcessInboundTransactionCommandHandler
     }
 
     const subjectAccounts =
-      await this.subjectAccountAgent.getBpiSubjectAccounts([command.fromSubjectAccountId, command.toSubjectAccountId]);
+      await this.subjectAccountAgent.getBpiSubjectAccounts([
+        command.fromSubjectAccountId,
+        command.toSubjectAccountId,
+      ]);
 
     if (subjectAccounts.length !== 2) {
       return false;
@@ -52,9 +55,7 @@ export class ProcessInboundTransactionCommandHandler
       command.signature,
     );
 
-    await this.storageAgent.createNewTransaction(
-      newTransactionCandidate,
-    );
+    await this.storageAgent.createNewTransaction(newTransactionCandidate);
 
     return true;
   }

@@ -94,7 +94,7 @@ export class BpiMessageAgent {
     signature: string,
     type: BpiMessageType,
   ): BpiMessage {
-    return new BpiMessage(id, from, to, content, signature, type);
+    return new BpiMessage(id, from.id, to.id, content, signature, type);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(

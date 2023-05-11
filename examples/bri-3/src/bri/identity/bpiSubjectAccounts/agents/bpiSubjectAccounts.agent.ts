@@ -37,7 +37,9 @@ export class BpiSubjectAccountAgent {
     return subjectAccounts;
   }
 
-  public async getBpiSubjectAccounts(subjectAccountIds: string[]): Promise<BpiSubjectAccount[]> {
+  public async getBpiSubjectAccounts(
+    subjectAccountIds: string[],
+  ): Promise<BpiSubjectAccount[]> {
     const subjectAccounts: BpiSubjectAccount[] = [];
 
     for (const subjectAccountId of subjectAccountIds) {
@@ -53,7 +55,6 @@ export class BpiSubjectAccountAgent {
 
     return subjectAccounts;
   }
-
 
   public async getCreatorAndOwnerSubjectsAndThrowIfNotExist(
     creatorBpiSubjectId: string,
