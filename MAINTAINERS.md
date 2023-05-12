@@ -25,7 +25,6 @@ Code and Systems maintainers
 - [Lucas Rodriguez Benitez](https://github.com/LucasRodriguez)
 - [Anais Ofranc](https://github.com/Consianimis)
 - [Hamza Tokuchi](https://github.com/Meuko) - [BlockLab](https://www.blocklab.nl/)
-- [Biswashree Dey](https://github.com/biscuitdey)
 
 # How to become a maintainer?
 
