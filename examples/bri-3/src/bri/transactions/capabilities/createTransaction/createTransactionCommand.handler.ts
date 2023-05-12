@@ -33,7 +33,7 @@ export class CreateTransactionCommandHandler
       command.signature,
     );
 
-    const newTransaction = await this.storageAgent.createNewTransaction(
+    const newTransaction = await this.storageAgent.storeNewTransaction(
       newTransactionCandidate,
     );
 

@@ -23,7 +23,7 @@ export class MockWorkflowStorageAgent {
     return Promise.resolve(this.workflowsStore);
   }
 
-  async createNewWorkflow(workflow: Workflow): Promise<Workflow> {
+  async storeNewWorkflow(workflow: Workflow): Promise<Workflow> {
     const createdWs = new Workflow(
       uuidv4(),
       workflow.name,

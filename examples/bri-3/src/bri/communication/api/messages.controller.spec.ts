@@ -53,7 +53,7 @@ describe('MessageController', () => {
   beforeEach(async () => {
     mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
-    existingBpiSubject1 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
+    existingBpiSubject1 = await mockBpiSubjectStorageAgent.storeNewBpiSubject(
       new BpiSubject(
         '',
         'name',
@@ -62,7 +62,7 @@ describe('MessageController', () => {
         [],
       ),
     );
-    existingBpiSubject2 = await mockBpiSubjectStorageAgent.createNewBpiSubject(
+    existingBpiSubject2 = await mockBpiSubjectStorageAgent.storeNewBpiSubject(
       new BpiSubject(
         '',
         'name2',
