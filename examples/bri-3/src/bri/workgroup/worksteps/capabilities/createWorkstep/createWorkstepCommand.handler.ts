@@ -22,7 +22,7 @@ export class CreateWorkstepCommandHandler
       command.privacyPolicy,
     );
 
-    const newWorkstep = await this.storageAgent.createNewWorkstep(
+    const newWorkstep = await this.storageAgent.storeNewWorkstep(
       newWorkstepCandidate,
     );
 

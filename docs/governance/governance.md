@@ -63,7 +63,7 @@ Baseline Maintainers have advanced code repository permissions and responsibilit
 
 #### Becoming a Baseline Maintainer
 
-First, one must attend at least two consecutive Baseline Core Dev meetings and contribute to the project through PRs, workgroups, or other contributions.
+First, one must attend at least two consecutive Baseline Core Dev meetings and contribute to the project through PRs, workgroups, or other contributions. E-mail baseline-team@oasis-open.org to be added to the Core Devs meeting invite.
 
 Then complete the [Pull_Request_Template](https://github.com/eea-oasis/baseline/blob/main/.github/PULL_REQUEST_TEMPLATE.md) in its entirety to add your Github ID to the [Code Owners file](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS).The current Maintainers will be assigned to review the Pull Request, and the PR will be merged through the PR approval process.
 

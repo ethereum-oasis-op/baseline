@@ -45,7 +45,7 @@ export class WorkflowStorageAgent extends PrismaService {
     });
   }
 
-  async createNewWorkflow(workflow: Workflow): Promise<Workflow> {
+  async storeNewWorkflow(workflow: Workflow): Promise<Workflow> {
     const workstepIds = workflow.worksteps.map((w) => {
       return {
         id: w.id,
