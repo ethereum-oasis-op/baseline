@@ -40,8 +40,16 @@ describe('TransactionController', () => {
       await mockBpiSubjectStorageAgent.storeNewBpiSubject(
         new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
       );
-    
-    return new BpiSubjectAccount(id, creatorBpiSubject, ownerBpiSubject, 'sample', 'sample', 'sample', 'sample');
+
+    return new BpiSubjectAccount(
+      id,
+      creatorBpiSubject,
+      ownerBpiSubject,
+      'sample',
+      'sample',
+      'sample',
+      'sample',
+    );
   };
 
   beforeEach(async () => {
