@@ -14,7 +14,6 @@ import { GetBpiAccountByIdQueryHandler } from '../capabilities/getBpiAccountById
 import { UpdateBpiAccountCommandHandler } from '../capabilities/updateBpiAccount/updateBpiAccountCommand.handler';
 import { BpiSubjectAccountAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
-import { MockBpiSubjectAccountsStorageAgent } from '../../bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
 import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
@@ -33,13 +32,11 @@ import { uuid } from 'uuidv4';
 describe('AccountController', () => {
   let accountController: AccountController;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
-  let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
   let accountStorageAgentMock: DeepMockProxy<BpiAccountStorageAgent>;
+  let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
 
   beforeEach(async () => {
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
-    mockBpiSubjectAccountsStorageAgent =
-      new MockBpiSubjectAccountsStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -67,13 +64,14 @@ describe('AccountController', () => {
       .overrideProvider(BpiAccountStorageAgent)
       .useValue(mockDeep<BpiAccountStorageAgent>())
       .overrideProvider(BpiSubjectAccountStorageAgent)
-      .useValue(mockBpiSubjectAccountsStorageAgent)
+      .useValue(mockDeep<BpiSubjectAccountStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     accountController = app.get<AccountController>(AccountController);
     accountStorageAgentMock = app.get(BpiAccountStorageAgent);
+    subjectAccountStorageAgentMock = app.get(BpiSubjectAccountStorageAgent);
     await app.init();
   });
 
@@ -85,7 +83,7 @@ describe('AccountController', () => {
       await mockBpiSubjectStorageAgent.storeNewBpiSubject(
         new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
       );
-    const bpiSubjectAccount = new BpiSubjectAccount(
+    return new BpiSubjectAccount(
       '123',
       creatorBpiSubject,
       ownerBpiSubject,
@@ -93,10 +91,6 @@ describe('AccountController', () => {
       'sample policy',
       'sample key',
       'sample vc',
-    );
-
-    return mockBpiSubjectAccountsStorageAgent.storeNewBpiSubjectAccount(
-      bpiSubjectAccount,
     );
   };
 
@@ -108,8 +102,10 @@ describe('AccountController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-      accountStorageAgentMock.getAccountById.mockRejectedValueOnce(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
-  
+      accountStorageAgentMock.getAccountById.mockRejectedValueOnce(
+        new NotFoundException(NOT_FOUND_ERR_MESSAGE),
+      );
+
       // Act and assert
       expect(async () => {
         await accountController.getBpiAccountById(nonExistentId);
@@ -120,7 +116,9 @@ describe('AccountController', () => {
       // Arrange
       const bpiSubjectAccount = await createBpiSubjectAccount();
       const newBpiAccount = createBpiAccount([bpiSubjectAccount]);
-      accountStorageAgentMock.getAccountById.mockResolvedValueOnce(newBpiAccount);
+      accountStorageAgentMock.getAccountById.mockResolvedValueOnce(
+        newBpiAccount,
+      );
 
       // Act
       const createdBpiAccount = await accountController.getBpiAccountById(
@@ -161,7 +159,10 @@ describe('AccountController', () => {
       const bpiSubjectAccount = await createBpiSubjectAccount();
       const firstBpiAccount = createBpiAccount([bpiSubjectAccount]);
       const secondBpiAccount = createBpiAccount([bpiSubjectAccount]);
-      accountStorageAgentMock.getAllBpiAccounts.mockResolvedValueOnce([firstBpiAccount, secondBpiAccount]);
+      accountStorageAgentMock.getAllBpiAccounts.mockResolvedValueOnce([
+        firstBpiAccount,
+        secondBpiAccount,
+      ]);
 
       // Act
       const bpiAccounts = await accountController.getAllBpiAccounts();
@@ -204,6 +205,9 @@ describe('AccountController', () => {
       const requestDto = {
         ownerBpiSubjectAccountsIds: ['123'],
       } as CreateBpiAccountDto;
+      subjectAccountStorageAgentMock.getBpiSubjectAccountById.mockRejectedValueOnce(
+        new NotFoundException(SUBJECT_ACCOUNT_NOT_FOUND_ERR_MESSAGE),
+      );
 
       // Act and assert
       expect(async () => {
@@ -220,10 +224,14 @@ describe('AccountController', () => {
         ownerBpiSubjectAccountsIds: [bpiSubjectAccount.id],
       } as CreateBpiAccountDto;
       const expectedBpiAcount = createBpiAccount([bpiSubjectAccount]);
-      accountStorageAgentMock.storeNewBpiAccount.mockResolvedValueOnce(expectedBpiAcount);
-  
+      accountStorageAgentMock.storeNewBpiAccount.mockResolvedValueOnce(
+        expectedBpiAcount,
+      );
+
       // Act
-      const newBpiAccount = await accountController.createBpiAccount(requestDto);
+      const newBpiAccount = await accountController.createBpiAccount(
+        requestDto,
+      );
 
       // Assert
       expect(uuidValidate(newBpiAccount));
@@ -235,7 +243,9 @@ describe('AccountController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-      accountStorageAgentMock.getAccountById.mockRejectedValueOnce(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+      accountStorageAgentMock.getAccountById.mockRejectedValueOnce(
+        new NotFoundException(NOT_FOUND_ERR_MESSAGE),
+      );
 
       // Act and assert
       expect(async () => {
@@ -247,7 +257,9 @@ describe('AccountController', () => {
       // Arrange
       const bpiSubjectAccount = await createBpiSubjectAccount();
       const newBpiAccount = createBpiAccount([bpiSubjectAccount]);
-      accountStorageAgentMock.getAccountById.mockResolvedValueOnce(newBpiAccount);
+      accountStorageAgentMock.getAccountById.mockResolvedValueOnce(
+        newBpiAccount,
+      );
 
       // Act
       await accountController.deleteBpiAccount(newBpiAccount.id);
