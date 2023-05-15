@@ -12,7 +12,6 @@ import { LoggingModule } from '../../../shared/logging/logging.module';
 import { INVALID_SIGNATURE } from '../../auth/api/err.messages';
 import { AuthModule } from '../../auth/auth.module';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
@@ -39,8 +38,7 @@ import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 describe('MessageController', () => {
   let mController: MessageController;
   let messageStorageAgentMock: DeepMockProxy<BpiMessageStorageAgent>;
-
-  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
+  let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
   let existingBpiSubject1: BpiSubject;
   let existingBpiSubject2: BpiSubject;
   let existingBpiMessage: BpiMessage;
@@ -52,25 +50,22 @@ describe('MessageController', () => {
   });
 
   beforeEach(async () => {
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
-    existingBpiSubject1 = await mockBpiSubjectStorageAgent.storeNewBpiSubject(
+    existingBpiSubject1 =
       new BpiSubject(
         '',
         'name',
         'desc',
         '0x08872e27BC5d78F1FC4590803369492868A1FCCb',
         [],
-      ),
-    );
-    existingBpiSubject2 = await mockBpiSubjectStorageAgent.storeNewBpiSubject(
+      );
+    existingBpiSubject2 =
       new BpiSubject(
         '',
         'name2',
         'desc2',
         '0xF58e44db895C0fa1ca97d68E2F9123B187b789d4',
         [],
-      ),
-    );
+      );
 
     existingBpiMessage = new BpiMessage(
       'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
@@ -113,11 +108,12 @@ describe('MessageController', () => {
       .overrideProvider(BpiMessageStorageAgent)
       .useValue(mockDeep<BpiMessageStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(mockBpiSubjectStorageAgent)
+      .useValue(mockDeep<BpiSubjectStorageAgent>())
       .compile();
 
     mController = app.get<MessageController>(MessageController);
     messageStorageAgentMock = app.get(BpiMessageStorageAgent);
+    subjectStorageAgentMock = app.get(BpiSubjectStorageAgent);
 
     await app.init();
   });
@@ -185,6 +181,8 @@ describe('MessageController', () => {
         signature: 'xyz',
         type: 1,
       } as CreateBpiMessageDto;
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(undefined);
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(undefined);
 
       // Act and assert
       expect(async () => {
@@ -204,6 +202,8 @@ describe('MessageController', () => {
         signature: 'invalid format signature',
         type: 1,
       } as CreateBpiMessageDto;
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(existingBpiSubject1);
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(existingBpiSubject2);
 
       // Act and assert
       expect(async () => {
@@ -222,6 +222,8 @@ describe('MessageController', () => {
           '0xb377f459b07873ed407c3d1a4904051f3384e02906a7ca0abd5bfe7b3349ee71194179801ad449c118281bd4772cfe3f272455f86ae8dfae59a5c00c1d762d2b1b',
         type: 1,
       } as CreateBpiMessageDto;
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(existingBpiSubject1);
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(existingBpiSubject2);
 
       // Act and assert
       expect(async () => {
@@ -240,6 +242,8 @@ describe('MessageController', () => {
           '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
         type: 1,
       } as CreateBpiMessageDto;
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(existingBpiSubject1);
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(existingBpiSubject2);
 
       const expectedBpiMessage = new BpiMessage(
         requestDto.id,

@@ -10,6 +10,7 @@ import {
   BPI_MESSAGE_ALREADY_EXISTS,
   NOT_FOUND_ERR_MESSAGE,
 } from '../api/err.messages';
+import { NOT_FOUND_ERR_MESSAGE as BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiSubjects/api/err.messages';
 import { BpiMessage } from '../models/bpiMessage';
 import { BpiMessageType } from '../models/bpiMessageType.enum';
 import { BpiMessageStorageAgent } from './bpiMessagesStorage.agent';
@@ -39,7 +40,7 @@ export class BpiMessageAgent {
     );
 
     if (!bpiSubject) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(BPI_SUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
     return bpiSubject;
