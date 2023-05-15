@@ -31,8 +31,7 @@ describe('ProofController', () => {
         BlockchainService,
         AnchorHashProfile,
       ],
-    })
-      .compile();
+    }).compile();
 
     controller = app.get<AnchorHashController>(AnchorHashController);
 

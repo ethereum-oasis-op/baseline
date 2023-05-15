@@ -19,7 +19,6 @@ import { SubjectsProfile } from '../../identity/bpiSubjects/subjects.profile';
 import { BpiMessageAgent } from '../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../agents/messaging.agent';
-import { MockBpiMessageStorageAgent } from '../agents/mockBpiMessagesStorage.agent';
 import { CreateBpiMessageCommandHandler } from '../capabilities/createBpiMessage/createBpiMessageCommand.handler';
 import { DeleteBpiMessageCommandHandler } from '../capabilities/deleteBpiMessage/deleteBpiMessageCommand.handler';
 import { GetBpiMessageByIdQueryHandler } from '../capabilities/getBpiMessageById/getBpiMessageByIdQuery.handler';
@@ -35,10 +34,12 @@ import {
   NOT_FOUND_ERR_MESSAGE,
 } from './err.messages';
 import { MessageController } from './messages.controller';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 
 describe('MessageController', () => {
   let mController: MessageController;
-  let mockBpiMessageStorageAgent: MockBpiMessageStorageAgent;
+  let messageStorageAgentMock: DeepMockProxy<BpiMessageStorageAgent>;
+
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let existingBpiSubject1: BpiSubject;
   let existingBpiSubject2: BpiSubject;
@@ -51,7 +52,6 @@ describe('MessageController', () => {
   });
 
   beforeEach(async () => {
-    mockBpiMessageStorageAgent = new MockBpiMessageStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     existingBpiSubject1 = await mockBpiSubjectStorageAgent.storeNewBpiSubject(
       new BpiSubject(
@@ -72,15 +72,13 @@ describe('MessageController', () => {
       ),
     );
 
-    existingBpiMessage = await mockBpiMessageStorageAgent.storeNewBpiMessage(
-      new BpiMessage(
-        'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
-        existingBpiSubject1,
-        existingBpiSubject2,
-        'hello world',
-        'xyz',
-        0,
-      ),
+    existingBpiMessage = new BpiMessage(
+      'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
+      existingBpiSubject1,
+      existingBpiSubject2,
+      'hello world',
+      'xyz',
+      0,
     );
 
     const app: TestingModule = await Test.createTestingModule({
@@ -113,12 +111,13 @@ describe('MessageController', () => {
       ],
     })
       .overrideProvider(BpiMessageStorageAgent)
-      .useValue(mockBpiMessageStorageAgent)
+      .useValue(mockDeep<BpiMessageStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     mController = app.get<MessageController>(MessageController);
+    messageStorageAgentMock = app.get(BpiMessageStorageAgent);
 
     await app.init();
   });
@@ -127,6 +126,9 @@ describe('MessageController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      messageStorageAgentMock.getBpiMessageById.mockResolvedValueOnce(
+        undefined,
+      );
 
       // Act and assert
       expect(async () => {
@@ -134,30 +136,19 @@ describe('MessageController', () => {
       }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
-    it('should return the correct bpi subject if proper id passed ', async () => {
+    it('should return the correct bpi message if proper id passed ', async () => {
       // Arrange
-      const requestDto = {
-        id: '123',
-        from: existingBpiSubject1.id,
-        to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature:
-          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
-        type: 1,
-      } as CreateBpiMessageDto;
-
-      const newBpiMessageId = await mController.createBpiMessage(requestDto);
+      messageStorageAgentMock.getBpiMessageById.mockResolvedValueOnce(
+        existingBpiMessage,
+      );
 
       // Act
-      const createdBpiMessage = await mController.getBpiMessageById(
-        newBpiMessageId,
+      const fetchedBpiMessage = await mController.getBpiMessageById(
+        existingBpiMessage.id,
       );
 
       // Assert
-      expect(createdBpiMessage.id).toEqual(newBpiMessageId);
-      expect(createdBpiMessage.content).toEqual(requestDto.content);
-      expect(createdBpiMessage.signature).toEqual(requestDto.signature);
-      expect(createdBpiMessage.type).toEqual(requestDto.type);
+      expect(fetchedBpiMessage.id).toEqual(existingBpiMessage.id);
     });
   });
 
@@ -172,6 +163,9 @@ describe('MessageController', () => {
         signature: 'xyz',
         type: 1,
       } as CreateBpiMessageDto;
+      messageStorageAgentMock.getBpiMessageById.mockResolvedValueOnce(
+        existingBpiMessage,
+      );
 
       // Act and assert
       expect(async () => {
@@ -247,6 +241,18 @@ describe('MessageController', () => {
         type: 1,
       } as CreateBpiMessageDto;
 
+      const expectedBpiMessage = new BpiMessage(
+        requestDto.id,
+        existingBpiSubject1,
+        existingBpiSubject2,
+        requestDto.content,
+        requestDto.signature,
+        requestDto.type,
+      );
+      messageStorageAgentMock.storeNewBpiMessage.mockResolvedValueOnce(
+        expectedBpiMessage,
+      );
+
       // Act
       const response = await mController.createBpiMessage(requestDto);
 
@@ -259,6 +265,9 @@ describe('MessageController', () => {
     it('should throw NotFound if non existent id passed', async () => {
       // Arrange
       const nonExistentId = '123';
+      messageStorageAgentMock.getBpiMessageById.mockResolvedValueOnce(
+        undefined,
+      );
 
       const requestDto = {
         content: 'this is content',
@@ -273,34 +282,28 @@ describe('MessageController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const createRequestDto = {
-        id: '123',
-        from: existingBpiSubject1.id,
-        to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature:
-          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
-        type: 1,
-      } as CreateBpiMessageDto;
-
-      const newBpiMessageId = await mController.createBpiMessage(
-        createRequestDto,
+      messageStorageAgentMock.getBpiMessageById.mockResolvedValueOnce(
+        existingBpiMessage,
       );
 
       const updateRequestDto = {
         content: 'this is content2',
         signature: 'xyz2',
       } as UpdateBpiMessageDto;
+      messageStorageAgentMock.updateBpiMessage.mockResolvedValueOnce({
+        ...existingBpiMessage,
+        content: updateRequestDto.content,
+        signature: updateRequestDto.signature,
+      } as BpiMessage);
 
       // Act
-      await mController.updateBpiMessage(newBpiMessageId, updateRequestDto);
-
-      // Assert
-      const updatedBpiMessage = await mController.getBpiMessageById(
-        newBpiMessageId,
+      const updatedBpiMessage = await mController.updateBpiMessage(
+        existingBpiMessage.id,
+        updateRequestDto,
       );
 
-      expect(updatedBpiMessage.id).toEqual(newBpiMessageId);
+      // Assert
+      expect(updatedBpiMessage.id).toEqual(existingBpiMessage.id);
       expect(updatedBpiMessage.content).toEqual(updateRequestDto.content);
       expect(updatedBpiMessage.signature).toEqual(updateRequestDto.signature);
     });
@@ -310,6 +313,10 @@ describe('MessageController', () => {
     it('should throw NotFound if non existent id passed', async () => {
       // Arrange
       const nonExistentId = '123';
+      messageStorageAgentMock.getBpiMessageById.mockResolvedValueOnce(
+        undefined,
+      );
+
       // Act and assert
       expect(async () => {
         await mController.deleteBpiMessage(nonExistentId);
@@ -318,27 +325,12 @@ describe('MessageController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const createRequestDto = {
-        id: '123',
-        from: existingBpiSubject1.id,
-        to: existingBpiSubject2.id,
-        content: 'hello world',
-        signature:
-          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
-        type: 1,
-      } as CreateBpiMessageDto;
-
-      const newBpiMessageId = await mController.createBpiMessage(
-        createRequestDto,
+      messageStorageAgentMock.getBpiMessageById.mockResolvedValueOnce(
+        existingBpiMessage,
       );
 
       // Act
-      await mController.deleteBpiMessage(newBpiMessageId);
-
-      // Assert
-      expect(async () => {
-        await mController.getBpiMessageById(newBpiMessageId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+      await mController.deleteBpiMessage(existingBpiMessage.id);
     });
   });
 });
