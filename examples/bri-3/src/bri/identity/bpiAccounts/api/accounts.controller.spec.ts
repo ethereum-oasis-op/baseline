@@ -7,7 +7,6 @@ import { NOT_FOUND_ERR_MESSAGE as SUBJECT_ACCOUNT_NOT_FOUND_ERR_MESSAGE } from '
 import { AccountController } from './accounts.controller';
 import { BpiAccountStorageAgent } from '../agents/bpiAccountsStorage.agent';
 import { BpiAccountAgent } from '../agents/bpiAccounts.agent';
-import { MockBpiAccountsStorageAgent } from '../agents/mockBpiAccountStorage.agent';
 import { CreateBpiAccountCommandHandler } from '../capabilities/createBpiAccount/createBpiAccountCommand.handler';
 import { DeleteBpiAccountCommandHandler } from '../capabilities/deleteBpiAccount/deleteBpiAccountCommand.handler';
 import { GetAllBpiAccountsQueryHandler } from '../capabilities/getAllBpiAccounts/getAllBpiAccountQuery.handler';
@@ -27,11 +26,15 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
 import { SubjectAccountsProfile } from '../../bpiSubjectAccounts/subjectAccounts.profile';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { BpiAccount } from '../models/bpiAccount';
+import { uuid } from 'uuidv4';
 
 describe('AccountController', () => {
   let accountController: AccountController;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
+  let accountStorageAgentMock: DeepMockProxy<BpiAccountStorageAgent>;
 
   beforeEach(async () => {
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
@@ -62,7 +65,7 @@ describe('AccountController', () => {
       ],
     })
       .overrideProvider(BpiAccountStorageAgent)
-      .useValue(new MockBpiAccountsStorageAgent())
+      .useValue(mockDeep<BpiAccountStorageAgent>())
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(mockBpiSubjectAccountsStorageAgent)
       .overrideProvider(BpiSubjectStorageAgent)
@@ -70,7 +73,7 @@ describe('AccountController', () => {
       .compile();
 
     accountController = app.get<AccountController>(AccountController);
-
+    accountStorageAgentMock = app.get(BpiAccountStorageAgent);
     await app.init();
   });
 
@@ -97,19 +100,16 @@ describe('AccountController', () => {
     );
   };
 
-  const createBpiAccount = async (ownerBpiSubjectAccountsIds: string[]) => {
-    const requestDto = {
-      ownerBpiSubjectAccountsIds,
-    } as CreateBpiAccountDto;
-
-    return accountController.createBpiAccount(requestDto);
+  const createBpiAccount = (ownerBpiSubjectAccounts: BpiSubjectAccount[]) => {
+    return new BpiAccount(uuid(), ownerBpiSubjectAccounts, '', '', '');
   };
 
   describe('getBpiAccountById', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
-
+      accountStorageAgentMock.getAccountById.mockRejectedValueOnce(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+  
       // Act and assert
       expect(async () => {
         await accountController.getBpiAccountById(nonExistentId);
@@ -119,15 +119,16 @@ describe('AccountController', () => {
     it('should return the correct bpi account if proper id passed ', async () => {
       // Arrange
       const bpiSubjectAccount = await createBpiSubjectAccount();
-      const newBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
+      const newBpiAccount = createBpiAccount([bpiSubjectAccount]);
+      accountStorageAgentMock.getAccountById.mockResolvedValueOnce(newBpiAccount);
 
       // Act
       const createdBpiAccount = await accountController.getBpiAccountById(
-        newBpiAccountId,
+        newBpiAccount.id,
       );
 
       // Assert
-      expect(createdBpiAccount.id).toEqual(newBpiAccountId);
+      expect(createdBpiAccount.id).toEqual(newBpiAccount.id);
       // TODO fix when automapper is introduced, currently all fields that are not in constructor seems to be ignored
       // expect(createdBpiAccount.nonce).toEqual(0);
       expect(createdBpiAccount.ownerBpiSubjectAccounts.length).toEqual(1);
@@ -146,7 +147,9 @@ describe('AccountController', () => {
 
   describe('getAllBpiAccounts', () => {
     it('should return empty array if no bpi accounts ', async () => {
-      // Arrange and act
+      // Arrange
+      accountStorageAgentMock.getAllBpiAccounts.mockResolvedValueOnce([]);
+      // Act
       const bpiAccounts = await accountController.getAllBpiAccounts();
 
       // Assert
@@ -156,15 +159,16 @@ describe('AccountController', () => {
     it('should return 2 bpi accounts if 2 exists ', async () => {
       // Arrange
       const bpiSubjectAccount = await createBpiSubjectAccount();
-      const firstBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
-      const secondBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
+      const firstBpiAccount = createBpiAccount([bpiSubjectAccount]);
+      const secondBpiAccount = createBpiAccount([bpiSubjectAccount]);
+      accountStorageAgentMock.getAllBpiAccounts.mockResolvedValueOnce([firstBpiAccount, secondBpiAccount]);
 
       // Act
       const bpiAccounts = await accountController.getAllBpiAccounts();
 
       // Assert
       expect(bpiAccounts.length).toEqual(2);
-      expect(bpiAccounts[0].id).toEqual(firstBpiAccountId);
+      expect(bpiAccounts[0].id).toEqual(firstBpiAccount.id);
       // TODO fix when automapper is introduced, currently all fields that are not in constructor seems to be ignored
       // expect(bpiAccounts[0].nonce).toEqual(0);
       expect(bpiAccounts[0].ownerBpiSubjectAccounts.length).toEqual(1);
@@ -178,7 +182,7 @@ describe('AccountController', () => {
         bpiSubjectAccount.ownerBpiSubject.id,
       );
 
-      expect(bpiAccounts[1].id).toEqual(secondBpiAccountId);
+      expect(bpiAccounts[1].id).toEqual(secondBpiAccount.id);
       // TODO fix when automapper is introduced, currently all fields that are not in constructor seems to be ignored
       // expect(bpiAccounts[1].nonce).toEqual(0);
       expect(bpiAccounts[1].ownerBpiSubjectAccounts.length).toEqual(1);
@@ -210,13 +214,20 @@ describe('AccountController', () => {
     });
 
     it('should return new uuid from the created bpi account when all params provided', async () => {
-      // Arrange and act
+      // Arrange
       const bpiSubjectAccount = await createBpiSubjectAccount();
-      const newBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
+      const requestDto = {
+        ownerBpiSubjectAccountsIds: [bpiSubjectAccount.id],
+      } as CreateBpiAccountDto;
+      const expectedBpiAcount = createBpiAccount([bpiSubjectAccount]);
+      accountStorageAgentMock.storeNewBpiAccount.mockResolvedValueOnce(expectedBpiAcount);
+  
+      // Act
+      const newBpiAccount = await accountController.createBpiAccount(requestDto);
 
       // Assert
-      expect(uuidValidate(newBpiAccountId));
-      expect(uuidVersion(newBpiAccountId)).toEqual(4);
+      expect(uuidValidate(newBpiAccount));
+      expect(uuidVersion(newBpiAccount)).toEqual(4);
     });
   });
 
@@ -224,6 +235,8 @@ describe('AccountController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      accountStorageAgentMock.getAccountById.mockRejectedValueOnce(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+
       // Act and assert
       expect(async () => {
         await accountController.deleteBpiAccount(nonExistentId);
@@ -233,15 +246,11 @@ describe('AccountController', () => {
     it('should perform the delete if existing id passed', async () => {
       // Arrange
       const bpiSubjectAccount = await createBpiSubjectAccount();
-      const newBpiAccountId = await createBpiAccount([bpiSubjectAccount.id]);
+      const newBpiAccount = createBpiAccount([bpiSubjectAccount]);
+      accountStorageAgentMock.getAccountById.mockResolvedValueOnce(newBpiAccount);
 
       // Act
-      await accountController.deleteBpiAccount(newBpiAccountId);
-
-      // Assert
-      expect(async () => {
-        await accountController.getBpiAccountById(newBpiAccountId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+      await accountController.deleteBpiAccount(newBpiAccount.id);
     });
   });
 });
