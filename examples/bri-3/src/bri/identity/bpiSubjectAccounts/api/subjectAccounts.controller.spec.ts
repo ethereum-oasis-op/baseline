@@ -14,7 +14,6 @@ import { GetBpiSubjectAccountByIdQueryHandler } from '../capabilities/getBpiSubj
 import { UpdateBpiSubjectAccountCommandHandler } from '../capabilities/updateBpiSubjectAccount/updateBpiSubjectAccountCommand.handler';
 import { CreateBpiSubjectAccountDto } from './dtos/request/createBpiSubjectAccount.dto';
 import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { MockBpiSubjectStorageAgent } from '../../bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
 import { SubjectAccountsProfile } from '../subjectAccounts.profile';
 import { AutomapperModule } from '@automapper/nestjs';
@@ -26,12 +25,10 @@ import { uuid } from 'uuidv4';
 
 describe('SubjectAccountController', () => {
   let subjectAccountController: SubjectAccountController;
-  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
+  let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
 
   beforeEach(async () => {
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
-
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -56,25 +53,33 @@ describe('SubjectAccountController', () => {
       .overrideProvider(BpiSubjectAccountStorageAgent)
       .useValue(mockDeep<BpiSubjectAccountStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(mockBpiSubjectStorageAgent)
+      .useValue(mockDeep<BpiSubjectStorageAgent>())
       .compile();
 
     subjectAccountController = app.get<SubjectAccountController>(
       SubjectAccountController,
     );
-
     subjectAccountStorageAgentMock = app.get(BpiSubjectAccountStorageAgent);
+    subjectStorageAgentMock = app.get(BpiSubjectStorageAgent);
+
     await app.init();
   });
 
   const createBpiSubjectAccount = async () => {
-    const ownerBpiSubject = await mockBpiSubjectStorageAgent.storeNewBpiSubject(
-      new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
+    const ownerBpiSubject = new BpiSubject(
+      '123',
+      'owner',
+      'desc',
+      'publicKey',
+      [],
     );
-    const creatorBpiSubject =
-      await mockBpiSubjectStorageAgent.storeNewBpiSubject(
-        new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
-      );
+    const creatorBpiSubject = new BpiSubject(
+      '321',
+      'creator',
+      'desc',
+      'publicKey',
+      [],
+    );
 
     const bpiSubjectAccount = new BpiSubjectAccount(
       uuid(),
@@ -190,10 +195,13 @@ describe('SubjectAccountController', () => {
   describe('createBpiSubjectAccount', () => {
     it('should throw BadRequest if non existent creator provided', async () => {
       // Arrange
-      const ownerBpiSubject =
-        await mockBpiSubjectStorageAgent.storeNewBpiSubject(
-          new BpiSubject('123', 'owner', 'desc', 'publicKey', []),
-        );
+      const ownerBpiSubject = new BpiSubject(
+        '123',
+        'owner',
+        'desc',
+        'publicKey',
+        [],
+      );
       const creatorBpiSubjectId = 'not-existing-id';
 
       const requestDto = {
@@ -211,10 +219,13 @@ describe('SubjectAccountController', () => {
 
     it('should throw BadRequest if non existent owner provided', async () => {
       // Arrange
-      const creatorBpiSubject =
-        await mockBpiSubjectStorageAgent.storeNewBpiSubject(
-          new BpiSubject('123', 'creator', 'desc', 'publicKey', []),
-        );
+      const creatorBpiSubject = new BpiSubject(
+        '123',
+        'creator',
+        'desc',
+        'publicKey',
+        [],
+      );
       const ownerBpiSubjectId = 'not-existing-id';
 
       //Sample data provided
@@ -248,6 +259,12 @@ describe('SubjectAccountController', () => {
         verifiableCredential: 'sample',
         recoveryKey: 'sample',
       } as CreateBpiSubjectAccountDto;
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
+        expectedBpiSubjectAccount.creatorBpiSubject,
+      );
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
+        expectedBpiSubjectAccount.ownerBpiSubject,
+      );
 
       subjectAccountStorageAgentMock.storeNewBpiSubjectAccount.mockResolvedValueOnce(
         expectedBpiSubjectAccount,

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
 
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { NOT_FOUND_ERR_MESSAGE as SUBJECT_NOT_FOUND_ERR_MESSAGE } from '../../bpiSubjects/api/err.messages';
 import { BpiSubjectAccountStorageAgent } from './bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
@@ -40,7 +41,7 @@ export class BpiSubjectAccountAgent {
     );
 
     if (!creatorBpiSubject) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(SUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
     const ownerBpiSubject = await this.subjectStorageAgent.getBpiSubjectById(
@@ -48,7 +49,7 @@ export class BpiSubjectAccountAgent {
     );
 
     if (!ownerBpiSubject) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(SUBJECT_NOT_FOUND_ERR_MESSAGE);
     }
 
     return {

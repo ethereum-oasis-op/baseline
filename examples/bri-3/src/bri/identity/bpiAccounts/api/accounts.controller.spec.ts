@@ -74,10 +74,20 @@ describe('AccountController', () => {
   });
 
   const createBpiSubjectAccount = () => {
-    const ownerBpiSubject =
-      new BpiSubject('123', 'owner', 'desc', 'publicKey', []);
-    const creatorBpiSubject =
-      new BpiSubject('321', 'creator', 'desc', 'publicKey', []);
+    const ownerBpiSubject = new BpiSubject(
+      '123',
+      'owner',
+      'desc',
+      'publicKey',
+      [],
+    );
+    const creatorBpiSubject = new BpiSubject(
+      '321',
+      'creator',
+      'desc',
+      'publicKey',
+      [],
+    );
     return new BpiSubjectAccount(
       '123',
       creatorBpiSubject,
