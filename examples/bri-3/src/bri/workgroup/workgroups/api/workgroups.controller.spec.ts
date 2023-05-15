@@ -11,7 +11,6 @@ import { UpdateWorkgroupCommandHandler } from '../capabilities/updateWorkgroup/u
 import { CreateWorkgroupDto } from './dtos/request/createWorkgroup.dto';
 import { UpdateWorkgroupDto } from './dtos/request/updateWorkgroup.dto';
 import { WorkgroupController } from './workgroups.controller';
-import { MockBpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectStorageAgent } from '../../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import {
@@ -30,16 +29,15 @@ import { WorkgroupProfile } from '../workgroups.profile';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
-  let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
   let workgroupStorageAgentMock: DeepMockProxy<WorkgroupStorageAgent>;
+  let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
 
-  const createTestBpiSubject = async () => {
-    const newBpiSubject = new BpiSubject('123', 'name', 'desc', 'pubkey', []);
-    return await mockBpiSubjectStorageAgent.storeNewBpiSubject(newBpiSubject);
+  const createTestBpiSubject = () => {
+    return new BpiSubject('123', 'name', 'desc', 'pubkey', []);
   };
 
-  const createTestWorkgroup = async (): Promise<Workgroup> => {
-    const bpiSubject = await createTestBpiSubject();
+  const createTestWorkgroup = (): Workgroup => {
+    const bpiSubject = createTestBpiSubject();
     const workgroup = new Workgroup(
       uuid(),
       'name',
@@ -56,8 +54,6 @@ describe('WorkgroupsController', () => {
   };
 
   beforeEach(async () => {
-    mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
-
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -82,11 +78,13 @@ describe('WorkgroupsController', () => {
       .overrideProvider(WorkgroupStorageAgent)
       .useValue(mockDeep<WorkgroupStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(mockBpiSubjectStorageAgent)
+      .useValue(mockDeep<BpiSubjectStorageAgent>())
       .compile();
 
     workgroupController = app.get<WorkgroupController>(WorkgroupController);
     workgroupStorageAgentMock = app.get(WorkgroupStorageAgent);
+    subjectStorageAgentMock = app.get(BpiSubjectStorageAgent);
+
     await app.init();
   });
 
@@ -108,7 +106,7 @@ describe('WorkgroupsController', () => {
 
     it('should return the correct workgroup if proper id passed ', async () => {
       // Arrange
-      const existingWorkgroup = await createTestWorkgroup();
+      const existingWorkgroup = createTestWorkgroup();
       workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
         existingWorkgroup,
       );
@@ -126,7 +124,7 @@ describe('WorkgroupsController', () => {
   describe('createWorkgroup', () => {
     it('should return new uuid from the created workgroup when all necessary params provided', async () => {
       // Arrange
-      const workgroup = await createTestWorkgroup();
+      const workgroup = createTestWorkgroup();
       workgroupStorageAgentMock.createNewWorkgroup.mockResolvedValueOnce(
         workgroup,
       );
@@ -154,7 +152,7 @@ describe('WorkgroupsController', () => {
     it('should throw NotFound if non existent id passed', async () => {
       // Arrange
       const nonExistentId = '123';
-      const newBpiSubject = await createTestBpiSubject();
+      const newBpiSubject = createTestBpiSubject();
 
       const requestDto: UpdateWorkgroupDto = {
         name: 'name',
@@ -166,6 +164,12 @@ describe('WorkgroupsController', () => {
       workgroupStorageAgentMock.getWorkgroupById.mockRejectedValueOnce(
         new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE),
       );
+      subjectStorageAgentMock.getBpiSubjectsById.mockResolvedValueOnce([
+        newBpiSubject,
+      ]);
+      subjectStorageAgentMock.getBpiSubjectsById.mockResolvedValueOnce([
+        newBpiSubject,
+      ]);
 
       // Act and assert
       expect(async () => {
@@ -177,8 +181,8 @@ describe('WorkgroupsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const newBpiSubject = await createTestBpiSubject();
-      const existingWorkgroup = await createTestWorkgroup();
+      const newBpiSubject = createTestBpiSubject();
+      const existingWorkgroup = createTestWorkgroup();
       workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
         existingWorkgroup,
       );
@@ -195,6 +199,12 @@ describe('WorkgroupsController', () => {
         administrators: [newBpiSubject],
         participants: [newBpiSubject],
       } as Workgroup);
+      subjectStorageAgentMock.getBpiSubjectsById.mockResolvedValueOnce([
+        newBpiSubject,
+      ]);
+      subjectStorageAgentMock.getBpiSubjectsById.mockResolvedValueOnce([
+        newBpiSubject,
+      ]);
 
       // Act
       const updatedWorkgroup = await workgroupController.updateWorkgroup(
@@ -232,7 +242,7 @@ describe('WorkgroupsController', () => {
 
     it('should throw BadRequest if workgroupToArchive status is not active', async () => {
       // Arrange
-      const existingWorkgroup = await createTestWorkgroup();
+      const existingWorkgroup = createTestWorkgroup();
       existingWorkgroup.updateStatus(WorkgroupStatus.ARCHIVED);
       workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
         existingWorkgroup,
@@ -248,7 +258,7 @@ describe('WorkgroupsController', () => {
 
     it('should perform the archive if existing id passed', async () => {
       // Arrange
-      const existingWorkgroup = await createTestWorkgroup();
+      const existingWorkgroup = createTestWorkgroup();
       workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
         existingWorkgroup,
       );
@@ -287,7 +297,7 @@ describe('WorkgroupsController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const existingWorkgroup = await createTestWorkgroup();
+      const existingWorkgroup = createTestWorkgroup();
       workgroupStorageAgentMock.getWorkgroupById.mockResolvedValueOnce(
         existingWorkgroup,
       );
