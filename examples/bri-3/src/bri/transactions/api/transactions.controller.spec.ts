@@ -242,7 +242,7 @@ describe('TransactionController', () => {
         ...existingTransaction,
         payload: updateRequestDto.payload,
         signature: updateRequestDto.signature,
-      } as any);
+      } as Transaction);
 
       // Act
       const updatedTransaction = await controller.updateTransaction(

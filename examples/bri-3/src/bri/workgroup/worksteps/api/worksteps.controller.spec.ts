@@ -216,7 +216,7 @@ describe('WorkstepController', () => {
         workgroupId: updateRequestDto.workgroupId,
         securityPolicy: updateRequestDto.securityPolicy,
         privacyPolicy: updateRequestDto.privacyPolicy,
-      } as any);
+      } as Workstep);
 
       // Act
       const updatedWorkstep = await wController.updateWorkstep(

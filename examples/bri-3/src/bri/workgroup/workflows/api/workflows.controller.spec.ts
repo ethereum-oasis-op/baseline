@@ -206,7 +206,7 @@ describe('WorkflowsController', () => {
         ...existingWorkflow,
         workgroupId: updateRequestDto.workgroupId,
         name: updateRequestDto.name,
-      } as any);
+      } as Workflow);
 
       // Act
       const updatedWorkflow = await workflowController.updateWorkflow(

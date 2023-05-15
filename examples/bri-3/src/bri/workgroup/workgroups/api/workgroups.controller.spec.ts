@@ -194,7 +194,7 @@ describe('WorkgroupsController', () => {
         ...existingWorkgroup,
         administrators: [newBpiSubject],
         participants: [newBpiSubject],
-      } as any);
+      } as Workgroup);
 
       // Act
       const updatedWorkgroup = await workgroupController.updateWorkgroup(
@@ -256,7 +256,7 @@ describe('WorkgroupsController', () => {
       workgroupStorageAgentMock.updateWorkgroup.mockResolvedValueOnce({
         ...existingWorkgroup,
         status: WorkgroupStatus.ARCHIVED,
-      } as any);
+      } as Workgroup);
 
       // Act
       const archivedWorkgroup = await workgroupController.archiveWorkgroup(
