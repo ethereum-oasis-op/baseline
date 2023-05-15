@@ -152,7 +152,7 @@ describe('WorkflowsController', () => {
     it('should return new uuid from the created workstep when all necessary params provided', async () => {
       // Arrange
       const workflow = createTestWorkflow();
-      workflowStorageAgentMock.createNewWorkflow.mockResolvedValueOnce(
+      workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(
         workflow,
       );
       const requestDto = {

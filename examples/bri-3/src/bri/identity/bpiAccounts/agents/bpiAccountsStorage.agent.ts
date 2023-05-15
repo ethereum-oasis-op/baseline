@@ -51,7 +51,7 @@ export class BpiAccountStorageAgent extends PrismaService {
     });
   }
 
-  async createNewBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
+  async storeNewBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
     const connectedOwnerBpiAccounts = bpiAccount.ownerBpiSubjectAccounts.map(
       (o) => {
         return {

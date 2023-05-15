@@ -43,6 +43,23 @@ $ npx prisma db seed # seed db
 
 Relevant information can be found in ./docs/nats/nats-configuration.md
 
+## Environment configuration
+
+Can be found in ./env.sample. Explanation: 
+
+```bash
+DATABASE_URL="postgresql://postgres:example@localhost:5432/postgres" # DB connection string
+GOERLI_RPC_URL="" # Any GOERLI RPC url i.e. "https://rpc.ankr.com/eth_goerli". This is used to resolve dids
+GOERLI_SERVICE_DID="did:ethr:0x5:<bpi_operator_public_key>" # bpi_operator_public_key = public key of the bpi operator that represents the issuer of the JWT token
+GOERLI_SERVICE_SIGNER_PRIVATE_KEY="<bpi_operator_private_key>" # bpi_operator_private_key = private key of the bpi operator that is used to sign the issued JWT token
+SERVICE_URL="bri-3" # JWT token audience
+BPI_NATS_SERVER_URL="localhost:4222" # URL of the local NATS server instance used by the BPI
+BPI_NATS_SERVER_USER="bpi_operator"
+BPI_NATS_SERVER_PASS="liftboiliftboiliftboiliftboi1"
+BPI_ENCRYPTION_KEY_K_PARAM="yzkXp3vY_AZQ3YfLv9GMRTYkjUOpn9x18gPkoFvoUxQ" # Encryption key params used by the BPI for Bpi Messages encryption at rest
+BPI_ENCRYPTION_KEY_KTY_PARAM="oct"
+```
+
 ## Running the app
 
 ```bash
@@ -72,8 +89,10 @@ $ npm run test
 
 ```bash
 # e2e testing - .e2e.spec files located in ./test folder
+# before running the tests, make sure that the database is properly populated with the seed.ts command (explained above)
+# and make sure that the .env file contains correct values for DID login to work (as explained in the .env.sample)
 
-$ comming soon
+$ npm run test:e2e
 ```
 
 ## Architecture

@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { PrismaService } from '../../../../prisma/prisma.service';
+import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from '../../decorators/public-endpoint';
 import { AuthzFactory } from '../authz.factory';
 import { CHECK_AUTHZ_METADATA_KEY, IRequirement } from './authz.decorator';
-import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from '../../decorators/public-endpoint';
 
 // helper map to know which relations to include in generic prisma query
 const prismaTypeToQueryIncludeMap = {
