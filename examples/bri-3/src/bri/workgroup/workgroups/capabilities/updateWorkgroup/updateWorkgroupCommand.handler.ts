@@ -3,12 +3,17 @@ import { BpiSubjectAgent } from '../../../../identity/bpiSubjects/agents/bpiSubj
 import { WorkgroupAgent } from '../../agents/workgroups.agent';
 import { WorkgroupStorageAgent } from '../../agents/workgroupStorage.agent';
 import { UpdateWorkgroupCommand } from './updateWorkgroup.command';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { Workgroup } from '../../models/workgroup';
+import { WorkgroupDto } from '../../api/dtos/response/workgroup.dto';
 
 @CommandHandler(UpdateWorkgroupCommand)
 export class UpdateWorkgroupCommandHandler
   implements ICommandHandler<UpdateWorkgroupCommand>
 {
   constructor(
+    @InjectMapper() private readonly mapper: Mapper,
     private workgroupAgent: WorkgroupAgent,
     private workgroupStorageAgent: WorkgroupStorageAgent,
     private bpiSubjectAgent: BpiSubjectAgent,
@@ -39,6 +44,10 @@ export class UpdateWorkgroupCommandHandler
       participantsToUpdate,
     );
 
-    await this.workgroupStorageAgent.updateWorkgroup(workgroupToUpdate);
+    const updatedWorkgroup = await this.workgroupStorageAgent.updateWorkgroup(
+      workgroupToUpdate,
+    );
+
+    return this.mapper.map(updatedWorkgroup, Workgroup, WorkgroupDto);
   }
 }

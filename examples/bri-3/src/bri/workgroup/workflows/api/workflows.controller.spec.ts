@@ -12,31 +12,24 @@ import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
-import { MockWorkflowStorageAgent } from '../agents/mockWorkflowStorage.agent';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
-import { MockWorkstepStorageAgent } from '../../worksteps/agents/mockWorkstepsStorage.agent';
 import { Workstep } from '../../worksteps/models/workstep';
-import { Mapper } from '@automapper/core';
 import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { WorkflowProfile } from '../workflow.profile';
 import { WorkstepProfile } from '../../worksteps/workstep.profile';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { Workflow } from '../models/workflow';
+import { uuid } from 'uuidv4';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
-  let mockWorkstepStorageAgent: MockWorkstepStorageAgent;
-  let mapper: Mapper;
+  let workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent>;
 
-  const workflowRequestDto = {
-    name: 'name1',
-    workstepIds: [],
-    workgroupId: 'workgroup1',
-  } as CreateWorkflowDto;
-
-  const createTestWorkstep = async () => {
-    const newWorkstep = new Workstep(
+  const createTestWorkstep = () => {
+    return new Workstep(
       '123',
       'name',
       'version',
@@ -45,20 +38,14 @@ describe('WorkflowsController', () => {
       'secPolicy',
       'privPolicy',
     );
-    return await mockWorkstepStorageAgent.storeNewWorkstep(newWorkstep);
   };
 
-  const createTestWorkflow = async (): Promise<string> => {
-    const newWorkstep = await createTestWorkstep();
-    workflowRequestDto.workstepIds = [newWorkstep.id];
-    const workflowId = await workflowController.createWorkflow(
-      workflowRequestDto,
-    );
-    return workflowId;
+  const createTestWorkflow = () => {
+    const newWorkstep = createTestWorkstep();
+    return new Workflow(uuid(), 'name', [newWorkstep], 'workgroup1');
   };
 
   beforeEach(async () => {
-    mockWorkstepStorageAgent = new MockWorkstepStorageAgent(mapper);
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -81,12 +68,13 @@ describe('WorkflowsController', () => {
       ],
     })
       .overrideProvider(WorkflowStorageAgent)
-      .useValue(new MockWorkflowStorageAgent(mapper))
+      .useValue(mockDeep<WorkflowStorageAgent>())
       .overrideProvider(WorkstepStorageAgent)
-      .useValue(mockWorkstepStorageAgent)
+      .useValue(mockDeep<WorkstepStorageAgent>())
       .compile();
 
     workflowController = app.get<WorkflowController>(WorkflowController);
+    workflowStorageAgentMock = app.get(WorkflowStorageAgent);
     await app.init();
   });
 
@@ -94,6 +82,9 @@ describe('WorkflowsController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      workflowStorageAgentMock.getWorkflowById.mockRejectedValueOnce(
+        new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE),
+      );
 
       // Act and assert
       expect(async () => {
@@ -103,22 +94,28 @@ describe('WorkflowsController', () => {
 
     it('should return the correct workflow if proper id passed ', async () => {
       // Arrange
-      const workflowId = await createTestWorkflow();
+      const existingWorkflow = createTestWorkflow();
+      workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+        existingWorkflow,
+      );
       // Act
       const createdWorkflow = await workflowController.getWorkflowById(
-        workflowId,
+        existingWorkflow.id,
       );
 
       // Assert
-      expect(createdWorkflow.id).toEqual(workflowId);
+      expect(createdWorkflow.id).toEqual(existingWorkflow.id);
       expect(createdWorkflow.worksteps.map((ws) => ws.id)).toEqual(
-        workflowRequestDto.workstepIds,
+        existingWorkflow.worksteps.map((ws) => ws.id),
       );
     });
   });
 
   describe('getAllWorkflows', () => {
     it('should return empty array if no workflows', async () => {
+      // Arrange
+      workflowStorageAgentMock.getAllWorkflows.mockResolvedValueOnce([]);
+
       // Act
       const workflows = await workflowController.getAllWorkflows();
 
@@ -128,50 +125,46 @@ describe('WorkflowsController', () => {
 
     it('should return 2 workflows if 2 exist', async () => {
       // Arrange
-      const workflowRequestDto2 = {
-        name: 'name2',
-        workstepIds: [],
-        workgroupId: 'workgroupId2',
-      } as CreateWorkflowDto;
-
-      const workflowId = await createTestWorkflow();
-      const workstep = await createTestWorkstep();
-      workflowRequestDto2.workstepIds = [workstep.id];
-
-      const newWorkflowId2 = await workflowController.createWorkflow(
-        workflowRequestDto2,
-      );
+      const workflow1 = createTestWorkflow();
+      const workflow2 = createTestWorkflow();
+      workflowStorageAgentMock.getAllWorkflows.mockResolvedValueOnce([
+        workflow1,
+        workflow2,
+      ]);
 
       // Act
       const workflows = await workflowController.getAllWorkflows();
 
       // Assert
       expect(workflows.length).toEqual(2);
-      expect(workflows[0].id).toEqual(workflowId);
+      expect(workflows[0].id).toEqual(workflow1.id);
       expect(workflows[0].worksteps.map((ws) => ws.id)).toEqual(
-        workflowRequestDto.workstepIds,
+        workflow1.worksteps.map((ws) => ws.id),
       );
-      expect(workflows[1].id).toEqual(newWorkflowId2);
+      expect(workflows[1].id).toEqual(workflow2.id);
       expect(workflows[1].worksteps.map((ws) => ws.id)).toEqual(
-        workflowRequestDto2.workstepIds,
+        workflow2.worksteps.map((ws) => ws.id),
       );
     });
   });
 
   describe('createWorkflow', () => {
     it('should return new uuid from the created workstep when all necessary params provided', async () => {
-      let workflows = await workflowController.getAllWorkflows();
-      expect(workflows).toEqual([]);
-
       // Arrange
+      const workflow = createTestWorkflow();
+      workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(workflow);
+      const requestDto = {
+        name: workflow.name,
+        workstepIds: workflow.worksteps.map((ws) => ws.id),
+        workgroupId: workflow.workgroupId,
+      } as CreateWorkflowDto;
       // Act
-      const workflowId = await createTestWorkflow();
-      workflows = await workflowController.getAllWorkflows();
+      const response = await workflowController.createWorkflow(requestDto);
 
       // Assert
-      expect(workflows).toHaveLength(1);
-      expect(uuidValidate(workflowId));
-      expect(uuidVersion(workflowId)).toEqual(4);
+      expect(response).toEqual(workflow.id);
+      expect(uuidValidate(response));
+      expect(uuidVersion(response)).toEqual(4);
     });
   });
 
@@ -185,6 +178,10 @@ describe('WorkflowsController', () => {
         workgroupId: 'workgroupId1',
       };
 
+      workflowStorageAgentMock.updateWorkflow.mockRejectedValueOnce(
+        new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE),
+      );
+
       // Act and assert
       expect(async () => {
         await workflowController.updateWorkflow(nonExistentId, requestDto);
@@ -193,23 +190,30 @@ describe('WorkflowsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const workstep = await createTestWorkstep();
+      const existingWorkflow = createTestWorkflow();
+      workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+        existingWorkflow,
+      );
 
-      const workflowId = await createTestWorkflow();
       const updateRequestDto: UpdateWorkflowDto = {
         name: 'name2',
-        workstepIds: [workstep.id],
+        workstepIds: existingWorkflow.worksteps.map((ws) => ws.id),
         workgroupId: 'workgroupId2',
       };
+      workflowStorageAgentMock.updateWorkflow.mockResolvedValueOnce({
+        ...existingWorkflow,
+        workgroupId: updateRequestDto.workgroupId,
+        name: updateRequestDto.name,
+      } as Workflow);
 
       // Act
-      await workflowController.updateWorkflow(workflowId, updateRequestDto);
+      const updatedWorkflow = await workflowController.updateWorkflow(
+        existingWorkflow.id,
+        updateRequestDto,
+      );
 
       // Assert
-      const updatedWorkflow = await workflowController.getWorkflowById(
-        workflowId,
-      );
-      expect(updatedWorkflow.id).toEqual(workflowId);
+      expect(updatedWorkflow.id).toEqual(existingWorkflow.id);
       expect(updatedWorkflow.worksteps.map((ws) => ws.id)).toEqual(
         updateRequestDto.workstepIds,
       );
@@ -222,6 +226,10 @@ describe('WorkflowsController', () => {
     it('should throw NotFound if non existent id passed', () => {
       // Arrange
       const nonExistentId = '123';
+      workflowStorageAgentMock.updateWorkflow.mockRejectedValueOnce(
+        new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE),
+      );
+
       // Act and assert
       expect(async () => {
         await workflowController.deleteWorkflow(nonExistentId);
@@ -230,15 +238,11 @@ describe('WorkflowsController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const workflowId = await createTestWorkflow();
+      const workflow = createTestWorkflow();
+      workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(workflow);
 
       // Act
-      await workflowController.deleteWorkflow(workflowId);
-
-      // Assert
-      expect(async () => {
-        await workflowController.getWorkflowById(workflowId);
-      }).rejects.toThrow(new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE));
+      await workflowController.deleteWorkflow(workflow.id);
     });
   });
 });

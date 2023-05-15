@@ -57,7 +57,7 @@ export class WorkstepController {
   async updateWorkstep(
     @Param('id') id: string,
     @Body() requestDto: UpdateWorkstepDto,
-  ): Promise<void> {
+  ): Promise<WorkstepDto> {
     return await this.commandBus.execute(
       new UpdateWorkstepCommand(
         id,
