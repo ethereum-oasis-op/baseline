@@ -90,17 +90,7 @@ describe('WorkstepController', () => {
       );
 
       // Assert
-      expect(createdWorkstep.id).toEqual(existingWorkstep.id);
-      expect(createdWorkstep.name).toEqual(existingWorkstep.name);
-      expect(createdWorkstep.version).toEqual(existingWorkstep.version);
-      expect(createdWorkstep.status).toEqual(existingWorkstep.status);
-      expect(createdWorkstep.workgroupId).toEqual(existingWorkstep.workgroupId);
-      expect(createdWorkstep.securityPolicy).toEqual(
-        existingWorkstep.securityPolicy,
-      );
-      expect(createdWorkstep.privacyPolicy).toEqual(
-        existingWorkstep.privacyPolicy,
-      );
+      expect(createdWorkstep).toMatchObject(existingWorkstep)
     });
   });
 
@@ -131,20 +121,8 @@ describe('WorkstepController', () => {
 
       // Assert
       expect(worksteps.length).toEqual(2);
-      expect(worksteps[0].id).toEqual(workstep1.id);
-      expect(worksteps[0].name).toEqual(workstep1.name);
-      expect(worksteps[0].version).toEqual(workstep1.version);
-      expect(worksteps[0].status).toEqual(workstep1.status);
-      expect(worksteps[0].workgroupId).toEqual(workstep1.workgroupId);
-      expect(worksteps[0].securityPolicy).toEqual(workstep1.securityPolicy);
-      expect(worksteps[0].privacyPolicy).toEqual(workstep1.privacyPolicy);
-      expect(worksteps[1].id).toEqual(workstep2.id);
-      expect(worksteps[1].name).toEqual(workstep2.name);
-      expect(worksteps[1].version).toEqual(workstep2.version);
-      expect(worksteps[1].status).toEqual(workstep2.status);
-      expect(worksteps[1].workgroupId).toEqual(workstep2.workgroupId);
-      expect(worksteps[1].securityPolicy).toEqual(workstep2.securityPolicy);
-      expect(worksteps[1].privacyPolicy).toEqual(workstep2.privacyPolicy);
+      expect(worksteps[0]).toMatchObject(workstep1);
+      expect(worksteps[1]).toMatchObject(workstep2);
     });
   });
 
