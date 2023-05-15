@@ -15,7 +15,6 @@ import { AutomapperModule } from '@automapper/nestjs';
 import { classes } from '@automapper/classes';
 import { TransactionsProfile } from '../transactions.profile';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { MockBpiSubjectAccountsStorageAgent } from '../../identity/bpiSubjectAccounts/agents/mockBpiSubjectAccountsStorage.agent';
 import { MockBpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/mockBpiSubjectStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
@@ -25,11 +24,12 @@ import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSub
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
+import { uuid } from 'uuidv4';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
   let transactionStorageAgentMock: DeepMockProxy<TransactionStorageAgent>;
-  let mockBpiSubjectAccountsStorageAgent: MockBpiSubjectAccountsStorageAgent;
+  let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
   let mockBpiSubjectStorageAgent: MockBpiSubjectStorageAgent;
 
   const createBpiSubjectAccount = async (id: string) => {
@@ -40,23 +40,11 @@ describe('TransactionController', () => {
       await mockBpiSubjectStorageAgent.storeNewBpiSubject(
         new BpiSubject('321', 'creator', 'desc', 'publicKey', []),
       );
-
-    return mockBpiSubjectAccountsStorageAgent.storeNewBpiSubjectAccount(
-      new BpiSubjectAccount(
-        id,
-        creatorBpiSubject,
-        ownerBpiSubject,
-        'sample',
-        'sample',
-        'sample',
-        'sample',
-      ),
-    );
+    
+    return new BpiSubjectAccount(id, creatorBpiSubject, ownerBpiSubject, 'sample', 'sample', 'sample', 'sample');
   };
 
   beforeEach(async () => {
-    mockBpiSubjectAccountsStorageAgent =
-      new MockBpiSubjectAccountsStorageAgent();
     mockBpiSubjectStorageAgent = new MockBpiSubjectStorageAgent();
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -82,13 +70,14 @@ describe('TransactionController', () => {
       .overrideProvider(TransactionStorageAgent)
       .useValue(mockDeep<TransactionStorageAgent>())
       .overrideProvider(BpiSubjectAccountStorageAgent)
-      .useValue(mockBpiSubjectAccountsStorageAgent)
+      .useValue(mockDeep<BpiSubjectAccountStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockBpiSubjectStorageAgent)
       .compile();
 
     controller = app.get<TransactionController>(TransactionController);
     transactionStorageAgentMock = app.get(TransactionStorageAgent);
+    subjectAccountStorageAgentMock = app.get(BpiSubjectAccountStorageAgent);
     await app.init();
   });
 
@@ -108,8 +97,8 @@ describe('TransactionController', () => {
 
     it('should return the correct transaction if proper id passed ', async () => {
       // Arrange
-      const fromBpiSubjectAccount = await createBpiSubjectAccount('123');
-      const toBpiSubjectAccount = await createBpiSubjectAccount('321');
+      const fromBpiSubjectAccount = await createBpiSubjectAccount(uuid());
+      const toBpiSubjectAccount = await createBpiSubjectAccount(uuid());
 
       const existingTransaction = new Transaction(
         '123',
