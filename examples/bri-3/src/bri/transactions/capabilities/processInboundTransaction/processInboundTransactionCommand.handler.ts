@@ -55,7 +55,7 @@ export class ProcessInboundTransactionCommandHandler
       command.signature,
     );
 
-    await this.storageAgent.createNewTransaction(newTransactionCandidate);
+    await this.storageAgent.storeNewTransaction(newTransactionCandidate);
 
     return true;
   }
