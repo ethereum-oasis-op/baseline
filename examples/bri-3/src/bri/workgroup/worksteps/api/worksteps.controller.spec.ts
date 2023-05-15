@@ -90,7 +90,7 @@ describe('WorkstepController', () => {
       );
 
       // Assert
-      expect(createdWorkstep).toMatchObject(existingWorkstep)
+      expect(createdWorkstep).toMatchObject(existingWorkstep);
     });
   });
 
@@ -130,9 +130,7 @@ describe('WorkstepController', () => {
     it('should return new uuid from the created workstep when all necessary params provided', async () => {
       // Arrange
       const workstep = createTestWorkstep();
-      workstepStorageAgentMock.storeNewWorkstep.mockResolvedValueOnce(
-        workstep,
-      );
+      workstepStorageAgentMock.storeNewWorkstep.mockResolvedValueOnce(workstep);
       const requestDto = {
         name: workstep.name,
         version: workstep.version,
