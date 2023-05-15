@@ -8,7 +8,6 @@ import { GetAllBpiSubjectsQueryHandler } from '../capabilities/getAllBpiSubjects
 import { GetBpiSubjectByIdQueryHandler } from '../capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from '../capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
 import { BpiSubjectStorageAgent } from '../agents/bpiSubjectsStorage.agent';
-import { MockBpiSubjectStorageAgent } from '../agents/mockBpiSubjectStorage.agent';
 import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { NAME_EMPTY_ERR_MESSAGE, NOT_FOUND_ERR_MESSAGE } from './err.messages';
@@ -19,9 +18,28 @@ import { classes } from '@automapper/classes';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { AuthzFactory } from '../../../authz/authz.factory';
 import { AuthzModule } from '../../../authz/authz.module';
+import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { BpiSubject } from '../models/bpiSubject';
+import { uuid } from 'uuidv4';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
+  let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
+  const existingBpiSubject1 = new BpiSubject(
+    uuid(),
+    'name',
+    'description',
+    'pk',
+    [],
+  );
+  const existingBpiSubject2 = new BpiSubject(
+    uuid(),
+    'name2',
+    'description2',
+    'pk2',
+    [],
+  );
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
@@ -45,10 +63,11 @@ describe('SubjectController', () => {
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
-      .useValue(new MockBpiSubjectStorageAgent())
+      .useValue(mockDeep<BpiSubjectStorageAgent>())
       .compile();
 
     sController = app.get<SubjectController>(SubjectController);
+    subjectStorageAgentMock = app.get(BpiSubjectStorageAgent);
 
     await app.init();
   });
@@ -66,29 +85,32 @@ describe('SubjectController', () => {
 
     it('should return the correct bpi subject if proper id passed ', async () => {
       // Arrange
-      const requestDto = {
-        name: 'name',
-        desc: 'desc',
-        publicKey: 'publicKey',
-      } as CreateBpiSubjectDto;
-
-      const newBpiSubjectId = await sController.createBpiSubject(requestDto);
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
+        existingBpiSubject1,
+      );
 
       // Act
-      const createdBpiSubject = await sController.getBpiSubjectById(
-        newBpiSubjectId,
+      const fetchedBpiSubject = await sController.getBpiSubjectById(
+        existingBpiSubject1.id,
       );
 
       // Assert
-      expect(createdBpiSubject.id).toEqual(newBpiSubjectId);
-      expect(createdBpiSubject.name).toEqual(requestDto.name);
-      expect(createdBpiSubject.description).toEqual(requestDto.desc);
-      expect(createdBpiSubject.publicKey).toEqual(requestDto.publicKey);
+      expect(fetchedBpiSubject.id).toEqual(existingBpiSubject1.id);
+      expect(fetchedBpiSubject.name).toEqual(existingBpiSubject1.name);
+      expect(fetchedBpiSubject.description).toEqual(
+        existingBpiSubject1.description,
+      );
+      expect(fetchedBpiSubject.publicKey).toEqual(
+        existingBpiSubject1.publicKey,
+      );
     });
   });
 
   describe('getAllBpiSubjects', () => {
     it('should return empty array if no bpi subjects ', async () => {
+      // Arrange
+      subjectStorageAgentMock.getAllBpiSubjects.mockResolvedValueOnce([]);
+
       // Act
       const bpiSubjects = await sController.getAllBpiSubjects();
 
@@ -98,33 +120,28 @@ describe('SubjectController', () => {
 
     it('should return 2 bpi subjects if 2 exists ', async () => {
       // Arrange
-      const requestDto1 = {
-        name: 'name1',
-        desc: 'desc1',
-        publicKey: 'publicKey1',
-      } as CreateBpiSubjectDto;
-      const newBpiSubjectId1 = await sController.createBpiSubject(requestDto1);
-
-      const requestDto2 = {
-        name: 'name2',
-        desc: 'desc2',
-        publicKey: 'publicKey2',
-      } as CreateBpiSubjectDto;
-      const newBpiSubjectId2 = await sController.createBpiSubject(requestDto2);
+      subjectStorageAgentMock.getAllBpiSubjects.mockResolvedValueOnce([
+        existingBpiSubject1,
+        existingBpiSubject2,
+      ]);
 
       // Act
       const bpiSubjects = await sController.getAllBpiSubjects();
 
       //Assert
       expect(bpiSubjects.length).toEqual(2);
-      expect(bpiSubjects[0].id).toEqual(newBpiSubjectId1);
-      expect(bpiSubjects[0].name).toEqual(requestDto1.name);
-      expect(bpiSubjects[0].description).toEqual(requestDto1.desc);
-      expect(bpiSubjects[0].publicKey).toEqual(requestDto1.publicKey);
-      expect(bpiSubjects[1].id).toEqual(newBpiSubjectId2);
-      expect(bpiSubjects[1].name).toEqual(requestDto2.name);
-      expect(bpiSubjects[1].description).toEqual(requestDto2.desc);
-      expect(bpiSubjects[1].publicKey).toEqual(requestDto2.publicKey);
+      expect(bpiSubjects[0].id).toEqual(existingBpiSubject1.id);
+      expect(bpiSubjects[0].name).toEqual(existingBpiSubject1.name);
+      expect(bpiSubjects[0].description).toEqual(
+        existingBpiSubject1.description,
+      );
+      expect(bpiSubjects[0].publicKey).toEqual(existingBpiSubject1.publicKey);
+      expect(bpiSubjects[1].id).toEqual(existingBpiSubject2.id);
+      expect(bpiSubjects[1].name).toEqual(existingBpiSubject2.name);
+      expect(bpiSubjects[1].description).toEqual(
+        existingBpiSubject2.description,
+      );
+      expect(bpiSubjects[1].publicKey).toEqual(existingBpiSubject2.publicKey);
     });
   });
 
@@ -149,6 +166,9 @@ describe('SubjectController', () => {
         desc: 'desc',
         publicKey: 'publicKey',
       } as CreateBpiSubjectDto;
+      subjectStorageAgentMock.storeNewBpiSubject.mockResolvedValueOnce(
+        existingBpiSubject1,
+      );
 
       // Act
       const response = await sController.createBpiSubject(requestDto);
@@ -177,29 +197,29 @@ describe('SubjectController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const createRequestDto = {
-        name: 'name1',
-        desc: 'desc1',
-        publicKey: 'publicKey1',
-      } as CreateBpiSubjectDto;
-      const newBpiSubjectId = await sController.createBpiSubject(
-        createRequestDto,
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
+        existingBpiSubject1,
       );
       const updateRequestDto = {
         name: 'name2',
         desc: 'desc2',
         publicKey: 'publicKey2',
       } as UpdateBpiSubjectDto;
+      subjectStorageAgentMock.updateBpiSubject.mockResolvedValueOnce({
+        ...existingBpiSubject1,
+        name: updateRequestDto.name,
+        description: updateRequestDto.desc,
+        publicKey: updateRequestDto.publicKey,
+      } as BpiSubject);
 
       // Act
-      await sController.updateBpiSubject(newBpiSubjectId, updateRequestDto);
-
-      // Assert
-      const updatedBpiSubject = await sController.getBpiSubjectById(
-        newBpiSubjectId,
+      const updatedBpiSubject = await sController.updateBpiSubject(
+        existingBpiSubject1.id,
+        updateRequestDto,
       );
 
-      expect(updatedBpiSubject.id).toEqual(newBpiSubjectId);
+      // Assert
+      expect(updatedBpiSubject.id).toEqual(existingBpiSubject1.id);
       expect(updatedBpiSubject.name).toEqual(updateRequestDto.name);
       expect(updatedBpiSubject.description).toEqual(updateRequestDto.desc);
       expect(updatedBpiSubject.publicKey).toEqual(updateRequestDto.publicKey);
@@ -218,22 +238,12 @@ describe('SubjectController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const createRequestDto = {
-        name: 'name1',
-        desc: 'desc1',
-        publicKey: 'publicKey1',
-      } as CreateBpiSubjectDto;
-      const newBpiSubjectId = await sController.createBpiSubject(
-        createRequestDto,
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
+        existingBpiSubject1,
       );
 
       // Act
-      await sController.deleteBpiSubject(newBpiSubjectId);
-
-      // Assert
-      expect(async () => {
-        await sController.getBpiSubjectById(newBpiSubjectId);
-      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
+      await sController.deleteBpiSubject(existingBpiSubject1.id);
     });
   });
 });
