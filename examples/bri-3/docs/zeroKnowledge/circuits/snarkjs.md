@@ -1,8 +1,6 @@
 # Snarkjs Circuit
 
-## Description
-
-This document describes the setup and process for generating zero-knowledge proofs using snarkjs. The circuits are written and compiled using [Circom](https://docs.circom.io/getting-started/installation/), which is written in Rust. Then, the snarkjs library is used to generate proofs from these compiled circuits.
+This document describes the setup and process for generating zero-knowledge proofs using snarkjs. The circuits are written and compiled using [Circom](https://docs.circom.io/getting-started/installation/). Then, the [snarkjs](https://github.com/iden3/snarkjs) library is used to generate proofs from these compiled circuits.
 
 ## Pre-Setup Installations
 
@@ -10,9 +8,13 @@ This document describes the setup and process for generating zero-knowledge proo
 
 Step 1: Install Rust
 
+Circom is written in Rust.
+
 `curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh`
 
 Step 2: Install Circom
+
+Run the following commands from the directory where your computer stores global libraries.
 
 `git clone https://github.com/iden3/circom.git`
 
