@@ -9,6 +9,7 @@ set -e
 [ -d zeroKnowledgeKeys/ptau ] || mkdir zeroKnowledgeKeys/ptau
 
 # Starts Powers Of Tau ceremony, creating the file pot12_0000.ptau
+# 12 is the power of two of the maximum number of constraints that the ceremony can accept: in this case, the number of constraints is 2 ^ 12 = 4,096.
 snarkjs powersoftau new bn128 12 zeroKnowledgeKeys/ptau/pot12_0000.ptau -v
 
 # Contribute to ceremony a few times...
@@ -26,7 +27,8 @@ snarkjs powersoftau verify zeroKnowledgeKeys/ptau/pot12_0003.ptau
 # Apply random beacon to finalised this phase of the setup.
 # For more information about random beacons see here: https://eprint.iacr.org/2017/1050.pdf
 # For the purposes, the beacon is essentially a delayed hash function evaluated on 0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
-# (in practice this value will be some form of high entropy and publicly available data of your choice)
+# as given in snarkjs docs.
+
 snarkjs powersoftau beacon zeroKnowledgeKeys/ptau/pot12_0003.ptau zeroKnowledgeKeys/ptau/pot12_beacon.ptau \
     0102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f 10 -n="Final Beacon"
 
