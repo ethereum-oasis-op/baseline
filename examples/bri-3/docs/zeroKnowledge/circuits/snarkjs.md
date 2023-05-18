@@ -40,4 +40,5 @@ We are going to use the Groth16 zk-SNARK protocol. To use this protocol, we need
 The commands for these two steps have been combined into ptau.sh and circuit.sh, respectively.
 
 Step 1: `npm run snarkjs:ptau`
+
 Step 2: `npm run snarkjs:circuit`
