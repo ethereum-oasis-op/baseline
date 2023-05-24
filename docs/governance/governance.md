@@ -34,7 +34,7 @@ The TSC's members are elected annually in September/October, concluding on the l
 
 #### Attendance Policy
 
-TSC members who miss two consective TSC meetings without prior notice will lose their voting right at the end of the second meeting missed and will not be counted towards quorum in a TSC meeting. However, they shall retain all other rights, privileges, and obligations afforded to TSC members. A TSC member who has lost voting rights by missing two meetings may regain voting rights by (a) declaring to the Chair their desire to regain voting rights and then (b) attending two consecutive meetings of the PGB. Their rights will be restored at the end of the second meeting.
+TSC members who miss two consective TSC meetings without prior notice will lose their voting right at the end of the second meeting missed and will not be counted towards quorum in a TSC meeting. However, they shall retain all other rights, privileges, and obligations afforded to TSC members. A TSC member who has lost voting rights by missing two meetings may regain voting rights by (a) declaring to the Chair their desire to regain voting rights and then (b) attending two consecutive meetings of the TSC. Their rights will be restored at the end of the second meeting.
 
 #### Removal
 
