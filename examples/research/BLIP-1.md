@@ -11,7 +11,7 @@ These resources illustrate how supply chain documents (state objects) can be:
 
 Technical elements highlighted in the following resources are:
 * The use of Verifiable Credentials as state objects representing Supply Chain Documents.
-* The need for CCSM's to provide provable, tamper resistant timestamping for new state propositions.
+* The need for CCSM's to provide provable, tamper resistant timestamping for state changes.
 * The use of ZKP's to provide automated validation and/or privacy.
 
 ## Blog 
