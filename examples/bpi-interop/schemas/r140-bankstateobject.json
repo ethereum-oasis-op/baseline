@@ -1,0 +1,15 @@
+{
+    "id" : "H(H(vendor_number), H(routing_number), H(account_number), H(country), H(date))",
+    "type" : "SAPZKVendorBank",
+    "subject_account_id" : "BPI subject id",
+    "workgroup_id" : "BPI workgroup id",
+    "payload" : {
+        "vendor_number"  : "Customer bank vendor number",
+        "routing_number" : "Customer bank routing number" ,
+        "account_number" : "Customer bank account number",
+        "country" : "Customer bank location country",
+        "date" : "YYYYMMDD",
+        "id" : "H(H(vendor_number), H(routing_number), H(account_number), H(country), H(date))"
+    }
+ }
+ 
