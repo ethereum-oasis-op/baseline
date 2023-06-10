@@ -179,10 +179,7 @@ describe('MessageController', () => {
         signature: 'xyz',
         type: 1,
       } as CreateBpiMessageDto;
-      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
-        undefined,
-      );
-      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
+      subjectStorageAgentMock.getBpiSubjectById.mockResolvedValue(
         undefined,
       );
 

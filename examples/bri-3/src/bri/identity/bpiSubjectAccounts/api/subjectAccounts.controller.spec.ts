@@ -169,8 +169,6 @@ describe('SubjectAccountController', () => {
       expect(bpiSubjectAccounts[0].id).toEqual(
         firstSubjectAccount.bpiSubjectAccount.id,
       );
-      // TODO fix when automapper is introduced, currently all fields that are not in constructor seems to be ignored
-      // expect(bpiSubjectAccounts[0].nonce).toEqual(0);
       expect(bpiSubjectAccounts[0].ownerBpiSubject.id).toEqual(
         firstSubjectAccount.ownerBpiSubject.id,
       );
@@ -181,8 +179,6 @@ describe('SubjectAccountController', () => {
       expect(bpiSubjectAccounts[1].id).toEqual(
         secondSubjectAccount.bpiSubjectAccount.id,
       );
-      // TODO fix when automapper is introduced, currently all fields that are not in constructor seems to be ignored
-      // expect(bpiSubjectAccounts[1].nonce).toEqual(0);
       expect(bpiSubjectAccounts[1].ownerBpiSubject.id).toEqual(
         secondSubjectAccount.ownerBpiSubject.id,
       );
