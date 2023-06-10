@@ -111,7 +111,7 @@ describe('TransactionController', () => {
       const toBpiSubjectAccount = createBpiSubjectAccount(uuid());
 
       const existingTransaction = new Transaction(
-        '123',
+        uuid(),
         1,
         '42',
         '24',
@@ -155,11 +155,11 @@ describe('TransactionController', () => {
   describe('createTransaction', () => {
     it('should return new id from the created transaction when all params provided', async () => {
       // Arrange
-      const fromBpiSubjectAccount = createBpiSubjectAccount('123');
-      const toBpiSubjectAccount = createBpiSubjectAccount('321');
+      const fromBpiSubjectAccount = createBpiSubjectAccount(uuid());
+      const toBpiSubjectAccount = createBpiSubjectAccount(uuid());
 
       const requestDto = {
-        id: '123',
+        id: uuid(),
         nonce: 1,
         workflowInstanceId: '42',
         workstepInstanceId: '24',
@@ -213,11 +213,11 @@ describe('TransactionController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const fromBpiSubjectAccount = createBpiSubjectAccount('123');
-      const toBpiSubjectAccount = createBpiSubjectAccount('321');
+      const fromBpiSubjectAccount = createBpiSubjectAccount(uuid());
+      const toBpiSubjectAccount = createBpiSubjectAccount(uuid());
 
       const existingTransaction = new Transaction(
-        '123',
+        uuid(),
         1,
         '42',
         '24',
@@ -270,11 +270,11 @@ describe('TransactionController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const fromBpiSubjectAccount = createBpiSubjectAccount('123');
-      const toBpiSubjectAccount = createBpiSubjectAccount('321');
+      const fromBpiSubjectAccount = createBpiSubjectAccount(uuid());
+      const toBpiSubjectAccount = createBpiSubjectAccount(uuid());
 
       const existingTransaction = new Transaction(
-        '123',
+        uuid(),
         1,
         '42',
         '24',
