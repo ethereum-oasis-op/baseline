@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
 import { MerkleTreeStorageAgent } from './merkleTreeStorage.agent';
 import * as crypto from 'crypto';
+import { MERKLE_TREE_NOT_FOUND } from '../api/err.messages';
 
 @Injectable()
 export class MerkleTreeAgent {
@@ -12,9 +13,7 @@ export class MerkleTreeAgent {
     leaves: string[],
     hashFunction: string,
   ): BpiMerkleTree {
-    const hashHelper = (data: any): Buffer => {
-      return crypto.createHash(hashFunction).update(data).digest();
-    };
+    const hashHelper = this.createHashHelper(hashFunction);
 
     const hashedLeaves = leaves.map((x) => hashHelper(x));
 
@@ -26,9 +25,7 @@ export class MerkleTreeAgent {
     leaves: string[],
     hashFunction: string,
   ) {
-    const hashHelper = (data: any): Buffer => {
-      return crypto.createHash(hashFunction).update(data).digest();
-    };
+    const hashHelper = this.createHashHelper(hashFunction);
 
     const hashedLeaves = leaves.map((x) => hashHelper(x));
 
@@ -41,6 +38,16 @@ export class MerkleTreeAgent {
     const merkleTreeCandidate: BpiMerkleTree =
       await this.storageAgent.getMerkleTreeById(id);
 
+    if (!merkleTreeCandidate) {
+      throw new Error(MERKLE_TREE_NOT_FOUND(id));
+    }
+
     return merkleTreeCandidate;
+  }
+
+  public createHashHelper(hashFunction: string): (data: any) => Buffer {
+    return (data: any): Buffer => {
+      return crypto.createHash(hashFunction).update(data).digest();
+    };
   }
 }

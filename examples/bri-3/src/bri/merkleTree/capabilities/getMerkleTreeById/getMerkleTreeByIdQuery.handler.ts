@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { NotFoundException } from '@nestjs/common';
-import { NOT_FOUND_ERR_MESSAGE } from '../../api/err.messages';
+import { MERKLE_TREE_NOT_FOUND } from '../../api/err.messages';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { MerkleTreeStorageAgent } from '../../agents/merkleTreeStorage.agent';
@@ -21,7 +21,7 @@ export class GetMerkleTreeByIdQueryHandler
     const merkletree = await this.storageAgent.getMerkleTreeById(query.id);
 
     if (!merkletree) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(MERKLE_TREE_NOT_FOUND(query.id));
     }
 
     return this.autoMapper.map(merkletree, BpiMerkleTree, MerkleTreeDto);

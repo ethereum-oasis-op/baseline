@@ -15,10 +15,10 @@ export class CreateMerkleTreeCommandHandler
   async execute(command: CreateMerkleTreeCommand) {
     const newMerkleTreeCandidate = this.agent.createNewMerkleTree(
       command.leaves,
-      command.hashFunction,
+      command.hashAlgName,
     );
 
-    const newMerkleTree = await this.storageAgent.createNewMerkleTree(
+    const newMerkleTree = await this.storageAgent.storeNewMerkleTree(
       newMerkleTreeCandidate,
     );
 

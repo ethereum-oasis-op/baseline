@@ -25,10 +25,10 @@ export class UpdateMerkleTreeCommandHandler
     this.agent.updateMerkleTree(
       merkleTreeUpdateCandidate,
       command.leaves,
-      command.hashFunction,
+      command.hashAlgName,
     );
 
-    const newMerkleTree = await this.storageAgent.updateMerkleTree(
+    const newMerkleTree = await this.storageAgent.storeUpdatedMerkleTree(
       merkleTreeUpdateCandidate,
     );
 

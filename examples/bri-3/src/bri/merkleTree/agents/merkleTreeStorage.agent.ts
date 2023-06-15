@@ -24,44 +24,33 @@ export class MerkleTreeStorageAgent extends PrismaService {
       merkleTreeModel.id,
       MerkleTree.unmarshalTree(merkleTreeModel.merkleTree),
     );
+
     return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 
-  async createNewMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    const treeIn = {
-      id: merkleTree.id,
-      merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
-    };
-    const newMerkleTreeModel = await this.bpiMerkleTree.create({
+  async storeNewMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
+    await this.bpiMerkleTree.create({
       data: {
-        ...treeIn,
+        id: merkleTree.id,
+        merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
       },
     });
 
-    const treeOut = {
-      id: newMerkleTreeModel.id,
-      merkleTree: MerkleTree.unmarshalTree(merkleTree.merkleTree),
-    };
-    return this.mapper.map(treeOut, BpiMerkleTree, BpiMerkleTree);
+    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 
-  async updateMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    const treeIn = {
-      id: merkleTree.id,
-      merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
-    };
-    const updatedMerkleTreeModel = await this.bpiMerkleTree.update({
+  async storeUpdatedMerkleTree(
+    merkleTree: BpiMerkleTree,
+  ): Promise<BpiMerkleTree> {
+    await this.bpiMerkleTree.update({
       where: { id: merkleTree.id },
       data: {
-        ...treeIn,
+        id: merkleTree.id,
+        merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
       },
     });
 
-    const treeOut = {
-      id: updatedMerkleTreeModel.id,
-      merkleTree: MerkleTree.unmarshalTree(merkleTree.merkleTree),
-    };
-    return this.mapper.map(treeOut, BpiMerkleTree, BpiMerkleTree);
+    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 
   async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<void> {

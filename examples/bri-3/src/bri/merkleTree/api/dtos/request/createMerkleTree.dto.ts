@@ -5,5 +5,5 @@ export class CreateMerkleTreeDto {
   leaves: string[];
 
   @IsNotEmpty()
-  hashFunction: string;
+  hashAlgName: string;
 }

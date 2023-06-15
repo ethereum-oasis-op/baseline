@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import MerkleTree from 'merkletreejs';
+import * as crypto from 'crypto';
 
 export class BpiMerkleTree {
   @AutoMap()
