@@ -3,16 +3,17 @@
 This document describes the setup and process for generating zero-knowledge proofs using snarkjs. The circuits are written and compiled using [Circom](https://docs.circom.io/getting-started/installation/). Then, the [snarkjs](https://github.com/iden3/snarkjs) library is used to generate proofs from these compiled circuits.
 
 > **Note**
-> 
+>
 > There are other available zk circuit libraries such as gnark.
-> 
+>
 > Here is a [link](https://blog.celer.network/2023/03/01/the-pantheon-of-zero-knowledge-proof-development-frameworks/) for comparing performances of gnark and snarkjs circuit libraries. To summarise,
+>
 > - Proof generation time: For Groth16, gnark is 5~10 times faster than snarkjs
 > - Peak memory usage: It is comparable for both libraries.
 > - CPU utilisation: Gnark shows better CPU utilisation.
-> 
+>
 > As discussed during call on 27/04/2023, snarkjs is preferred due to its ease of development (a separate service for running zk-circuits in golang is not required). Also, It is deemed sufficient for our use case based on the number of constraints in our circuit.
-> 
+>
 > The zero knowledge proof module interface allows these libraries to be used interchangeably. According to your requirement, you may write new circuits in your preferred library and plug it into this module.
 
 ## Pre-Setup Installations
@@ -41,9 +42,9 @@ Step 3: Install Snarkjs
 
 `npm install -g snarkjs@0.5.0`
 
-```NOTE
-Snarkjs version 0.5.0 is used because it is more stable than the latest version (0.7.0).
-```
+> **Note**
+>
+> Snarkjs version 0.5.0 is used because it is more stable than the latest version (0.7.0).
 
 ## Setup
 
