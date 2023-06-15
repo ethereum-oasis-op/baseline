@@ -2,7 +2,7 @@
 
 ## DIDs Explanation
 
-The Decentralized Identifiers (DIDs) is a globally unique identifier. By utilizing it for authentication, DIDs enables a decentralized and self-sovereign approach to digital identity, where users have control over their own identity data and can prove their identity without relying on centralized authorities.
+[W3C Decentralized Identifiers](https://www.w3.org/TR/did-core/) (DIDs) are cryptographically variable, globally unique identifiers. By utilizing DIDs for authentication, they enable a decentralized and self-sovereign approach to digital identity, where users have control over their own identity data and can prove their identity without relying on centralized authorities.
 
 In context of Bri-3, they are designed to enable users (BpiSubjects) to
 
