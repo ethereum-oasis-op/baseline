@@ -4,6 +4,7 @@ import { Mapper } from '@automapper/core';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import MerkleTree from 'merkletreejs';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
+import { MerkleTreeDto } from '../api/dtos/response/merkleTree.dto';
 
 @Injectable()
 export class MerkleTreeStorageAgent extends PrismaService {
@@ -20,23 +21,19 @@ export class MerkleTreeStorageAgent extends PrismaService {
       return null;
     }
 
-    const merkleTree = new BpiMerkleTree(
-      merkleTreeModel.id,
-      MerkleTree.unmarshalTree(merkleTreeModel.merkleTree),
-    );
-
-    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
+    return this.mapper.map(merkleTreeModel, MerkleTreeDto, BpiMerkleTree);
   }
 
   async storeNewMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    await this.bpiMerkleTree.create({
+    const storedMerkleTree = await this.bpiMerkleTree.create({
       data: {
         id: merkleTree.id,
-        merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
+        hashAlgName: merkleTree.hashAlgName,
+        tree: MerkleTree.marshalTree(merkleTree.tree),
       },
     });
 
-    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
+    return this.mapper.map(storedMerkleTree, MerkleTreeDto, BpiMerkleTree);
   }
 
   async storeUpdatedMerkleTree(
@@ -46,16 +43,18 @@ export class MerkleTreeStorageAgent extends PrismaService {
       where: { id: merkleTree.id },
       data: {
         id: merkleTree.id,
-        merkleTree: MerkleTree.marshalTree(merkleTree.merkleTree),
+        tree: MerkleTree.marshalTree(merkleTree.tree),
       },
     });
 
     return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 
-  async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<void> {
+  async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
     await this.bpiMerkleTree.delete({
       where: { id: merkleTree.id },
     });
+
+    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 }

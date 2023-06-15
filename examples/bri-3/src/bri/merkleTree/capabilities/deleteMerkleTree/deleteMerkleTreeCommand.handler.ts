@@ -12,11 +12,16 @@ export class DeleteMerkleTreeCommandHandler
     private readonly storageAgent: MerkleTreeStorageAgent,
   ) {}
 
-  async execute(command: DeleteMerkleTreeCommand) {
+  async execute(command: DeleteMerkleTreeCommand): Promise<string> {
     const merkleTreeToDelete =
       await this.agent.fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
         command.id,
       );
-    await this.storageAgent.deleteMerkleTree(merkleTreeToDelete);
+
+    const deletedMerkleTree = await this.storageAgent.deleteMerkleTree(
+      merkleTreeToDelete,
+    );
+
+    return deletedMerkleTree.id;
   }
 }

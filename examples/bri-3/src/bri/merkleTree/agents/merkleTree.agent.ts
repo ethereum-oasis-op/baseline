@@ -1,42 +1,40 @@
 import { Injectable } from '@nestjs/common';
-import MerkleTree from 'merkletreejs';
 import { v4 } from 'uuid';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
 import { MerkleTreeStorageAgent } from './merkleTreeStorage.agent';
-import * as crypto from 'crypto';
 import { MERKLE_TREE_NOT_FOUND } from '../api/err.messages';
+import MerkleTree from 'merkletreejs';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class MerkleTreeAgent {
   constructor(private storageAgent: MerkleTreeStorageAgent) {}
   public createNewMerkleTree(
     leaves: string[],
-    hashFunction: string,
+    hashAlgName: string,
   ): BpiMerkleTree {
-    const hashHelper = this.createHashHelper(hashFunction);
-
-    const hashedLeaves = leaves.map((x) => hashHelper(x));
-
-    return new BpiMerkleTree(v4(), new MerkleTree(hashedLeaves, hashHelper));
+    return new BpiMerkleTree(
+      v4(),
+      hashAlgName,
+      this.formMerkleTree(leaves, hashAlgName),
+    );
   }
 
   public updateMerkleTree(
     merkleTreeToUpdate: BpiMerkleTree,
     leaves: string[],
-    hashFunction: string,
+    hashAlgName: string,
   ) {
-    const hashHelper = this.createHashHelper(hashFunction);
-
-    const hashedLeaves = leaves.map((x) => hashHelper(x));
-
-    merkleTreeToUpdate.updateMerkleTree(hashedLeaves, hashHelper);
+    merkleTreeToUpdate.updateMerkleTree(
+      hashAlgName,
+      this.formMerkleTree(leaves, hashAlgName),
+    );
   }
 
   public async fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
     id: string,
   ): Promise<BpiMerkleTree> {
-    const merkleTreeCandidate: BpiMerkleTree =
-      await this.storageAgent.getMerkleTreeById(id);
+    const merkleTreeCandidate = await this.storageAgent.getMerkleTreeById(id);
 
     if (!merkleTreeCandidate) {
       throw new Error(MERKLE_TREE_NOT_FOUND(id));
@@ -45,9 +43,11 @@ export class MerkleTreeAgent {
     return merkleTreeCandidate;
   }
 
-  public createHashHelper(hashFunction: string): (data: any) => Buffer {
-    return (data: any): Buffer => {
-      return crypto.createHash(hashFunction).update(data).digest();
+  public formMerkleTree(leaves: string[], hashAlgName: string): MerkleTree {
+    const hashHelper = (data: any): Buffer => {
+      return crypto.createHash(hashAlgName).update(data).digest();
     };
+    const hashedLeaves = leaves.map((x) => hashHelper(x));
+    return new MerkleTree(hashedLeaves, hashHelper);
   }
 }

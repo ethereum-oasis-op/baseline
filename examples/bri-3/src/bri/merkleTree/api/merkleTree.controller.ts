@@ -16,6 +16,7 @@ import { CreateMerkleTreeDto } from './dtos/request/createMerkleTree.dto';
 import { UpdateMerkleTreeDto } from './dtos/request/updateMerkleTree.dto';
 import { MerkleTreeDto } from './dtos/response/merkleTree.dto';
 import { Public } from '../../decorators/public-endpoint';
+import { BpiMerkleTree } from '../models/bpiMerkleTree';
 
 @Controller('merkle')
 export class MerkleTreeController {
@@ -42,7 +43,7 @@ export class MerkleTreeController {
   async updateMerkleTree(
     @Param('id') id: string,
     @Body() requestDto: UpdateMerkleTreeDto,
-  ): Promise<void> {
+  ): Promise<BpiMerkleTree> {
     return await this.commandBus.execute(
       new UpdateMerkleTreeCommand(
         id,
@@ -54,7 +55,7 @@ export class MerkleTreeController {
 
   @Public()
   @Delete('/:id')
-  async deleteMerkleTree(@Param('id') id: string): Promise<void> {
+  async deleteMerkleTree(@Param('id') id: string): Promise<BpiMerkleTree> {
     return await this.commandBus.execute(new DeleteMerkleTreeCommand(id));
   }
 }

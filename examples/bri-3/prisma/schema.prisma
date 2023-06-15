@@ -123,7 +123,8 @@ model AnchorHash {
 
 model BpiMerkleTree {
   id                String @id @default(uuid())
-  merkleTree        String
+  hashAlgName       String
+  tree              String
 }
 
 enum WorkgroupStatus {

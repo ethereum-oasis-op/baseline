@@ -1,10 +1,18 @@
 import { AutoMap } from '@automapper/classes';
-import MerkleTree from 'merkletreejs';
 
 export class MerkleTreeDto {
   @AutoMap()
   id: string;
 
   @AutoMap()
-  merkleTree: MerkleTree;
+  hashAlgName: string;
+
+  @AutoMap()
+  tree: string;
+
+  constructor(id: string, hashAlgName: string, tree: string) {
+    this.id = id;
+    this.hashAlgName = hashAlgName;
+    this.tree = tree;
+  }
 }

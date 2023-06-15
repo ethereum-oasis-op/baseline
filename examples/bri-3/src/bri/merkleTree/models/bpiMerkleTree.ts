@@ -1,23 +1,24 @@
 import { AutoMap } from '@automapper/classes';
 import MerkleTree from 'merkletreejs';
-import * as crypto from 'crypto';
 
 export class BpiMerkleTree {
   @AutoMap()
   id: string;
 
   @AutoMap()
-  merkleTree: MerkleTree;
+  hashAlgName: string;
 
-  constructor(id: string, merkleTree: MerkleTree) {
+  @AutoMap()
+  tree: MerkleTree;
+
+  constructor(id: string, hashAlgName: string, tree: MerkleTree) {
     this.id = id;
-    this.merkleTree = merkleTree;
+    this.hashAlgName = hashAlgName;
+    this.tree = tree;
   }
 
-  public updateMerkleTree(
-    hashedLeaves: Buffer[],
-    hashFunction: (data: any) => Buffer,
-  ): void {
-    this.merkleTree = new MerkleTree(hashedLeaves, hashFunction);
+  public updateMerkleTree(hashAlgName: string, tree: MerkleTree): void {
+    this.hashAlgName = hashAlgName;
+    this.tree = tree;
   }
 }

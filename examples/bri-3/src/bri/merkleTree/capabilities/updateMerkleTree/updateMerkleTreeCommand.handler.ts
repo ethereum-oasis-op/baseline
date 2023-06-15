@@ -17,7 +17,7 @@ export class UpdateMerkleTreeCommandHandler
   ) {}
 
   async execute(command: UpdateMerkleTreeCommand) {
-    const merkleTreeUpdateCandidate: BpiMerkleTree =
+    const merkleTreeUpdateCandidate =
       await this.agent.fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
         command.id,
       );

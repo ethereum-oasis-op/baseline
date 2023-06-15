@@ -4,7 +4,6 @@ import { MERKLE_TREE_NOT_FOUND } from '../../api/err.messages';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { MerkleTreeStorageAgent } from '../../agents/merkleTreeStorage.agent';
-import { MerkleTreeDto } from '../../api/dtos/response/merkleTree.dto';
 import { GetMerkleTreeByIdQuery } from './getMerkleTreeById.query';
 import { BpiMerkleTree } from '../../models/bpiMerkleTree';
 
@@ -24,6 +23,6 @@ export class GetMerkleTreeByIdQueryHandler
       throw new NotFoundException(MERKLE_TREE_NOT_FOUND(query.id));
     }
 
-    return this.autoMapper.map(merkletree, BpiMerkleTree, MerkleTreeDto);
+    return this.autoMapper.map(merkletree, BpiMerkleTree, BpiMerkleTree);
   }
 }

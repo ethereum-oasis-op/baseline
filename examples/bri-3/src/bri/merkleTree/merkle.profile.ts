@@ -1,8 +1,9 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, Mapper } from '@automapper/core';
+import { createMap, forMember, mapFrom, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
 import { MerkleTreeDto } from './api/dtos/response/merkleTree.dto';
 import { BpiMerkleTree } from './models/bpiMerkleTree';
+import MerkleTree from 'merkletreejs';
 
 @Injectable()
 export class MerkleProfile extends AutomapperProfile {
@@ -12,7 +13,15 @@ export class MerkleProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper: Mapper) => {
-      createMap(mapper, BpiMerkleTree, MerkleTreeDto);
+      createMap(
+        mapper,
+        MerkleTreeDto,
+        BpiMerkleTree,
+        forMember(
+          (destination) => destination.tree,
+          mapFrom((source) => MerkleTree.unmarshalTree(source.tree)),
+        ),
+      );
       createMap(mapper, BpiMerkleTree, BpiMerkleTree);
     };
   }
