@@ -30,7 +30,7 @@ where
 
 ## Authentication Flow Explanation
 
-1. (Prerequisite) The BpiOperators first must configure their own .env files with the .env.sample and register BpiSubjects’ public keys in the database
+1. (Prerequisite) The BpiOperators first must configure their own .env files with the .env.sample and register a BpiSubjects’ DID and public keys in the database.
 2. BpiSubject sends POST /auth/login to Service and provides their public key
 3. BpiOperator receives the response, retrieves BpiSubject’s public key, verifies the message and signature against BpiOperator’s public key. Then generates an access (JWT) token for successfully authorized account using BpiOperator’s private key
 4. BpiSubject authenticates next HTTP request using the received access (JWT) token that is signed by their metamask public key
