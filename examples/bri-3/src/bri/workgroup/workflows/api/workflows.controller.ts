@@ -51,7 +51,7 @@ export class WorkflowController {
   async updateWorkflow(
     @Param('id') id: string,
     @Body() requestDto: UpdateWorkflowDto,
-  ): Promise<void> {
+  ): Promise<WorkflowDto> {
     return await this.commandBus.execute(
       new UpdateWorkflowCommand(
         id,

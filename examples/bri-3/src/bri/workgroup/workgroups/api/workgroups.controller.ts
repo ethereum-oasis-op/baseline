@@ -52,7 +52,7 @@ export class WorkgroupController {
   async updateWorkgroup(
     @Param('id') id: string,
     @Body() requestDto: UpdateWorkgroupDto,
-  ): Promise<void> {
+  ): Promise<WorkgroupDto> {
     return await this.commandBus.execute(
       new UpdateWorkgroupCommand(
         id,
@@ -67,7 +67,7 @@ export class WorkgroupController {
 
   @Put('archive/:id')
   @CheckAuthz({ action: 'delete', type: 'Workgroup' })
-  async archiveWorkgroup(@Param('id') id: string): Promise<void> {
+  async archiveWorkgroup(@Param('id') id: string): Promise<WorkgroupDto> {
     return await this.commandBus.execute(new ArchiveWorkgroupCommand(id));
   }
 

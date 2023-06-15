@@ -2,12 +2,17 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { WorkstepAgent } from '../../agents/worksteps.agent';
 import { WorkstepStorageAgent } from '../../agents/workstepsStorage.agent';
 import { UpdateWorkstepCommand } from './updateWorkstep.command';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { Workstep } from '../../models/workstep';
+import { WorkstepDto } from '../../api/dtos/response/workstep.dto';
 
 @CommandHandler(UpdateWorkstepCommand)
 export class UpdateWorkstepCommandHandler
   implements ICommandHandler<UpdateWorkstepCommand>
 {
   constructor(
+    @InjectMapper() private readonly mapper: Mapper,
     private agent: WorkstepAgent,
     private storageAgent: WorkstepStorageAgent,
   ) {}
@@ -28,6 +33,10 @@ export class UpdateWorkstepCommandHandler
       command.privacyPolicy,
     );
 
-    await this.storageAgent.updateWorkstep(workstepToUpdate);
+    const updatedWorkstep = await this.storageAgent.updateWorkstep(
+      workstepToUpdate,
+    );
+
+    return this.mapper.map(updatedWorkstep, Workstep, WorkstepDto);
   }
 }

@@ -47,7 +47,7 @@ export class MockBpiSubjectStorageAgent {
     return Promise.resolve(this.bpiSubjectsStore);
   }
 
-  async createNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
+  async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     if (!bpiSubject.roles || !bpiSubject.roles.length) {
       const role = new BpiSubjectRole(
         '321',

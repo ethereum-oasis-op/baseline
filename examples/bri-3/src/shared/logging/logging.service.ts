@@ -6,7 +6,9 @@ export class LoggingService {
   private _logger: Logger;
 
   constructor() {
-    this._logger = new Logger();
+    this._logger = new Logger({
+      ignoreStackLevels: 4,
+    });
   }
 
   public logError(message: string) {

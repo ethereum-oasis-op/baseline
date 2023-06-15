@@ -22,7 +22,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "snarkjs:ptau": "./zeroKnowledgeKeys/scripts/ptau.sh",
+    "snarkjs:circuit": "./zeroKnowledgeKeys/scripts/circuit.sh"
   },
   "dependencies": {
     "@automapper/classes": "^8.7.6",
@@ -37,6 +39,7 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@prisma/client": "^4.4.0",
+    "circomlib": "^2.0.5",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "did-jwt": "^6.10.1",
@@ -53,6 +56,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
+    "snarkjs": "^0.6.11",
     "tslog": "^3.3.4",
     "uuidv4": "^6.2.13"
   },
@@ -74,6 +78,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "28.1.2",
+    "jest-mock-extended": "^3.0.3",
     "prettier": "^2.3.2",
     "prisma": "^4.4.0",
     "source-map-support": "^0.5.20",
