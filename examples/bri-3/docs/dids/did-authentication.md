@@ -32,7 +32,7 @@ where
 
 1. (Prerequisite) The BpiOperators first must configure their own .env files with the .env.sample and register a BpiSubjects’ DID and public keys in the database.
 2. BpiSubject sends POST /auth/login to Service and provides their public key
-3. BpiOperator receives the response, retrieves BpiSubject’s public key, verifies the message and signature against BpiOperator’s public key. Then generates an access (JWT) token for successfully authorized account using BpiOperator’s private key
+3. BpiOperator receives the response, resolves the DID to its DID Document and retrieves the key used from the `authentication` property, and then verifies the message signature with the `authentication` key. Then the BPI Operator generates an access (JWT) token for a successfully authorized account using BpiOperator’s private key.
 4. BpiSubject authenticates next HTTP request using the received access (JWT) token that is signed by their metamask public key
 5. BpiOperator receives the request, provides a resolver, verifies the token and stores the did document in a verifiable data registry, associating with the BpiSubject’s identity
 
