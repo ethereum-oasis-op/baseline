@@ -34,7 +34,7 @@ where
 2. BpiSubject sends POST /auth/login to Service and provides their public key
 3. BpiOperator receives the response, resolves the DID to its DID Document and retrieves the key used from the `authentication` property, and then verifies the message signature with the `authentication` key. Then the BPI Operator generates an access (JWT) token for a successfully authorized account using BpiOperator’s private key.
 4. BpiSubject authenticates next HTTP request using the received access (JWT) token that is signed by their metamask public key
-5. BpiOperator receives the request, provides a resolver, verifies the token and stores the did document in a verifiable data registry, associating with the BpiSubject’s identity
+5. BpiOperator receives the request, verifies the token, and, if successful routes the request to the target service. If the token verification fails (e.g. expiration), a failure message is generated, and the request is not routed to its target service.
 
 ## Reference
 1. [PR #606](https://github.com/eea-oasis/baseline/pull/606)
