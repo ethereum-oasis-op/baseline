@@ -50,13 +50,14 @@ Step 3: Install Snarkjs
 
 [Detailed Instructions](https://github.com/iden3/snarkjs)
 
-We are going to use the Groth16 zk-SNARK protocol. To use this protocol, we need to generate a trusted setup. Groth16 requires a per circuit trusted setup. This trusted setup consists of 2 parts:
+We are going to use the Groth16 zk-SNARK protocol. To use this protocol, we need to generate a trusted setup, which will be completed in 2 phases (circuit-independent and circuit-specific). The goal of the setup is to generate trustworthy cryptographic keys for securing the zero-knowledge proof systems.
 
-- The powers of tau, which is independent of the circuit.
-- The phase 2, which depends on the circuit.
+- Phase 1 (circuit-independent): Powers of tau ceremony. This ensures that the toxic waste generated during the trusted setup is discarded and guarantees zero-knowledge of the resulting proofs, even if all participants were compromised.
 
-The commands for these two steps have been combined into ptau.sh and circuit.sh, respectively.
+- Phase 2 (circuit-specific): Compiles the circuit and generates the proving and verification keys.
 
-Step 1: `npm run snarkjs:ptau`
+The commands for these two phases have been combined into ptau.sh and circuit.sh, respectively.
 
-Step 2: `npm run snarkjs:circuit`
+Phase 1: `npm run snarkjs:ptau`
+
+Phase 2: `npm run snarkjs:circuit`
