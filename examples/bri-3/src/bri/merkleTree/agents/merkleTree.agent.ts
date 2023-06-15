@@ -9,6 +9,8 @@ import * as crypto from 'crypto';
 @Injectable()
 export class MerkleTreeAgent {
   constructor(private storageAgent: MerkleTreeStorageAgent) {}
+
+  //TODO add validation that hashAlgName is within a supported list
   public createNewMerkleTree(
     leaves: string[],
     hashAlgName: string,
@@ -43,6 +45,7 @@ export class MerkleTreeAgent {
     return merkleTreeCandidate;
   }
 
+  //TODO to be moved into BpiMerkleTree Domain Object
   public formMerkleTree(leaves: string[], hashAlgName: string): MerkleTree {
     const hashHelper = (data: any): Buffer => {
       return crypto.createHash(hashAlgName).update(data).digest();
