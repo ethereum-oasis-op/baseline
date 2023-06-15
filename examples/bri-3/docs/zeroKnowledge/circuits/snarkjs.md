@@ -40,7 +40,11 @@ Run the following commands from the directory where your computer stores global 
 
 Step 3: Install Snarkjs
 
-`npm install -g snarkjs`
+`npm install -g snarkjs@0.5.0`
+
+```NOTE
+Snarkjs version 0.5.0 is used because it is more stable than the latest version (0.7.0).
+```
 
 ## Setup
 
