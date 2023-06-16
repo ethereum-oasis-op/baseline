@@ -42,7 +42,3 @@ snarkjs zkey export verificationkey zeroKnowledgeKeys/circuit/circuit_final.zkey
 
 # Export circuit verifier with updated name and solidity version
 snarkjs zkey export solidityverifier zeroKnowledgeKeys/circuit/circuit_final.zkey src/bri/zeroKnowledgeProof/services/circuit/snarkjs/CircuitVerifier.sol
-# sed -i'.bak' 's/0.6.11;/0.8.11;/g' contracts/CircuitVerifier.sol
-sed -i'.bak' 's/contract Verifier/contract CircuitVerifier/g' src/bri/zeroKnowledgeProof/services/circuit/snarkjs/CircuitVerifier.sol
-
-rm src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.bak
