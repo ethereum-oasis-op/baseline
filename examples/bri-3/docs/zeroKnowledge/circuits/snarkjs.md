@@ -12,7 +12,7 @@ This document describes the setup and process for generating zero-knowledge proo
 > - Peak memory usage: It is comparable for both libraries.
 > - CPU utilisation: Gnark shows better CPU utilisation.
 >
-> As discussed during call on 27/04/2023, snarkjs is preferred due to its ease of development (a separate service for running zk-circuits in golang is not required). Also, It is deemed sufficient for our use case based on the number of constraints in our circuit.
+> However, our team chose snarkjs due to its ease of development (a separate service for running zk-circuits in golang is not required). Also, It was deemed sufficient for our use case based on the number of constraints in our circuit.
 >
 > The zero knowledge proof module interface allows these libraries to be used interchangeably. According to your requirement, you may write new circuits in your preferred library and plug it into this module.
 
