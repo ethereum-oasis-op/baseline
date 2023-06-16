@@ -40,3 +40,5 @@ snarkjs powersoftau prepare phase2 zeroKnowledgeKeys/ptau/pot12_beacon.ptau zero
 
 # Verify the final ptau file. Creates the file pot12_final.ptau
 snarkjs powersoftau verify zeroKnowledgeKeys/ptau/pot12_final.ptau
+
+echo "------------------Phase 1 complete-------------------------"
