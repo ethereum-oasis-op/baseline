@@ -5,8 +5,6 @@ import { INVALID_ANCHOR_HASH_INPUT } from './err.messages';
 import { AnchorHashController } from './anchorHash.controller';
 import { AnchorHashAgent } from '../agents/anchorHash.agent';
 import { VerifyAnchorHashCommandHandler } from '../capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
-import { AnchorHashStorageAgent } from '../agents/anchorHashStorage.agent';
-import { MockAnchorHashStorageAgent } from '../agents/mockAnchorHashStorage.agent';
 import { AutomapperModule } from '@automapper/nestjs';
 import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
 import { BlockchainService } from '../services/blockchain/blockchain.service';
@@ -29,15 +27,11 @@ describe('ProofController', () => {
       providers: [
         AnchorHashAgent,
         VerifyAnchorHashCommandHandler,
-        AnchorHashStorageAgent,
         AnchorHashCcsmStorageAgent,
         BlockchainService,
         AnchorHashProfile,
       ],
-    })
-      .overrideProvider(AnchorHashStorageAgent)
-      .useValue(new MockAnchorHashStorageAgent())
-      .compile();
+    }).compile();
 
     controller = app.get<AnchorHashController>(AnchorHashController);
 

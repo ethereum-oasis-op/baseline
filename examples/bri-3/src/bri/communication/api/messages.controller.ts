@@ -45,7 +45,7 @@ export class MessageController {
   async updateBpiMessage(
     @Param('id') id: string,
     @Body() requestDto: UpdateBpiMessageDto,
-  ): Promise<void> {
+  ): Promise<BpiMessageDto> {
     return await this.commandBus.execute(
       new UpdateBpiMessageCommand(id, requestDto.content, requestDto.signature),
     );
