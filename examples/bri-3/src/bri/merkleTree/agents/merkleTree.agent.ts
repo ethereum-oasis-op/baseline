@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
 import { MerkleTreeStorageAgent } from './merkleTreeStorage.agent';
@@ -33,16 +33,16 @@ export class MerkleTreeAgent {
     );
   }
 
-  public async fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
+  public async fetchMerkleTreeByIdAndThrowIfValidationFails(
     id: string,
   ): Promise<BpiMerkleTree> {
-    const merkleTreeCandidate = await this.storageAgent.getMerkleTreeById(id);
+    const merkleTree = await this.storageAgent.getMerkleTreeById(id);
 
-    if (!merkleTreeCandidate) {
-      throw new Error(MERKLE_TREE_NOT_FOUND(id));
+    if (!merkleTree) {
+      throw new NotFoundException(MERKLE_TREE_NOT_FOUND(id));
     }
 
-    return merkleTreeCandidate;
+    return merkleTree;
   }
 
   //TODO to be moved into BpiMerkleTree Domain Object

@@ -14,9 +14,7 @@ export class DeleteMerkleTreeCommandHandler
 
   async execute(command: DeleteMerkleTreeCommand): Promise<string> {
     const merkleTreeToDelete =
-      await this.agent.fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
-        command.id,
-      );
+      await this.agent.fetchMerkleTreeByIdAndThrowIfValidationFails(command.id);
 
     const deletedMerkleTree = await this.storageAgent.deleteMerkleTree(
       merkleTreeToDelete,

@@ -39,7 +39,7 @@ export class MerkleTreeStorageAgent extends PrismaService {
   async storeUpdatedMerkleTree(
     merkleTree: BpiMerkleTree,
   ): Promise<BpiMerkleTree> {
-    await this.bpiMerkleTree.update({
+    const updatedMerkleTree = await this.bpiMerkleTree.update({
       where: { id: merkleTree.id },
       data: {
         id: merkleTree.id,
@@ -47,7 +47,7 @@ export class MerkleTreeStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
+    return this.mapper.map(updatedMerkleTree, MerkleTreeDto, BpiMerkleTree);
   }
 
   async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {

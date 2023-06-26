@@ -9,10 +9,4 @@ export class MerkleTreeDto {
 
   @AutoMap()
   tree: string;
-
-  constructor(id: string, hashAlgName: string, tree: string) {
-    this.id = id;
-    this.hashAlgName = hashAlgName;
-    this.tree = tree;
-  }
 }

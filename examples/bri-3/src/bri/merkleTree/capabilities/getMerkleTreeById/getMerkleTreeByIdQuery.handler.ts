@@ -1,11 +1,9 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { NotFoundException } from '@nestjs/common';
-import { MERKLE_TREE_NOT_FOUND } from '../../api/err.messages';
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
-import { MerkleTreeStorageAgent } from '../../agents/merkleTreeStorage.agent';
 import { GetMerkleTreeByIdQuery } from './getMerkleTreeById.query';
 import { BpiMerkleTree } from '../../models/bpiMerkleTree';
+import { MerkleTreeAgent } from '../../agents/merkleTree.agent';
 
 @QueryHandler(GetMerkleTreeByIdQuery)
 export class GetMerkleTreeByIdQueryHandler
@@ -13,16 +11,13 @@ export class GetMerkleTreeByIdQueryHandler
 {
   constructor(
     @InjectMapper() private autoMapper: Mapper,
-    private readonly storageAgent: MerkleTreeStorageAgent,
+    private readonly agent: MerkleTreeAgent,
   ) {}
 
   async execute(query: GetMerkleTreeByIdQuery) {
-    const merkletree = await this.storageAgent.getMerkleTreeById(query.id);
+    const merkleTree =
+      await this.agent.fetchMerkleTreeByIdAndThrowIfValidationFails(query.id);
 
-    if (!merkletree) {
-      throw new NotFoundException(MERKLE_TREE_NOT_FOUND(query.id));
-    }
-
-    return this.autoMapper.map(merkletree, BpiMerkleTree, BpiMerkleTree);
+    return this.autoMapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 }

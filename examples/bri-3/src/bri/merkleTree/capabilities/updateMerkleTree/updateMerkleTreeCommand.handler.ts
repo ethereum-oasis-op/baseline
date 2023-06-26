@@ -18,9 +18,7 @@ export class UpdateMerkleTreeCommandHandler
 
   async execute(command: UpdateMerkleTreeCommand) {
     const merkleTreeUpdateCandidate =
-      await this.agent.fetchMerkleTreeCandidateByIdAndThrowIfValidationFails(
-        command.id,
-      );
+      await this.agent.fetchMerkleTreeByIdAndThrowIfValidationFails(command.id);
 
     this.agent.updateMerkleTree(
       merkleTreeUpdateCandidate,
