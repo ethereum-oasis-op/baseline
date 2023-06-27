@@ -21,18 +21,6 @@ export class MerkleTreeAgent {
       this.formMerkleTree(leaves, hashAlgName),
     );
   }
-
-  public updateMerkleTree(
-    merkleTreeToUpdate: BpiMerkleTree,
-    leaves: string[],
-    hashAlgName: string,
-  ) {
-    merkleTreeToUpdate.updateMerkleTree(
-      hashAlgName,
-      this.formMerkleTree(leaves, hashAlgName),
-    );
-  }
-
   public async fetchMerkleTreeByIdAndThrowIfValidationFails(
     id: string,
   ): Promise<BpiMerkleTree> {
@@ -45,12 +33,16 @@ export class MerkleTreeAgent {
     return merkleTree;
   }
 
-  //TODO to be moved into BpiMerkleTree Domain Object
+  //TODO to be moved into BpiMerkleTree Domain Object or Hashing Service
   public formMerkleTree(leaves: string[], hashAlgName: string): MerkleTree {
-    const hashHelper = (data: any): Buffer => {
+    const hashFn = this.createHashFunction(hashAlgName);
+    const hashedLeaves = leaves.map((x) => hashFn(x));
+    return new MerkleTree(hashedLeaves, hashFn);
+  }
+
+  public createHashFunction(hashAlgName: string): (data: any) => Buffer {
+    return (data: any): Buffer => {
       return crypto.createHash(hashAlgName).update(data).digest();
     };
-    const hashedLeaves = leaves.map((x) => hashHelper(x));
-    return new MerkleTree(hashedLeaves, hashHelper);
   }
 }

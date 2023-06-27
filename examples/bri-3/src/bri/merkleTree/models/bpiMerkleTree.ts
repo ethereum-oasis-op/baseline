@@ -16,9 +16,4 @@ export class BpiMerkleTree {
     this.hashAlgName = hashAlgName;
     this.tree = tree;
   }
-
-  public updateMerkleTree(hashAlgName: string, tree: MerkleTree): void {
-    this.hashAlgName = hashAlgName;
-    this.tree = tree;
-  }
 }

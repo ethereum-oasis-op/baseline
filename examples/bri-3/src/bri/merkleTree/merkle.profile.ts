@@ -4,10 +4,14 @@ import { Injectable } from '@nestjs/common';
 import { MerkleTreeDto } from './api/dtos/response/merkleTree.dto';
 import { BpiMerkleTree } from './models/bpiMerkleTree';
 import MerkleTree from 'merkletreejs';
+import { MerkleTreeAgent } from './agents/merkleTree.agent';
 
 @Injectable()
 export class MerkleProfile extends AutomapperProfile {
-  constructor(@InjectMapper() mapper: Mapper) {
+  constructor(
+    @InjectMapper() mapper: Mapper,
+    private readonly agent: MerkleTreeAgent,
+  ) {
     super(mapper);
   }
 
@@ -19,7 +23,12 @@ export class MerkleProfile extends AutomapperProfile {
         BpiMerkleTree,
         forMember(
           (destination) => destination.tree,
-          mapFrom((source) => MerkleTree.unmarshalTree(source.tree)),
+          mapFrom((source) =>
+            MerkleTree.unmarshalTree(
+              source.tree,
+              this.agent.createHashFunction(source.hashAlgName),
+            ),
+          ),
         ),
       );
       createMap(mapper, BpiMerkleTree, BpiMerkleTree);

@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "9901faf2-1db5-4e4c-921b-b5f43ea33cf8",
-		"name": "bri",
+		"_postman_id": "ba45f484-70a4-4516-825f-e9747aeaaabe",
+		"name": "bri Copy",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "11201020"
+		"_exporter_id": "11201020",
+		"_collection_link": "https://speeding-moon-127141.postman.co/workspace/Baseline~2b0609f4-7b8a-4f42-a245-7e537015edbc/collection/11201020-ba45f484-70a4-4516-825f-e9747aeaaabe?action=share&creator=11201020&source=collection_link"
 	},
 	"item": [
 		{
@@ -1242,35 +1243,6 @@
 							"path": [
 								"merkle",
 								"d5262706-bb63-4681-ba3e-9bba41960c1a"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Merkle Tree",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": \"22530de2-f368-4d26-808a-787a1528adbd\",\n    \"name\": \"hello3\",\n    \"desc\": \"world2\",\n    \"publicKey\": \"xyz2\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:3000/merkle/21f79c81-7ff1-4d61-b379-ff0d5415e2e9",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"merkle",
-								"21f79c81-7ff1-4d61-b379-ff0d5415e2e9"
 							]
 						}
 					},

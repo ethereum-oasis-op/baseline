@@ -9,12 +9,10 @@ import { MerkleTreeController } from './api/merkleTree.controller';
 import { CreateMerkleTreeCommandHandler } from './capabilities/createMerkleTree/createMerkleTreeCommand.handler';
 import { DeleteMerkleTreeCommandHandler } from './capabilities/deleteMerkleTree/deleteMerkleTreeCommand.handler';
 import { GetMerkleTreeByIdQueryHandler } from './capabilities/getMerkleTreeById/getMerkleTreeByIdQuery.handler';
-import { UpdateMerkleTreeCommandHandler } from './capabilities/updateMerkleTree/updateMerkleTreeCommand.handler';
 import { MerkleProfile } from './merkle.profile';
 
 export const CommandHandlers = [
   CreateMerkleTreeCommandHandler,
-  UpdateMerkleTreeCommandHandler,
   DeleteMerkleTreeCommandHandler,
 ];
 export const QueryHandlers = [GetMerkleTreeByIdQueryHandler];
