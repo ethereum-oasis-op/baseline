@@ -2,6 +2,8 @@
 /dist
 /node_modules
 /zeroKnowledgeKeys/ptau
+/zeroKnowledgeKeys/circuit
+src/bri/zeroKnowledgeProof/services/circuit/snarkjs/CircuitVerifier.sol
 
 # Logs
 logs

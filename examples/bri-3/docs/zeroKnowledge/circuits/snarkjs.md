@@ -3,16 +3,17 @@
 This document describes the setup and process for generating zero-knowledge proofs using snarkjs. The circuits are written and compiled using [Circom](https://docs.circom.io/getting-started/installation/). Then, the [snarkjs](https://github.com/iden3/snarkjs) library is used to generate proofs from these compiled circuits.
 
 > **Note**
-> 
+>
 > There are other available zk circuit libraries such as gnark.
-> 
+>
 > Here is a [link](https://blog.celer.network/2023/03/01/the-pantheon-of-zero-knowledge-proof-development-frameworks/) for comparing performances of gnark and snarkjs circuit libraries. To summarise,
+>
 > - Proof generation time: For Groth16, gnark is 5~10 times faster than snarkjs
 > - Peak memory usage: It is comparable for both libraries.
 > - CPU utilisation: Gnark shows better CPU utilisation.
-> 
-> As discussed during call on 27/04/2023, snarkjs is preferred due to its ease of development (a separate service for running zk-circuits in golang is not required). Also, It is deemed sufficient for our use case based on the number of constraints in our circuit.
-> 
+>
+> However, our team chose snarkjs due to its ease of development (a separate service for running zk-circuits in golang is not required). Also, It was deemed sufficient for our use case based on the number of constraints in our circuit.
+>
 > The zero knowledge proof module interface allows these libraries to be used interchangeably. According to your requirement, you may write new circuits in your preferred library and plug it into this module.
 
 ## Pre-Setup Installations
@@ -39,19 +40,24 @@ Run the following commands from the directory where your computer stores global 
 
 Step 3: Install Snarkjs
 
-`npm install -g snarkjs`
+`npm install -g snarkjs@0.5.0`
+
+> **Note**
+>
+> Snarkjs version 0.5.0 is used because it is more stable than the latest version (0.7.0).
 
 ## Setup
 
 [Detailed Instructions](https://github.com/iden3/snarkjs)
 
-We are going to use the Groth16 zk-SNARK protocol. To use this protocol, we need to generate a trusted setup. Groth16 requires a per circuit trusted setup. This trusted setup consists of 2 parts:
+We are going to use the Groth16 zk-SNARK protocol. To use this protocol, we need to generate a trusted setup, which will be completed in 2 phases (circuit-independent and circuit-specific). The goal of the setup is to generate trustworthy cryptographic keys for securing the zero-knowledge proof systems.
 
-- The powers of tau, which is independent of the circuit.
-- The phase 2, which depends on the circuit.
+- Phase 1 (circuit-independent): Powers of tau ceremony. This ensures that the toxic waste generated during the trusted setup is discarded and guarantees zero-knowledge of the resulting proofs, even if all participants were compromised.
 
-The commands for these two steps have been combined into ptau.sh and circuit.sh, respectively.
+- Phase 2 (circuit-specific): Compiles the circuit and generates the proving and verification keys.
 
-Step 1: `npm run snarkjs:ptau`
+The commands for these two phases have been combined into ptau.sh and circuit.sh, respectively.
 
-Step 2: `npm run snarkjs:circuit`
+Phase 1: `npm run snarkjs:ptau`
+
+Phase 2: `npm run snarkjs:circuit`
