@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
+import * as snarkjs from 'snarkjs';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
