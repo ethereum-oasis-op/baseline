@@ -3,8 +3,6 @@ import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
 import * as snarkjs from 'snarkjs';
-import * as fs from 'fs';
-import * as p from ;
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
@@ -18,27 +16,17 @@ export class SnarkjsCircuitService implements ICircuitService {
     return witness;
   }
 
-  public async createProof(witness: Witness): Promise<Proof> {
-    return witness.proof;
+  public async createProof(publicInputs: any): Promise<Proof> {
+    const { proof, publicInput: publicSignals } =
+      await snarkjs.groth16.fullProve(
+        publicInputs,
+        process.env.SNARKJS_PROVING_KEY,
+        process.env.SNARKJS_CIRCUIT_WASM,
+      );
+    return { proof, publicSignals };
   }
 
   public async verifyProof(proof: Proof, witness: Witness): Promise<boolean> {
     return true;
-  }
-
-  private async getProvingKeyPath(): Promise<string> {
-    return '../../../../../../zeroKnowledgeKeys/circuit/circuit_final.zkey';
-  }
-
-  private async getWasmFilePath(): Promise<string> {
-    return '../../../../../../zeroKnowledgeKeys/circuit/circuit_js/circuit.wasm'; 
-  }
-
-  private async getVerificationKey(): Promise<string> {
-    return 'verificationKey';
-  }
-
-  private getFile(path: string): Buffer {
-    return fs.readFileSync(path);
   }
 }
