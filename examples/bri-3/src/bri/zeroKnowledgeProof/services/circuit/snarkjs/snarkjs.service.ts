@@ -17,13 +17,20 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   public async createProof(publicInputs: any): Promise<Proof> {
-    const { proof, publicInput: publicSignals } =
-      await snarkjs.groth16.fullProve(
-        publicInputs,
-        process.env.SNARKJS_PROVING_KEY,
-        process.env.SNARKJS_CIRCUIT_WASM,
-      );
-    return { proof, publicSignals };
+    const { proof, publicSignals } = await snarkjs.groth16.fullProve(
+      publicInputs,
+      process.env.SNARKJS_PROVING_KEY,
+      process.env.SNARKJS_CIRCUIT_WASM,
+    );
+
+    const newProof = {
+      a: proof.pi_a,
+      b: proof.pi_b,
+      c: proof.pi_c,
+      publicInputs: publicSignals,
+    } as Proof;
+
+    return newProof;
   }
 
   public async verifyProof(proof: Proof, witness: Witness): Promise<boolean> {
