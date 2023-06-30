@@ -1,45 +1,317 @@
 {
-    "id": "uuid",
-    "originatorBpiSubject": "did_jwt_ACME", 
-    "createDate": "date",
-    "updateDate": "date",
-    "description": "",  //“The Bank Data Object of H(DID-JWT_Customer) from H(DID-JWT_ACME) and committed to as MerkleRoot(Bank Data Object) has the following structure: ${schema} and commits to a set of values to be synchronized for the data properties in the structure”,
-    "syncPredicate":
-    {
-    "predicate": [], //[ISyncPredicate] - Array of merkle proofs for each banking data element, and predicate defining the Merkle tree structure in terms of fields to be proven
-    "input": [], //[ISyncPredicateInputData] - Array of inputs required for the predicate zk proofs
-    "output": {}, //ISyncPredicateOutputData - Output to be obtained after running the predicate using the above inputs and syncing the state objects 
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r141-syncadvancepredicate.json",
+  "$comment": {
+    "term": "r141-syncadvancepredicate",
+    "@id": "https://github.com/eea-oasis/baseline#r141-syncadvancepredicate"
+  },
+  "title": "syncadvancepredicate",
+  "description": "BPI State Synchronization and Advancement Predicate",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "uuid"
     },
-    "advancePredicate":
-    {
-    "predicate": [], // [IAdvancePredicate] - Array of functions for each business rule
-    "input": [], //[IAdvancePredicateInputData] - Array of inputs for each business rule"
-    "output": {} //"IAdvancePredicateOutputData - Output to be obtained after running the predicate using the above inputs and advancing the state objects", 
+    "originatorBpiSubject": {
+      "type": "string",
+      "description": "DID of the originator of the Bank Data Object (ACME)"
     },
-    "bankStateObject": {}, //"bankStateObject as mentioned in [R140]",
-    "environment": 
-    [ 
-    {
-        "briId": "string - Id for BRI-3",
-        "workgroupId": "string - Id for Workgroup 1 in BRI-3",
-        "workflowId": "string - Id for Workflow in BRI-3",
-        "workstepId": "string - Id for Workstep 1 in BRI-3"
+    "createDate": {
+      "type": "string",
+      "description": "Date the Bank Data Object was created"
     },
-    {
-        "briId": "string - Id for BRI-1",
-        "workgroupId": "string - Id for Workgroup 2 in BRI-1",
-        "workflowId": "string - Id for Workflow in BRI-1",
-        "workstepId": "string - Id for Workstep 2 in BRI-1"
+    "updateDate": {
+      "type": "string",
+      "description": "Date the Bank Data Object was last updated"
     },
-    {
-        "briId": "string - Id for BRI-3",
-        "workgroupId": "string - Id for Workgroup 1 in BRI-3",
-        "workflowId": "string - Id for Workflow in BRI-3",
-        "workstepId": "string - Id for Workstep 3 in BRI-3"
+    "description": {
+      "type": "string",
+      "description": "Description of the Bank Data Object"
+    },
+    "syncPredicate": {
+      "type": "object",
+      "properties": {
+        "predicate": {
+          "type": "string",
+          "description": "Description of the Synchronization Statement: Verify the zk-proof of correct banking data by generating the root hash of the bankStateObject from Bank Data system and verifying that with this public input the proof verifies to true."
+        },
+        "input": {
+          "description": "Array of public inputs required for the predicate zk proof(s)",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "participantsSourceWorkgroup": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "idType": {
+                      "type": "string"
+                    },
+                    "Participant": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id", "idType", "Participant"]
+                }
+              },
+              "publicProof": {
+                "type": "object",
+                "properties": {
+                  "requesterKey": {
+                    "type": "string"
+                  },
+                  "MerkleRootBankStateObject": {
+                    "type": "string"
+                  },
+                  "zkProof": {
+                    "type": "string"
+                  },
+                  "verificationKey": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": ["requesterKey", "MerkleRootBankStateObject", "zkProof", "verificationKey"]
+              }
+            },
+            "required": ["participantsSourceWorkgroup", "publicProof"]
+          }
+        },
+        "output": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bankSignedBankStateObjectMerkleRoot": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "bankAuditorZKWitness": {
+                "$ref": "#/definitions/IZKWitnessWorkstep2"
+              }
+            },
+            "required": ["bankSignedBankStateObjectMerkleRoot", "bankAuditorZKWitness"]
+          }
+        }
+      },
+      "required": ["predicate", "input", "output"]
+    },
+    "advancePredicate": {
+      "type": "object",
+      "properties": {
+        "predicate": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule": {
+                "type": "string"
+              },
+              "result": {
+                "type": "string"
+              }
+            },
+            "required": ["rule", "result"]
+          }
+        },
+        "input": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "participantsTargetWorkgroup": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "idType": {
+                      "type": "string"
+                    },
+                    "Participant": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id", "idType", "Participant"]
+                }
+              },
+              "publicProof": {
+                "type": "object",
+                "properties": {
+                  "bankSignedBankStateObjectMerkleRoot": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "bankAuditorZKWitness": {
+                    "$ref": "#/definitions/IZKWitnessWorkstep2"
+                  }
+                },
+                "required": ["bankSignedBankStateObjectMerkleRoot", "bankAuditorZKWitness"]
+              }
+            },
+            "required": ["participantsTargetWorkgroup", "publicProof"]
+          }
+        },
+        "output": {
+          "type": "object",
+          "properties": {
+            "public": {
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "participantsTargetWorkgroup": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "idType": {
+                              "type": "string"
+                            },
+                            "Participant": {
+                              "type": "string"
+                            }
+                          },
+                          "required": ["id", "idType", "Participant"]
+                        }
+                      },
+                      "publicProof": {
+                        "type": "object",
+                        "properties": {
+                          "bankSignedBankStateObjectMerkleRoot": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "bankAuditorZKWitness": {
+                            "$ref": "#/definitions/IZKWitnessWorkstep2"
+                          }
+                        },
+                        "required": ["bankSignedBankStateObjectMerkleRoot", "bankAuditorZKWitness"]
+                      },
+                      "signatureRequestor": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": ["participantsTargetWorkgroup", "publicProof", "signatureRequestor"]
+                  }
+                }
+              },
+              "required": ["input"]
+            }
+          },
+          "required": ["public"]
+        }
+      },
+      "required": ["predicate", "input", "output"]
+    },
+    "bankStateObject": {
+      "$ref": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json"
+    },
+    "environment": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Environment"
+      }
+    },
+    "proverSystem": {
+      "type": "string",
+      "description": "Groth16 | Plonk"
+    },
+    "crs": {
+      "type": "string",
+      "description": "Common Reference String for the Trusted Set Up of the Prover System"
+    },
+    "orignatorSignature": {
+      "title": "ECDSA Digital Signature with Public Key",
+      "description": "ECDSA Digital Signature with Public Key",
+      "type": "object",
+      "properties": {
+        "r": {
+          "description": "The first signature value",
+          "type": "string"
+        },
+        "s": {
+          "description": "The second signature value",
+          "type": "string"
+        },
+        "hash": {
+          "description": "The hash of the message that was signed",
+          "type": "string"
+        },
+        "public_key": {
+          "description": "The public key that corresponds to the signature",
+          "type": "string"
+        }
+      }
     }
-    ]
-    "proverSystem" : “Groth16 | Plonk”,
-    "crs": "crs value for groth16 | plonk",
-    "orignatorSignature": "Digital signature of ACME over the payload [message,pubKey,signature]"
+  },
+  "definitions": {
+    "BankStateObject": {
+      "$ref": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json"
+    },
+    "Environment": {
+      "type": "object",
+      "properties": {
+        "briId": {
+          "type": "string"
+        },
+        "workgroupId": {
+          "type": "string"
+        },
+        "workflowId": {
+          "type": "string"
+        },
+        "workstepId": {
+          "type": "string"
+        }
+      }
+    },
+    "IZKWitnessWorkstep2": {
+      "type": "object",
+      "properties": {
+        "proof": {
+          "type": "string"
+        },
+        "publicInput": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "verificationKey": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["proof", "publicInput", "verificationKey"]
     }
+  }
+}
     

@@ -1,15 +1,60 @@
 {
-    "id" : "H(H(vendor_number), H(routing_number), H(account_number), H(country), H(date))",
-    "type" : "SAPZKVendorBank",
-    "subject_account_id" : "BPI subject id",
-    "workgroup_id" : "BPI workgroup id",
-    "payload" : {
-        "vendor_number"  : "Customer bank vendor number",
-        "routing_number" : "Customer bank routing number" ,
-        "account_number" : "Customer bank account number",
-        "country" : "Customer bank location country",
-        "date" : "YYYYMMDD",
-        "id" : "H(H(vendor_number), H(routing_number), H(account_number), H(country), H(date))"
-    }
- }
- 
+    "$id": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json",
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "$comment": "{\"term\": \"r140-bankstateobject\", \"@id\": \"https://github.com/eea-oasis/baseline#r140-bankstateobject\"}",
+    "title": "BankStateObject",
+    "description": "Bank State Object",
+    "type": "object",
+    "properties": {
+        "id" : {
+            "description": "Concatenated Hash of the hashes of the Bank State Object: H(H(vendor_number), H(routing_number), H(account_number), H(country), H(date))",
+            "type": "string"
+            },
+        "type" : {
+            "description": "Bank State Object",
+            "type": "string"
+            },
+        "subject_account_id" : {
+            "description": "BPI Subject ID as a DID",
+            "type": "string"
+            },
+        "workgroup_id" : {
+            "description": "BPI Workgroup ID as a UUID",
+            "type": "string"
+            },
+        "payload" : {
+            "description": "Bank State Object Payload",
+            "type": "array",
+            "items": {
+                "description": "Bank Object Payload",
+                "type": "object",
+                "properties": {
+                    "vendor_number"  : {
+                        "description": "Vendor Number",
+                        "type": "string"
+                        },
+                    "routing_number" : {
+                        "description": "Customer bank routing number",
+                        "type": "string"
+                        },
+                    "account_number" : {
+                        "description": "Customer bank account number",
+                        "type": "string"
+                        },
+                    "country" : {
+                        "description": "Customer bank location country",
+                        "type": "string"
+                        },
+                    "date" : {
+                        "description": "YYYYMMDD",
+                        "type": "string"
+                        },
+                    "id" : {
+                        "description": "H(H(vendor_number), H(routing_number), H(account_number), H(country), H(date))",
+                        "type": "string"
+                        } 
+                    }
+                }      
+            }
+        }
+}
