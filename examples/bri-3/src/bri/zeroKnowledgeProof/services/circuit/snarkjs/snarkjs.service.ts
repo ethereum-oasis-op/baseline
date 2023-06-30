@@ -4,6 +4,7 @@ import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
 import * as snarkjs from 'snarkjs';
 import * as fs from 'fs';
+import * as p from ;
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
@@ -25,11 +26,19 @@ export class SnarkjsCircuitService implements ICircuitService {
     return true;
   }
 
-  private async getProvingKey(): Promise<string> {
-    return 'provingKey';
+  private async getProvingKeyPath(): Promise<string> {
+    return '../../../../../../zeroKnowledgeKeys/circuit/circuit_final.zkey';
+  }
+
+  private async getWasmFilePath(): Promise<string> {
+    return '../../../../../../zeroKnowledgeKeys/circuit/circuit_js/circuit.wasm'; 
   }
 
   private async getVerificationKey(): Promise<string> {
     return 'verificationKey';
+  }
+
+  private getFile(path: string): Buffer {
+    return fs.readFileSync(path);
   }
 }
