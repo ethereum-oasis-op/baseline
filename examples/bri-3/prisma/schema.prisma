@@ -121,6 +121,12 @@ model AnchorHash {
   hash              String     @unique
 }
 
+model BpiMerkleTree {
+  id                String @id @default(uuid())
+  hashAlgName       String
+  tree              String
+}
+
 enum WorkgroupStatus {
   ACTIVE
   ARCHIVED

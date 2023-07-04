@@ -10,6 +10,7 @@ import { AuthzGuard } from './bri/authz/guards/authz.guard';
 import { CommunicationModule } from './bri/communication/communication.module';
 import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
 import { IdentityModule } from './bri/identity/identity.module';
+import { MerkleModule } from './bri/merkleTree/merkle.module';
 import { TransactionModule } from './bri/transactions/transactions.module';
 import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { ZeroKnowledgeProofModule } from './bri/zeroKnowledgeProof/zeroKnowledgeProof.module';
@@ -31,6 +32,7 @@ import { LoggingModule } from './shared/logging/logging.module';
     AuthModule,
     AuthzModule,
     SubjectModule,
+    MerkleModule,
   ],
   providers: [
     PrismaService,
