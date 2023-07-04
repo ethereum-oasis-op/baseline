@@ -28,6 +28,7 @@ import { uuid } from 'uuidv4';
 describe('TransactionController', () => {
   let controller: TransactionController;
   let transactionStorageAgentMock: DeepMockProxy<TransactionStorageAgent>;
+  let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
 
   const createBpiSubjectAccount = (id: string) => {
     const ownerBpiSubject = new BpiSubject(
@@ -88,6 +89,8 @@ describe('TransactionController', () => {
 
     controller = app.get<TransactionController>(TransactionController);
     transactionStorageAgentMock = app.get(TransactionStorageAgent);
+    subjectAccountStorageAgentMock = app.get(BpiSubjectAccountStorageAgent);
+
     await app.init();
   });
 
@@ -157,6 +160,14 @@ describe('TransactionController', () => {
       // Arrange
       const fromBpiSubjectAccount = createBpiSubjectAccount(uuid());
       const toBpiSubjectAccount = createBpiSubjectAccount(uuid());
+
+      subjectAccountStorageAgentMock.getBpiSubjectAccountById
+        .calledWith(fromBpiSubjectAccount.id)
+        .mockResolvedValueOnce(fromBpiSubjectAccount);
+
+      subjectAccountStorageAgentMock.getBpiSubjectAccountById
+        .calledWith(toBpiSubjectAccount.id)
+        .mockResolvedValueOnce(toBpiSubjectAccount);
 
       const requestDto = {
         id: uuid(),
