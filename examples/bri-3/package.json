@@ -44,6 +44,7 @@
     "class-validator": "^0.13.2",
     "did-jwt": "^6.10.1",
     "did-resolver": "^4.0.1",
+    "dotenv": "^16.3.1",
     "eslint-config-react-app": "^7.0.1",
     "ethers": "^5.7.2",
     "ethr-did-resolver": "^8.0.0",
