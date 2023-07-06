@@ -12,6 +12,7 @@ describe('Snarkjs circuit service', () => {
         inputValueB: 2,
       });
 
+      //Required for running tests or else tests hang
       globalThis.curve_bn128.terminate();
     });
 
@@ -53,11 +54,13 @@ describe('Snarkjs circuit service', () => {
     const snarkjsCircuitService = new SnarkjsCircuitService();
     let proverWitness: Witness;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
       proverWitness = await snarkjsCircuitService.createWitness({
         inputValueA: 2,
         inputValueB: 3,
       });
+
+      //Required for running tests or else tests hang
       globalThis.curve_bn128.terminate();
     });
 
