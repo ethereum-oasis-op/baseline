@@ -7,10 +7,10 @@
 In context of Bri-3, they are designed to enable users (BpiSubjects) to
 
 1. Register/generate their own unique identifiers
-2. Prove their control over them by authenticating using digital signatures
+2. Prove BpiSubjects' control over their identities by authenticating using digital signatures
 3. Obtain an access token as a proof of their authenticated identity that can be reused over time
 
-So that no sensitive information would be revealed during the business activities.
+Hence, Bri-3 utilizes the self-sovereign nature of decentralized identifiers (DIDs) to effectively protect sensitive information during business activities.
 
 ## Environment Variables Explanation
 
@@ -38,11 +38,11 @@ where
 
 ## Authentication Flow Explanation
 
-1. (Prerequisite) The BpiOperators first must configure their own .env files with the .env.sample and register a BpiSubjects’ DID and public keys in the database.
-2. BpiSubject signs in the Service using their MetaMask account and sends POST /auth/nonce to Service with their public key. The Service generates a nonce and BpiSubject signs the received nonce using their private key to create a signature. Then BpiSubject sends POST /auth/login to Service, providing their public key and signature.
-3. BpiOperator receives the response, resolves the DID to its DID Document and retrieves the key used from the `authentication` property, and then verifies the message signature with the `authentication` key. Then the BPI Operator generates an access (JWT) token for a successfully authorized account using BpiOperator’s private key.
+1. (Prerequisite) The BpiOperators first must configure their own .env files with the .env.sample and register a BpiSubject's DID and public keys in the database.
+2. BpiSubject signs into the Service using their MetaMask account and sends POST /auth/nonce to Service with their public key. The Service generates a nonce and BpiSubject signs the received nonce using their private key to create a signature. Then BpiSubject sends POST /auth/login to Service, providing their public key and signature.
+3. BpiOperator receives the response, resolves the DID to its DID Document, retrieves the key used from the `authentication` property, and verifies the message signature with the `authentication` key. Then the BPI Operator generates an access (JWT) token for a successfully authorized account using BpiOperator’s private key.
 4. BpiSubject authenticates next HTTP request using the received access (JWT) token that is signed by their public key.
-5. BpiOperator receives the request, verifies the token, and, if successful routes the request to the target service. If the token verification fails (e.g. expiration), a failure message is generated, and the request is not routed to its target service.
+5. BpiOperator receives the request, verifies the token, and, if successful, routes the request to the target service. If the token verification fails (e.g. expiration), a failure message is generated, and the request is not routed to its target service.
 
 ## Reference
 1. [PR #606](https://github.com/eea-oasis/baseline/pull/606)
