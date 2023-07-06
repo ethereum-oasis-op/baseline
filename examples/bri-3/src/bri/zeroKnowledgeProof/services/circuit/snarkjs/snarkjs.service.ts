@@ -24,7 +24,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   public async createProof(inputs: object): Promise<Proof> {
-    const { proof } = await this.generateProofAndPublicSignals(inputs);
+    const { proof } = await this.executeCircuit(inputs);
 
     const newProof = {
       a: proof.pi_a,
@@ -52,20 +52,21 @@ export class SnarkjsCircuitService implements ICircuitService {
     return isVerified;
   }
 
-  private async getPublicInputs(inputs: object): Promise<string[]> {
-    const { publicSignals } = await this.generateProofAndPublicSignals(inputs);
-    return publicSignals;
+  private async getPublicInputs(inputs): Promise<string[]> {
+    const { publicInputs } = await this.executeCircuit(inputs);
+    return publicInputs;
   }
 
-  private async generateProofAndPublicSignals(
+  private async executeCircuit(
     inputs: object,
-  ): Promise<{ proof: any; publicSignals: any }> {
-    const { proof, publicSignals } = await snarkjs.groth16.fullProve(
-      inputs,
-      process.env.SNARKJS_CIRCUIT_WASM,
-      process.env.SNARKJS_PROVING_KEY,
-    );
+  ): Promise<{ proof: any; publicInputs: string[] }> {
+    const { proof, publicSignals: publicInputs } =
+      await snarkjs.groth16.fullProve(
+        inputs,
+        process.env.SNARKJS_CIRCUIT_WASM,
+        process.env.SNARKJS_PROVING_KEY,
+      );
 
-    return { proof, publicSignals };
+    return { proof, publicInputs };
   }
 }
