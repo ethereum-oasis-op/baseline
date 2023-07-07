@@ -12,7 +12,6 @@ export class MerkleTreeAgent {
     private readonly service: MerkleTreeService,
   ) {}
 
-  //TODO add validation that hashAlgName is within a supported list
   public createNewMerkleTree(
     leaves: string[],
     hashAlgName: string,
@@ -23,6 +22,7 @@ export class MerkleTreeAgent {
       this.service.formMerkleTree(leaves, hashAlgName),
     );
   }
+
   public async fetchMerkleTreeByIdAndThrowIfValidationFails(
     id: string,
   ): Promise<BpiMerkleTree> {
