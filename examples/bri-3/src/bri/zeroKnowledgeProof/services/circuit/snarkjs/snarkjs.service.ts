@@ -15,14 +15,7 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     const { proof, publicInputs } = await this.executeCircuit(inputs);
 
-    const newProof = {
-      a: proof.pi_a,
-      b: proof.pi_b,
-      c: proof.pi_c,
-      protocol: proof.protocol,
-      curve: proof.curve,
-    } as Proof;
-    this.witness.proof = newProof;
+    this.witness.proof = proof;
 
     this.witness.publicInputs = publicInputs;
 
@@ -47,7 +40,7 @@ export class SnarkjsCircuitService implements ICircuitService {
 
   private async executeCircuit(
     inputs: object,
-  ): Promise<{ proof: any; publicInputs: string[] }> {
+  ): Promise<{ proof: Proof; publicInputs: string[] }> {
     const { proof, publicSignals: publicInputs } =
       await snarkjs.groth16.fullProve(
         inputs,
@@ -55,6 +48,14 @@ export class SnarkjsCircuitService implements ICircuitService {
         process.env.SNARKJS_PROVING_KEY,
       );
 
-    return { proof, publicInputs };
+    const newProof = {
+      a: proof.pi_a,
+      b: proof.pi_b,
+      c: proof.pi_c,
+      protocol: proof.protocol,
+      curve: proof.curve,
+    } as Proof;
+
+    return { proof: newProof, publicInputs };
   }
 }
