@@ -222,9 +222,15 @@ describe('AccountController', () => {
     it('should return new uuid from the created bpi account when all params provided', async () => {
       // Arrange
       const bpiSubjectAccount = createBpiSubjectAccount();
+
+      subjectAccountStorageAgentMock.getBpiSubjectAccountById.mockResolvedValueOnce(
+        bpiSubjectAccount,
+      );
+
       const requestDto = {
         ownerBpiSubjectAccountsIds: [bpiSubjectAccount.id],
       } as CreateBpiAccountDto;
+
       const expectedBpiAcount = createBpiAccount([bpiSubjectAccount]);
       accountStorageAgentMock.storeNewBpiAccount.mockResolvedValueOnce(
         expectedBpiAcount,

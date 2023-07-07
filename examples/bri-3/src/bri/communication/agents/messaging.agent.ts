@@ -4,11 +4,11 @@ import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { validate } from 'uuid';
 import { LoggingService } from '../../../shared/logging/logging.service';
+import { ProcessInboundBpiTransactionCommand } from '../../transactions/capabilities/processInboundTransaction/processInboundTransaction.command';
 import { BpiMessageDto } from '../api/dtos/response/bpiMessage.dto';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
 import { BpiMessage } from '../models/bpiMessage';
-import { BpiMessageType } from '../models/bpiMessageType.enum';
 
 @Injectable()
 export class MessagingAgent implements OnApplicationBootstrap {
@@ -53,16 +53,33 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return false;
     }
 
-    return await this.commandBus.execute(
-      new ProcessInboundBpiMessageCommand(
-        newBpiMessageCandidate.id,
-        newBpiMessageCandidate.fromBpiSubjectId,
-        newBpiMessageCandidate.toBpiSubjectId,
-        JSON.stringify(newBpiMessageCandidate.content),
-        newBpiMessageCandidate.signature,
-        newBpiMessageCandidate.type,
-      ),
-    );
+    if (newBpiMessageCandidate.isInfoMessage()) {
+      return await this.commandBus.execute(
+        new ProcessInboundBpiMessageCommand(
+          newBpiMessageCandidate.id,
+          newBpiMessageCandidate.fromBpiSubjectId,
+          newBpiMessageCandidate.toBpiSubjectId,
+          JSON.stringify(newBpiMessageCandidate.content),
+          newBpiMessageCandidate.signature,
+          newBpiMessageCandidate.type,
+        ),
+      );
+    }
+
+    if (newBpiMessageCandidate.isTransactionMessage()) {
+      return await this.commandBus.execute(
+        new ProcessInboundBpiTransactionCommand(
+          newBpiMessageCandidate.id,
+          1, // TODO: #669 Nonce
+          'TODO: #669 workflowInstanceId',
+          'TODO: #669 workstepInstanceId',
+          'TODO: #669 fromBpiSubjectAccountId',
+          'TODO: #669 toBpiSubjectAccountId',
+          JSON.stringify(newBpiMessageCandidate.content),
+          newBpiMessageCandidate.signature,
+        ),
+      );
+    }
   }
 
   public tryDeserializeToBpiMessageCandidate(
@@ -72,10 +89,26 @@ export class MessagingAgent implements OnApplicationBootstrap {
     let newBpiMessageCandidate: BpiMessage;
 
     try {
-      newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
+      const newBpiMessageProps = this.parseJsonOrThrow(rawMessage);
+      newBpiMessageCandidate = new BpiMessage(
+        newBpiMessageProps.id,
+        newBpiMessageProps.fromBpiSubjectId,
+        newBpiMessageProps.toBpiSubjectId,
+        newBpiMessageProps.content,
+        newBpiMessageProps.signature,
+        newBpiMessageProps.type,
+      );
     } catch (e) {
       errors.push(`${rawMessage} is not valid JSON. Error: ${e}`);
       return [newBpiMessageCandidate, errors];
+    }
+
+    if (
+      !newBpiMessageCandidate.isInfoMessage() &&
+      !newBpiMessageCandidate.isTransactionMessage()
+    ) {
+      errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
+      return [null, errors];
     }
 
     if (!validate(newBpiMessageCandidate.id)) {
@@ -110,8 +143,8 @@ export class MessagingAgent implements OnApplicationBootstrap {
       errors.push('signature is empty');
     }
 
-    if (newBpiMessageCandidate.type !== BpiMessageType.Info) {
-      errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
+    if (newBpiMessageCandidate.isTransactionMessage()) {
+      // TODO: Perform additional transaction specific validation once #669 is done
     }
 
     return [newBpiMessageCandidate, errors];

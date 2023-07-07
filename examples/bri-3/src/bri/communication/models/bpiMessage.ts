@@ -29,15 +29,15 @@ export class BpiMessage {
 
   constructor(
     id: string,
-    from: BpiSubject,
-    to: BpiSubject,
+    fromBpiSubjectId: string,
+    toBpiSubjectId: string,
     content: string,
     signature: string,
     type: BpiMessageType,
   ) {
     this.id = id;
-    this.fromBpiSubject = from;
-    this.toBpiSubject = to;
+    this.fromBpiSubjectId = fromBpiSubjectId;
+    this.toBpiSubjectId = toBpiSubjectId;
     this.content = content;
     this.signature = signature;
     this.type = type;
@@ -49,5 +49,13 @@ export class BpiMessage {
 
   public updateSignature(newSignature: string): void {
     this.signature = newSignature;
+  }
+
+  public isInfoMessage(): boolean {
+    return this.type === BpiMessageType.Info;
+  }
+
+  public isTransactionMessage(): boolean {
+    return this.type === BpiMessageType.Transaction;
   }
 }

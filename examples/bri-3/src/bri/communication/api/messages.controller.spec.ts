@@ -67,8 +67,8 @@ describe('MessageController', () => {
 
     existingBpiMessage = new BpiMessage(
       'f3e4295d-6a2a-4f04-8477-02f781eb93f8',
-      existingBpiSubject1,
-      existingBpiSubject2,
+      existingBpiSubject1.id,
+      existingBpiSubject2.id,
       'hello world',
       'xyz',
       0,
@@ -256,8 +256,8 @@ describe('MessageController', () => {
 
       const expectedBpiMessage = new BpiMessage(
         requestDto.id,
-        existingBpiSubject1,
-        existingBpiSubject2,
+        existingBpiSubject1.id,
+        existingBpiSubject2.id,
         requestDto.content,
         requestDto.signature,
         requestDto.type,
