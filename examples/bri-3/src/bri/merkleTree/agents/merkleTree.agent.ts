@@ -3,12 +3,14 @@ import { v4 } from 'uuid';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
 import { MerkleTreeStorageAgent } from './merkleTreeStorage.agent';
 import { MERKLE_TREE_NOT_FOUND } from '../api/err.messages';
-import MerkleTree from 'merkletreejs';
-import * as crypto from 'crypto';
+import { MerkleTreeService } from '../services/merkleTree.service';
 
 @Injectable()
 export class MerkleTreeAgent {
-  constructor(private storageAgent: MerkleTreeStorageAgent) {}
+  constructor(
+    private storageAgent: MerkleTreeStorageAgent,
+    private readonly service: MerkleTreeService,
+  ) {}
 
   //TODO add validation that hashAlgName is within a supported list
   public createNewMerkleTree(
@@ -18,7 +20,7 @@ export class MerkleTreeAgent {
     return new BpiMerkleTree(
       v4(),
       hashAlgName,
-      this.formMerkleTree(leaves, hashAlgName),
+      this.service.formMerkleTree(leaves, hashAlgName),
     );
   }
   public async fetchMerkleTreeByIdAndThrowIfValidationFails(
@@ -31,18 +33,5 @@ export class MerkleTreeAgent {
     }
 
     return merkleTree;
-  }
-
-  //TODO to be moved into BpiMerkleTree Domain Object or Hashing Service
-  public formMerkleTree(leaves: string[], hashAlgName: string): MerkleTree {
-    const hashFn = this.createHashFunction(hashAlgName);
-    const hashedLeaves = leaves.map((x) => hashFn(x));
-    return new MerkleTree(hashedLeaves, hashFn);
-  }
-
-  public createHashFunction(hashAlgName: string): (data: any) => Buffer {
-    return (data: any): Buffer => {
-      return crypto.createHash(hashAlgName).update(data).digest();
-    };
   }
 }
