@@ -1,0 +1,19 @@
+{
+  "name": "axiom_bpi_interop",
+  "version": "1.0.0",
+  "description": "Client script for demonstrating Axiom BPI interop",
+  "main": "create_protocol_msg.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "axiom",
+    "prvd",
+    "bpi-interop"
+  ],
+  "author": "Ryan Fleischmann",
+  "license": "ISC",
+  "dependencies": {
+    "provide-js": "^1.10.0"
+  }
+}

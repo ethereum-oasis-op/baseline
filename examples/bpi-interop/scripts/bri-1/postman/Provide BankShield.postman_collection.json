@@ -1,0 +1,549 @@
+{
+	"info": {
+		"_postman_id": "4e91ff93-daa8-4d68-9481-98807430de87",
+		"name": "Provide BankShield",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22975745"
+	},
+	"item": [
+		{
+			"name": "SAP",
+			"item": [
+				{
+					"name": "proUBC auth - fetch token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"X-CSRF-Token is present\", function () {\r",
+									"    pm.response.to.have.header(\"X-CSRF-Token\");\r",
+									"    var xsrf = pm.response.headers.get(\"X-CSRF-Token\");\r",
+									"    pm.environment.set(\"xcsrftoken\", xsrf);\r",
+									"    //pm.setEnvironmentVariable('xcsrftoken', \"yah\");\r",
+									"    //get X-CSRF-Token and save it to variable\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{sappassword}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{sapuser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "HEAD",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "Fetch",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{sapbaseurl}}/sap/proubc/auth",
+							"host": [
+								"{{sapbaseurl}}"
+							],
+							"path": [
+								"sap",
+								"proubc",
+								"auth"
+							]
+						},
+						"description": "Given a set of SAP credentials, authenticates to SAP to retrieve an x-csrf-token. The xcsrftoken is later needed in the request header for POST and PUT REST API operations to SAP ."
+					},
+					"response": []
+				},
+				{
+					"name": "proUBC tenants create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{sappassword}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{sapuser}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-CSRF-Token",
+								"value": "{{xcsrftoken}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"organization_id\":\"{{bankshield_organizationid}}\", \"subject_account_id\" : \"{{bankshield_subjectacct}}\", \"workgroup_id\" : \"{{bankshield_workgroupid}}\", \"bpi_endpoint\":\"https://axiom.provide.services\",\"ident_endpoint\":\"https://ident.provide.services\",\"refresh_token\":\"{{bankshield_refreshtoken}}\"}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{sapbaseurl}}/sap/proubc/tenants",
+							"host": [
+								"{{sapbaseurl}}"
+							],
+							"path": [
+								"sap",
+								"proubc",
+								"tenants"
+							]
+						},
+						"description": "Creates a PRVD Subject Account configuration based on the payload of data provided\n\nxcsrftoken value required in the header - refer to the proUBC auth endpoint. Note: embedded Postman test scripts store this value following a successful call to the auth endpoint."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authorize Access Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"console.log(response);",
+							"",
+							"//pm.collectionVariables.set(\"eco_refreshtoken\", response.token.refresh_token), (\"user_id\", response.user.id);",
+							"pm.collectionVariables.set(\"bankshield_accesstoken\", response.token.access_token);",
+							"pm.collectionVariables.set(\"bankshield_user_id\", response.user.id);",
+							"",
+							"pm.test(\"Permissions are 415\", function () {",
+							"    pm.expect(response.token.permissions).to.eql(415);",
+							"});",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"{{shuttle_email}}\", \n    \"password\": \"{{shuttle_password}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/authenticate",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"authenticate"
+					]
+				},
+				"description": "Sends email & password to Ident. Token is retrieved and stored in environment variables as jwt_token"
+			},
+			"response": []
+		},
+		{
+			"name": "List organizations",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();\r",
+							"\r",
+							"pm.collectionVariables.set(\"bankshield_organizationid\", response[0].id );\r",
+							"\r",
+							"var org_workgroups = response[0].metadata.workgroups;\r",
+							"\r",
+							"var workgroup_id = \"\";\r",
+							"\r",
+							"for (const wg in org_workgroups) {\r",
+							"  workgroup_id = org_workgroups[wg];\r",
+							"  break;\r",
+							"}\r",
+							"\r",
+							"pm.collectionVariables.set(\"bankshield_workgroupid\",workgroup_id);\r",
+							"\r",
+							"var user_id = pm.collectionVariables.get(\"bankshield_user_id\");\r",
+							"\r",
+							"var subjaccount_dna = workgroup_id + \".\" + user_id;\r",
+							"\r",
+							"var subjaccount = CryptoJS.AES.encrypt(subjaccount_dna, '').toString();\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/organizations",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"organizations"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "JWT Authenticate - Generate long-dated refresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.collectionVariables.set(\"eco_refreshtoken\", response.refresh_token );",
+							"",
+							"pm.test(\"Permissions are 510\", function () {",
+							"    pm.expect(response.permissions).to.eql(510);",
+							"});",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"scope\": \"offline_access\",\n    \"organization_id\" : \"{{bankshield_organizationid}}\",\n    \"user_id\" : \"{{bankshield_user_id}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/tokens",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tokens"
+					]
+				},
+				"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests.\n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`\n\nNeed help finding your organization id?\n\nRun the \"List organizations\" request in the Helper folder. This will automatically save id to your eco_organizationid collection variable.\n\n<img src=\"https://content.pstmn.io/fb9ecae9-0f07-4e2c-99d9-5da2b07f630f/aW1hZ2UucG5n\" alt=\"\" height=\"280\" width=\"870\">\n\nOr you can find by logging into the PRVD CLI\n\n<img src=\"https://content.pstmn.io/7d2115dd-a795-4465-95b7-ed1ab4193c57/aW1hZ2UucG5n\" width=\"764\" height=\"168\">\n\nOr find it in Shuttle with dev tools open\n\n<img src=\"https://content.pstmn.io/6a19c2c1-b62e-4c48-904b-1bd1a02679b4/aW1hZ2UucG5n\" width=\"647\" height=\"121\">"
+			},
+			"response": []
+		},
+		{
+			"name": "JWT Authenticate - Get access token from refresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json();",
+							"",
+							"pm.collectionVariables.set(\"eco_accesstoken\", response.access_token );",
+							"",
+							"pm.test(\"Permissions are 510\", function () {",
+							"    pm.expect(response.permissions).to.eql(510);",
+							"});",
+							"",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{eco_refreshtoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "authorization",
+						"value": "bearer {{jwt_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"organization_id\": \"{{bankshield_organizationid}}\",\n    \"user_id\" : \"{{bankshield_user_id}}\"\n}"
+				},
+				"url": {
+					"raw": "https://ident.provide.services/api/v1/tokens",
+					"protocol": "https",
+					"host": [
+						"ident",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"tokens"
+					]
+				},
+				"description": "Returns an authorized JSON formatted JWT with an `offline-access` scoped long-term `access_token` that serves as authentication for `User`, `Organization`, and `Application` related requests. \n\nTo authorize an `Application` token, replace `organization_id` in this example with `application_id`\n\nTo authorize a `User` token, replace `organization_id` with `user_id`"
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger Bank Account verification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"To Check if id is Null\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).not.eql(null);",
+							"});// Sets the jwt_token_application or jwt_token_organization from the token received in response",
+							"",
+							"const response = pm.response.json();",
+							"",
+							"pm.environment.set(\"baseline_id\", response.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{ao_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+						"key": "Authorization",
+						"value": "bearer {{ao_accesstoken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"\",\n    \"type\": \"{{bankshield_schematype}}\",\n    \"subject_account_id\" : \"{{bankshield_subjectacct}}\",\n    \"workgroup_id\": \"{{bankshield_workgroupid}}\",\n    \"payload\": {\n        \"vendor_number\"  : \"\",\n        \"routing_number\" : \"\",\n        \"account_number\" : \"\",\n        \"country\" : \"\",\n        \"date\" : \"YYYYMMDD\",\n        \"id\" : \"\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{prvdbaselineurl}}/api/v1/protocol_messages",
+					"host": [
+						"{{prvdbaselineurl}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"protocol_messages"
+					]
+				},
+				"description": "A `ProtocolMessage` is a message sent to a BPI including the `Payload` and the context necessary for the execution of a deployed `Workflow` or `WorkflowInstance`."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "bankshield_refreshtoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bankshield_accesstoken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bankshield_subjectacct",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bankshield_workgroupid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "shuttle_email",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "shuttle_password",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bankshield_schematype",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bankshield_organizationid",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "bankshield_user_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
