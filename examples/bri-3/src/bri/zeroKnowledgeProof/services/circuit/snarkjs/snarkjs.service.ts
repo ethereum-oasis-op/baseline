@@ -13,18 +13,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   public async createWitness(inputs: object): Promise<Witness> {
     this.witness = new Witness();
 
-    const proof = await this.createProof(inputs);
-    this.witness.proof = proof;
-
-    const publicInputs = await this.getPublicInputs(inputs);
-    this.witness.publicInputs = publicInputs;
-
-    this.witness.verificationKey = verificationKey;
-    return this.witness;
-  }
-
-  public async createProof(inputs: object): Promise<Proof> {
-    const { proof } = await this.executeCircuit(inputs);
+    const { proof, publicInputs } = await this.executeCircuit(inputs);
 
     const newProof = {
       a: proof.pi_a,
@@ -33,8 +22,12 @@ export class SnarkjsCircuitService implements ICircuitService {
       protocol: proof.protocol,
       curve: proof.curve,
     } as Proof;
+    this.witness.proof = newProof;
 
-    return newProof;
+    this.witness.publicInputs = publicInputs;
+
+    this.witness.verificationKey = verificationKey;
+    return this.witness;
   }
 
   public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
@@ -50,11 +43,6 @@ export class SnarkjsCircuitService implements ICircuitService {
       },
     );
     return isVerified;
-  }
-
-  private async getPublicInputs(inputs): Promise<string[]> {
-    const { publicInputs } = await this.executeCircuit(inputs);
-    return publicInputs;
   }
 
   private async executeCircuit(
