@@ -16,6 +16,7 @@ import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { ZeroKnowledgeProofModule } from './bri/zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { EncryptionModule } from './shared/encryption/encryption.module';
 import { LoggingModule } from './shared/logging/logging.module';
+import { VsmModule } from './bri/vsm/vsm.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { LoggingModule } from './shared/logging/logging.module';
     ZeroKnowledgeProofModule,
     LoggingModule,
     EncryptionModule,
+    VsmModule,
     AutomapperModule.forRoot({
       strategyInitializer: classes(),
     }),
