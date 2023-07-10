@@ -9,10 +9,10 @@ export class ExecuteVsmCycleCommandHandler
 {
   constructor(
     private storageAgent: TransactionStorageAgent,
-    private readonly logger: LoggingService
+    private readonly logger: LoggingService,
   ) {}
 
   async execute(command: ExecuteVsmCycleCommand) {
-    this.logger.logInfo("I am in a vsm cycle.")
+    this.logger.logInfo('I am in a vsm cycle.');
   }
 }
