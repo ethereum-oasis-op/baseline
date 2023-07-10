@@ -5,7 +5,7 @@ import { ExecuteVsmCycleCommand } from '../capabilites/executeVsmCycle/executeVs
 
 @Injectable()
 export class VsmTasksSchedulerAgent {
-  constructor(private readonly commandBus: CommandBus) { }
+  constructor(private readonly commandBus: CommandBus) {}
 
   // TODO: How to pass env config value here?
   @Cron(CronExpression.EVERY_10_SECONDS)

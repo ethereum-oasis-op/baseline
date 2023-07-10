@@ -1,3 +1,1 @@
-export class ExecuteVsmCycleCommand {
-    constructor() {}
-  }
+export class ExecuteVsmCycleCommand {}
