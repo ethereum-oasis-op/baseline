@@ -32,5 +32,8 @@ export const QueryHandlers = [
     TransactionStorageAgent,
     TransactionsProfile,
   ],
+  exports: [
+    TransactionStorageAgent
+  ]
 })
 export class TransactionModule {}
