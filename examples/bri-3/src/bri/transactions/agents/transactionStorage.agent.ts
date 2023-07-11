@@ -108,6 +108,25 @@ export class TransactionStorageAgent extends PrismaService {
     return this.mapper.map(updatedTransactionModel, Transaction, Transaction);
   }
 
+  async bulkUpdateTransactionStatus(
+    transactions: Transaction[],
+  ): Promise<number> {
+    const newStatus = transactions[0].status;
+
+    const updatedTransactionsCount = await this.transaction.updateMany({
+      where: {
+        id: {
+          in: [...transactions.map((tx) => tx.id)],
+        },
+      },
+      data: {
+        status: newStatus,
+      },
+    });
+
+    return updatedTransactionsCount.count;
+  }
+
   async deleteTransaction(transaction: Transaction): Promise<void> {
     await this.transaction.delete({
       where: { id: transaction.id },

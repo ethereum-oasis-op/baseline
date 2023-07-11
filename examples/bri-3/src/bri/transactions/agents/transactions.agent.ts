@@ -75,6 +75,14 @@ export class TransactionAgent {
     transactionToUpdate.updatePayload(payload, signature);
   }
 
+  public bulkUpdateTransactionStatusToProcessing(
+    transactionsToUpdate: Transaction[],
+  ) {
+    transactionsToUpdate.forEach((tx) => {
+      tx.updateStatusToProcessing();
+    });
+  }
+
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
     id: string,
   ): Promise<Transaction> {
