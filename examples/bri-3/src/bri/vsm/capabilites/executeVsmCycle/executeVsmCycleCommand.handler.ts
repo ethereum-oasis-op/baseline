@@ -16,23 +16,27 @@ export class ExecuteVsmCycleCommandHandler
   ) {}
 
   async execute(command: ExecuteVsmCycleCommand) {
-    this.logger.logInfo('I am in a vsm cycle.');
-
-    // Initialized transactions are fetched in batches of configurable size
     const executionCandidates =
       await this.storageAgent.getTopNTransactionsByStatus(
         Number(process.env.VSM_CYCLE_TX_BATCH_SIZE),
         TransactionStatus.Initialized,
       );
 
-    // Fetched transactions are marked as Processing
-    this.agent.bulkUpdateTransactionStatusToProcessing(executionCandidates);
+    executionCandidates.forEach(async (tx) => {
+      tx.updateStatusToProcessing();
+      await this.storageAgent.updateTransactionStatus(tx);
+      //  this.agent.validateTransactionForExecution
+      //  if err
+      //     this.agent.markTransactionAsAborted
+      //     this.storageAgent.updateTransactionStatus
+      //     continue
+      //  else
+      //     execute transaction
+      //     this.agent.markTransactionAsExecuted
+      //     this.storageAgent.updateTransactionStatus
+      //
+    });
 
-    await this.storageAgent.bulkUpdateTransactionStatus(executionCandidates);
-
-    // TODO: Transactions are validated and marked as Invalid in case of errors
-    // TODO: Valid transactions are passed on to Workstep execution, one by one for now
-    // TODO: Dummy workstep outputs are picked up from Workstep execution and transaction is stored as Executed
     // TODO: Any exception during workstep execution is handled gracefully and logged and transaction is marked as Aborted
     // TODO: Relevant BPI subjects are informed (Notification is thrown?)
   }
