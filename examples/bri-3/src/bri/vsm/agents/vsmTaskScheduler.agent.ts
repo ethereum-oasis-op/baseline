@@ -7,8 +7,7 @@ import { ExecuteVsmCycleCommand } from '../capabilites/executeVsmCycle/executeVs
 export class VsmTasksSchedulerAgent {
   constructor(private readonly commandBus: CommandBus) {}
 
-  // TODO: How to pass env config value here?
-  @Cron(CronExpression.EVERY_10_SECONDS)
+  @Cron(`*/${process.env.VSM_CYCLE_PERIOD_IN_SECS} * * * * *`)
   async handleCron() {
     return await this.commandBus.execute(new ExecuteVsmCycleCommand());
   }
