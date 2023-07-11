@@ -2,6 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
 import { TransactionStorageAgent } from 'src/bri/transactions/agents/transactionStorage.agent';
 import { LoggingService } from 'src/shared/logging/logging.service';
+import { TransactionStatus } from 'src/bri/transactions/models/transactionStatus.enum';
 
 @CommandHandler(ExecuteVsmCycleCommand)
 export class ExecuteVsmCycleCommandHandler
@@ -14,7 +15,13 @@ export class ExecuteVsmCycleCommandHandler
 
   async execute(command: ExecuteVsmCycleCommand) {
     this.logger.logInfo('I am in a vsm cycle.');
-    // TODO: Initialized transactions are fetched in batches of configurable size
+
+    // Initialized transactions are fetched in batches of configurable size
+    const executionCandidates = this.storageAgent.getTopNTransactionsByStatus(
+      Number(process.env.VSM_CYCLE_TX_BATCH_SIZE),
+      TransactionStatus.Initialized,
+    );
+
     // TODO: Fetched transactions are marked as Processing
     // TODO: Transactions are validated and marked as Invalid in case of errors
     // TODO: Valid transactions are passed on to Workstep execution, one by one for now
