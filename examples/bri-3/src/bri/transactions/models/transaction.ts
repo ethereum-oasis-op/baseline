@@ -1,9 +1,7 @@
 import { TransactionStatus } from './transactionStatus.enum';
 import { AutoMap } from '@automapper/classes';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
-import {
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 
 export class Transaction {
   @AutoMap()
