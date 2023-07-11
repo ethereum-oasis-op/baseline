@@ -4,6 +4,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '..//api/err.messages';
 import { Transaction } from '../models/transaction';
+import { TransactionStatus } from '../models/transactionStatus.enum';
 
 @Injectable()
 export class TransactionStorageAgent extends PrismaService {
@@ -44,6 +45,23 @@ export class TransactionStorageAgent extends PrismaService {
     }
 
     return this.mapper.map(transactionModel, Transaction, Transaction);
+  }
+
+  async getTopNTransactionsByStatus(
+    n: number,
+    statusToFetch: TransactionStatus,
+  ): Promise<Transaction[]> {
+    // TODO: Add creation date to transaction
+    // TODO: Add execution or abortion date to transaction
+    const transactionModels = await this.transaction.findMany({
+      include: { fromBpiSubjectAccount: true, toBpiSubjectAccount: true },
+      where: { status: statusToFetch },
+      take: n,
+    });
+
+    return transactionModels.map((transactionModel) => {
+      return this.mapper.map(transactionModel, Transaction, Transaction);
+    });
   }
 
   async storeNewTransaction(transaction: Transaction): Promise<Transaction> {
