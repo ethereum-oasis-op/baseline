@@ -79,4 +79,34 @@ export class Transaction {
 
     this.status = TransactionStatus.Processing;
   }
+
+  public updateStatusToInvalid(): void {
+    if (this.status !== TransactionStatus.Processing) {
+      throw new InternalServerErrorException(
+        `Error while trying to update tx status to Invalid as current status not Processing. Current tx status: ${this.status}`,
+      );
+    }
+
+    this.status = TransactionStatus.Invalid;
+  }
+
+  public updateStatusToAborted(): void {
+    if (this.status !== TransactionStatus.Processing) {
+      throw new InternalServerErrorException(
+        `Error while trying to update tx status to Aborted as current status not Processing. Current tx status: ${this.status}`,
+      );
+    }
+
+    this.status = TransactionStatus.Aborted;
+  }
+
+  public updateStatusToExecuted(): void {
+    if (this.status !== TransactionStatus.Processing) {
+      throw new InternalServerErrorException(
+        `Error while trying to update tx status to Executed as current status not Processing. Current tx status: ${this.status}`,
+      );
+    }
+
+    this.status = TransactionStatus.Executed;
+  }
 }

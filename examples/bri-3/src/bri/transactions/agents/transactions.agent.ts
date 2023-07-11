@@ -99,4 +99,17 @@ export class TransactionAgent {
 
     return transactionToDelete;
   }
+
+  public async validateTransactionForExecution(
+    tx: Transaction,
+  ): Promise<boolean> {
+    // TODO: has workstep id
+    // TODO: has workflow id
+    // TODO: has correct nonce
+    // TODO: has correct status
+    // TODO: has from and to bpi accounts
+    // TODO: has correct signature
+    // TODO: is in correct status
+    return false;
+  }
 }

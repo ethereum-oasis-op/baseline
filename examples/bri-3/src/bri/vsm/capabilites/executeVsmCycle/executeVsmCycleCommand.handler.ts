@@ -25,19 +25,27 @@ export class ExecuteVsmCycleCommandHandler
     executionCandidates.forEach(async (tx) => {
       tx.updateStatusToProcessing();
       await this.storageAgent.updateTransactionStatus(tx);
-      //  this.agent.validateTransactionForExecution
-      //  if err
-      //     this.agent.markTransactionAsAborted
-      //     this.storageAgent.updateTransactionStatus
-      //     continue
-      //  else
-      //     execute transaction
-      //     this.agent.markTransactionAsExecuted
-      //     this.storageAgent.updateTransactionStatus
-      //
+
+      if (!this.agent.validateTransactionForExecution(tx)) {
+        tx.updateStatusToInvalid();
+        await this.storageAgent.updateTransactionStatus(tx);
+        return;
+      }
+
+      try {
+        // TODO: Execute the transaction
+      } catch (error) {
+        this.logger.logError(
+          `Error executing transaction with id ${tx.id}: ${error}`,
+        );
+        tx.updateStatusToAborted();
+        this.storageAgent.updateTransactionStatus(tx);
+      }
+
+      tx.updateStatusToExecuted();
+      this.storageAgent.updateTransactionStatus(tx);
     });
 
-    // TODO: Any exception during workstep execution is handled gracefully and logged and transaction is marked as Aborted
     // TODO: Relevant BPI subjects are informed (Notification is thrown?)
   }
 }
