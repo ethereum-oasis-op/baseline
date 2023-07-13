@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ScheduleModule } from '@nestjs/schedule';
-import { VsmTasksSchedulerAgent } from './agents/vsmTaskScheduler.agent';
-import { LoggingModule } from 'src/shared/logging/logging.module';
-import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/executeVsmCycleCommand.handler';
+import { LoggingModule } from '../../shared/logging/logging.module';
 import { TransactionModule } from '../transactions/transactions.module';
+import { WorkstepModule } from '../workgroup/worksteps/worksteps.module';
+import { VsmTasksSchedulerAgent } from './agents/vsmTaskScheduler.agent';
+import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/executeVsmCycleCommand.handler';
 
 export const CommandHandlers = [ExecuteVsmCycleCommandHandler];
 
@@ -16,6 +17,7 @@ export const QueryHandlers = [];
     ScheduleModule.forRoot(),
     TransactionModule,
     LoggingModule,
+    WorkstepModule
   ],
   providers: [VsmTasksSchedulerAgent, ...CommandHandlers, ...QueryHandlers],
 })

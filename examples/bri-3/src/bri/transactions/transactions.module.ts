@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SubjectAccountModule } from '../identity/bpiSubjectAccounts/subjectAccounts.module';
-import { TransactionAgent } from './agents/transactions.agent';
+import { WorkflowModule } from '../workgroup/workflows/workflows.module';
+import { WorkstepModule } from '../workgroup/worksteps/worksteps.module';
 import { TransactionStorageAgent } from './agents/transactionStorage.agent';
+import { TransactionAgent } from './agents/transactions.agent';
 import { TransactionController } from './api/transactions.controller';
 import { CreateTransactionCommandHandler } from './capabilities/createTransaction/createTransactionCommand.handler';
 import { DeleteTransactionCommandHandler } from './capabilities/deleteTransaction/deleteTransactionCommand.handler';
@@ -10,6 +12,7 @@ import { GetAllTransactionsQueryHandler } from './capabilities/getAllTransaction
 import { GetTransactionByIdQueryHandler } from './capabilities/getTransactionById/getTransactionByIdQuery.handler';
 import { UpdateTransactionCommandHandler } from './capabilities/updateTransaction/updateTransactionCommand.handler';
 import { TransactionsProfile } from './transactions.profile';
+import { AuthModule } from '../auth/auth.module';
 
 export const CommandHandlers = [
   CreateTransactionCommandHandler,
@@ -23,7 +26,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, SubjectAccountModule],
+  imports: [CqrsModule, SubjectAccountModule, WorkstepModule, WorkflowModule, AuthModule],
   controllers: [TransactionController],
   providers: [
     ...CommandHandlers,
