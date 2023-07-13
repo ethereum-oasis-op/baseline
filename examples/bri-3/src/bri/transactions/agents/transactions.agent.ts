@@ -6,17 +6,17 @@ import {
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
+import { Workstep } from '@prisma/client';
+import { AuthAgent } from '../../auth/agent/auth.agent';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
+import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
 import {
   DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
-import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
-import { Workstep } from '@prisma/client';
-import { WorkstepStorageAgent } from 'src/bri/workgroup/worksteps/agents/workstepsStorage.agent';
-import { WorkflowStorageAgent } from 'src/bri/workgroup/workflows/agents/workflowsStorage.agent';
-import { AuthAgent } from 'src/bri/auth/agent/auth.agent';
 
 @Injectable()
 export class TransactionAgent {

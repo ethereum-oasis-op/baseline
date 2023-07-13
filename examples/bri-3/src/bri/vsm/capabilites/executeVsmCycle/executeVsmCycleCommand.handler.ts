@@ -1,10 +1,10 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { LoggingService } from '../../../../shared/logging/logging.service';
+import { TransactionStorageAgent } from '../../../transactions/agents/transactionStorage.agent';
+import { TransactionAgent } from '../../../transactions/agents/transactions.agent';
+import { TransactionStatus } from '../../../transactions/models/transactionStatus.enum';
+import { WorkstepStorageAgent } from '../../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
-import { TransactionStorageAgent } from 'src/bri/transactions/agents/transactionStorage.agent';
-import { LoggingService } from 'src/shared/logging/logging.service';
-import { TransactionStatus } from 'src/bri/transactions/models/transactionStatus.enum';
-import { TransactionAgent } from 'src/bri/transactions/agents/transactions.agent';
-import { WorkstepStorageAgent } from 'src/bri/workgroup/worksteps/agents/workstepsStorage.agent';
 
 @CommandHandler(ExecuteVsmCycleCommand)
 export class ExecuteVsmCycleCommandHandler
