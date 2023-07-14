@@ -3,7 +3,7 @@ import { Proof } from './proof';
 export class Witness {
   proof: Proof;
 
-  publicInput?: string[];
+  publicInputs?: string[];
 
-  verificationKey: string;
+  verificationKey: object;
 }

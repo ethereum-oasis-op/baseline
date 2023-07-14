@@ -18,7 +18,8 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "useDefineForClassFields": true,
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule":true,
   },
   "ts-node": {
     "compiler": "ttypescript"

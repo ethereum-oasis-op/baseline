@@ -2,32 +2,60 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
+import * as snarkjs from 'snarkjs';
+import * as verificationKey from '../../../../../../zeroKnowledgeKeys/circuit/circuit_verification_key.json';
+import 'dotenv/config';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
-  public async createWitness(input: object): Promise<Witness> {
-    const witness: Witness = {
-      proof: { a: ['a'], b: [['b']], c: ['c'] },
-      publicInput: ['publicInput'],
-      verificationKey: 'verificationKey',
-    };
+  public witness: Witness;
 
-    return witness;
+  public async createWitness(inputs: object): Promise<Witness> {
+    this.witness = new Witness();
+
+    const { proof, publicInputs } = await this.executeCircuit(inputs);
+
+    this.witness.proof = proof;
+
+    this.witness.publicInputs = publicInputs;
+
+    this.witness.verificationKey = verificationKey;
+    return this.witness;
   }
 
-  public async createProof(witness: Witness): Promise<Proof> {
-    return witness.proof;
+  public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
+    const isVerified = await snarkjs.groth16.verify(
+      witness.verificationKey,
+      witness.publicInputs,
+      {
+        pi_a: witness.proof.a,
+        pi_b: witness.proof.b,
+        pi_c: witness.proof.c,
+        protocol: witness.proof.protocol,
+        curve: witness.proof.curve,
+      },
+    );
+    return isVerified;
   }
 
-  public async verifyProof(proof: Proof, witness: Witness): Promise<boolean> {
-    return true;
-  }
+  private async executeCircuit(
+    inputs: object,
+  ): Promise<{ proof: Proof; publicInputs: string[] }> {
+    const { proof, publicSignals: publicInputs } =
+      await snarkjs.groth16.fullProve(
+        inputs,
+        process.env.SNARKJS_CIRCUIT_WASM,
+        process.env.SNARKJS_PROVING_KEY,
+      );
 
-  private async getProvingKey(): Promise<string> {
-    return 'provingKey';
-  }
+    const newProof = {
+      a: proof.pi_a,
+      b: proof.pi_b,
+      c: proof.pi_c,
+      protocol: proof.protocol,
+      curve: proof.curve,
+    } as Proof;
 
-  private async getVerificationKey(): Promise<string> {
-    return 'verificationKey';
+    return { proof: newProof, publicInputs };
   }
 }
