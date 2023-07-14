@@ -10,6 +10,7 @@ import { CreateMerkleTreeCommandHandler } from './capabilities/createMerkleTree/
 import { DeleteMerkleTreeCommandHandler } from './capabilities/deleteMerkleTree/deleteMerkleTreeCommand.handler';
 import { GetMerkleTreeByIdQueryHandler } from './capabilities/getMerkleTreeById/getMerkleTreeByIdQuery.handler';
 import { MerkleProfile } from './merkle.profile';
+import { MerkleTreeService } from './services/merkleTree.service';
 
 export const CommandHandlers = [
   CreateMerkleTreeCommandHandler,
@@ -25,6 +26,7 @@ export const QueryHandlers = [GetMerkleTreeByIdQueryHandler];
     ...QueryHandlers,
     MerkleTreeAgent,
     MerkleTreeStorageAgent,
+    MerkleTreeService,
     MerkleProfile,
   ],
 })

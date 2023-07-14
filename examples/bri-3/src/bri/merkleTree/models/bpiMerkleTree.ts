@@ -16,4 +16,9 @@ export class BpiMerkleTree {
     this.hashAlgName = hashAlgName;
     this.tree = tree;
   }
+
+  public addLeaves(leaves: string[]): void {
+    const bufferLeaves = leaves.map((leaf) => Buffer.from(leaf, 'utf-8'));
+    this.tree.addLeaves(bufferLeaves, true);
+  }
 }
