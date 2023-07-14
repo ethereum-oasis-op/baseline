@@ -1,6 +1,7 @@
 import { Ident } from "provide-js";
 import { Axiom } from "provide-js";
 import { Vault } from "provide-js";
+import { createHash } from "crypto";
 import 'dotenv/config';
 
 //Use the stored refresh token to acquire access token
@@ -13,12 +14,31 @@ const AXIOM_PROXY = new Axiom(ACCESS_TOKEN.accessToken);
 
 //Map field values to the bank statement object schema
 var bankStatementObject = {};
+
 bankStatementObject.vendor_number = "3001";
 bankStatementObject.routing_number = "2700001";
 bankStatementObject.account_number = "1234888";
 bankStatementObject.country = "US";
 bankStatementObject.date = "20230623";
-bankStatementObject.id = "";
+
+//setup id
+var vendor_number_hash = Buffer.from(createHash('sha256').update(bankStatementObject.vendor_number).digest('hex')).toString('base64');
+var routing_number_hash = Buffer.from(createHash('sha256').update(bankStatementObject.routing_number).digest('hex')).toString('base64');
+var account_number_hash = Buffer.from(createHash('sha256').update(bankStatementObject.account_number).digest('hex')).toString('base64');;
+var country_hash = Buffer.from(createHash('sha256').update(bankStatementObject.country).digest('hex')).toString('base64');;
+var date_hash = Buffer.from(createHash('sha256').update(bankStatementObject.date).digest('hex')).toString('base64');;
+
+const statement_id_hash = createHash('sha256');
+statement_id_hash.write(vendor_number_hash);
+statement_id_hash.write(routing_number_hash);
+statement_id_hash.write(account_number_hash);
+statement_id_hash.write(country_hash);
+statement_id_hash.write(date_hash);
+
+var bankStatementId = statement_id_hash.digest('base64').toString();
+console.log(bankStatementId);
+
+bankStatementObject.id =  bankStatementId;
 
 
 //Create the PRVD Axiom Protocol message
