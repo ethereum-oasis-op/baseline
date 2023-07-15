@@ -17,7 +17,7 @@ export const QueryHandlers = [];
     ScheduleModule.forRoot(),
     TransactionModule,
     LoggingModule,
-    WorkstepModule
+    WorkstepModule,
   ],
   providers: [VsmTasksSchedulerAgent, ...CommandHandlers, ...QueryHandlers],
 })

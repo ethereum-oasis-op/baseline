@@ -15,7 +15,7 @@ describe('UpdateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('content');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'content ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -31,7 +31,7 @@ describe('UpdateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('signature');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });

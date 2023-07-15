@@ -26,7 +26,13 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, SubjectAccountModule, WorkstepModule, WorkflowModule, AuthModule],
+  imports: [
+    CqrsModule,
+    SubjectAccountModule,
+    WorkstepModule,
+    WorkflowModule,
+    AuthModule,
+  ],
   controllers: [TransactionController],
   providers: [
     ...CommandHandlers,

@@ -15,7 +15,7 @@ describe('UpdateTransactionDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('payload');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'payload ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -31,7 +31,7 @@ describe('UpdateTransactionDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('signature');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });

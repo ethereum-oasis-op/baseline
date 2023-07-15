@@ -21,7 +21,7 @@ export class TransactionStorageAgent extends PrismaService {
     });
   }
 
-  async getTransactionById(id: string): Promise<Transaction> {
+  async getTransactionById(id: string): Promise<Transaction | undefined> {
     const transactionModel = await this.transaction.findUnique({
       where: { id },
       include: {

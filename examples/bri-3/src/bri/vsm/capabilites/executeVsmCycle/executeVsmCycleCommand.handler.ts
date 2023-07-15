@@ -39,7 +39,7 @@ export class ExecuteVsmCycleCommandHandler
       );
 
       try {
-        const txResult = this.agent.executeTransaction(tx, workstep);
+        const txResult = this.agent.executeTransaction(tx, workstep!);
         // TODO: When do we update the nonce on the BpiAccount?
         // TODO: #702 Update relevant Bpi Account state on sucess
         tx.updateStatusToExecuted();

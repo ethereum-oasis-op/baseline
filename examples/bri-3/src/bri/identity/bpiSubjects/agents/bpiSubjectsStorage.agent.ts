@@ -15,13 +15,13 @@ export class BpiSubjectStorageAgent extends PrismaService {
     super();
   }
 
-  async getBpiSubjectById(id: string): Promise<BpiSubject> {
+  async getBpiSubjectById(id: string): Promise<BpiSubject | undefined> {
     const bpiSubjectModel = await this.bpiSubject.findUnique({
       where: { id },
     });
 
     if (!bpiSubjectModel) {
-      return null;
+      return undefined;
     }
 
     return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);

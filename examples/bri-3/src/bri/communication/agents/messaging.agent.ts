@@ -80,13 +80,15 @@ export class MessagingAgent implements OnApplicationBootstrap {
         ),
       );
     }
+
+    return false;
   }
 
   public tryDeserializeToBpiMessageCandidate(
     rawMessage: string,
   ): [BpiMessage, string[]] {
     const errors: string[] = [];
-    let newBpiMessageCandidate: BpiMessage;
+    let newBpiMessageCandidate: BpiMessage = {} as BpiMessage;
 
     try {
       const newBpiMessageProps = this.parseJsonOrThrow(rawMessage);
@@ -108,7 +110,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
       !newBpiMessageCandidate.isTransactionMessage()
     ) {
       errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
-      return [null, errors];
+      return [newBpiMessageCandidate, errors];
     }
 
     if (!validate(newBpiMessageCandidate.id)) {

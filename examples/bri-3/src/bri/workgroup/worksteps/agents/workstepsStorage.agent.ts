@@ -14,7 +14,7 @@ export class WorkstepStorageAgent extends PrismaService {
     super();
   }
 
-  async getWorkstepById(id: string): Promise<Workstep> {
+  async getWorkstepById(id: string): Promise<Workstep | undefined> {
     const workstepModel = await this.workstep.findUnique({ where: { id } });
 
     if (!workstepModel) {
