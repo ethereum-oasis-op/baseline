@@ -3,7 +3,9 @@ import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
+import { Workflow } from '../../workgroup/workflows/models/workflow';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { Workstep } from '../../workgroup/worksteps/models/workstep';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 import { TransactionStorageAgent } from './transactionStorage.agent';
@@ -66,6 +68,8 @@ beforeAll(async () => {
 describe('Transaction Agent', () => {
   it('Should return false when validateTransactionForExecution invoked with tx with non existent workflow id', async () => {
     // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(undefined);
+
     const tx = new Transaction(
       '1',
       1,
@@ -84,5 +88,189 @@ describe('Transaction Agent', () => {
 
     // Assert
     expect(validationResult).toBeFalsy();
+  });
+
+  it('Should return false when validateTransactionForExecution invoked with tx with non existent workstep id', async () => {
+    // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+      {} as Workflow,
+    );
+
+    workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(undefined);
+
+    const tx = new Transaction(
+      '1',
+      1,
+      '123',
+      '123',
+      fromBpiSubjectAccount,
+      toBpiSubjectAccount,
+      'transaction payload',
+      'sig',
+      TransactionStatus.Processing,
+    );
+
+    // Act
+    const validationResult =
+      await transactionAgent.validateTransactionForExecution(tx);
+
+    // Assert
+    expect(validationResult).toBeFalsy();
+  });
+
+  it('Should return false when validateTransactionForExecution invoked with tx with non existent fromBpiSubjectAccount', async () => {
+    // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+      {} as Workflow,
+    );
+
+    workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+      {} as Workstep,
+    );
+
+    const tx = new Transaction(
+      '1',
+      1,
+      '123',
+      '123',
+      undefined as unknown as BpiSubjectAccount,
+      toBpiSubjectAccount,
+      'transaction payload',
+      'sig',
+      TransactionStatus.Processing,
+    );
+
+    // Act
+    const validationResult =
+      await transactionAgent.validateTransactionForExecution(tx);
+
+    // Assert
+    expect(validationResult).toBeFalsy();
+  });
+
+  it('Should return false when validateTransactionForExecution invoked with tx with non existent toBpiSubjectAccount', async () => {
+    // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+      {} as Workflow,
+    );
+
+    workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+      {} as Workstep,
+    );
+
+    const tx = new Transaction(
+      '1',
+      1,
+      '123',
+      '123',
+      fromBpiSubjectAccount,
+      undefined as unknown as BpiSubjectAccount,
+      'transaction payload',
+      'sig',
+      TransactionStatus.Processing,
+    );
+
+    // Act
+    const validationResult =
+      await transactionAgent.validateTransactionForExecution(tx);
+
+    // Assert
+    expect(validationResult).toBeFalsy();
+  });
+
+  it('Should return false when validateTransactionForExecution invoked with tx with wrong signature', async () => {
+    // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+      {} as Workflow,
+    );
+
+    workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+      {} as Workstep,
+    );
+
+    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(false);
+
+    const tx = new Transaction(
+      '1',
+      1,
+      '123',
+      '123',
+      fromBpiSubjectAccount,
+      toBpiSubjectAccount,
+      'transaction payload',
+      'wrong sig',
+      TransactionStatus.Processing,
+    );
+
+    // Act
+    const validationResult =
+      await transactionAgent.validateTransactionForExecution(tx);
+
+    // Assert
+    expect(validationResult).toBeFalsy();
+  });
+
+  it('Should return false when validateTransactionForExecution invoked with tx with status not processing', async () => {
+    // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+      {} as Workflow,
+    );
+
+    workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+      {} as Workstep,
+    );
+
+    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);
+
+    const tx = new Transaction(
+      '1',
+      1,
+      '123',
+      '123',
+      fromBpiSubjectAccount,
+      toBpiSubjectAccount,
+      'transaction payload',
+      'correct sig',
+      TransactionStatus.Executed,
+    );
+
+    // Act
+    const validationResult =
+      await transactionAgent.validateTransactionForExecution(tx);
+
+    // Assert
+    expect(validationResult).toBeFalsy();
+  });
+
+  it('Should return true when validateTransactionForExecution invoked with tx with all properties correctly set', async () => {
+    // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+      {} as Workflow,
+    );
+
+    workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+      {} as Workstep,
+    );
+
+    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);
+
+    const tx = new Transaction(
+      '1',
+      1,
+      '123',
+      '123',
+      fromBpiSubjectAccount,
+      toBpiSubjectAccount,
+      'transaction payload',
+      'correct sig',
+      TransactionStatus.Processing,
+    );
+
+    // Act
+    const validationResult =
+      await transactionAgent.validateTransactionForExecution(tx);
+
+    // Assert
+    expect(validationResult).toBeTruthy();
   });
 });
