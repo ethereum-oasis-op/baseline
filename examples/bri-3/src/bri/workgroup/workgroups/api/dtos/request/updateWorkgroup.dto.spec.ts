@@ -19,7 +19,7 @@ describe('CreateWorkgroupDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('name');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'name should not be empty',
     );
   });
@@ -40,7 +40,7 @@ describe('CreateWorkgroupDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('administratorIds');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'administratorIds should not be empty',
     );
   });
@@ -61,7 +61,7 @@ describe('CreateWorkgroupDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('securityPolicy');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'securityPolicy should not be empty',
     );
   });
@@ -82,7 +82,7 @@ describe('CreateWorkgroupDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('privacyPolicy');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'privacyPolicy should not be empty',
     );
   });
@@ -103,7 +103,7 @@ describe('CreateWorkgroupDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('participantIds');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'participantIds should not be empty',
     );
   });
@@ -125,7 +125,7 @@ describe('CreateWorkgroupDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('administratorIds');
-    expect(errors[0].constraints.arrayNotEmpty).toContain(
+    expect(errors[0].constraints?.arrayNotEmpty).toContain(
       'administratorIds should not be empty',
     );
   });
@@ -147,7 +147,7 @@ describe('CreateWorkgroupDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('participantIds');
-    expect(errors[0].constraints.arrayNotEmpty).toContain(
+    expect(errors[0].constraints?.arrayNotEmpty).toContain(
       'participantIds should not be empty',
     );
   });

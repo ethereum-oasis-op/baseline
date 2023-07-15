@@ -82,7 +82,7 @@ describe('TransactionController', () => {
         BpiSubjectStorageAgent,
         WorkstepStorageAgent,
         WorkflowStorageAgent,
-        AuthAgent
+        AuthAgent,
       ],
     })
       .overrideProvider(TransactionStorageAgent)

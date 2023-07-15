@@ -15,7 +15,7 @@ describe('CreateBpiAccountDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('ownerBpiSubjectAccountsIds');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'ownerBpiSubjectAccountsIds ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });

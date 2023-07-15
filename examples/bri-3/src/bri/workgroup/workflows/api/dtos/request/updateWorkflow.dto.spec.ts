@@ -14,7 +14,7 @@ describe('UpdateWorkflowDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('name');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'name should not be empty',
     );
   });
@@ -30,7 +30,7 @@ describe('UpdateWorkflowDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('workgroupId');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'workgroupId should not be empty',
     );
   });
@@ -46,7 +46,7 @@ describe('UpdateWorkflowDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('workstepIds');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'workstepIds should not be empty',
     );
   });
@@ -62,7 +62,7 @@ describe('UpdateWorkflowDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('workstepIds');
-    expect(errors[0].constraints.arrayNotEmpty).toContain(
+    expect(errors[0].constraints?.arrayNotEmpty).toContain(
       'workstepIds should not be empty',
     );
   });
