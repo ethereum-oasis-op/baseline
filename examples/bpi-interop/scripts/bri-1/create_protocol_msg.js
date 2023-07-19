@@ -7,6 +7,14 @@ import 'dotenv/config';
 //Use the stored refresh token to acquire access token
 const REFRESH_TOKEN = process.env.AXIOM_USER_REFRESH_TOKEN;
 const IDENT_PROXY = new Ident(REFRESH_TOKEN);
+
+const ORG_ID = process.env.AXIOM_BPI_INTEROP_ORG_ID;
+const USER_ID = process.env.AXIOM_BPI_INTEROP_USERID;
+
+var access_token_request = {};
+access_token_request.organization_id = ORG_ID;
+access_token_request.user_id = USER_ID;
+
 const ACCESS_TOKEN = await IDENT_PROXY.createToken(access_token_request);
 
 //Create Axiom BPI proxy instance
@@ -19,7 +27,7 @@ bankStatementObject.vendor_number = "3001";
 bankStatementObject.routing_number = "2700001";
 bankStatementObject.account_number = "1234888";
 bankStatementObject.country = "US";
-bankStatementObject.date = "20230623";
+bankStatementObject.date = "06232023";
 
 //setup id
 var vendor_number_hash = Buffer.from(createHash('sha256').update(bankStatementObject.vendor_number).digest('hex')).toString('base64');
@@ -57,4 +65,4 @@ const AXIOM_ZK_PROOF = await AXIOM_PROXY.sendProtocolMessage(AXIOM_PROTOCOL_MSG)
 console.log(AXIOM_ZK_PROOF);
 
 //Additional details (e.g. verifying key) in Vault/Axiom
-const VAULT_PROXY = new Vault(ACCESS_TOKEN.accessToken);
+//const VAULT_PROXY = new Vault(ACCESS_TOKEN.accessToken);
