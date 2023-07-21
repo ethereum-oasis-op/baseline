@@ -1,13 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Workstep } from '../../worksteps/models/workstep';
-import { Workflow } from '../models/workflow';
 import { v4 as uuidv4 } from 'uuid';
+import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
+import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
+import { Workstep } from '../../worksteps/models/workstep';
 import {
   WORKFLOW_NOT_FOUND_ERR_MESSAGE,
   WORKSTEP_NOT_FOUND_ERR_MESSAGE,
 } from '../api/err.messages';
+import { Workflow } from '../models/workflow';
 import { WorkflowStorageAgent } from './workflowsStorage.agent';
-import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 
 @Injectable()
 export class WorkflowAgent {
@@ -34,8 +35,9 @@ export class WorkflowAgent {
     name: string,
     worksteps: Workstep[],
     workgroupId: string,
+    bpiAccount: BpiAccount
   ): Workflow {
-    return new Workflow(uuidv4(), name, worksteps, workgroupId);
+    return new Workflow(uuidv4(), name, worksteps, workgroupId, bpiAccount);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
