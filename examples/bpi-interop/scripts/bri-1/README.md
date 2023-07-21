@@ -6,9 +6,37 @@
 
 <b>Create account at https://shuttle.provide.services</b>
 
+[!img](./img/shuttle-signup.PNG)
+
+[!img](./img/org-create.PNG)
+
 <b>Define workgroup</b>
 
+[!img](./img/create-workgroup.PNG)
+
+[!img](./img/workgroup-schema-create.PNG)
+
+[!img](./img/workgroup-network-select.PNG)
+
+[!img](./img/worgroup-finish-onboarding.PNG)
+
+[!img](./img/shuttle-home.PNG)
+
 <b>Configure workflow</b>
+
+[!img](./img/shuttle-newwf.PNG)
+
+[!img](./img/wf-create.PNG)
+
+[!img](./img/wf-addworkstep.PNG)
+
+[!img](./img/wf-workstepsave.PNG)
+
+[!img](./img/wf-deploy.PNG)
+
+[!img](./img/wf-deploy.PNG)
+
+[!img](./img/wf-deploy-success.PNG)
 
 <b> Review protocol messages</b>
 
