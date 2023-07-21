@@ -23,7 +23,7 @@ export class Workflow {
     name: string,
     worksteps: Workstep[],
     workgroupId: string,
-    bpiAccount: BpiAccount
+    bpiAccount: BpiAccount,
   ) {
     this.id = id;
     this.name = name;
