@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
 import { Workstep } from '../../worksteps/models/workstep';
 
 export class Workflow {
@@ -14,16 +15,21 @@ export class Workflow {
   @AutoMap()
   workgroupId: string;
 
+  @AutoMap(() => BpiAccount)
+  bpiAccount: BpiAccount;
+
   constructor(
     id: string,
     name: string,
     worksteps: Workstep[],
     workgroupId: string,
+    bpiAccount: BpiAccount
   ) {
     this.id = id;
     this.name = name;
     this.worksteps = worksteps;
     this.workgroupId = workgroupId;
+    this.bpiAccount = bpiAccount;
   }
 
   public updateName(newName: string): void {

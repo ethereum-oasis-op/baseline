@@ -6,19 +6,19 @@ export class BpiSubjectAccount {
   id: string; // TODO: Add uuid after #491
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   authenticationPolicy: string;
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   authorizationPolicy: string;
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   verifiableCredential: string;
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   recoveryKey: string;
 
   @AutoMap(() => BpiSubject)
