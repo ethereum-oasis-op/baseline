@@ -35,7 +35,7 @@ export class WorkflowAgent {
     name: string,
     worksteps: Workstep[],
     workgroupId: string,
-    bpiAccount: BpiAccount
+    bpiAccount: BpiAccount,
   ): Workflow {
     return new Workflow(uuidv4(), name, worksteps, workgroupId, bpiAccount);
   }
