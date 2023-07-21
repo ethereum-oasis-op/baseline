@@ -24,16 +24,17 @@ export class CreateWorkflowCommandHandler
         command.workstepIds,
       );
 
-    const workgroup = await this.workgroupStorageAgent.getWorkgroupById(command.workgroupId);
-    
-    
-    const newBpiAccountCandidate = this.accountAgent.createNewBpiAccount(
-       [], // TODO:  workgroup.participants, either get all BpiSubjectAccounts bellonging to participatns or have bpisubjectaccounts ids passed as param
-       'sample authorization condition',
-       'sample state object prover system',
-       'sample state object storage',
+    const workgroup = await this.workgroupStorageAgent.getWorkgroupById(
+      command.workgroupId,
     );
-  
+
+    const newBpiAccountCandidate = this.accountAgent.createNewBpiAccount(
+      [], // TODO:  workgroup.participants, either get all BpiSubjectAccounts bellonging to participatns or have bpisubjectaccounts ids passed as param
+      'sample authorization condition',
+      'sample state object prover system',
+      'sample state object storage',
+    );
+
     const newBpiAccount = await this.accountStorageAgent.storeNewBpiAccount(
       newBpiAccountCandidate,
     );
@@ -42,7 +43,7 @@ export class CreateWorkflowCommandHandler
       command.name,
       workstepsToConnect,
       command.workgroupId,
-      newBpiAccount
+      newBpiAccount,
     );
 
     const newWorkflow = await this.storageAgent.storeNewWorkflow(
