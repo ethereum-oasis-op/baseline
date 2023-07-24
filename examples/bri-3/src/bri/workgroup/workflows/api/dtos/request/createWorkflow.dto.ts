@@ -10,4 +10,8 @@ export class CreateWorkflowDto {
 
   @IsNotEmpty()
   workgroupId: string;
+
+  @IsNotEmpty()
+  @ArrayNotEmpty()
+  workflowBpiAccountSubjectAccountOwnersIds: string[];
 }

@@ -1,10 +1,11 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { BpiAccountAgent } from '../../../../identity/bpiAccounts/agents/bpiAccounts.agent';
+import { BpiAccountStorageAgent } from '../../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
+import { BpiSubjectAccountAgent } from '../../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
+import { WorkgroupAgent } from '../../../../workgroup/workgroups/agents/workgroups.agent';
 import { WorkflowAgent } from '../../agents/workflows.agent';
 import { WorkflowStorageAgent } from '../../agents/workflowsStorage.agent';
 import { CreateWorkflowCommand } from './createWorkflow.command';
-import { BpiAccountAgent } from 'src/bri/identity/bpiAccounts/agents/bpiAccounts.agent';
-import { BpiAccountStorageAgent } from 'src/bri/identity/bpiAccounts/agents/bpiAccountsStorage.agent';
-import { WorkgroupStorageAgent } from 'src/bri/workgroup/workgroups/agents/workgroupStorage.agent';
 
 @CommandHandler(CreateWorkflowCommand)
 export class CreateWorkflowCommandHandler
@@ -13,8 +14,9 @@ export class CreateWorkflowCommandHandler
   constructor(
     private agent: WorkflowAgent,
     private accountAgent: BpiAccountAgent,
+    private subjectAccountAgent: BpiSubjectAccountAgent,
+    private workgroupAgent: WorkgroupAgent,
     private storageAgent: WorkflowStorageAgent,
-    private workgroupStorageAgent: WorkgroupStorageAgent,
     private accountStorageAgent: BpiAccountStorageAgent,
   ) {}
 
@@ -24,12 +26,23 @@ export class CreateWorkflowCommandHandler
         command.workstepIds,
       );
 
-    const workgroup = await this.workgroupStorageAgent.getWorkgroupById(
-      command.workgroupId,
+    const workgroup =
+      await this.workgroupAgent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
+        command.workgroupId,
+      );
+
+    const bpiAccountOwnerCandidates =
+      await this.subjectAccountAgent.getBpiSubjectAccountsAndThrowIfNotExist(
+        command.workflowBpiAccountSubjectAccountOwnersIds,
+      );
+
+    await this.agent.throwIfWorkflowBpiAccountOwnersAreNotWorkgroupParticipants(
+      workgroup.participants,
+      bpiAccountOwnerCandidates,
     );
 
     const newBpiAccountCandidate = this.accountAgent.createNewBpiAccount(
-      [], // TODO:  workgroup.participants, either get all BpiSubjectAccounts bellonging to participatns or have bpisubjectaccounts ids passed as param
+      bpiAccountOwnerCandidates,
       'sample authorization condition',
       'sample state object prover system',
       'sample state object storage',
