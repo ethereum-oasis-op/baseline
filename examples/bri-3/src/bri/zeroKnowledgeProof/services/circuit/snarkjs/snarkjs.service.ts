@@ -3,7 +3,9 @@ import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
 import * as snarkjs from 'snarkjs';
-import * as verificationKey from '../../../../../../zeroKnowledgeKeys/circuit/circuit_verification_key.json';
+// TODO: Does not compile atm because the circuit_verification_key.json does not exist
+// Probably has to be dynamically loaded
+// import * as verificationKey from '../../../../../../zeroKnowledgeKeys/circuit/circuit_verification_key.json';
 import 'dotenv/config';
 
 @Injectable()
@@ -19,8 +21,16 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = verificationKey;
+    // TODO: Above TODO
+    // this.witness.verificationKey = verificationKey;
     return this.witness;
+  }
+
+  createProof(witness: Witness): Promise<Proof> {
+    throw new Error('Method not implemented.');
+  }
+  verifyProof(proof: Proof, witness: Witness): Promise<boolean> {
+    throw new Error('Method not implemented.');
   }
 
   public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
