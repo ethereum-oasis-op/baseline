@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4e91ff93-daa8-4d68-9481-98807430de87",
+		"_postman_id": "e18d5b6d-380b-4488-a266-e2931a9a7804",
 		"name": "Provide BankShield",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "22975745"
@@ -37,13 +37,13 @@
 							"type": "basic",
 							"basic": [
 								{
-									"key": "password",
-									"value": "{{sappassword}}",
+									"key": "username",
+									"value": "{{sapuserid}}",
 									"type": "string"
 								},
 								{
-									"key": "username",
-									"value": "{{sapuser}}",
+									"key": "password",
+									"value": "{{sappassword}}",
 									"type": "string"
 								}
 							]
@@ -214,7 +214,12 @@
 							"\r",
 							"for (const wg in org_workgroups) {\r",
 							"  workgroup_id = org_workgroups[wg];\r",
-							"  break;\r",
+							"  console.log(\"Subject account id for workgroup \" + wg);\r",
+							"  // org +wg\r",
+							"  var subjaccount_dna = response[0].id + \".\" + wg;\r",
+							"  var subjaccount = CryptoJS.SHA256(subjaccount_dna).toString();\r",
+							"  console.log(subjaccount);\r",
+							"  //break;\r",
 							"}\r",
 							"\r",
 							"pm.collectionVariables.set(\"bankshield_workgroupid\",workgroup_id);\r",
@@ -242,7 +247,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{eco_accesstoken}}",
+							"value": "{{bankshield_accesstoken}}",
 							"type": "string"
 						}
 					]
@@ -288,7 +293,7 @@
 						"exec": [
 							"const response = pm.response.json();",
 							"",
-							"pm.collectionVariables.set(\"eco_refreshtoken\", response.refresh_token );",
+							"pm.collectionVariables.set(\"bankshield_refreshtoken\", response.refresh_token );",
 							"",
 							"pm.test(\"Permissions are 510\", function () {",
 							"    pm.expect(response.permissions).to.eql(510);",
@@ -308,7 +313,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{eco_accesstoken}}",
+							"value": "{{bankshield_accesstoken}}",
 							"type": "string"
 						}
 					]
@@ -355,7 +360,7 @@
 						"exec": [
 							"const response = pm.response.json();",
 							"",
-							"pm.collectionVariables.set(\"eco_accesstoken\", response.access_token );",
+							"pm.collectionVariables.set(\"bankshield_accesstoken\", response.access_token );",
 							"",
 							"pm.test(\"Permissions are 510\", function () {",
 							"    pm.expect(response.permissions).to.eql(510);",
@@ -375,7 +380,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{eco_refreshtoken}}",
+							"value": "{{bankshield_refreshtoken}}",
 							"type": "string"
 						}
 					]
@@ -414,6 +419,72 @@
 			"response": []
 		},
 		{
+			"name": "List workgroups",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bankshield_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://axiom.provide.services/api/v1/workgroups",
+					"protocol": "https",
+					"host": [
+						"axiom",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"workgroups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subject Accounts List",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bankshield_accesstoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://axiom.provide.services/api/v1/subjects/{{bankshield_organizationid}}/accounts",
+					"protocol": "https",
+					"host": [
+						"axiom",
+						"provide",
+						"services"
+					],
+					"path": [
+						"api",
+						"v1",
+						"subjects",
+						"{{bankshield_organizationid}}",
+						"accounts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Trigger Bank Account verification",
 			"event": [
 				{
@@ -440,7 +511,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "{{ao_accesstoken}}",
+							"value": "{{bankshield_accesstoken}}",
 							"type": "string"
 						}
 					]
@@ -456,7 +527,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": \"\",\n    \"type\": \"{{bankshield_schematype}}\",\n    \"subject_account_id\" : \"{{bankshield_subjectacct}}\",\n    \"workgroup_id\": \"{{bankshield_workgroupid}}\",\n    \"payload\": {\n        \"vendor_number\"  : \"\",\n        \"routing_number\" : \"\",\n        \"account_number\" : \"\",\n        \"country\" : \"\",\n        \"date\" : \"YYYYMMDD\",\n        \"id\" : \"\"\n    }\n}",
+					"raw": "{\n    \"id\": \"87945319hojfguopi87fvuopi09\",\n    \"type\": \"{{bankshield_schematype}}\",\n    \"subject_account_id\" : \"{{bankshield_subjectacct}}\",\n    \"workgroup_id\": \"{{bankshield_workgroupid}}\",\n    \"payload\": {\n        \"vendor_number\"  : \"10001\",\n        \"routing_number\" : \"1234567\",\n        \"account_number\" : \"5318008\",\n        \"country\" : \"US\",\n        \"date\" : \"07192023\",\n        \"id\" : \"87945319hojfguopi87fvuopi09\"\n    }\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -464,9 +535,9 @@
 					}
 				},
 				"url": {
-					"raw": "{{prvdbaselineurl}}/api/v1/protocol_messages",
+					"raw": "{{bankshield_baselineurl}}/api/v1/protocol_messages",
 					"host": [
-						"{{prvdbaselineurl}}"
+						"{{bankshield_baselineurl}}"
 					],
 					"path": [
 						"api",
@@ -502,22 +573,22 @@
 	"variable": [
 		{
 			"key": "bankshield_refreshtoken",
-			"value": "",
+			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImM1OmViOjhkOjU5OjQ0OjM4OjYzOjA2OmM5OmQzOmU0Ojk3OjA4OmZiOjY4OjljIiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiZXhwIjoxNjkyMzY1OTg1LCJpYXQiOjE2ODk3NzM5ODUsImlzcyI6Imh0dHBzOi8vaWRlbnQucHJvdmlkZS5zZXJ2aWNlcyIsImp0aSI6IjQxYTQ1YzgzLWJlYWYtNGUxNC04NTE2LWQ1YzMxODZiNDg4NyIsIm5hdHMiOnsicGVybWlzc2lvbnMiOnsicHVibGlzaCI6eyJhbGxvdyI6WyJheGlvbSIsImF4aW9tLlx1MDAzZSJdfSwic3Vic2NyaWJlIjp7ImFsbG93IjpbInVzZXIuYzg3MWZhYTQtNjgzYS00ZDAwLTg1ZTgtMWZiNzhmOGRmMjYwIiwib3JnYW5pemF0aW9uLjBiMTEwOTk5LWJiZWEtNDc0Yi04ZTY1LTQ3MmFhMGVkNTA0NyIsImF4aW9tIiwiYXhpb20uXHUwMDNlIiwibmV0d29yay4qLmNvbm5lY3Rvci4qIiwibmV0d29yay4qLmNvbnRyYWN0cy4qIiwibmV0d29yay4qLnN0YXR1cyIsInBsYXRmb3JtLlx1MDAzZSJdfX19LCJwcnZkIjp7Im9yZ2FuaXphdGlvbl9pZCI6IjBiMTEwOTk5LWJiZWEtNDc0Yi04ZTY1LTQ3MmFhMGVkNTA0NyIsInBlcm1pc3Npb25zIjo1MTAsInVzZXJfaWQiOiJjODcxZmFhNC02ODNhLTRkMDAtODVlOC0xZmI3OGY4ZGYyNjAifSwic3ViIjoidG9rZW46MWQyMGYzNzYtMWJmOC00ODU4LTk3ZTQtODY2YWM3YWQ1NmM1In0.Z73RSThrUiA1a8v2_mFEDyIw268D5bn9A6qMGd4HlJ7ECyn9vHabS5HiQVr3KfLB_xWxDj7oftljx8E23tfK0Rd84fHeL9DrIaoZIuGw0rQyD01qmz4V6DpbuRBPVmDeD-uQdAzMEWj_V10SOB1nWI6ireEnUgFoVkX2Ehh5nNujZ7QZ8zem7MTNhEbHWH8ZKW2hxH9l4p1lx8VcqzE3Y5bBQP3rDi-VPNOT0EppmjYUf6CugK3qhmwIyD0qaTP50YbkIY2xgjgVFDF_fgXcEq6E2utncpjF7051yeQ3rSIFcQ6uO67mcEXcPQU8pQ3AzT7RI7WOjFqZUOfn17tW8CrsG_4OhpPYWXEwzRmEoWsP1fdYqdNufc5Dq-0oKdTbyWCK0poPZWXocrXsemkpNRBFpmKB5vjV6QMQT67-KgInqE7K1sA63R4RztatJcVHGEIh0CQ047C8pOzdy4gdzJsZdUDJ54iNgFwAkSiWMmb2Lbld8wPBC6KazYYlXh7QhtEae9ur5L5-DJYZjCNTevw-ZLaCMUbmaAZnBQYA0zMBFFqDsmBLFSJEoXno9u8gQ3ktZGbw-Rs4IGaw9pPAzQQWAej1_CAi-wEfzf08MnyuXT_bWcRAn292DJhHx9-HGYCCSkx5L-QbcGYuiXdyrmIdD0sYrQocDEDtQePy32Y",
 			"type": "string"
 		},
 		{
 			"key": "bankshield_accesstoken",
-			"value": "",
+			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImM1OmViOjhkOjU5OjQ0OjM4OjYzOjA2OmM5OmQzOmU0Ojk3OjA4OmZiOjY4OjljIiwidHlwIjoiSldUIn0.eyJhdWQiOiJodHRwczovL2lkZW50LnByb3ZpZGUuc2VydmljZXMvYXBpL3YxIiwiZXhwIjoxNjkwMDQzNTA0LCJpYXQiOjE2ODk5NTcxMDQsImlzcyI6Imh0dHBzOi8vaWRlbnQucHJvdmlkZS5zZXJ2aWNlcyIsImp0aSI6IjQzYmM2Y2FkLTI5MWYtNGU5Zi1hOGM1LWE5MDQxNTY1ZTMxMyIsIm5hdHMiOnsicGVybWlzc2lvbnMiOnsicHVibGlzaCI6eyJhbGxvdyI6WyJheGlvbSIsImF4aW9tLlx1MDAzZSJdfSwic3Vic2NyaWJlIjp7ImFsbG93IjpbInVzZXIuYzg3MWZhYTQtNjgzYS00ZDAwLTg1ZTgtMWZiNzhmOGRmMjYwIiwiYXhpb20iLCJheGlvbS5cdTAwM2UiLCJuZXR3b3JrLiouY29ubmVjdG9yLioiLCJuZXR3b3JrLiouY29udHJhY3RzLioiLCJuZXR3b3JrLiouc3RhdHVzIiwicGxhdGZvcm0uXHUwMDNlIl19fX0sInBydmQiOnsicGVybWlzc2lvbnMiOjQxNSwidXNlcl9pZCI6ImM4NzFmYWE0LTY4M2EtNGQwMC04NWU4LTFmYjc4ZjhkZjI2MCJ9LCJzdWIiOiJ1c2VyOmM4NzFmYWE0LTY4M2EtNGQwMC04NWU4LTFmYjc4ZjhkZjI2MCJ9.ZKjScKd-a0pEqBTN6XgNPgXK3D70MxyCff71dZh37kMh0pBLvUs2ClbJz6afaPxjAZyc8wvA5B-7nui5UdAZMyKCMCLzcFosOP7UO93TDYaXTtmt-NYWBf9-rG3fchm-kIsoy4RMw4cMnFGob5eGTy2JUxmRR7HksMmN3scax1EegquS1z-_R75469oTvS4k57ROGDsE7t4Kgatp_eXFSkDJiIya74ZIiOd3nBEXSixdzj4UpEsdsER5Dg2tgbElhUfRBaQWeJaDFIcGn16sohENV51hD4TiB6GNoDN47lLuPqwZJ4ZQ9Aa05Vc6nLBjYbOOLOT97fjGolnRDNEd4rJsDA-PX9m_8DzDq5Z4xL_Gu0JaQeXuHsm69ANOjaRVPPngHz0_u4mQbz8rWQFkfqXadD9kZLzqFRIdQmS2Mxd6i363vNfuja8SsLeuEcSjG4J6mpR8AAfu-Cqwns-jhAZ7J55Xg29y9sccReoGyTw212z7Mc7YA8DHOxpJ_4Ju3ZRusb6jpkQaEpc8xghElNBDG9zB1MCeNVBhhras3D_tnn2KvAQZV-eB6Lg2PORMdKIinp9Or8fhzqBDZM2zapY_OVk-b5IdSfHR2bKgJETrqFYeXlvCbdc8hSlYRsLFNNQhHko8h127zwX8XIu75P68yk1cu4tmtIzT0Nw6BYk",
 			"type": "string"
 		},
 		{
 			"key": "bankshield_subjectacct",
-			"value": "",
+			"value": "c2e510788b99cbf841633f115a2674b3cd8445f1408f51d58a8495391d4e75cc",
 			"type": "string"
 		},
 		{
 			"key": "bankshield_workgroupid",
-			"value": "",
+			"value": "f4ab097d-f71c-4d52-8912-ef3f5e661b04",
 			"type": "string"
 		},
 		{
@@ -544,6 +615,32 @@
 			"key": "bankshield_user_id",
 			"value": "",
 			"type": "string"
+		},
+		{
+			"key": "eco_refreshtoken",
+			"value": ""
+		},
+		{
+			"key": "bankshield_baselineurl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sapbaseurl",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "sapuserid",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		},
+		{
+			"key": "sappassword",
+			"value": "",
+			"type": "string",
+			"disabled": true
 		}
 	]
 }
