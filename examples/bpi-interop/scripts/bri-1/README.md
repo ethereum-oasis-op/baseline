@@ -6,46 +6,66 @@
 
 <b>Create account at https://shuttle.provide.services</b>
 
-[!img](./img/shuttle-signup.PNG)
+Use your email to create an account. You will be prompted to configure an organization and your org-level Vault configuration along with other agreements to accept.
 
-[!img](./img/org-create.PNG)
+[!img](/img/shuttle-signup.PNG)
+
+[!img](/img/org-create.PNG)
 
 <b>Define workgroup</b>
 
-[!img](./img/create-workgroup.PNG)
+Upon creating your organization, you will be immediately prompted to create your work group. Accept the Vault privacy policy and continue. 
 
-[!img](./img/workgroup-schema-create.PNG)
+[!img](/img/create-workgroup.PNG)
 
-[!img](./img/workgroup-network-select.PNG)
+Configure fields of the bank record synchronization message type. 
 
-[!img](./img/worgroup-finish-onboarding.PNG)
+[!img](/img/workgroup-schema-create.PNG)
 
-[!img](./img/shuttle-home.PNG)
+Choose the PRVD network layer 3 testnet. Continue.
+
+[!img](/img/workgroup-network-select.PNG)
+
+Continue until "Finish onboarding" can be selected.
+
+[!img](/img/worgroup-finish-onboarding.PNG)
+
+Upon successful workgroup creation - you will be redirected to the Shuttle homepage.
+
+[!img](/img/shuttle-home.PNG)
 
 <b>Configure workflow</b>
 
-[!img](./img/shuttle-newwf.PNG)
+Select the workflows tab.
 
-[!img](./img/wf-create.PNG)
+[!img](/img/shuttle-newwf.PNG)
 
-[!img](./img/wf-addworkstep.PNG)
+Create the workflow. Save and select + to create workstep.
 
-[!img](./img/wf-workstepsave.PNG)
+[!img](/img/wf-create.PNG)
 
-[!img](./img/wf-deploy.PNG)
+[!img](/img/wf-addworkstep.PNG)
 
-[!img](./img/wf-deploy.PNG)
+Configure the workstep. Add a name and description. Select the general consistency circuit. Select the previously configured schema. Add participants as needed. Click save.
 
-[!img](./img/wf-deploy-success.PNG)
+[!img](/img/wf-workstepsave.PNG)
 
-<b> Review protocol messages</b>
+Once all worksteps are created - deploy the workflow.
+
+[!img](/img/wf-deploy.PNG)
+
+[!img](/img/wf-deploy-success.PNG)
+
+Once successfully deployed - the zk-workflow can be reached/triggered via API
 
 ### Postman configuration, credentials generation, initial protocol message test
 
 <b>Maintain Shuttle Credentials</b>
+
 Use the email and password in the ```{{shuttle_email}}``` and ```{{shuttle_password}}``` collection variables
 
 <b>Generating the refresh and access tokens</b>
+
 Execute Postman requests in the following order
 1. Authorize Access Token
 2. List organizations
@@ -53,32 +73,33 @@ Execute Postman requests in the following order
 4. JWT Authenticate - Generate short dated access token from refresh token
 
 <b>Maintain the workgroup id, subject account id</b>
+
 For a given workflow, maintaining the correct workgroup id and subject account id in the collection variables is essential for the protocol messages to work correctly.
 
 Review the console outputs when executing "List organizations". You can verify you have the right workgroup and subject account id in the additional endpoints provided.
 
-[!img](./img/list-orgs.PNG)
+[!img](/img/list-orgs.PNG)
 
-[!img](./img/list-workgroups.PNG)
+[!img](/img/list-workgroups.PNG)
 
-[!img](./img/list-subjaccts.PNG)
+[!img](/img/list-subjaccts.PNG)
 
 Maintain the desired workgroup and subject account id in the collection variables
 
-[!img](./img/maintain-wg-subjacct.PNG)
+[!img](/img/maintain-wg-subjacct.PNG)
 
 <b>Test the protocol messaging from Postman</b>
 While authenticated, Go to the Trigger Bank Account Verification request
 
 Add data to the blank fields and execute
 
-[!img](./img/postman-sent-protocol-msg.PNG)
+[!img](/img/postman-sent-protocol-msg.PNG)
 
 <b>Review ZKP in Shuttle</b>
 
 View the console where you originally deployed the workflow
 
-[!img](./img/shuttle-msg-review1.PNG)
+[!img](/img/shuttle-msg-review1.PNG)
 
 ### Node.js Sample Script
 
@@ -96,7 +117,7 @@ Run command ```node create_protocol_msg```
 
 View the console where you originally deployed the workflow. You'll see an additional protocol message created in the console.
 
-[!img](./img/shuttle-msg-review1.PNG)
+[!img](/img/shuttle-msg-review1.PNG)
 
 ### SAP Sample Program
 
