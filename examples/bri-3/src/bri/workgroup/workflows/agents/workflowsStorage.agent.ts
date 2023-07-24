@@ -60,6 +60,7 @@ export class WorkflowStorageAgent extends PrismaService {
           connect: workstepIds,
         },
         workgroupId: workflow.workgroupId,
+        bpiAccountId: workflow.bpiAccountId,
       },
       include: {
         worksteps: true,

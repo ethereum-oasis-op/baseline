@@ -15,6 +15,9 @@ export class Workflow {
   @AutoMap()
   workgroupId: string;
 
+  @AutoMap()
+  bpiAccountId: string;
+
   @AutoMap(() => BpiAccount)
   bpiAccount: BpiAccount;
 
