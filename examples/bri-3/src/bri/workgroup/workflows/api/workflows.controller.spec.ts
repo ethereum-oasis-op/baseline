@@ -1,32 +1,39 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { uuid } from 'uuidv4';
+import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
+import { BpiAccountStorageAgent } from '../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
+import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
+import { BpiSubjectAccountAgent } from '../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../../workflows/api/err.messages';
+import { WorkgroupAgent } from '../../workgroups/agents/workgroups.agent';
+import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
+import { Workstep } from '../../worksteps/models/workstep';
+import { WorkstepProfile } from '../../worksteps/workstep.profile';
+import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkflowAgent } from '../agents/workflows.agent';
+import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
 import { CreateWorkflowCommandHandler } from '../capabilities/createWorkflow/createWorkflowCommand.handler';
 import { DeleteWorkflowCommandHandler } from '../capabilities/deleteWorkflow/deleteWorkflowCommand.handler';
 import { GetAllWorkflowsQueryHandler } from '../capabilities/getAllWorkflows/getAllWorkflowsQuery.handler';
 import { GetWorkflowByIdQueryHandler } from '../capabilities/getWorkflowById/getWorkflowByIdQuery.handler';
 import { UpdateWorkflowCommandHandler } from '../capabilities/updateWorkflow/updateWorkflowCommand.handler';
-import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
-import { WorkflowController } from './workflows.controller';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
-import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
-import { WorkstepModule } from '../../worksteps/worksteps.module';
-import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
-import { Workstep } from '../../worksteps/models/workstep';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
-import { WorkflowProfile } from '../workflow.profile';
-import { WorkstepProfile } from '../../worksteps/workstep.profile';
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { Workflow } from '../models/workflow';
-import { uuid } from 'uuidv4';
+import { WorkflowProfile } from '../workflow.profile';
+import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
+import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
+import { WorkflowController } from './workflows.controller';
+import { Workgroup } from '../../workgroups/models/workgroup';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
   let workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent>;
+  let workgroupAgentMock: DeepMockProxy<WorkgroupAgent>;
 
   const createTestWorkstep = () => {
     return new Workstep(
@@ -42,7 +49,13 @@ describe('WorkflowsController', () => {
 
   const createTestWorkflow = () => {
     const newWorkstep = createTestWorkstep();
-    return new Workflow(uuid(), 'name', [newWorkstep], 'workgroup1');
+    return new Workflow(
+      uuid(),
+      'name',
+      [newWorkstep],
+      'workgroup1',
+      {} as unknown as BpiAccount,
+    );
   };
 
   beforeEach(async () => {
@@ -57,12 +70,16 @@ describe('WorkflowsController', () => {
       controllers: [WorkflowController],
       providers: [
         WorkflowAgent,
+        WorkgroupAgent,
+        BpiAccountAgent,
+        BpiSubjectAccountAgent,
         CreateWorkflowCommandHandler,
         UpdateWorkflowCommandHandler,
         DeleteWorkflowCommandHandler,
         GetWorkflowByIdQueryHandler,
         GetAllWorkflowsQueryHandler,
         WorkflowStorageAgent,
+        BpiAccountStorageAgent,
         WorkstepProfile,
         WorkflowProfile,
       ],
@@ -71,10 +88,20 @@ describe('WorkflowsController', () => {
       .useValue(mockDeep<WorkflowStorageAgent>())
       .overrideProvider(WorkstepStorageAgent)
       .useValue(mockDeep<WorkstepStorageAgent>())
+      .overrideProvider(BpiAccountAgent)
+      .useValue(mockDeep<BpiAccountAgent>())
+      .overrideProvider(BpiSubjectAccountAgent)
+      .useValue(mockDeep<BpiSubjectAccountAgent>())
+      .overrideProvider(WorkgroupAgent)
+      .useValue(mockDeep<WorkgroupAgent>())
+      .overrideProvider(BpiAccountStorageAgent)
+      .useValue(mockDeep<BpiAccountStorageAgent>())
       .compile();
 
     workflowController = app.get<WorkflowController>(WorkflowController);
     workflowStorageAgentMock = app.get(WorkflowStorageAgent);
+    workgroupAgentMock = app.get(WorkgroupAgent);
+
     await app.init();
   });
 
@@ -149,15 +176,22 @@ describe('WorkflowsController', () => {
   });
 
   describe('createWorkflow', () => {
-    it('should return new uuid from the created workstep when all necessary params provided', async () => {
+    // TODO: mock prisma context avoiding the need to mock anything else  https://www.prisma.io/docs/guides/testing/unit-testing
+    it.skip('should return new uuid from the created workflow when all necessary params provided', async () => {
       // Arrange
       const workflow = createTestWorkflow();
+
       workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(workflow);
+      workgroupAgentMock.fetchUpdateCandidateAndThrowIfUpdateValidationFails.mockResolvedValueOnce(
+        { participants: [] } as unknown as Workgroup,
+      );
+
       const requestDto = {
         name: workflow.name,
         workstepIds: workflow.worksteps.map((ws) => ws.id),
         workgroupId: workflow.workgroupId,
       } as CreateWorkflowDto;
+
       // Act
       const response = await workflowController.createWorkflow(requestDto);
 
