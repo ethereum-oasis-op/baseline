@@ -54,7 +54,7 @@ export class WorkflowAgent {
     bpiAccountOwnerCandidates.forEach((bpiSubjectAccount) => {
       const ownerIndexInListOfParticipants = workgroupParticipants.findIndex(
         (bpiSubject) => {
-          bpiSubject.id === bpiSubjectAccount.ownerBpiSubjectId;
+          return bpiSubject.id === bpiSubjectAccount.ownerBpiSubjectId;
         },
       );
 

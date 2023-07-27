@@ -5,13 +5,13 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { uuid } from 'uuidv4';
 import { TestDataHelper } from '../../../../shared/testing/testData.helper';
 import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
 import { BpiAccountStorageAgent } from '../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../../workflows/api/err.messages';
 import { WorkgroupAgent } from '../../workgroups/agents/workgroups.agent';
-import { Workgroup } from '../../workgroups/models/workgroup';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 import { WorkstepProfile } from '../../worksteps/workstep.profile';
 import { WorkstepModule } from '../../worksteps/worksteps.module';
@@ -27,7 +27,6 @@ import { WorkflowProfile } from '../workflow.profile';
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
-import { BpiSubjectAccount } from 'src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
@@ -35,8 +34,52 @@ describe('WorkflowsController', () => {
   let workgroupAgentMock: DeepMockProxy<WorkgroupAgent>;
   let bpiSubjectAccountAgentMock: DeepMockProxy<BpiSubjectAccountAgent>;
 
+  let existingWorkgroupId;
+  let existingBpiSubject1;
+  let existingBpiSubject2;
+  let existingBpiSubjectAccount1;
+  let existingBpiSubjectAccount2;
+  let existingBpiAccount1;
+  let existingWorkstep1;
+  let existingWorkflow1;
+  let existingWorkflow2;
+  let existingWorkgroup;
+
   beforeEach(async () => {
-    const 
+    existingWorkgroupId = uuid();
+    existingBpiSubject1 = TestDataHelper.createBpiSubject();
+    existingBpiSubject2 = TestDataHelper.createBpiSubject();
+    existingBpiSubjectAccount1 = TestDataHelper.createBpiSubjectAccount(
+      existingBpiSubject1,
+      existingBpiSubject1,
+    );
+    existingBpiSubjectAccount2 = TestDataHelper.createBpiSubjectAccount(
+      existingBpiSubject2,
+      existingBpiSubject2,
+    );
+    existingBpiAccount1 = TestDataHelper.createBpiAccount([
+      existingBpiSubjectAccount1,
+      existingBpiSubjectAccount2,
+    ]);
+    existingWorkstep1 = TestDataHelper.createTestWorkstep(existingWorkgroupId);
+    existingWorkflow1 = TestDataHelper.createTestWorkflow(
+      existingWorkgroupId,
+      [existingWorkstep1],
+      existingBpiAccount1,
+    );
+    existingWorkflow2 = TestDataHelper.createTestWorkflow(
+      existingWorkgroupId,
+      [existingWorkstep1],
+      existingBpiAccount1,
+    );
+    existingWorkgroup = TestDataHelper.createWorkgroup(
+      existingWorkgroupId,
+      [existingBpiSubject1],
+      [existingBpiSubject1, existingBpiSubject2],
+      [existingWorkstep1],
+      [existingWorkflow1],
+    );
+
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -100,7 +143,7 @@ describe('WorkflowsController', () => {
 
     it('should return the correct workflow if proper id passed ', async () => {
       // Arrange
-      const existingWorkflow = TestDataHelper.createTestWorkflow();
+      const existingWorkflow = existingWorkflow1;
       workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
         existingWorkflow,
       );
@@ -131,11 +174,9 @@ describe('WorkflowsController', () => {
 
     it('should return 2 workflows if 2 exist', async () => {
       // Arrange
-      const workflow1 = TestDataHelper.createTestWorkflow();
-      const workflow2 = TestDataHelper.createTestWorkflow();
       workflowStorageAgentMock.getAllWorkflows.mockResolvedValueOnce([
-        workflow1,
-        workflow2,
+        existingWorkflow1,
+        existingWorkflow2,
       ]);
 
       // Act
@@ -143,13 +184,13 @@ describe('WorkflowsController', () => {
 
       // Assert
       expect(workflows.length).toEqual(2);
-      expect(workflows[0].id).toEqual(workflow1.id);
+      expect(workflows[0].id).toEqual(existingWorkflow1.id);
       expect(workflows[0].worksteps.map((ws) => ws.id)).toEqual(
-        workflow1.worksteps.map((ws) => ws.id),
+        existingWorkflow1.worksteps.map((ws) => ws.id),
       );
-      expect(workflows[1].id).toEqual(workflow2.id);
+      expect(workflows[1].id).toEqual(existingWorkflow2.id);
       expect(workflows[1].worksteps.map((ws) => ws.id)).toEqual(
-        workflow2.worksteps.map((ws) => ws.id),
+        existingWorkflow2.worksteps.map((ws) => ws.id),
       );
     });
   });
@@ -157,28 +198,29 @@ describe('WorkflowsController', () => {
   describe('createWorkflow', () => {
     it('should return new uuid from the created workflow when all necessary params provided', async () => {
       // Arrange
-      const workflow = TestDataHelper.createTestWorkflow();
 
-      workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(workflow);
+      workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(
+        existingWorkflow1,
+      );
       workgroupAgentMock.fetchUpdateCandidateAndThrowIfUpdateValidationFails.mockResolvedValueOnce(
-        { participants: [] } as unknown as Workgroup,
+        existingWorkgroup,
       );
 
       bpiSubjectAccountAgentMock.getBpiSubjectAccountsAndThrowIfNotExist.mockResolvedValueOnce(
-        [{} as BpiSubjectAccount],
+        [existingBpiSubjectAccount1, existingBpiSubjectAccount2],
       );
 
       const requestDto = {
-        name: workflow.name,
-        workstepIds: workflow.worksteps.map((ws) => ws.id),
-        workgroupId: workflow.workgroupId,
+        name: existingWorkflow1.name,
+        workstepIds: existingWorkflow1.worksteps.map((ws) => ws.id),
+        workgroupId: existingWorkflow1.workgroupId,
       } as CreateWorkflowDto;
 
       // Act
       const response = await workflowController.createWorkflow(requestDto);
 
       // Assert
-      expect(response).toEqual(workflow.id);
+      expect(response).toEqual(existingWorkflow1.id);
       expect(uuidValidate(response));
       expect(uuidVersion(response)).toEqual(4);
     });
@@ -206,30 +248,29 @@ describe('WorkflowsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const existingWorkflow = TestDataHelper.createTestWorkflow();
       workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-        existingWorkflow,
+        existingWorkflow1,
       );
 
       const updateRequestDto: UpdateWorkflowDto = {
         name: 'name2',
-        workstepIds: existingWorkflow.worksteps.map((ws) => ws.id),
+        workstepIds: existingWorkflow1.worksteps.map((ws) => ws.id),
         workgroupId: 'workgroupId2',
       };
       workflowStorageAgentMock.updateWorkflow.mockResolvedValueOnce({
-        ...existingWorkflow,
+        ...existingWorkflow1,
         workgroupId: updateRequestDto.workgroupId,
         name: updateRequestDto.name,
       } as Workflow);
 
       // Act
       const updatedWorkflow = await workflowController.updateWorkflow(
-        existingWorkflow.id,
+        existingWorkflow1.id,
         updateRequestDto,
       );
 
       // Assert
-      expect(updatedWorkflow.id).toEqual(existingWorkflow.id);
+      expect(updatedWorkflow.id).toEqual(existingWorkflow1.id);
       expect(updatedWorkflow.worksteps.map((ws) => ws.id)).toEqual(
         updateRequestDto.workstepIds,
       );
@@ -254,11 +295,12 @@ describe('WorkflowsController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const workflow = TestDataHelper.createTestWorkflow();
-      workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(workflow);
+      workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+        existingWorkflow1,
+      );
 
       // Act
-      await workflowController.deleteWorkflow(workflow.id);
+      await workflowController.deleteWorkflow(existingWorkflow1.id);
     });
   });
 });
