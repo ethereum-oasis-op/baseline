@@ -37,6 +37,7 @@ template HashLeftRight() {
 
 
 	//Num2Bits 256
+	
 	//Concatenate bits
 	//Sha256 on 512 bits
 	//Bits to Num 256
@@ -60,6 +61,18 @@ template DualMux() {
 	out[1] <== (in[0] - in[1])*s + in[1];
 }
 
-function concatenanteBits(a, b){
-	
+function concatenanteLeftRight(left, right){
+
+	component numToBits
+
+}
+
+function numToBits(num) {
+	var bits[256];
+	component num2Bits = Num2Bits(256);
+	num2Bits.in <== num;
+
+	for(var i = 0; i < 256; i++){
+		bits[i] <== num2Bits.out[i];
+	}
 }
