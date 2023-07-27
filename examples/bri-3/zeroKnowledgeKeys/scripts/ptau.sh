@@ -10,7 +10,7 @@ set -e
 
 # Starts Powers Of Tau ceremony, creating the file pot14_0000.ptau
 # 14 is the power of two of the maximum number of constraints that the ceremony can accept: in this case, the number of constraints is 2 ^ 14 = 16,384.
-# 14 is required as ecdsaSignatureVerification takes 8,076 constraints.
+# 14 is required as ecdsaSignatureVerification takes 8,076 constraints
 snarkjs powersoftau new bn128 14 zeroKnowledgeKeys/ptau/pot14_0000.ptau -v
 
 # Contribute to ceremony a few times.
