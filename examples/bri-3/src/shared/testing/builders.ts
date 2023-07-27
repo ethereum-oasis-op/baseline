@@ -295,3 +295,60 @@ export class BpiSubjectAccountBuilder {
     return bpiSubjectAccount;
   }
 }
+
+export class BpiAccountBuilder {
+  private id: string;
+  private nonce = 0;
+  private ownerBpiSubjectAccounts: BpiSubjectAccount[] = [];
+  private authorizationCondition: string;
+  private stateObjectProverSystem: string;
+  private stateObjectStorage: string;
+
+  constructor() {}
+
+  setId(id: string): BpiAccountBuilder {
+    this.id = id;
+    return this;
+  }
+
+  setNonce(nonce: number): BpiAccountBuilder {
+    this.nonce = nonce;
+    return this;
+  }
+
+  setOwnerBpiSubjectAccounts(
+    ownerBpiSubjectAccounts: BpiSubjectAccount[],
+  ): BpiAccountBuilder {
+    this.ownerBpiSubjectAccounts = ownerBpiSubjectAccounts;
+    return this;
+  }
+
+  setAuthorizationCondition(authorizationCondition: string): BpiAccountBuilder {
+    this.authorizationCondition = authorizationCondition;
+    return this;
+  }
+
+  setStateObjectProverSystem(
+    stateObjectProverSystem: string,
+  ): BpiAccountBuilder {
+    this.stateObjectProverSystem = stateObjectProverSystem;
+    return this;
+  }
+
+  setStateObjectStorage(stateObjectStorage: string): BpiAccountBuilder {
+    this.stateObjectStorage = stateObjectStorage;
+    return this;
+  }
+
+  public build(): BpiAccount {
+    const bpiAccount = new BpiAccount(
+      this.id,
+      this.ownerBpiSubjectAccounts,
+      this.authorizationCondition,
+      this.stateObjectProverSystem,
+      this.stateObjectStorage,
+    );
+    bpiAccount.nonce = this.nonce;
+    return bpiAccount;
+  }
+}

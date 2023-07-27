@@ -1,5 +1,6 @@
 import { uuid } from 'uuidv4';
 import { BpiAccount } from '../../bri/identity/bpiAccounts/models/bpiAccount';
+import { BpiSubjectAccount } from '../../bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../../bri/identity/bpiSubjects/models/bpiSubject';
 import {
   BpiSubjectRole,
@@ -8,6 +9,7 @@ import {
 import { Workflow } from '../../bri/workgroup/workflows/models/workflow';
 import { Workstep } from '../../bri/workgroup/worksteps/models/workstep';
 import {
+  BpiAccountBuilder,
   BpiSubjectAccountBuilder,
   BpiSubjectBuilder,
   WorkflowBuilder,
@@ -33,14 +35,15 @@ export class TestDataHelper {
   };
 
   public static createTestWorkflow = (
+    workgroupId: string,
     worksteps: Workstep[],
     bpiAccount: BpiAccount,
   ) => {
     const workflow = new WorkflowBuilder()
-      .setId('123')
+      .setId(uuid())
       .setName('Example Workflow')
       .setWorksteps(worksteps)
-      .setWorkgroupId('456')
+      .setWorkgroupId(workgroupId)
       .setBpiAccount(bpiAccount)
       .build();
 
@@ -66,12 +69,14 @@ export class TestDataHelper {
   };
 
   public static createWorkgroup = (
+    id: string,
     admins: BpiSubject[],
     participants: BpiSubject[],
     worksteps: Workstep[],
     workflows: Workflow[],
   ) => {
     const workgroup = new WorkgroupBuilder()
+      .setId(id)
       .setAdministrators(admins)
       .setSecurityPolicy('security policy')
       .setPrivacyPolicy('privacy policy')
@@ -98,5 +103,20 @@ export class TestDataHelper {
       .build();
 
     return bpiSubjectAccount;
+  };
+
+  public static createBpiAccount = (
+    ownerBpiSubjectAccounts: BpiSubjectAccount[],
+  ) => {
+    const bpiAccount = new BpiAccountBuilder()
+      .setId(uuid())
+      .setNonce(123)
+      .setOwnerBpiSubjectAccounts(ownerBpiSubjectAccounts)
+      .setAuthorizationCondition('authorization condition')
+      .setStateObjectProverSystem('prover system')
+      .setStateObjectStorage('storage')
+      .build();
+
+    return bpiAccount;
   };
 }
