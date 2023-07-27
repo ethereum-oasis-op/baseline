@@ -35,18 +35,20 @@ template HashLeftRight() {
 	signal input right;
 	signal output hash;
 
-
-	//Num2Bits 256
+	var concatenatedBits[512] = concatenateLeftRight(left, right);
 	
-	//Concatenate bits
-	//Sha256 on 512 bits
-	//Bits to Num 256
+	var hashedBits[256];
+	component hasher = Sha256(512);
 
-	component hasher = MiMCSponge(2, 1);
-	hasher.ins[0] <== left;
-	hasher.ins[1] <== right;
-	hasher.k <== 0;
-	hash <== hasher.outs[0];
+	for(var i = 0; i < 512; i++){
+		hasher.in[i] <== concatenatedBits[i];
+	}	
+
+	for(var i = 0; i < 256; i++){
+		hashedBits[i] <== hasher.outs[i];
+	}
+
+	hash <== bitsToNum(hashedBits);		
 }
 
 // if s == 0 returns [in[0], in[1]]
@@ -61,18 +63,43 @@ template DualMux() {
 	out[1] <== (in[0] - in[1])*s + in[1];
 }
 
-function concatenanteLeftRight(left, right){
+function concatenateLeftRight(left, right){
 
-	component numToBits
+	var leftBits[256] = numToBits(left);
+	var rightBits[256] = numToBits(right);
 
+	var result[512];
+
+	for(var i = 0; i < 512; i++){
+		if(i < 256){
+			result[i] = leftBits[i];
+		}else{
+			result[i] = rightBits[i-256];
+		}
+	}
+
+	return result;
 }
 
 function numToBits(num) {
 	var bits[256];
-	component num2Bits = Num2Bits(256);
-	num2Bits.in <== num;
+	component numToBits = Num2Bits(256);
+	numToBits.in <== num;
 
 	for(var i = 0; i < 256; i++){
-		bits[i] <== num2Bits.out[i];
+		bits[i] = numToBits.out[i];
 	}
+
+	return bits;
+}
+
+function bitsToNum(bits[256]) {
+	var num;
+	component bitsToNum = Bits2Num(256);
+	for(var i = 0; i < 256; i++){
+		bitsToNum.in[i] <== bits[i];
+	}
+	num = bitsToNum.out;
+
+	return num;
 }
