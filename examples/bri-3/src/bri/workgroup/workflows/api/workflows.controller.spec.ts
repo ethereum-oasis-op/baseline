@@ -5,15 +5,14 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { uuid } from 'uuidv4';
+import { TestDataHelper } from '../../../../shared/testing/testData.helper';
 import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
 import { BpiAccountStorageAgent } from '../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
-import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccountAgent } from '../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../../workflows/api/err.messages';
 import { WorkgroupAgent } from '../../workgroups/agents/workgroups.agent';
+import { Workgroup } from '../../workgroups/models/workgroup';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
-import { Workstep } from '../../worksteps/models/workstep';
 import { WorkstepProfile } from '../../worksteps/workstep.profile';
 import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkflowAgent } from '../agents/workflows.agent';
@@ -28,35 +27,13 @@ import { WorkflowProfile } from '../workflow.profile';
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
-import { Workgroup } from '../../workgroups/models/workgroup';
+import { BpiSubjectAccount } from 'src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
   let workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent>;
   let workgroupAgentMock: DeepMockProxy<WorkgroupAgent>;
-
-  const createTestWorkstep = () => {
-    return new Workstep(
-      '123',
-      'name',
-      'version',
-      'status',
-      'wgid',
-      'secPolicy',
-      'privPolicy',
-    );
-  };
-
-  const createTestWorkflow = () => {
-    const newWorkstep = createTestWorkstep();
-    return new Workflow(
-      uuid(),
-      'name',
-      [newWorkstep],
-      'workgroup1',
-      {} as unknown as BpiAccount,
-    );
-  };
+  let bpiSubjectAccountAgentMock: DeepMockProxy<BpiSubjectAccountAgent>;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -101,6 +78,7 @@ describe('WorkflowsController', () => {
     workflowController = app.get<WorkflowController>(WorkflowController);
     workflowStorageAgentMock = app.get(WorkflowStorageAgent);
     workgroupAgentMock = app.get(WorkgroupAgent);
+    bpiSubjectAccountAgentMock = app.get(BpiSubjectAccountAgent);
 
     await app.init();
   });
@@ -121,7 +99,7 @@ describe('WorkflowsController', () => {
 
     it('should return the correct workflow if proper id passed ', async () => {
       // Arrange
-      const existingWorkflow = createTestWorkflow();
+      const existingWorkflow = TestDataHelper.createTestWorkflow();
       workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
         existingWorkflow,
       );
@@ -152,8 +130,8 @@ describe('WorkflowsController', () => {
 
     it('should return 2 workflows if 2 exist', async () => {
       // Arrange
-      const workflow1 = createTestWorkflow();
-      const workflow2 = createTestWorkflow();
+      const workflow1 = TestDataHelper.createTestWorkflow();
+      const workflow2 = TestDataHelper.createTestWorkflow();
       workflowStorageAgentMock.getAllWorkflows.mockResolvedValueOnce([
         workflow1,
         workflow2,
@@ -176,14 +154,17 @@ describe('WorkflowsController', () => {
   });
 
   describe('createWorkflow', () => {
-    // TODO: mock prisma context avoiding the need to mock anything else  https://www.prisma.io/docs/guides/testing/unit-testing
-    it.skip('should return new uuid from the created workflow when all necessary params provided', async () => {
+    it('should return new uuid from the created workflow when all necessary params provided', async () => {
       // Arrange
-      const workflow = createTestWorkflow();
+      const workflow = TestDataHelper.createTestWorkflow();
 
       workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(workflow);
       workgroupAgentMock.fetchUpdateCandidateAndThrowIfUpdateValidationFails.mockResolvedValueOnce(
         { participants: [] } as unknown as Workgroup,
+      );
+
+      bpiSubjectAccountAgentMock.getBpiSubjectAccountsAndThrowIfNotExist.mockResolvedValueOnce(
+        [{} as BpiSubjectAccount],
       );
 
       const requestDto = {
@@ -224,7 +205,7 @@ describe('WorkflowsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const existingWorkflow = createTestWorkflow();
+      const existingWorkflow = TestDataHelper.createTestWorkflow();
       workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
         existingWorkflow,
       );
@@ -272,7 +253,7 @@ describe('WorkflowsController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const workflow = createTestWorkflow();
+      const workflow = TestDataHelper.createTestWorkflow();
       workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(workflow);
 
       // Act
