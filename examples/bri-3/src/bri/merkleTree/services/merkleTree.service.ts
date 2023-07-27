@@ -19,4 +19,24 @@ export class MerkleTreeService {
       return crypto.createHash(hashAlgName).update(data).digest();
     };
   }
+
+  public merkelizePayload(payload: JSON, hashAlgName: string): MerkleTree {
+    const leaves: string[] = [];
+    const recurse = (payload: JSON, _currentKey: string) => {
+      for (const key in payload) {
+        const value = payload[key];
+        if (value != undefined) {
+          if (value && typeof value === 'object') {
+            recurse(value, key);
+          } else {
+            leaves.push(key);
+            leaves.push(value.toString());
+          }
+        }
+      }
+    };
+
+    recurse(payload, null);
+    return this.formMerkleTree(leaves, hashAlgName);
+  }
 }
