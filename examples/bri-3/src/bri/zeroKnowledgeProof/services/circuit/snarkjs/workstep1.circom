@@ -1,7 +1,7 @@
 pragma circom 2.1.5;
 
 include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
-include "./edcsaSignatureVerifier.circom";
+include "./ecdsaSignatureVerifier.circom";
 include "./merkleProofVerifier.circom";
 
 template Workstep1(items, nodes){
@@ -88,16 +88,16 @@ function verifyMerkleProof(merkelizedInvoiceRoot, stateTreeRoot, stateTree[nodes
 }
 
 function verifySignature(signature, publicKeyX, publicKeyY, Tx, Ty, Ux, Uy){
-	component edcsaSignatureVerifier = EdcsaSignatureVerifier();
-	edcsaSignatureVerifier.signature <== signature;
-	edcsaSignatureVerifier.publicKeyX <== publicKeyX;
-	edcsaSignatureVerifier.publicKeyY <== publicKeyY;
-	edcsaSignatureVerifier.Tx <== Tx;
-	edcsaSignatureVerifier.Ty <== Ty;
-    	edcsaSignatureVerifier.Ux <== Ux;
-	edcsaSignatureVerifier.Uy <== Uy;
+	component ecdsaSignatureVerifier = EcdsaSignatureVerifier();
+	ecdsaSignatureVerifier.signature <== signature;
+	ecdsaSignatureVerifier.publicKeyX <== publicKeyX;
+	ecdsaSignatureVerifier.publicKeyY <== publicKeyY;
+	ecdsaSignatureVerifier.Tx <== Tx;
+	ecdsaSignatureVerifier.Ty <== Ty;
+    	ecdsaSignatureVerifier.Ux <== Ux;
+	ecdsaSignatureVerifier.Uy <== Uy;
 
-	return edcsaSignatureVerifier.isVerified;
+	return ecdsaSignatureVerifier.isVerified;
 }
 
 //declaring the public inputs
