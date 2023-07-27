@@ -41,6 +41,6 @@ snarkjs zkey verify zeroKnowledgeKeys/circuit/workstep1.r1cs zeroKnowledgeKeys/p
 snarkjs zkey export verificationkey zeroKnowledgeKeys/circuit/circuit_final.zkey zeroKnowledgeKeys/circuit/circuit_verification_key.json
 
 # Export circuit verifier with updated name and solidity version
-snarkjs zkey export solidityverifier zeroKnowledgeKeys/circuit/circuit_final.zkey src/bri/zeroKnowledgeProof/services/circuit/snarkjs/CircuitVerifier.sol
+snarkjs zkey export solidityverifier zeroKnowledgeKeys/circuit/circuit_final.zkey src/bri/zeroKnowledgeProof/services/circuit/snarkjs/Workstep1Verifier.sol
 
 echo "------------------Phase 2 complete-------------------------"
