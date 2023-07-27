@@ -36,6 +36,7 @@ describe('WorkflowsController', () => {
   let bpiSubjectAccountAgentMock: DeepMockProxy<BpiSubjectAccountAgent>;
 
   beforeEach(async () => {
+    const 
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
