@@ -115,6 +115,7 @@ model Message {
   fromBpiSubjectAccountId String?
   toBpiSubjectAccountId   String?
   workstepId              String?
+  nonce                   Int?
   content                 String
   signature               String
   type                    Int

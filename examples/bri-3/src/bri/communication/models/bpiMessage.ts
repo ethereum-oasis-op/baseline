@@ -28,6 +28,9 @@ export class BpiMessage {
   workstepId: string;
 
   @AutoMap()
+  nonce: number;
+
+  @AutoMap()
   content: string;
 
   @AutoMap()
