@@ -70,11 +70,11 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return await this.commandBus.execute(
         new ProcessInboundBpiTransactionCommand(
           newBpiMessageCandidate.id,
-          1, // TODO: #669 Nonce
-          'TODO: #669 workflowInstanceId',
-          'TODO: #669 workstepInstanceId',
-          'TODO: #669 fromBpiSubjectAccountId',
-          'TODO: #669 toBpiSubjectAccountId',
+          newBpiMessageCandidate.nonce,
+          newBpiMessageCandidate.workflowId,
+          newBpiMessageCandidate.workstepId,
+          newBpiMessageCandidate.fromBpiSubjectAccountId,
+          newBpiMessageCandidate.toBpiSubjectAccountId,
           JSON.stringify(newBpiMessageCandidate.content),
           newBpiMessageCandidate.signature,
         ),
@@ -146,7 +146,29 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     if (newBpiMessageCandidate.isTransactionMessage()) {
-      // TODO: Perform additional transaction specific validation once #669 is done
+      if (!validate(newBpiMessageCandidate.fromBpiSubjectAccountId)) {
+        errors.push(
+          `fromBpiSubjectAccountId: ${newBpiMessageCandidate.fromBpiSubjectAccountId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.toBpiSubjectAccountId)) {
+        errors.push(
+          `toBpiSubjectAccountId: ${newBpiMessageCandidate.toBpiSubjectAccountId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.workflowId)) {
+        errors.push(
+          `workflowId: ${newBpiMessageCandidate.workflowId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.workstepId)) {
+        errors.push(
+          `workstepId: ${newBpiMessageCandidate.workstepId} is not valid UUID`,
+        );
+      }
     }
 
     return [newBpiMessageCandidate, errors];

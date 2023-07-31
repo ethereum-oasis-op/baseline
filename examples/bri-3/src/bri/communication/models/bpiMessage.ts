@@ -25,6 +25,9 @@ export class BpiMessage {
   toBpiSubjectAccountId: string;
 
   @AutoMap()
+  workflowId: string;
+
+  @AutoMap()
   workstepId: string;
 
   @AutoMap()

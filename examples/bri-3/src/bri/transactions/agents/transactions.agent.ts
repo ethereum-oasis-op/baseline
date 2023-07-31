@@ -141,10 +141,9 @@ export class TransactionAgent {
       return false;
     }
 
-    // TODO: #668 - Uncomment this check once workflow has bpiAccount reference
-    // if (tx.nonce !== workflow.bpiAccount.nonce + 1) {
-    //   return false;
-    // }
+    if (tx.nonce !== workflow.bpiAccount.nonce + 1) {
+      return false;
+    }
 
     const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
       tx.payload,
