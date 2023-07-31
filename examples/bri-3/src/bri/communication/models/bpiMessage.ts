@@ -66,6 +66,22 @@ export class BpiMessage {
     this.signature = newSignature;
   }
 
+  public updateFromBpiSubjectAccountId(id: string): void {
+    this.fromBpiSubjectAccountId = id;
+  }
+
+  public updateToBpiSubjectAccountId(id: string): void {
+    this.toBpiSubjectAccountId = id;
+  }
+
+  public updateWorkflowId(id: string): void {
+    this.workflowId = id;
+  }
+
+  public updateWorkstepId(id: string): void {
+    this.workstepId = id;
+  }
+
   public isInfoMessage(): boolean {
     return this.type === BpiMessageType.Info;
   }

@@ -151,8 +151,18 @@ describe('Messaging Agent', () => {
 
   it('Should return no errors and create message dto when validating correct JSON raw message of TRANSACTION type', () => {
     // Arrange
-    const rawMessage =
-      '{ "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", "fromBpiSubjectId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32", "toBpiSubjectId": "76cdd901-d87d-4c87-b572-155afe45c128", "content": { "testProp":"testValue" }, "signature": "xyz", "type": 1}';
+    const rawMessage = `{ 
+          "id": "0a3dd67c-c031-4b50-95df-0bc5fc1c78b5", 
+          "fromBpiSubjectId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32",
+          "toBpiSubjectId": "76cdd901-d87d-4c87-b572-155afe45c128",
+          "fromBpiSubjectAccountId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32",
+          "toBpiSubjectAccountId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32",
+          "workflowId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32",
+          "workstepId": "71302cec-0a38-469a-a4e5-f58bdfc4ab32",
+          "content": { "testProp":"testValue" }, 
+          "signature": "xyz", 
+          "type": 1
+        }`;
 
     // Act
     const [resultDto, validationErrors] =
