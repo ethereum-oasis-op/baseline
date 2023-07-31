@@ -114,6 +114,7 @@ model Message {
   toBpiSubject            BpiSubject @relation(fields: [toBpiSubjectId], references: [id], name: "toBpiSubject_fk")
   fromBpiSubjectAccountId String?
   toBpiSubjectAccountId   String?
+  workflowId              String?
   workstepId              String?
   nonce                   Int?
   content                 String
