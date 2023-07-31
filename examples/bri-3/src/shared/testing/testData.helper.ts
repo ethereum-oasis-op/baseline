@@ -110,7 +110,7 @@ export class TestDataHelper {
   ) => {
     const bpiAccount = new BpiAccountBuilder()
       .setId(uuid())
-      .setNonce(123)
+      .setNonce(0)
       .setOwnerBpiSubjectAccounts(ownerBpiSubjectAccounts)
       .setAuthorizationCondition('authorization condition')
       .setStateObjectProverSystem('prover system')
