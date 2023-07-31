@@ -1,11 +1,11 @@
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { uuid } from 'uuidv4';
+import { TestDataHelper } from '../../../shared/testing/testData.helper';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
-import { Workflow } from '../../workgroup/workflows/models/workflow';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
-import { Workstep } from '../../workgroup/worksteps/models/workstep';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 import { TransactionStorageAgent } from './transactionStorage.agent';
@@ -20,6 +20,10 @@ const workstepStorageAgentMock: DeepMockProxy<WorkstepStorageAgent> =
 const workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent> =
   mockDeep<WorkflowStorageAgent>();
 const authAgentMock: DeepMockProxy<AuthAgent> = mockDeep<AuthAgent>();
+
+// TODO: Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
+// and implement various test data scenarios that can be selected with a single line of code.
+const existingWorkgroupId = uuid();
 
 const existingBpiSubject1 = new BpiSubject(
   '',
@@ -53,6 +57,17 @@ const toBpiSubjectAccount = new BpiSubjectAccount(
   '',
   '',
   '',
+);
+
+const existingBpiAccount1 = TestDataHelper.createBpiAccount([
+  fromBpiSubjectAccount,
+]);
+const existingWorkstep1 =
+  TestDataHelper.createTestWorkstep(existingWorkgroupId);
+const existingWorkflow1 = TestDataHelper.createTestWorkflow(
+  existingWorkgroupId,
+  [existingWorkstep1],
+  existingBpiAccount1,
 );
 
 beforeAll(async () => {
@@ -93,7 +108,7 @@ describe('Transaction Agent', () => {
   it('Should return false when validateTransactionForExecution invoked with tx with non existent workstep id', async () => {
     // Arrange
     workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-      {} as Workflow,
+      existingWorkflow1,
     );
 
     workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(undefined);
@@ -121,11 +136,11 @@ describe('Transaction Agent', () => {
   it('Should return false when validateTransactionForExecution invoked with tx with non existent fromBpiSubjectAccount', async () => {
     // Arrange
     workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-      {} as Workflow,
+      existingWorkflow1,
     );
 
     workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
-      {} as Workstep,
+      existingWorkstep1,
     );
 
     const tx = new Transaction(
@@ -151,11 +166,11 @@ describe('Transaction Agent', () => {
   it('Should return false when validateTransactionForExecution invoked with tx with non existent toBpiSubjectAccount', async () => {
     // Arrange
     workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-      {} as Workflow,
+      existingWorkflow1,
     );
 
     workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
-      {} as Workstep,
+      existingWorkstep1,
     );
 
     const tx = new Transaction(
@@ -181,11 +196,11 @@ describe('Transaction Agent', () => {
   it('Should return false when validateTransactionForExecution invoked with tx with wrong signature', async () => {
     // Arrange
     workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-      {} as Workflow,
+      existingWorkflow1,
     );
 
     workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
-      {} as Workstep,
+      existingWorkstep1,
     );
 
     authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(false);
@@ -213,11 +228,11 @@ describe('Transaction Agent', () => {
   it('Should return false when validateTransactionForExecution invoked with tx with status not processing', async () => {
     // Arrange
     workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-      {} as Workflow,
+      existingWorkflow1,
     );
 
     workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
-      {} as Workstep,
+      existingWorkstep1,
     );
 
     authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);
@@ -242,14 +257,46 @@ describe('Transaction Agent', () => {
     expect(validationResult).toBeFalsy();
   });
 
-  it('Should return true when validateTransactionForExecution invoked with tx with all properties correctly set', async () => {
+  it('Should return false when validateTransactionForExecution invoked with tx with nonce not  bpi account nonce +  1', async () => {
     // Arrange
     workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-      {} as Workflow,
+      existingWorkflow1,
     );
 
     workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
-      {} as Workstep,
+      existingWorkstep1,
+    );
+
+    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);
+
+    const tx = new Transaction(
+      '1',
+      999,
+      '123',
+      '123',
+      fromBpiSubjectAccount,
+      toBpiSubjectAccount,
+      'transaction payload',
+      'correct sig',
+      TransactionStatus.Executed,
+    );
+
+    // Act
+    const validationResult =
+      await transactionAgent.validateTransactionForExecution(tx);
+
+    // Assert
+    expect(validationResult).toBeFalsy();
+  });
+
+  it('Should return true when validateTransactionForExecution invoked with tx with all properties correctly set', async () => {
+    // Arrange
+    workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+      existingWorkflow1,
+    );
+
+    workstepStorageAgentMock.getWorkstepById.mockResolvedValueOnce(
+      existingWorkstep1,
     );
 
     authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);

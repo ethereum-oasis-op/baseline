@@ -92,6 +92,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
 
     try {
       const newBpiMessageProps = this.parseJsonOrThrow(rawMessage);
+
       newBpiMessageCandidate = new BpiMessage(
         newBpiMessageProps.id,
         newBpiMessageProps.fromBpiSubjectId,
@@ -100,6 +101,15 @@ export class MessagingAgent implements OnApplicationBootstrap {
         newBpiMessageProps.signature,
         newBpiMessageProps.type,
       );
+
+      newBpiMessageCandidate.updateFromBpiSubjectAccountId(
+        newBpiMessageProps.fromBpiSubjectAccountId,
+      );
+      newBpiMessageCandidate.updateToBpiSubjectAccountId(
+        newBpiMessageProps.toBpiSubjectAccountId,
+      );
+      newBpiMessageCandidate.updateWorkflowId(newBpiMessageProps.workflowId);
+      newBpiMessageCandidate.updateWorkstepId(newBpiMessageProps.workstepId);
     } catch (e) {
       errors.push(`${rawMessage} is not valid JSON. Error: ${e}`);
       return [newBpiMessageCandidate, errors];
