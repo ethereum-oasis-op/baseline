@@ -3,7 +3,7 @@
 /node_modules
 /zeroKnowledgeKeys/ptau
 /zeroKnowledgeKeys/circuit
-src/bri/zeroKnowledgeProof/services/circuit/snarkjs/CircuitVerifier.sol
+src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
 
 # Logs
 logs
