@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
+import { Workgroup } from '../../workgroups/models/workgroup';
 import { Workstep } from '../../worksteps/models/workstep';
 
 export class Workflow {
@@ -14,6 +15,9 @@ export class Workflow {
 
   @AutoMap()
   workgroupId: string;
+
+  @AutoMap()
+  workgroup: Workgroup;
 
   @AutoMap()
   bpiAccountId: string;
@@ -32,6 +36,7 @@ export class Workflow {
     this.name = name;
     this.worksteps = worksteps;
     this.workgroupId = workgroupId;
+    this.bpiAccountId = bpiAccount.id;
     this.bpiAccount = bpiAccount;
   }
 

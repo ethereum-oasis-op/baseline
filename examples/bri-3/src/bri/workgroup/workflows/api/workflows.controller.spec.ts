@@ -33,6 +33,7 @@ describe('WorkflowsController', () => {
   let workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent>;
   let workgroupAgentMock: DeepMockProxy<WorkgroupAgent>;
   let bpiSubjectAccountAgentMock: DeepMockProxy<BpiSubjectAccountAgent>;
+  let bpiAccountStorageAgentMock: DeepMockProxy<BpiAccountStorageAgent>;
 
   // TODO: Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
   // and implement various test data scenarios that can be selected with a single line of code.
@@ -125,6 +126,7 @@ describe('WorkflowsController', () => {
     workflowStorageAgentMock = app.get(WorkflowStorageAgent);
     workgroupAgentMock = app.get(WorkgroupAgent);
     bpiSubjectAccountAgentMock = app.get(BpiSubjectAccountAgent);
+    bpiAccountStorageAgentMock = app.get(BpiAccountStorageAgent);
 
     await app.init();
   });
@@ -210,6 +212,10 @@ describe('WorkflowsController', () => {
 
       bpiSubjectAccountAgentMock.getBpiSubjectAccountsAndThrowIfNotExist.mockResolvedValueOnce(
         [existingBpiSubjectAccount1, existingBpiSubjectAccount2],
+      );
+
+      bpiAccountStorageAgentMock.storeNewBpiAccount.mockResolvedValueOnce(
+        existingBpiAccount1,
       );
 
       const requestDto = {
