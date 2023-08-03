@@ -22,12 +22,12 @@ export class MerkleTreeService {
 
   public merkelizePayload(payload: JSON, hashAlgName: string): MerkleTree {
     const leaves: string[] = [];
-    const recurse = (payload: JSON, _currentKey: string) => {
+    const recurse = (payload: JSON) => {
       for (const key in payload) {
         const value = payload[key];
         if (value != undefined) {
           if (value && typeof value === 'object') {
-            recurse(value, key);
+            recurse(value);
           } else {
             leaves.push(key);
             leaves.push(value.toString());
@@ -36,7 +36,7 @@ export class MerkleTreeService {
       }
     };
 
-    recurse(payload, null);
+    recurse(payload);
     return this.formMerkleTree(leaves, hashAlgName);
   }
 }
