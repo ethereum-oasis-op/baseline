@@ -15,6 +15,8 @@ export class SnarkjsCircuitService implements ICircuitService {
   ): Promise<Witness> {
     this.witness = new Witness();
 
+    const preparedInputs = this.prepareInputs(inputs, circuitName);
+
     const { proof, publicInputs } = await this.executeCircuit(
       inputs,
       circuitName,
@@ -65,5 +67,18 @@ export class SnarkjsCircuitService implements ICircuitService {
     } as Proof;
 
     return { proof: newProof, publicInputs };
+  }
+
+  private async prepareInputs(inputs: object, circuitName: string) {
+    this[circuitName](inputs);
+  }
+
+  private async workstep(inputs: object): Promise<object> {
+    const preparedInputs = {
+      inputValueA: inputs['inputValueA'],
+      inputValueB: inputs['inputValueB'],
+    };
+
+    return preparedInputs;
   }
 }
