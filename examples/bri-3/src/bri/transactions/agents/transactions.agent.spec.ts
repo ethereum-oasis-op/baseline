@@ -1,5 +1,6 @@
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { uuid } from 'uuidv4';
+import { ICircuitService } from '../../../bri/zeroKnowledgeProof/services/circuit/circuitService.interface';
 import { TestDataHelper } from '../../../shared/testing/testData.helper';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
@@ -23,6 +24,7 @@ const workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent> =
 const authAgentMock: DeepMockProxy<AuthAgent> = mockDeep<AuthAgent>();
 const merkleTreeServiceMock: DeepMockProxy<MerkleTreeService> =
   mockDeep<MerkleTreeService>();
+const circuitsServiceMock: DeepMockProxy<ICircuitService> = mockDeep<ICircuitService>();
 
 // TODO: Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
 // and implement various test data scenarios that can be selected with a single line of code.
@@ -81,6 +83,7 @@ beforeAll(async () => {
     workflowStorageAgentMock,
     authAgentMock,
     merkleTreeServiceMock,
+    circuitsServiceMock
   );
 });
 

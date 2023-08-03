@@ -1,23 +1,27 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
+import MerkleTree from 'merkletreejs';
+import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { Workstep } from '../../workgroup/worksteps/models/workstep';
+import { ICircuitService } from '../../zeroKnowledgeProof/services/circuit/circuitService.interface';
 import {
   DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
-import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
-import { Workstep } from '../../workgroup/worksteps/models/workstep';
 
 @Injectable()
 export class TransactionAgent {
@@ -27,6 +31,8 @@ export class TransactionAgent {
     private workflowStorageAgent: WorkflowStorageAgent,
     private authAgent: AuthAgent,
     private merkleTreeService: MerkleTreeService,
+    @Inject('ICircuitService')
+    private readonly circuitService: ICircuitService,
   ) {}
 
   public throwIfCreateTransactionInputInvalid() {
@@ -167,11 +173,16 @@ export class TransactionAgent {
   public async executeTransaction(
     tx: Transaction,
     workstep: Workstep,
-  ): Promise<boolean> {
-    this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
-    // TODO: #701 Fetch circuit attached to the workstep
-    // TODO: #701 Prepare circuit inputs and execute
-    // TODO: #701 Return merkelized payload and witness
-    return true;
+  ): Promise<{ merkelizedPayload: MerkleTree; witness: Witness }> {
+    // TODO: #698 Merkelize transaction payload
+    const merkelizedPayload = this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
+
+    // TODO: #701 Fetch correct circuit based on the workstep
+
+    // TODO: #701 Prepare circuit inputs
+    const circuitInputs = {};
+    const witness = await this.circuitService.createWitness(circuitInputs, "TODO");
+
+    return { merkelizedPayload, witness };
   }
 }
