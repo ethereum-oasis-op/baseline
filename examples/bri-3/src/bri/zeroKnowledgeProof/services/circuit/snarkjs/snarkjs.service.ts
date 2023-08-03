@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
-import { ICircuitService } from '../circuit.interface';
+import { ICircuitService } from '../circuitService.interface';
 import { computeEcdsaPublicInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
 import * as snarkjs from 'snarkjs';
 import 'dotenv/config';
