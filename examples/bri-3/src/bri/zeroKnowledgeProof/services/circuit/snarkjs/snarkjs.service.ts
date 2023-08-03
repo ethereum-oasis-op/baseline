@@ -10,7 +10,10 @@ import 'dotenv/config';
 export class SnarkjsCircuitService implements ICircuitService {
   public witness: Witness;
 
-  public async createWitness(inputs: object): Promise<Witness> {
+  public async createWitness(
+    inputs: object,
+    circuitName: string,
+  ): Promise<Witness> {
     this.witness = new Witness();
 
     const { proof, publicInputs } = await this.executeCircuit(inputs);
