@@ -3,7 +3,6 @@ import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
 import * as snarkjs from 'snarkjs';
-import * as verificationKey from '../../../../../../zeroKnowledgeKeys/circuit/circuit_verification_key.json';
 import 'dotenv/config';
 
 @Injectable()
@@ -16,13 +15,18 @@ export class SnarkjsCircuitService implements ICircuitService {
   ): Promise<Witness> {
     this.witness = new Witness();
 
-    const { proof, publicInputs } = await this.executeCircuit(inputs);
+    const { proof, publicInputs } = await this.executeCircuit(
+      inputs,
+      circuitName,
+    );
 
     this.witness.proof = proof;
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = verificationKey;
+    this.witness.verificationKey = import(
+      `../../../../../../zeroKnowledgeKeys/circuit/${circuitName}_verification_key.json`
+    );
     return this.witness;
   }
 
@@ -43,12 +47,13 @@ export class SnarkjsCircuitService implements ICircuitService {
 
   private async executeCircuit(
     inputs: object,
+    circuitName: string,
   ): Promise<{ proof: Proof; publicInputs: string[] }> {
     const { proof, publicSignals: publicInputs } =
       await snarkjs.groth16.fullProve(
         inputs,
-        process.env.SNARKJS_CIRCUIT_WASM,
-        process.env.SNARKJS_PROVING_KEY,
+        `zeroKnowledgeKeys/circuit/${circuitName}_js/${circuitName}.wasm`,
+        `zeroKnowledgeKeys/circuit/${circuitName}_final.zkey`,
       );
 
     const newProof = {
