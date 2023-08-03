@@ -14,6 +14,7 @@ import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSub
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { SnarkjsCircuitService } from '../../zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service';
 import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { TransactionAgent } from '../agents/transactions.agent';
 import { CreateTransactionCommandHandler } from '../capabilities/createTransaction/createTransactionCommand.handler';
@@ -85,6 +86,10 @@ describe('TransactionController', () => {
         WorkflowStorageAgent,
         AuthAgent,
         MerkleTreeService,
+        {
+          provide: 'ICircuitService',
+          useClass: SnarkjsCircuitService,
+        },
       ],
     })
       .overrideProvider(TransactionStorageAgent)
