@@ -11,10 +11,10 @@ template MerkleProofVerifier(nodes){
 
 	signal output isVerified;
 
-	component selectors[levels];
-    	component hashers[levels];
+	component selectors[nodes];
+    	component hashers[nodes];
 
-	for (var i = 0; i < levels; i++) {
+	for (var i = 0; i < nodes; i++) {
 		selectors[i] = DualMux();
 		selectors[i].in[0] <== i == 0 ? leaf : hashers[i - 1].hash;
 		selectors[i].in[1] <== pathElements[i];
@@ -25,7 +25,7 @@ template MerkleProofVerifier(nodes){
 		hashers[i].right <== selectors[i].out[1];
 	}
 
-	root === hashers[levels - 1].hash;
+	root === hashers[nodes - 1].hash;
 	
 }
 
@@ -35,20 +35,22 @@ template HashLeftRight() {
 	signal input right;
 	signal output hash;
 
-	var concatenatedBits[512] = concatenateLeftRight(left, right);
-	
-	var hashedBits[256];
+	component concatenateLeftRight = ConcatenateLeftRight();
+	concatenateLeftRight.left <== left;
+	concatenateLeftRight.right <== right;	
+
 	component hasher = Sha256(512);
+	component bitsToNum = BitsToNum();
 
 	for(var i = 0; i < 512; i++){
-		hasher.in[i] <== concatenatedBits[i];
-	}	
+		hasher.in[i] <== concatenateLeftRight.result[i];
+	}		
 
 	for(var i = 0; i < 256; i++){
-		hashedBits[i] <== hasher.outs[i];
+		bitsToNum.bits[i] <== hasher.outs[i];
 	}
 
-	hash <== bitsToNum(hashedBits);		
+	hash <== bitsToNum.num;		
 }
 
 // if s == 0 returns [in[0], in[1]]
@@ -63,43 +65,43 @@ template DualMux() {
 	out[1] <== (in[0] - in[1])*s + in[1];
 }
 
-function concatenateLeftRight(left, right){
+template ConcatenateLeftRight(){
+	signal input left;
+	signal input right;
+	signal output result[512];
 
-	var leftBits[256] = numToBits(left);
-	var rightBits[256] = numToBits(right);
+	component leftNumToBits = NumToBits();
+	leftNumToBits.num <== left;
 
-	var result[512];
+	component rightNumToBits = NumToBits();	
+	rightNumToBits.num <== right;
 
 	for(var i = 0; i < 512; i++){
 		if(i < 256){
-			result[i] = leftBits[i];
+			result[i] <== leftNumToBits.bits[i];
 		}else{
-			result[i] = rightBits[i-256];
+			result[i] <== rightNumToBits.bits[i-256]; 
 		}
 	}
-
-	return result;
 }
 
-function numToBits(num) {
-	var bits[256];
+template NumToBits() {
+	signal input num;
+	signal output bits[256];
 	component numToBits = Num2Bits(256);
 	numToBits.in <== num;
 
 	for(var i = 0; i < 256; i++){
-		bits[i] = numToBits.out[i];
+		bits[i] <== numToBits.out[i];
 	}
-
-	return bits;
 }
 
-function bitsToNum(bits) {
-	var num;
+template BitsToNum() {
+	signal input bits[265];
+	signal output num;
 	component bitsToNum = Bits2Num(256);
 	for(var i = 0; i < 256; i++){
 		bitsToNum.in[i] <== bits[i];
 	}
-	num = bitsToNum.out;
-
-	return num;
+	num <== bitsToNum.out;
 }

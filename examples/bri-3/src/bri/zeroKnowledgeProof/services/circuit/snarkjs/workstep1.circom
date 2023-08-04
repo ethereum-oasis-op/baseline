@@ -4,14 +4,16 @@ include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
 include "./ecdsaSignatureVerifier.circom";
 include "./merkleProofVerifier.circom";
 
-template Workstep1(items, nodes){
+template Workstep1(){
 
 	signal input invoiceStatus;
 	signal input invoiceAmount;
+	signal input items;
 	signal input itemPrices[items];
 	signal input itemAmount[items];
 	
 	//Non-inclusion Merkle Proof inputs
+	signal input nodes;
 	signal input merkelizedInvoiceRoot;
 	signal input stateTreeRoot;
 	signal input stateTree[nodes];
@@ -34,11 +36,11 @@ template Workstep1(items, nodes){
 
 	
 	//2. InvoiceAmount == itemPrices * itemAmount	
-	var isInvoiceAmountVerified = verifyAmount(invoiceAmount, itemPrices[items], itemAmount[items]);
+	var isInvoiceAmountVerified = verifyAmount(items, invoiceAmount, itemPrices[items], itemAmount[items]);
 
 
 	//3. merklizedInvoiceRoot is NOT part of stateTree
-	var isMerkleProofVerified = verifyMerkleProof(merkelizedInvoiceRoot, stateTreeRoot, stateTree[nodes], stateTreeLeafPosition[nodes]);
+	var isMerkleProofVerified = verifyMerkleProof(nodes, merkelizedInvoiceRoot, stateTreeRoot, stateTree[nodes], stateTreeLeafPosition[nodes]);
 	
 
 	//4. Verify Signature
@@ -61,7 +63,7 @@ function verifyStatus(invoiceStatus){
 
 }
 
-function verifyAmount(invoiceAmount, itemPrices, itemAmount){
+function verifyAmount(items, invoiceAmount, itemPrices, itemAmount){
 	var totalItemAmount = 0;
 	for(var i = 0; i < items; i++){
 		totalItemAmount += itemPrices[i] * itemAmount[i]; 
@@ -75,7 +77,7 @@ function verifyAmount(invoiceAmount, itemPrices, itemAmount){
 	return isItemAmountEqualInvoice.out;
 }
 
-function verifyMerkleProof(merkelizedInvoiceRoot, stateTreeRoot, stateTree, stateTreeLeafPosition){
+function verifyMerkleProof(nodes, merkelizedInvoiceRoot, stateTreeRoot, stateTree, stateTreeLeafPosition){
 	component merkleProofVerifier = MerkleProofVerifier(nodes);
 	merkleProofVerifier.leaf <== merkelizedInvoiceRoot;
 	merkleProofVerifier.root <== stateTreeRoot;
