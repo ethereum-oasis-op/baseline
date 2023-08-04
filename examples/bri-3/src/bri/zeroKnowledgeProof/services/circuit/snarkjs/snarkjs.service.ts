@@ -15,10 +15,10 @@ export class SnarkjsCircuitService implements ICircuitService {
   ): Promise<Witness> {
     this.witness = new Witness();
 
-    const preparedInputs = this.prepareInputs(inputs, circuitName);
+    const preparedInputs = await this.prepareInputs(inputs, circuitName);
 
     const { proof, publicInputs } = await this.executeCircuit(
-      inputs,
+      preparedInputs,
       circuitName,
     );
 
@@ -26,7 +26,7 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = import(
+    this.witness.verificationKey = await import(
       `../../../../../../zeroKnowledgeKeys/circuit/${circuitName}_verification_key.json`
     );
     return this.witness;
@@ -69,8 +69,11 @@ export class SnarkjsCircuitService implements ICircuitService {
     return { proof: newProof, publicInputs };
   }
 
-  private async prepareInputs(inputs: object, circuitName: string) {
-    this[circuitName](inputs);
+  private async prepareInputs(
+    inputs: object,
+    circuitName: string,
+  ): Promise<object> {
+    return await this[circuitName](inputs);
   }
 
   private async workstep(inputs: object): Promise<object> {
