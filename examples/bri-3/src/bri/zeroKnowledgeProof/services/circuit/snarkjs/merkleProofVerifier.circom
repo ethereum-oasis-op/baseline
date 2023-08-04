@@ -58,7 +58,7 @@ template DualMux() {
 	signal input s;
 	signal output out[2];
 
-	s * (1 - s) === 0
+	s * (1 - s) === 0;
 	out[0] <== (in[1] - in[0])*s + in[0];
 	out[1] <== (in[0] - in[1])*s + in[1];
 }
@@ -93,7 +93,7 @@ function numToBits(num) {
 	return bits;
 }
 
-function bitsToNum(bits[256]) {
+function bitsToNum(bits) {
 	var num;
 	component bitsToNum = Bits2Num(256);
 	for(var i = 0; i < 256; i++){

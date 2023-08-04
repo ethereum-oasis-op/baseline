@@ -22,8 +22,8 @@ template EcdsaSignatureVerifier(){
     	signatureVerifier.Ux <== Ux;
     	signatureVerifier.Uy <== Uy;
 
-	component isEqualPubKeyX <== IsEqual();
-	component isEqualPubKeyY <== IsEqual();
+	component isEqualPubKeyX = IsEqual();
+	component isEqualPubKeyY = IsEqual();
 
 	isEqualPubKeyX.in[0] <== signatureVerifier.pubKeyX;
 	isEqualPubKeyX.in[1] <== publicKeyX;	

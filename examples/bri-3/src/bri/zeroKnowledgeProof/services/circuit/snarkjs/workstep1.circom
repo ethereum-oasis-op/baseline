@@ -61,7 +61,7 @@ function verifyStatus(invoiceStatus){
 
 }
 
-function verifyAmount(invoiceAmount, itemPrices[items], itemAmount[items]){
+function verifyAmount(invoiceAmount, itemPrices, itemAmount){
 	var totalItemAmount = 0;
 	for(var i = 0; i < items; i++){
 		totalItemAmount += itemPrices[i] * itemAmount[i]; 
@@ -75,7 +75,7 @@ function verifyAmount(invoiceAmount, itemPrices[items], itemAmount[items]){
 	return isItemAmountEqualInvoice.out;
 }
 
-function verifyMerkleProof(merkelizedInvoiceRoot, stateTreeRoot, stateTree[nodes], stateTreeLeafPosition[nodes]){
+function verifyMerkleProof(merkelizedInvoiceRoot, stateTreeRoot, stateTree, stateTreeLeafPosition){
 	component merkleProofVerifier = MerkleProofVerifier(nodes);
 	merkleProofVerifier.leaf <== merkelizedInvoiceRoot;
 	merkleProofVerifier.root <== stateTreeRoot;

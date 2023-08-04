@@ -84,4 +84,13 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     return preparedInputs;
   }
+
+  private async workstep1(inputs: object): Promise<object> {
+    const preparedInputs = {
+      inputValueA: inputs['inputValueA'],
+      inputValueB: inputs['inputValueB'],
+    };
+
+    return preparedInputs;
+  }
 }
