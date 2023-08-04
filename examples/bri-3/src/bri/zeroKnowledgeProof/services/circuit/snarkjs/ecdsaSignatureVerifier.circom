@@ -1,7 +1,7 @@
 pragma circom 2.1.5;
 
 include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
- include "../../../../../../node_modules/spartan-ecdsa-circuits/eff_ecdsa_membership/eff_ecdsa.circom";
+include "./ecdsaSignatureVerifier/eff_ecdsa.circom";
 
 template EcdsaSignatureVerifier(){
 	signal input signature;
