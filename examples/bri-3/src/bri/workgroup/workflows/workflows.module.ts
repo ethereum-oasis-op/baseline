@@ -1,5 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { AccountModule } from '../../identity/bpiAccounts/accounts.module';
+import { SubjectAccountModule } from '../../identity/bpiSubjectAccounts/subjectAccounts.module';
+import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
+import { WorkgroupStorageAgent } from '../workgroups/agents/workgroupStorage.agent';
+import { WorkgroupAgent } from '../workgroups/agents/workgroups.agent';
 import { WorkstepModule } from '../worksteps/worksteps.module';
 import { WorkflowAgent } from './agents/workflows.agent';
 import { WorkflowStorageAgent } from './agents/workflowsStorage.agent';
@@ -23,7 +28,13 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, WorkstepModule],
+  imports: [
+    CqrsModule,
+    WorkstepModule,
+    AccountModule,
+    SubjectAccountModule,
+    SubjectModule,
+  ],
   controllers: [WorkflowController],
   providers: [
     ...CommandHandlers,
@@ -31,6 +42,10 @@ export const QueryHandlers = [
     WorkflowAgent,
     WorkflowStorageAgent,
     WorkflowProfile,
+    // TODO: Circular dependency if Workgroup module is imported above
+    // for the two providers below - resolve.
+    WorkgroupAgent,
+    WorkgroupStorageAgent,
   ],
   exports: [WorkflowAgent, WorkflowStorageAgent],
 })

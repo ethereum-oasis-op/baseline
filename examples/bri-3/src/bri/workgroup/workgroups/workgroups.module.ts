@@ -38,7 +38,7 @@ export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
     WorkgroupAgent,
     WorkgroupStorageAgent,
     WorkgroupProfile,
-    BpiSubjectAgent,
   ],
+  exports: [WorkgroupAgent],
 })
 export class WorkgroupModule {}
