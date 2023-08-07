@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { SubjectAccountModule } from '../bpiSubjectAccounts/subjectAccounts.module';
+import { AccountsProfile } from './accounts.profile';
 import { BpiAccountAgent } from './agents/bpiAccounts.agent';
 import { BpiAccountStorageAgent } from './agents/bpiAccountsStorage.agent';
 import { AccountController } from './api/accounts.controller';
@@ -9,7 +10,6 @@ import { DeleteBpiAccountCommandHandler } from './capabilities/deleteBpiAccount/
 import { GetAllBpiAccountsQueryHandler } from './capabilities/getAllBpiAccounts/getAllBpiAccountQuery.handler';
 import { GetBpiAccountByIdQueryHandler } from './capabilities/getBpiAccountById/getBpiAccountByIdQuery.handler';
 import { UpdateBpiAccountCommandHandler } from './capabilities/updateBpiAccount/updateBpiAccountCommand.handler';
-import { AccountsProfile } from './accounts.profile';
 
 export const CommandHandlers = [
   CreateBpiAccountCommandHandler,
@@ -30,5 +30,6 @@ export const QueryHandlers = [
     BpiAccountStorageAgent,
     AccountsProfile,
   ],
+  exports: [BpiAccountAgent, BpiAccountStorageAgent],
 })
 export class AccountModule {}

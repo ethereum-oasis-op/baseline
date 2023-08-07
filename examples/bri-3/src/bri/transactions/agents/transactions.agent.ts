@@ -193,7 +193,7 @@ export class TransactionAgent {
   }
 
   // TODO: Only for the purposes of temporary convention
-  // to connect worksteps with circuits on the file system.   
+  // to connect worksteps with circuits on the file system.
   // Format is: <path_from_env>/<workstep_name_in_snake_case>_<predefined_suffix>.
   // Will be ditchedcompletely as part of milestone 5.
   private constructCircuitPathsFromWorkstepName(name: string): {
@@ -222,7 +222,7 @@ export class TransactionAgent {
   }
 
   // TODO: ChatGPT generated only for the purposes of temporary convention
-  // to connect worksteps with circuits on the file system. 
+  // to connect worksteps with circuits on the file system.
   private convertStringToSnakeCase(name: string): string {
     // Remove any leading or trailing spaces
     name = name.trim();
