@@ -174,16 +174,65 @@ export class TransactionAgent {
   public async executeTransaction(
     tx: Transaction,
     workstep: Workstep,
-    ): Promise<TransactionResult> {
-      // TODO: #701 Fetch correct circuit based on the workstep, throw on err
+  ): Promise<TransactionResult> {
+    const txResult = new TransactionResult();
+
+    const merkelizedPayload = this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
+    txResult.merkelizedPayload = merkelizedPayload;
+
+    const { circuitProvingKeyPath, circuitPath } =
+      this.constructCircuitPathsFromWorkstepName(workstep.name);
+
+    const circuitInputs = {}; // TODO: #701 Prepare circuit inputs
+    txResult.witness = await this.circuitService.createWitness(
+      circuitInputs,
+      "TODO"
+    );
+
+    return txResult;
+  }
+
+  private constructCircuitPathsFromWorkstepName(name: string): {
+    circuitProvingKeyPath: string;
+    circuitVerificatioKeyPath: string;
+    circuitPath: string;
+  } {
+    const snakeCaseWorkstepName = this.convertStringToSnakeCase(name);
+
+    const circuitProvingKeyPath =
+      process.env.SNARKJS_CIRCUITS_KEY_PATH +
+      snakeCaseWorkstepName +
+      '_circuit_final.zkey';
+
+    const circuitVerificatioKeyPath =
+      process.env.SNARKJS_CIRCUITS_KEY_PATH +
+      snakeCaseWorkstepName +
+      '_circuit_verification_key.json';
       
-      const txResult = new TransactionResult();
-      txResult.merkelizedPayload = this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
+    const circuitPath =
+      process.env.SNARKJS_CIRCUIT_WASM_PATH +
+      snakeCaseWorkstepName +
+      '_circuit.wasm';
 
-      // TODO: #701 Prepare circuit inputs
-      const circuitInputs = {};
-      txResult.witness = await this.circuitService.createWitness(circuitInputs, "TODO");
+    return { circuitProvingKeyPath, circuitVerificatioKeyPath, circuitPath };
+  }
 
-      return txResult;
+  private convertStringToSnakeCase(name: string): string {
+    // Remove any leading or trailing spaces
+    name = name.trim();
+
+    // Replace spaces, hyphens, and underscores with a single underscore
+    name = name.replace(/[\s-]/g, '_');
+
+    // Convert uppercase letters to lowercase and insert an underscore before them if they are not at the beginning
+    name = name.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`);
+
+    // Remove any consecutive underscores
+    name = name.replace(/_+/g, '_');
+
+    // Remove any non-alphanumeric characters except for underscore
+    name = name.replace(/[^a-zA-Z0-9_]/g, '');
+
+    return name;
   }
 }
