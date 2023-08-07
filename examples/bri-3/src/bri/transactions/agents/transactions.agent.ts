@@ -200,15 +200,15 @@ export class TransactionAgent {
     const snakeCaseWorkstepName = this.convertStringToSnakeCase(name);
 
     const circuitProvingKeyPath =
-      process.env.SNARKJS_CIRCUITS_KEY_PATH +
+      process.env.SNARKJS_CIRCUIT_KEYS_PATH +
       snakeCaseWorkstepName +
       '_circuit_final.zkey';
 
     const circuitVerificatioKeyPath =
-      process.env.SNARKJS_CIRCUITS_KEY_PATH +
+      process.env.SNARKJS_CIRCUIT_KEYS_PATH +
       snakeCaseWorkstepName +
       '_circuit_verification_key.json';
-      
+
     const circuitPath =
       process.env.SNARKJS_CIRCUIT_WASM_PATH +
       snakeCaseWorkstepName +
