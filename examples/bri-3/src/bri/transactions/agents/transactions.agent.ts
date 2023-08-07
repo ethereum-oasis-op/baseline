@@ -22,6 +22,7 @@ import {
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
+import { TransactionResult } from '../models/transactionResult';
 
 @Injectable()
 export class TransactionAgent {
@@ -173,16 +174,16 @@ export class TransactionAgent {
   public async executeTransaction(
     tx: Transaction,
     workstep: Workstep,
-  ): Promise<{ merkelizedPayload: MerkleTree; witness: Witness }> {
-    // TODO: #698 Merkelize transaction payload
-    const merkelizedPayload = this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
+    ): Promise<TransactionResult> {
+      // TODO: #701 Fetch correct circuit based on the workstep, throw on err
+      
+      const txResult = new TransactionResult();
+      txResult.merkelizedPayload = this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
 
-    // TODO: #701 Fetch correct circuit based on the workstep
+      // TODO: #701 Prepare circuit inputs
+      const circuitInputs = {};
+      txResult.witness = await this.circuitService.createWitness(circuitInputs, "TODO");
 
-    // TODO: #701 Prepare circuit inputs
-    const circuitInputs = {};
-    const witness = await this.circuitService.createWitness(circuitInputs, "TODO");
-
-    return { merkelizedPayload, witness };
+      return txResult;
   }
 }
