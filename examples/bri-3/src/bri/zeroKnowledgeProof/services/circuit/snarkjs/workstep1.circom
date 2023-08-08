@@ -4,16 +4,14 @@ include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
 include "./ecdsaSignatureVerifier.circom";
 include "./merkleProofVerifier.circom";
 
-template Workstep1(){
+template Workstep1(items, nodes){
 
 	signal input invoiceStatus;
 	signal input invoiceAmount;
-	signal input items;
 	signal input itemPrices[items];
 	signal input itemAmount[items];
 	
 	//Non-inclusion Merkle Proof inputs
-	signal input nodes;
 	signal input merkelizedInvoiceRoot;
 	signal input stateTreeRoot;
 	signal input stateTree[nodes];
@@ -31,53 +29,24 @@ template Workstep1(){
 	signal output isVerified;
 
 
-	//1. Status == NEW	
-	var isStatusVerified = verifyStatus(invoiceStatus);
+	//1. Status == NEW
+	component statusVerifier = StatusVerifier();
+	statusVerifier.invoiceStatus <== invoiceStatus;	
+	var isStatusVerified = statusVerifier.verified; 
 
 	
-	//2. InvoiceAmount == itemPrices * itemAmount	
-	var isInvoiceAmountVerified = verifyAmount(items, invoiceAmount, itemPrices[items], itemAmount[items]);
+	//2. InvoiceAmount == itemPrices * itemAmount
+	component amountVerifier = AmountVerifier(items);
+	amountVerifier.invoiceAmount <== invoiceAmount;
+	for(var i = 0; i < items; i++){
+		amountVerifier.itemPrices[i] <== itemPrices[i];
+		amountVerifier.itemAmount[i] <== itemAmount[i];
+	}
+
+	var isInvoiceAmountVerified = amountVerifier.verified;
 
 
 	//3. merklizedInvoiceRoot is NOT part of stateTree
-	var isMerkleProofVerified = verifyMerkleProof(nodes, merkelizedInvoiceRoot, stateTreeRoot, stateTree[nodes], stateTreeLeafPosition[nodes]);
-	
-
-	//4. Verify Signature
-	var isSignatureVerified = verifySignature(signature, publicKeyX, publicKeyY, Tx, Ty, Ux, Uy);
-
-	isVerified <== isStatusVerified * isInvoiceAmountVerified * isMerkleProofVerified * isSignatureVerified;
-	
-}
-
-function verifyStatus(invoiceStatus){
-	//NEW (as decimal utf-8 [78, 69, 87])
-	var status = 234; // status= 78 + 69 + 87
-
-	component isStatusEqualNew = IsEqual();
-
-	isStatusEqualNew.in[0] <== status;
-	isStatusEqualNew.in[1] <== invoiceStatus;	
-	
-	return isStatusEqualNew.out;
-
-}
-
-function verifyAmount(items, invoiceAmount, itemPrices, itemAmount){
-	var totalItemAmount = 0;
-	for(var i = 0; i < items; i++){
-		totalItemAmount += itemPrices[i] * itemAmount[i]; 
-	}
-
-	component isItemAmountEqualInvoice = IsEqual();
-
-	isItemAmountEqualInvoice.in[0] <== totalItemAmount;
-	isItemAmountEqualInvoice.in[1] <== invoiceAmount;	
-	
-	return isItemAmountEqualInvoice.out;
-}
-
-function verifyMerkleProof(nodes, merkelizedInvoiceRoot, stateTreeRoot, stateTree, stateTreeLeafPosition){
 	component merkleProofVerifier = MerkleProofVerifier(nodes);
 	merkleProofVerifier.leaf <== merkelizedInvoiceRoot;
 	merkleProofVerifier.root <== stateTreeRoot;
@@ -85,11 +54,11 @@ function verifyMerkleProof(nodes, merkelizedInvoiceRoot, stateTreeRoot, stateTre
 		merkleProofVerifier.pathElements[n] <== stateTree[n];
 		merkleProofVerifier.pathIndices[n] <== stateTreeLeafPosition[n]; 
 	} 
+	
+	var isMerkleProofVerified = merkleProofVerifier.verified;
+	
 
-	return merkleProofVerifier.isVerified;
-}
-
-function verifySignature(signature, publicKeyX, publicKeyY, Tx, Ty, Ux, Uy){
+	//4. Verify Signature
 	component ecdsaSignatureVerifier = EcdsaSignatureVerifier();
 	ecdsaSignatureVerifier.signature <== signature;
 	ecdsaSignatureVerifier.publicKeyX <== publicKeyX;
@@ -98,9 +67,85 @@ function verifySignature(signature, publicKeyX, publicKeyY, Tx, Ty, Ux, Uy){
 	ecdsaSignatureVerifier.Ty <== Ty;
     	ecdsaSignatureVerifier.Ux <== Ux;
 	ecdsaSignatureVerifier.Uy <== Uy;
+	
+	var isSignatureVerified = ecdsaSignatureVerifier.verified;
 
-	return ecdsaSignatureVerifier.isVerified;
+
+	component mul = CalculateMul(4);
+	mul.nums[0] <== isStatusVerified;
+	mul.nums[1] <== isInvoiceAmountVerified;
+	mul.nums[2] <== isMerkleProofVerified;
+	mul.nums[3] <== isSignatureVerified;
+
+
+	isVerified <== mul.sum;
+	
+}
+
+template StatusVerifier(){
+	signal input invoiceStatus;
+	
+	signal output verified;
+
+	//NEW (as decimal utf-8 [78, 69, 87])
+	var status = 234; // status= 78 + 69 + 87
+
+	component isStatusEqualNew = IsEqual();
+
+	isStatusEqualNew.in[0] <== status;
+	isStatusEqualNew.in[1] <== invoiceStatus;	
+	
+	verified <== isStatusEqualNew.out;
+
+}
+
+template AmountVerifier(items){
+	signal input invoiceAmount;
+	signal input itemPrices[items];
+	signal input itemAmount[items];
+
+	signal output verified;
+
+	component total = CalculateTotal(items);
+	for(var i = 0; i < items; i++){
+		total.nums[i] <== itemPrices[i] * itemAmount[i]; 
+	}
+
+	component isItemAmountEqualInvoice = IsEqual();
+
+	isItemAmountEqualInvoice.in[0] <== invoiceAmount;
+	isItemAmountEqualInvoice.in[1] <== total.sum;	
+	
+	verified <== isItemAmountEqualInvoice.out;
+}
+
+template CalculateTotal(n) {
+    signal input nums[n];
+    signal output sum;
+
+    signal sums[n];
+    sums[0] <== nums[0];
+
+    for (var i=1; i < n; i++) {
+        sums[i] <== sums[i - 1] + nums[i];
+    }
+
+    sum <== sums[n - 1];
+}
+
+template CalculateMul(n) {
+    signal input nums[n];
+    signal output sum;
+
+    signal sums[n];
+    sums[0] <== nums[0];
+
+    for (var i=1; i < n; i++) {
+        sums[i] <== sums[i - 1] * nums[i];
+    }
+
+    sum <== sums[n - 1];
 }
 
 //declaring the public inputs
-component main = Workstep1();
+component main = Workstep1(50, 100);

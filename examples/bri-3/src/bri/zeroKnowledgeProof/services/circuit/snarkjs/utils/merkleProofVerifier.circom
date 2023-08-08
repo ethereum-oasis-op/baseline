@@ -1,6 +1,7 @@
 pragma circom 2.1.5;
 
 include "../../../../../../node_modules/circomlib/circuits/sha256/sha256.circom";
+include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
 include "../../../../../../node_modules/circomlib/circuits/bitify.circom";
 
 template MerkleProofVerifier(nodes){
@@ -9,7 +10,7 @@ template MerkleProofVerifier(nodes){
     	signal input pathElements[nodes];
     	signal input pathIndices[nodes];
 
-	signal output isVerified;
+	signal output verified;
 
 	component selectors[nodes];
     	component hashers[nodes];
@@ -25,7 +26,11 @@ template MerkleProofVerifier(nodes){
 		hashers[i].right <== selectors[i].out[1];
 	}
 
-	root === hashers[nodes - 1].hash;
+	component isRootHashEqual = IsEqual();
+	isRootHashEqual.in[0] <== root;
+	isRootHashEqual.in[1] <== hashers[nodes - 1].hash;	
+	
+	verified <== isRootHashEqual.out;
 	
 }
 
@@ -47,7 +52,7 @@ template HashLeftRight() {
 	}		
 
 	for(var i = 0; i < 256; i++){
-		bitsToNum.bits[i] <== hasher.outs[i];
+		bitsToNum.bits[i] <== hasher.out[i];
 	}
 
 	hash <== bitsToNum.num;		
@@ -97,7 +102,7 @@ template NumToBits() {
 }
 
 template BitsToNum() {
-	signal input bits[265];
+	signal input bits[256];
 	signal output num;
 	component bitsToNum = Bits2Num(256);
 	for(var i = 0; i < 256; i++){

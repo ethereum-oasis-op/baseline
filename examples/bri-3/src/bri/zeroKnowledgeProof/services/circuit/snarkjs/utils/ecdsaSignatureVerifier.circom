@@ -12,7 +12,7 @@ template EcdsaSignatureVerifier(){
 	signal input Ux; // U = -(m * r^-1 * G)
 	signal input Uy;
 
-	signal output isVerified;
+	signal output verified;
 
 	component signatureVerifier = EfficientECDSA();
 
@@ -31,5 +31,5 @@ template EcdsaSignatureVerifier(){
 	isEqualPubKeyY.in[0] <== signatureVerifier.pubKeyY;
 	isEqualPubKeyY.in[1] <== publicKeyY;
 
-	isVerified <== isEqualPubKeyX.out * isEqualPubKeyY.out;	
+	verified <== isEqualPubKeyX.out * isEqualPubKeyY.out;	
 }
