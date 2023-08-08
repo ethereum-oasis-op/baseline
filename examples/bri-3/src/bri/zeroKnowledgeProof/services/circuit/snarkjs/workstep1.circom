@@ -1,8 +1,8 @@
 pragma circom 2.1.5;
 
 include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
-include "./ecdsaSignatureVerifier.circom";
-include "./merkleProofVerifier.circom";
+include "./utils/ecdsaSignatureVerifier.circom";
+include "./utils/merkleProofVerifier.circom";
 include "./utils/arithmeticOperators.circom";
 
 template Workstep1(items, nodes){
@@ -75,7 +75,7 @@ template Workstep1(items, nodes){
 	component mul = Mul(4);
 	mul.nums[0] <== isStatusVerified;
 	mul.nums[1] <== isInvoiceAmountVerified;
-	mul.nums[2] <== isMerkleProofVerified;
+	mul.nums[2] <== !isMerkleProofVerified;
 	mul.nums[3] <== isSignatureVerified;
 
 	isVerified <== mul.result;

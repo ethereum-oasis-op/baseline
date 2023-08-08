@@ -1,8 +1,8 @@
 pragma circom 2.1.5;
 
-include "../../../../../../node_modules/circomlib/circuits/sha256/sha256.circom";
-include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
-include "../../../../../../node_modules/circomlib/circuits/bitify.circom";
+include "../../../../../../../node_modules/circomlib/circuits/sha256/sha256.circom";
+include "../../../../../../../node_modules/circomlib/circuits/comparators.circom";
+include "../../../../../../../node_modules/circomlib/circuits/bitify.circom";
 
 template MerkleProofVerifier(nodes){
 	signal input leaf;
