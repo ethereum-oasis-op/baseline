@@ -76,15 +76,6 @@ export class SnarkjsCircuitService implements ICircuitService {
     return await this[circuitName](inputs);
   }
 
-  private async workstep(inputs: object): Promise<object> {
-    const preparedInputs = {
-      inputValueA: inputs['inputValueA'],
-      inputValueB: inputs['inputValueB'],
-    };
-
-    return preparedInputs;
-  }
-
   private async workstep1(inputs: object): Promise<object> {
     const preparedInputs = {
       inputValueA: inputs['inputValueA'],
