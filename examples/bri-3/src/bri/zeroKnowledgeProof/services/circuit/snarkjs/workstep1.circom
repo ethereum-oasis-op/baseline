@@ -120,4 +120,4 @@ template AmountVerifier(items){
 }
 
 //declaring the public inputs
-component main = Workstep1(50, 100);
+component main = Workstep1(5, 12);
