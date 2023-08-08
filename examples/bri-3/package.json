@@ -58,7 +58,6 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "snarkjs": "^0.6.11",
-    "spartan-ecdsa-circuits": "^1.0.0",
     "tslog": "^3.3.4",
     "uuidv4": "^6.2.13"
   },
