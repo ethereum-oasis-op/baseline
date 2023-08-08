@@ -48,7 +48,7 @@ export class BpiSubjectAccountAgent {
           subjectAccountId,
         );
 
-      if (subjectAccount !== null) {
+      if (subjectAccount !== undefined) {
         subjectAccounts.push(subjectAccount);
       }
     }

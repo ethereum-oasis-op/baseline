@@ -38,7 +38,7 @@ export class BpiSubjectAgent {
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
   ): Promise<BpiSubject> {
-    const bpiSubjectToUpdate: BpiSubject =
+    const bpiSubjectToUpdate: BpiSubject | undefined =
       await this.storageAgent.getBpiSubjectById(id);
 
     if (!bpiSubjectToUpdate) {

@@ -64,14 +64,14 @@ export class BpiMessageAgent {
   public async fetchFromAndToBpiSubjects(
     fromBpiSubjectId: string,
     toBpiSubjectId: string,
-  ): Promise<[BpiSubject, BpiSubject]> {
+  ): Promise<[BpiSubject?, BpiSubject?]> {
     const fromBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
       fromBpiSubjectId,
     );
 
     if (!fromBpiSubject) {
       this.logger.logError(`BpiMessageAgent: From Bpi Subjects do not exist.`);
-      return [null, null];
+      return [undefined, undefined];
     }
 
     const toBpiSubject = await this.bpiSubjectStorageAgent.getBpiSubjectById(
@@ -80,7 +80,7 @@ export class BpiMessageAgent {
 
     if (!toBpiSubject) {
       this.logger.logError(`BpiMessageAgent: To Bpi Subject do not exist.`);
-      return [null, null];
+      return [undefined, undefined];
     }
 
     return [fromBpiSubject, toBpiSubject];
@@ -100,7 +100,7 @@ export class BpiMessageAgent {
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(
     id: string,
   ): Promise<BpiMessage> {
-    const bpiMessageToUpdate: BpiMessage =
+    const bpiMessageToUpdate: BpiMessage | undefined =
       await this.bpiMessageStorageAgent.getBpiMessageById(id);
 
     if (!bpiMessageToUpdate) {

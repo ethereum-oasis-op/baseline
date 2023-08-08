@@ -70,26 +70,29 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return await this.commandBus.execute(
         new ProcessInboundBpiTransactionCommand(
           newBpiMessageCandidate.id,
-          1, // TODO: #669 Nonce
-          'TODO: #669 workflowInstanceId',
-          'TODO: #669 workstepInstanceId',
-          'TODO: #669 fromBpiSubjectAccountId',
-          'TODO: #669 toBpiSubjectAccountId',
+          newBpiMessageCandidate.nonce,
+          newBpiMessageCandidate.workflowId,
+          newBpiMessageCandidate.workstepId,
+          newBpiMessageCandidate.fromBpiSubjectAccountId,
+          newBpiMessageCandidate.toBpiSubjectAccountId,
           JSON.stringify(newBpiMessageCandidate.content),
           newBpiMessageCandidate.signature,
         ),
       );
     }
+
+    return false;
   }
 
   public tryDeserializeToBpiMessageCandidate(
     rawMessage: string,
   ): [BpiMessage, string[]] {
     const errors: string[] = [];
-    let newBpiMessageCandidate: BpiMessage;
+    let newBpiMessageCandidate: BpiMessage = {} as BpiMessage;
 
     try {
       const newBpiMessageProps = this.parseJsonOrThrow(rawMessage);
+
       newBpiMessageCandidate = new BpiMessage(
         newBpiMessageProps.id,
         newBpiMessageProps.fromBpiSubjectId,
@@ -98,6 +101,15 @@ export class MessagingAgent implements OnApplicationBootstrap {
         newBpiMessageProps.signature,
         newBpiMessageProps.type,
       );
+
+      newBpiMessageCandidate.updateFromBpiSubjectAccountId(
+        newBpiMessageProps.fromBpiSubjectAccountId,
+      );
+      newBpiMessageCandidate.updateToBpiSubjectAccountId(
+        newBpiMessageProps.toBpiSubjectAccountId,
+      );
+      newBpiMessageCandidate.updateWorkflowId(newBpiMessageProps.workflowId);
+      newBpiMessageCandidate.updateWorkstepId(newBpiMessageProps.workstepId);
     } catch (e) {
       errors.push(`${rawMessage} is not valid JSON. Error: ${e}`);
       return [newBpiMessageCandidate, errors];
@@ -108,7 +120,7 @@ export class MessagingAgent implements OnApplicationBootstrap {
       !newBpiMessageCandidate.isTransactionMessage()
     ) {
       errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
-      return [null, errors];
+      return [newBpiMessageCandidate, errors];
     }
 
     if (!validate(newBpiMessageCandidate.id)) {
@@ -144,7 +156,29 @@ export class MessagingAgent implements OnApplicationBootstrap {
     }
 
     if (newBpiMessageCandidate.isTransactionMessage()) {
-      // TODO: Perform additional transaction specific validation once #669 is done
+      if (!validate(newBpiMessageCandidate.fromBpiSubjectAccountId)) {
+        errors.push(
+          `fromBpiSubjectAccountId: ${newBpiMessageCandidate.fromBpiSubjectAccountId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.toBpiSubjectAccountId)) {
+        errors.push(
+          `toBpiSubjectAccountId: ${newBpiMessageCandidate.toBpiSubjectAccountId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.workflowId)) {
+        errors.push(
+          `workflowId: ${newBpiMessageCandidate.workflowId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.workstepId)) {
+        errors.push(
+          `workstepId: ${newBpiMessageCandidate.workstepId} is not valid UUID`,
+        );
+      }
     }
 
     return [newBpiMessageCandidate, errors];

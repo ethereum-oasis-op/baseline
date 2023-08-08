@@ -19,6 +19,21 @@ export class BpiMessage {
   toBpiSubjectId: string;
 
   @AutoMap()
+  fromBpiSubjectAccountId: string;
+
+  @AutoMap()
+  toBpiSubjectAccountId: string;
+
+  @AutoMap()
+  workflowId: string;
+
+  @AutoMap()
+  workstepId: string;
+
+  @AutoMap()
+  nonce: number;
+
+  @AutoMap()
   content: string;
 
   @AutoMap()
@@ -49,6 +64,22 @@ export class BpiMessage {
 
   public updateSignature(newSignature: string): void {
     this.signature = newSignature;
+  }
+
+  public updateFromBpiSubjectAccountId(id: string): void {
+    this.fromBpiSubjectAccountId = id;
+  }
+
+  public updateToBpiSubjectAccountId(id: string): void {
+    this.toBpiSubjectAccountId = id;
+  }
+
+  public updateWorkflowId(id: string): void {
+    this.workflowId = id;
+  }
+
+  public updateWorkstepId(id: string): void {
+    this.workstepId = id;
   }
 
   public isInfoMessage(): boolean {

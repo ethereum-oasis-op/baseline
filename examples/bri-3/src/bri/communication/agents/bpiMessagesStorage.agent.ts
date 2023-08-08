@@ -14,14 +14,14 @@ export class BpiMessageStorageAgent extends PrismaService {
     super();
   }
 
-  async getBpiMessageById(id: string): Promise<BpiMessage> {
+  async getBpiMessageById(id: string): Promise<BpiMessage | undefined> {
     const bpiMessageModel = await this.message.findUnique({
       where: { id },
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
     if (!bpiMessageModel) {
-      return null;
+      return undefined;
     }
 
     const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);

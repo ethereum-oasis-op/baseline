@@ -19,7 +19,7 @@ export class WorkgroupStorageAgent extends PrismaService {
         administrators: true,
         participants: true,
         workflows: {
-          include: { worksteps: true },
+          include: { worksteps: true, bpiAccount: true },
         },
       },
     });
@@ -62,7 +62,7 @@ export class WorkgroupStorageAgent extends PrismaService {
         administrators: true,
         participants: true,
         workflows: {
-          include: { worksteps: true },
+          include: { worksteps: true, bpiAccount: true },
         },
       },
     });
@@ -100,7 +100,7 @@ export class WorkgroupStorageAgent extends PrismaService {
         administrators: true,
         participants: true,
         workflows: {
-          include: { worksteps: true },
+          include: { worksteps: true, bpiAccount: true },
         },
       },
     });

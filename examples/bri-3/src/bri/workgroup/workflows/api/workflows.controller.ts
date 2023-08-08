@@ -42,6 +42,7 @@ export class WorkflowController {
         requestDto.name,
         requestDto.workgroupId,
         requestDto.workstepIds,
+        requestDto.workflowBpiAccountSubjectAccountOwnersIds,
       ),
     );
   }

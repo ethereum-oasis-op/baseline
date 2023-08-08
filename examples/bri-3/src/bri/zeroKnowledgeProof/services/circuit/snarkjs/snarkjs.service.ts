@@ -33,6 +33,13 @@ export class SnarkjsCircuitService implements ICircuitService {
     return this.witness;
   }
 
+  createProof(witness: Witness): Promise<Proof> {
+    throw new Error('Method not implemented.');
+  }
+  verifyProof(proof: Proof, witness: Witness): Promise<boolean> {
+    throw new Error('Method not implemented.');
+  }
+
   public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
     const isVerified = await snarkjs.groth16.verify(
       witness.verificationKey,
