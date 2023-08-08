@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
+import { computeEcdsaPubInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
 import * as snarkjs from 'snarkjs';
 import 'dotenv/config';
 
@@ -77,9 +78,30 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   private async workstep1(inputs: object): Promise<object> {
+    //Ecdsa signature
+    const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
+      computeEcdsaPubInputs(
+        inputs['signature'],
+        inputs['messageHash'],
+        inputs['publicKey'],
+      );
+
     const preparedInputs = {
-      inputValueA: inputs['inputValueA'],
-      inputValueB: inputs['inputValueB'],
+      invoiceStatus: inputs['invoiceStatus'],
+      invoiceAmount: inputs['invoiceAmount'],
+      itemPrices: inputs['itemPrices'],
+      itemAmount: inputs['itemAmount'],
+      merkelizedInvoiceRoot: inputs['merkelizedInvoiceRoot'],
+      stateTreeRoot: inputs['stateTreeRoot'],
+      stateTree: inputs['stateTree'],
+      stateTreeLeafPosition: inputs['stateTreeLeafPosition'],
+      signature,
+      publicKeyX,
+      publicKeyY,
+      Tx,
+      Ty,
+      Ux,
+      Uy,
     };
 
     return preparedInputs;
