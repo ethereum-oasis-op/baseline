@@ -20,16 +20,16 @@ export class CreateBpiAccountCommandHandler
         command.ownerBpiSubjectAccountsIds,
       );
 
-    const newBpiSubjectCandidate = this.accountAgent.createNewBpiAccount(
+    const newBpiAccountCandidate = this.accountAgent.createNewBpiAccount(
       ownerBpiSubjectAccounts,
       'sample authorization condition',
       'sample state object prover system',
       'sample state object storage',
     );
 
-    const newBpiSubject = await this.accountStorageAgent.storeNewBpiAccount(
-      newBpiSubjectCandidate,
+    const newBpiAccount = await this.accountStorageAgent.storeNewBpiAccount(
+      newBpiAccountCandidate,
     );
-    return newBpiSubject.id;
+    return newBpiAccount.id;
   }
 }

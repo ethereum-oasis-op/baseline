@@ -74,7 +74,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
     .send({ publicKey: internalBpiSubjectPublicKey })
     .expect(201);
 
-  const signer = new ethers.Wallet(internalBpiSubjectPrivateKey, null);
+  const signer = new ethers.Wallet(internalBpiSubjectPrivateKey, undefined);
   const signature = await signer.signMessage(nonceResponse.text);
 
   const loginResponse = await request(app.getHttpServer())

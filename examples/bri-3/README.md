@@ -87,7 +87,11 @@ $ npm run start
 # Unit testing - .spec files located next to the thing they are testing
 
 $ npm run test
+
+# Run single spec file
+$ npm run test -- transactions.agent.spec.ts
 ```
+
 
 ```bash
 # e2e testing - .e2e.spec files located in ./test folder

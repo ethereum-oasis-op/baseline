@@ -23,7 +23,7 @@ describe('CreateTransactionDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('id');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'id ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
