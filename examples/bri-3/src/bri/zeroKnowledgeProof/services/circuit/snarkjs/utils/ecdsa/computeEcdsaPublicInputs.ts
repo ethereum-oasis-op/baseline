@@ -6,12 +6,15 @@ const ec = elliptic.ec;
 export const computeEcdsaPublicInputs = (
   signature: ECDSASignature,
   msgHash: Buffer,
-  publicKey: Buffer,
+  publicKeyHex: string,
 ) => {
+  //Public Key
+  const publicKeyBuffer = Buffer.from(publicKeyHex.split('Ox')[1], 'hex');
   const publicKeyCoordinates = ec.prototype
-    .keyFromPublic(publicKey.toString('hex'))
+    .keyFromPublic(publicKeyBuffer.toString('hex'))
     .getPublic();
 
+  //Signature
   const r = BigInt('0x' + signature.r.toString('hex'));
   const circuitPubInput = computeEffEcdsaPubInput(r, signature.v, msgHash);
   const input = {
