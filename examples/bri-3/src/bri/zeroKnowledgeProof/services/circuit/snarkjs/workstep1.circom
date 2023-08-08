@@ -71,14 +71,13 @@ template Workstep1(items, nodes){
 	var isSignatureVerified = ecdsaSignatureVerifier.verified;
 
 
-	component mul = CalculateMul(4);
+	component mul = Mul(4);
 	mul.nums[0] <== isStatusVerified;
 	mul.nums[1] <== isInvoiceAmountVerified;
 	mul.nums[2] <== isMerkleProofVerified;
 	mul.nums[3] <== isSignatureVerified;
 
-
-	isVerified <== mul.sum;
+	isVerified <== mul.result;
 	
 }
 
@@ -106,22 +105,22 @@ template AmountVerifier(items){
 
 	signal output verified;
 
-	component total = CalculateTotal(items);
+	component add = Add(items);
 	for(var i = 0; i < items; i++){
-		total.nums[i] <== itemPrices[i] * itemAmount[i]; 
+		add.nums[i] <== itemPrices[i] * itemAmount[i]; 
 	}
 
 	component isItemAmountEqualInvoice = IsEqual();
 
 	isItemAmountEqualInvoice.in[0] <== invoiceAmount;
-	isItemAmountEqualInvoice.in[1] <== total.sum;	
+	isItemAmountEqualInvoice.in[1] <== add.result;	
 	
 	verified <== isItemAmountEqualInvoice.out;
 }
 
-template CalculateTotal(n) {
+template Add(n) {
     signal input nums[n];
-    signal output sum;
+    signal output result;
 
     signal sums[n];
     sums[0] <== nums[0];
@@ -130,21 +129,21 @@ template CalculateTotal(n) {
         sums[i] <== sums[i - 1] + nums[i];
     }
 
-    sum <== sums[n - 1];
+    result <== sums[n - 1];
 }
 
-template CalculateMul(n) {
+template Mul(n) {
     signal input nums[n];
-    signal output sum;
+    signal output result;
 
-    signal sums[n];
-    sums[0] <== nums[0];
+    signal muls[n];
+    muls[0] <== nums[0];
 
     for (var i=1; i < n; i++) {
-        sums[i] <== sums[i - 1] * nums[i];
+        muls[i] <== muls[i - 1] * muls[i];
     }
 
-    sum <== sums[n - 1];
+    result <== muls[n - 1];
 }
 
 //declaring the public inputs
