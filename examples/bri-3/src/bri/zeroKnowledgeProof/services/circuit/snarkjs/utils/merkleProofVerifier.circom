@@ -28,9 +28,14 @@ template MerkleProofVerifier(nodes){
 
 	component isRootHashEqual = IsEqual();
 	isRootHashEqual.in[0] <== root;
-	isRootHashEqual.in[1] <== hashers[nodes - 1].hash;	
-	
-	verified <== isRootHashEqual.out;
+	isRootHashEqual.in[1] <== hashers[nodes - 1].hash;
+
+	//Verify non-inclusion
+	component isNotIncluded = IsEqual();	
+	isNotIncluded.in[0] <== isRootHashEqual.out;
+	isNotIncluded.in[1] <== 0;
+
+	verified <== isNotIncluded.out; 
 	
 }
 

@@ -1,3 +1,5 @@
+pragma circom 2.1.5;
+
 template Add(n) {
     signal input nums[n];
     signal output result;
@@ -20,7 +22,7 @@ template Mul(n) {
     muls[0] <== nums[0];
 
     for (var i=1; i < n; i++) {
-        muls[i] <== muls[i - 1] * muls[i];
+        muls[i] <== muls[i - 1] * nums[i];
     }
 
     result <== muls[n - 1];
