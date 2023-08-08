@@ -3,7 +3,7 @@ import { computeEffEcdsaPubInput } from '@personaelabs/spartan-ecdsa';
 import * as elliptic from 'elliptic';
 const ec = elliptic.ec;
 
-export const computeEcdsaPubInputs = (
+export const computeEcdsaPublicInputs = (
   signature: ECDSASignature,
   msgHash: Buffer,
   publicKey: Buffer,

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
-import { computeEcdsaPubInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
+import { computeEcdsaPublicInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
 import * as snarkjs from 'snarkjs';
 import 'dotenv/config';
 
@@ -31,13 +31,6 @@ export class SnarkjsCircuitService implements ICircuitService {
       `../../../../../../zeroKnowledgeKeys/circuit/${circuitName}_verification_key.json`
     );
     return this.witness;
-  }
-
-  createProof(witness: Witness): Promise<Proof> {
-    throw new Error('Method not implemented.');
-  }
-  verifyProof(proof: Proof, witness: Witness): Promise<boolean> {
-    throw new Error('Method not implemented.');
   }
 
   public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
@@ -87,7 +80,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   private async workstep1(inputs: object): Promise<object> {
     //Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
-      computeEcdsaPubInputs(
+      computeEcdsaPublicInputs(
         inputs['signature'],
         inputs['messageHash'],
         inputs['publicKey'],
