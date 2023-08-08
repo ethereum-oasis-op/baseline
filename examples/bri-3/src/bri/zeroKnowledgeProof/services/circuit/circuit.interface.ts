@@ -1,4 +1,3 @@
-import { Proof } from '../../models/proof';
 import { Witness } from '../../models/witness';
 
 export interface ICircuitService {
