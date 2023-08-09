@@ -2,35 +2,35 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuit.interface';
+import { computeEcdsaPublicInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
 import * as snarkjs from 'snarkjs';
-// TODO: Does not compile atm because the circuit_verification_key.json does not exist
-// Probably has to be dynamically loaded
-// import * as verificationKey from '../../../../../../zeroKnowledgeKeys/circuit/circuit_verification_key.json';
 import 'dotenv/config';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
   public witness: Witness;
 
-  public async createWitness(inputs: object): Promise<Witness> {
+  public async createWitness(
+    inputs: object,
+    circuitName: string,
+  ): Promise<Witness> {
     this.witness = new Witness();
 
-    const { proof, publicInputs } = await this.executeCircuit(inputs);
+    const preparedInputs = await this.prepareInputs(inputs, circuitName);
+
+    const { proof, publicInputs } = await this.executeCircuit(
+      preparedInputs,
+      circuitName,
+    );
 
     this.witness.proof = proof;
 
     this.witness.publicInputs = publicInputs;
 
-    // TODO: Above TODO
-    // this.witness.verificationKey = verificationKey;
+    this.witness.verificationKey = await import(
+      `../../../../../../zeroKnowledgeKeys/circuit/${circuitName}_verification_key.json`
+    );
     return this.witness;
-  }
-
-  createProof(witness: Witness): Promise<Proof> {
-    throw new Error('Method not implemented.');
-  }
-  verifyProof(proof: Proof, witness: Witness): Promise<boolean> {
-    throw new Error('Method not implemented.');
   }
 
   public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
@@ -50,12 +50,13 @@ export class SnarkjsCircuitService implements ICircuitService {
 
   private async executeCircuit(
     inputs: object,
+    circuitName: string,
   ): Promise<{ proof: Proof; publicInputs: string[] }> {
     const { proof, publicSignals: publicInputs } =
       await snarkjs.groth16.fullProve(
         inputs,
-        process.env.SNARKJS_CIRCUIT_WASM,
-        process.env.SNARKJS_PROVING_KEY,
+        `zeroKnowledgeKeys/circuit/${circuitName}_js/${circuitName}.wasm`,
+        `zeroKnowledgeKeys/circuit/${circuitName}_final.zkey`,
       );
 
     const newProof = {
@@ -67,5 +68,42 @@ export class SnarkjsCircuitService implements ICircuitService {
     } as Proof;
 
     return { proof: newProof, publicInputs };
+  }
+
+  private async prepareInputs(
+    inputs: object,
+    circuitName: string,
+  ): Promise<object> {
+    return await this[circuitName](inputs);
+  }
+
+  private async workstep1(inputs: object): Promise<object> {
+    //Ecdsa signature
+    const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
+      computeEcdsaPublicInputs(
+        inputs['signature'],
+        inputs['messageHash'],
+        inputs['publicKey'],
+      );
+
+    const preparedInputs = {
+      invoiceStatus: inputs['invoiceStatus'],
+      invoiceAmount: inputs['invoiceAmount'],
+      itemPrices: inputs['itemPrices'],
+      itemAmount: inputs['itemAmount'],
+      merkelizedInvoiceRoot: inputs['merkelizedInvoiceRoot'],
+      stateTreeRoot: inputs['stateTreeRoot'],
+      stateTree: inputs['stateTree'],
+      stateTreeLeafPosition: inputs['stateTreeLeafPosition'],
+      signature,
+      publicKeyX,
+      publicKeyY,
+      Tx,
+      Ty,
+      Ux,
+      Uy,
+    };
+
+    return preparedInputs;
   }
 }
