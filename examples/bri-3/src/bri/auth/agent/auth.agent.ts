@@ -88,8 +88,8 @@ export class AuthAgent {
       iat: now,
     };
 
-    const serviceDid = process.env.GOERLI_SERVICE_DID;
-    const privateKey = process.env.GOERLI_SERVICE_SIGNER_PRIVATE_KEY;
+    const serviceDid = process.env.GOERLI_SERVICE_DID as string;
+    const privateKey = process.env.GOERLI_SERVICE_SIGNER_PRIVATE_KEY as string;
 
     const serviceSigner = ES256KSigner(hexToBytes(privateKey));
 

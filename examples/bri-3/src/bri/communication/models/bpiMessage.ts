@@ -19,6 +19,21 @@ export class BpiMessage {
   toBpiSubjectId: string;
 
   @AutoMap()
+  fromBpiSubjectAccountId: string;
+
+  @AutoMap()
+  toBpiSubjectAccountId: string;
+
+  @AutoMap()
+  workflowId: string;
+
+  @AutoMap()
+  workstepId: string;
+
+  @AutoMap()
+  nonce: number;
+
+  @AutoMap()
   content: string;
 
   @AutoMap()
@@ -29,15 +44,15 @@ export class BpiMessage {
 
   constructor(
     id: string,
-    from: BpiSubject,
-    to: BpiSubject,
+    fromBpiSubjectId: string,
+    toBpiSubjectId: string,
     content: string,
     signature: string,
     type: BpiMessageType,
   ) {
     this.id = id;
-    this.fromBpiSubject = from;
-    this.toBpiSubject = to;
+    this.fromBpiSubjectId = fromBpiSubjectId;
+    this.toBpiSubjectId = toBpiSubjectId;
     this.content = content;
     this.signature = signature;
     this.type = type;
@@ -49,5 +64,29 @@ export class BpiMessage {
 
   public updateSignature(newSignature: string): void {
     this.signature = newSignature;
+  }
+
+  public updateFromBpiSubjectAccountId(id: string): void {
+    this.fromBpiSubjectAccountId = id;
+  }
+
+  public updateToBpiSubjectAccountId(id: string): void {
+    this.toBpiSubjectAccountId = id;
+  }
+
+  public updateWorkflowId(id: string): void {
+    this.workflowId = id;
+  }
+
+  public updateWorkstepId(id: string): void {
+    this.workstepId = id;
+  }
+
+  public isInfoMessage(): boolean {
+    return this.type === BpiMessageType.Info;
+  }
+
+  public isTransactionMessage(): boolean {
+    return this.type === BpiMessageType.Transaction;
   }
 }

@@ -60,6 +60,8 @@ BPI_ENCRYPTION_KEY_K_PARAM="yzkXp3vY_AZQ3YfLv9GMRTYkjUOpn9x18gPkoFvoUxQ" # Encry
 BPI_ENCRYPTION_KEY_KTY_PARAM="oct"
 ```
 
+Relevant information on DID Auth can be found in ./docs/dids/did-authentication.md
+
 ## Running the app
 
 ```bash
@@ -85,7 +87,11 @@ $ npm run start
 # Unit testing - .spec files located next to the thing they are testing
 
 $ npm run test
+
+# Run single spec file
+$ npm run test -- transactions.agent.spec.ts
 ```
+
 
 ```bash
 # e2e testing - .e2e.spec files located in ./test folder

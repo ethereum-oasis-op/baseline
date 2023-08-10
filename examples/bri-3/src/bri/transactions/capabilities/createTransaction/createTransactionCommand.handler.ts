@@ -16,6 +16,7 @@ export class CreateTransactionCommandHandler
 
   async execute(command: CreateTransactionCommand) {
     this.agent.throwIfCreateTransactionInputInvalid();
+
     const subjectAccounts =
       await this.subjectAccountAgent.getBpiSubjectAccountsAndThrowIfNotExist([
         command.fromSubjectAccountId,

@@ -4,11 +4,11 @@ import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { validate } from 'uuid';
 import { LoggingService } from '../../../shared/logging/logging.service';
+import { ProcessInboundBpiTransactionCommand } from '../../transactions/capabilities/processInboundTransaction/processInboundTransaction.command';
 import { BpiMessageDto } from '../api/dtos/response/bpiMessage.dto';
 import { ProcessInboundBpiMessageCommand } from '../capabilities/processInboundMessage/processInboundMessage.command';
 import { IMessagingClient } from '../messagingClients/messagingClient.interface';
 import { BpiMessage } from '../models/bpiMessage';
-import { BpiMessageType } from '../models/bpiMessageType.enum';
 
 @Injectable()
 export class MessagingAgent implements OnApplicationBootstrap {
@@ -53,28 +53,73 @@ export class MessagingAgent implements OnApplicationBootstrap {
       return false;
     }
 
-    return await this.commandBus.execute(
-      new ProcessInboundBpiMessageCommand(
-        newBpiMessageCandidate.id,
-        newBpiMessageCandidate.fromBpiSubjectId,
-        newBpiMessageCandidate.toBpiSubjectId,
-        JSON.stringify(newBpiMessageCandidate.content),
-        newBpiMessageCandidate.signature,
-        newBpiMessageCandidate.type,
-      ),
-    );
+    if (newBpiMessageCandidate.isInfoMessage()) {
+      return await this.commandBus.execute(
+        new ProcessInboundBpiMessageCommand(
+          newBpiMessageCandidate.id,
+          newBpiMessageCandidate.fromBpiSubjectId,
+          newBpiMessageCandidate.toBpiSubjectId,
+          JSON.stringify(newBpiMessageCandidate.content),
+          newBpiMessageCandidate.signature,
+          newBpiMessageCandidate.type,
+        ),
+      );
+    }
+
+    if (newBpiMessageCandidate.isTransactionMessage()) {
+      return await this.commandBus.execute(
+        new ProcessInboundBpiTransactionCommand(
+          newBpiMessageCandidate.id,
+          newBpiMessageCandidate.nonce,
+          newBpiMessageCandidate.workflowId,
+          newBpiMessageCandidate.workstepId,
+          newBpiMessageCandidate.fromBpiSubjectAccountId,
+          newBpiMessageCandidate.toBpiSubjectAccountId,
+          JSON.stringify(newBpiMessageCandidate.content),
+          newBpiMessageCandidate.signature,
+        ),
+      );
+    }
+
+    return false;
   }
 
   public tryDeserializeToBpiMessageCandidate(
     rawMessage: string,
   ): [BpiMessage, string[]] {
     const errors: string[] = [];
-    let newBpiMessageCandidate: BpiMessage;
+    let newBpiMessageCandidate: BpiMessage = {} as BpiMessage;
 
     try {
-      newBpiMessageCandidate = this.parseJsonOrThrow(rawMessage);
+      const newBpiMessageProps = this.parseJsonOrThrow(rawMessage);
+
+      newBpiMessageCandidate = new BpiMessage(
+        newBpiMessageProps.id,
+        newBpiMessageProps.fromBpiSubjectId,
+        newBpiMessageProps.toBpiSubjectId,
+        newBpiMessageProps.content,
+        newBpiMessageProps.signature,
+        newBpiMessageProps.type,
+      );
+
+      newBpiMessageCandidate.updateFromBpiSubjectAccountId(
+        newBpiMessageProps.fromBpiSubjectAccountId,
+      );
+      newBpiMessageCandidate.updateToBpiSubjectAccountId(
+        newBpiMessageProps.toBpiSubjectAccountId,
+      );
+      newBpiMessageCandidate.updateWorkflowId(newBpiMessageProps.workflowId);
+      newBpiMessageCandidate.updateWorkstepId(newBpiMessageProps.workstepId);
     } catch (e) {
       errors.push(`${rawMessage} is not valid JSON. Error: ${e}`);
+      return [newBpiMessageCandidate, errors];
+    }
+
+    if (
+      !newBpiMessageCandidate.isInfoMessage() &&
+      !newBpiMessageCandidate.isTransactionMessage()
+    ) {
+      errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
       return [newBpiMessageCandidate, errors];
     }
 
@@ -110,8 +155,30 @@ export class MessagingAgent implements OnApplicationBootstrap {
       errors.push('signature is empty');
     }
 
-    if (newBpiMessageCandidate.type !== BpiMessageType.Info) {
-      errors.push(`type: ${newBpiMessageCandidate.type} is unknown`);
+    if (newBpiMessageCandidate.isTransactionMessage()) {
+      if (!validate(newBpiMessageCandidate.fromBpiSubjectAccountId)) {
+        errors.push(
+          `fromBpiSubjectAccountId: ${newBpiMessageCandidate.fromBpiSubjectAccountId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.toBpiSubjectAccountId)) {
+        errors.push(
+          `toBpiSubjectAccountId: ${newBpiMessageCandidate.toBpiSubjectAccountId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.workflowId)) {
+        errors.push(
+          `workflowId: ${newBpiMessageCandidate.workflowId} is not valid UUID`,
+        );
+      }
+
+      if (!validate(newBpiMessageCandidate.workstepId)) {
+        errors.push(
+          `workstepId: ${newBpiMessageCandidate.workstepId} is not valid UUID`,
+        );
+      }
     }
 
     return [newBpiMessageCandidate, errors];

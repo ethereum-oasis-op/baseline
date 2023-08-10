@@ -6,19 +6,19 @@ export class BpiSubjectAccount {
   id: string; // TODO: Add uuid after #491
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   authenticationPolicy: string;
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   authorizationPolicy: string;
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   verifiableCredential: string;
 
   //Placeholder
-  @AutoMap(() => BpiSubject)
+  @AutoMap()
   recoveryKey: string;
 
   @AutoMap(() => BpiSubject)
@@ -37,7 +37,7 @@ export class BpiSubjectAccount {
     id: string,
     creatorBpiSubject: BpiSubject,
     ownerBpiSubject: BpiSubject,
-    authenticationPoliy: string,
+    authenticationPolicy: string,
     authorizationPolicy: string,
     verifiableCredential: string,
     recoveryKey: string,
@@ -47,7 +47,7 @@ export class BpiSubjectAccount {
     this.creatorBpiSubjectId = creatorBpiSubject?.id;
     this.ownerBpiSubject = ownerBpiSubject;
     this.ownerBpiSubjectId = ownerBpiSubject?.id;
-    this.authenticationPolicy = authenticationPoliy;
+    this.authenticationPolicy = authenticationPolicy;
     this.authorizationPolicy = authorizationPolicy;
     this.verifiableCredential = verifiableCredential;
     this.recoveryKey = recoveryKey;

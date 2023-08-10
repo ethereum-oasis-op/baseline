@@ -11,7 +11,7 @@ export class WorkflowStorageAgent extends PrismaService {
     super();
   }
 
-  async getWorkflowById(id: string): Promise<Workflow> {
+  async getWorkflowById(id: string): Promise<Workflow | undefined> {
     const workflowModel = await this.workflow.findUnique({
       where: { id: id },
       include: { worksteps: true },
@@ -60,6 +60,7 @@ export class WorkflowStorageAgent extends PrismaService {
           connect: workstepIds,
         },
         workgroupId: workflow.workgroupId,
+        bpiAccountId: workflow.bpiAccountId,
       },
       include: {
         worksteps: true,

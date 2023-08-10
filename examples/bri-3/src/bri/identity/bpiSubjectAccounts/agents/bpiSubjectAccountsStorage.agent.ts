@@ -14,14 +14,16 @@ export class BpiSubjectAccountStorageAgent extends PrismaService {
     super();
   }
 
-  async getBpiSubjectAccountById(id: string): Promise<BpiSubjectAccount> {
+  async getBpiSubjectAccountById(
+    id: string,
+  ): Promise<BpiSubjectAccount | undefined> {
     const bpiSubjectAccountModel = await this.bpiSubjectAccount.findUnique({
       where: { id: id },
       include: { ownerBpiSubject: true, creatorBpiSubject: true },
     });
 
     if (!bpiSubjectAccountModel) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
+      return undefined;
     }
 
     return this.mapper.map(

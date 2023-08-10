@@ -26,5 +26,6 @@ export const CommandHandlers = [VerifyAnchorHashCommandHandler];
       useClass: SnarkjsCircuitService,
     },
   ],
+  exports: ['ICircuitService'],
 })
 export class ZeroKnowledgeProofModule {}

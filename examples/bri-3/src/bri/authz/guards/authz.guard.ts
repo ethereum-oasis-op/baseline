@@ -68,6 +68,11 @@ export class AuthzGuard implements CanActivate {
         roles: true,
       },
     });
+
+    if (!bpiSubjectToCheckAuthzFor) {
+      return false;
+    }
+
     const authz = this.authzFactory.buildAuthzFor(bpiSubjectToCheckAuthzFor);
 
     try {
@@ -95,5 +100,7 @@ export class AuthzGuard implements CanActivate {
         throw new ForbiddenException(err.message);
       }
     }
+
+    return false;
   }
 }

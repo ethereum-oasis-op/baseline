@@ -12,13 +12,14 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "useDefineForClassFields": true,
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule":true,
   },
   "ts-node": {
     "compiler": "ttypescript"

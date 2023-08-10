@@ -24,7 +24,7 @@ describe('CreateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('id');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'id ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -46,7 +46,7 @@ describe('CreateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('from');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'from ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -68,7 +68,7 @@ describe('CreateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('to');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'to ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -84,7 +84,7 @@ describe('CreateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('content');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'content ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -106,7 +106,7 @@ describe('CreateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('signature');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'signature ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -128,7 +128,7 @@ describe('CreateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('type');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'type ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -151,7 +151,7 @@ describe('CreateBpiMessageDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('type');
-    expect(errors[0].constraints.isNumber).toContain(
+    expect(errors[0].constraints?.isNumber).toContain(
       'type ' + SHOULD_BE_OF_TYPE_NUMBER,
     );
   });

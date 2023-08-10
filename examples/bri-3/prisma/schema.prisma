@@ -11,50 +11,51 @@ datasource db {
 }
 
 model BpiSubject {
-  id                          String                 @id @default(uuid())
-  name                        String
-  description                 String
-  publicKey                   String
-  loginNonce                  String                 @default("")
-  ownedBpiSubjectAccounts     BpiSubjectAccount[]    @relation(name: "ownerBpiSubject_fk")
-  createdBpiSubjectAccounts   BpiSubjectAccount[]    @relation(name: "creatorBpiSubject_fk")
-  sentMessages                Message[]              @relation(name: "fromBpiSubject_fk")
-  receivedMessages            Message[]              @relation(name: "toBpiSubject_fk")
-  administratedWorkgroups     Workgroup[]            @relation(name: "administratorSubjects")
-  participatingWorkgroups     Workgroup[]            @relation(name: "participantSubjects") 
-  roles                       BpiSubjectRole[]
-  ownedAnchorHashes           AnchorHash[]          @relation(name: "anchorHashOwnerBpiSubject_fk")       
+  id                        String              @id @default(uuid())
+  name                      String
+  description               String
+  publicKey                 String
+  loginNonce                String              @default("")
+  ownedBpiSubjectAccounts   BpiSubjectAccount[] @relation(name: "ownerBpiSubject_fk")
+  createdBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "creatorBpiSubject_fk")
+  sentMessages              Message[]           @relation(name: "fromBpiSubject_fk")
+  receivedMessages          Message[]           @relation(name: "toBpiSubject_fk")
+  administratedWorkgroups   Workgroup[]         @relation(name: "administratorSubjects")
+  participatingWorkgroups   Workgroup[]         @relation(name: "participantSubjects")
+  roles                     BpiSubjectRole[]
+  ownedAnchorHashes         AnchorHash[]        @relation(name: "anchorHashOwnerBpiSubject_fk")
 }
 
 model BpiSubjectRole {
-  id                          String                 @id @default(uuid())
-  name                        String                 @unique
-  description                 String
-  bpiSubjects                 BpiSubject[]           
+  id          String       @id @default(uuid())
+  name        String       @unique
+  description String
+  bpiSubjects BpiSubject[]
 }
 
 model BpiAccount {
-  id                      String                    @id @default(uuid())
-  nonce                   Int     
-  ownerBpiSubjectAccounts BpiSubjectAccount[]     
-  authorizationCondition  String                    @default("") //Placeholder R251
-  stateObjectProverSystem String                    @default("") //Placeholder R251
-  stateObjectStorage      String                    @default("") //Placeholder R251
+  id                      String              @id @default(uuid())
+  nonce                   Int
+  ownerBpiSubjectAccounts BpiSubjectAccount[]
+  authorizationCondition  String              @default("") //Placeholder R251
+  stateObjectProverSystem String              @default("") //Placeholder R251
+  stateObjectStorage      String              @default("") //Placeholder R251
+  Workflow                Workflow[]
 }
 
 model BpiSubjectAccount {
-  id                        String            @id @default(uuid())
-  creatorBpiSubjectId       String    
-  ownerBpiSubjectId         String    
-  authenticationPolicy      String            @default("") //Placeholder R80
-  authorizationPolicy       String            @default("") //Placeholder R80
-  verifiableCredential      String            @default("") //Placeholder R80
-  recoveryKey               String            @default("") //Placeholder R80
-  bpiAccounts               BpiAccount[]    
-  creatorBpiSubject         BpiSubject        @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
-  ownerBpiSubject           BpiSubject        @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
-  sentTransactions          Transaction[]     @relation(name: "fromBpiSubjectAccount_fk")
-  receivedTransactions      Transaction[]     @relation(name: "toBpiSubjectAccount_fk")
+  id                   String        @id @default(uuid())
+  creatorBpiSubjectId  String
+  ownerBpiSubjectId    String
+  authenticationPolicy String        @default("") //Placeholder R80
+  authorizationPolicy  String        @default("") //Placeholder R80
+  verifiableCredential String        @default("") //Placeholder R80
+  recoveryKey          String        @default("") //Placeholder R80
+  bpiAccounts          BpiAccount[]
+  creatorBpiSubject    BpiSubject    @relation(fields: [creatorBpiSubjectId], references: [id], name: "creatorBpiSubject_fk")
+  ownerBpiSubject      BpiSubject    @relation(fields: [ownerBpiSubjectId], references: [id], name: "ownerBpiSubject_fk")
+  sentTransactions     Transaction[] @relation(name: "fromBpiSubjectAccount_fk")
+  receivedTransactions Transaction[] @relation(name: "toBpiSubjectAccount_fk")
 }
 
 model Workstep {
@@ -70,61 +71,68 @@ model Workstep {
 }
 
 model Workflow {
-  id          String     @id @default(uuid())
-  name        String
-  workgroupId String
-  worksteps   Workstep[]
-  workgroup   Workgroup  @relation(fields: [workgroupId], references: [id])
+  id           String     @id @default(uuid())
+  name         String
+  workgroupId  String
+  worksteps    Workstep[]
+  workgroup    Workgroup  @relation(fields: [workgroupId], references: [id])
+  bpiAccountId String
+  bpiAccount   BpiAccount @relation(fields: [bpiAccountId], references: [id])
 }
 
 model Workgroup {
-  id             String                       @id @default(uuid())
+  id             String          @id @default(uuid())
   name           String
-  administrators BpiSubject[] @relation(name: "administratorSubjects")
+  administrators BpiSubject[]    @relation(name: "administratorSubjects")
   securityPolicy String
   privacyPolicy  String
-  participants   BpiSubject[] @relation(name: "participantSubjects")
+  participants   BpiSubject[]    @relation(name: "participantSubjects")
   workflows      Workflow[]
   worksteps      Workstep[]
-  status         WorkgroupStatus       @default(ACTIVE)
+  status         WorkgroupStatus @default(ACTIVE)
 }
 
 model Transaction {
-  id String @id
-  nonce Int
-  workflowInstanceId String
-  workstepInstanceId String
+  id                      String            @id
+  nonce                   Int
+  workflowInstanceId      String
+  workstepInstanceId      String
   fromBpiSubjectAccountId String
-  fromBpiSubjectAccount BpiSubjectAccount @relation(fields: [fromBpiSubjectAccountId], references: [id], name: "fromBpiSubjectAccount_fk")
-  toBpiSubjectAccountId String
-  toBpiSubjectAccount BpiSubjectAccount @relation(fields: [toBpiSubjectAccountId], references: [id], name: "toBpiSubjectAccount_fk")
-  payload String
-  signature String
-  status Int
+  fromBpiSubjectAccount   BpiSubjectAccount @relation(fields: [fromBpiSubjectAccountId], references: [id], name: "fromBpiSubjectAccount_fk")
+  toBpiSubjectAccountId   String
+  toBpiSubjectAccount     BpiSubjectAccount @relation(fields: [toBpiSubjectAccountId], references: [id], name: "toBpiSubjectAccount_fk")
+  payload                 String
+  signature               String
+  status                  Int
 }
 
 model Message {
-  id               String     @id
-  fromBpiSubjectId String
-  fromBpiSubject   BpiSubject @relation(fields: [fromBpiSubjectId], references: [id], name: "fromBpiSubject_fk")
-  toBpiSubjectId   String
-  toBpiSubject     BpiSubject @relation(fields: [toBpiSubjectId], references: [id], name: "toBpiSubject_fk")
-  content          String
-  signature        String
-  type             Int
+  id                      String     @id
+  fromBpiSubjectId        String
+  fromBpiSubject          BpiSubject @relation(fields: [fromBpiSubjectId], references: [id], name: "fromBpiSubject_fk")
+  toBpiSubjectId          String
+  toBpiSubject            BpiSubject @relation(fields: [toBpiSubjectId], references: [id], name: "toBpiSubject_fk")
+  fromBpiSubjectAccountId String?
+  toBpiSubjectAccountId   String?
+  workflowId              String?
+  workstepId              String?
+  nonce                   Int?
+  content                 String
+  signature               String
+  type                    Int
 }
 
 model AnchorHash {
-  id                String     @id @default(uuid()) 
+  id                String     @id @default(uuid())
   ownerBpiSubjectId String
-  ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "anchorHashOwnerBpiSubject_fk")    
+  ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "anchorHashOwnerBpiSubject_fk")
   hash              String     @unique
 }
 
 model BpiMerkleTree {
-  id                String @id @default(uuid())
-  hashAlgName       String
-  tree              String
+  id          String @id @default(uuid())
+  hashAlgName String
+  tree        String
 }
 
 enum WorkgroupStatus {

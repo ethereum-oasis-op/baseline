@@ -1,33 +1,37 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
-import { TransactionController } from './transactions.controller';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { uuid } from 'uuidv4';
+import { AuthAgent } from '../../auth/agent/auth.agent';
+import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
+import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
+import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
+import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { TransactionAgent } from '../agents/transactions.agent';
 import { CreateTransactionCommandHandler } from '../capabilities/createTransaction/createTransactionCommand.handler';
-import { UpdateTransactionCommandHandler } from '../capabilities/updateTransaction/updateTransactionCommand.handler';
 import { DeleteTransactionCommandHandler } from '../capabilities/deleteTransaction/deleteTransactionCommand.handler';
 import { GetTransactionByIdQueryHandler } from '../capabilities/getTransactionById/getTransactionByIdQuery.handler';
-import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
-import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
-import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
-import { TransactionsProfile } from '../transactions.profile';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
-import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
-import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
-import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
-import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { UpdateTransactionCommandHandler } from '../capabilities/updateTransaction/updateTransactionCommand.handler';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
-import { uuid } from 'uuidv4';
+import { TransactionsProfile } from '../transactions.profile';
+import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
+import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
+import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import { TransactionController } from './transactions.controller';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
   let transactionStorageAgentMock: DeepMockProxy<TransactionStorageAgent>;
+  let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
 
   const createBpiSubjectAccount = (id: string) => {
     const ownerBpiSubject = new BpiSubject(
@@ -76,6 +80,9 @@ describe('TransactionController', () => {
         BpiSubjectAccountStorageAgent,
         BpiSubjectAccountAgent,
         BpiSubjectStorageAgent,
+        WorkstepStorageAgent,
+        WorkflowStorageAgent,
+        AuthAgent,
       ],
     })
       .overrideProvider(TransactionStorageAgent)
@@ -84,10 +91,18 @@ describe('TransactionController', () => {
       .useValue(mockDeep<BpiSubjectAccountStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockDeep<BpiSubjectStorageAgent>())
+      .overrideProvider(WorkstepStorageAgent)
+      .useValue(mockDeep<WorkstepStorageAgent>())
+      .overrideProvider(WorkflowStorageAgent)
+      .useValue(mockDeep<WorkflowStorageAgent>())
+      .overrideProvider(AuthAgent)
+      .useValue(mockDeep<AuthAgent>())
       .compile();
 
     controller = app.get<TransactionController>(TransactionController);
     transactionStorageAgentMock = app.get(TransactionStorageAgent);
+    subjectAccountStorageAgentMock = app.get(BpiSubjectAccountStorageAgent);
+
     await app.init();
   });
 
@@ -157,6 +172,14 @@ describe('TransactionController', () => {
       // Arrange
       const fromBpiSubjectAccount = createBpiSubjectAccount(uuid());
       const toBpiSubjectAccount = createBpiSubjectAccount(uuid());
+
+      subjectAccountStorageAgentMock.getBpiSubjectAccountById
+        .calledWith(fromBpiSubjectAccount.id)
+        .mockResolvedValueOnce(fromBpiSubjectAccount);
+
+      subjectAccountStorageAgentMock.getBpiSubjectAccountById
+        .calledWith(toBpiSubjectAccount.id)
+        .mockResolvedValueOnce(toBpiSubjectAccount);
 
       const requestDto = {
         id: uuid(),
