@@ -10,6 +10,7 @@ import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 import { TransactionStorageAgent } from './transactionStorage.agent';
 import { TransactionAgent } from './transactions.agent';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 
 let transactionAgent: TransactionAgent;
 
@@ -20,6 +21,8 @@ const workstepStorageAgentMock: DeepMockProxy<WorkstepStorageAgent> =
 const workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent> =
   mockDeep<WorkflowStorageAgent>();
 const authAgentMock: DeepMockProxy<AuthAgent> = mockDeep<AuthAgent>();
+const merkleTreeServiceMock: DeepMockProxy<MerkleTreeService> =
+  mockDeep<MerkleTreeService>();
 
 // TODO: Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
 // and implement various test data scenarios that can be selected with a single line of code.
@@ -77,6 +80,7 @@ beforeAll(async () => {
     workstepStorageAgentMock,
     workflowStorageAgentMock,
     authAgentMock,
+    merkleTreeServiceMock,
   );
 });
 
