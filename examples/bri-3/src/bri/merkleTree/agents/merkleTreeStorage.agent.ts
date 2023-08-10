@@ -12,13 +12,13 @@ export class MerkleTreeStorageAgent extends PrismaService {
     super();
   }
 
-  async getMerkleTreeById(id: string): Promise<BpiMerkleTree> {
+  async getMerkleTreeById(id: string): Promise<BpiMerkleTree | undefined> {
     const merkleTreeModel = await this.bpiMerkleTree.findUnique({
       where: { id },
     });
 
     if (!merkleTreeModel) {
-      return null;
+      return undefined;
     }
 
     return this.mapper.map(merkleTreeModel, MerkleTreeDto, BpiMerkleTree);

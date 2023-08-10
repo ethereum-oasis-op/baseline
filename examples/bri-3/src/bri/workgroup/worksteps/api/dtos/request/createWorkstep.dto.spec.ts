@@ -15,7 +15,7 @@ describe('CreateWorkstepDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('name');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'name ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
@@ -31,7 +31,7 @@ describe('CreateWorkstepDto', () => {
     // Assert
     expect(errors.length).toBe(1);
     expect(errors[0].property).toEqual('workgroupId');
-    expect(errors[0].constraints.isNotEmpty).toContain(
+    expect(errors[0].constraints?.isNotEmpty).toContain(
       'workgroupId ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });

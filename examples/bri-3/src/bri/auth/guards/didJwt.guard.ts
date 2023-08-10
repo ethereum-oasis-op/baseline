@@ -44,7 +44,7 @@ export class DidJwtAuthGuard implements CanActivate {
     const didSubstrLength = 13;
     const bpiSubject =
       await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
-        verified.payload.sub.substring(didSubstrLength),
+        verified.payload.sub!.substring(didSubstrLength),
       );
     const req = context.switchToHttp().getRequest();
     req.bpiSubject = bpiSubject;
@@ -63,10 +63,10 @@ export class DidJwtAuthGuard implements CanActivate {
     const verified = await verifyJWT(jwt, { audience: serviceUrl, resolver });
 
     const now = Math.floor(Date.now() / 1000);
-    if (verified.payload.exp < now) {
+    if (!verified.payload.exp || verified.payload.exp < now) {
       throw new Error('Token expired!');
     }
-    if (verified.payload.nbf > now) {
+    if (!verified.payload.nbf || verified.payload.nbf > now) {
       throw new Error('Token invalid!');
     }
 

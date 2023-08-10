@@ -1,51 +1,88 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { uuid } from 'uuidv4';
+import { TestDataHelper } from '../../../../shared/testing/testData.helper';
+import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
+import { BpiAccountStorageAgent } from '../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
+import { BpiSubjectAccountAgent } from '../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../../workflows/api/err.messages';
+import { WorkgroupAgent } from '../../workgroups/agents/workgroups.agent';
+import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
+import { WorkstepProfile } from '../../worksteps/workstep.profile';
+import { WorkstepModule } from '../../worksteps/worksteps.module';
 import { WorkflowAgent } from '../agents/workflows.agent';
+import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
 import { CreateWorkflowCommandHandler } from '../capabilities/createWorkflow/createWorkflowCommand.handler';
 import { DeleteWorkflowCommandHandler } from '../capabilities/deleteWorkflow/deleteWorkflowCommand.handler';
 import { GetAllWorkflowsQueryHandler } from '../capabilities/getAllWorkflows/getAllWorkflowsQuery.handler';
 import { GetWorkflowByIdQueryHandler } from '../capabilities/getWorkflowById/getWorkflowByIdQuery.handler';
 import { UpdateWorkflowCommandHandler } from '../capabilities/updateWorkflow/updateWorkflowCommand.handler';
-import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
-import { WorkflowController } from './workflows.controller';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { WorkflowStorageAgent } from '../agents/workflowsStorage.agent';
-import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
-import { WorkstepModule } from '../../worksteps/worksteps.module';
-import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
-import { Workstep } from '../../worksteps/models/workstep';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
-import { WorkflowProfile } from '../workflow.profile';
-import { WorkstepProfile } from '../../worksteps/workstep.profile';
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { Workflow } from '../models/workflow';
-import { uuid } from 'uuidv4';
+import { WorkflowProfile } from '../workflow.profile';
+import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
+import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
+import { WorkflowController } from './workflows.controller';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
   let workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent>;
+  let workgroupAgentMock: DeepMockProxy<WorkgroupAgent>;
+  let bpiSubjectAccountAgentMock: DeepMockProxy<BpiSubjectAccountAgent>;
+  let bpiAccountStorageAgentMock: DeepMockProxy<BpiAccountStorageAgent>;
 
-  const createTestWorkstep = () => {
-    return new Workstep(
-      '123',
-      'name',
-      'version',
-      'status',
-      'wgid',
-      'secPolicy',
-      'privPolicy',
-    );
-  };
-
-  const createTestWorkflow = () => {
-    const newWorkstep = createTestWorkstep();
-    return new Workflow(uuid(), 'name', [newWorkstep], 'workgroup1');
-  };
+  // TODO: Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
+  // and implement various test data scenarios that can be selected with a single line of code.
+  let existingWorkgroupId;
+  let existingBpiSubject1;
+  let existingBpiSubject2;
+  let existingBpiSubjectAccount1;
+  let existingBpiSubjectAccount2;
+  let existingBpiAccount1;
+  let existingWorkstep1;
+  let existingWorkflow1;
+  let existingWorkflow2;
+  let existingWorkgroup;
 
   beforeEach(async () => {
+    existingWorkgroupId = uuid();
+    existingBpiSubject1 = TestDataHelper.createBpiSubject();
+    existingBpiSubject2 = TestDataHelper.createBpiSubject();
+    existingBpiSubjectAccount1 = TestDataHelper.createBpiSubjectAccount(
+      existingBpiSubject1,
+      existingBpiSubject1,
+    );
+    existingBpiSubjectAccount2 = TestDataHelper.createBpiSubjectAccount(
+      existingBpiSubject2,
+      existingBpiSubject2,
+    );
+    existingBpiAccount1 = TestDataHelper.createBpiAccount([
+      existingBpiSubjectAccount1,
+      existingBpiSubjectAccount2,
+    ]);
+    existingWorkstep1 = TestDataHelper.createTestWorkstep(existingWorkgroupId);
+    existingWorkflow1 = TestDataHelper.createTestWorkflow(
+      existingWorkgroupId,
+      [existingWorkstep1],
+      existingBpiAccount1,
+    );
+    existingWorkflow2 = TestDataHelper.createTestWorkflow(
+      existingWorkgroupId,
+      [existingWorkstep1],
+      existingBpiAccount1,
+    );
+    existingWorkgroup = TestDataHelper.createWorkgroup(
+      existingWorkgroupId,
+      [existingBpiSubject1],
+      [existingBpiSubject1, existingBpiSubject2],
+      [existingWorkstep1],
+      [existingWorkflow1],
+    );
+
     const app: TestingModule = await Test.createTestingModule({
       imports: [
         CqrsModule,
@@ -57,12 +94,16 @@ describe('WorkflowsController', () => {
       controllers: [WorkflowController],
       providers: [
         WorkflowAgent,
+        WorkgroupAgent,
+        BpiAccountAgent,
+        BpiSubjectAccountAgent,
         CreateWorkflowCommandHandler,
         UpdateWorkflowCommandHandler,
         DeleteWorkflowCommandHandler,
         GetWorkflowByIdQueryHandler,
         GetAllWorkflowsQueryHandler,
         WorkflowStorageAgent,
+        BpiAccountStorageAgent,
         WorkstepProfile,
         WorkflowProfile,
       ],
@@ -71,10 +112,22 @@ describe('WorkflowsController', () => {
       .useValue(mockDeep<WorkflowStorageAgent>())
       .overrideProvider(WorkstepStorageAgent)
       .useValue(mockDeep<WorkstepStorageAgent>())
+      .overrideProvider(BpiAccountAgent)
+      .useValue(mockDeep<BpiAccountAgent>())
+      .overrideProvider(BpiSubjectAccountAgent)
+      .useValue(mockDeep<BpiSubjectAccountAgent>())
+      .overrideProvider(WorkgroupAgent)
+      .useValue(mockDeep<WorkgroupAgent>())
+      .overrideProvider(BpiAccountStorageAgent)
+      .useValue(mockDeep<BpiAccountStorageAgent>())
       .compile();
 
     workflowController = app.get<WorkflowController>(WorkflowController);
     workflowStorageAgentMock = app.get(WorkflowStorageAgent);
+    workgroupAgentMock = app.get(WorkgroupAgent);
+    bpiSubjectAccountAgentMock = app.get(BpiSubjectAccountAgent);
+    bpiAccountStorageAgentMock = app.get(BpiAccountStorageAgent);
+
     await app.init();
   });
 
@@ -94,7 +147,7 @@ describe('WorkflowsController', () => {
 
     it('should return the correct workflow if proper id passed ', async () => {
       // Arrange
-      const existingWorkflow = createTestWorkflow();
+      const existingWorkflow = existingWorkflow1;
       workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
         existingWorkflow,
       );
@@ -125,11 +178,9 @@ describe('WorkflowsController', () => {
 
     it('should return 2 workflows if 2 exist', async () => {
       // Arrange
-      const workflow1 = createTestWorkflow();
-      const workflow2 = createTestWorkflow();
       workflowStorageAgentMock.getAllWorkflows.mockResolvedValueOnce([
-        workflow1,
-        workflow2,
+        existingWorkflow1,
+        existingWorkflow2,
       ]);
 
       // Act
@@ -137,32 +188,47 @@ describe('WorkflowsController', () => {
 
       // Assert
       expect(workflows.length).toEqual(2);
-      expect(workflows[0].id).toEqual(workflow1.id);
+      expect(workflows[0].id).toEqual(existingWorkflow1.id);
       expect(workflows[0].worksteps.map((ws) => ws.id)).toEqual(
-        workflow1.worksteps.map((ws) => ws.id),
+        existingWorkflow1.worksteps.map((ws) => ws.id),
       );
-      expect(workflows[1].id).toEqual(workflow2.id);
+      expect(workflows[1].id).toEqual(existingWorkflow2.id);
       expect(workflows[1].worksteps.map((ws) => ws.id)).toEqual(
-        workflow2.worksteps.map((ws) => ws.id),
+        existingWorkflow2.worksteps.map((ws) => ws.id),
       );
     });
   });
 
   describe('createWorkflow', () => {
-    it('should return new uuid from the created workstep when all necessary params provided', async () => {
+    it('should return new uuid from the created workflow when all necessary params provided', async () => {
       // Arrange
-      const workflow = createTestWorkflow();
-      workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(workflow);
+
+      workflowStorageAgentMock.storeNewWorkflow.mockResolvedValueOnce(
+        existingWorkflow1,
+      );
+      workgroupAgentMock.fetchUpdateCandidateAndThrowIfUpdateValidationFails.mockResolvedValueOnce(
+        existingWorkgroup,
+      );
+
+      bpiSubjectAccountAgentMock.getBpiSubjectAccountsAndThrowIfNotExist.mockResolvedValueOnce(
+        [existingBpiSubjectAccount1, existingBpiSubjectAccount2],
+      );
+
+      bpiAccountStorageAgentMock.storeNewBpiAccount.mockResolvedValueOnce(
+        existingBpiAccount1,
+      );
+
       const requestDto = {
-        name: workflow.name,
-        workstepIds: workflow.worksteps.map((ws) => ws.id),
-        workgroupId: workflow.workgroupId,
+        name: existingWorkflow1.name,
+        workstepIds: existingWorkflow1.worksteps.map((ws) => ws.id),
+        workgroupId: existingWorkflow1.workgroupId,
       } as CreateWorkflowDto;
+
       // Act
       const response = await workflowController.createWorkflow(requestDto);
 
       // Assert
-      expect(response).toEqual(workflow.id);
+      expect(response).toEqual(existingWorkflow1.id);
       expect(uuidValidate(response));
       expect(uuidVersion(response)).toEqual(4);
     });
@@ -190,30 +256,29 @@ describe('WorkflowsController', () => {
 
     it('should perform the update if existing id passed', async () => {
       // Arrange
-      const existingWorkflow = createTestWorkflow();
       workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
-        existingWorkflow,
+        existingWorkflow1,
       );
 
       const updateRequestDto: UpdateWorkflowDto = {
         name: 'name2',
-        workstepIds: existingWorkflow.worksteps.map((ws) => ws.id),
+        workstepIds: existingWorkflow1.worksteps.map((ws) => ws.id),
         workgroupId: 'workgroupId2',
       };
       workflowStorageAgentMock.updateWorkflow.mockResolvedValueOnce({
-        ...existingWorkflow,
+        ...existingWorkflow1,
         workgroupId: updateRequestDto.workgroupId,
         name: updateRequestDto.name,
       } as Workflow);
 
       // Act
       const updatedWorkflow = await workflowController.updateWorkflow(
-        existingWorkflow.id,
+        existingWorkflow1.id,
         updateRequestDto,
       );
 
       // Assert
-      expect(updatedWorkflow.id).toEqual(existingWorkflow.id);
+      expect(updatedWorkflow.id).toEqual(existingWorkflow1.id);
       expect(updatedWorkflow.worksteps.map((ws) => ws.id)).toEqual(
         updateRequestDto.workstepIds,
       );
@@ -238,11 +303,12 @@ describe('WorkflowsController', () => {
 
     it('should perform the delete if existing id passed', async () => {
       // Arrange
-      const workflow = createTestWorkflow();
-      workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(workflow);
+      workflowStorageAgentMock.getWorkflowById.mockResolvedValueOnce(
+        existingWorkflow1,
+      );
 
       // Act
-      await workflowController.deleteWorkflow(workflow.id);
+      await workflowController.deleteWorkflow(existingWorkflow1.id);
     });
   });
 });
