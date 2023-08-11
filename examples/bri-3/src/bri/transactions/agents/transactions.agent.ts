@@ -177,7 +177,10 @@ export class TransactionAgent {
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
 
-    const merkelizedPayload = this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
+    const merkelizedPayload = this.merkleTreeService.merkelizePayload(
+      JSON.parse(tx.payload),
+      'sha256',
+    );
     txResult.merkelizedPayload = merkelizedPayload;
 
     const { circuitProvingKeyPath, circuitPath } =
@@ -186,7 +189,7 @@ export class TransactionAgent {
     const circuitInputs = {}; // TODO: #701 Prepare circuit inputs
     txResult.witness = await this.circuitService.createWitness(
       circuitInputs,
-      "TODO"
+      'TODO',
     );
 
     return txResult;

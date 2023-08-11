@@ -35,7 +35,7 @@ export const QueryHandlers = [
     WorkflowModule,
     AuthModule,
     MerkleModule,
-    ZeroKnowledgeProofModule
+    ZeroKnowledgeProofModule,
   ],
   controllers: [TransactionController],
   providers: [
