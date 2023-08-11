@@ -27,6 +27,7 @@ import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { TransactionController } from './transactions.controller';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -83,6 +84,7 @@ describe('TransactionController', () => {
         WorkstepStorageAgent,
         WorkflowStorageAgent,
         AuthAgent,
+        MerkleTreeService,
       ],
     })
       .overrideProvider(TransactionStorageAgent)

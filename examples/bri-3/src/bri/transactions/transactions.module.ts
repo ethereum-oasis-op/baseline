@@ -13,6 +13,7 @@ import { GetTransactionByIdQueryHandler } from './capabilities/getTransactionByI
 import { UpdateTransactionCommandHandler } from './capabilities/updateTransaction/updateTransactionCommand.handler';
 import { TransactionsProfile } from './transactions.profile';
 import { AuthModule } from '../auth/auth.module';
+import { MerkleModule } from '../merkleTree/merkle.module';
 
 export const CommandHandlers = [
   CreateTransactionCommandHandler,
@@ -32,6 +33,7 @@ export const QueryHandlers = [
     WorkstepModule,
     WorkflowModule,
     AuthModule,
+    MerkleModule,
   ],
   controllers: [TransactionController],
   providers: [

@@ -6,7 +6,6 @@ import {
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
-import { Workstep } from '@prisma/client';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
@@ -17,6 +16,8 @@ import {
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
+import { Workstep } from '../../workgroup/worksteps/models/workstep';
 
 @Injectable()
 export class TransactionAgent {
@@ -25,6 +26,7 @@ export class TransactionAgent {
     private workstepStorageAgent: WorkstepStorageAgent,
     private workflowStorageAgent: WorkflowStorageAgent,
     private authAgent: AuthAgent,
+    private merkleTreeService: MerkleTreeService,
   ) {}
 
   public throwIfCreateTransactionInputInvalid() {
@@ -166,7 +168,7 @@ export class TransactionAgent {
     tx: Transaction,
     workstep: Workstep,
   ): Promise<boolean> {
-    // TODO: #698 Merkelize transaction payload
+    this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
     // TODO: #701 Fetch circuit attached to the workstep
     // TODO: #701 Prepare circuit inputs and execute
     // TODO: #701 Return merkelized payload and witness
