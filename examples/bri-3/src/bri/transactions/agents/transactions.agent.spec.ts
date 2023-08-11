@@ -24,7 +24,8 @@ const workflowStorageAgentMock: DeepMockProxy<WorkflowStorageAgent> =
 const authAgentMock: DeepMockProxy<AuthAgent> = mockDeep<AuthAgent>();
 const merkleTreeServiceMock: DeepMockProxy<MerkleTreeService> =
   mockDeep<MerkleTreeService>();
-const circuitsServiceMock: DeepMockProxy<ICircuitService> = mockDeep<ICircuitService>();
+const circuitsServiceMock: DeepMockProxy<ICircuitService> =
+  mockDeep<ICircuitService>();
 
 // TODO: Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
 // and implement various test data scenarios that can be selected with a single line of code.
@@ -83,7 +84,7 @@ beforeAll(async () => {
     workflowStorageAgentMock,
     authAgentMock,
     merkleTreeServiceMock,
-    circuitsServiceMock
+    circuitsServiceMock,
   );
 });
 
