@@ -6,8 +6,16 @@ import { TransactionModule } from '../transactions/transactions.module';
 import { WorkstepModule } from '../workgroup/worksteps/worksteps.module';
 import { VsmTasksSchedulerAgent } from './agents/vsmTaskScheduler.agent';
 import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/executeVsmCycleCommand.handler';
+import { MessagingAgent } from '../communication/agents/messaging.agent';
+import { WorkstepExecutionFailuresHandler } from './capabilites/handleWorkstepFailuresEvents/workstepExecutionFailures.handler';
+import { HandleWorkstepFailuresCommandHandler } from './capabilites/handleWorkstepFailures/handleWorkstepFailuresCommand.handler';
+import { VsmFailureSagas } from './capabilites/sagas/vsmFailures.sagas';
 
-export const CommandHandlers = [ExecuteVsmCycleCommandHandler];
+export const CommandHandlers = [
+  ExecuteVsmCycleCommandHandler,
+  HandleWorkstepFailuresCommandHandler,
+  WorkstepExecutionFailuresHandler,
+];
 
 export const QueryHandlers = [];
 
@@ -18,6 +26,8 @@ export const QueryHandlers = [];
     TransactionModule,
     LoggingModule,
     WorkstepModule,
+    MessagingAgent,
+    VsmFailureSagas,
   ],
   providers: [VsmTasksSchedulerAgent, ...CommandHandlers, ...QueryHandlers],
 })
