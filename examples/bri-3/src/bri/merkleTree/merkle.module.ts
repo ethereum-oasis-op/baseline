@@ -17,6 +17,6 @@ import { MerkleTreeService } from './services/merkleTree.service';
     MerkleProfile,
   ],
 
-  exports: [MerkleTreeService]
+  exports: [MerkleTreeService],
 })
 export class MerkleModule {}
