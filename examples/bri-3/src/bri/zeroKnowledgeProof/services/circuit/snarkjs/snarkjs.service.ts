@@ -4,7 +4,6 @@ import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
 import { computeEcdsaPublicInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
 import * as snarkjs from 'snarkjs';
-import 'dotenv/config';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
@@ -28,7 +27,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     this.witness.publicInputs = publicInputs;
 
     this.witness.verificationKey = await import(
-      `../../../../../../zeroKnowledgeKeys/circuit/${circuitName}_verification_key.json`
+      `../../../../../../zeroKnowledgeArtifacts/circuit/${circuitName}_verification_key.json`
     );
     return this.witness;
   }
@@ -55,8 +54,8 @@ export class SnarkjsCircuitService implements ICircuitService {
     const { proof, publicSignals: publicInputs } =
       await snarkjs.groth16.fullProve(
         inputs,
-        `zeroKnowledgeKeys/circuit/${circuitName}_js/${circuitName}.wasm`,
-        `zeroKnowledgeKeys/circuit/${circuitName}_final.zkey`,
+        `zeroKnowledgeArtifacts/circuit/${circuitName}_js/${circuitName}.wasm`,
+        `zeroKnowledgeArtifacts/circuit/${circuitName}_final.zkey`,
       );
 
     const newProof = {

@@ -1,8 +1,8 @@
 # compiled output
 /dist
 /node_modules
-/zeroKnowledgeKeys/ptau
-/zeroKnowledgeKeys/circuit
+/zeroKnowledgeArtifacts/ptau
+/zeroKnowledgeArtifacts/circuit
 src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
 
 # Logs
