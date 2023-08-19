@@ -183,13 +183,15 @@ export class TransactionAgent {
     );
     txResult.merkelizedPayload = merkelizedPayload;
 
-    const { circuitProvingKeyPath, circuitPath } =
+    const { snakeCaseWorkstepName, circuitProvingKeyPath, circuitVerificatioKeyPath, circuitPath } =
       this.constructCircuitPathsFromWorkstepName(workstep.name);
 
-    const circuitInputs = {}; // TODO: #701 Prepare circuit inputs
     txResult.witness = await this.circuitService.createWitness(
-      circuitInputs,
-      'TODO',
+      {}, // TODO: Something needs to translate tx.payload and current bpi account state into circuit inputs
+      snakeCaseWorkstepName,
+      circuitPath,
+      circuitProvingKeyPath,
+      circuitVerificatioKeyPath
     );
 
     return txResult;
@@ -200,6 +202,7 @@ export class TransactionAgent {
   // Format is: <path_from_env>/<workstep_name_in_snake_case>_<predefined_suffix>.
   // Will be ditched completely as part of milestone 5.
   private constructCircuitPathsFromWorkstepName(name: string): {
+    snakeCaseWorkstepName: string,
     circuitProvingKeyPath: string;
     circuitVerificatioKeyPath: string;
     circuitPath: string;
@@ -207,21 +210,24 @@ export class TransactionAgent {
     const snakeCaseWorkstepName = this.convertStringToSnakeCase(name);
 
     const circuitProvingKeyPath =
-      process.env.SNARKJS_CIRCUIT_KEYS_PATH +
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName + '/' +
       snakeCaseWorkstepName +
       '_circuit_final.zkey';
 
     const circuitVerificatioKeyPath =
-      process.env.SNARKJS_CIRCUIT_KEYS_PATH +
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName + '/' +
       snakeCaseWorkstepName +
       '_circuit_verification_key.json';
 
     const circuitPath =
-      process.env.SNARKJS_CIRCUIT_WASM_PATH +
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName + '/' +
       snakeCaseWorkstepName +
       '_circuit.wasm';
 
-    return { circuitProvingKeyPath, circuitVerificatioKeyPath, circuitPath };
+    return { snakeCaseWorkstepName, circuitProvingKeyPath, circuitVerificatioKeyPath, circuitPath };
   }
 
   // TODO: ChatGPT generated only for the purposes of temporary convention
