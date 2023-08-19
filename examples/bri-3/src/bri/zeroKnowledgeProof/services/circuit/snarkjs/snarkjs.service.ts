@@ -12,6 +12,9 @@ export class SnarkjsCircuitService implements ICircuitService {
   public async createWitness(
     inputs: object,
     circuitName: string,
+    pathToCircuit: string,
+    pathToProvingKey: string,
+    pathToVerificationKey: string,
   ): Promise<Witness> {
     this.witness = new Witness();
 
@@ -19,16 +22,16 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     const { proof, publicInputs } = await this.executeCircuit(
       preparedInputs,
-      circuitName,
+      pathToCircuit,
+      pathToProvingKey
     );
 
     this.witness.proof = proof;
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = await import(
-      `../../../../../../zeroKnowledgeArtifacts/circuit/${circuitName}_verification_key.json`
-    );
+    this.witness.verificationKey = await import(pathToVerificationKey);
+
     return this.witness;
   }
 
@@ -49,13 +52,14 @@ export class SnarkjsCircuitService implements ICircuitService {
 
   private async executeCircuit(
     inputs: object,
-    circuitName: string,
+    pathToCircuit: string,
+    pathToProvingKey: string,
   ): Promise<{ proof: Proof; publicInputs: string[] }> {
     const { proof, publicSignals: publicInputs } =
       await snarkjs.groth16.fullProve(
         inputs,
-        `zeroKnowledgeArtifacts/circuit/${circuitName}_js/${circuitName}.wasm`,
-        `zeroKnowledgeArtifacts/circuit/${circuitName}_final.zkey`,
+        pathToCircuit,
+        pathToProvingKey,
       );
 
     const newProof = {
@@ -76,6 +80,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     return await this[circuitName](inputs);
   }
 
+  // TODO: Mil5 - How to parametrize this for different use-cases?
   private async workstep1(inputs: object): Promise<object> {
     //Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
