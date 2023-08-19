@@ -58,8 +58,11 @@ BPI_NATS_SERVER_USER="bpi_operator"
 BPI_NATS_SERVER_PASS="liftboiliftboiliftboiliftboi1"
 BPI_ENCRYPTION_KEY_K_PARAM="yzkXp3vY_AZQ3YfLv9GMRTYkjUOpn9x18gPkoFvoUxQ" # Encryption key params used by the BPI for Bpi Messages encryption at rest
 BPI_ENCRYPTION_KEY_KTY_PARAM="oct"
-SNARKJS_CIRCUIT_KEYS_PATH="zeroKnowledgeArtifacts/circuit/" # used to construct the path to the circuit by applying the workstep name in snake case + suffix '_circuit.wasm'
-SNARKJS_CIRCUIT_WASM_PATH="zeroKnowledgeArtifacts/circuit/circuit_js/" # used to construct the paths to the circuit proving and verifying keys by applying the workstep name in snake case + suffix '_circuit_final.zkey' or '_circuit_verification_key.json' respectively. This is just a temporary mechanism for milestone 4.
+SNARKJS_CIRCUITS_PATH="zeroKnowledgeArtifacts/circuits/" # used to construct the path to the circuit artifacts for a specific workstep by following this convention:
+# SNARKJS_CIRCUITS_PATH + <workstep_name_in_snake_case>/<workstep_name_in_snake_case> + suffix for the artifact. Artifact suffixes:
+# Circuit proving key = '_circuit_final.zkey'
+# Circuit verification key = '_circuit_verification_key.json'
+# Compiled circuit = '_circuit.wasm'
 VSM_CYCLE_PERIOD_IN_SECS=15 # How many seconds before each VSM cycle
 VSM_CYCLE_TX_BATCH_SIZE=5 # How many transactions to execute in the single VSM  cycle
 ```
