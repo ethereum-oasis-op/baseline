@@ -7,8 +7,6 @@ import { WorkstepExecutionFailuresEvent } from '../handleWorkstepFailuresEvents/
 export class VsmFailureSagas {
   @Saga()
   handleWorkstepFailures = (events$: Observable<any>): Observable<ICommand> => {
-    return events$.pipe(
-      ofType(WorkstepExecutionFailuresEvent)
-    );
+    return events$.pipe(ofType(WorkstepExecutionFailuresEvent));
   };
 }

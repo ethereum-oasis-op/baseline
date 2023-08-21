@@ -9,6 +9,7 @@ import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/exe
 import { MessagingAgent } from '../communication/agents/messaging.agent';
 import { WorkstepExecutionFailuresHandler } from './capabilites/handleWorkstepFailuresEvents/workstepExecutionFailures.handler';
 import { VsmFailureSagas } from './capabilites/sagas/vsmFailures.sagas';
+import { NatsMessagingClient } from '../communication/messagingClients/natsMessagingClient';
 
 export const CommandHandlers = [
   ExecuteVsmCycleCommandHandler,
@@ -24,9 +25,17 @@ export const QueryHandlers = [];
     TransactionModule,
     LoggingModule,
     WorkstepModule,
+  ],
+  providers: [
+    VsmTasksSchedulerAgent,
+    ...CommandHandlers,
+    ...QueryHandlers,
     MessagingAgent,
     VsmFailureSagas,
+    {
+      provide: 'IMessagingClient',
+      useClass: NatsMessagingClient,
+    },
   ],
-  providers: [VsmTasksSchedulerAgent, ...CommandHandlers, ...QueryHandlers],
 })
 export class VsmModule {}
