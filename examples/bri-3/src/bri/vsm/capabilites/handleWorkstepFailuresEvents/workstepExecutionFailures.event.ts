@@ -1,5 +1,3 @@
-import { BpiSubjectAccount } from "@prisma/client";
-
 export class WorkstepExecutionFailuresEvent {
   constructor(
     public readonly id: string, 

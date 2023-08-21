@@ -13,7 +13,7 @@ export class WorkstepExecutionFailuresHandler
   constructor(
     private readonly logger: LoggingService,
     private readonly messagingAgent: MessagingAgent,
-    ) {}
+  ) {}
 
   handle(event: WorkstepExecutionFailuresEvent) {
     this.logger.logError(
