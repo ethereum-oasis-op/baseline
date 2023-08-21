@@ -17,22 +17,17 @@ export class BpiAccount {
   @AutoMap()
   stateObjectProverSystem: string;
 
-  @AutoMap()
-  stateObjectStorage: string;
-
   constructor(
     id: string,
     ownerBpiSubjectAccounts: BpiSubjectAccount[],
     authorizationCondition: string,
     stateObjectProverSystem: string,
-    stateObjectStorage: string,
   ) {
     this.id = id;
     this.nonce = 0;
     this.ownerBpiSubjectAccounts = ownerBpiSubjectAccounts;
     this.authorizationCondition = authorizationCondition;
     this.stateObjectProverSystem = stateObjectProverSystem;
-    this.stateObjectStorage = stateObjectStorage;
   }
 
   public updateNonce(): void {
