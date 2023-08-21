@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
-import { ICircuitService } from '../circuit.interface';
+import { ICircuitService } from '../circuitService.interface';
 import { computeEcdsaPublicInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
 import * as snarkjs from 'snarkjs';
-import 'dotenv/config';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
@@ -13,6 +12,9 @@ export class SnarkjsCircuitService implements ICircuitService {
   public async createWitness(
     inputs: object,
     circuitName: string,
+    pathToCircuit: string,
+    pathToProvingKey: string,
+    pathToVerificationKey: string,
   ): Promise<Witness> {
     this.witness = new Witness();
 
@@ -20,16 +22,16 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     const { proof, publicInputs } = await this.executeCircuit(
       preparedInputs,
-      circuitName,
+      pathToCircuit,
+      pathToProvingKey,
     );
 
     this.witness.proof = proof;
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = await import(
-      `../../../../../../zeroKnowledgeKeys/circuit/${circuitName}_verification_key.json`
-    );
+    this.witness.verificationKey = await import(pathToVerificationKey);
+
     return this.witness;
   }
 
@@ -50,14 +52,11 @@ export class SnarkjsCircuitService implements ICircuitService {
 
   private async executeCircuit(
     inputs: object,
-    circuitName: string,
+    pathToCircuit: string,
+    pathToProvingKey: string,
   ): Promise<{ proof: Proof; publicInputs: string[] }> {
     const { proof, publicSignals: publicInputs } =
-      await snarkjs.groth16.fullProve(
-        inputs,
-        `zeroKnowledgeKeys/circuit/${circuitName}_js/${circuitName}.wasm`,
-        `zeroKnowledgeKeys/circuit/${circuitName}_final.zkey`,
-      );
+      await snarkjs.groth16.fullProve(inputs, pathToCircuit, pathToProvingKey);
 
     const newProof = {
       a: proof.pi_a,
@@ -77,6 +76,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     return await this[circuitName](inputs);
   }
 
+  // TODO: Mil5 - How to parametrize this for different use-cases?
   private async workstep1(inputs: object): Promise<object> {
     //Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =

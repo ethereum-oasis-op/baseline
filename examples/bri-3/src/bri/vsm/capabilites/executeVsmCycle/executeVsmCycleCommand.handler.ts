@@ -49,9 +49,9 @@ export class ExecuteVsmCycleCommandHandler
       );
 
       try {
-        const txResult = this.agent.executeTransaction(tx, workstep!);
-        // TODO: When do we update the nonce on the BpiAccount?
-        // TODO: #702 Update relevant Bpi Account state on sucess
+        const txResult = await this.agent.executeTransaction(tx, workstep!);
+        // TODO: When do we update the nonce on the BpiAccount? // Whenever a transaction is initiated
+        // TODO: #702 Update relevant Bpi Account state with txResult sucess
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {

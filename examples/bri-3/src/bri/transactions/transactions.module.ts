@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { AuthModule } from '../auth/auth.module';
 import { SubjectAccountModule } from '../identity/bpiSubjectAccounts/subjectAccounts.module';
 import { WorkflowModule } from '../workgroup/workflows/workflows.module';
 import { WorkstepModule } from '../workgroup/worksteps/worksteps.module';
+import { ZeroKnowledgeProofModule } from '../zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { TransactionStorageAgent } from './agents/transactionStorage.agent';
 import { TransactionAgent } from './agents/transactions.agent';
 import { TransactionController } from './api/transactions.controller';
@@ -12,7 +14,6 @@ import { GetAllTransactionsQueryHandler } from './capabilities/getAllTransaction
 import { GetTransactionByIdQueryHandler } from './capabilities/getTransactionById/getTransactionByIdQuery.handler';
 import { UpdateTransactionCommandHandler } from './capabilities/updateTransaction/updateTransactionCommand.handler';
 import { TransactionsProfile } from './transactions.profile';
-import { AuthModule } from '../auth/auth.module';
 import { MerkleModule } from '../merkleTree/merkle.module';
 
 export const CommandHandlers = [
@@ -34,6 +35,7 @@ export const QueryHandlers = [
     WorkflowModule,
     AuthModule,
     MerkleModule,
+    ZeroKnowledgeProofModule,
   ],
   controllers: [TransactionController],
   providers: [

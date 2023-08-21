@@ -1,23 +1,28 @@
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
+import MerkleTree from 'merkletreejs';
+import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { Workstep } from '../../workgroup/worksteps/models/workstep';
+import { ICircuitService } from '../../zeroKnowledgeProof/services/circuit/circuitService.interface';
 import {
   DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
-import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
-import { Workstep } from '../../workgroup/worksteps/models/workstep';
+import { TransactionResult } from '../models/transactionResult';
 
 @Injectable()
 export class TransactionAgent {
@@ -27,6 +32,8 @@ export class TransactionAgent {
     private workflowStorageAgent: WorkflowStorageAgent,
     private authAgent: AuthAgent,
     private merkleTreeService: MerkleTreeService,
+    @Inject('ICircuitService')
+    private readonly circuitService: ICircuitService,
   ) {}
 
   public throwIfCreateTransactionInputInvalid() {
@@ -167,11 +174,92 @@ export class TransactionAgent {
   public async executeTransaction(
     tx: Transaction,
     workstep: Workstep,
-  ): Promise<boolean> {
-    this.merkleTreeService.merkelizePayload(JSON.parse(tx.payload), 'sha256');
-    // TODO: #701 Fetch circuit attached to the workstep
-    // TODO: #701 Prepare circuit inputs and execute
-    // TODO: #701 Return merkelized payload and witness
-    return true;
+  ): Promise<TransactionResult> {
+    const txResult = new TransactionResult();
+
+    const merkelizedPayload = this.merkleTreeService.merkelizePayload(
+      JSON.parse(tx.payload),
+      'sha256',
+    );
+    txResult.merkelizedPayload = merkelizedPayload;
+
+    const {
+      snakeCaseWorkstepName,
+      circuitProvingKeyPath,
+      circuitVerificatioKeyPath,
+      circuitPath,
+    } = this.constructCircuitPathsFromWorkstepName(workstep.name);
+
+    txResult.witness = await this.circuitService.createWitness(
+      {}, // TODO: Something needs to translate tx.payload and current bpi account state into circuit inputs
+      snakeCaseWorkstepName,
+      circuitPath,
+      circuitProvingKeyPath,
+      circuitVerificatioKeyPath,
+    );
+
+    return txResult;
+  }
+
+  // TODO: Only for the purposes of temporary convention
+  // to connect worksteps with circuits on the file system.
+  // Format is: <path_from_env>/<workstep_name_in_snake_case>_<predefined_suffix>.
+  // Will be ditched completely as part of milestone 5.
+  private constructCircuitPathsFromWorkstepName(name: string): {
+    snakeCaseWorkstepName: string;
+    circuitProvingKeyPath: string;
+    circuitVerificatioKeyPath: string;
+    circuitPath: string;
+  } {
+    const snakeCaseWorkstepName = this.convertStringToSnakeCase(name);
+
+    const circuitProvingKeyPath =
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/' +
+      snakeCaseWorkstepName +
+      '_circuit_final.zkey';
+
+    const circuitVerificatioKeyPath =
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/' +
+      snakeCaseWorkstepName +
+      '_circuit_verification_key.json';
+
+    const circuitPath =
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/' +
+      snakeCaseWorkstepName +
+      '_circuit.wasm';
+
+    return {
+      snakeCaseWorkstepName,
+      circuitProvingKeyPath,
+      circuitVerificatioKeyPath,
+      circuitPath,
+    };
+  }
+
+  // TODO: ChatGPT generated only for the purposes of temporary convention
+  // to connect worksteps with circuits on the file system.
+  private convertStringToSnakeCase(name: string): string {
+    // Remove any leading or trailing spaces
+    name = name.trim();
+
+    // Replace spaces, hyphens, and underscores with a single underscore
+    name = name.replace(/[\s-]/g, '_');
+
+    // Convert uppercase letters to lowercase and insert an underscore before them if they are not at the beginning
+    name = name.replace(/([A-Z])/g, (match) => `_${match.toLowerCase()}`);
+
+    // Remove any consecutive underscores
+    name = name.replace(/_+/g, '_');
+
+    // Remove any non-alphanumeric characters except for underscore
+    name = name.replace(/[^a-zA-Z0-9_]/g, '');
+
+    return name;
   }
 }

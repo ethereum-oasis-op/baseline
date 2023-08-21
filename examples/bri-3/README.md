@@ -58,6 +58,13 @@ BPI_NATS_SERVER_USER="bpi_operator"
 BPI_NATS_SERVER_PASS="liftboiliftboiliftboiliftboi1"
 BPI_ENCRYPTION_KEY_K_PARAM="yzkXp3vY_AZQ3YfLv9GMRTYkjUOpn9x18gPkoFvoUxQ" # Encryption key params used by the BPI for Bpi Messages encryption at rest
 BPI_ENCRYPTION_KEY_KTY_PARAM="oct"
+SNARKJS_CIRCUITS_PATH="zeroKnowledgeArtifacts/circuits/" # used to construct the path to the circuit artifacts for a specific workstep by following this convention:
+# SNARKJS_CIRCUITS_PATH + <workstep_name_in_snake_case>/<workstep_name_in_snake_case> + suffix for the artifact. Artifact suffixes:
+# Circuit proving key = '_circuit_final.zkey'
+# Circuit verification key = '_circuit_verification_key.json'
+# Compiled circuit = '_circuit.wasm'
+VSM_CYCLE_PERIOD_IN_SECS=15 # How many seconds before each VSM cycle
+VSM_CYCLE_TX_BATCH_SIZE=5 # How many transactions to execute in the single VSM  cycle
 ```
 
 Relevant information on DID Auth can be found in ./docs/dids/did-authentication.md
