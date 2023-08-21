@@ -114,7 +114,6 @@ export class TestDataHelper {
       .setOwnerBpiSubjectAccounts(ownerBpiSubjectAccounts)
       .setAuthorizationCondition('authorization condition')
       .setStateObjectProverSystem('prover system')
-      .setStateObjectStorage('storage')
       .build();
 
     return bpiAccount;

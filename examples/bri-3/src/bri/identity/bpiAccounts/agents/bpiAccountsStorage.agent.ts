@@ -67,7 +67,6 @@ export class BpiAccountStorageAgent extends PrismaService {
         },
         authorizationCondition: bpiAccount.authorizationCondition,
         stateObjectProverSystem: bpiAccount.stateObjectProverSystem,
-        stateObjectStorage: bpiAccount.stateObjectStorage,
       },
     });
 

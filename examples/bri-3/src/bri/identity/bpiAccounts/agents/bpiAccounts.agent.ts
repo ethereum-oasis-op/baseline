@@ -20,14 +20,12 @@ export class BpiAccountAgent {
     ownerBpiSubjectAccounts: BpiSubjectAccount[],
     authorizationCondition: string,
     stateObjectProverSystem: string,
-    stateObjectStorage: string,
   ): BpiAccount {
     return new BpiAccount(
       v4(),
       ownerBpiSubjectAccounts,
       authorizationCondition,
       stateObjectProverSystem,
-      stateObjectStorage,
     );
   }
 

@@ -39,7 +39,7 @@ model BpiAccount {
   ownerBpiSubjectAccounts BpiSubjectAccount[]
   authorizationCondition  String              @default("") //Placeholder R251
   stateObjectProverSystem String              @default("") //Placeholder R251
-  stateObjectStorage      String              @default("") //Placeholder R251
+  stateTreeNodes          StateTreeNode[]
   Workflow                Workflow[]
 }
 
@@ -134,6 +134,25 @@ model BpiMerkleTree {
   hashAlgName String
   tree        String
 }
+
+// https://www.npmjs.com/package/prisma-extension-bark TODO: Upgrade to prisma 5.0.0
+model StateTreeNode {
+  // prisma-bark extension fields start
+  id       Int    @id @default(autoincrement())
+  path     String @unique
+  depth    Int
+  numchild Int    @default(0)
+  // prisma-bark extension fields end
+  
+  bpiAccountId String
+  bpiAccount   BpiAccount @relation(fields: [bpiAccountId], references: [id])
+  value String
+
+  @@index([path])
+}
+
+
+// TODO: table for values (merkelized payload and witness) that are related to a StateTreeNode which is a leaf
 
 enum WorkgroupStatus {
   ACTIVE

@@ -304,7 +304,6 @@ export class BpiAccountBuilder {
   private ownerBpiSubjectAccounts: BpiSubjectAccount[] = [];
   private authorizationCondition: string;
   private stateObjectProverSystem: string;
-  private stateObjectStorage: string;
 
   constructor() {}
 
@@ -337,18 +336,12 @@ export class BpiAccountBuilder {
     return this;
   }
 
-  setStateObjectStorage(stateObjectStorage: string): BpiAccountBuilder {
-    this.stateObjectStorage = stateObjectStorage;
-    return this;
-  }
-
   public build(): BpiAccount {
     const bpiAccount = new BpiAccount(
       this.id,
       this.ownerBpiSubjectAccounts,
       this.authorizationCondition,
       this.stateObjectProverSystem,
-      this.stateObjectStorage,
     );
     bpiAccount.nonce = this.nonce;
     return bpiAccount;
