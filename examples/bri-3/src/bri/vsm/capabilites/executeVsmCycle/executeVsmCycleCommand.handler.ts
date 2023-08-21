@@ -32,6 +32,8 @@ export class ExecuteVsmCycleCommandHandler
         this.eventBus.publish(
           new WorkstepExecutionFailuresEvent(tx.id, 'Validation Error'),
         );
+        tx.updateStatusToAborted();
+        this.txStorageAgent.updateTransactionStatus(tx);
         return;
       }
 
@@ -46,7 +48,11 @@ export class ExecuteVsmCycleCommandHandler
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {
-        this.eventBus.publish(new WorkstepExecutionFailuresEvent(tx.id, error));
+        this.eventBus.publish(
+          new WorkstepExecutionFailuresEvent(tx.id, error)
+        );
+        tx.updateStatusToAborted();
+        this.txStorageAgent.updateTransactionStatus(tx);
         return;
       }
     });

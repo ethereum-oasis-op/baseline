@@ -38,8 +38,6 @@ export class HandleWorkstepFailuresCommandHandler
         initiatorChannel,
         JSON.stringify(errorBpiMessage),
       );
-      tx.updateStatusToAborted();
-      this.txStorageAgent.updateTransactionStatus(tx);
     }
   }
 }
