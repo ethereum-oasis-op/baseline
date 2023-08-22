@@ -1,10 +1,8 @@
+import { Transaction } from "src/bri/transactions/models/transaction";
+
 export class WorkstepExecutionFailuresEvent {
   constructor(
-    public readonly id: string,
+    public readonly tx: Transaction,
     public readonly err: string,
-    public readonly fromBpiSubjectAccountId: string,
-    public readonly toBpiSubjectAccountId: string,
-    public readonly signature: string,
-    public readonly initiatorChannel: string,
   ) {}
 }

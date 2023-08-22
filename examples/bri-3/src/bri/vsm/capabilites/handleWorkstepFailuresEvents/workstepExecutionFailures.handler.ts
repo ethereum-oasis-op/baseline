@@ -17,7 +17,7 @@ export class WorkstepExecutionFailuresHandler
 
   handle(event: WorkstepExecutionFailuresEvent) {
     this.logger.logError(
-      `Invalid transaction for execution with id ${event.id}: ${event.err}`,
+      `Invalid transaction for execution with id ${event.tx.id}: ${event.err}`,
     );
 
     const errPayload = {
@@ -26,16 +26,16 @@ export class WorkstepExecutionFailuresHandler
     };
 
     const errorBpiMessage = new BpiMessage(
-      event.id,
-      event.fromBpiSubjectAccountId,
-      event.toBpiSubjectAccountId,
+      event.tx.id,
+      event.tx.fromBpiSubjectAccountId,
+      event.tx.toBpiSubjectAccountId,
       JSON.stringify(errPayload),
-      event.signature,
+      event.tx.signature,
       BpiMessageType.Err,
     );
 
     this.messagingAgent.publishMessage(
-      event.initiatorChannel,
+      event.tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
       JSON.stringify(errorBpiMessage),
     );
   }

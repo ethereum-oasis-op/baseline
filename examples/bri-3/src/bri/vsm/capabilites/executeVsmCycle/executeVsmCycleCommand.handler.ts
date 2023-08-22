@@ -31,12 +31,8 @@ export class ExecuteVsmCycleCommandHandler
       if (!this.agent.validateTransactionForExecution(tx)) {
         this.eventBus.publish(
           new WorkstepExecutionFailuresEvent(
-            tx.id,
+            tx,
             'Validation Error',
-            tx.fromBpiSubjectAccountId,
-            tx.toBpiSubjectAccountId,
-            tx.signature,
-            tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
           ),
         );
         tx.updateStatusToAborted();
@@ -57,12 +53,8 @@ export class ExecuteVsmCycleCommandHandler
       } catch (error) {
         this.eventBus.publish(
           new WorkstepExecutionFailuresEvent(
-            tx.id,
+            tx,
             error,
-            tx.fromBpiSubjectAccountId,
-            tx.toBpiSubjectAccountId,
-            tx.signature,
-            tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
           ),
         );
         tx.updateStatusToAborted();
