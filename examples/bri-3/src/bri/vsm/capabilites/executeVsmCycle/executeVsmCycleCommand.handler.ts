@@ -30,10 +30,7 @@ export class ExecuteVsmCycleCommandHandler
 
       if (!this.agent.validateTransactionForExecution(tx)) {
         this.eventBus.publish(
-          new WorkstepExecutionFailuresEvent(
-            tx,
-            'Validation Error',
-          ),
+          new WorkstepExecutionFailuresEvent(tx, 'Validation Error'),
         );
         tx.updateStatusToAborted();
         this.txStorageAgent.updateTransactionStatus(tx);
@@ -51,12 +48,7 @@ export class ExecuteVsmCycleCommandHandler
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {
-        this.eventBus.publish(
-          new WorkstepExecutionFailuresEvent(
-            tx,
-            error,
-          ),
-        );
+        this.eventBus.publish(new WorkstepExecutionFailuresEvent(tx, error));
         tx.updateStatusToAborted();
         this.txStorageAgent.updateTransactionStatus(tx);
         return;
