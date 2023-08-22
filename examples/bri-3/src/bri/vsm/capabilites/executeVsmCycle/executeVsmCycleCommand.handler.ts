@@ -33,7 +33,7 @@ export class ExecuteVsmCycleCommandHandler
           new WorkstepExecutionFailuresEvent(tx, 'Validation Error'),
         );
         tx.updateStatusToInvalid();
-        this.txStorageAgent.updateTransactionStatus(tx);
+        await this.txStorageAgent.updateTransactionStatus(tx);
         return;
       }
 
