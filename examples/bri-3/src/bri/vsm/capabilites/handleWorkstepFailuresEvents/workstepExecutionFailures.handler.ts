@@ -17,7 +17,7 @@ export class WorkstepExecutionFailuresHandler
 
   handle(event: WorkstepExecutionFailuresEvent) {
     this.logger.logError(
-      `Invalid transaction for execution with id ${event.tx.id}: ${event.err}`,
+      `Failed execution of transaction with id ${event.tx.id}. Error: ${event.err}`,
     );
 
     const errPayload = {
