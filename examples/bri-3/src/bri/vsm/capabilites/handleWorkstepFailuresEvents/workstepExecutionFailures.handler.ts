@@ -16,13 +16,15 @@ export class WorkstepExecutionFailuresHandler
   ) {}
 
   handle(event: WorkstepExecutionFailuresEvent) {
+    const message = `Failed execution of transaction with id ${event.tx.id}. Error: ${event.err}`
+
     this.logger.logError(
-      `Failed execution of transaction with id ${event.tx.id}. Error: ${event.err}`,
+      message,
     );
 
     const errPayload = {
-      errorCode: 'xxx',
-      errorMessage: 'Execution fails',
+      errorId: 'xxx',
+      errorMessage: message,
     };
 
     const errorBpiMessage = new BpiMessage(
