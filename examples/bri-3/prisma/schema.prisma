@@ -135,7 +135,7 @@ model BpiMerkleTree {
   tree        String
 }
 
-// https://www.npmjs.com/package/prisma-extension-bark TODO: Upgrade to prisma 5.0.0
+// https://www.npmjs.com/package/prisma-extension-bark
 model StateTreeNode {
   // prisma-bark extension fields start
   id       Int    @id @default(autoincrement())
