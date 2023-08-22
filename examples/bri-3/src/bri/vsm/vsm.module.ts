@@ -8,7 +8,6 @@ import { VsmTasksSchedulerAgent } from './agents/vsmTaskScheduler.agent';
 import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/executeVsmCycleCommand.handler';
 import { MessagingAgent } from '../communication/agents/messaging.agent';
 import { WorkstepExecutionFailuresHandler } from './capabilites/handleWorkstepFailuresEvents/workstepExecutionFailures.handler';
-import { VsmFailureSagas } from './capabilites/sagas/vsmFailures.sagas';
 import { NatsMessagingClient } from '../communication/messagingClients/natsMessagingClient';
 
 export const CommandHandlers = [
@@ -31,7 +30,6 @@ export const QueryHandlers = [];
     ...CommandHandlers,
     ...QueryHandlers,
     MessagingAgent,
-    VsmFailureSagas,
     {
       provide: 'IMessagingClient',
       useClass: NatsMessagingClient,
