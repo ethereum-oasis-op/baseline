@@ -112,15 +112,18 @@ export class BpiAccountStorageAgent extends PrismaService {
       return false;
     }
 
-    // Reconstruct a MerkeTree from the bpiAccountModel.StateTreeNodes
-    // TODO: Only leaves should be provided here
-    const bpiAccountStateTree = this.merkleTreeService.formMerkleTree(bpiAccountModel?.stateTreeNodes.map(stn => stn.value), 'sha256' );
-    
-    // add the new leaf to the MerkleTree
-    const hashFn = this.merkleTreeService.createHashFunction('sha256');
-    bpiAccountStateTree.addLeaf(hashFn(leafValue));
+    // TODO: merkleTreeStorage.getMerkleTreeById
 
-    // TODO: Translate the new MerkleTree to StateTreeNodes and update BpiAccount
+    // TODO: Reconstruct a MerkeTree from the bpiAccountModel.stateTree with unmarhsaling
+    
+    
+    // TODO: add the new leaf to the MerkleTree
+    // const hashFn = this.merkleTreeService.createHashFunction('sha256');
+    // bpiAccountStateTree.addLeaf(hashFn(leafValue));
+
+    // TODO: Take the new leaf index and store a new entry in BpiAccountStateTreeLeafValue with merkelized payload nad witness
+
+    // TODO: Update the bpi account state tree  merkleTreeStorage.agent.storeUpdatedMerkleTree
     
   }
 }
