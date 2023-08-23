@@ -34,13 +34,15 @@ model BpiSubjectRole {
 }
 
 model BpiAccount {
-  id                      String              @id @default(uuid())
-  nonce                   Int
-  ownerBpiSubjectAccounts BpiSubjectAccount[]
-  authorizationCondition  String              @default("") //Placeholder R251
-  stateObjectProverSystem String              @default("") //Placeholder R251
-  stateTreeNodes          StateTreeNode[]
-  Workflow                Workflow[]
+  id                           String                         @id @default(uuid())
+  nonce                        Int
+  ownerBpiSubjectAccounts      BpiSubjectAccount[]
+  authorizationCondition       String                         @default("") //Placeholder R251
+  stateObjectProverSystem      String                         @default("") //Placeholder R251
+  stateTreeId                  String
+  stateTree                    BpiMerkleTree                  @relation(fields: [stateTreeId], references: [id])
+  Workflow                     Workflow[]
+  BpiAccountStateTreeLeafValue BpiAccountStateTreeLeafValue[]
 }
 
 model BpiSubjectAccount {
@@ -130,29 +132,22 @@ model AnchorHash {
 }
 
 model BpiMerkleTree {
-  id          String @id @default(uuid())
+  id          String       @id @default(uuid())
   hashAlgName String
   tree        String
+  BpiAccount  BpiAccount[]
 }
 
-// https://www.npmjs.com/package/prisma-extension-bark
-model StateTreeNode {
-  // prisma-bark extension fields start
-  id       Int    @id @default(autoincrement())
-  path     String @unique
-  depth    Int
-  numchild Int    @default(0)
-  // prisma-bark extension fields end
-  
-  bpiAccountId String
-  bpiAccount   BpiAccount @relation(fields: [bpiAccountId], references: [id])
-  value String
-
-  @@index([path])
+model BpiAccountStateTreeLeafValue {
+  id                String     @id @default(uuid())
+  bpiAccountId      String
+  bpiAccount        BpiAccount @relation(fields: [bpiAccountId], references: [id])
+  leafIndex         Int
+  merkelizedPayload String
+  witness           String
 }
 
-
-// TODO: table for values (merkelized payload and witness) that are related to a StateTreeNode which is a leaf
+// TODO: table for values (merkelized payload and witness) that are referencing a specific bpi account and a specific leaf of the state tree
 
 enum WorkgroupStatus {
   ACTIVE
