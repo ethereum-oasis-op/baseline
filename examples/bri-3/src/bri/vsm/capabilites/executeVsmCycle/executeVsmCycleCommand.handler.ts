@@ -1,10 +1,10 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { LoggingService } from '../../../../shared/logging/logging.service';
+import { CommandHandler, ICommandHandler, EventBus } from '@nestjs/cqrs';
 import { TransactionStorageAgent } from '../../../transactions/agents/transactionStorage.agent';
 import { TransactionAgent } from '../../../transactions/agents/transactions.agent';
 import { TransactionStatus } from '../../../transactions/models/transactionStatus.enum';
 import { WorkstepStorageAgent } from '../../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
+import { WorkstepExecutionFailuresEvent } from '../handleWorkstepFailuresEvents/workstepExecutionFailures.event';
 
 @CommandHandler(ExecuteVsmCycleCommand)
 export class ExecuteVsmCycleCommandHandler
@@ -14,7 +14,7 @@ export class ExecuteVsmCycleCommandHandler
     private agent: TransactionAgent,
     private workstepStorageAgent: WorkstepStorageAgent,
     private txStorageAgent: TransactionStorageAgent,
-    private readonly logger: LoggingService,
+    private eventBus: EventBus,
   ) {}
 
   async execute(command: ExecuteVsmCycleCommand) {
@@ -29,6 +29,9 @@ export class ExecuteVsmCycleCommandHandler
       await this.txStorageAgent.updateTransactionStatus(tx);
 
       if (!this.agent.validateTransactionForExecution(tx)) {
+        this.eventBus.publish(
+          new WorkstepExecutionFailuresEvent(tx, 'Validation Error'),
+        );
         tx.updateStatusToInvalid();
         await this.txStorageAgent.updateTransactionStatus(tx);
         return;
@@ -45,9 +48,7 @@ export class ExecuteVsmCycleCommandHandler
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {
-        this.logger.logError(
-          `Error executing transaction with id ${tx.id}: ${error}`,
-        );
+        this.eventBus.publish(new WorkstepExecutionFailuresEvent(tx, error));
         tx.updateStatusToAborted();
         this.txStorageAgent.updateTransactionStatus(tx);
         return;
