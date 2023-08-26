@@ -16,14 +16,21 @@ export class WorkstepExecutionFailuresHandler
   ) {}
 
   handle(event: WorkstepExecutionFailuresEvent) {
-    const message = `Failed execution of transaction with id ${event.tx.id}. Error: ${event.err}`;
+    let message: string, messageType: number;
 
-    this.logger.logError(message);
+    if (event.err !== 'Success') {
+      message = `Failed execution of transaction with id ${event.tx.id}. Error: ${event.err}`;
+      messageType = BpiMessageType.Err;
 
-    const errPayload = {
-      errorId: 'xxx',
-      errorMessage: message,
-    };
+      this.logger.logError(message);
+    } else {
+      message = `Transaction ${event.tx.toBpiSubjectAccountId} from ${event.tx.fromBpiSubjectAccountId} successfully executed`;
+      messageType = BpiMessageType.Info;
+
+      this.logger.logInfo(message);
+    }
+
+    const errPayload = this.constructPayload(message);
 
     const errorBpiMessage = new BpiMessage(
       event.tx.id,
@@ -31,12 +38,33 @@ export class WorkstepExecutionFailuresHandler
       event.tx.toBpiSubjectAccountId,
       JSON.stringify(errPayload),
       event.tx.signature,
-      BpiMessageType.Err,
+      messageType,
     );
 
-    this.messagingAgent.publishMessage(
-      event.tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
-      JSON.stringify(errorBpiMessage),
+    const channels = [event.tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey];
+
+    if (event.err == 'Success') {
+      channels.push(event.tx.toBpiSubjectAccount.ownerBpiSubject.publicKey);
+    }
+
+    this.publishMessage(channels, errorBpiMessage);
+  }
+
+  private constructPayload(message: string) {
+    return {
+      id: 'xxx',
+      errorMessage: message,
+    };
+  }
+
+  private async publishMessage(channels: string[], bpiMessage: BpiMessage) {
+    await Promise.all(
+      channels.map(async (channel) => {
+        await this.messagingAgent.publishMessage(
+          channel,
+          JSON.stringify(bpiMessage),
+        );
+      }),
     );
   }
 }
