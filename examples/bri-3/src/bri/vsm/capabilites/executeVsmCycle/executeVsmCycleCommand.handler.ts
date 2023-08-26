@@ -4,7 +4,7 @@ import { TransactionAgent } from '../../../transactions/agents/transactions.agen
 import { TransactionStatus } from '../../../transactions/models/transactionStatus.enum';
 import { WorkstepStorageAgent } from '../../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
-import { WorkstepExecutionFailuresEvent } from '../handleWorkstepFailuresEvents/workstepExecutionFailures.event';
+import { WorkstepExecutionEvent } from '../handleWorkstepEvents/workstepExecution.event';
 
 @CommandHandler(ExecuteVsmCycleCommand)
 export class ExecuteVsmCycleCommandHandler
@@ -30,7 +30,7 @@ export class ExecuteVsmCycleCommandHandler
 
       if (!this.agent.validateTransactionForExecution(tx)) {
         this.eventBus.publish(
-          new WorkstepExecutionFailuresEvent(tx, 'Validation Error'),
+          new WorkstepExecutionEvent(tx, 'Validation Error'),
         );
         tx.updateStatusToInvalid();
         await this.txStorageAgent.updateTransactionStatus(tx);
@@ -48,14 +48,14 @@ export class ExecuteVsmCycleCommandHandler
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {
-        this.eventBus.publish(new WorkstepExecutionFailuresEvent(tx, error));
+        this.eventBus.publish(new WorkstepExecutionEvent(tx, error));
         tx.updateStatusToAborted();
         this.txStorageAgent.updateTransactionStatus(tx);
         return;
       }
 
       // TODO: #705 Relevant BPI subjects are informed (Notification is thrown?)
-      this.eventBus.publish(new WorkstepExecutionFailuresEvent(tx, 'Success'));
+      this.eventBus.publish(new WorkstepExecutionEvent(tx, 'Success'));
     });
   }
 }

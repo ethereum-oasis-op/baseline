@@ -1,59 +1,61 @@
 import { IEventHandler } from '@nestjs/cqrs';
 import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decorator';
-import { WorkstepExecutionFailuresEvent } from './workstepExecutionFailures.event';
+import { WorkstepExecutionEvent } from './workstepExecution.event';
 import { LoggingService } from '../../../../shared/logging/logging.service';
 import { BpiMessage } from '../../../communication/models/bpiMessage';
 import { BpiMessageType } from '../../../communication/models/bpiMessageType.enum';
 import { MessagingAgent } from '../../../communication/agents/messaging.agent';
 
-@EventsHandler(WorkstepExecutionFailuresEvent)
-export class WorkstepExecutionFailuresHandler
-  implements IEventHandler<WorkstepExecutionFailuresEvent>
+@EventsHandler(WorkstepExecutionEvent)
+export class WorkstepExecutionHandler
+  implements IEventHandler<WorkstepExecutionEvent>
 {
   constructor(
     private readonly logger: LoggingService,
     private readonly messagingAgent: MessagingAgent,
   ) {}
 
-  handle(event: WorkstepExecutionFailuresEvent) {
+  handle(event: WorkstepExecutionEvent) {
     let message: string, messageType: number;
 
-    if (event.err !== 'Success') {
-      message = `Failed execution of transaction with id ${event.tx.id}. Error: ${event.err}`;
+    if (event.status !== 'Success') {
+      message = `Failed execution of transaction with id ${event.tx.id}. Error: ${event.status}`;
       messageType = BpiMessageType.Err;
 
       this.logger.logError(message);
     } else {
-      message = `Transaction ${event.tx.toBpiSubjectAccountId} from ${event.tx.fromBpiSubjectAccountId} successfully executed`;
+      message = `Transaction ${event.tx.id} from ${event.tx.fromBpiSubjectAccountId} to ${event.tx.toBpiSubjectAccountId} successfully executed`;
       messageType = BpiMessageType.Info;
 
       this.logger.logInfo(message);
     }
 
-    const errPayload = this.constructPayload(message);
+    // Update standarized payload here
+    const payload = this.constructPayload(message);
 
-    const errorBpiMessage = new BpiMessage(
+    const bpiMessage = new BpiMessage(
       event.tx.id,
       event.tx.fromBpiSubjectAccountId,
       event.tx.toBpiSubjectAccountId,
-      JSON.stringify(errPayload),
+      JSON.stringify(payload),
       event.tx.signature,
       messageType,
     );
 
+    // Change channels to publish message here
     const channels = [event.tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey];
 
-    if (event.err == 'Success') {
+    if (event.status == 'Success') {
       channels.push(event.tx.toBpiSubjectAccount.ownerBpiSubject.publicKey);
     }
 
-    this.publishMessage(channels, errorBpiMessage);
+    this.publishMessage(channels, bpiMessage);
   }
 
   private constructPayload(message: string) {
     return {
       id: 'xxx',
-      errorMessage: message,
+      info: message,
     };
   }
 
