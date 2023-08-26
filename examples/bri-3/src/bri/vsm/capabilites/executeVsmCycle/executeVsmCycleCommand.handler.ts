@@ -53,7 +53,9 @@ export class ExecuteVsmCycleCommandHandler
         this.txStorageAgent.updateTransactionStatus(tx);
         return;
       }
+
+      // TODO: #705 Relevant BPI subjects are informed (Notification is thrown?)
+      this.eventBus.publish(new WorkstepExecutionFailuresEvent(tx, 'Success'));
     });
-    // TODO: #705 Relevant BPI subjects are informed (Notification is thrown?)
   }
 }
