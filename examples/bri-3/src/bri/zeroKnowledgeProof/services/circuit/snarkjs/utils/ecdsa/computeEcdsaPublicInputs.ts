@@ -1,10 +1,10 @@
-import { ECDSASignature } from '@ethereumjs/util';
+import { Signature } from 'ethers';
 import { computeEffEcdsaPubInput } from '@personaelabs/spartan-ecdsa';
 import * as elliptic from 'elliptic';
 const ec = elliptic.ec;
 
 export const computeEcdsaPublicInputs = (
-  signature: ECDSASignature,
+  signature: Signature,
   msgHash: Buffer,
   publicKeyHex: string,
 ) => {
@@ -15,10 +15,14 @@ export const computeEcdsaPublicInputs = (
     .getPublic();
 
   //Signature
-  const r = BigInt('0x' + signature.r.toString('hex'));
-  const circuitPubInput = computeEffEcdsaPubInput(r, signature.v, msgHash);
+  const r = BigInt(signature.r);
+  const circuitPubInput = computeEffEcdsaPubInput(
+    r,
+    BigInt(signature.v),
+    msgHash,
+  );
   const input = {
-    signature: BigInt('0x' + signature.s.toString('hex')),
+    signature: BigInt(signature.s),
     Tx: circuitPubInput.Tx,
     Ty: circuitPubInput.Ty,
     Ux: circuitPubInput.Ux,

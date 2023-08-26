@@ -23,6 +23,8 @@ import {
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
 import { TransactionResult } from '../models/transactionResult';
+import { ethers } from 'ethers';
+import { ECDSASignature } from '@ethereumjs/util';
 
 @Injectable()
 export class TransactionAgent {
@@ -199,6 +201,23 @@ export class TransactionAgent {
     );
 
     return txResult;
+  }
+
+  private async prepareTransactionPayloadForCircuit(
+    tx: Transaction,
+  ): Promise<object> {
+    const messageHash = ethers.utils.arrayify(
+      ethers.utils.hashMessage(tx.payload),
+    );
+
+    const signature = ethers.utils.splitSignature(tx.signature);
+    const ecdsaSignature = new ECDSASignature();
+
+    return {
+      signature: tx.signature,
+      messageHash,
+      publicKey: tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
+    };
   }
 
   // TODO: Only for the purposes of temporary convention
