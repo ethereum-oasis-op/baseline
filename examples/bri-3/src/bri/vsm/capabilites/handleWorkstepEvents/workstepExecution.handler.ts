@@ -30,7 +30,7 @@ export class WorkstepExecutionHandler
       this.logger.logInfo(message);
     }
 
-    // Update standarized payload here
+    // Update standardized payload here
     const payload = this.constructPayload(message);
 
     const bpiMessage = new BpiMessage(
