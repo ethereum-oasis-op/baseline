@@ -65,8 +65,12 @@ export const computeMerkleProofPublicInputs = (
     '21663839004416932945382355908790599225266501822907911457504978515578255421292';
 
   const merkelizedInvoiceHashedLeaves = merkelizedPayload.getHexLeaves();
+  const merkelizedInvoicelevels = Math.ceil(
+    Math.log2(merkelizedInvoiceHashedLeaves.length),
+  );
+
   const fixedMerkelizedInvoice = new FixedMerkleTree(
-    5,
+    merkelizedInvoicelevels,
     merkelizedInvoiceHashedLeaves,
     {
       hashFunction: sha256Hash,
@@ -75,10 +79,15 @@ export const computeMerkleProofPublicInputs = (
   );
 
   const stateTreeHexLeaves = stateTree.getHexLeaves();
-  const fixedStateTree = new FixedMerkleTree(10, stateTreeHexLeaves, {
-    hashFunction: sha256Hash,
-    zeroElement: ZERO_ELEMENT,
-  });
+  const stateTreelevels = Math.ceil(Math.log2(stateTreeHexLeaves.length));
+  const fixedStateTree = new FixedMerkleTree(
+    stateTreelevels,
+    stateTreeHexLeaves,
+    {
+      hashFunction: sha256Hash,
+      zeroElement: ZERO_ELEMENT,
+    },
+  );
 
   const { pathElements, pathIndices } = fixedStateTree.path(0);
 
