@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
-import { computeEcdsaPublicInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
+import {
+  computeEcdsaPublicInputs,
+  computeMerkleProofPublicInputs,
+} from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
 import MerkleTree from 'merkletreejs';
-import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import { Transaction } from '../../../../transactions/models/transaction';
-import { ethers } from 'ethers';
-import * as crypto from 'crypto';
+
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
   public witness: Witness;
@@ -94,23 +95,11 @@ export class SnarkjsCircuitService implements ICircuitService {
     merklelizedPayload: MerkleTree;
     stateTree: MerkleTree;
   }): Promise<object> {
-    //Ecdsa signature
-    const ecdsaSignature = ethers.utils.splitSignature(inputs.tx.signature);
-
-    const messageHash = ethers.utils.arrayify(
-      ethers.utils.hashMessage(inputs.tx.payload),
-    );
-
-    const publicKey = inputs.tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
-
+    //1. Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
-      computeEcdsaPublicInputs(
-        ecdsaSignature,
-        Buffer.from(messageHash),
-        publicKey,
-      );
+      computeEcdsaPublicInputs(inputs.tx);
 
-    //Items
+    //2. Items
     const payload = JSON.parse(inputs.tx.payload);
 
     const itemPrices: number[] = [];
@@ -121,48 +110,26 @@ export class SnarkjsCircuitService implements ICircuitService {
       itemAmount.push(item['amount']);
     });
 
-    // const merkelizedInvoiceRoot = BigInt(
-    //   '0x' + inputs.merklelizedPayload.getHexRoot(),
-    // );
-
-    // const stateTreeRoot = BigInt('0x' + inputs.stateTree.getHexRoot());
-
-    //convert
-    const sha256Hash = (left: any, right: any) =>
-      crypto.createHash('sha256').update(`${left}${right}`).digest('hex');
-    const ZERO_ELEMENT =
-      '21663839004416932945382355908790599225266501822907911457504978515578255421292';
-
-    const merkelizedInvoiceHashedLeaves =
-      inputs.merklelizedPayload.getHexLeaves();
-    const fixedMerkelizedInvoice = new FixedMerkleTree(
-      5,
-      merkelizedInvoiceHashedLeaves,
-      {
-        hashFunction: sha256Hash,
-        zeroElement: ZERO_ELEMENT,
-      },
+    //3. Merkle Proof
+    const {
+      merkelizedInvoiceRoot,
+      stateTreeRoot,
+      stateTree,
+      stateTreeLeafPosition,
+    } = computeMerkleProofPublicInputs(
+      inputs.merklelizedPayload,
+      inputs.stateTree,
     );
-
-    fixedMerkelizedInvoice.root;
-
-    const stateTreeHexLeaves = inputs.stateTree.getHexLeaves();
-    const fixedStateTree = new FixedMerkleTree(10, stateTreeHexLeaves, {
-      hashFunction: sha256Hash,
-      zeroElement: ZERO_ELEMENT,
-    });
-
-    const { pathElements, pathIndices } = fixedStateTree.path(0);
 
     const preparedInputs = {
       invoiceStatus: payload.status,
       invoiceAmount: payload.amount,
       itemPrices,
       itemAmount,
-      merkelizedInvoiceRoot: fixedMerkelizedInvoice.root,
-      stateTreeRoot: fixedStateTree.root,
-      stateTree: pathElements,
-      stateTreeLeafPosition: pathIndices,
+      merkelizedInvoiceRoot,
+      stateTreeRoot,
+      stateTree,
+      stateTreeLeafPosition,
       signature,
       publicKeyX,
       publicKeyY,
