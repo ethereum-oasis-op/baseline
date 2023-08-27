@@ -191,10 +191,11 @@ export class TransactionAgent {
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     //TODO: Get stored state tree
+    //Following code only for temporary purpose
     const stateTree = new MerkleTree([]);
 
     txResult.witness = await this.circuitService.createWitness(
-      { tx, merkelizedPayload, stateTree }, // TODO: Something needs to translate tx.payload and current bpi account state into circuit inputs
+      { tx, merkelizedPayload, stateTree },
       snakeCaseWorkstepName,
       circuitPath,
       circuitProvingKeyPath,
