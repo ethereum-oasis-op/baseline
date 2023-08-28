@@ -29,7 +29,6 @@ export class StateAgent {
     merkelizedPayload: MerkleTree,
     witness: Witness,
   ): Promise<void> {
-    // TODO: state tree storage agent
     let stateTree = await this.merkleTreetStorageAgent.getMerkleTreeById(
       bpiAccount.stateTreeId,
     );
