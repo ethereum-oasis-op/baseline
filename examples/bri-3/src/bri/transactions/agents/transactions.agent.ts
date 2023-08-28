@@ -190,7 +190,9 @@ export class TransactionAgent {
       circuitPath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
-    //TODO: Get stored state tree
+    //TODO: Need to Discuss
+    //Problem: StateTree(merkelizedInvoice + witness) but
+    //witness creation requires checking non-inclusion of only (merkelizedInvoice) in StateTree
     //Following code only for temporary purpose
     const stateTree = new MerkleTree([]);
 
