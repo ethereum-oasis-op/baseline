@@ -177,7 +177,7 @@ export class TransactionAgent {
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
 
-    // TODO: Have the hash algh 'sha256' in a single place in env instead of spread around in code 
+    // TODO: Have the hash algh 'sha256' in a single place in env instead of spread around in code
     const merkelizedPayload = this.merkleTreeService.merkelizePayload(
       JSON.parse(tx.payload),
       'sha256',
