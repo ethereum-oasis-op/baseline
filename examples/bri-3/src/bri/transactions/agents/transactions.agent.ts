@@ -204,13 +204,14 @@ export class TransactionAgent {
 
     const hashFn = this.merkleTreeService.createHashFunction('sha256');
 
+    const merkelizedInvoiceRoot = merkelizedPayload.getRoot().toString('hex');
     const witnessHash = hashFn(JSON.stringify(txResult.witness)).toString(
       'hex',
     );
 
-    txResult.hash = hashFn(
-      `${merkelizedPayload.getHexRoot()}` + `${witnessHash}`,
-    ).toString('hex');
+    txResult.hash = hashFn(`${merkelizedInvoiceRoot}${witnessHash}`).toString(
+      'hex',
+    );
 
     return txResult;
   }
