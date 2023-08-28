@@ -36,7 +36,7 @@ import { LoggingModule } from './shared/logging/logging.module';
     AuthzModule,
     SubjectModule,
     MerkleModule,
-    StateModule
+    StateModule,
   ],
   providers: [
     PrismaService,

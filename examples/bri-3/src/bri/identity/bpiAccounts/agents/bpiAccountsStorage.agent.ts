@@ -69,7 +69,6 @@ export class BpiAccountStorageAgent extends PrismaService {
         },
         authorizationCondition: bpiAccount.authorizationCondition,
         stateObjectProverSystem: bpiAccount.stateObjectProverSystem,
-        
       },
     });
 
@@ -82,8 +81,8 @@ export class BpiAccountStorageAgent extends PrismaService {
       data: {
         nonce: bpiAccount.nonce,
         stateTree: {
-          update: { tree: MerkleTree.marshalTree(bpiAccount.stateTree.tree), }
-        }
+          update: { tree: MerkleTree.marshalTree(bpiAccount.stateTree.tree) },
+        },
       },
     });
 
@@ -96,14 +95,19 @@ export class BpiAccountStorageAgent extends PrismaService {
     });
   }
 
-  async storeBpiAccountStateTreeLeafValue(id: string, leafIndex: number, merkPayload: MerkleTree, witness: Witness): Promise<void>  {
+  async storeBpiAccountStateTreeLeafValue(
+    id: string,
+    leafIndex: number,
+    merkPayload: MerkleTree,
+    witness: Witness,
+  ): Promise<void> {
     await this.bpiAccountStateTreeLeafValue.create({
       data: {
         bpiAccountId: id,
         leafIndex: leafIndex,
         merkelizedPayload: MerkleTree.marshalTree(merkPayload),
-        witness: JSON.stringify(witness)
-      }
+        witness: JSON.stringify(witness),
+      },
     });
   }
 }
