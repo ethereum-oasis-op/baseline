@@ -202,6 +202,16 @@ export class TransactionAgent {
       circuitVerificatioKeyPath,
     );
 
+    const hashFn = this.merkleTreeService.createHashFunction('sha256');
+
+    const witnessHash = hashFn(JSON.stringify(txResult.witness)).toString(
+      'hex',
+    );
+
+    txResult.hash = hashFn(
+      `${merkelizedPayload.getHexRoot()}` + `${witnessHash}`,
+    ).toString('hex');
+
     return txResult;
   }
 
