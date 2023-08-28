@@ -1,4 +1,6 @@
 import { CommandHandler, ICommandHandler, EventBus } from '@nestjs/cqrs';
+import { WorkflowStorageAgent } from 'src/bri/workgroup/workflows/agents/workflowsStorage.agent';
+import { StateAgent } from '../../../state/agents/state.agent';
 import { TransactionStorageAgent } from '../../../transactions/agents/transactionStorage.agent';
 import { TransactionAgent } from '../../../transactions/agents/transactions.agent';
 import { TransactionStatus } from '../../../transactions/models/transactionStatus.enum';
@@ -11,8 +13,10 @@ export class ExecuteVsmCycleCommandHandler
   implements ICommandHandler<ExecuteVsmCycleCommand>
 {
   constructor(
-    private agent: TransactionAgent,
+    private txAgent: TransactionAgent,
+    private stateAgent: StateAgent,
     private workstepStorageAgent: WorkstepStorageAgent,
+    private workflowStorageAgent: WorkflowStorageAgent,
     private txStorageAgent: TransactionStorageAgent,
     private eventBus: EventBus,
   ) {}
@@ -28,7 +32,7 @@ export class ExecuteVsmCycleCommandHandler
       tx.updateStatusToProcessing();
       await this.txStorageAgent.updateTransactionStatus(tx);
 
-      if (!this.agent.validateTransactionForExecution(tx)) {
+      if (!this.txAgent.validateTransactionForExecution(tx)) {
         this.eventBus.publish(
           new WorkstepExecutionFailuresEvent(tx, 'Validation Error'),
         );
@@ -41,10 +45,21 @@ export class ExecuteVsmCycleCommandHandler
         tx.workstepInstanceId,
       );
 
+      const workflow = await this.workflowStorageAgent.getWorkflowById(
+        tx.workflowInstanceId,
+      );
+
       try {
-        const txResult = await this.agent.executeTransaction(tx, workstep!);
+        const txResult = await this.txAgent.executeTransaction(tx, workstep!);
+        
+        await this.stateAgent.storeNewLeafInStateTree(
+          workflow!.bpiAccount, 
+          "TODO: txResult.hash", 
+          txResult.merkelizedPayload, 
+          txResult.witness);
+
         // TODO: When do we update the nonce on the BpiAccount? // Whenever a transaction is initiated
-        // TODO: #702 Update relevant Bpi Account state with txResult sucess
+    
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {
