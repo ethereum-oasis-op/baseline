@@ -11,12 +11,13 @@ import { CommunicationModule } from './bri/communication/communication.module';
 import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
 import { IdentityModule } from './bri/identity/identity.module';
 import { MerkleModule } from './bri/merkleTree/merkle.module';
+import { StateModule } from './bri/state/state.module';
 import { TransactionModule } from './bri/transactions/transactions.module';
+import { VsmModule } from './bri/vsm/vsm.module';
 import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { ZeroKnowledgeProofModule } from './bri/zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { EncryptionModule } from './shared/encryption/encryption.module';
 import { LoggingModule } from './shared/logging/logging.module';
-import { VsmModule } from './bri/vsm/vsm.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { VsmModule } from './bri/vsm/vsm.module';
     AuthzModule,
     SubjectModule,
     MerkleModule,
+    StateModule
   ],
   providers: [
     PrismaService,
