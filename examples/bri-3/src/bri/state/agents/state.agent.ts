@@ -3,9 +3,11 @@ import {
 } from '@nestjs/common';
 
 import MerkleTree from 'merkletreejs';
+import { BpiAccountStorageAgent } from '../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
+import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
+import { MerkleTreeAgent } from '../../merkleTree/agents/merkleTree.agent';
 import { MerkleTreeStorageAgent } from '../../merkleTree/agents/merkleTreeStorage.agent';
 import { Witness } from '../../zeroKnowledgeProof/models/witness';
-import { BpiAccountStorageAgent } from '../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
 
 // TODO: We should follow this approach everywhere for storage
 // https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#scenario-pre-computed-ids-and-the-transaction-api
@@ -13,33 +15,32 @@ import { BpiAccountStorageAgent } from '../../identity/bpiAccounts/agents/bpiAcc
 // and then execute a single prisma transaction at the end of the command handler
 // Best way to achieve this is to have a provider called i.e dbContext, which is scoped as REQUEST
 // that is injected in every agent and serves as the place where we collect all the db actions created by storage agents which are invoked by
-// by regular agents. This dbContext is in the end passed to prisma.transaction call.
+// by regular agents. This dbContext is in the end passed to prisma.transaction call, so that db actions are executed in order
+// as part of a single transaction.
 @Injectable()
 export class StateAgent {
   constructor(
     private bpiAccountStorageAgent: BpiAccountStorageAgent,
-    private merkleTreetStorageAgent: MerkleTreeStorageAgent
+    private merkleTreetStorageAgent: MerkleTreeStorageAgent,
+    private merkleTreeAgent: MerkleTreeAgent
   ) {}
 
-  public async storeNewLeafInStateTree(bpiAccountId: string, stateLeaf: Buffer, merkelizedPayload: MerkleTree, witness: Witness): Promise<void> {
-    // unmarsahling from text to merkleTree.js object should happen inside
-    const bpiAccount = await this.bpiAccountStorageAgent.getAccountById(bpiAccountId);
+  public async storeNewLeafInStateTree(bpiAccount: BpiAccount, stateLeaf: string, merkelizedPayload: MerkleTree, witness: Witness): Promise<void> {
+    // TODO: state tree storage agent
+    let stateTree = await this.merkleTreetStorageAgent.getMerkleTreeById(bpiAccount.stateTreeId);
 
-    // hasStateTree method on domain object
-    if (!bpiAccount.stateTree) {
-      // construct the new empty merkle tree js object
+    if (!stateTree) {
+      stateTree = this.merkleTreeAgent.createNewMerkleTree([])
     }
 
-    // addleafToStateTree method on domain object
-    bpiAccount.stateTree.tree.addLeaf(stateLeaf)
+    stateTree.addLeaf(stateLeaf)
     
-    await this.merkleTreetStorageAgent.storeUpdatedMerkleTree(bpiAccount.stateTree);
+    await this.merkleTreetStorageAgent.storeUpdatedMerkleTree(stateTree);
 
-    const newLeafIndex = bpiAccount.stateTree.tree.getLeafIndex(stateLeaf);
-
+    // TODO: store accompanying state leaf values
     this.bpiAccountStorageAgent.storeBpiAccountStateTreeLeafValue(
         bpiAccount.id, 
-        newLeafIndex,
+        stateTree.getLeafIndex(stateLeaf),
         merkelizedPayload, 
         witness);
   }

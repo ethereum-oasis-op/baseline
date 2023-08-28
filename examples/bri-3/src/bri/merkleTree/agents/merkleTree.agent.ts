@@ -14,12 +14,11 @@ export class MerkleTreeAgent {
 
   public createNewMerkleTree(
     leaves: string[],
-    hashAlgName: string,
   ): BpiMerkleTree {
     return new BpiMerkleTree(
       v4(),
-      hashAlgName,
-      this.service.formMerkleTree(leaves, hashAlgName),
+      'sha256',
+      this.service.formMerkleTree(leaves, 'sha256'),
     );
   }
 

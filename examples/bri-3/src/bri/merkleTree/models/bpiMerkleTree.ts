@@ -21,4 +21,13 @@ export class BpiMerkleTree {
     const bufferLeaves = leaves.map((leaf) => Buffer.from(leaf, 'utf-8'));
     this.tree.addLeaves(bufferLeaves, true);
   }
+
+  public addLeaf(leaf: string): void {
+    const bufferLeaf = Buffer.from(leaf, 'utf-8');
+    this.tree.addLeaf(bufferLeaf, true);
+  }
+
+  public getLeafIndex(leaf: string): number {
+    return this.tree.getLeafIndex(Buffer.from(leaf, 'utf-8'));
+  }
 }
