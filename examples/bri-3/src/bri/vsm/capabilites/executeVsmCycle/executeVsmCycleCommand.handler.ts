@@ -55,7 +55,7 @@ export class ExecuteVsmCycleCommandHandler
 
         await this.stateAgent.storeNewLeafInStateTree(
           workflow!.bpiAccount,
-          'TODO: txResult.hash',
+          txResult.hash,
           txResult.merkelizedPayload,
           txResult.witness,
         );
