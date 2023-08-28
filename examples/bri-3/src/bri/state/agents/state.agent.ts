@@ -42,8 +42,7 @@ export class StateAgent {
 
     await this.merkleTreetStorageAgent.storeUpdatedMerkleTree(stateTree);
 
-    // TODO: store accompanying state leaf values
-    this.bpiAccountStorageAgent.storeBpiAccountStateTreeLeafValue(
+    this.bpiAccountStorageAgent.storeAccompanyingStateLeafValues(
       bpiAccount.id,
       stateTree.getLeafIndex(stateLeaf),
       merkelizedPayload,

@@ -95,7 +95,7 @@ export class BpiAccountStorageAgent extends PrismaService {
     });
   }
 
-  async storeBpiAccountStateTreeLeafValue(
+  async storeAccompanyingStateLeafValues(
     id: string,
     leafIndex: number,
     merkPayload: MerkleTree,
