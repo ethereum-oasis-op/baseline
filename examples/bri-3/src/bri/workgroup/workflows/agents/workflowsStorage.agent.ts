@@ -14,7 +14,10 @@ export class WorkflowStorageAgent extends PrismaService {
   async getWorkflowById(id: string): Promise<Workflow | undefined> {
     const workflowModel = await this.workflow.findUnique({
       where: { id: id },
-      include: { worksteps: true },
+      include: { 
+        worksteps: true,
+        bpiAccount: true
+      },
     });
 
     if (!workflowModel) {

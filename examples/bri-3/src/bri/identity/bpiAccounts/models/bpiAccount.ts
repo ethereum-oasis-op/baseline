@@ -1,5 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BpiMerkleTree } from 'src/bri/merkleTree/models/bpiMerkleTree';
 
 export class BpiAccount {
   @AutoMap()
@@ -16,6 +17,12 @@ export class BpiAccount {
 
   @AutoMap()
   stateObjectProverSystem: string;
+
+  @AutoMap()
+  stateTreeId: string;
+
+  @AutoMap()
+  stateTree: BpiMerkleTree;
 
   constructor(
     id: string,
