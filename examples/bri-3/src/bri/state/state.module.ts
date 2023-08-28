@@ -5,14 +5,8 @@ import { MerkleModule } from '../merkleTree/merkle.module';
 import { StateAgent } from './agents/state.agent';
 
 @Module({
-  imports: [
-    CqrsModule,
-    MerkleModule,
-    AccountModule,
-  ],
-  providers: [
-    StateAgent,
-  ],
+  imports: [CqrsModule, MerkleModule, AccountModule],
+  providers: [StateAgent],
   exports: [StateAgent],
 })
 export class StateModule {}

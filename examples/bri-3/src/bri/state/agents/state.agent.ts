@@ -1,6 +1,4 @@
-import {
-  Injectable,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import MerkleTree from 'merkletreejs';
 import { BpiAccountStorageAgent } from '../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
@@ -22,26 +20,34 @@ export class StateAgent {
   constructor(
     private bpiAccountStorageAgent: BpiAccountStorageAgent,
     private merkleTreetStorageAgent: MerkleTreeStorageAgent,
-    private merkleTreeAgent: MerkleTreeAgent
+    private merkleTreeAgent: MerkleTreeAgent,
   ) {}
 
-  public async storeNewLeafInStateTree(bpiAccount: BpiAccount, stateLeaf: string, merkelizedPayload: MerkleTree, witness: Witness): Promise<void> {
+  public async storeNewLeafInStateTree(
+    bpiAccount: BpiAccount,
+    stateLeaf: string,
+    merkelizedPayload: MerkleTree,
+    witness: Witness,
+  ): Promise<void> {
     // TODO: state tree storage agent
-    let stateTree = await this.merkleTreetStorageAgent.getMerkleTreeById(bpiAccount.stateTreeId);
+    let stateTree = await this.merkleTreetStorageAgent.getMerkleTreeById(
+      bpiAccount.stateTreeId,
+    );
 
     if (!stateTree) {
-      stateTree = this.merkleTreeAgent.createNewMerkleTree([])
+      stateTree = this.merkleTreeAgent.createNewMerkleTree([]);
     }
 
-    stateTree.addLeaf(stateLeaf)
-    
+    stateTree.addLeaf(stateLeaf);
+
     await this.merkleTreetStorageAgent.storeUpdatedMerkleTree(stateTree);
 
     // TODO: store accompanying state leaf values
     this.bpiAccountStorageAgent.storeBpiAccountStateTreeLeafValue(
-        bpiAccount.id, 
-        stateTree.getLeafIndex(stateLeaf),
-        merkelizedPayload, 
-        witness);
+      bpiAccount.id,
+      stateTree.getLeafIndex(stateLeaf),
+      merkelizedPayload,
+      witness,
+    );
   }
 }

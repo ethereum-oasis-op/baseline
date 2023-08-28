@@ -27,7 +27,7 @@ export const QueryHandlers = [];
     LoggingModule,
     WorkstepModule,
     WorkflowModule,
-    StateModule
+    StateModule,
   ],
   providers: [
     VsmTasksSchedulerAgent,
