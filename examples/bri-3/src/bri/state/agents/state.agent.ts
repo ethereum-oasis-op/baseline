@@ -15,6 +15,8 @@ import { Witness } from '../../zeroKnowledgeProof/models/witness';
 // that is injected in every agent and serves as the place where we collect all the db actions created by storage agents which are invoked by
 // by regular agents. This dbContext is in the end passed to prisma.transaction call, so that db actions are executed in order
 // as part of a single transaction.
+
+// TODO: MIL5 - Introduce unit tests once https://github.com/demonsters/prisma-mock implemented
 @Injectable()
 export class StateAgent {
   constructor(
