@@ -26,6 +26,8 @@ export class BpiAccountStorageAgent extends PrismaService {
             ownerBpiSubject: true,
           },
         },
+        // look into merkle tree profile to resolve unmarhsling of the state tree here
+        // stateTree: true
       },
     });
 
@@ -69,6 +71,7 @@ export class BpiAccountStorageAgent extends PrismaService {
         },
         authorizationCondition: bpiAccount.authorizationCondition,
         stateObjectProverSystem: bpiAccount.stateObjectProverSystem,
+        
       },
     });
 
