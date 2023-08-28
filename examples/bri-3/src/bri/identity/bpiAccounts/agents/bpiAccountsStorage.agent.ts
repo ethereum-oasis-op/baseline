@@ -1,19 +1,18 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import MerkleTree from 'merkletreejs';
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { Witness } from '../../../zeroKnowledgeProof/models/witness';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
-import { MerkleTreeService } from 'src/bri/merkleTree/services/merkleTree.service';
-import MerkleTree from 'merkletreejs';
-import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
 export class BpiAccountStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private readonly mapper: Mapper,private readonly merkleTreeService: MerkleTreeService) {
+  constructor(@InjectMapper() private readonly mapper: Mapper) {
     super();
   }
 
@@ -27,8 +26,6 @@ export class BpiAccountStorageAgent extends PrismaService {
             ownerBpiSubject: true,
           },
         },
-        // look into merkle tree profile to resolve unmarhsling of the state tree here
-        // stateTree: true
       },
     });
 

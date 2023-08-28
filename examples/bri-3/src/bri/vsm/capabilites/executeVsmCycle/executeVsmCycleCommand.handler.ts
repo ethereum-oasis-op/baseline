@@ -23,11 +23,12 @@ export class ExecuteVsmCycleCommandHandler
 
   async execute(command: ExecuteVsmCycleCommand) {
     const executionCandidates =
-      await this.txStorageAgent.getTopNTransactionsByStatus(
-        Number(process.env.VSM_CYCLE_TX_BATCH_SIZE),
-        TransactionStatus.Initialized,
+    await this.txStorageAgent.getTopNTransactionsByStatus(
+      Number(process.env.VSM_CYCLE_TX_BATCH_SIZE),
+      TransactionStatus.Initialized,
       );
-
+      
+    // TODO: When do we update the nonce on the BpiAccount? // Whenever a transaction is initiated
     executionCandidates.forEach(async (tx) => {
       tx.updateStatusToProcessing();
       await this.txStorageAgent.updateTransactionStatus(tx);
@@ -58,7 +59,6 @@ export class ExecuteVsmCycleCommandHandler
           txResult.merkelizedPayload, 
           txResult.witness);
 
-        // TODO: When do we update the nonce on the BpiAccount? // Whenever a transaction is initiated
     
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
