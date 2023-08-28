@@ -12,9 +12,7 @@ export class MerkleTreeAgent {
     private readonly service: MerkleTreeService,
   ) {}
 
-  public createNewMerkleTree(
-    leaves: string[],
-  ): BpiMerkleTree {
+  public createNewMerkleTree(leaves: string[]): BpiMerkleTree {
     return new BpiMerkleTree(
       v4(),
       'sha256',

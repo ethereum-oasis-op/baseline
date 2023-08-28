@@ -23,11 +23,11 @@ export class ExecuteVsmCycleCommandHandler
 
   async execute(command: ExecuteVsmCycleCommand) {
     const executionCandidates =
-    await this.txStorageAgent.getTopNTransactionsByStatus(
-      Number(process.env.VSM_CYCLE_TX_BATCH_SIZE),
-      TransactionStatus.Initialized,
+      await this.txStorageAgent.getTopNTransactionsByStatus(
+        Number(process.env.VSM_CYCLE_TX_BATCH_SIZE),
+        TransactionStatus.Initialized,
       );
-      
+
     // TODO: When do we update the nonce on the BpiAccount? // Whenever a transaction is initiated
     executionCandidates.forEach(async (tx) => {
       tx.updateStatusToProcessing();
@@ -52,14 +52,14 @@ export class ExecuteVsmCycleCommandHandler
 
       try {
         const txResult = await this.txAgent.executeTransaction(tx, workstep!);
-        
-        await this.stateAgent.storeNewLeafInStateTree(
-          workflow!.bpiAccount, 
-          "TODO: txResult.hash", 
-          txResult.merkelizedPayload, 
-          txResult.witness);
 
-    
+        await this.stateAgent.storeNewLeafInStateTree(
+          workflow!.bpiAccount,
+          'TODO: txResult.hash',
+          txResult.merkelizedPayload,
+          txResult.witness,
+        );
+
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {
