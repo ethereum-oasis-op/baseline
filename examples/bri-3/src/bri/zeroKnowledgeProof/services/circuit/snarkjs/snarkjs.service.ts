@@ -2,12 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
-import {
-  computeEcdsaPublicInputs,
-  computeMerkleProofPublicInputs,
-} from './utils/computePublicInputs';
+import { computeEcdsaPublicInputs } from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
-import MerkleTree from 'merkletreejs';
 import { Transaction } from '../../../../transactions/models/transaction';
 
 @Injectable()
