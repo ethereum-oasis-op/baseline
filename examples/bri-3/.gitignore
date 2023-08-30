@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /zeroKnowledgeArtifacts/ptau
-/zeroKnowledgeArtifacts/circuit
+/zeroKnowledgeArtifacts/circuits
 src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
 
 # Logs

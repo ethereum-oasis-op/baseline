@@ -2,15 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
-import { computeEcdsaPublicInputs } from './utils/ecdsa/computeEcdsaPublicInputs';
+import { computeEcdsaSigPublicInputs } from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
+import { Transaction } from '../../../../transactions/models/transaction';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
   public witness: Witness;
 
   public async createWitness(
-    inputs: object,
+    inputs: {
+      tx: Transaction;
+    },
     circuitName: string,
     pathToCircuit: string,
     pathToProvingKey: string,
@@ -70,31 +73,36 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   private async prepareInputs(
-    inputs: object,
+    inputs: {
+      tx: Transaction;
+    },
     circuitName: string,
   ): Promise<object> {
     return await this[circuitName](inputs);
   }
 
   // TODO: Mil5 - How to parametrize this for different use-cases?
-  private async workstep1(inputs: object): Promise<object> {
-    //Ecdsa signature
+  private async workstep1(inputs: { tx: Transaction }): Promise<object> {
+    //1. Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
-      computeEcdsaPublicInputs(
-        inputs['signature'],
-        inputs['messageHash'],
-        inputs['publicKey'],
-      );
+      computeEcdsaSigPublicInputs(inputs.tx);
+
+    //2. Items
+    const payload = JSON.parse(inputs.tx.payload);
+
+    const itemPrices: number[] = [];
+    const itemAmount: number[] = [];
+
+    payload.items.forEach((item: object) => {
+      itemPrices.push(item['price']);
+      itemAmount.push(item['amount']);
+    });
 
     const preparedInputs = {
-      invoiceStatus: inputs['invoiceStatus'],
-      invoiceAmount: inputs['invoiceAmount'],
-      itemPrices: inputs['itemPrices'],
-      itemAmount: inputs['itemAmount'],
-      merkelizedInvoiceRoot: inputs['merkelizedInvoiceRoot'],
-      stateTreeRoot: inputs['stateTreeRoot'],
-      stateTree: inputs['stateTree'],
-      stateTreeLeafPosition: inputs['stateTreeLeafPosition'],
+      invoiceStatus: payload.status,
+      invoiceAmount: payload.amount,
+      itemPrices,
+      itemAmount,
       signature,
       publicKeyX,
       publicKeyY,
