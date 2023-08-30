@@ -62,7 +62,7 @@ export class ExecuteVsmCycleCommandHandler
 
         await this.stateAgent.storeNewLeafInHistoryTree(
           workflow!.bpiAccount,
-          stateTreeRoot
+          stateTreeRoot,
         );
 
         tx.updateStatusToExecuted();
