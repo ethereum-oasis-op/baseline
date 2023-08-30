@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
-import { computeEcdsaPublicInputs } from './utils/computePublicInputs';
+import { computeEcdsaSigPublicInputs } from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
 import { Transaction } from '../../../../transactions/models/transaction';
 
@@ -85,7 +85,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   private async workstep1(inputs: { tx: Transaction }): Promise<object> {
     //1. Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
-      computeEcdsaPublicInputs(inputs.tx);
+      computeEcdsaSigPublicInputs(inputs.tx);
 
     //2. Items
     const payload = JSON.parse(inputs.tx.payload);

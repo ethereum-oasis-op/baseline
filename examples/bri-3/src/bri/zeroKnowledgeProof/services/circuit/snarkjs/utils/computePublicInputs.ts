@@ -8,7 +8,7 @@ import MerkleTree from 'merkletreejs';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
 
-export const computeEffectiveEcdsaPublicInputs = (
+export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
   msgHash: Buffer,
   publicKeyHex: string,
@@ -39,7 +39,7 @@ export const computeEffectiveEcdsaPublicInputs = (
   return input;
 };
 
-export const computeEcdsaPublicInputs = (tx: Transaction) => {
+export const computeEcdsaSigPublicInputs = (tx: Transaction) => {
   const ecdsaSignature = ethers.utils.splitSignature(tx.signature);
 
   const messageHash = ethers.utils.arrayify(
@@ -48,7 +48,7 @@ export const computeEcdsaPublicInputs = (tx: Transaction) => {
 
   const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
 
-  return computeEffectiveEcdsaPublicInputs(
+  return computeEffectiveEcdsaSigPublicInputs(
     ecdsaSignature,
     Buffer.from(messageHash),
     publicKey,
