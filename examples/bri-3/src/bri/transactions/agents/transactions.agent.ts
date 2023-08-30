@@ -191,11 +191,22 @@ export class TransactionAgent {
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
-      {}, // TODO: Something needs to translate tx.payload and current bpi account state into circuit inputs
+      { tx },
       snakeCaseWorkstepName,
       circuitPath,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
+    );
+
+    const hashFn = this.merkleTreeService.createHashFunction('sha256');
+
+    const merkelizedInvoiceRoot = merkelizedPayload.getRoot().toString('hex');
+    const witnessHash = hashFn(JSON.stringify(txResult.witness)).toString(
+      'hex',
+    );
+
+    txResult.hash = hashFn(`${merkelizedInvoiceRoot}${witnessHash}`).toString(
+      'hex',
     );
 
     return txResult;
