@@ -30,4 +30,8 @@ export class BpiMerkleTree {
   public getLeafIndex(leaf: string): number {
     return this.tree.getLeafIndex(Buffer.from(leaf, 'utf-8'));
   }
+
+  public getRoot(): string {
+    return this.tree.getRoot().toString();
+  }
 }

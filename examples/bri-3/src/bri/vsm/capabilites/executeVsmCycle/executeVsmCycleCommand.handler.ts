@@ -53,11 +53,16 @@ export class ExecuteVsmCycleCommandHandler
       try {
         const txResult = await this.txAgent.executeTransaction(tx, workstep!);
 
-        await this.stateAgent.storeNewLeafInStateTree(
+        const stateTreeRoot = await this.stateAgent.storeNewLeafInStateTree(
           workflow!.bpiAccount,
           txResult.hash,
           txResult.merkelizedPayload,
           txResult.witness,
+        );
+
+        await this.stateAgent.storeNewLeafInHistoryTree(
+          workflow!.bpiAccount,
+          stateTreeRoot
         );
 
         tx.updateStatusToExecuted();
