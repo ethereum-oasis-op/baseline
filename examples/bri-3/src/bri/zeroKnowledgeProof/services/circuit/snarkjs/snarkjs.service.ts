@@ -17,8 +17,6 @@ export class SnarkjsCircuitService implements ICircuitService {
   public async createWitness(
     inputs: {
       tx: Transaction;
-      merklelizedPayload: MerkleTree;
-      stateTree: MerkleTree;
     },
     circuitName: string,
     pathToCircuit: string,
@@ -81,8 +79,6 @@ export class SnarkjsCircuitService implements ICircuitService {
   private async prepareInputs(
     inputs: {
       tx: Transaction;
-      merklelizedPayload: MerkleTree;
-      stateTree: MerkleTree;
     },
     circuitName: string,
   ): Promise<object> {
@@ -90,11 +86,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   // TODO: Mil5 - How to parametrize this for different use-cases?
-  private async workstep1(inputs: {
-    tx: Transaction;
-    merklelizedPayload: MerkleTree;
-    stateTree: MerkleTree;
-  }): Promise<object> {
+  private async workstep1(inputs: { tx: Transaction }): Promise<object> {
     //1. Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
       computeEcdsaPublicInputs(inputs.tx);
@@ -110,26 +102,11 @@ export class SnarkjsCircuitService implements ICircuitService {
       itemAmount.push(item['amount']);
     });
 
-    //3. Merkle Proof
-    const {
-      merkelizedInvoiceRoot,
-      stateTreeRoot,
-      stateTree,
-      stateTreeLeafPosition,
-    } = computeMerkleProofPublicInputs(
-      inputs.merklelizedPayload,
-      inputs.stateTree,
-    );
-
     const preparedInputs = {
       invoiceStatus: payload.status,
       invoiceAmount: payload.amount,
       itemPrices,
       itemAmount,
-      merkelizedInvoiceRoot,
-      stateTreeRoot,
-      stateTree,
-      stateTreeLeafPosition,
       signature,
       publicKeyX,
       publicKeyY,

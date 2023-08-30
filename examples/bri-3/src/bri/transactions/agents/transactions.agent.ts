@@ -190,14 +190,8 @@ export class TransactionAgent {
       circuitPath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
-    //TODO: Need to Discuss
-    //Problem: StateTree(merkelizedInvoice + witness) but
-    //witness creation requires checking non-inclusion of only (merkelizedInvoice) in StateTree
-    //Following code only for temporary purpose
-    const stateTree = new MerkleTree([]);
-
     txResult.witness = await this.circuitService.createWitness(
-      { tx, merkelizedPayload, stateTree },
+      { tx },
       snakeCaseWorkstepName,
       circuitPath,
       circuitProvingKeyPath,
