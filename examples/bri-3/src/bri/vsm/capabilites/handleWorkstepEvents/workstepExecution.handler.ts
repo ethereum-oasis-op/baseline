@@ -15,7 +15,7 @@ export class WorkstepExecutionHandler
     private readonly messagingAgent: MessagingAgent,
   ) {}
 
-  handle(event: WorkstepExecutionEvent) {
+  async handle(event: WorkstepExecutionEvent) {
     let message: string, messageType: number;
 
     if (event.status !== 'Success') {
@@ -49,7 +49,7 @@ export class WorkstepExecutionHandler
       channels.push(event.tx.toBpiSubjectAccount.ownerBpiSubject.publicKey);
     }
 
-    this.publishMessage(channels, bpiMessage);
+    await this.publishMessage(channels, bpiMessage);
   }
 
   private constructPayload(message: string) {
