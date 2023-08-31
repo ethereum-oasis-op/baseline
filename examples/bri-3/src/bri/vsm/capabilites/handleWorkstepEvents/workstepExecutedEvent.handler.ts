@@ -1,21 +1,21 @@
 import { IEventHandler } from '@nestjs/cqrs';
 import { EventsHandler } from '@nestjs/cqrs/dist/decorators/events-handler.decorator';
-import { WorkstepExecutionEvent } from './workstepExecution.event';
+import { WorkstepExecutedEvent } from './workstepExecuted.event';
 import { LoggingService } from '../../../../shared/logging/logging.service';
 import { BpiMessage } from '../../../communication/models/bpiMessage';
 import { BpiMessageType } from '../../../communication/models/bpiMessageType.enum';
 import { MessagingAgent } from '../../../communication/agents/messaging.agent';
 
-@EventsHandler(WorkstepExecutionEvent)
-export class WorkstepExecutionHandler
-  implements IEventHandler<WorkstepExecutionEvent>
+@EventsHandler(WorkstepExecutedEvent)
+export class WorkstepExecutedEventHandler
+  implements IEventHandler<WorkstepExecutedEvent>
 {
   constructor(
     private readonly logger: LoggingService,
     private readonly messagingAgent: MessagingAgent,
   ) {}
 
-  async handle(event: WorkstepExecutionEvent) {
+  async handle(event: WorkstepExecutedEvent) {
     let message: string, messageType: number;
 
     if (event.status !== 'Success') {

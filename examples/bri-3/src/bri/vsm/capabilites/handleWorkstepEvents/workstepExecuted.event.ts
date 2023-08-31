@@ -1,6 +1,6 @@
 import { Transaction } from 'src/bri/transactions/models/transaction';
 
-export class WorkstepExecutionEvent {
+export class WorkstepExecutedEvent {
   constructor(
     public readonly tx: Transaction,
     public readonly status: string,

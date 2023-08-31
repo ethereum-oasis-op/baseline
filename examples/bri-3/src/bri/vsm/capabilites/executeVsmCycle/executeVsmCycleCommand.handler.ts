@@ -4,7 +4,7 @@ import { TransactionAgent } from '../../../transactions/agents/transactions.agen
 import { TransactionStatus } from '../../../transactions/models/transactionStatus.enum';
 import { WorkstepStorageAgent } from '../../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
-import { WorkstepExecutionEvent } from '../handleWorkstepEvents/workstepExecution.event';
+import { WorkstepExecutedEvent } from '../handleWorkstepEvents/workstepExecuted.event';
 
 @CommandHandler(ExecuteVsmCycleCommand)
 export class ExecuteVsmCycleCommandHandler
@@ -30,7 +30,7 @@ export class ExecuteVsmCycleCommandHandler
 
       if (!this.agent.validateTransactionForExecution(tx)) {
         this.eventBus.publish(
-          new WorkstepExecutionEvent(tx, 'Validation Error'),
+          new WorkstepExecutedEvent(tx, 'Validation Error'),
         );
         tx.updateStatusToInvalid();
         await this.txStorageAgent.updateTransactionStatus(tx);
@@ -48,13 +48,13 @@ export class ExecuteVsmCycleCommandHandler
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
       } catch (error) {
-        this.eventBus.publish(new WorkstepExecutionEvent(tx, error));
+        this.eventBus.publish(new WorkstepExecutedEvent(tx, error));
         tx.updateStatusToAborted();
         this.txStorageAgent.updateTransactionStatus(tx);
         return;
       }
 
-      await this.eventBus.publish(new WorkstepExecutionEvent(tx, 'Success'));
+      await this.eventBus.publish(new WorkstepExecutedEvent(tx, 'Success'));
     });
   }
 }
