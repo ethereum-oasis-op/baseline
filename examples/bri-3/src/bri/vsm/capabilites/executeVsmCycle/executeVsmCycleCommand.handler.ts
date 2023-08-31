@@ -54,7 +54,6 @@ export class ExecuteVsmCycleCommandHandler
         return;
       }
 
-      // TODO: #705 Relevant BPI subjects are informed (Notification is thrown?)
       await this.eventBus.publish(new WorkstepExecutionEvent(tx, 'Success'));
     });
   }
