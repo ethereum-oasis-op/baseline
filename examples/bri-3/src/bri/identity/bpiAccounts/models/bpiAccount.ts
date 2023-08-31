@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { BpiMerkleTree } from '../../../merkleTree/models/bpiMerkleTree';
 import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
 
 export class BpiAccount {
@@ -18,21 +19,22 @@ export class BpiAccount {
   stateObjectProverSystem: string;
 
   @AutoMap()
-  stateObjectStorage: string;
+  stateTreeId: string;
+
+  @AutoMap()
+  stateTree: BpiMerkleTree;
 
   constructor(
     id: string,
     ownerBpiSubjectAccounts: BpiSubjectAccount[],
     authorizationCondition: string,
     stateObjectProverSystem: string,
-    stateObjectStorage: string,
   ) {
     this.id = id;
     this.nonce = 0;
     this.ownerBpiSubjectAccounts = ownerBpiSubjectAccounts;
     this.authorizationCondition = authorizationCondition;
     this.stateObjectProverSystem = stateObjectProverSystem;
-    this.stateObjectStorage = stateObjectStorage;
   }
 
   public updateNonce(): void {
