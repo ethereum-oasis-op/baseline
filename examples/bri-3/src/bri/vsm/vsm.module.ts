@@ -7,12 +7,12 @@ import { WorkstepModule } from '../workgroup/worksteps/worksteps.module';
 import { VsmTasksSchedulerAgent } from './agents/vsmTaskScheduler.agent';
 import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/executeVsmCycleCommand.handler';
 import { MessagingAgent } from '../communication/agents/messaging.agent';
-import { WorkstepExecutionHandler } from './capabilites/handleWorkstepEvents/workstepExecution.handler';
+import { WorkstepExecutedEventHandler } from './capabilites/handleWorkstepEvents/workstepExecutedEvent.handler';
 import { NatsMessagingClient } from '../communication/messagingClients/natsMessagingClient';
 
 export const CommandHandlers = [
   ExecuteVsmCycleCommandHandler,
-  WorkstepExecutionHandler,
+  WorkstepExecutedEventHandler,
 ];
 
 export const QueryHandlers = [];
