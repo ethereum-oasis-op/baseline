@@ -54,7 +54,7 @@ export class WorkstepExecutedEventHandler
 
   private constructPayload(message: string) {
     return {
-      id: 'xxx',
+      id: 'xxx', // TODO: Update standardized message payload
       info: message,
     };
   }
