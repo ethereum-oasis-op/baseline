@@ -60,13 +60,11 @@ export class WorkstepExecutionHandler
   }
 
   private async publishMessage(channels: string[], bpiMessage: BpiMessage) {
-    await Promise.all(
-      channels.map(async (channel) => {
-        await this.messagingAgent.publishMessage(
-          channel,
-          JSON.stringify(bpiMessage),
-        );
-      }),
-    );
+    for (const channel of channels) {
+      await this.messagingAgent.publishMessage(
+        channel,
+        JSON.stringify(bpiMessage),
+      );
+    }
   }
 }
