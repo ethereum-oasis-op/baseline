@@ -98,15 +98,3 @@ export const computeMerkleProofPublicInputs = (
     stateTreeLeafPosition: pathIndices,
   };
 };
-
-export const computePreviousStatePublicInputs = async (tx: Transaction) => {
-  //TODO: Verify that State is same as previous workstep, except the allowed changes
-  //TO DO: 1. Get the payload of the previous workstep
-  //       2. Make updates as per current workstep (change status == VERIFIED)
-  //       3. Merkelize the updated payload
-  //       4. Get merkle tree root
-
-  const previousMerkelizedPayload = new MerkleTree([]);
-
-  return previousMerkelizedPayload;
-};
