@@ -2,19 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
-import {
-  computeEcdsaSigPublicInputs,
-  computePreviousStatePublicInputs,
-} from './utils/computePublicInputs';
+import { computeEcdsaSigPublicInputs } from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
 import { Transaction } from '../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
-import { WorkflowStorageAgent } from '../../../../workgroup/workflows/agents/workflowsStorage.agent';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
   public witness: Witness;
-  constructor(private workflowStorageAgent: WorkflowStorageAgent) {}
 
   public async createWitness(
     inputs: {
@@ -134,23 +129,10 @@ export class SnarkjsCircuitService implements ICircuitService {
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
       computeEcdsaSigPublicInputs(inputs.tx);
 
-    //2. Previous merkelized payload (with status == VERIFIED) == current merkelized payload
     const payload = JSON.parse(inputs.tx.payload);
-
-    const previousMerkelizedPayload = await computePreviousStatePublicInputs(
-      inputs.tx,
-    );
-    const previousMerkelizedInvoiceRoot = BigInt(
-      previousMerkelizedPayload.getRoot().toString('hex'),
-    );
-    const currentMerkelizedInvoiceRoot = BigInt(
-      inputs.merkelizedPayload.getRoot().toString('hex'),
-    );
 
     const preparedInputs = {
       invoiceStatus: payload.status,
-      previousMerkelizedInvoiceRoot,
-      currentMerkelizedInvoiceRoot,
       signature,
       publicKeyX,
       publicKeyY,
@@ -171,23 +153,10 @@ export class SnarkjsCircuitService implements ICircuitService {
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
       computeEcdsaSigPublicInputs(inputs.tx);
 
-    //2. Previous merkelized payload (with status == PAID) == current merkelized payload
     const payload = JSON.parse(inputs.tx.payload);
-
-    const previousMerkelizedPayload = await computePreviousStatePublicInputs(
-      inputs.tx,
-    );
-    const previousMerkelizedInvoiceRoot = BigInt(
-      previousMerkelizedPayload.getRoot().toString('hex'),
-    );
-    const currentMerkelizedInvoiceRoot = BigInt(
-      inputs.merkelizedPayload.getRoot().toString('hex'),
-    );
 
     const preparedInputs = {
       invoiceStatus: payload.status,
-      previousMerkelizedInvoiceRoot,
-      currentMerkelizedInvoiceRoot,
       signature,
       publicKeyX,
       publicKeyY,

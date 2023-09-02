@@ -7,8 +7,6 @@ include "./utils/arithmeticOperators.circom";
 template Workstep2(){
 
 	signal input invoiceStatus;
-	signal input previousMerkelizedInvoiceRoot;
-	signal input currentMerkelizedInvoiceRoot;
 	
 	//Signature inputs
 	signal input signature;
@@ -26,16 +24,9 @@ template Workstep2(){
 	component statusVerifier = StatusVerifier();
 	statusVerifier.invoiceStatus <== invoiceStatus;	
 	var isStatusVerified = statusVerifier.verified; 
-
 	
-	//2. previousMerkelizedInvoiceRoot (with status == PAID) == currentMerkelizedInvoiceRoot
-	component isInvoiceEqual = IsEqual();
-	isInvoiceEqual.in[0] <== previousMerkelizedInvoiceRoot;
-	isInvoiceEqual.in[1] <== currentMerkelizedInvoiceRoot;
-	var isInvoiceVerified = isInvoiceEqual.out;
 	
-
-	//3. Verify Signature
+	//2. Verify Signature
 	component ecdsaSignatureVerifier = EcdsaSignatureVerifier();
 	ecdsaSignatureVerifier.signature <== signature;
 	ecdsaSignatureVerifier.publicKeyX <== publicKeyX;
@@ -48,10 +39,9 @@ template Workstep2(){
 	var isSignatureVerified = ecdsaSignatureVerifier.verified;
 
 
-	component mul = Mul(3);
+	component mul = Mul(2);
 	mul.nums[0] <== isStatusVerified;
-	mul.nums[1] <== isInvoiceVerified;
-	mul.nums[2] <== isSignatureVerified;
+	mul.nums[1] <== isSignatureVerified;
 
 	isVerified <== mul.result;
 	
