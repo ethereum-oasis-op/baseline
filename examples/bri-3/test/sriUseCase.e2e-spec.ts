@@ -18,6 +18,7 @@ describe('Workgroup administration', () => {
     await app.init();
   });
 
+  // TODO: Add detailed explanation of the SRI use-case setup and necessary seed data
   it('Logs in an internal Bpi Subject, creates two external Bpi Subjects (Supplier and Buyer) and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
     const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(
       app,
@@ -59,15 +60,20 @@ describe('Workgroup administration', () => {
   });
 
   it('Sets up a workflow with a workstep  in the previously created workgroup', async () => {
-    
+    // TODO: Auth as supplier?
+    // TODO: Can we  listen and fire NATS messages here
+    // createWorkstep
+    // createWorkflow 
   });
 
   it('Submits a transaction for execution of the workstep 1', async () => {
-    
+    // TODO: CheckAuthz on createTransaction and in other places 
+    // createTransaction
   });
 
   it('Verifies that the transaction has been executed and that the state has been properly stored', async () => {
-    
+    // wait 20 secs for the vsm to perform a loop
+    // query the CAH retrieved from the transaction
   });
 });
 
