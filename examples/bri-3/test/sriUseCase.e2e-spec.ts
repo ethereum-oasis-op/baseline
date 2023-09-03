@@ -18,18 +18,18 @@ describe('Workgroup administration', () => {
     await app.init();
   });
 
-  it('Logs in an internal Bpi Subject, creates two external Bpi Subjects and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
+  it('Logs in an internal Bpi Subject, creates two external Bpi Subjects (Supplier and Buyer) and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
     const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(
       app,
     );
 
-    const createdBpiSubject1Id = await createExternalBpiSubjectAndReturnId(
-      'External Bpi Subject 1',
+    const createdBpiSubjectSupplierId = await createExternalBpiSubjectAndReturnId(
+      'External Bpi Subject - Supplier',
       app,
       accessToken,
     );
-    const createdBpiSubject2Id = await createExternalBpiSubjectAndReturnId(
-      'External Bpi Subject 2',
+    const createdBpiSubjectBuyerId = await createExternalBpiSubjectAndReturnId(
+      'External Bpi Subject 2 - Buyer',
       app,
       accessToken,
     );
@@ -41,8 +41,8 @@ describe('Workgroup administration', () => {
 
     await updateWorkgroupAdminsAndParticipants(
       createdWorkgroupId,
-      [createdBpiSubject1Id],
-      [createdBpiSubject1Id, createdBpiSubject2Id],
+      [createdBpiSubjectSupplierId],
+      [createdBpiSubjectSupplierId, createdBpiSubjectBuyerId],
       app,
       accessToken,
     );
@@ -54,8 +54,8 @@ describe('Workgroup administration', () => {
     );
 
     expect(resultWorkgroup.participants.length).toBe(2);
-    expect(resultWorkgroup.participants[0].id).toEqual(createdBpiSubject1Id);
-    expect(resultWorkgroup.participants[1].id).toEqual(createdBpiSubject2Id);
+    expect(resultWorkgroup.participants[0].id).toEqual(createdBpiSubjectSupplierId);
+    expect(resultWorkgroup.participants[1].id).toEqual(createdBpiSubjectBuyerId);
   });
 });
 

@@ -1,9 +1,9 @@
-import { CommandHandler, ICommandHandler, EventBus } from '@nestjs/cqrs';
-import { WorkflowStorageAgent } from 'src/bri/workgroup/workflows/agents/workflowsStorage.agent';
+import { CommandHandler, EventBus, ICommandHandler } from '@nestjs/cqrs';
 import { StateAgent } from '../../../state/agents/state.agent';
 import { TransactionStorageAgent } from '../../../transactions/agents/transactionStorage.agent';
 import { TransactionAgent } from '../../../transactions/agents/transactions.agent';
 import { TransactionStatus } from '../../../transactions/models/transactionStatus.enum';
+import { WorkflowStorageAgent } from '../../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
 import { WorkstepExecutedEvent } from '../handleWorkstepEvents/workstepExecuted.event';
