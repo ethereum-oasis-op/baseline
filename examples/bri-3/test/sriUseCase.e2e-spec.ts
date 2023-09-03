@@ -57,6 +57,18 @@ describe('Workgroup administration', () => {
     expect(resultWorkgroup.participants[0].id).toEqual(createdBpiSubjectSupplierId);
     expect(resultWorkgroup.participants[1].id).toEqual(createdBpiSubjectBuyerId);
   });
+
+  it('Sets up a workflow with a workstep  in the previously created workgroup', async () => {
+    
+  });
+
+  it('Submits a transaction for execution of the workstep 1', async () => {
+    
+  });
+
+  it('Verifies that the transaction has been executed and that the state has been properly stored', async () => {
+    
+  });
 });
 
 async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
