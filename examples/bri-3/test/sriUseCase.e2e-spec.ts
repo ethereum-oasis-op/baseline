@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { AppModule } from '../src/app.module';
+import { Test, TestingModule } from '@nestjs/testing';
 import { ethers } from 'ethers';
-import { SubscriptionLoggable } from 'rxjs/internal/testing/SubscriptionLoggable';
+import * as request from 'supertest';
+import { v4 } from 'uuid';
+import { AppModule } from '../src/app.module';
 
 jest.setTimeout(20000);
 
@@ -13,6 +13,7 @@ let server: any;
 
 let createdWorkgroupId: string;
 let createdWorkstepId: string;
+let createdWorkflowId: string;
 let createdBpiSubjectAccountSupplierId: string;
 let createdBpiSubjectAccountBuyerId: string;
 
@@ -84,19 +85,29 @@ describe('SRI use-case end-to-end test', () => {
       createdWorkgroupId,
     );
 
-    const createdWorkflowId = await createWorkflowAndReturnId(
+    createdWorkflowId = await createWorkflowAndReturnId(
       'worksflow1',
       createdWorkgroupId,
       [createdWorkstepId],
       [createdBpiSubjectAccountSupplierId, createdBpiSubjectAccountBuyerId],
     );
-
-    console.log(createdWorkflowId);
   });
 
   it('Submits a transaction for execution of the workstep 1', async () => {
     // TODO: CheckAuthz on createTransaction and in other places
-    // createTransaction
+
+    const createdTransactionId = await createTransactionAndReturnId(
+      v4(),
+      1,
+      createdWorkflowId,
+      createdWorkstepId,
+      createdBpiSubjectAccountSupplierId,
+      createdBpiSubjectAccountBuyerId,
+      'payload',
+      'sig',
+    );
+
+    console.log(createdTransactionId);
   });
 
   it('Verifies that the transaction has been executed and that the state has been properly stored', async () => {
@@ -244,4 +255,32 @@ async function createWorkflowAndReturnId(
     .expect(201);
 
   return createdWorkflowResponse.text;
+}
+
+async function createTransactionAndReturnId(
+  id: string,
+  nonce: number,
+  workflowInstanceId: string,
+  workstepInstanceId: string,
+  fromSubjectAccountId: string,
+  toSubjectAccountId: string,
+  payload: string,
+  signature: string,
+): Promise<string> {
+  const createdTransactionResponse = await request(server)
+    .post('/transactions')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      id: id,
+      nonce: nonce,
+      workflowInstanceId: workflowInstanceId,
+      workstepInstanceId: workstepInstanceId,
+      fromSubjectAccountId: fromSubjectAccountId,
+      toSubjectAccountId: toSubjectAccountId,
+      payload: payload,
+      signature: signature,
+    })
+    .expect(201);
+
+  return createdTransactionResponse.text;
 }
