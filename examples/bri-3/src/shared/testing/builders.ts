@@ -343,16 +343,12 @@ export class BpiAccountBuilder {
     return this;
   }
 
-  setStateTree(
-    stateTree: BpiMerkleTree,
-  ): BpiAccountBuilder {
+  setStateTree(stateTree: BpiMerkleTree): BpiAccountBuilder {
     this.stateTree = stateTree;
     return this;
   }
 
-  setHistoryTree(
-    historyTree: BpiMerkleTree,
-  ): BpiAccountBuilder {
+  setHistoryTree(historyTree: BpiMerkleTree): BpiAccountBuilder {
     this.historyTree = historyTree;
     return this;
   }
@@ -364,7 +360,7 @@ export class BpiAccountBuilder {
       this.authorizationCondition,
       this.stateObjectProverSystem,
       this.stateTree,
-      this.historyTree
+      this.historyTree,
     );
     bpiAccount.nonce = this.nonce;
     return bpiAccount;

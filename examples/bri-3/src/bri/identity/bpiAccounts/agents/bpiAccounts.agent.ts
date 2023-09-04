@@ -11,7 +11,10 @@ import { BpiAccountStorageAgent } from './bpiAccountsStorage.agent';
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class BpiAccountAgent {
-  constructor(private merkleTreeAgent: MerkleTreeAgent, private storageAgent: BpiAccountStorageAgent) {}
+  constructor(
+    private merkleTreeAgent: MerkleTreeAgent,
+    private storageAgent: BpiAccountStorageAgent,
+  ) {}
 
   public throwIfCreateBpiAccountInputInvalid() {
     return true;

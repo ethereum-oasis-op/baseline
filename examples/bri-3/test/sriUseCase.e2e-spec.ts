@@ -17,7 +17,6 @@ let createdBpiSubjectAccountSupplierId: string;
 let createdBpiSubjectAccountBuyerId: string;
 
 describe('SRI use-case end-to-end test', () => {
-
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -29,22 +28,24 @@ describe('SRI use-case end-to-end test', () => {
   });
 
   afterAll(async () => {
-    await app.close()
-    server.close()
-  })
+    await app.close();
+    server.close();
+  });
 
   // TODO: Add detailed explanation of the SRI use-case setup and necessary seed data
   it('Logs in an internal Bpi Subject, creates two external Bpi Subjects (Supplier and Buyer) and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
     accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken();
 
-    const createdBpiSubjectSupplierId = await createExternalBpiSubjectAndReturnId(
-      'External Bpi Subject - Supplier',
-    );
+    const createdBpiSubjectSupplierId =
+      await createExternalBpiSubjectAndReturnId(
+        'External Bpi Subject - Supplier',
+      );
 
-    createdBpiSubjectAccountSupplierId = await createBpiSubjectAccountAndReturnId(
-      createdBpiSubjectSupplierId,
-      createdBpiSubjectSupplierId
-    );
+    createdBpiSubjectAccountSupplierId =
+      await createBpiSubjectAccountAndReturnId(
+        createdBpiSubjectSupplierId,
+        createdBpiSubjectSupplierId,
+      );
 
     const createdBpiSubjectBuyerId = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject 2 - Buyer',
@@ -52,7 +53,7 @@ describe('SRI use-case end-to-end test', () => {
 
     createdBpiSubjectAccountBuyerId = await createBpiSubjectAccountAndReturnId(
       createdBpiSubjectBuyerId,
-      createdBpiSubjectBuyerId
+      createdBpiSubjectBuyerId,
     );
 
     createdWorkgroupId = await createAWorkgroupAndReturnId();
@@ -63,36 +64,38 @@ describe('SRI use-case end-to-end test', () => {
       [createdBpiSubjectSupplierId, createdBpiSubjectBuyerId],
     );
 
-    const resultWorkgroup = await fetchWorkgroup(
-      createdWorkgroupId
-    );
+    const resultWorkgroup = await fetchWorkgroup(createdWorkgroupId);
 
     expect(resultWorkgroup.participants.length).toBe(2);
-    expect(resultWorkgroup.participants[0].id).toEqual(createdBpiSubjectSupplierId);
-    expect(resultWorkgroup.participants[1].id).toEqual(createdBpiSubjectBuyerId);
+    expect(resultWorkgroup.participants[0].id).toEqual(
+      createdBpiSubjectSupplierId,
+    );
+    expect(resultWorkgroup.participants[1].id).toEqual(
+      createdBpiSubjectBuyerId,
+    );
   });
 
   it('Sets up a workflow with a workstep in the previously created workgroup', async () => {
     // TODO: Auth as supplier?
     // TODO: Can we  listen and fire NATS messages here
-    
+
     createdWorkstepId = await createWorkstepAndReturnId(
-      "workstep1",
-      createdWorkgroupId
+      'workstep1',
+      createdWorkgroupId,
     );
 
     const createdWorkflowId = await createWorkflowAndReturnId(
-      "worksflow1",
+      'worksflow1',
       createdWorkgroupId,
       [createdWorkstepId],
-      [createdBpiSubjectAccountSupplierId, createdBpiSubjectAccountBuyerId]
+      [createdBpiSubjectAccountSupplierId, createdBpiSubjectAccountBuyerId],
     );
 
     console.log(createdWorkflowId);
   });
 
   it('Submits a transaction for execution of the workstep 1', async () => {
-    // TODO: CheckAuthz on createTransaction and in other places 
+    // TODO: CheckAuthz on createTransaction and in other places
     // createTransaction
   });
 
@@ -148,14 +151,14 @@ async function createExternalBpiSubjectAndReturnId(
 
 async function createBpiSubjectAccountAndReturnId(
   creatorBpiSubjectId: string,
-  ownerBpiSubjectId: string
+  ownerBpiSubjectId: string,
 ): Promise<string> {
   const createdBpiSubjectAccountResponse = await request(server)
     .post('/subjectAccounts')
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
       creatorBpiSubjectId: creatorBpiSubjectId,
-      ownerBpiSubjectId: ownerBpiSubjectId
+      ownerBpiSubjectId: ownerBpiSubjectId,
     })
     .expect(201);
 
@@ -194,8 +197,7 @@ async function updateWorkgroupAdminsAndParticipants(
     .expect(200);
 }
 
-async function fetchWorkgroup(workgroupId: string,
-): Promise<any> {
+async function fetchWorkgroup(workgroupId: string): Promise<any> {
   const getWorkgroupResponse = await request(server)
     .get(`/workgroups/${workgroupId}`)
     .set('Authorization', `Bearer ${accessToken}`)
@@ -205,16 +207,16 @@ async function fetchWorkgroup(workgroupId: string,
 }
 
 async function createWorkstepAndReturnId(
-  name: string, 
-  workgroupId: string
+  name: string,
+  workgroupId: string,
 ): Promise<string> {
   const createdWorkstepResponse = await request(server)
     .post('/worksteps')
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
       name: name,
-      version: "1",
-      status: "NEW",
+      version: '1',
+      status: 'NEW',
       workgroupId: workgroupId,
       securityPolicy: 'Dummy security policy',
       privacyPolicy: 'Dummy privacy policy',
@@ -225,10 +227,10 @@ async function createWorkstepAndReturnId(
 }
 
 async function createWorkflowAndReturnId(
-  name: string, 
+  name: string,
   workgroupId: string,
   workstepIds: string[],
-  ownerIds: string[]
+  ownerIds: string[],
 ): Promise<string> {
   const createdWorkflowResponse = await request(server)
     .post('/workflows')

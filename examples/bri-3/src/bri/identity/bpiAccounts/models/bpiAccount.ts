@@ -36,7 +36,7 @@ export class BpiAccount {
     authorizationCondition: string,
     stateObjectProverSystem: string,
     stateTree: BpiMerkleTree,
-    historyTree: BpiMerkleTree
+    historyTree: BpiMerkleTree,
   ) {
     this.id = id;
     this.nonce = 0;

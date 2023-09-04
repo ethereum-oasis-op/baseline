@@ -44,7 +44,13 @@ export class WorkflowAgent {
     workgroupId: string,
     bpiAccount: BpiAccount,
   ): Workflow {
-    const newWorkflow = new Workflow(v4(), name, worksteps, workgroupId, bpiAccount.id)
+    const newWorkflow = new Workflow(
+      v4(),
+      name,
+      worksteps,
+      workgroupId,
+      bpiAccount.id,
+    );
     newWorkflow.bpiAccount = bpiAccount;
     return newWorkflow;
   }
