@@ -5,12 +5,13 @@ import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAcc
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
 
+import { MerkleTreeAgent } from '../../../merkleTree/agents/merkleTree.agent';
 import { BpiAccountStorageAgent } from './bpiAccountsStorage.agent';
 
 // Agent methods have extremely declarative names and perform a single task
 @Injectable()
 export class BpiAccountAgent {
-  constructor(private storageAgent: BpiAccountStorageAgent) {}
+  constructor(private merkleTreeAgent: MerkleTreeAgent, private storageAgent: BpiAccountStorageAgent) {}
 
   public throwIfCreateBpiAccountInputInvalid() {
     return true;
@@ -26,6 +27,8 @@ export class BpiAccountAgent {
       ownerBpiSubjectAccounts,
       authorizationCondition,
       stateObjectProverSystem,
+      this.merkleTreeAgent.createNewMerkleTree([]),
+      this.merkleTreeAgent.createNewMerkleTree([]),
     );
   }
 

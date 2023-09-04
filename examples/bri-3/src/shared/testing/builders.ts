@@ -4,6 +4,7 @@ import { BpiAccount } from '../../bri/identity/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccount } from '../../bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../../bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../../bri/identity/bpiSubjects/models/bpiSubjectRole';
+import { BpiMerkleTree } from '../../bri/merkleTree/models/bpiMerkleTree';
 import { Workflow } from '../../bri/workgroup/workflows/models/workflow';
 import { Workgroup } from '../../bri/workgroup/workgroups/models/workgroup';
 import { Workstep } from '../../bri/workgroup/worksteps/models/workstep';
@@ -107,7 +108,7 @@ export class WorkflowBuilder {
       this.name,
       this.worksteps,
       this.workgroupId,
-      this.bpiAccount,
+      this.bpiAccount.id,
     );
   }
 }
@@ -304,6 +305,8 @@ export class BpiAccountBuilder {
   private ownerBpiSubjectAccounts: BpiSubjectAccount[] = [];
   private authorizationCondition: string;
   private stateObjectProverSystem: string;
+  private stateTree: BpiMerkleTree;
+  private historyTree: BpiMerkleTree;
 
   constructor() {}
 
@@ -336,12 +339,28 @@ export class BpiAccountBuilder {
     return this;
   }
 
+  setStateTree(
+    stateTree: BpiMerkleTree,
+  ): BpiAccountBuilder {
+    this.stateTree = stateTree;
+    return this;
+  }
+
+  setHistoryTree(
+    historyTree: BpiMerkleTree,
+  ): BpiAccountBuilder {
+    this.historyTree = historyTree;
+    return this;
+  }
+
   public build(): BpiAccount {
     const bpiAccount = new BpiAccount(
       this.id,
       this.ownerBpiSubjectAccounts,
       this.authorizationCondition,
       this.stateObjectProverSystem,
+      this.stateTree,
+      this.historyTree
     );
     bpiAccount.nonce = this.nonce;
     return bpiAccount;

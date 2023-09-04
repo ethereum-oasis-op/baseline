@@ -35,12 +35,16 @@ export class BpiAccount {
     ownerBpiSubjectAccounts: BpiSubjectAccount[],
     authorizationCondition: string,
     stateObjectProverSystem: string,
+    stateTree: BpiMerkleTree,
+    historyTree: BpiMerkleTree
   ) {
     this.id = id;
     this.nonce = 0;
     this.ownerBpiSubjectAccounts = ownerBpiSubjectAccounts;
     this.authorizationCondition = authorizationCondition;
     this.stateObjectProverSystem = stateObjectProverSystem;
+    this.stateTree = stateTree;
+    this.historyTree = historyTree;
   }
 
   public updateNonce(): void {

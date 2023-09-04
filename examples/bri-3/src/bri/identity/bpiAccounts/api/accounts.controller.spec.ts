@@ -100,7 +100,7 @@ describe('AccountController', () => {
   };
 
   const createBpiAccount = (ownerBpiSubjectAccounts: BpiSubjectAccount[]) => {
-    return new BpiAccount(uuid(), ownerBpiSubjectAccounts, '', '');
+    return new BpiAccount(uuid(), ownerBpiSubjectAccounts, '', '', undefined, undefined);
   };
 
   describe('getBpiAccountById', () => {

@@ -30,14 +30,13 @@ export class Workflow {
     name: string,
     worksteps: Workstep[],
     workgroupId: string,
-    bpiAccount: BpiAccount,
+    bpiAccountId: string,
   ) {
     this.id = id;
     this.name = name;
     this.worksteps = worksteps;
     this.workgroupId = workgroupId;
-    this.bpiAccountId = bpiAccount.id;
-    this.bpiAccount = bpiAccount;
+    this.bpiAccountId = bpiAccountId;
   }
 
   public updateName(newName: string): void {
