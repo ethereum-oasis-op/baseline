@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import MerkleTree from 'merkletreejs';
 import { BpiAccountStorageAgent } from '../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
@@ -6,6 +6,12 @@ import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { MerkleTreeAgent } from '../../merkleTree/agents/merkleTree.agent';
 import { MerkleTreeStorageAgent } from '../../merkleTree/agents/merkleTreeStorage.agent';
 import { Witness } from '../../zeroKnowledgeProof/models/witness';
+import { StateLeafValues } from '../models/stateLeafValues';
+import { InjectMapper } from '@automapper/nestjs';
+import { Mapper } from '@automapper/core';
+import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiAccounts/api/err.messages';
+import { StateContent } from '../models/stateContent';
+import { BpiMerkleTree } from '@prisma/client';
 
 // TODO: We should follow this approach everywhere for storage
 // https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#scenario-pre-computed-ids-and-the-transaction-api
@@ -20,6 +26,7 @@ import { Witness } from '../../zeroKnowledgeProof/models/witness';
 @Injectable()
 export class StateAgent {
   constructor(
+    @InjectMapper() private mapper: Mapper,
     private bpiAccountStorageAgent: BpiAccountStorageAgent,
     private merkleTreetStorageAgent: MerkleTreeStorageAgent,
     private merkleTreeAgent: MerkleTreeAgent,
@@ -45,9 +52,23 @@ export class StateAgent {
 
     this.bpiAccountStorageAgent.storeAccompanyingStateLeafValues(
       bpiAccount.id,
+      stateLeaf,
       stateTree.getLeafIndex(stateLeaf),
       merkelizedPayload,
       witness,
     );
+  }
+
+  public async getStateLeafValues(stateLeaf: string): Promise<StateLeafValues> {
+    const stateLeafValues =
+      await this.bpiAccountStorageAgent.getAccompanyingStateLeafValues(
+        stateLeaf,
+      );
+
+    if (!stateLeafValues) {
+      throw new NotFoundException(LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return this.mapper.map(stateLeafValues, StateLeafValues, StateLeafValues);
   }
 }

@@ -143,6 +143,7 @@ model BpiAccountStateTreeLeafValue {
   bpiAccountId      String
   bpiAccount        BpiAccount @relation(fields: [bpiAccountId], references: [id])
   leafIndex         Int
+  leafValue         String     @unique
   merkelizedPayload String
   witness           String
 }
