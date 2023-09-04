@@ -103,13 +103,17 @@ export class WorkflowBuilder {
   }
 
   build(): Workflow {
-    return new Workflow(
+    const workflow = new Workflow(
       this.id,
       this.name,
       this.worksteps,
       this.workgroupId,
       this.bpiAccount.id,
     );
+
+    workflow.bpiAccount = this.bpiAccount;
+
+    return workflow;
   }
 }
 
