@@ -3,55 +3,54 @@ import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { ethers } from 'ethers';
+import { SubscriptionLoggable } from 'rxjs/internal/testing/SubscriptionLoggable';
 
 jest.setTimeout(20000);
 
-describe('Workgroup administration', () => {
-  let app: INestApplication;
+let accessToken: string;
+let app: INestApplication;
+let server: any;
 
-  beforeEach(async () => {
+let createdWorkgroupId: string;
+
+describe('SRI use-case end-to-end test', () => {
+
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+    server = app.getHttpServer();
   });
+
+  afterAll(async () => {
+    await app.close()
+    server.close()
+  })
 
   // TODO: Add detailed explanation of the SRI use-case setup and necessary seed data
   it('Logs in an internal Bpi Subject, creates two external Bpi Subjects (Supplier and Buyer) and a Workgroup and adds the created Bpi Subjects as participants to the Workgroup', async () => {
-    const accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken(
-      app,
-    );
+    accessToken = await loginAsInternalBpiSubjectAndReturnAnAccessToken();
 
     const createdBpiSubjectSupplierId = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject - Supplier',
-      app,
-      accessToken,
     );
     const createdBpiSubjectBuyerId = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject 2 - Buyer',
-      app,
-      accessToken,
     );
 
-    const createdWorkgroupId = await createAWorkgroupAndReturnId(
-      app,
-      accessToken,
-    );
+    createdWorkgroupId = await createAWorkgroupAndReturnId();
 
     await updateWorkgroupAdminsAndParticipants(
       createdWorkgroupId,
       [createdBpiSubjectSupplierId],
       [createdBpiSubjectSupplierId, createdBpiSubjectBuyerId],
-      app,
-      accessToken,
     );
 
     const resultWorkgroup = await fetchWorkgroup(
-      createdWorkgroupId,
-      app,
-      accessToken,
+      createdWorkgroupId
     );
 
     expect(resultWorkgroup.participants.length).toBe(2);
@@ -59,10 +58,15 @@ describe('Workgroup administration', () => {
     expect(resultWorkgroup.participants[1].id).toEqual(createdBpiSubjectBuyerId);
   });
 
-  it('Sets up a workflow with a workstep  in the previously created workgroup', async () => {
+  it('Sets up a workflow with a workstep in the previously created workgroup', async () => {
     // TODO: Auth as supplier?
     // TODO: Can we  listen and fire NATS messages here
-    // createWorkstep
+    
+    const createdWorkstepId = await createWorkstep(
+      "workstep1",
+      createdWorkgroupId
+    );
+
     // createWorkflow 
   });
 
@@ -77,9 +81,7 @@ describe('Workgroup administration', () => {
   });
 });
 
-async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
-  app: INestApplication,
-): Promise<string> {
+async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string> {
   // These two values must be inline with the value for the bpiAdmin from seed.ts
   // These values are used for testing purposes only
   const internalBpiSubjectPublicKey =
@@ -87,7 +89,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
   const internalBpiSubjectPrivateKey =
     '2c95d82bcd8851bd3a813c50afafb025228bf8d237e8fd37ba4adba3a7596d58';
 
-  const nonceResponse = await request(app.getHttpServer())
+  const nonceResponse = await request(server)
     .post('/auth/nonce')
     .send({ publicKey: internalBpiSubjectPublicKey })
     .expect(201);
@@ -95,7 +97,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
   const signer = new ethers.Wallet(internalBpiSubjectPrivateKey, undefined);
   const signature = await signer.signMessage(nonceResponse.text);
 
-  const loginResponse = await request(app.getHttpServer())
+  const loginResponse = await request(server)
     .post('/auth/login')
     .send({
       message: nonceResponse.text,
@@ -109,10 +111,8 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(
 
 async function createExternalBpiSubjectAndReturnId(
   bpiSubjectName: string,
-  app: INestApplication,
-  accessToken: string,
 ): Promise<string> {
-  const createdBpiSubjectResponse = await request(app.getHttpServer())
+  const createdBpiSubjectResponse = await request(server)
     .post('/subjects')
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
@@ -125,11 +125,8 @@ async function createExternalBpiSubjectAndReturnId(
   return createdBpiSubjectResponse.text;
 }
 
-async function createAWorkgroupAndReturnId(
-  app: INestApplication,
-  accessToken: string,
-): Promise<string> {
-  const createdWorkgroupResponse = await request(app.getHttpServer())
+async function createAWorkgroupAndReturnId(): Promise<string> {
+  const createdWorkgroupResponse = await request(server)
     .post('/workgroups')
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
@@ -146,10 +143,8 @@ async function updateWorkgroupAdminsAndParticipants(
   workgroupId: string,
   administratorIds: string[],
   participantIds: string[],
-  app: INestApplication,
-  accessToken: string,
 ): Promise<void> {
-  await request(app.getHttpServer())
+  await request(server)
     .put(`/workgroups/${workgroupId}`)
     .set('Authorization', `Bearer ${accessToken}`)
     .send({
@@ -162,15 +157,32 @@ async function updateWorkgroupAdminsAndParticipants(
     .expect(200);
 }
 
-async function fetchWorkgroup(
-  workgroupId: string,
-  app: INestApplication,
-  accessToken: string,
+async function fetchWorkgroup(workgroupId: string,
 ): Promise<any> {
-  const getWorkgroupResponse = await request(app.getHttpServer())
+  const getWorkgroupResponse = await request(server)
     .get(`/workgroups/${workgroupId}`)
     .set('Authorization', `Bearer ${accessToken}`)
     .expect(200);
 
   return JSON.parse(getWorkgroupResponse.text);
+}
+
+async function createWorkstep(
+  name: string, 
+  workgroupId: string
+): Promise<string> {
+  const createdWorkstepResponse = await request(server)
+    .post('/worksteps')
+    .set('Authorization', `Bearer ${accessToken}`)
+    .send({
+      name: name,
+      version: "1",
+      status: "NEW",
+      workgroupId: workgroupId,
+      securityPolicy: 'Dummy security policy',
+      privacyPolicy: 'Dummy privacy policy',
+    })
+    .expect(201);
+
+  return createdWorkstepResponse.text;
 }
