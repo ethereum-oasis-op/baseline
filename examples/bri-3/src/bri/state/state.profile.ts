@@ -1,8 +1,8 @@
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
 import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { StateTreeLeafValueContent } from './models/stateTreeLeafValueContent';
-import { StateTreeLeafValueContentDto } from './api/dtos/response/stateTreeLeafValueContent.dto';
+import { StateLeafValues } from './models/stateLeafValues';
+import { StateContent } from './models/stateContent';
 
 @Injectable()
 export class StateProfile extends AutomapperProfile {
@@ -12,12 +12,7 @@ export class StateProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper: Mapper) => {
-      createMap(mapper, StateTreeLeafValueContent, StateTreeLeafValueContent);
-      createMap(
-        mapper,
-        StateTreeLeafValueContent,
-        StateTreeLeafValueContentDto,
-      );
+      createMap(mapper, StateLeafValues, StateLeafValues);
     };
   }
 }
