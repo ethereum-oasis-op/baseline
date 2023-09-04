@@ -114,14 +114,14 @@ describe('SRI use-case end-to-end test', () => {
       createdBpiSubjectAccountSupplierId,
       supplierBPiSubjectPrivateKey,
       createdBpiSubjectAccountBuyerId,
-      'TODO: payload',
+      '{ "testProp":"testValue" }',
     );
 
     console.log(createdTransactionId);
   });
 
   it('Verifies that the transaction has been executed and that the state has been properly stored', async () => {
-    // wait 20 secs for the vsm to perform a loop
+    await new Promise((r) => setTimeout(r, 20000));
     // query the CAH retrieved from the transaction
   });
 });
