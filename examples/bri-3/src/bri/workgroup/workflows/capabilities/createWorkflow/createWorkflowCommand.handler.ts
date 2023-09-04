@@ -45,7 +45,6 @@ export class CreateWorkflowCommandHandler
       bpiAccountOwnerCandidates,
       'sample authorization condition',
       'sample state object prover system',
-      'sample state object storage',
     );
 
     const newBpiAccount = await this.accountStorageAgent.storeNewBpiAccount(

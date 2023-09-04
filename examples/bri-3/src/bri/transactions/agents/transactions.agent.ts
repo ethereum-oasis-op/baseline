@@ -177,6 +177,7 @@ export class TransactionAgent {
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
 
+    // TODO: Have the hash algh 'sha256' in a single place in env instead of spread around in code
     const merkelizedPayload = this.merkleTreeService.merkelizePayload(
       JSON.parse(tx.payload),
       'sha256',
@@ -191,7 +192,7 @@ export class TransactionAgent {
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
-      { tx },
+      { tx, merkelizedPayload },
       snakeCaseWorkstepName,
       circuitPath,
       circuitProvingKeyPath,

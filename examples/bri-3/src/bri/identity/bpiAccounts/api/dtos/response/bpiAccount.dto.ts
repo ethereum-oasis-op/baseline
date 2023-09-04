@@ -16,7 +16,4 @@ export class BpiAccountDto {
 
   @AutoMap()
   stateObjectProverSystem: string;
-
-  @AutoMap()
-  stateObjectStorage: string;
 }

@@ -34,13 +34,15 @@ model BpiSubjectRole {
 }
 
 model BpiAccount {
-  id                      String              @id @default(uuid())
-  nonce                   Int
-  ownerBpiSubjectAccounts BpiSubjectAccount[]
-  authorizationCondition  String              @default("") //Placeholder R251
-  stateObjectProverSystem String              @default("") //Placeholder R251
-  stateObjectStorage      String              @default("") //Placeholder R251
-  Workflow                Workflow[]
+  id                           String                         @id @default(uuid())
+  nonce                        Int
+  ownerBpiSubjectAccounts      BpiSubjectAccount[]
+  authorizationCondition       String                         @default("") //Placeholder R251
+  stateObjectProverSystem      String                         @default("") //Placeholder R251
+  stateTreeId                  String
+  stateTree                    BpiMerkleTree?                 @relation(fields: [stateTreeId], references: [id])
+  Workflow                     Workflow[]
+  BpiAccountStateTreeLeafValue BpiAccountStateTreeLeafValue[]
 }
 
 model BpiSubjectAccount {
@@ -130,9 +132,19 @@ model AnchorHash {
 }
 
 model BpiMerkleTree {
-  id          String @id @default(uuid())
+  id          String       @id @default(uuid())
   hashAlgName String
   tree        String
+  BpiAccount  BpiAccount[]
+}
+
+model BpiAccountStateTreeLeafValue {
+  id                String     @id @default(uuid())
+  bpiAccountId      String
+  bpiAccount        BpiAccount @relation(fields: [bpiAccountId], references: [id])
+  leafIndex         Int
+  merkelizedPayload String
+  witness           String
 }
 
 enum WorkgroupStatus {

@@ -1,7 +1,9 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import MerkleTree from 'merkletreejs';
 import { PrismaService } from '../../../../../prisma/prisma.service';
+import { Witness } from '../../../zeroKnowledgeProof/models/witness';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
 
@@ -67,7 +69,6 @@ export class BpiAccountStorageAgent extends PrismaService {
         },
         authorizationCondition: bpiAccount.authorizationCondition,
         stateObjectProverSystem: bpiAccount.stateObjectProverSystem,
-        stateObjectStorage: bpiAccount.stateObjectStorage,
       },
     });
 
@@ -79,6 +80,9 @@ export class BpiAccountStorageAgent extends PrismaService {
       where: { id: bpiAccount.id },
       data: {
         nonce: bpiAccount.nonce,
+        stateTree: {
+          update: { tree: MerkleTree.marshalTree(bpiAccount.stateTree.tree) },
+        },
       },
     });
 
@@ -88,6 +92,22 @@ export class BpiAccountStorageAgent extends PrismaService {
   async deleteBpiAccount(bpiAccount: BpiAccount): Promise<void> {
     await this.bpiAccount.delete({
       where: { id: bpiAccount.id },
+    });
+  }
+
+  async storeAccompanyingStateLeafValues(
+    id: string,
+    leafIndex: number,
+    merkPayload: MerkleTree,
+    witness: Witness,
+  ): Promise<void> {
+    await this.bpiAccountStateTreeLeafValue.create({
+      data: {
+        bpiAccountId: id,
+        leafIndex: leafIndex,
+        merkelizedPayload: MerkleTree.marshalTree(merkPayload),
+        witness: JSON.stringify(witness),
+      },
     });
   }
 }
