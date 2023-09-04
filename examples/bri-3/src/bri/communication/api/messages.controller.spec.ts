@@ -236,7 +236,7 @@ describe('MessageController', () => {
       }).rejects.toThrow(new UnauthorizedException(INVALID_SIGNATURE));
     });
 
-    it('should return new uuid from the created bpi subject when all params provided', async () => {
+    it('should return new uuid from the created bpi message when all params provided', async () => {
       // Arrange
       const requestDto = {
         id: '123',

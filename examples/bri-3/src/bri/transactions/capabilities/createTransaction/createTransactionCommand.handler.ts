@@ -23,6 +23,8 @@ export class CreateTransactionCommandHandler
         command.toSubjectAccountId,
       ]);
 
+    // TODO: Validate tx signature here
+
     const newTransactionCandidate = this.agent.createNewTransaction(
       command.id,
       command.nonce,

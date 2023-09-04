@@ -11,6 +11,14 @@ let accessToken: string;
 let app: INestApplication;
 let server: any;
 
+const supplierBPiSubjectPublicKey =
+  '0x22725172d0f1b7fF196a53b4215b9A6bCba6F4A7';
+const supplierBPiSubjectPrivateKey =
+  '8713c8fcf0f1fb2d78595d0e3a8ff9ebb9e5c55c92d613ec350dc912c71ae189';
+const buyerBPiSubjectPublicKey = '0xe5597D425F4198926156a6d9c2A8C49398596638';
+const buyerBPiSubjectPrivateKey =
+  '1849796c50bd4fb09ac1f1ea660d4bc0c7f3904229e9139b9780e46a10c84f4a';
+
 let createdWorkgroupId: string;
 let createdWorkstepId: string;
 let createdWorkflowId: string;
@@ -40,6 +48,7 @@ describe('SRI use-case end-to-end test', () => {
     const createdBpiSubjectSupplierId =
       await createExternalBpiSubjectAndReturnId(
         'External Bpi Subject - Supplier',
+        supplierBPiSubjectPublicKey,
       );
 
     createdBpiSubjectAccountSupplierId =
@@ -50,6 +59,7 @@ describe('SRI use-case end-to-end test', () => {
 
     const createdBpiSubjectBuyerId = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject 2 - Buyer',
+      buyerBPiSubjectPublicKey,
     );
 
     createdBpiSubjectAccountBuyerId = await createBpiSubjectAccountAndReturnId(
@@ -102,9 +112,9 @@ describe('SRI use-case end-to-end test', () => {
       createdWorkflowId,
       createdWorkstepId,
       createdBpiSubjectAccountSupplierId,
+      supplierBPiSubjectPrivateKey,
       createdBpiSubjectAccountBuyerId,
-      'payload',
-      'sig',
+      'TODO: payload',
     );
 
     console.log(createdTransactionId);
@@ -146,6 +156,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string
 
 async function createExternalBpiSubjectAndReturnId(
   bpiSubjectName: string,
+  pk: string,
 ): Promise<string> {
   const createdBpiSubjectResponse = await request(server)
     .post('/subjects')
@@ -153,7 +164,7 @@ async function createExternalBpiSubjectAndReturnId(
     .send({
       name: bpiSubjectName,
       desc: 'A test Bpi Subject',
-      publicKey: 'Bpi Subject dummy public key',
+      publicKey: pk,
     })
     .expect(201);
 
@@ -263,10 +274,13 @@ async function createTransactionAndReturnId(
   workflowInstanceId: string,
   workstepInstanceId: string,
   fromSubjectAccountId: string,
+  fromPrivatekey: string,
   toSubjectAccountId: string,
   payload: string,
-  signature: string,
 ): Promise<string> {
+  const signer = new ethers.Wallet(fromPrivatekey, undefined);
+  const signature = await signer.signMessage(payload);
+
   const createdTransactionResponse = await request(server)
     .post('/transactions')
     .set('Authorization', `Bearer ${accessToken}`)
