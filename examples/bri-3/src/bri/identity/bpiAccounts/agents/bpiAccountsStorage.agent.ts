@@ -6,6 +6,7 @@ import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Witness } from '../../../zeroKnowledgeProof/models/witness';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
+import { StateLeafValues } from '../../../state/models/stateLeafValues';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -99,6 +100,7 @@ export class BpiAccountStorageAgent extends PrismaService {
 
   async storeAccompanyingStateLeafValues(
     id: string,
+    leafValue: string,
     leafIndex: number,
     merkPayload: MerkleTree,
     witness: Witness,
@@ -106,10 +108,25 @@ export class BpiAccountStorageAgent extends PrismaService {
     await this.bpiAccountStateTreeLeafValue.create({
       data: {
         bpiAccountId: id,
+        leafValue: leafValue,
         leafIndex: leafIndex,
         merkelizedPayload: MerkleTree.marshalTree(merkPayload),
         witness: JSON.stringify(witness),
       },
     });
+  }
+
+  async getAccompanyingStateLeafValues(
+    leafValue: string,
+  ): Promise<StateLeafValues | undefined> {
+    const stateLeafValues = await this.bpiAccountStateTreeLeafValue.findUnique({
+      where: { leafValue: leafValue },
+    });
+
+    if (!stateLeafValues) {
+      return undefined;
+    }
+
+    return this.mapper.map(stateLeafValues, StateLeafValues, StateLeafValues);
   }
 }
