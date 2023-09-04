@@ -109,4 +109,17 @@ export class StateAgent {
 
     return this.mapper.map(stateLeafValues, StateLeafValues, StateLeafValues);
   }
+
+  public async getStateLeafValues(stateLeaf: string): Promise<StateLeafValues> {
+    const stateLeafValues =
+      await this.bpiAccountStorageAgent.getAccompanyingStateLeafValues(
+        stateLeaf,
+      );
+
+    if (!stateLeafValues) {
+      throw new NotFoundException(LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE);
+    }
+
+    return this.mapper.map(stateLeafValues, StateLeafValues, StateLeafValues);
+  }
 }
