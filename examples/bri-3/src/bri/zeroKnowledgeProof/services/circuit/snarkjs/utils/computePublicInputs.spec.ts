@@ -21,8 +21,6 @@ describe('Compute public inputs utils', () => {
       wallet.publicKey,
     );
 
-    console.log(result);
-
     expect(typeof result.signature).toBe('bigint');
     expect(typeof result.Tx).toBe('bigint');
     expect(typeof result.Ty).toBe('bigint');
