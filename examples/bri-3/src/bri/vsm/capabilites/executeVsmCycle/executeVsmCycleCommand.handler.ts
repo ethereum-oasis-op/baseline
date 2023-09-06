@@ -1,5 +1,6 @@
 import { CommandHandler, ICommandHandler, EventBus } from '@nestjs/cqrs';
 import { WorkflowStorageAgent } from 'src/bri/workgroup/workflows/agents/workflowsStorage.agent';
+import { CcsmStorageAgent } from '../../../zeroKnowledgeProof/agents/ccsmStorage.agent';
 import { StateAgent } from '../../../state/agents/state.agent';
 import { TransactionStorageAgent } from '../../../transactions/agents/transactionStorage.agent';
 import { TransactionAgent } from '../../../transactions/agents/transactions.agent';
@@ -18,6 +19,7 @@ export class ExecuteVsmCycleCommandHandler
     private workstepStorageAgent: WorkstepStorageAgent,
     private workflowStorageAgent: WorkflowStorageAgent,
     private txStorageAgent: TransactionStorageAgent,
+    private ccsmStorageAgent: CcsmStorageAgent,
     private eventBus: EventBus,
   ) {}
 
@@ -60,10 +62,7 @@ export class ExecuteVsmCycleCommandHandler
           txResult.witness,
         );
 
-        await this.stateAgent.storeNewLeafInHistoryTree(
-          workflow!.bpiAccount,
-          stateTreeRoot,
-        );
+        await this.ccsmStorageAgent.storeAnchorHashOnCcsm(txResult.hash);
 
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
