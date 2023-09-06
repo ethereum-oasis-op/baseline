@@ -23,7 +23,6 @@ model BpiSubject {
   administratedWorkgroups   Workgroup[]         @relation(name: "administratorSubjects")
   participatingWorkgroups   Workgroup[]         @relation(name: "participantSubjects")
   roles                     BpiSubjectRole[]
-  ownedAnchorHashes         AnchorHash[]        @relation(name: "anchorHashOwnerBpiSubject_fk")
 }
 
 model BpiSubjectRole {
@@ -124,13 +123,6 @@ model Message {
   content                 String
   signature               String
   type                    Int
-}
-
-model AnchorHash {
-  id                String     @id @default(uuid())
-  ownerBpiSubjectId String
-  ownerBpiSubject   BpiSubject @relation(fields: [ownerBpiSubjectId], references: [id], name: "anchorHashOwnerBpiSubject_fk")
-  hash              String     @unique
 }
 
 model BpiMerkleTree {
