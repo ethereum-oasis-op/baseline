@@ -22,5 +22,13 @@ describe('Compute public inputs utils', () => {
     );
 
     console.log(result);
+
+    expect(typeof result.signature).toBe('bigint');
+    expect(typeof result.Tx).toBe('bigint');
+    expect(typeof result.Ty).toBe('bigint');
+    expect(typeof result.Ux).toBe('bigint');
+    expect(typeof result.Uy).toBe('bigint');
+    expect(typeof result.publicKeyX).toBe('string');
+    expect(typeof result.publicKeyX).toBe('string');
   });
 });
