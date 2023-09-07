@@ -1,6 +1,7 @@
-//NOTE: Commenting out the test as it requires compiled artifacts to run
+import { EthereumService } from './ethereum.service';
 
-// import { EthereumService } from './ethereum.service';
+describe('Ethereum services', () => {
+  let ccsm: EthereumService;
 
   //REMOVE THIS
   it('empty test', async () => {
