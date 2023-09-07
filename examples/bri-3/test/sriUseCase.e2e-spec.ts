@@ -114,7 +114,18 @@ describe('SRI use-case end-to-end test', () => {
       createdBpiSubjectAccountSupplierId,
       supplierBPiSubjectPrivateKey,
       createdBpiSubjectAccountBuyerId,
-      '{ "testProp":"testValue" }',
+      `{
+        "supplierInvoiceID": "INV123",
+        "amount": 300,
+        "issueDate": "2023-06-15",
+        "dueDate": "2023-07-15",
+        "status": "NEW",
+        "items": [
+          { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
+          { "id": 2, "productId": "product2", "price": 200, "amount": 1 }
+        ]
+      }`
+      // '{ "testProp":"testValue" }',
     );
 
     console.log(createdTransactionId);
