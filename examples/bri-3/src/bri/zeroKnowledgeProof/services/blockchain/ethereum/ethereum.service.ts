@@ -12,17 +12,14 @@ export class EthereumService implements IBlockchainService {
     await this.storeDeployedContractAddress(deployedCcsmContract.address);
   }
 
-  async connectToContract(contractName: string): Promise<Contract> {
-    const ccsmContractAddress = await this.getDeployedContractAddress();
-    return await ethers.getContractAt(contractName, ccsmContractAddress);
-  }
-
-  public async storeAnchorHash(
-    contractName: string,
-    anchorHash: string,
-  ): Promise<void> {
+  public async storeAnchorHash(contractName: string, anchorHash: string) {
     const ccsmContract = await this.connectToContract(contractName);
     await ccsmContract.setAnchorHash(anchorHash);
+  }
+
+  private async connectToContract(contractName: string) {
+    const ccsmContractAddress = await this.getDeployedContractAddress();
+    return await ethers.getContractAt(contractName, ccsmContractAddress);
   }
 
   private async getDeployedContractAddress(): Promise<string> {
