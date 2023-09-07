@@ -29,7 +29,7 @@ export class EthereumService implements IBlockchainService {
     return JSON.parse(
       (
         await readFile(
-          './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts/ccsmContractAddress.json',
+          './zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/ccsmContractAddress.json',
         )
       ).toString(),
     ).contractAddress;
@@ -41,7 +41,7 @@ export class EthereumService implements IBlockchainService {
     });
 
     await writeFile(
-      './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts/ccsmContractAddress.json',
+      './zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/ccsmContractAddress.json',
       ccsmAddress,
     );
   }
