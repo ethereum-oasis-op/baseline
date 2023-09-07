@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
     sources:
       './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts',
     artifacts:
-      './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/artifacts/artifacts',
+      './zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/artifacts',
   },
 };
 
