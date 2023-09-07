@@ -1,4 +1,3 @@
-
 import { Injectable, NotFoundException } from '@nestjs/common';
 import MerkleTree from 'merkletreejs';
 import { BpiAccountStorageAgent } from '../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
@@ -12,7 +11,6 @@ import { Mapper } from '@automapper/core';
 import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiAccounts/api/err.messages';
 import { StateContent } from '../models/stateContent';
 import { BpiMerkleTree } from '@prisma/client';
-
 
 // TODO: We should follow this approach everywhere for storage
 // https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#scenario-pre-computed-ids-and-the-transaction-api
