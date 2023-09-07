@@ -1,4 +1,5 @@
 import { EthereumService } from './ethereum.service';
+jest.useFakeTimers();
 
 describe('Ethereum services', () => {
   let ccsm: EthereumService;
