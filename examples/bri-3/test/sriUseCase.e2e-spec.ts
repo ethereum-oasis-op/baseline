@@ -15,7 +15,8 @@ const supplierBPiSubjectPublicKey =
   '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539';
 const supplierBPiSubjectPrivateKey =
   '0x93b7ed4405c73a1dbd8936e67419ee4e711ed44225aeabe9a5acf49a9ec90e68';
-const buyerBPiSubjectPublicKey = '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980';
+const buyerBPiSubjectPublicKey =
+  '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980';
 const buyerBPiSubjectPrivateKey =
   '0x32c8d8f4e53cd1920d1ad22b9d51a7b28216337f2b664fb8d33bbcfc3c455c62';
 
@@ -122,10 +123,11 @@ describe('SRI use-case end-to-end test', () => {
         "status": "NEW",
         "items": [
           { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
-          { "id": 2, "productId": "product2", "price": 200, "amount": 1 }
+          { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
+          { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
+          { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
         ]
-      }`
-      // '{ "testProp":"testValue" }',
+      }`,
     );
 
     console.log(createdTransactionId);

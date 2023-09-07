@@ -37,8 +37,12 @@ export class AuthAgent {
     let publicAddressFromSignature = '';
 
     try {
-      publicAddressFromSenderPublicKey = ethers.utils.computeAddress(senderPublicKey);
-      publicAddressFromSignature = ethers.utils.verifyMessage(message, signature);
+      publicAddressFromSenderPublicKey =
+        ethers.utils.computeAddress(senderPublicKey);
+      publicAddressFromSignature = ethers.utils.verifyMessage(
+        message,
+        signature,
+      );
     } catch (error) {
       this.logger.logError(
         `Error validating signature: ${signature} for message ${message}. Error: ${error}}`,
@@ -47,7 +51,8 @@ export class AuthAgent {
     }
 
     const isValid =
-      publicAddressFromSignature.toLowerCase() === publicAddressFromSenderPublicKey.toLowerCase();
+      publicAddressFromSignature.toLowerCase() ===
+      publicAddressFromSenderPublicKey.toLowerCase();
 
     if (!isValid) {
       this.logger.logWarn(

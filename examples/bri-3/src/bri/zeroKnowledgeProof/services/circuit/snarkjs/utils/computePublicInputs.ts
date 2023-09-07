@@ -1,6 +1,6 @@
 import { Signature } from 'ethers';
 import { computeEffEcdsaPubInput } from '@personaelabs/spartan-ecdsa';
-import { ec as EC } from 'elliptic'
+import { ec as EC } from 'elliptic';
 import { ethers } from 'ethers';
 import { Transaction } from '../../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
@@ -12,13 +12,11 @@ export const computeEffectiveEcdsaSigPublicInputs = (
   msgHash: Buffer,
   publicKeyHex: string,
 ) => {
-  var ec = new EC('secp256k1');
+  const ec = new EC('secp256k1');
   //Public Key
   const publicKeyBuffer = Buffer.from(publicKeyHex.split('0x')[1], 'hex');
 
-  const publicKeyCoordinates = ec
-    .keyFromPublic(publicKeyBuffer)
-    .getPublic();
+  const publicKeyCoordinates = ec.keyFromPublic(publicKeyBuffer).getPublic();
 
   //Signature
   const r = BigInt(signature.r);

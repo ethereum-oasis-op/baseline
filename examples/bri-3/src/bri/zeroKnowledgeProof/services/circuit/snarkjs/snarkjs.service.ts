@@ -99,7 +99,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     });
 
     const preparedInputs = {
-      invoiceStatus: payload.status,
+      invoiceStatus: this.calculateStringCharCodeSum(payload.status),
       invoiceAmount: payload.amount,
       itemPrices,
       itemAmount,
@@ -113,5 +113,15 @@ export class SnarkjsCircuitService implements ICircuitService {
     };
 
     return preparedInputs;
+  }
+
+  private calculateStringCharCodeSum(status: string): number {
+    let sum = 0;
+
+    for (let i = 0; i < status.length; i++) {
+      sum += status.charCodeAt(i);
+    }
+
+    return sum;
   }
 }
