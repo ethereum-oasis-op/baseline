@@ -40,6 +40,7 @@
     "@nestjs/passport": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/schedule": "^3.0.1",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "@nomiclabs/hardhat-ethers": "^2.2.3",
     "@personaelabs/spartan-ecdsa": "^2.1.4",
     "@prisma/client": "^5.2.0",
