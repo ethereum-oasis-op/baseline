@@ -1,4 +1,4 @@
 export interface IBlockchainService {
-  deployContract(): Promise<void>;
-  storeAnchorHash(anchorHash: string): Promise<void>;
+  deployContract(contractName: string): Promise<void>;
+  storeAnchorHash(contractName: string, anchorHash: string): Promise<void>;
 }
