@@ -5,39 +5,20 @@ describe('Ethereum services', () => {
 
   beforeAll(async () => {
     ccsm = new EthereumService();
-    await ccsm.deployContract();
+    await ccsm.deployContract('Ccsm');
   });
 
   describe('storeAnchorHash', () => {
     it('should set anchor hash in the mapping and return true', async () => {
       //Arrange
-      const ccsmContract = await ccsm.connectToContract();
+      const anchorHash = 'anchorHash';
 
       //Act
-      await ccsm.storeAnchorHash('anchorHash1');
+      await ccsm.storeAnchorHash('Ccsm', anchorHash);
+      const ccsmContract = await ccsm.connectToContract('Ccsm');
 
       //Assert
-      expect(await ccsmContract.anchorHashStore('anchorHash1')).toEqual(true);
-    });
-  });
-
-  describe('verifyIfAnchorHashExists', () => {
-    it('should return the anchor hash if it exists', async () => {
-      //Act
-      await ccsm.storeAnchorHash('anchorHash2');
-
-      //Assert
-      expect(await ccsm.verifyIfAnchorHashExists('anchorHash2')).toEqual(
-        'anchorHash2',
-      );
-    });
-
-    it('should return null if anchor hash does not exists', async () => {
-      //Act
-      await ccsm.storeAnchorHash('');
-
-      //Assert
-      expect(await ccsm.verifyIfAnchorHashExists('anchorHash3')).toEqual('');
+      expect(await ccsmContract.anchorHashStore('anchorHash')).toEqual(true);
     });
   });
 });

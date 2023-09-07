@@ -2,23 +2,27 @@ import { ethers } from 'hardhat';
 import { readFile, writeFile } from 'fs/promises';
 import { Injectable } from '@nestjs/common';
 import { IBlockchainService } from '../blockchain.interface';
+import { Contract } from 'ethers';
 
 @Injectable()
 export class EthereumService implements IBlockchainService {
-  public async deployContract(contractName: string) {
+  public async deployContract(contractName: string): Promise<void> {
     const ccsmContract = await ethers.getContractFactory(contractName);
     const deployedCcsmContract = await ccsmContract.deploy();
     await this.storeDeployedContractAddress(deployedCcsmContract.address);
   }
 
-  public async storeAnchorHash(contractName: string, anchorHash: string) {
-    const ccsmContract = await this.connectToContract(contractName);
-    await ccsmContract.setAnchorHash(anchorHash);
-  }
-
-  private async connectToContract(contractName: string) {
+  async connectToContract(contractName: string): Promise<Contract> {
     const ccsmContractAddress = await this.getDeployedContractAddress();
     return await ethers.getContractAt(contractName, ccsmContractAddress);
+  }
+
+  public async storeAnchorHash(
+    contractName: string,
+    anchorHash: string,
+  ): Promise<void> {
+    const ccsmContract = await this.connectToContract(contractName);
+    await ccsmContract.setAnchorHash(anchorHash);
   }
 
   private async getDeployedContractAddress(): Promise<string> {
