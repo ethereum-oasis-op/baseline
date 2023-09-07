@@ -3,7 +3,12 @@ import { EthereumService } from './ethereum.service';
 describe('Ethereum services', () => {
   let ccsm: EthereumService;
 
-  //NOTE: Commenting out the test as it requires compiled artifacts to run
+  //REMOVE THIS
+  it('empty test', async () => {
+    expect('empty').toBe('empty');
+  });
+
+  //NOTE: Commenting out the test as it requires compiled artifacts to run. RUN THIS.
 
   //   beforeAll(async () => {
   //     ccsm = new EthereumService();
