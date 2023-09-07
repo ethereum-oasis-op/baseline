@@ -5,20 +5,20 @@ import { IBlockchainService } from '../blockchain.interface';
 
 @Injectable()
 export class EthereumService implements IBlockchainService {
-  public async deployContract() {
-    const ccsmContract = await ethers.getContractFactory('Ccsm');
+  public async deployContract(contractName: string) {
+    const ccsmContract = await ethers.getContractFactory(contractName);
     const deployedCcsmContract = await ccsmContract.deploy();
     await this.storeDeployedContractAddress(deployedCcsmContract.address);
   }
 
-  public async storeAnchorHash(anchorHash: string) {
-    const ccsmContract = await this.connectToContract();
+  public async storeAnchorHash(contractName: string, anchorHash: string) {
+    const ccsmContract = await this.connectToContract(contractName);
     await ccsmContract.setAnchorHash(anchorHash);
   }
 
-  private async connectToContract() {
+  private async connectToContract(contractName: string) {
     const ccsmContractAddress = await this.getDeployedContractAddress();
-    return await ethers.getContractAt('Ccsm', ccsmContractAddress);
+    return await ethers.getContractAt(contractName, ccsmContractAddress);
   }
 
   private async getDeployedContractAddress(): Promise<string> {
