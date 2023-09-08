@@ -30,9 +30,9 @@ Step 2: Install Circom
 
 Run the following commands from the directory where your computer stores global libraries.
 
-`git clone https://github.com/iden3/circom.git`
+`git clone https://github.com/DanTehrani/circom-secq`
 
-`cd circom`
+`cd circom-secq`
 
 `cargo build --release`
 
