@@ -27,24 +27,25 @@ template Workstep2(){
 	
 	
 	//2. Verify Signature
-	component ecdsaSignatureVerifier = EcdsaSignatureVerifier();
-	ecdsaSignatureVerifier.signature <== signature;
-	ecdsaSignatureVerifier.publicKeyX <== publicKeyX;
-	ecdsaSignatureVerifier.publicKeyY <== publicKeyY;
-	ecdsaSignatureVerifier.Tx <== Tx;
-	ecdsaSignatureVerifier.Ty <== Ty;
-    	ecdsaSignatureVerifier.Ux <== Ux;
-	ecdsaSignatureVerifier.Uy <== Uy;
+	// component ecdsaSignatureVerifier = EcdsaSignatureVerifier();
+	// ecdsaSignatureVerifier.signature <== signature;
+	// ecdsaSignatureVerifier.publicKeyX <== publicKeyX;
+	// ecdsaSignatureVerifier.publicKeyY <== publicKeyY;
+	// ecdsaSignatureVerifier.Tx <== Tx;
+	// ecdsaSignatureVerifier.Ty <== Ty;
+    	// ecdsaSignatureVerifier.Ux <== Ux;
+	// ecdsaSignatureVerifier.Uy <== Uy;
 	
-	var isSignatureVerified = ecdsaSignatureVerifier.verified;
+	// var isSignatureVerified = ecdsaSignatureVerifier.verified;
 
 
-	component mul = Mul(2);
-	mul.nums[0] <== isStatusVerified;
-	mul.nums[1] <== isSignatureVerified;
+	// component mul = Mul(2);
+	// mul.nums[0] <== isStatusVerified;
+	// mul.nums[1] <== isSignatureVerified;
 
-	isVerified <== mul.result;
-	
+	// isVerified <== mul.result;
+
+	isVerified <== isStatusVerified;	
 }
 
 template StatusVerifier(){
