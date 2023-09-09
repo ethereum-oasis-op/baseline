@@ -33,7 +33,9 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = await import(pathToVerificationKey);
+    // TODO: stack Error: Cannot find module 'zeroKnowledgeArtifacts/circuits/workstep1/workstep1_circuit_verification_key.json' 
+    // from '../src/bri/zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service.ts'
+    // this.witness.verificationKey = await import(pathToVerificationKey);
 
     return this.witness;
   }

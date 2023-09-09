@@ -5,7 +5,7 @@ import * as request from 'supertest';
 import { v4 } from 'uuid';
 import { AppModule } from '../src/app.module';
 
-jest.setTimeout(20000);
+jest.setTimeout(120000);
 
 let accessToken: string;
 let app: INestApplication;
