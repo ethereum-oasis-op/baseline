@@ -13,4 +13,7 @@ export class WorkflowDto {
 
   @AutoMap()
   workgroupId: string;
+
+  @AutoMap()
+  bpiAccountId: string;
 }

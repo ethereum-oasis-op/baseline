@@ -42,7 +42,6 @@ export class MerkleTreeStorageAgent extends PrismaService {
     const updatedMerkleTree = await this.bpiMerkleTree.update({
       where: { id: merkleTree.id },
       data: {
-        id: merkleTree.id,
         tree: MerkleTree.marshalTree(merkleTree.tree),
       },
     });

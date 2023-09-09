@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { MerkleTreeDto } from '../../../../..//merkleTree/api/dtos/response/merkleTree.dto';
 import { BpiSubjectAccountDto } from '../../../../bpiSubjectAccounts/api/dtos/response/bpiSubjectAccount.dto';
 
 export class BpiAccountDto {
@@ -16,4 +17,10 @@ export class BpiAccountDto {
 
   @AutoMap()
   stateObjectProverSystem: string;
+
+  @AutoMap()
+  stateTree: MerkleTreeDto;
+
+  @AutoMap()
+  historyTree: MerkleTreeDto;
 }

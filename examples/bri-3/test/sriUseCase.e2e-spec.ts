@@ -106,7 +106,7 @@ describe('SRI use-case end-to-end test', () => {
 
   it('Submits a transaction for execution of the workstep 1', async () => {
     // TODO: CheckAuthz on createTransaction and in other places
-
+    // TODO: Faking two items in the payload as the circuit is hardcoded to 4
     const createdTransactionId = await createTransactionAndReturnId(
       v4(),
       1,
@@ -129,13 +129,18 @@ describe('SRI use-case end-to-end test', () => {
         ]
       }`,
     );
-
-    console.log(createdTransactionId);
   });
 
-  it('Verifies that the transaction has been executed and that the state has been properly stored', async () => {
+  it('Waits for a single VSM cycle and then verifies that the transaction has been executed and that the state has been properly stored', async () => {
     await new Promise((r) => setTimeout(r, 20000));
-    // query the CAH retrieved from the transaction
+    const resultWorkflow = await fetchWorkflow(createdWorkflowId);
+    const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
+
+    const stateTree = JSON.parse(resultBpiAccount.stateTree.tree);
+    const historyTree = JSON.parse(resultBpiAccount.historyTree.tree);
+
+    expect(stateTree.leaves.length).toBe(1);
+    expect(historyTree.leaves.length).toBe(1);
   });
 });
 
@@ -310,4 +315,22 @@ async function createTransactionAndReturnId(
     .expect(201);
 
   return createdTransactionResponse.text;
+}
+
+async function fetchWorkflow(workflowId: string): Promise<any> {
+  const getWorkflowResponse = await request(server)
+    .get(`/workflows/${workflowId}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect(200);
+
+  return JSON.parse(getWorkflowResponse.text);
+}
+
+async function fetchBpiAccount(bpiAccountId: string): Promise<any> {
+  const getBpiAccountResponse = await request(server)
+    .get(`/accounts/${bpiAccountId}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect(200);
+
+  return JSON.parse(getBpiAccountResponse.text);
 }
