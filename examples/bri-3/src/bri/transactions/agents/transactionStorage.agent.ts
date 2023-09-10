@@ -51,8 +51,8 @@ export class TransactionStorageAgent extends PrismaService {
     n: number,
     statusToFetch: TransactionStatus,
   ): Promise<Transaction[]> {
-    // TODO: Add creation date to transaction
-    // TODO: Add execution or abortion date to transaction
+    // TODO: #745 Add creation date to transaction
+    // TODO: #745 Add execution or abortion date to transaction
     const transactionModels = await this.transaction.findMany({
       include: {
         fromBpiSubjectAccount: {

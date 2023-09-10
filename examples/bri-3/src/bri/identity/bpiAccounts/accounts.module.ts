@@ -33,5 +33,5 @@ export const QueryHandlers = [
   ],
   exports: [BpiAccountAgent, BpiAccountStorageAgent],
 })
-// TODO: Move this under a separate folder 'state' instead of 'identity'
+
 export class AccountModule {}

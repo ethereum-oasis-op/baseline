@@ -27,7 +27,7 @@ const merkleTreeServiceMock: DeepMockProxy<MerkleTreeService> =
 const circuitsServiceMock: DeepMockProxy<ICircuitService> =
   mockDeep<ICircuitService>();
 
-// TODO: Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
+// TODO: #742 Setup of this test data below is what should be handled in a separate file where we mock only prisma.client
 // and implement various test data scenarios that can be selected with a single line of code.
 // https://github.com/demonsters/prisma-mock
 const existingWorkgroupId = uuid();
@@ -78,7 +78,7 @@ const existingWorkflow1 = TestDataHelper.createTestWorkflow(
 );
 
 beforeAll(async () => {
-  // TODO: https://github.com/prisma/prisma/issues/10203
+  // TODO: #742 https://github.com/prisma/prisma/issues/10203
   transactionAgent = new TransactionAgent(
     transactionStorageAgentMock,
     workstepStorageAgentMock,

@@ -21,7 +21,7 @@ export class GetBpiAccountByIdQueryHandler
   async execute(query: GetBpiAccountByIdQuery) {
     const bpiAccount = await this.storageAgent.getAccountById(query.id);
 
-    // TODO: Remove this as soon as automapper is fixed
+    // TODO: #740 Remove this as soon as automapper is fixed
     // This should be handled as part of mapping the bpi account from the db
     // in the method getAccountById above
     const stateTree = await this.merkleTreeStorageAgent.getMerkleTreeById(
