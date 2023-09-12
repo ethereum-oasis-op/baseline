@@ -24,6 +24,12 @@ export class BpiAccount {
   @AutoMap()
   stateTree: BpiMerkleTree;
 
+  @AutoMap()
+  historyTreeId: string;
+
+  @AutoMap()
+  historyTree: BpiMerkleTree;
+
   constructor(
     id: string,
     ownerBpiSubjectAccounts: BpiSubjectAccount[],
