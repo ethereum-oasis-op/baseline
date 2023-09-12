@@ -60,7 +60,11 @@ export class TransactionStorageAgent extends PrismaService {
             ownerBpiSubject: true,
           },
         },
-        toBpiSubjectAccount: true,
+        toBpiSubjectAccount: {
+          include: {
+            ownerBpiSubject: true,
+          },
+        },
       },
       where: { status: statusToFetch },
       take: n,
