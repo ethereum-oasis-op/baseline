@@ -33,5 +33,4 @@ export const QueryHandlers = [
   ],
   exports: [BpiAccountAgent, BpiAccountStorageAgent],
 })
-
 export class AccountModule {}
