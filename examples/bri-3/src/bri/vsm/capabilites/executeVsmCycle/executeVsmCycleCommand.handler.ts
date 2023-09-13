@@ -62,14 +62,12 @@ export class ExecuteVsmCycleCommandHandler
           txResult.witness,
         );
 
-
         await this.ccsmStorageAgent.storeAnchorHashOnCcsm(txResult.hash);
 
         await this.stateAgent.storeNewLeafInHistoryTree(
           workflow!.bpiAccount,
           stateTreeRoot,
         );
-
 
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
