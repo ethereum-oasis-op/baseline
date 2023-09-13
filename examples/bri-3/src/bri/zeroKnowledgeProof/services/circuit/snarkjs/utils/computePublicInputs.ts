@@ -1,7 +1,6 @@
 import { Signature } from 'ethers';
 import { computeEffEcdsaPubInput } from '@personaelabs/spartan-ecdsa';
-import * as elliptic from 'elliptic';
-const ec = elliptic.ec;
+import { ec as EC } from 'elliptic';
 import { ethers } from 'ethers';
 import { Transaction } from '../../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
@@ -13,11 +12,11 @@ export const computeEffectiveEcdsaSigPublicInputs = (
   msgHash: Buffer,
   publicKeyHex: string,
 ) => {
+  const ec = new EC('secp256k1');
+
   //Public Key
-  const publicKeyBuffer = Buffer.from(publicKeyHex.split('Ox')[1], 'hex');
-  const publicKeyCoordinates = ec.prototype
-    .keyFromPublic(publicKeyBuffer.toString('hex'))
-    .getPublic();
+  const publicKeyBuffer = ethers.utils.arrayify(publicKeyHex);
+  const publicKeyCoordinates = ec.keyFromPublic(publicKeyBuffer).getPublic();
 
   //Signature
   const r = BigInt(signature.r);
@@ -42,8 +41,8 @@ export const computeEffectiveEcdsaSigPublicInputs = (
 export const computeEcdsaSigPublicInputs = (tx: Transaction) => {
   const ecdsaSignature = ethers.utils.splitSignature(tx.signature);
 
-  const messageHash = ethers.utils.arrayify(
-    ethers.utils.hashMessage(tx.payload),
+  const messageHash = Buffer.from(
+    ethers.utils.arrayify(ethers.utils.hashMessage(tx.payload)),
   );
 
   const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
