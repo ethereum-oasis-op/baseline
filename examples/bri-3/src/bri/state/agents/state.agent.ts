@@ -36,7 +36,7 @@ export class StateAgent {
     stateLeaf: string,
     merkelizedPayload: MerkleTree,
     witness: Witness,
-  ): Promise<void> {
+  ): Promise<string> {
     let stateTree = await this.merkleTreetStorageAgent.getMerkleTreeById(
       bpiAccount.stateTreeId,
     );
@@ -56,6 +56,25 @@ export class StateAgent {
       merkelizedPayload,
       witness,
     );
+
+    return stateTree.getRoot();
+  }
+
+  public async storeNewLeafInHistoryTree(
+    bpiAccount: BpiAccount,
+    stateTreeRoot: string,
+  ): Promise<void> {
+    let historyTree = await this.merkleTreetStorageAgent.getMerkleTreeById(
+      bpiAccount.historyTreeId,
+    );
+
+    if (!historyTree) {
+      historyTree = this.merkleTreeAgent.createNewMerkleTree([]);
+    }
+
+    historyTree.addLeaf(stateTreeRoot);
+
+    await this.merkleTreetStorageAgent.storeUpdatedMerkleTree(historyTree);
   }
 
   public async getStateLeafValues(stateLeaf: string): Promise<StateLeafValues> {

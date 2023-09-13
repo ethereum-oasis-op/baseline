@@ -39,7 +39,9 @@ model BpiAccount {
   authorizationCondition       String                         @default("") //Placeholder R251
   stateObjectProverSystem      String                         @default("") //Placeholder R251
   stateTreeId                  String
-  stateTree                    BpiMerkleTree?                 @relation(fields: [stateTreeId], references: [id])
+  stateTree                    BpiMerkleTree?                 @relation("StateTree", fields: [stateTreeId], references: [id])
+  historyTreeId                String
+  historyTree                  BpiMerkleTree?                 @relation("HistoryTree", fields: [historyTreeId], references: [id])
   Workflow                     Workflow[]
   BpiAccountStateTreeLeafValue BpiAccountStateTreeLeafValue[]
 }
@@ -127,7 +129,8 @@ model BpiMerkleTree {
   id          String       @id @default(uuid())
   hashAlgName String
   tree        String
-  BpiAccount  BpiAccount[]
+  stateTree   BpiAccount[] @relation("StateTree")
+  historyTree BpiAccount[] @relation("HistoryTree")
 }
 
 model BpiAccountStateTreeLeafValue {
