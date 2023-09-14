@@ -51,6 +51,3 @@ const getEffEcdsaCircuitInput = (privKey: Buffer, msg: Buffer) => {
 
   return input;
 };
-
-export const bytesToBigInt = (bytes: Uint8Array): bigint =>
-  BigInt('0x' + Buffer.from(bytes).toString('hex'));
