@@ -1,5 +1,4 @@
 import * as snarkjs from 'snarkjs';
-import { fromRpcSig } from '@ethereumjs/util';
 import * as fs from 'fs';
 
 export const calculateCircuitWitness = async (input: any, wasmFile: string) => {
