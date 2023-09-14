@@ -1,16 +1,7 @@
 import { AutoMap } from '@automapper/classes';
-import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
+import MerkleTree from 'merkletreejs';
 
-export class StateLeafValues {
-  @AutoMap()
-  id: string;
-
-  @AutoMap()
-  bpiAccountId: string;
-
-  @AutoMap()
-  BpiAccount: BpiAccount;
-
+export class StateTreeLeafValueContentDto {
   @AutoMap()
   leafIndex: number;
 
@@ -23,21 +14,20 @@ export class StateLeafValues {
   @AutoMap()
   witness: string;
 
+  @AutoMap()
+  merkleTree: MerkleTree;
+
   constructor(
-    id: string,
-    bpiAccountId: string,
-    BpiAccount: BpiAccount,
     leafIndex: number,
     leafValue: string,
     merkelizedPayload: string,
     witness: string,
+    merkleTree: MerkleTree,
   ) {
-    this.id = id;
-    this.bpiAccountId = bpiAccountId;
-    this.BpiAccount = BpiAccount;
     this.leafIndex = leafIndex;
     this.leafValue = leafValue;
     this.merkelizedPayload = merkelizedPayload;
     this.witness = witness;
+    this.merkleTree = merkleTree;
   }
 }

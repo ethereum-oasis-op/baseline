@@ -6,12 +6,10 @@ import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
 import { MerkleTreeAgent } from '../../merkleTree/agents/merkleTree.agent';
 import { MerkleTreeStorageAgent } from '../../merkleTree/agents/merkleTreeStorage.agent';
 import { Witness } from '../../zeroKnowledgeProof/models/witness';
-import { StateLeafValues } from '../models/stateLeafValues';
+import { StateTreeLeafValueContent } from '../models/stateTreeLeafValueContent';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiAccounts/api/err.messages';
-import { StateContent } from '../models/stateContent';
-import { BpiMerkleTree } from '@prisma/client';
 
 // TODO: We should follow this approach everywhere for storage
 // https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#scenario-pre-computed-ids-and-the-transaction-api
@@ -78,7 +76,9 @@ export class StateAgent {
     await this.merkleTreetStorageAgent.storeUpdatedMerkleTree(historyTree);
   }
 
-  public async getStateLeafValues(stateLeaf: string): Promise<StateLeafValues> {
+  public async getStateLeafValues(
+    stateLeaf: string,
+  ): Promise<StateTreeLeafValueContent> {
     const stateLeafValues =
       await this.bpiAccountStorageAgent.getAccompanyingStateLeafValues(
         stateLeaf,
@@ -88,6 +88,10 @@ export class StateAgent {
       throw new NotFoundException(LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(stateLeafValues, StateLeafValues, StateLeafValues);
+    return this.mapper.map(
+      stateLeafValues,
+      StateTreeLeafValueContent,
+      StateTreeLeafValueContent,
+    );
   }
 }
