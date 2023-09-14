@@ -6,9 +6,7 @@
  */
 
 export class Proof {
-  a: string[];
-  b: string[][];
-  c: string[];
+  value: Uint8Array | { a: string[]; b: string[][]; c: string[] };
   protocol?: string;
   curve?: string;
 }

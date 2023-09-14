@@ -5,5 +5,5 @@ export class Witness {
 
   publicInputs?: string[];
 
-  verificationKey: object;
+  verificationKey?: object;
 }

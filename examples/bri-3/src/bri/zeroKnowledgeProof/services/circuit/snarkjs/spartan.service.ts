@@ -7,7 +7,7 @@ import * as snarkjs from 'snarkjs';
 import { Transaction } from '../../../../transactions/models/transaction';
 
 @Injectable()
-export class SnarkjsCircuitService implements ICircuitService {
+export class SpartanCircuitService implements ICircuitService {
   public witness: Witness;
 
   public async createWitness(
@@ -16,8 +16,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     },
     circuitName: string,
     pathToCircuit: string,
-    pathToProvingKey: string,
-    pathToVerificationKey: string,
+    pathToCircuitWasm: string,
   ): Promise<Witness> {
     this.witness = new Witness();
 
@@ -45,9 +44,9 @@ export class SnarkjsCircuitService implements ICircuitService {
       witness.verificationKey,
       witness.publicInputs,
       {
-        pi_a: witness.proof.value['a'],
-        pi_b: witness.proof.value['b'],
-        pi_c: witness.proof.value['c'],
+        pi_a: witness.proof.a,
+        pi_b: witness.proof.b,
+        pi_c: witness.proof.c,
         protocol: witness.proof.protocol,
         curve: witness.proof.curve,
       },
@@ -64,7 +63,9 @@ export class SnarkjsCircuitService implements ICircuitService {
       await snarkjs.groth16.fullProve(inputs, pathToCircuit, pathToProvingKey);
 
     const newProof = {
-      value: { a: proof.pi_a, b: proof.pi_b, c: proof.pi_c },
+      a: proof.pi_a,
+      b: proof.pi_b,
+      c: proof.pi_c,
       protocol: proof.protocol,
       curve: proof.curve,
     } as Proof;
