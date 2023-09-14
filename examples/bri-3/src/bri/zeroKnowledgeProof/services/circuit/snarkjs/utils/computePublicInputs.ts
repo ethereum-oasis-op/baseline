@@ -31,8 +31,8 @@ export const computeEffectiveEcdsaSigPublicInputs = (
     Ty: circuitPubInput.Ty,
     Ux: circuitPubInput.Ux,
     Uy: circuitPubInput.Uy,
-    publicKeyX: publicKeyCoordinates.getX().toString(),
-    publicKeyY: publicKeyCoordinates.getY().toString(),
+    publicKeyX: BigInt(publicKeyCoordinates.getX().toString()),
+    publicKeyY: BigInt(publicKeyCoordinates.getY().toString()),
   };
 
   return input;

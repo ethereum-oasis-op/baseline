@@ -3,8 +3,14 @@ import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
 import { computeEcdsaSigPublicInputs } from './utils/computePublicInputs';
-import * as snarkjs from 'snarkjs';
+import * as spartan from '@personaelabs/spartan-ecdsa/build/wasm';
 import { Transaction } from '../../../../transactions/models/transaction';
+import {
+  calculateCircuitWitness,
+  loadCircuit,
+  deserialize,
+} from './utils/spartan';
+import { serialize } from 'v8';
 
 @Injectable()
 export class SpartanCircuitService implements ICircuitService {
@@ -19,37 +25,34 @@ export class SpartanCircuitService implements ICircuitService {
     pathToCircuitWasm: string,
   ): Promise<Witness> {
     this.witness = new Witness();
+    await spartan.init();
 
     const preparedInputs = await this.prepareInputs(inputs, circuitName);
 
-    const { proof, publicInputs } = await this.executeCircuit(
+    const { proof, publicInputs, circuitBinary } = await this.executeCircuit(
       preparedInputs,
       pathToCircuit,
-      pathToProvingKey,
+      pathToCircuitWasm,
     );
 
     this.witness.proof = proof;
 
     this.witness.publicInputs = publicInputs;
 
-    // TODO: stack Error: Cannot find module 'zeroKnowledgeArtifacts/circuits/workstep1/workstep1_circuit_verification_key.json'
-    // from '../src/bri/zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service.ts'
-    // this.witness.verificationKey = await import(pathToVerificationKey);
+    this.witness.circuitBinary = circuitBinary;
 
     return this.witness;
   }
 
   public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
-    const isVerified = await snarkjs.groth16.verify(
-      witness.verificationKey,
-      witness.publicInputs,
-      {
-        pi_a: witness.proof.a,
-        pi_b: witness.proof.b,
-        pi_c: witness.proof.c,
-        protocol: witness.proof.protocol,
-        curve: witness.proof.curve,
-      },
+    const circuitPubInput = serialize(
+      (witness.publicInputs as string[]).map((input) => BigInt(input)),
+    );
+
+    const isVerified = spartan.default.verify(
+      witness.circuitBinary as Uint8Array,
+      witness.proof.value as Uint8Array,
+      circuitPubInput,
     );
     return isVerified;
   }
@@ -57,20 +60,36 @@ export class SpartanCircuitService implements ICircuitService {
   private async executeCircuit(
     inputs: object,
     pathToCircuit: string,
-    pathToProvingKey: string,
-  ): Promise<{ proof: Proof; publicInputs: string[] }> {
-    const { proof, publicSignals: publicInputs } =
-      await snarkjs.groth16.fullProve(inputs, pathToCircuit, pathToProvingKey);
+    pathToCircuitWasm: string,
+  ): Promise<{
+    proof: Proof;
+    publicInputs: string[];
+    circuitBinary: Uint8Array;
+  }> {
+    const witness = await calculateCircuitWitness(inputs, pathToCircuitWasm);
+
+    const circuitBinary = await loadCircuit(pathToCircuit);
+
+    //TODO: Add circuit public inputs ==> serialize(Object.values(inputs.public))
+    const circuitPublicInputs: Uint8Array = new Uint8Array();
+
+    const proof = spartan.default.prove(
+      circuitBinary,
+      witness.data,
+      circuitPublicInputs,
+    );
 
     const newProof = {
-      a: proof.pi_a,
-      b: proof.pi_b,
-      c: proof.pi_c,
-      protocol: proof.protocol,
-      curve: proof.curve,
+      value: proof,
+      protocol: 'spartan',
+      curve: 'secq256k1',
     } as Proof;
 
-    return { proof: newProof, publicInputs };
+    const publicInputs = deserialize(circuitPublicInputs).map((input) =>
+      input.toString(),
+    );
+
+    return { proof: newProof, publicInputs, circuitBinary };
   }
 
   private async prepareInputs(
