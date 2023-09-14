@@ -189,12 +189,14 @@ export class TransactionAgent {
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
+      circuitWasmPath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
       { tx },
       snakeCaseWorkstepName,
       circuitPath,
+      circuitWasmPath,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
     );
@@ -222,6 +224,7 @@ export class TransactionAgent {
     circuitProvingKeyPath: string;
     circuitVerificatioKeyPath: string;
     circuitPath: string;
+    circuitWasmPath: string;
   } {
     const snakeCaseWorkstepName = this.convertStringToSnakeCase(name);
 
@@ -244,6 +247,13 @@ export class TransactionAgent {
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
+      '_circuit.circuit';
+
+    const circuitWasmPath =
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/' +
+      snakeCaseWorkstepName +
       '_circuit.wasm';
 
     return {
@@ -251,6 +261,7 @@ export class TransactionAgent {
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
+      circuitWasmPath,
     };
   }
 
