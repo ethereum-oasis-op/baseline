@@ -3,6 +3,7 @@
 /node_modules
 /zeroKnowledgeArtifacts/ptau
 src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
+/zeroKnowledgeArtifacts/circuits
 
 # Logs
 logs
