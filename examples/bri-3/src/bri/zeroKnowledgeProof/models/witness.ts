@@ -6,4 +6,6 @@ export class Witness {
   publicInputs?: string[];
 
   verificationKey?: object;
+
+  circuitBinary?: Uint8Array;
 }
