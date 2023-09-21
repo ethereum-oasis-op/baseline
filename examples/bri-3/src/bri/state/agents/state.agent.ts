@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
 import MerkleTree from 'merkletreejs';
 import { BpiAccountStorageAgent } from '../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
 import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
@@ -76,25 +75,6 @@ export class StateAgent {
     historyTree.addLeaf(stateTreeRoot);
 
     await this.merkleTreetStorageAgent.storeUpdatedMerkleTree(historyTree);
-  }
-
-  public async getStateLeafValues(
-    stateLeaf: string,
-  ): Promise<StateTreeLeafValueContent> {
-    const stateLeafValues =
-      await this.bpiAccountStorageAgent.getAccompanyingStateLeafValues(
-        stateLeaf,
-      );
-
-    if (!stateLeafValues) {
-      throw new NotFoundException(LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE);
-    }
-
-    return this.mapper.map(
-      stateLeafValues,
-      StateTreeLeafValueContent,
-      StateTreeLeafValueContent,
-    );
   }
 
   public async getStateLeafValues(stateLeaf: string): Promise<StateLeafValues> {
