@@ -1,11 +1,11 @@
 **NOTE**
 
-> Follow this document in case you DO NOT need ECDSA signature verification in your circuit.
-> If you need ECDSA signature verification, follow the instructions in `ecdsaSignatureCircuit.md` instead.
+> Follow this document in case you need ECDSA signature verification in your circuit.
+> If you DO NOT need signature verification, follow the instructions in `snarkjs.md` instead.
 
-# Snarkjs Circuit
+# ECDSA Signature Circuit
 
-This document describes the setup and process for generating zero-knowledge proofs using snarkjs. The circuits are written and compiled using [Circom](https://docs.circom.io/getting-started/installation/). Then, the [snarkjs](https://github.com/iden3/snarkjs) library is used to generate proofs from these compiled circuits.
+In case you want to add ECDSA signature verification to your circom circuits, follow these instructions instead of the `snarkjs.md` document. This document describes the setup and process for generating zero-knowledge proofs using snarkjs. The circuits are written and compiled using [Circom](https://docs.circom.io/getting-started/installation/). Then, the [snarkjs](https://github.com/iden3/snarkjs) library is used to generate proofs from these compiled circuits.
 
 > **Note**
 >
