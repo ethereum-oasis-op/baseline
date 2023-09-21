@@ -31,6 +31,15 @@ export class MerkleProfile extends AutomapperProfile {
           ),
         ),
       );
+      createMap(
+        mapper,
+        BpiMerkleTree,
+        MerkleTreeDto,
+        forMember(
+          (destination) => destination.tree,
+          mapFrom((source) => MerkleTree.marshalTree(source.tree)),
+        ),
+      );
       createMap(mapper, BpiMerkleTree, BpiMerkleTree);
     };
   }

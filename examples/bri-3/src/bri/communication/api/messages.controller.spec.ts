@@ -34,6 +34,7 @@ import {
 } from './err.messages';
 import { MessageController } from './messages.controller';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
+import { ethers } from 'ethers';
 
 describe('MessageController', () => {
   let mController: MessageController;
@@ -54,14 +55,14 @@ describe('MessageController', () => {
       '',
       'name',
       'desc',
-      '0x08872e27BC5d78F1FC4590803369492868A1FCCb',
+      '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539',
       [],
     );
     existingBpiSubject2 = new BpiSubject(
       '',
       'name2',
       'desc2',
-      '0xF58e44db895C0fa1ca97d68E2F9123B187b789d4',
+      '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980',
       [],
     );
 
@@ -236,7 +237,7 @@ describe('MessageController', () => {
       }).rejects.toThrow(new UnauthorizedException(INVALID_SIGNATURE));
     });
 
-    it('should return new uuid from the created bpi subject when all params provided', async () => {
+    it('should return new uuid from the created bpi message when all params provided', async () => {
       // Arrange
       const requestDto = {
         id: '123',
@@ -244,7 +245,7 @@ describe('MessageController', () => {
         to: existingBpiSubject2.id,
         content: 'hello world',
         signature:
-          '0xb27e0845a034ae61be153bf305985e4c66e9e0b0009289c764eceeb9d886a33b435cef57834b078c3eca85e015374c6f8e1406c3ac6b13144a98f794ba7c56ce1c',
+          '0xfa6069e94f62a4bbf519d5ce9e367357804a5d933da6aeccfd69d9a4ffe9df40560d285e13a3408fe03e3934a3b9f309f5e22b3ebe5b21e4b73834a1ed8495ab1c',
         type: 1,
       } as CreateBpiMessageDto;
       subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(

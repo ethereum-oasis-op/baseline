@@ -3,8 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
-import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
+import { v4 } from 'uuid';
 import { BpiSubjectAccount } from '../../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../../../identity/bpiSubjects/models/bpiSubject';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
@@ -16,6 +15,7 @@ import {
 } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 import { WorkflowStorageAgent } from './workflowsStorage.agent';
+import { BpiAccount } from 'src/bri/identity/bpiAccounts/models/bpiAccount';
 
 @Injectable()
 export class WorkflowAgent {
@@ -44,7 +44,15 @@ export class WorkflowAgent {
     workgroupId: string,
     bpiAccount: BpiAccount,
   ): Workflow {
-    return new Workflow(uuidv4(), name, worksteps, workgroupId, bpiAccount);
+    const newWorkflow = new Workflow(
+      v4(),
+      name,
+      worksteps,
+      workgroupId,
+      bpiAccount.id,
+    );
+    newWorkflow.bpiAccount = bpiAccount;
+    return newWorkflow;
   }
 
   public async throwIfWorkflowBpiAccountOwnersAreNotWorkgroupParticipants(

@@ -70,6 +70,20 @@ export class BpiAccountStorageAgent extends PrismaService {
         },
         authorizationCondition: bpiAccount.authorizationCondition,
         stateObjectProverSystem: bpiAccount.stateObjectProverSystem,
+        stateTree: {
+          create: {
+            id: bpiAccount.stateTreeId,
+            hashAlgName: bpiAccount.stateTree.hashAlgName,
+            tree: MerkleTree.marshalTree(bpiAccount.stateTree.tree),
+          },
+        },
+        historyTree: {
+          create: {
+            id: bpiAccount.historyTreeId,
+            hashAlgName: bpiAccount.historyTree.hashAlgName,
+            tree: MerkleTree.marshalTree(bpiAccount.historyTree.tree),
+          },
+        },
       },
     });
 

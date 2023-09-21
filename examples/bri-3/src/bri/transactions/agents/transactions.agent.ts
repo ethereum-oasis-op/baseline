@@ -177,7 +177,7 @@ export class TransactionAgent {
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
 
-    // TODO: Have the hash algh 'sha256' in a single place in env instead of spread around in code
+    // TODO: #743 Have the hash algh 'sha256' in a single place in env instead of spread around in code
     const merkelizedPayload = this.merkleTreeService.merkelizePayload(
       JSON.parse(tx.payload),
       'sha256',
@@ -213,7 +213,7 @@ export class TransactionAgent {
     return txResult;
   }
 
-  // TODO: Only for the purposes of temporary convention
+  // TODO: #744 Only for the purposes of temporary convention
   // to connect worksteps with circuits on the file system.
   // Format is: <path_from_env>/<workstep_name_in_snake_case>_<predefined_suffix>.
   // Will be ditched completely as part of milestone 5.
@@ -254,7 +254,7 @@ export class TransactionAgent {
     };
   }
 
-  // TODO: ChatGPT generated only for the purposes of temporary convention
+  // TODO: #744 ChatGPT generated only for the purposes of temporary convention
   // to connect worksteps with circuits on the file system.
   private convertStringToSnakeCase(name: string): string {
     // Remove any leading or trailing spaces

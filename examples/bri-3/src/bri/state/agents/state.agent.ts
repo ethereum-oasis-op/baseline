@@ -11,7 +11,7 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiAccounts/api/err.messages';
 
-// TODO: We should follow this approach everywhere for storage
+// TODO: #741 We should follow this approach everywhere for storage
 // https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#scenario-pre-computed-ids-and-the-transaction-api
 // We precompute Ids, collect all storage actions from the relevant storage agents
 // and then execute a single prisma transaction at the end of the command handler
@@ -20,7 +20,7 @@ import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../../identity/bpiAccoun
 // by regular agents. This dbContext is in the end passed to prisma.transaction call, so that db actions are executed in order
 // as part of a single transaction.
 
-// TODO: MIL5 - Introduce unit tests once https://github.com/demonsters/prisma-mock implemented
+// TODO: #742 MIL5 - Introduce unit tests once https://github.com/demonsters/prisma-mock implemented
 @Injectable()
 export class StateAgent {
   constructor(

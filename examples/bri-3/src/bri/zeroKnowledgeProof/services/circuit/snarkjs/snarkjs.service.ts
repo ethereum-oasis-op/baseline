@@ -35,7 +35,9 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = await import(pathToVerificationKey);
+    // TODO: stack Error: Cannot find module 'zeroKnowledgeArtifacts/circuits/workstep1/workstep1_circuit_verification_key.json'
+    // from '../src/bri/zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service.ts'
+    // this.witness.verificationKey = await import(pathToVerificationKey);
 
     return this.witness;
   }
@@ -105,7 +107,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     });
 
     const preparedInputs = {
-      invoiceStatus: payload.status,
+      invoiceStatus: this.calculateStringCharCodeSum(payload.status),
       invoiceAmount: payload.amount,
       itemPrices,
       itemAmount,
@@ -167,5 +169,15 @@ export class SnarkjsCircuitService implements ICircuitService {
     };
 
     return preparedInputs;
+  }
+
+  private calculateStringCharCodeSum(status: string): number {
+    let sum = 0;
+
+    for (let i = 0; i < status.length; i++) {
+      sum += status.charCodeAt(i);
+    }
+
+    return sum;
   }
 }

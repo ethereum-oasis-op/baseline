@@ -42,7 +42,6 @@ export class MerkleTreeStorageAgent extends PrismaService {
     const updatedMerkleTree = await this.bpiMerkleTree.update({
       where: { id: merkleTree.id },
       data: {
-        id: merkleTree.id,
         tree: MerkleTree.marshalTree(merkleTree.tree),
       },
     });
@@ -55,7 +54,7 @@ export class MerkleTreeStorageAgent extends PrismaService {
       where: { id: merkleTree.id },
     });
 
-    // TODO: Mil5 - Mapping from a prisma client type to a domain object is not working.
+    // TODO: #740 Mil5 - Mapping from a prisma client type to a domain object is not working.
     // We need to address this by either introducing a helper model (like the MerkleTreeDto above)
     // or experimenting with automapper pojos strategy.
     return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);

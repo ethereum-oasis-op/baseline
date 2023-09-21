@@ -2,36 +2,41 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import MerkleTree from 'merkletreejs';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { uuid } from 'uuidv4';
+import { MerkleTreeStorageAgent } from '../../../merkleTree/agents/merkleTreeStorage.agent';
+import { MerkleModule } from '../../../merkleTree/merkle.module';
+import { BpiMerkleTree } from '../../../merkleTree/models/bpiMerkleTree';
+import { BpiSubjectAccountAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
+import { BpiSubjectAccountStorageAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { NOT_FOUND_ERR_MESSAGE as SUBJECT_ACCOUNT_NOT_FOUND_ERR_MESSAGE } from '../../bpiSubjectAccounts/api/err.messages';
-import { AccountController } from './accounts.controller';
-import { BpiAccountStorageAgent } from '../agents/bpiAccountsStorage.agent';
+import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
+import { SubjectAccountsProfile } from '../../bpiSubjectAccounts/subjectAccounts.profile';
+import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
+import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
+import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
+import { AccountsProfile } from '../accounts.profile';
 import { BpiAccountAgent } from '../agents/bpiAccounts.agent';
+import { BpiAccountStorageAgent } from '../agents/bpiAccountsStorage.agent';
 import { CreateBpiAccountCommandHandler } from '../capabilities/createBpiAccount/createBpiAccountCommand.handler';
 import { DeleteBpiAccountCommandHandler } from '../capabilities/deleteBpiAccount/deleteBpiAccountCommand.handler';
 import { GetAllBpiAccountsQueryHandler } from '../capabilities/getAllBpiAccounts/getAllBpiAccountQuery.handler';
 import { GetBpiAccountByIdQueryHandler } from '../capabilities/getBpiAccountById/getBpiAccountByIdQuery.handler';
 import { UpdateBpiAccountCommandHandler } from '../capabilities/updateBpiAccount/updateBpiAccountCommand.handler';
-import { BpiSubjectAccountAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
-import { BpiSubjectAccountStorageAgent } from '../../bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
-import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { BpiSubjectStorageAgent } from '../../bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { BpiSubject } from '../../bpiSubjects/models/bpiSubject';
-import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
-import { AccountsProfile } from '../accounts.profile';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
-import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
-import { SubjectAccountsProfile } from '../../bpiSubjectAccounts/subjectAccounts.profile';
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { BpiAccount } from '../models/bpiAccount';
-import { uuid } from 'uuidv4';
+import { AccountController } from './accounts.controller';
+import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
+import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 
 describe('AccountController', () => {
   let accountController: AccountController;
   let accountStorageAgentMock: DeepMockProxy<BpiAccountStorageAgent>;
   let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
+  let merkleTreeStorageAgentMock: DeepMockProxy<MerkleTreeStorageAgent>;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
@@ -40,6 +45,7 @@ describe('AccountController', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        MerkleModule,
       ],
       controllers: [AccountController],
       providers: [
@@ -64,11 +70,14 @@ describe('AccountController', () => {
       .useValue(mockDeep<BpiSubjectAccountStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockDeep<BpiSubjectStorageAgent>())
+      .overrideProvider(MerkleTreeStorageAgent)
+      .useValue(mockDeep<MerkleTreeStorageAgent>())
       .compile();
 
     accountController = app.get<AccountController>(AccountController);
     accountStorageAgentMock = app.get(BpiAccountStorageAgent);
     subjectAccountStorageAgentMock = app.get(BpiSubjectAccountStorageAgent);
+    merkleTreeStorageAgentMock = app.get(MerkleTreeStorageAgent);
 
     await app.init();
   });
@@ -100,7 +109,14 @@ describe('AccountController', () => {
   };
 
   const createBpiAccount = (ownerBpiSubjectAccounts: BpiSubjectAccount[]) => {
-    return new BpiAccount(uuid(), ownerBpiSubjectAccounts, '', '');
+    return new BpiAccount(
+      uuid(),
+      ownerBpiSubjectAccounts,
+      '',
+      '',
+      new BpiMerkleTree('1', 'sha256', new MerkleTree([])),
+      new BpiMerkleTree('2', 'sha256', new MerkleTree([])),
+    );
   };
 
   describe('getBpiAccountById', () => {

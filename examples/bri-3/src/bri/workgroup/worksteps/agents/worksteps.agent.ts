@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Workstep } from '../models/workstep';
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 } from 'uuid';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { WorkstepStorageAgent } from './workstepsStorage.agent';
 
@@ -18,7 +18,7 @@ export class WorkstepAgent {
     privacyPolicy: string,
   ): Workstep {
     return new Workstep(
-      uuidv4(),
+      v4(),
       name,
       version,
       status,
