@@ -50,7 +50,7 @@ Although PLONK doesn't require a trusted setup per application-specific circuit,
 - In the case of ECDSA verification, can work on elliptic curve where discrete log holds
 
 Article/Research paper: [1](https://personaelabs.org/posts/spartan-ecdsa/) , [2](https://eprint.iacr.org/2019/550.pdf)
-[Github](https://github.com/personaelabs/spartan-ecdsa)
+Github: [Link](https://github.com/personaelabs/spartan-ecdsa)
 
 ## Pre-Setup Installations
 
