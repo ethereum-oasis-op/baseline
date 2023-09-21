@@ -193,7 +193,7 @@ export class TransactionAgent {
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
-      { tx },
+      { tx, merkelizedPayload },
       snakeCaseWorkstepName,
       circuitPath,
       circuitWasmPath,

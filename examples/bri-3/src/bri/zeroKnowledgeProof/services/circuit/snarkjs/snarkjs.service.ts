@@ -5,6 +5,7 @@ import { ICircuitService } from '../circuitService.interface';
 import { computeEcdsaSigPublicInputs } from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
 import { Transaction } from '../../../../transactions/models/transaction';
+import MerkleTree from 'merkletreejs';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
@@ -13,6 +14,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   public async createWitness(
     inputs: {
       tx: Transaction;
+      merkelizedPayload: MerkleTree;
     },
     circuitName: string,
     pathToCircuit: string,
@@ -75,6 +77,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   private async prepareInputs(
     inputs: {
       tx: Transaction;
+      merkelizedPayload: MerkleTree;
     },
     circuitName: string,
   ): Promise<object> {
@@ -82,7 +85,10 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   // TODO: Mil5 - How to parametrize this for different use-cases?
-  private async workstep1(inputs: { tx: Transaction }): Promise<object> {
+  private async workstep1(inputs: {
+    tx: Transaction;
+    merkelizedPayload: MerkleTree;
+  }): Promise<object> {
     //1. Ecdsa signature
     const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
       computeEcdsaSigPublicInputs(inputs.tx);
@@ -103,6 +109,54 @@ export class SnarkjsCircuitService implements ICircuitService {
       invoiceAmount: payload.amount,
       itemPrices,
       itemAmount,
+      signature,
+      publicKeyX,
+      publicKeyY,
+      Tx,
+      Ty,
+      Ux,
+      Uy,
+    };
+
+    return preparedInputs;
+  }
+
+  private async workstep2(inputs: {
+    tx: Transaction;
+    merkelizedPayload: MerkleTree;
+  }): Promise<object> {
+    //1. Ecdsa signature
+    const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
+      computeEcdsaSigPublicInputs(inputs.tx);
+
+    const payload = JSON.parse(inputs.tx.payload);
+
+    const preparedInputs = {
+      invoiceStatus: payload.status,
+      signature,
+      publicKeyX,
+      publicKeyY,
+      Tx,
+      Ty,
+      Ux,
+      Uy,
+    };
+
+    return preparedInputs;
+  }
+
+  private async workstep3(inputs: {
+    tx: Transaction;
+    merkelizedPayload: MerkleTree;
+  }): Promise<object> {
+    //1. Ecdsa signature
+    const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
+      computeEcdsaSigPublicInputs(inputs.tx);
+
+    const payload = JSON.parse(inputs.tx.payload);
+
+    const preparedInputs = {
+      invoiceStatus: payload.status,
       signature,
       publicKeyX,
       publicKeyY,
