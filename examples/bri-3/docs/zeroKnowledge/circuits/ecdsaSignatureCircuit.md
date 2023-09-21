@@ -39,7 +39,7 @@ Sources:
 
 Reasons for not using PLONK:
 
-Although PLONK doesn't require a trusted setup per application-specific circuit, it does require the powers of tau ceremony. [7](https://blog.iden3.io/circom-snarkjs-plonk.html) Ptau is only available for BN128 and BLS12-381 curves, making it incompatible with fast circuits that use Secq256k1 curve. [8](https://github.com/iden3/snarkjs)
+Although PLONK doesn't require a trusted setup per application-specific circuit, it does require the powers of tau ceremony.^[7]^(https://blog.iden3.io/circom-snarkjs-plonk.html) Ptau is only available for BN128 and BLS12-381 curves, making it incompatible with fast circuits that use Secq256k1 curve.^[8]^(https://github.com/iden3/snarkjs)
 
 **Spartan-ECDSA has been chosen because it is the fastest and most efficient zk-SNARK protocol for ECDSA signature verification circuits.**
 
@@ -50,8 +50,8 @@ Although PLONK doesn't require a trusted setup per application-specific circuit,
 - Doesn’t require a trusted setup
 - In the case of ECDSA verification, can work on elliptic curve where discrete log holds
 
-Article/Research paper: [1](https://personaelabs.org/posts/spartan-ecdsa/) , [2](https://eprint.iacr.org/2019/550.pdf)
-Github: [Link](https://github.com/personaelabs/spartan-ecdsa)
+Article/Research paper: [9](https://personaelabs.org/posts/spartan-ecdsa/) , [10](https://eprint.iacr.org/2019/550.pdf)
+Github: [11](https://github.com/personaelabs/spartan-ecdsa)
 
 ## Pre-Setup Installations
 
