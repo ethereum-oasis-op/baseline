@@ -10,7 +10,7 @@ import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
 import { BlockchainService } from '../services/blockchain/blockchain.interface';
 import { AnchorHashProfile } from '../anchorHash.profile';
 import { classes } from '@automapper/classes';
-import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
+import { AnchorHashCcsmStorageAgent } from '../agents/ccsmStorage.agent';
 
 describe('ProofController', () => {
   let controller: AnchorHashController;
