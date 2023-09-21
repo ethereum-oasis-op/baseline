@@ -12,8 +12,9 @@ There are a number of challenges to implementing ECDSA signature algorithms in z
 
 ## Comparisons
 
-Circom-ECDSA: Groth16 on a 20-core 3.3GHz, 64G RAM
-Spartan-ECDSA: SpartanNIZK on a 10-core M1 MacBook Pro, 16GB RAM
+_Circom-ECDSA: Groth16 on a 20-core 3.3GHz, 64G RAM_
+
+_Spartan-ECDSA: SpartanNIZK on a 10-core M1 MacBook Pro, 16GB RAM_
 
 |                                                                                                  | circom-ecdsa  | spartan-ecdsa |
 | ------------------------------------------------------------------------------------------------ | ------------- | ------------- |
