@@ -3,6 +3,9 @@
 /node_modules
 /zeroKnowledgeArtifacts/ptau
 src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
+/zeroKnowledgeArtifacts/blockchain/ethereum/artifacts
+/typechain-types
+/cache
 
 # Logs
 logs
