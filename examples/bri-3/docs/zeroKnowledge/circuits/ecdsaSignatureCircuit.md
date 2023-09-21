@@ -16,21 +16,21 @@ _Circom-ECDSA: Groth16 on a 20-core 3.3GHz, 64G RAM_
 
 _Spartan-ECDSA: SpartanNIZK on a 10-core M1 MacBook Pro, 16GB RAM_
 
-|                                                                                                  | circom-ecdsa  | spartan-ecdsa |
-| ------------------------------------------------------------------------------------------------ | ------------- | ------------- |
-| ZKSnark Protocol                                                                                 | Groth16       | SpartanNIZK   |
-| Curve used                                                                                       | BN128         | Secq256k1     |
-| Constraints                                                                                      | 9480361       | 8,076         |
-| Powers of Tau Ceremony ( 1. available curves - bn128, bls12-381 2. Number of constraints - 2^21) | several hours | Not needed    |
-| Circuit compilation                                                                              | 324s          | 5s            |
-| Witness generation                                                                               | 150s          | 3s            |
-| Trusted setup phase 2 key generation                                                             | 5569s         | Not needed    |
-| Trusted setup phase 2 contribution                                                               | 767s          | Not needed    |
-| Proving key size                                                                                 | 5.8GB         | Not needed    |
-| Proving key verification                                                                         | 6211s         | Not needed    |
-| Proving time                                                                                     | 239s          | 2s            |
-| Verification time                                                                                | <1s           | 300ms         |
-| Proof size                                                                                       | 128bytes      | 16kb          |
+|                                                                                               | circom-ecdsa  | spartan-ecdsa |
+| --------------------------------------------------------------------------------------------- | ------------- | ------------- |
+| ZKSnark Protocol                                                                              | Groth16       | SpartanNIZK   |
+| Curve used                                                                                    | BN128         | Secq256k1     |
+| Constraints                                                                                   | 9480361       | 8,076         |
+| Powers of Tau Ceremony ( Available curves -> bn128, bls12-381; Number of constraints -> 2^21) | several hours | Not needed    |
+| Circuit compilation                                                                           | 324s          | 5s            |
+| Witness generation                                                                            | 150s          | 3s            |
+| Trusted setup phase 2 key generation                                                          | 5569s         | Not needed    |
+| Trusted setup phase 2 contribution                                                            | 767s          | Not needed    |
+| Proving key size                                                                              | 5.8GB         | Not needed    |
+| Proving key verification                                                                      | 6211s         | Not needed    |
+| Proving time                                                                                  | 239s          | 2s            |
+| Verification time                                                                             | <1s           | 300ms         |
+| Proof size                                                                                    | 128bytes      | 16kb          |
 
 Sources:
 
@@ -100,6 +100,7 @@ We need to generate `.circuit` and `.wasm` files from our circom files. These fi
 Add your circom circuit files to the `baseline/circuits` folder of the spartan-ecdsa directory.
 
 `npm run build`
+
 `npm run compile:circuit <name_of_circuit> <number_of_public_inputs>`
 
 The compiled artifacts would be available under `baseline/artifacts`. You can copy these artifacts into the `./zeroKnowledgeArtifacts/circuits` folder under the bri-3 root directory.
