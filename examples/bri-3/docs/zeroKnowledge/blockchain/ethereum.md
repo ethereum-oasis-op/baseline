@@ -24,7 +24,7 @@ The following params are passed as config:
 
 ## Compile & Deploy Contract
 
-`Ccsm.sol` is the contract for storing anchor hash on-chain. Run the following command to compile and deploy it to the network of your choice.
+`Ccsm.sol` is the contract for storing the anchor hash on-chain. Run the following command to compile and deploy it to the network of your choice.
 
 `npx hardhat compile`
 
