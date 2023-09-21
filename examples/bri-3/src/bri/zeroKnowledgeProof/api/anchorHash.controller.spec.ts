@@ -7,7 +7,7 @@ import { AnchorHashAgent } from '../agents/anchorHash.agent';
 import { VerifyAnchorHashCommandHandler } from '../capabilities/verifyAnchorHash/verifyAnchorHashCommand.handler';
 import { AutomapperModule } from '@automapper/nestjs';
 import { VerifyAnchorHashDto } from './dtos/request/verifyAnchorHash.dto';
-import { BlockchainService } from '../services/blockchain/blockchain.service';
+import { BlockchainService } from '../services/blockchain/blockchain.interface';
 import { AnchorHashProfile } from '../anchorHash.profile';
 import { classes } from '@automapper/classes';
 import { AnchorHashCcsmStorageAgent } from '../agents/anchorHashCcsmStorage.agent';
