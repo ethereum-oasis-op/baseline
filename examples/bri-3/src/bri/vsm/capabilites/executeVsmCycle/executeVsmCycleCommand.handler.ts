@@ -7,6 +7,7 @@ import { TransactionStatus } from '../../../transactions/models/transactionStatu
 import { WorkstepStorageAgent } from '../../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
 import { WorkstepExecutedEvent } from '../handleWorkstepEvents/workstepExecuted.event';
+import { CcsmStorageAgent } from '../../../zeroKnowledgeProof/agents/ccsmStorage.agent';
 
 @CommandHandler(ExecuteVsmCycleCommand)
 export class ExecuteVsmCycleCommandHandler
@@ -18,6 +19,7 @@ export class ExecuteVsmCycleCommandHandler
     private workstepStorageAgent: WorkstepStorageAgent,
     private workflowStorageAgent: WorkflowStorageAgent,
     private txStorageAgent: TransactionStorageAgent,
+    private ccsmStorageAgent: CcsmStorageAgent,
     private eventBus: EventBus,
   ) {}
 
@@ -64,6 +66,8 @@ export class ExecuteVsmCycleCommandHandler
           workflow!.bpiAccount,
           stateTreeRoot,
         );
+
+        await this.ccsmStorageAgent.storeAnchorHashOnCcsm(txResult.hash);
 
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);
