@@ -4,6 +4,9 @@
 /zeroKnowledgeArtifacts/ptau
 /zeroKnowledgeArtifacts/circuits
 src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
+/zeroKnowledgeArtifacts/blockchain/ethereum/artifacts
+/typechain-types
+/cache
 
 # Logs
 logs
