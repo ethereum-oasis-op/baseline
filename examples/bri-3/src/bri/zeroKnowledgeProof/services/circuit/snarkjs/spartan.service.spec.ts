@@ -114,11 +114,11 @@ describe('SpartanService', () => {
       pathToCircuit,
       pathToCircuitWasm,
     );
-    console.log('Witness : ' + witness);
+    expect(typeof witness).toEqual('object');
   });
 
   it('verifies witness for workstep1', async () => {
     const isVerified = await spartan.verifyProofUsingWitness(witness);
-    console.log('Witness is verified : ' + isVerified);
+    expect(isVerified).toBe(true);
   });
 });
