@@ -26,7 +26,7 @@ describe('Compute public inputs utils', () => {
     expect(typeof result.Ty).toBe('bigint');
     expect(typeof result.Ux).toBe('bigint');
     expect(typeof result.Uy).toBe('bigint');
-    expect(typeof result.publicKeyX).toBe('string');
-    expect(typeof result.publicKeyX).toBe('string');
+    expect(typeof result.publicKeyX).toBe('bigint');
+    expect(typeof result.publicKeyX).toBe('bigint');
   });
 });
