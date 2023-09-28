@@ -59,7 +59,10 @@ export const computeMerkleProofPublicInputs = (
   stateTree: MerkleTree,
 ) => {
   const sha256Hash = (left: any, right: any) =>
-    crypto.createHash('sha256').update(`${left}${right}`).digest('hex');
+    crypto
+      .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
+      .update(`${left}${right}`)
+      .digest('hex');
   const ZERO_ELEMENT =
     '21663839004416932945382355908790599225266501822907911457504978515578255421292';
 
