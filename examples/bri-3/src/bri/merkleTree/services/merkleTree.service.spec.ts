@@ -4,6 +4,7 @@ import MerkleTree from 'merkletreejs';
 let merkleTreeService: MerkleTreeService;
 let payload: any;
 beforeAll(async () => {
+  process.env.MERKLE_TREE_HASH_ALGH = 'sha256';
   payload = {
     SupplierInvoiceID: 'INV123',
     Amount: 300,
@@ -53,12 +54,12 @@ describe('MerkleTree Service', () => {
     // Act
     const merkelizedPayload = merkleTreeService.merkelizePayload(
       payload,
-      'sha256',
+      `${process.env.MERKLE_TREE_HASH_ALGH}`,
     );
 
     const expectedPayload = merkleTreeService.formMerkleTree(
       expectedLeaves,
-      'sha256',
+      `${process.env.MERKLE_TREE_HASH_ALGH}`,
     );
 
     // Assert

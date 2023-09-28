@@ -114,8 +114,16 @@ describe('AccountController', () => {
       ownerBpiSubjectAccounts,
       '',
       '',
-      new BpiMerkleTree('1', 'sha256', new MerkleTree([])),
-      new BpiMerkleTree('2', 'sha256', new MerkleTree([])),
+      new BpiMerkleTree(
+        '1',
+        `${process.env.MERKLE_TREE_HASH_ALGH}`,
+        new MerkleTree([]),
+      ),
+      new BpiMerkleTree(
+        '2',
+        `${process.env.MERKLE_TREE_HASH_ALGH}`,
+        new MerkleTree([]),
+      ),
     );
   };
 

@@ -177,10 +177,9 @@ export class TransactionAgent {
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
 
-    // TODO: #743 Have the hash algh 'sha256' in a single place in env instead of spread around in code
     const merkelizedPayload = this.merkleTreeService.merkelizePayload(
       JSON.parse(tx.payload),
-      'sha256',
+      `${process.env.MERKLE_TREE_HASH_ALGH}`,
     );
     txResult.merkelizedPayload = merkelizedPayload;
 
@@ -199,7 +198,9 @@ export class TransactionAgent {
       circuitVerificatioKeyPath,
     );
 
-    const hashFn = this.merkleTreeService.createHashFunction('sha256');
+    const hashFn = this.merkleTreeService.createHashFunction(
+      `${process.env.MERKLE_TREE_HASH_ALGH}`,
+    );
 
     const merkelizedInvoiceRoot = merkelizedPayload.getRoot().toString('hex');
     const witnessHash = hashFn(JSON.stringify(txResult.witness)).toString(

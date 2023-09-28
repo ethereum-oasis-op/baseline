@@ -65,6 +65,7 @@ SNARKJS_CIRCUITS_PATH="zeroKnowledgeArtifacts/circuits/" # used to construct the
 # Compiled circuit = '_circuit.wasm'
 VSM_CYCLE_PERIOD_IN_SECS=15 # How many seconds before each VSM cycle
 VSM_CYCLE_TX_BATCH_SIZE=5 # How many transactions to execute in the single VSM  cycle
+MERKLE_TREE_HASH_ALGH="sha256" # Hash algorithm used in creation of Merkle Tree
 ```
 
 Relevant information on DID Auth can be found in ./docs/dids/did-authentication.md
