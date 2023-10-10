@@ -63,4 +63,4 @@ The commands for these two phases have been combined into ptau.sh and circuit.sh
 
 Phase 1: `npm run snarkjs:ptau`
 
-Phase 2: `npm run snarkjs:circuit --protocol={protocol} --circuitName={circuitName}`
+Phase 2: `$PROTOCOL={protocol} npm run snarkjs:circuit  {circuitName}`

@@ -24,7 +24,7 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "snarkjs:ptau": "./zeroKnowledgeArtifacts/scripts/ptau.sh",
-    "snarkjs:circuit": "./zeroKnowledgeArtifacts/scripts/circuit/$npm_config_protocol.sh"
+    "snarkjs:circuit": "./zeroKnowledgeArtifacts/scripts/circuits/$PROTOCOL.sh"
   },
   "dependencies": {
     "@automapper/classes": "^8.7.6",
