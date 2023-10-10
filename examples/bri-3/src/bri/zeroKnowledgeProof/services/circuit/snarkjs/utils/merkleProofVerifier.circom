@@ -1,4 +1,4 @@
-pragma circom 2.1.5;
+pragma circom 2.1.2;
 
 include "../../../../../../../node_modules/circomlib/circuits/sha256/sha256.circom";
 include "../../../../../../../node_modules/circomlib/circuits/comparators.circom";
