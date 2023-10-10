@@ -55,9 +55,12 @@ We are going to use the Groth16 zk-SNARK protocol. To use this protocol, we need
 - Phase 1 (circuit-independent): Powers of tau ceremony. This ensures that the toxic waste generated during the trusted setup is discarded and guarantees zero-knowledge of the resulting proofs, even if all participants were compromised.
 
 - Phase 2 (circuit-specific): Compiles the circuit and generates the proving and verification keys.
+  Flags:
+  1.  Protocol = Select either groth16 or plonk
+  2.  Circuit name = Pass the circuit name
 
 The commands for these two phases have been combined into ptau.sh and circuit.sh, respectively.
 
 Phase 1: `npm run snarkjs:ptau`
 
-Phase 2: `npm run snarkjs:circuit {circuitName}`
+Phase 2: `npm run snarkjs:circuit --protocol={protocol} --circuitName={circuitName}`

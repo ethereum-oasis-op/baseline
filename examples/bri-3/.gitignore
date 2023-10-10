@@ -6,6 +6,7 @@ src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
 /zeroKnowledgeArtifacts/blockchain/ethereum/artifacts
 /typechain-types
 /cache
+/zeroKnowledgeArtifacts/circuits
 
 # Logs
 logs
