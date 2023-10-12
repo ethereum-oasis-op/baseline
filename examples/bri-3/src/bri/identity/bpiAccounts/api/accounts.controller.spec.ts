@@ -38,6 +38,10 @@ describe('AccountController', () => {
   let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
   let merkleTreeStorageAgentMock: DeepMockProxy<MerkleTreeStorageAgent>;
 
+  beforeAll(async () => {
+    process.env.MERKLE_TREE_HASH_ALGH = 'sha256';
+  });
+
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       imports: [
