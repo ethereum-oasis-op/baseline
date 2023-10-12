@@ -6,6 +6,8 @@ import { Transaction } from '../../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
+import * as circomlib from 'circomlibjs';
+import * as ed2curve from 'ed2curve';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
@@ -99,4 +101,59 @@ export const computeMerkleProofPublicInputs = (
     stateTree: pathElements,
     stateTreeLeafPosition: pathIndices,
   };
+};
+
+export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
+  const babyJub = await circomlib.buildBabyjub();
+
+  const hashedPayload = crypto
+    .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
+    .update(tx.payload)
+    .digest()
+    .toString();
+
+  const message = Buffer.from(hashedPayload, 'hex');
+
+  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
+  // Parse the hex-encoded key into Uint8Array
+  const publicKeyBytes = Uint8Array.from(Buffer.from(publicKey, 'hex'));
+
+  //ed25519 key to curve25519 key
+  const eddsaCurvePointBytes = ed2curve.convertPublicKey(
+    publicKeyBytes,
+  ) as Uint8Array;
+
+  //Extract X and Y coordinates from curve25519 public key
+  const curvePoint = babyJub.unpackPoint(eddsaCurvePointBytes);
+  const pPubKey = babyJub.packPoint(curvePoint);
+
+  const signature = Uint8Array.from(Buffer.from(tx.signature, 'hex'));
+
+  const messageBits = buffer2bits(message);
+  const r8Bits = buffer2bits(Buffer.from(signature.slice(0, 32)));
+  const sBits = buffer2bits(Buffer.from(signature.slice(32, 64)));
+  const aBits = buffer2bits(Buffer.from(pPubKey));
+
+  const inputs = {
+    message: messageBits,
+    A: aBits,
+    R8: r8Bits,
+    S: sBits,
+  };
+
+  return inputs;
+};
+
+const buffer2bits = (buffer: Buffer) => {
+  const res: bigint[] = [];
+  for (let i = 0; i < buffer.length; i++) {
+    for (let j = 0; j < 8; j++) {
+      if ((buffer[i] >> j) & 1) {
+        res.push(BigInt('1n'));
+      } else {
+        res.push(BigInt('0n'));
+      }
+    }
+  }
+  return res;
 };

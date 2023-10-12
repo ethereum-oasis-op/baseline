@@ -1,7 +1,7 @@
 pragma circom 2.1.2;
 
 include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
-include "./utils/ecdsaSignatureVerifier.circom";
+include "../../../../../../node_modules/circomlib/circuits/eddsa.circom";
 include "./utils/arithmeticOperators.circom";
 
 template Workstep1(items){
@@ -12,13 +12,11 @@ template Workstep1(items){
 	signal input itemAmount[items];
 	
 	//Signature inputs
-	signal input signature;
-	signal input publicKeyX;
-	signal input publicKeyY;
-	signal input Tx;
-	signal input Ty;
-    	signal input Ux;
-	signal input Uy;
+	signal input message[80];
+    	signal input A[256];
+   	signal input R8[256];
+    	signal input S[256];
+
 
 	signal output isVerified;
 
@@ -40,17 +38,22 @@ template Workstep1(items){
 	var isInvoiceAmountVerified = amountVerifier.verified;
 	
 
-	//3. Verify Signature
-	// component ecdsaSignatureVerifier = EcdsaSignatureVerifier();
-	// ecdsaSignatureVerifier.signature <== signature;
-	// ecdsaSignatureVerifier.publicKeyX <== publicKeyX;
-	// ecdsaSignatureVerifier.publicKeyY <== publicKeyY;
-	// ecdsaSignatureVerifier.Tx <== Tx;
-	// ecdsaSignatureVerifier.Ty <== Ty;
-    	// ecdsaSignatureVerifier.Ux <== Ux;
-	// ecdsaSignatureVerifier.Uy <== Uy;
-	
-	// var isSignatureVerified = ecdsaSignatureVerifier.verified;
+	//3. Verify Signature	
+	var verifiedFlag = 0;
+	component eddsaSignatureVerifier = EdDSAVerifier(80);
+	for(var i = 0; i < 80; i++){
+		eddsaSignatureVerifier.msg[i] <== message[i];
+	}
+	for(var i = 0; i < 256; i++){
+		eddsaSignatureVerifier.A[i] <== A[i];
+		eddsaSignatureVerifier.R8[i] <== R8[i];
+		eddsaSignatureVerifier.S[i] <== S[i];	
+	}
+	verifiedFlag = 1;
+	component isEqualSignature = IsEqual();
+	isEqualSignature.in[0] <== verifiedFlag;
+	isEqualSignature.in[1] <== 1;
+	var isSignatureVerified = isEqualSignature.out;	
 
 
 	component mul = Mul(2);
