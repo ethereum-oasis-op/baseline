@@ -11,6 +11,7 @@ import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/exe
 import { MessagingAgent } from '../communication/agents/messaging.agent';
 import { WorkstepExecutedEventHandler } from './capabilites/handleWorkstepEvents/workstepExecutedEvent.handler';
 import { NatsMessagingClient } from '../communication/messagingClients/natsMessagingClient';
+import { ZeroKnowledgeProofModule } from '../zeroKnowledgeProof/zeroKnowledgeProof.module';
 
 export const CommandHandlers = [
   ExecuteVsmCycleCommandHandler,
@@ -28,6 +29,7 @@ export const QueryHandlers = [];
     WorkstepModule,
     WorkflowModule,
     StateModule,
+    ZeroKnowledgeProofModule
   ],
   providers: [
     VsmTasksSchedulerAgent,
