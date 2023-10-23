@@ -6,6 +6,7 @@ import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccount
 import { Mapper } from '@automapper/core';
 import { StateTreeLeafValueContent } from '../../models/stateTreeLeafValueContent';
 import { StateTreeLeafValueContentDto } from '../../api/dtos/response/stateTreeLeafValueContent.dto';
+import { InjectMapper } from '@automapper/nestjs';
 
 @QueryHandler(GetStateTreeLeafValueContentQuery)
 export class GetStateTreeLeafValueContentQueryHandler
