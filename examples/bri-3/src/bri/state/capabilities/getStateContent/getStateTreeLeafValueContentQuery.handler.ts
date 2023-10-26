@@ -1,11 +1,12 @@
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetStateTreeLeafValueContentQuery } from './getStateTreeLeafValueContent.query';
+import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
 import { MerkleTreeAgent } from '../../../merkleTree/agents/merkleTree.agent';
 import { StateAgent } from '../../agents/state.agent';
-import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
-import { Mapper } from '@automapper/core';
-import { StateTreeLeafValueContent } from '../../models/stateTreeLeafValueContent';
 import { StateTreeLeafValueContentDto } from '../../api/dtos/response/stateTreeLeafValueContent.dto';
+import { StateTreeLeafValueContent } from '../../models/stateTreeLeafValueContent';
+import { GetStateTreeLeafValueContentQuery } from './getStateTreeLeafValueContent.query';
 
 @QueryHandler(GetStateTreeLeafValueContentQuery)
 export class GetStateTreeLeafValueContentQueryHandler
