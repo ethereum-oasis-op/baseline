@@ -18,6 +18,6 @@ import { EthereumService } from './services/blockchain/ethereum/ethereum.service
       useClass: EthereumService,
     },
   ],
-  exports: ['ICircuitService', 'IBlockchainService'],
+  exports: ['ICircuitService', 'IBlockchainService', CcsmStorageAgent],
 })
 export class ZeroKnowledgeProofModule {}

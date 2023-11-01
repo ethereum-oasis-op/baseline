@@ -1,9 +1,9 @@
-import { HardhatUserConfig } from 'hardhat/config';
-import '@nomiclabs/hardhat-ethers';
-import '@nomicfoundation/hardhat-toolbox';
-import 'dotenv/config';
+/** @type import('hardhat/config').HardhatUserConfig */
 
-const config: HardhatUserConfig = {
+require('@nomiclabs/hardhat-ethers');
+require('@nomicfoundation/hardhat-toolbox');
+require('dotenv/config');
+module.exports = {
   defaultNetwork: process.env.CCSM_NETWORK,
   networks: {
     //Uncomment the required network
@@ -16,9 +16,7 @@ const config: HardhatUserConfig = {
     //   accounts: [`0x${process.env.GANACHE_ACCOUNT_PRIVATE_KEY}`],
     // },
   },
-  solidity: {
-    version: '0.8.17',
-  },
+  solidity: '0.8.19',
   paths: {
     sources:
       './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts',
@@ -26,5 +24,3 @@ const config: HardhatUserConfig = {
       './zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/artifacts',
   },
 };
-
-export default config;

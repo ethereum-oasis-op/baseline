@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { ExecuteVsmCycleCommand } from '../capabilites/executeVsmCycle/executeVsmCycle.command';
 
 @Injectable()
