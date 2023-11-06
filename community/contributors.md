@@ -103,7 +103,7 @@ Any of the following ways:
 * You are disruptive to the general process of maintaining the project, meetings, discussions, issues, or other.
 * You notify the other core developers  you would like to relinquish your core developer status.
 
-Two-thirds of all current core developers constitute a quorum for a meeting involving a question of removal. A simple majority vote from core developers attending the meeting is required to remove a core developer, but the TSC may be brought in to arbitrate if the core developer to be removed or any other core developer wishes to dispute the action. (See [Governance](broken-reference) for details.)
+Two-thirds of all current core developers constitute a quorum for a meeting involving a question of removal. A simple majority vote from core developers attending the meeting is required to remove a core developer, but the TSC may be brought in to arbitrate if the core developer to be removed or any other core developer wishes to dispute the action. (See [Governance](https://github.com/eea-oasis/baseline/blob/main/docs/governance/governance.md) for details.)
 
 ### BLIPs
 
@@ -142,11 +142,11 @@ Merging to Master requires review by THREE Core Developers. The TSC seeded the i
 
 ## Specifications Contributors <a href="#specifications-contributors" id="specifications-contributors"></a>
 
-The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below. The [General Assembly](broken-reference) is the coordinating body for this work.
+The specifications work of the community can be done by anyone, both technical and non-technical contributors. The focus is on finding evidence for a requirement and articulating it in the form below.
 
 ### Epics and Stories Organization <a href="#epics-and-stories-organization" id="epics-and-stories-organization"></a>
 
-The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/ethereum-oasis/baseline/tree/master/examples/radish34/ui#workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap?repos=239590893) work and active protocol requirements and prioritization. (Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).)
+The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/eea-oasis/baseline-standard) work and active protocol requirements and prioritization. (Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).)
 
 Zenhub enables Epics to nest, while Issues don't nest...not really. Therefore, the community will employ the practice of using Issues for engineering Tasks and Epics to contain high level topics, which may have nested within them a set of agile Epics, and in them a set of Stories, and even Stories may have other Stories nested in them. Engineering meets planning where a Story (in the form of a Zenhub Epic) is referenced by an Issue/Task. (This can work very well, but Zenhub's choice in calling Epics, _Epics_ can cause confusion.
 
