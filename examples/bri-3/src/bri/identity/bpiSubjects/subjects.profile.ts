@@ -1,8 +1,8 @@
+import { Mapper, createMap } from '@automapper/core';
 import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
-import { createMap, Mapper } from '@automapper/core';
 import { Injectable } from '@nestjs/common';
-import { BpiSubject } from './models/bpiSubject';
 import { BpiSubjectDto } from './api/dtos/response/bpiSubject.dto';
+import { BpiSubject } from './models/bpiSubject';
 import { BpiSubjectRole } from './models/bpiSubjectRole';
 
 @Injectable()
@@ -12,9 +12,9 @@ export class SubjectsProfile extends AutomapperProfile {
   }
 
   override get profile() {
-    return (mapper) => {
+    
+    return (mapper) => {     
       createMap(mapper, BpiSubject, BpiSubjectDto);
-      createMap(mapper, BpiSubject, BpiSubject);
       createMap(mapper, BpiSubjectRole, BpiSubjectRole);
     };
   }
