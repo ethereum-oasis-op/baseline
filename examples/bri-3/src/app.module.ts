@@ -2,7 +2,6 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { PrismaService } from '../prisma/prisma.service';
 import { AuthModule } from './bri/auth/auth.module';
 import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
 import { AuthzModule } from './bri/authz/authz.module';
@@ -18,6 +17,7 @@ import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { ZeroKnowledgeProofModule } from './bri/zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { EncryptionModule } from './shared/encryption/encryption.module';
 import { LoggingModule } from './shared/logging/logging.module';
+import { PrismaService } from './shared/prisma/prisma.service';
 
 @Module({
   imports: [

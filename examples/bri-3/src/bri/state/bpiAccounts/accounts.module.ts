@@ -11,6 +11,7 @@ import { DeleteBpiAccountCommandHandler } from './capabilities/deleteBpiAccount/
 import { GetAllBpiAccountsQueryHandler } from './capabilities/getAllBpiAccounts/getAllBpiAccountQuery.handler';
 import { GetBpiAccountByIdQueryHandler } from './capabilities/getBpiAccountById/getBpiAccountByIdQuery.handler';
 import { UpdateBpiAccountCommandHandler } from './capabilities/updateBpiAccount/updateBpiAccountCommand.handler';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateBpiAccountCommandHandler,
@@ -22,7 +23,7 @@ export const QueryHandlers = [
   GetAllBpiAccountsQueryHandler,
 ];
 @Module({
-  imports: [CqrsModule, SubjectAccountModule, MerkleModule],
+  imports: [CqrsModule, SubjectAccountModule, MerkleModule, PrismaModule],
   controllers: [AccountController],
   providers: [
     ...CommandHandlers,

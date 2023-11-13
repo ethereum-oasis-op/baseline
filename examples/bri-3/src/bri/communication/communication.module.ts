@@ -16,6 +16,7 @@ import { GetBpiMessageByIdQueryHandler } from './capabilities/getBpiMessageById/
 import { ProcessInboundMessageCommandHandler } from './capabilities/processInboundMessage/processInboundMessageCommand.handler';
 import { UpdateBpiMessageCommandHandler } from './capabilities/updateBpiMessage/updateBpiMessageCommand.handler';
 import { CommunicationProfile } from './communicaton.profile';
+import { PrismaModule } from '../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateBpiMessageCommandHandler,
@@ -32,6 +33,7 @@ export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
     SubjectModule,
     LoggingModule,
     EncryptionModule,
+    PrismaModule,
   ],
   controllers: [MessageController],
   providers: [
