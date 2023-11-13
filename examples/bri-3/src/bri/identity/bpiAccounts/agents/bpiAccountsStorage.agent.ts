@@ -2,23 +2,24 @@ import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import MerkleTree from 'merkletreejs';
-import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Witness } from '../../../zeroKnowledgeProof/models/witness';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
 import { StateTreeLeafValueContent } from '../../../state/models/stateTreeLeafValueContent';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
-export class BpiAccountStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private readonly mapper: Mapper) {
-    super();
-  }
+export class BpiAccountStorageAgent {
+  constructor(
+    @InjectMapper() private readonly mapper: Mapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getAccountById(id: string): Promise<BpiAccount> {
-    const bpiAccountModel = await this.bpiAccount.findUnique({
+    const bpiAccountModel = await this.prisma.bpiAccount.findUnique({
       where: { id },
       include: {
         ownerBpiSubjectAccounts: {
@@ -38,7 +39,7 @@ export class BpiAccountStorageAgent extends PrismaService {
   }
 
   async getAllBpiAccounts(): Promise<BpiAccount[]> {
-    const bpiAccountModels = await this.bpiAccount.findMany({
+    const bpiAccountModels = await this.prisma.bpiAccount.findMany({
       include: {
         ownerBpiSubjectAccounts: {
           include: {
@@ -62,7 +63,7 @@ export class BpiAccountStorageAgent extends PrismaService {
         };
       },
     );
-    const newBpiAccountModel = await this.bpiAccount.create({
+    const newBpiAccountModel = await this.prisma.bpiAccount.create({
       data: {
         nonce: bpiAccount.nonce,
         ownerBpiSubjectAccounts: {
@@ -91,7 +92,7 @@ export class BpiAccountStorageAgent extends PrismaService {
   }
 
   async updateBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
-    const newBpiAccountModel = await this.bpiAccount.update({
+    const newBpiAccountModel = await this.prisma.bpiAccount.update({
       where: { id: bpiAccount.id },
       data: {
         nonce: bpiAccount.nonce,
@@ -105,7 +106,7 @@ export class BpiAccountStorageAgent extends PrismaService {
   }
 
   async deleteBpiAccount(bpiAccount: BpiAccount): Promise<void> {
-    await this.bpiAccount.delete({
+    await this.prisma.bpiAccount.delete({
       where: { id: bpiAccount.id },
     });
   }
@@ -117,7 +118,7 @@ export class BpiAccountStorageAgent extends PrismaService {
     merkPayload: MerkleTree,
     witness: Witness,
   ): Promise<void> {
-    await this.bpiAccountStateTreeLeafValue.create({
+    await this.prisma.bpiAccountStateTreeLeafValue.create({
       data: {
         bpiAccountId: id,
         leafValue: leafValue,
@@ -131,9 +132,10 @@ export class BpiAccountStorageAgent extends PrismaService {
   async getAccompanyingStateLeafValues(
     leafValue: string,
   ): Promise<StateTreeLeafValueContent | undefined> {
-    const stateLeafValues = await this.bpiAccountStateTreeLeafValue.findUnique({
-      where: { leafValue: leafValue },
-    });
+    const stateLeafValues =
+      await this.prisma.bpiAccountStateTreeLeafValue.findUnique({
+        where: { leafValue: leafValue },
+      });
 
     if (!stateLeafValues) {
       return undefined;

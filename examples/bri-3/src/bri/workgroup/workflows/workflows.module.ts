@@ -15,6 +15,7 @@ import { GetAllWorkflowsQueryHandler } from './capabilities/getAllWorkflows/getA
 import { GetWorkflowByIdQueryHandler } from './capabilities/getWorkflowById/getWorkflowByIdQuery.handler';
 import { UpdateWorkflowCommandHandler } from './capabilities/updateWorkflow/updateWorkflowCommand.handler';
 import { WorkflowProfile } from './workflow.profile';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateWorkflowCommandHandler,
@@ -34,6 +35,7 @@ export const QueryHandlers = [
     AccountModule,
     SubjectAccountModule,
     SubjectModule,
+    PrismaModule,
   ],
   controllers: [WorkflowController],
   providers: [

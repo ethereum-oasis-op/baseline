@@ -1,22 +1,23 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
-export class BpiSubjectStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
-    super();
-  }
+export class BpiSubjectStorageAgent {
+  constructor(
+    @InjectMapper() private mapper: Mapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getBpiSubjectById(id: string): Promise<BpiSubject | undefined> {
-    const bpiSubjectModel = await this.bpiSubject.findUnique({
+    const bpiSubjectModel = await this.prisma.bpiSubject.findUnique({
       where: { id },
     });
 
@@ -28,14 +29,14 @@ export class BpiSubjectStorageAgent extends PrismaService {
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
-    const bpiSubjectModels = await this.bpiSubject.findMany();
+    const bpiSubjectModels = await this.prisma.bpiSubject.findMany();
     return bpiSubjectModels.map((bpiSubjectModel) => {
       return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
     });
   }
 
   async getBpiSubjectsById(ids: string[]): Promise<BpiSubject[]> {
-    const bpiSubjectModels = await this.bpiSubject.findMany({
+    const bpiSubjectModels = await this.prisma.bpiSubject.findMany({
       where: {
         id: { in: ids },
       },
@@ -49,7 +50,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
   async getBpiSubjectRoleByName(
     name: BpiSubjectRoleName,
   ): Promise<BpiSubjectRole> {
-    const bpiSubjectRole = await this.bpiSubjectRole.findUnique({
+    const bpiSubjectRole = await this.prisma.bpiSubjectRole.findUnique({
       where: { name },
     });
 
@@ -61,7 +62,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
 
   async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     bpiSubject.publicKey = bpiSubject.publicKey.toLowerCase();
-    const newBpiSubjectModel = await this.bpiSubject.create({
+    const newBpiSubjectModel = await this.prisma.bpiSubject.create({
       data: {
         ...bpiSubject,
         roles: {
@@ -78,7 +79,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const updatedBpiSubjectModel = await this.bpiSubject.update({
+    const updatedBpiSubjectModel = await this.prisma.bpiSubject.update({
       where: { id: bpiSubject.id },
       data: {
         ...bpiSubject,
@@ -95,13 +96,13 @@ export class BpiSubjectStorageAgent extends PrismaService {
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
-    await this.bpiSubject.delete({
+    await this.prisma.bpiSubject.delete({
       where: { id: bpiSubject.id },
     });
   }
 
   async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
-    const bpiSubjectModel = await this.bpiSubject.findFirst({
+    const bpiSubjectModel = await this.prisma.bpiSubject.findFirst({
       where: {
         publicKey: publicKey,
       },

@@ -10,6 +10,7 @@ import { UpdateWorkstepCommandHandler } from './capabilities/updateWorkstep/upda
 import { WorkstepStorageAgent } from './agents/workstepsStorage.agent';
 import { LoggingModule } from '../../../../src/shared/logging/logging.module';
 import { WorkstepProfile } from './workstep.profile';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateWorkstepCommandHandler,
@@ -23,7 +24,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, LoggingModule],
+  imports: [CqrsModule, LoggingModule, PrismaModule],
   controllers: [WorkstepController],
   providers: [
     ...CommandHandlers,

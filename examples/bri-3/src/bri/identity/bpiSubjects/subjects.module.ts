@@ -10,6 +10,7 @@ import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/
 import { BpiSubjectStorageAgent } from './agents/bpiSubjectsStorage.agent';
 import { SubjectsProfile } from './subjects.profile';
 import { AuthzModule } from '../../authz/authz.module';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler,
@@ -22,7 +23,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, AuthzModule],
+  imports: [CqrsModule, AuthzModule, PrismaModule],
   controllers: [SubjectController],
   providers: [
     ...CommandHandlers,

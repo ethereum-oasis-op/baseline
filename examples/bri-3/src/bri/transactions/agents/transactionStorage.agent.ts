@@ -1,19 +1,20 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '..//api/err.messages';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 
 @Injectable()
-export class TransactionStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
-    super();
-  }
+export class TransactionStorageAgent {
+  constructor(
+    @InjectMapper() private mapper: Mapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getAllTransactions(): Promise<Transaction[]> {
-    const transactionModels = await this.transaction.findMany({
+    const transactionModels = await this.prisma.transaction.findMany({
       include: { fromBpiSubjectAccount: true, toBpiSubjectAccount: true },
     });
     return transactionModels.map((transactionModel) => {
@@ -22,7 +23,7 @@ export class TransactionStorageAgent extends PrismaService {
   }
 
   async getTransactionById(id: string): Promise<Transaction | undefined> {
-    const transactionModel = await this.transaction.findUnique({
+    const transactionModel = await this.prisma.transaction.findUnique({
       where: { id },
       include: {
         fromBpiSubjectAccount: {
@@ -53,7 +54,7 @@ export class TransactionStorageAgent extends PrismaService {
   ): Promise<Transaction[]> {
     // TODO: #745 Add creation date to transaction
     // TODO: #745 Add execution or abortion date to transaction
-    const transactionModels = await this.transaction.findMany({
+    const transactionModels = await this.prisma.transaction.findMany({
       include: {
         fromBpiSubjectAccount: {
           include: {
@@ -76,7 +77,7 @@ export class TransactionStorageAgent extends PrismaService {
   }
 
   async storeNewTransaction(transaction: Transaction): Promise<Transaction> {
-    const newTransactionModel = await this.transaction.create({
+    const newTransactionModel = await this.prisma.transaction.create({
       data: {
         id: transaction.id,
         nonce: transaction.nonce,
@@ -108,7 +109,7 @@ export class TransactionStorageAgent extends PrismaService {
   }
 
   async updateTransaction(transaction: Transaction): Promise<Transaction> {
-    const updatedTransactionModel = await this.transaction.update({
+    const updatedTransactionModel = await this.prisma.transaction.update({
       where: { id: transaction.id },
       data: {
         payload: transaction.payload,
@@ -122,7 +123,7 @@ export class TransactionStorageAgent extends PrismaService {
   async updateTransactionStatus(
     transaction: Transaction,
   ): Promise<Transaction> {
-    const updatedTransaction = await this.transaction.update({
+    const updatedTransaction = await this.prisma.transaction.update({
       where: {
         id: transaction.id,
       },
@@ -135,7 +136,7 @@ export class TransactionStorageAgent extends PrismaService {
   }
 
   async deleteTransaction(transaction: Transaction): Promise<void> {
-    await this.transaction.delete({
+    await this.prisma.transaction.delete({
       where: { id: transaction.id },
     });
   }
