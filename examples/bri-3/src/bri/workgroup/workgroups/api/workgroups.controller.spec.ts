@@ -26,6 +26,8 @@ import { Workgroup, WorkgroupStatus } from '../models/workgroup';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { uuid } from 'uuidv4';
 import { WorkgroupProfile } from '../workgroups.profile';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -73,12 +75,15 @@ describe('WorkgroupsController', () => {
         GetWorkgroupByIdQueryHandler,
         WorkgroupStorageAgent,
         WorkgroupProfile,
+        PrismaService,
       ],
     })
       .overrideProvider(WorkgroupStorageAgent)
       .useValue(mockDeep<WorkgroupStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockDeep<BpiSubjectStorageAgent>())
+      .overrideProvider(PrismaService)
+      .useValue(mockDeep<PrismaClient>())
       .compile();
 
     workgroupController = app.get<WorkgroupController>(WorkgroupController);

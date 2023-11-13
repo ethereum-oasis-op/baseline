@@ -34,7 +34,8 @@ import {
 } from './err.messages';
 import { MessageController } from './messages.controller';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-import { ethers } from 'ethers';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
 
 describe('MessageController', () => {
   let mController: MessageController;
@@ -108,6 +109,8 @@ describe('MessageController', () => {
       .useValue(mockDeep<BpiMessageStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockDeep<BpiSubjectStorageAgent>())
+      .overrideProvider(PrismaService)
+      .useValue(mockDeep<PrismaClient>())
       .compile();
 
     mController = app.get<MessageController>(MessageController);
