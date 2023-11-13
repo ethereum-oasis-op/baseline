@@ -27,6 +27,8 @@ import { WorkflowProfile } from '../workflow.profile';
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
@@ -121,6 +123,8 @@ describe('WorkflowsController', () => {
       .useValue(mockDeep<WorkgroupAgent>())
       .overrideProvider(BpiAccountStorageAgent)
       .useValue(mockDeep<BpiAccountStorageAgent>())
+      .overrideProvider(PrismaService)
+      .useValue(mockDeep<PrismaClient>())
       .compile();
 
     workflowController = app.get<WorkflowController>(WorkflowController);

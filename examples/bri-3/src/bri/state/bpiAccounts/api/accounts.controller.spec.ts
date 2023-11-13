@@ -31,6 +31,8 @@ import { BpiAccount } from '../models/bpiAccount';
 import { AccountController } from './accounts.controller';
 import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
 
 describe('AccountController', () => {
   let accountController: AccountController;
@@ -76,6 +78,8 @@ describe('AccountController', () => {
       .useValue(mockDeep<BpiSubjectStorageAgent>())
       .overrideProvider(MerkleTreeStorageAgent)
       .useValue(mockDeep<MerkleTreeStorageAgent>())
+      .overrideProvider(PrismaService)
+      .useValue(mockDeep<PrismaClient>())
       .compile();
 
     accountController = app.get<AccountController>(AccountController);
