@@ -1,18 +1,19 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../../prisma/prisma.service';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 @Injectable()
-export class WorkflowStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
-    super();
-  }
+export class WorkflowStorageAgent {
+  constructor(
+    @InjectMapper() private mapper: Mapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getWorkflowById(id: string): Promise<Workflow | undefined> {
-    const workflowModel = await this.workflow.findUnique({
+    const workflowModel = await this.prisma.workflow.findUnique({
       where: { id: id },
       include: {
         worksteps: true,
@@ -28,7 +29,7 @@ export class WorkflowStorageAgent extends PrismaService {
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
-    const workflowModels = await this.workflow.findMany({
+    const workflowModels = await this.prisma.workflow.findMany({
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
@@ -37,7 +38,7 @@ export class WorkflowStorageAgent extends PrismaService {
   }
 
   async getWorkflowsByIds(ids: string[]): Promise<Workflow[]> {
-    const workflowModels = await this.workflow.findMany({
+    const workflowModels = await this.prisma.workflow.findMany({
       where: {
         id: { in: ids },
       },
@@ -55,7 +56,7 @@ export class WorkflowStorageAgent extends PrismaService {
       };
     });
 
-    const newWorkflowModel = await this.workflow.create({
+    const newWorkflowModel = await this.prisma.workflow.create({
       data: {
         id: workflow.id,
         name: workflow.name,
@@ -81,7 +82,7 @@ export class WorkflowStorageAgent extends PrismaService {
       };
     });
 
-    const updatedWorkflowModel = await this.workflow.update({
+    const updatedWorkflowModel = await this.prisma.workflow.update({
       where: { id: workflow.id },
       data: {
         name: workflow.name,
@@ -99,7 +100,7 @@ export class WorkflowStorageAgent extends PrismaService {
   }
 
   async deleteWorkflow(workflow: Workflow): Promise<void> {
-    await this.workflow.delete({
+    await this.prisma.workflow.delete({
       where: { id: workflow.id },
     });
   }

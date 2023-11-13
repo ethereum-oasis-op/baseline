@@ -15,6 +15,7 @@ import { GetTransactionByIdQueryHandler } from './capabilities/getTransactionByI
 import { UpdateTransactionCommandHandler } from './capabilities/updateTransaction/updateTransactionCommand.handler';
 import { TransactionsProfile } from './transactions.profile';
 import { MerkleModule } from '../merkleTree/merkle.module';
+import { PrismaModule } from '../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateTransactionCommandHandler,
@@ -36,6 +37,7 @@ export const QueryHandlers = [
     AuthModule,
     MerkleModule,
     ZeroKnowledgeProofModule,
+    PrismaModule,
   ],
   controllers: [TransactionController],
   providers: [

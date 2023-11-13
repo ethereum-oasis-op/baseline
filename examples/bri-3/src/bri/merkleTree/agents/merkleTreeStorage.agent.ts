@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
-import { PrismaService } from '../../../../prisma/prisma.service';
 import MerkleTree from 'merkletreejs';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
 import { MerkleTreeDto } from '../api/dtos/response/merkleTree.dto';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 
 @Injectable()
-export class MerkleTreeStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
-    super();
-  }
+export class MerkleTreeStorageAgent {
+  constructor(
+    @InjectMapper() private mapper: Mapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getMerkleTreeById(id: string): Promise<BpiMerkleTree | undefined> {
-    const merkleTreeModel = await this.bpiMerkleTree.findUnique({
+    const merkleTreeModel = await this.prisma.bpiMerkleTree.findUnique({
       where: { id },
     });
 
@@ -25,7 +26,7 @@ export class MerkleTreeStorageAgent extends PrismaService {
   }
 
   async storeNewMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    const storedMerkleTree = await this.bpiMerkleTree.create({
+    const storedMerkleTree = await this.prisma.bpiMerkleTree.create({
       data: {
         id: merkleTree.id,
         hashAlgName: merkleTree.hashAlgName,
@@ -39,7 +40,7 @@ export class MerkleTreeStorageAgent extends PrismaService {
   async storeUpdatedMerkleTree(
     merkleTree: BpiMerkleTree,
   ): Promise<BpiMerkleTree> {
-    const updatedMerkleTree = await this.bpiMerkleTree.update({
+    const updatedMerkleTree = await this.prisma.bpiMerkleTree.update({
       where: { id: merkleTree.id },
       data: {
         tree: MerkleTree.marshalTree(merkleTree.tree),
@@ -50,7 +51,7 @@ export class MerkleTreeStorageAgent extends PrismaService {
   }
 
   async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    await this.bpiMerkleTree.delete({
+    await this.prisma.bpiMerkleTree.delete({
       where: { id: merkleTree.id },
     });
 

@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { AuthModule } from '../../auth/auth.module';
-import { BpiSubjectAgent } from '../../identity/bpiSubjects/agents/bpiSubjects.agent';
 import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
 import { WorkflowModule } from '../workflows/workflows.module';
 import { WorkstepModule } from '../worksteps/worksteps.module';
@@ -14,6 +13,7 @@ import { DeleteWorkgroupCommandHandler } from './capabilities/deleteWorkgroup/de
 import { GetWorkgroupByIdQueryHandler } from './capabilities/getWorkgroupById/getWorkgroupByIdQuery.handler';
 import { UpdateWorkgroupCommandHandler } from './capabilities/updateWorkgroup/updateWorkgroupCommand.handler';
 import { WorkgroupProfile } from './workgroups.profile';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateWorkgroupCommandHandler,
@@ -30,6 +30,7 @@ export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
     WorkstepModule,
     WorkflowModule,
     AuthModule,
+    PrismaModule,
   ],
   controllers: [WorkgroupController],
   providers: [

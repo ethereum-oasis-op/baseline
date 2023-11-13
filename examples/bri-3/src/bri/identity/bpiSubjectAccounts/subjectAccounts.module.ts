@@ -10,6 +10,7 @@ import { GetAllBpiSubjectAccountsQueryHandler } from './capabilities/getAllBpiSu
 import { GetBpiSubjectAccountByIdQueryHandler } from './capabilities/getBpiSubjectAccountById/getBpiSubjectAccountByIdQuery.handler';
 import { UpdateBpiSubjectAccountCommandHandler } from './capabilities/updateBpiSubjectAccount/updateBpiSubjectAccountCommand.handler';
 import { SubjectAccountsProfile } from './subjectAccounts.profile';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateBpiSubjectAccountCommandHandler,
@@ -22,7 +23,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, SubjectModule],
+  imports: [CqrsModule, SubjectModule, PrismaModule],
   controllers: [SubjectAccountController],
   providers: [
     ...CommandHandlers,
