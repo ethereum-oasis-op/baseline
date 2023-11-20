@@ -63,7 +63,7 @@ Maintainers meet and discuss issues virtually via the private #maintainers slack
 
 ## Bi-Weekly Meetings
 
-There are Bi-Eeekly _Maintainers meetings_(https://us06web.zoom.us/j/88974739050?pwd=M2w1THFHdzBkaXp0STZtWXQyZXlYQT09) where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are not public but special exceptions can be granted for members of the baseline community, experts, or other key participants. The summaries of the meetings will be posted to the public #maintainer-meeting slack room.
+There are Bi-Weekly _Maintainers meetings_(https://us06web.zoom.us/j/88974739050?pwd=M2w1THFHdzBkaXp0STZtWXQyZXlYQT09) where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are not public but special exceptions can be granted for members of the baseline community, experts, or other key participants. The summaries of the meetings will be posted to the public #maintainer-meeting slack room.
 
 # How to stop being a maintainer?
 
