@@ -8,7 +8,7 @@ contract Registrar {
 
     ERC1820Registry ERC1820REGISTRY;
 
-    bytes32 constant internal ERC1820_ACCEPT_MAGIC = keccak256(abi.encodePacked("ERC1820_ACCEPT_MAGIC"));
+    bytes32 immutable internal ERC1820_ACCEPT_MAGIC = keccak256(abi.encodePacked("ERC1820_ACCEPT_MAGIC"));
 
     /**
     * @dev Throws if called by any account other than the owner.
