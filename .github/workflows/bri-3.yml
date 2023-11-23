@@ -42,6 +42,10 @@ jobs:
         working-directory: examples/bri-3
         run: npm ci
 
+      - name: Run build
+        working-directory: examples/bri-3
+        run: npm run build
+
       - name: Run prettier
         working-directory: examples/bri-3
         run: npm run format:check
