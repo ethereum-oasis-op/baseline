@@ -35,6 +35,11 @@ jobs:
         ports:
           - 5432:5432
 
+      nats:
+        image: nats:alpine
+        ports:
+          - 4222:4222
+          
     steps:
       - name: Checkout
         uses: actions/checkout@v3
