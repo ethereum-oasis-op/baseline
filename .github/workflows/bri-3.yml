@@ -89,6 +89,10 @@ jobs:
         working-directory: examples/bri-3
         run: npm run lint:check
 
-      - name: Run test
+      - name: Run tests
         working-directory: examples/bri-3
         run: npm run test
+
+      - name: Run e2e tests
+        working-directory: examples/bri-3
+        run: npm run test:e2e
