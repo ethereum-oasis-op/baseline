@@ -94,6 +94,18 @@ jobs:
         working-directory: examples/bri-3
         run: npm run test
 
+      - name: Run prisma generate
+        working-directory: examples/bri-3
+        run: npm run prisma:generate
+
+      - name: Run prisma migrate
+        working-directory: examples/bri-3
+        run: npm run prisma:migrate:dev
+
+      - name: Run prisma db seed
+        working-directory: examples/bri-3
+        run: npx prisma db seed
+
       - name: Run e2e tests
         working-directory: examples/bri-3
         run: npm run test:e2e
