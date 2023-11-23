@@ -2,14 +2,15 @@ name: bri-3
 
 on:
   push:
+    paths:
+      - examples/bri-3/**
     branches:
-      - feature/761-build-and-e2e-test-ci
+      - main
   pull_request:
     paths:
       - examples/bri-3/**
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   ci:
