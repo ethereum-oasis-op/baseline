@@ -103,8 +103,9 @@ $ npm run test -- transactions.agent.spec.ts
 
 ```bash
 # e2e testing - .e2e.spec files located in ./test folder
-# before running the tests, make sure that the database is properly populated with the seed.ts command (explained above)
-# and make sure that the .env file contains correct values for DID login to work (as explained in the .env.sample)
+# before running the tests, make sure that postgres and nats are running
+# and the database is properly populated with the seed.ts command (explained above)
+# also make sure that the .env file contains correct values for DID login to work (as explained in the .env.sample)
 
 $ npm run test:e2e
 ```
