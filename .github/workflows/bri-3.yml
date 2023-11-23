@@ -5,7 +5,7 @@ on:
     paths:
       - examples/bri-3/**
     branches:
-      - main
+      - feature/761-build-and-e2e-test-ci
   pull_request:
     paths:
       - examples/bri-3/**
@@ -20,6 +20,20 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node: [16.17.0]
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: example
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - name: Checkout
