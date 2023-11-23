@@ -2,8 +2,6 @@ name: bri-3
 
 on:
   push:
-    paths:
-      - examples/bri-3/**
     branches:
       - feature/761-build-and-e2e-test-ci
   pull_request:
