@@ -1,11 +1,11 @@
 # What do maintainers do?
 
-Maintainers are people who take an active role in writing code that advances the Baseline Protocol and/or related projects (e.g. the Radish34 Demo). They are primarily responsible for:
+Maintainers are people who take an active role in writing code that advances the Baseline Protocol and/or related projects (e.g. reference implementations such as BRI-3). They are primarily responsible for:
 
 - Contributing code to the project in the form of PRs that are linked to open and prioritized issues
 - Reviewing and merging PRs into the master branch
 - Cutting, testing, and releasing new versions of the related Baseline projects
-- Working with the TSC and SSC to advance the Baseline Protocol
+- Working with the TSC advance the Baseline Protocol
 
 They can/should also contribute in the following ways:
 
@@ -18,17 +18,16 @@ They can/should also contribute in the following ways:
 
 Code and Systems maintainers
 
-- [Sam Stokes](https://github.com/bitwiseguy)
+- [Yoav Bittan](https://github.com/Ybittan)
+- [Biswashree Dey](https://github.com/biscuitdey)
+- [Andreas Freund](https://github.com/Therecanbeonlyone1969)
+- [Ognjen Kurtic](https://github.com/ognjenkurtic)
+- [Keith Salzman](https://github.com/Kasshern)
 - [Kartheek Solipuram](https://github.com/skarred14)
-- [Kyle Thomas](https://github.com/kthomas)
-- [Tomasz Stanczak](https://github.com/tkstanczak)
-- [Lucas Rodriguez Benitez](https://github.com/LucasRodriguez)
-- [Anais Ofranc](https://github.com/Consianimis)
-- [Hamza Tokuchi](https://github.com/Meuko) - [BlockLab](https://www.blocklab.nl/)
 
 # How to become a maintainer?
 
-There are two ways to become a maintainer: You are asked by a current maintainer, or you make request to an existing maintainer to become one.
+There are two ways to become a maintainer: You are asked by a current maintainer, or you make a request to an existing maintainer to become one.
 
 With either path you become a "provisional maintainer". As such you will need to show consistent contributions of code to the project. This can be in the form of pull requests that get merged into master. Or it can be in the form of system architecture and related artifacts that guide the development activities of others.
 
@@ -62,9 +61,9 @@ In general, a maintainer needs to:
 
 Maintainers meet and discuss issues virtually via the private #maintainers slack room in the [baseline slack](https://ethereum-baseline.slack.com/).
 
-## Weekly Meetings
+## Bi-Weekly Meetings
 
-There are weekly _Maintainers meetings_ where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are not public but special exceptions can be granted for members of the baseline community, experts, or other key participants. The summaries of the meetings will be posted to the public #maintainer-meeting slack room.
+There are Bi-Weekly _Maintainers meetings_(https://us06web.zoom.us/j/88974739050?pwd=M2w1THFHdzBkaXp0STZtWXQyZXlYQT09) where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are not public but special exceptions can be granted for members of the baseline community, experts, or other key participants. The summaries of the meetings will be posted to the public #maintainer-meeting slack room.
 
 # How to stop being a maintainer?
 

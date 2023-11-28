@@ -1,7 +1,3 @@
----
-description: TO DO
----
-
 # General Members
 
 Anyone with a github ID can be a [Contributor](contributors.md) to the Baseline Protocol, but you can also become a **Member** of our Github Organization, which will allow you to get invitations to key meetings, be assigned to Issues, and vote for Technical Steering Committee members (provided you make at least one contribution that is successfully merged to master within the [voting period](../docs/governance/governance.md#steady-state-periods)).
@@ -52,5 +48,4 @@ Once you are a member, you can:
 
 1. Become a [Core Developer ](broken-reference)responsible for governing the contributions that get merged to the official master branch;
 2. Get elected to the [Technical Steering Committee](../docs/governance/technical-steering-committee.md), accountable for architecture and governance of the core developers;
-3. Join the [General Assembly](broken-reference) accountable for proposing, prioritizing, and promoting Baseline Protocol projects.
-4. Or, just write awesome code, specifications, docs and communications.
+3. Or, just write awesome code, specifications, docs and communications.
