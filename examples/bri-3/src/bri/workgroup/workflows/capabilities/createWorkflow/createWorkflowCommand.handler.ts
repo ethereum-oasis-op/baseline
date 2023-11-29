@@ -47,21 +47,24 @@ export class CreateWorkflowCommandHandler
       'sample state object prover system',
     );
 
-    const newBpiAccount = await this.accountStorageAgent.storeNewBpiAccount(
-      newBpiAccountCandidate,
-    );
+    const storeNewBpiAccountOperation =
+      this.accountStorageAgent.storeNewBpiAccount(newBpiAccountCandidate);
 
     const newWorkflowCandidate = this.agent.createNewWorkflow(
       command.name,
       workstepsToConnect,
       command.workgroupId,
-      newBpiAccount,
+      newBpiAccountCandidate,
     );
 
-    const newWorkflow = await this.storageAgent.storeNewWorkflow(
-      newWorkflowCandidate,
+    const storeNewWorkflowOperation =
+      this.storageAgent.storeNewWorkflow(newWorkflowCandidate);
+
+    this.storageAgent.storeWorkflowTransaction(
+      storeNewBpiAccountOperation,
+      storeNewWorkflowOperation,
     );
 
-    return newWorkflow.id;
+    return newWorkflowCandidate.id;
   }
 }
