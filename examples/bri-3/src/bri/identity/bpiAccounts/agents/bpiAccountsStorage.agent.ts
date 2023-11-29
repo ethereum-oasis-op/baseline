@@ -5,6 +5,7 @@ import MerkleTree from 'merkletreejs';
 import { Witness } from '../../../zeroKnowledgeProof/models/witness';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
+import { BpiAccount as BpiAccountModel, PrismaPromise } from '@prisma/client';
 import { StateTreeLeafValueContent } from '../../../state/models/stateTreeLeafValueContent';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
@@ -55,7 +56,7 @@ export class BpiAccountStorageAgent {
     });
   }
 
-  async storeNewBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
+  storeNewBpiAccount(bpiAccount: BpiAccount): PrismaPromise<BpiAccountModel> {
     const connectedOwnerBpiAccounts = bpiAccount.ownerBpiSubjectAccounts.map(
       (o) => {
         return {
@@ -63,7 +64,8 @@ export class BpiAccountStorageAgent {
         };
       },
     );
-    const newBpiAccountModel = await this.prisma.bpiAccount.create({
+
+    return this.prisma.bpiAccount.create({
       data: {
         nonce: bpiAccount.nonce,
         ownerBpiSubjectAccounts: {
@@ -87,8 +89,6 @@ export class BpiAccountStorageAgent {
         },
       },
     });
-
-    return this.mapper.map(newBpiAccountModel, BpiAccount, BpiAccount);
   }
 
   async updateBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {

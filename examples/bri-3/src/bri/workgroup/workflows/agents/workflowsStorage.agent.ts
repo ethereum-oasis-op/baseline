@@ -3,7 +3,10 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
+import { Workflow as WorkflowModel } from '@prisma/client';
+import { BpiAccount as BpiAccountModel } from '@prisma/client';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { PrismaPromise } from '@prisma/client';
 
 @Injectable()
 export class WorkflowStorageAgent {
@@ -49,14 +52,14 @@ export class WorkflowStorageAgent {
     });
   }
 
-  async storeNewWorkflow(workflow: Workflow): Promise<Workflow> {
+  storeNewWorkflow(workflow: Workflow): PrismaPromise<WorkflowModel> {
     const workstepIds = workflow.worksteps.map((w) => {
       return {
         id: w.id,
       };
     });
 
-    const newWorkflowModel = await this.prisma.workflow.create({
+    return this.prisma.workflow.create({
       data: {
         id: workflow.id,
         name: workflow.name,
@@ -71,8 +74,6 @@ export class WorkflowStorageAgent {
         bpiAccount: true,
       },
     });
-
-    return this.mapper.map(newWorkflowModel, Workflow, Workflow);
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
@@ -103,5 +104,15 @@ export class WorkflowStorageAgent {
     await this.prisma.workflow.delete({
       where: { id: workflow.id },
     });
+  }
+
+  async storeWorkflowTransaction(
+    bpiAccountOperation: PrismaPromise<BpiAccountModel>,
+    workflowOperation: PrismaPromise<WorkflowModel>,
+  ) {
+    await this.prisma.executeTransaction(
+      bpiAccountOperation,
+      workflowOperation,
+    );
   }
 }
