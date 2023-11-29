@@ -18,12 +18,22 @@ export class AuthAgent {
 
   // TODO: Move into a separate service once signature verification
   // capabilities grow
-  throwIfSignatureVerificationFails(
+  throwIfSignatureAgainstPublicKeyVerificationFails(
     message: string,
     signature: string,
     publicKey: string,
   ): void {
     if (!this.verifySignatureAgainstPublicKey(message, signature, publicKey)) {
+      throw new UnauthorizedException(INVALID_SIGNATURE);
+    }
+  }
+
+  throwIfSignatureAgainstAddressVerificationFails(
+    message: string,
+    signature: string,
+    address: string,
+  ): void {
+    if (!this.verifySignatureAgainstAddress(message, signature, address)) {
       throw new UnauthorizedException(INVALID_SIGNATURE);
     }
   }
@@ -57,6 +67,37 @@ export class AuthAgent {
     if (!isValid) {
       this.logger.logWarn(
         `Signature: ${signature} for public key ${senderPublicKey} is invalid.`,
+      );
+    }
+
+    return isValid;
+  }
+
+  verifySignatureAgainstAddress(
+    message: string,
+    signature: string,
+    senderAddress: string,
+  ): boolean {
+    let publicAddressFromSignature = '';
+
+    try {
+      publicAddressFromSignature = ethers.utils.verifyMessage(
+        message,
+        signature,
+      );
+    } catch (error) {
+      this.logger.logError(
+        `Error validating signature: ${signature} for message ${message}. Error: ${error}}`,
+      );
+      return false;
+    }
+
+    const isValid =
+      publicAddressFromSignature.toLowerCase() === senderAddress.toLowerCase();
+
+    if (!isValid) {
+      this.logger.logWarn(
+        `Signature: ${signature} for address ${senderAddress} is invalid.`,
       );
     }
 

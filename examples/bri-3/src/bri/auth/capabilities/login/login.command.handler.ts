@@ -13,7 +13,7 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
 
     this.authAgent.throwIfLoginNonceMismatch(bpiSubject, message);
 
-    this.authAgent.throwIfSignatureVerificationFails(
+    this.authAgent.throwIfSignatureAgainstAddressVerificationFails(
       message,
       signature,
       publicKey,

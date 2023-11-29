@@ -27,7 +27,7 @@ export class CreateBpiMessageCommandHandler
       command.to,
     );
 
-    this.authAgent.throwIfSignatureVerificationFails(
+    this.authAgent.throwIfSignatureAgainstPublicKeyVerificationFails(
       command.content,
       command.signature,
       fromBpiSubject.publicKey,
