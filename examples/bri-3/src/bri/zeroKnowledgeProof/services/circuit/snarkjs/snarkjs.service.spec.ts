@@ -132,6 +132,10 @@ describe('SnarkjsService', () => {
   //     './zeroKnowledgeArtifacts/circuits/workstep1/workstep1_final.zkey';
   //   const pathToVerificationKey =
   //     './zeroKnowledgeArtifacts/circuits/workstep1/workstep1_verification_key.json';
+  //   const pathToWitnessCalculator =
+  //     '../../../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1_js/witness_calculator';
+  //   const pathToWitnessFile =
+  //     './zeroKnowledgeArtifacts/circuits/workstep1/witness.txt';
 
   //   witness = await snarkjs.createWitness(
   //     inputs,
@@ -139,6 +143,8 @@ describe('SnarkjsService', () => {
   //     pathToCircuit,
   //     pathToProvingKey,
   //     pathToVerificationKey,
+  //     pathToWitnessCalculator,
+  //     pathToWitnessFile,
   //   );
   //   expect(typeof witness).toEqual('object');
   // });

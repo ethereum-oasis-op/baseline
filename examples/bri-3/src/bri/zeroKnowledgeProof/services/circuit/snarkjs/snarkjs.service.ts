@@ -7,8 +7,6 @@ import * as snarkjs from 'snarkjs';
 import { Transaction } from '../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
 import * as fs from 'fs';
-import * as wc from '../../../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1_js/witness_calculator';
-const WITNESS_FILE = './zeroKnowledgeArtifacts/circuits/workstep1/witness.txt';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
@@ -23,6 +21,8 @@ export class SnarkjsCircuitService implements ICircuitService {
     pathToCircuit: string,
     pathToProvingKey: string,
     pathToVerificationKey: string,
+    pathToWitnessCalculator: string,
+    pathToWitnessFile: string,
   ): Promise<Witness> {
     this.witness = new Witness();
 
@@ -32,6 +32,8 @@ export class SnarkjsCircuitService implements ICircuitService {
       preparedInputs,
       pathToCircuit,
       pathToProvingKey,
+      pathToWitnessCalculator,
+      pathToWitnessFile,
     );
 
     this.witness.proof = proof;
@@ -57,16 +59,19 @@ export class SnarkjsCircuitService implements ICircuitService {
     inputs: object,
     pathToCircuit: string,
     pathToProvingKey: string,
+    pathToWitnessCalculator: string,
+    pathToWitnessFile: string,
   ): Promise<{ proof: Proof; publicInputs: string[] }> {
     const buffer = fs.readFileSync(pathToCircuit);
+    const wc = await import(pathToWitnessCalculator);
     const witnessCalculator = await wc(buffer);
 
     const buff = await witnessCalculator.calculateWTNSBin(inputs, 0);
-    fs.writeFileSync(WITNESS_FILE, buff);
+    fs.writeFileSync(pathToWitnessFile, buff);
 
     const { proof, publicSignals: publicInputs } = await snarkjs.plonk.prove(
       pathToProvingKey,
-      WITNESS_FILE,
+      pathToWitnessFile,
     );
 
     const newProof = {
