@@ -6,9 +6,7 @@
  */
 
 export class Proof {
-  a: string[];
-  b: string[][];
-  c: string[];
+  value: object;
   protocol?: string;
   curve?: string;
 }

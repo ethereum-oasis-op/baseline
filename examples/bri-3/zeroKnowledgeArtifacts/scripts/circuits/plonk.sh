@@ -13,7 +13,7 @@ circom src/bri/zeroKnowledgeProof/services/circuit/snarkjs/$1.circom -o zeroKnow
 
 #Setup
 ## The zkey is a zero-knowledge key that includes both the proving and verification keys
-snarkjs plonk setup zeroKnowledgeArtifacts/circuits/$1/$1.r1cs zeroKnowledgeArtifacts/ptau/pot14_final.ptau zeroKnowledgeArtifacts/circuits/$1/$1_final.zkey
+snarkjs plonk setup zeroKnowledgeArtifacts/circuits/$1/$1.r1cs zeroKnowledgeArtifacts/ptau/pot15_final.ptau zeroKnowledgeArtifacts/circuits/$1/$1_final.zkey
 
 ## Export verification key
 snarkjs zkey export verificationkey zeroKnowledgeArtifacts/circuits/$1/$1_final.zkey zeroKnowledgeArtifacts/circuits/$1/$1_verification_key.json

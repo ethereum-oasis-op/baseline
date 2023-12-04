@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
-import { computeEcdsaSigPublicInputs } from './utils/computePublicInputs';
+import { computeEddsaSigPublicInputs } from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
 import { Transaction } from '../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
+import * as fs from 'fs';
+import * as wc from '../../../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1_js/witness_calculator';
+const WITNESS_FILE = './zeroKnowledgeArtifacts/circuits/workstep1/witness.txt';
 
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
@@ -35,24 +38,17 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     this.witness.publicInputs = publicInputs;
 
-    // TODO: stack Error: Cannot find module 'zeroKnowledgeArtifacts/circuits/workstep1/workstep1_circuit_verification_key.json'
-    // from '../src/bri/zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service.ts'
-    // this.witness.verificationKey = await import(pathToVerificationKey);
-
+    this.witness.verificationKey = JSON.parse(
+      fs.readFileSync(pathToVerificationKey, 'utf8'),
+    );
     return this.witness;
   }
 
   public async verifyProofUsingWitness(witness: Witness): Promise<boolean> {
-    const isVerified = await snarkjs.groth16.verify(
+    const isVerified = await snarkjs.plonk.verify(
       witness.verificationKey,
       witness.publicInputs,
-      {
-        pi_a: witness.proof.a,
-        pi_b: witness.proof.b,
-        pi_c: witness.proof.c,
-        protocol: witness.proof.protocol,
-        curve: witness.proof.curve,
-      },
+      witness.proof.value,
     );
     return isVerified;
   }
@@ -62,13 +58,19 @@ export class SnarkjsCircuitService implements ICircuitService {
     pathToCircuit: string,
     pathToProvingKey: string,
   ): Promise<{ proof: Proof; publicInputs: string[] }> {
-    const { proof, publicSignals: publicInputs } =
-      await snarkjs.groth16.fullProve(inputs, pathToCircuit, pathToProvingKey);
+    const buffer = fs.readFileSync(pathToCircuit);
+    const witnessCalculator = await wc(buffer);
+
+    const buff = await witnessCalculator.calculateWTNSBin(inputs, 0);
+    fs.writeFileSync(WITNESS_FILE, buff);
+
+    const { proof, publicSignals: publicInputs } = await snarkjs.plonk.prove(
+      pathToProvingKey,
+      WITNESS_FILE,
+    );
 
     const newProof = {
-      a: proof.pi_a,
-      b: proof.pi_b,
-      c: proof.pi_c,
+      value: proof,
       protocol: proof.protocol,
       curve: proof.curve,
     } as Proof;
@@ -92,8 +94,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     merkelizedPayload: MerkleTree;
   }): Promise<object> {
     //1. Ecdsa signature
-    const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
-      computeEcdsaSigPublicInputs(inputs.tx);
+    const { message, A, R8, S } = await computeEddsaSigPublicInputs(inputs.tx);
 
     //2. Items
     const payload = JSON.parse(inputs.tx.payload);
@@ -111,13 +112,10 @@ export class SnarkjsCircuitService implements ICircuitService {
       invoiceAmount: payload.amount,
       itemPrices,
       itemAmount,
-      signature,
-      publicKeyX,
-      publicKeyY,
-      Tx,
-      Ty,
-      Ux,
-      Uy,
+      message,
+      A,
+      R8,
+      S,
     };
 
     return preparedInputs;
@@ -127,21 +125,17 @@ export class SnarkjsCircuitService implements ICircuitService {
     tx: Transaction;
     merkelizedPayload: MerkleTree;
   }): Promise<object> {
-    //1. Ecdsa signature
-    const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
-      computeEcdsaSigPublicInputs(inputs.tx);
+    //1. Eddsa signature
+    const { message, A, R8, S } = await computeEddsaSigPublicInputs(inputs.tx);
 
     const payload = JSON.parse(inputs.tx.payload);
 
     const preparedInputs = {
       invoiceStatus: payload.status,
-      signature,
-      publicKeyX,
-      publicKeyY,
-      Tx,
-      Ty,
-      Ux,
-      Uy,
+      message,
+      A,
+      R8,
+      S,
     };
 
     return preparedInputs;
@@ -151,21 +145,17 @@ export class SnarkjsCircuitService implements ICircuitService {
     tx: Transaction;
     merkelizedPayload: MerkleTree;
   }): Promise<object> {
-    //1. Ecdsa signature
-    const { signature, Tx, Ty, Ux, Uy, publicKeyX, publicKeyY } =
-      computeEcdsaSigPublicInputs(inputs.tx);
+    //1. Eddsa signature
+    const { message, A, R8, S } = await computeEddsaSigPublicInputs(inputs.tx);
 
     const payload = JSON.parse(inputs.tx.payload);
 
     const preparedInputs = {
       invoiceStatus: payload.status,
-      signature,
-      publicKeyX,
-      publicKeyY,
-      Tx,
-      Ty,
-      Ux,
-      Uy,
+      message,
+      A,
+      R8,
+      S,
     };
 
     return preparedInputs;

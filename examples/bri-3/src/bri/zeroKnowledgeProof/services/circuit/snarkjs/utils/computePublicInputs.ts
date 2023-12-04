@@ -6,8 +6,8 @@ import { Transaction } from '../../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
-import * as circomlib from 'circomlibjs';
-import * as ed2curve from 'ed2curve';
+import { Point, buildBabyjub, buildEddsa } from 'circomlibjs';
+import 'dotenv';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
@@ -104,35 +104,37 @@ export const computeMerkleProofPublicInputs = (
 };
 
 export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
-  const babyJub = await circomlib.buildBabyjub();
+  const babyJub = await buildBabyjub();
+  const eddsa = await buildEddsa();
 
   const hashedPayload = crypto
-    .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
-    .update(tx.payload)
-    .digest()
-    .toString();
+    .createHash('sha256')
+    .update(JSON.stringify(tx.payload))
+    .digest();
 
-  const message = Buffer.from(hashedPayload, 'hex');
+  const publicKey =
+    tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey.split(',');
 
-  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
-  // Parse the hex-encoded key into Uint8Array
-  const publicKeyBytes = Uint8Array.from(Buffer.from(publicKey, 'hex'));
+  const publicKeyPoints = [
+    Uint8Array.from(Buffer.from(publicKey[0], 'hex')),
+    Uint8Array.from(Buffer.from(publicKey[1], 'hex')),
+  ] as Point;
 
-  //ed25519 key to curve25519 key
-  const eddsaCurvePointBytes = ed2curve.convertPublicKey(
-    publicKeyBytes,
-  ) as Uint8Array;
-
-  //Extract X and Y coordinates from curve25519 public key
-  const curvePoint = babyJub.unpackPoint(eddsaCurvePointBytes);
-  const pPubKey = babyJub.packPoint(curvePoint);
+  const packedPublicKey = babyJub.packPoint(publicKeyPoints);
 
   const signature = Uint8Array.from(Buffer.from(tx.signature, 'hex'));
+  const unpackedSignature = eddsa.unpackSignature(signature);
 
-  const messageBits = buffer2bits(message);
+  if (
+    !eddsa.verifyPedersen(hashedPayload, unpackedSignature, publicKeyPoints)
+  ) {
+    throw new Error(`Eddsa signature does not match public key.`);
+  }
+
+  const messageBits = buffer2bits(hashedPayload);
   const r8Bits = buffer2bits(Buffer.from(signature.slice(0, 32)));
   const sBits = buffer2bits(Buffer.from(signature.slice(32, 64)));
-  const aBits = buffer2bits(Buffer.from(pPubKey));
+  const aBits = buffer2bits(Buffer.from(packedPublicKey));
 
   const inputs = {
     message: messageBits,
@@ -149,9 +151,9 @@ const buffer2bits = (buffer: Buffer) => {
   for (let i = 0; i < buffer.length; i++) {
     for (let j = 0; j < 8; j++) {
       if ((buffer[i] >> j) & 1) {
-        res.push(BigInt('1n'));
+        res.push(BigInt(1));
       } else {
-        res.push(BigInt('0n'));
+        res.push(BigInt(0));
       }
     }
   }

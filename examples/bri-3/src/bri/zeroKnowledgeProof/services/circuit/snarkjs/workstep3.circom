@@ -4,18 +4,15 @@ include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
 include "./utils/ecdsaSignatureVerifier.circom";
 include "./utils/arithmeticOperators.circom";
 
-template Workstep2(){
+template Workstep3(){
 
 	signal input invoiceStatus;
 	
 	//Signature inputs
-	signal input signature;
-	signal input publicKeyX;
-	signal input publicKeyY;
-	signal input Tx;
-	signal input Ty;
-    	signal input Ux;
-	signal input Uy;
+	signal input message[256];
+    	signal input A[256];
+   	signal input R8[256];
+    	signal input S[256];
 
 	signal output isVerified;
 
@@ -26,17 +23,21 @@ template Workstep2(){
 	var isStatusVerified = statusVerifier.verified; 
 	
 	
-	//2. Verify Signature
-	component ecdsaSignatureVerifier = EcdsaSignatureVerifier();
-	ecdsaSignatureVerifier.signature <== signature;
-	ecdsaSignatureVerifier.publicKeyX <== publicKeyX;
-	ecdsaSignatureVerifier.publicKeyY <== publicKeyY;
-	ecdsaSignatureVerifier.Tx <== Tx;
-	ecdsaSignatureVerifier.Ty <== Ty;
-    	ecdsaSignatureVerifier.Ux <== Ux;
-	ecdsaSignatureVerifier.Uy <== Uy;
-	
-	var isSignatureVerified = ecdsaSignatureVerifier.verified;
+	//3. Verify Eddsa signature
+	var verifiedFlag = 0;
+	component eddsaSignatureVerifier = EdDSAVerifier(256);
+	for(var i = 0; i < 256; i++){
+		eddsaSignatureVerifier.msg[i] <== message[i];
+		eddsaSignatureVerifier.A[i] <== A[i];
+		eddsaSignatureVerifier.R8[i] <== R8[i];
+		eddsaSignatureVerifier.S[i] <== S[i];	
+	}
+	verifiedFlag = 1;
+	component isEqualSignature = IsEqual();
+	isEqualSignature.in[0] <== verifiedFlag;
+	isEqualSignature.in[1] <== 1;
+
+	var isSignatureVerified = isEqualSignature.out;	
 
 
 	component mul = Mul(2);
@@ -67,4 +68,4 @@ template StatusVerifier(){
 
 
 //declaring the public inputs
-component main = Workstep2();
+component main = Workstep3();

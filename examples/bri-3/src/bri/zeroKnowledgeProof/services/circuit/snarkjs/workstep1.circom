@@ -5,28 +5,24 @@ include "../../../../../../node_modules/circomlib/circuits/eddsa.circom";
 include "./utils/arithmeticOperators.circom";
 
 template Workstep1(items){
-
 	signal input invoiceStatus;
 	signal input invoiceAmount;
 	signal input itemPrices[items];
 	signal input itemAmount[items];
-	
+
 	//Signature inputs
-	signal input message[80];
+	signal input message[256];
     	signal input A[256];
    	signal input R8[256];
     	signal input S[256];
 
-
 	signal output isVerified;
 
-
-	//1. Status == NEW
+   	//1. Status == NEW
 	component statusVerifier = StatusVerifier();
 	statusVerifier.invoiceStatus <== invoiceStatus;	
-	var isStatusVerified = statusVerifier.verified; 
+	var isStatusVerified = statusVerifier.verified;
 
-	
 	//2. InvoiceAmount == itemPrices * itemAmount
 	component amountVerifier = AmountVerifier(items);
 	amountVerifier.invoiceAmount <== invoiceAmount;
@@ -36,15 +32,12 @@ template Workstep1(items){
 	}
 
 	var isInvoiceAmountVerified = amountVerifier.verified;
-	
 
-	//3. Verify Signature	
+	//3. Verify Eddsa signature
 	var verifiedFlag = 0;
-	component eddsaSignatureVerifier = EdDSAVerifier(80);
-	for(var i = 0; i < 80; i++){
-		eddsaSignatureVerifier.msg[i] <== message[i];
-	}
+	component eddsaSignatureVerifier = EdDSAVerifier(256);
 	for(var i = 0; i < 256; i++){
+		eddsaSignatureVerifier.msg[i] <== message[i];
 		eddsaSignatureVerifier.A[i] <== A[i];
 		eddsaSignatureVerifier.R8[i] <== R8[i];
 		eddsaSignatureVerifier.S[i] <== S[i];	
@@ -55,13 +48,12 @@ template Workstep1(items){
 	isEqualSignature.in[1] <== 1;
 	var isSignatureVerified = isEqualSignature.out;	
 
-
-	component mul = Mul(2);
+	component mul = Mul(3);
 	mul.nums[0] <== isStatusVerified;
 	mul.nums[1] <== isInvoiceAmountVerified;
-	// mul.nums[2] <== isSignatureVerified;
+	mul.nums[2] <== isSignatureVerified;
 
-	isVerified <== mul.result;
+	isVerified <== mul.result; 
 	
 }
 
@@ -101,6 +93,7 @@ template AmountVerifier(items){
 	
 	verified <== isItemAmountEqualInvoice.out;
 }
+
 
 //declaring the public inputs
 component main = Workstep1(4);
