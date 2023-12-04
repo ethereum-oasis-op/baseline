@@ -7,7 +7,7 @@ import MerkleTree from 'merkletreejs';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
 import { Point, buildBabyjub, buildEddsa } from 'circomlibjs';
-import 'dotenv';
+import 'dotenv/config';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
@@ -108,7 +108,7 @@ export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
   const eddsa = await buildEddsa();
 
   const hashedPayload = crypto
-    .createHash('sha256')
+    .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
     .update(JSON.stringify(tx.payload))
     .digest();
 

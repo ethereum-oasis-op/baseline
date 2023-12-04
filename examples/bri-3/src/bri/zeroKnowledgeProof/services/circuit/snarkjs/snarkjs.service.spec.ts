@@ -11,6 +11,7 @@ import { Witness } from '../../../models/witness';
 import { ed25519 } from '@noble/curves/ed25519';
 import * as circomlib from 'circomlibjs';
 import * as crypto from 'crypto';
+import 'dotenv/config';
 
 jest.setTimeout(20000);
 describe('SnarkjsService', () => {
@@ -18,7 +19,7 @@ describe('SnarkjsService', () => {
   let inputs: any;
   let witness: Witness;
 
-  //Empty test
+  //REMOVE THIS TEST: Empty test
   it('this is empty test', () => {
     expect('test').toBe('test');
   });
@@ -100,7 +101,7 @@ describe('SnarkjsService', () => {
   //   );
 
   //   const hashedPayload = crypto
-  //     .createHash('sha256')
+  //     .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
   //     .update(JSON.stringify(payload))
   //     .digest();
 
