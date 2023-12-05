@@ -24,7 +24,7 @@ The Baseline Protocol shall be a project within the Ethereum-Oasis project of [O
 
 ### TSC <a href="#tsc" id="tsc"></a>
 
-The Baseline Protocol shall be governed by a Technical Steering Committee, with 7, 9 or 11 Members, one of whom will serve as TSC Chair or two as TSC Co-Chairs. The current number of TSC members is 11.
+The Baseline Protocol shall be governed by a Technical Steering Committee, with 7, 9 or 11 Members, one of whom will serve as TSC Chair or two as TSC Co-Chairs. The current number of TSC members is 7.
 
 A quorum of two-thirds of the TSC members can conduct any vote required of the TSC during any given meeting. Disputes on whether a matter should be tabled for a different TSC meeting can be presented to the PGB of the Ethereum-OASIS project for a decision. A move to table a matter can be lodged during a TSC meeting, and it shall be tabled and submitted to the PGB with a simple majority vote. If a majority cannot be achieved during the meeting, a minimum of two members that were present at the meeting in question may dispute the matter after the fact to the PGB.
 
