@@ -40,9 +40,13 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     this.witness.publicInputs = publicInputs;
 
-    this.witness.verificationKey = JSON.parse(
-      fs.readFileSync(pathToVerificationKey, 'utf8'),
-    );
+    fs.readFile(pathToVerificationKey, 'utf8', (error, data) => {
+      if (error) {
+        throw new Error('Circuit verification key file does not exist.');
+      }
+
+      this.witness.verificationKey = JSON.parse(data);
+    });
     return this.witness;
   }
 
