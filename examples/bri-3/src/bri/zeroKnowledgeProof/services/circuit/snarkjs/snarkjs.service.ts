@@ -40,13 +40,17 @@ export class SnarkjsCircuitService implements ICircuitService {
 
     this.witness.publicInputs = publicInputs;
 
-    fs.readFile(pathToVerificationKey, 'utf8', (error, data) => {
-      if (error) {
-        throw new Error('Circuit verification key file does not exist.');
-      }
-
+    try {
+      const data = fs.readFileSync(pathToVerificationKey, 'utf8');
       this.witness.verificationKey = JSON.parse(data);
-    });
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new Error('Circuit verification key file does not exist.');
+      } else {
+        throw new Error('Error while reading circuit verification key file');
+      }
+    }
+
     return this.witness;
   }
 
