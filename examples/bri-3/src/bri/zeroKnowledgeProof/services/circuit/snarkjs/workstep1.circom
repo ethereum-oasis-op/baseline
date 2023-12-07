@@ -1,4 +1,4 @@
-pragma circom 2.1.2;
+pragma circom 2.1.5;
 
 include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
 include "../../../../../../node_modules/circomlib/circuits/eddsa.circom";
