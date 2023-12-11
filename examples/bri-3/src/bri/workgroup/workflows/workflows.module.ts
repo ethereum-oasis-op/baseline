@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AccountModule } from '../../identity/bpiAccounts/accounts.module';
+import { AccountModule } from '../../state/bpiAccounts/accounts.module';
 import { SubjectAccountModule } from '../../identity/bpiSubjectAccounts/subjectAccounts.module';
 import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
 import { WorkgroupStorageAgent } from '../workgroups/agents/workgroupStorage.agent';

@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { BpiMerkleTree } from '../../../merkleTree/models/bpiMerkleTree';
-import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BpiSubjectAccount } from '../../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
 export class BpiAccount {
   @AutoMap()

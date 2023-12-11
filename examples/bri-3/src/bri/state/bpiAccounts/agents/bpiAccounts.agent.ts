@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 } from 'uuid';
-import { BpiSubjectAccount } from '../../bpiSubjectAccounts/models/bpiSubjectAccount';
+import { BpiSubjectAccount } from '../../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';

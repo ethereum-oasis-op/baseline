@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
-import { MerkleTreeDto } from '../../../../..//merkleTree/api/dtos/response/merkleTree.dto';
-import { BpiSubjectAccountDto } from '../../../../bpiSubjectAccounts/api/dtos/response/bpiSubjectAccount.dto';
+import { MerkleTreeDto } from '../../../../../merkleTree/api/dtos/response/merkleTree.dto';
+import { BpiSubjectAccountDto } from '../../../../../identity/bpiSubjectAccounts/api/dtos/response/bpiSubjectAccount.dto';
 
 export class BpiAccountDto {
   @AutoMap()
