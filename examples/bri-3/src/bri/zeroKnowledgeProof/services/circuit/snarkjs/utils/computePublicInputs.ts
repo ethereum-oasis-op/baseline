@@ -6,6 +6,8 @@ import { Transaction } from '../../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
+import { Point, buildBabyjub, buildEddsa } from 'circomlibjs';
+import 'dotenv/config';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
@@ -99,4 +101,61 @@ export const computeMerkleProofPublicInputs = (
     stateTree: pathElements,
     stateTreeLeafPosition: pathIndices,
   };
+};
+
+export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
+  const babyJub = await buildBabyjub();
+  const eddsa = await buildEddsa();
+
+  const hashedPayload = crypto
+    .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
+    .update(JSON.stringify(tx.payload))
+    .digest();
+
+  const publicKey =
+    tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey.split(',');
+
+  const publicKeyPoints = [
+    Uint8Array.from(Buffer.from(publicKey[0], 'hex')),
+    Uint8Array.from(Buffer.from(publicKey[1], 'hex')),
+  ] as Point;
+
+  const packedPublicKey = babyJub.packPoint(publicKeyPoints);
+
+  const signature = Uint8Array.from(Buffer.from(tx.signature, 'hex'));
+  const unpackedSignature = eddsa.unpackSignature(signature);
+
+  if (
+    !eddsa.verifyPedersen(hashedPayload, unpackedSignature, publicKeyPoints)
+  ) {
+    throw new Error(`Eddsa signature does not match public key.`);
+  }
+
+  const messageBits = buffer2bits(hashedPayload);
+  const r8Bits = buffer2bits(Buffer.from(signature.slice(0, 32)));
+  const sBits = buffer2bits(Buffer.from(signature.slice(32, 64)));
+  const aBits = buffer2bits(Buffer.from(packedPublicKey));
+
+  const inputs = {
+    message: messageBits,
+    A: aBits,
+    R8: r8Bits,
+    S: sBits,
+  };
+
+  return inputs;
+};
+
+const buffer2bits = (buffer: Buffer) => {
+  const res: bigint[] = [];
+  for (let i = 0; i < buffer.length; i++) {
+    for (let j = 0; j < 8; j++) {
+      if ((buffer[i] >> j) & 1) {
+        res.push(BigInt(1));
+      } else {
+        res.push(BigInt(0));
+      }
+    }
+  }
+  return res;
 };

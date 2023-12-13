@@ -7,6 +7,8 @@ export interface ICircuitService {
     pathToCircuit: string,
     pathToProvingKey: string,
     pathToVerificationKey: string,
+    pathToWitnessCalculator?: string,
+    pathToWitnessFile?: string,
   ): Promise<Witness>;
   verifyProofUsingWitness(witness: Witness): Promise<boolean>;
 }

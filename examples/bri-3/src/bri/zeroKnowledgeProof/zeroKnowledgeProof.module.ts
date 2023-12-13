@@ -3,9 +3,10 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { CcsmStorageAgent } from './agents/ccsmStorage.agent';
 import { SnarkjsCircuitService } from './services/circuit/snarkjs/snarkjs.service';
 import { EthereumService } from './services/blockchain/ethereum/ethereum.service';
+import { LoggingModule } from '../../shared/logging/logging.module';
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, LoggingModule],
 
   providers: [
     CcsmStorageAgent,
