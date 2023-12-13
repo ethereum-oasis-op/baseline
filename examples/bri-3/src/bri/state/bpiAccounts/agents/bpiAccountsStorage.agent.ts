@@ -6,7 +6,7 @@ import { PrismaService } from '../../../../../prisma/prisma.service';
 import { Witness } from '../../../zeroKnowledgeProof/models/witness';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
-import { StateTreeLeafValueContent } from '../../../state/models/stateTreeLeafValueContent';
+import { StateTreeLeafValueContent } from '../../models/stateTreeLeafValueContent';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application

@@ -15,7 +15,7 @@ import {
 } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 import { WorkflowStorageAgent } from './workflowsStorage.agent';
-import { BpiAccount } from 'src/bri/identity/bpiAccounts/models/bpiAccount';
+import { BpiAccount } from 'src/bri/state/bpiAccounts/models/bpiAccount';
 
 @Injectable()
 export class WorkflowAgent {

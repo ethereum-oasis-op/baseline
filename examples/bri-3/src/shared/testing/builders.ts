@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
-import { BpiAccount } from '../../bri/identity/bpiAccounts/models/bpiAccount';
+import { BpiAccount } from '../../bri/state/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccount } from '../../bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../../bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../../bri/identity/bpiSubjects/models/bpiSubjectRole';
