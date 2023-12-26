@@ -21,6 +21,41 @@ jobs:
         os: [ubuntu-latest]
         node: [16.17.0]
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: example
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      nats:
+        image: nats:alpine
+        ports:
+          - 4222:4222
+    env:
+      DATABASE_URL: "postgresql://postgres:example@localhost:5432/postgres"
+      GOERLI_RPC_URL: "https://rpc.goerli.eth.gateway.fm"
+      GOERLI_SERVICE_DID: "did:ethr:0x5:0xB73A16e32FE027838f9aDEf72A192AFFf45a0A9D"
+      GOERLI_SERVICE_SIGNER_PRIVATE_KEY: "0x0fbdb56ab0fecb2f406fa807d9e6558baedacc1c15c0e2703b77d4c08441e4fe"
+      SERVICE_URL: "bri-3"
+      BPI_NATS_SERVER_URL: "localhost:4222"
+      BPI_NATS_SERVER_USER: "bpi_operator"
+      BPI_NATS_SERVER_PASS: "liftboiliftboiliftboiliftboi1"
+      BPI_ENCRYPTION_KEY_K_PARAM: "yzkXp3vY_AZQ3YfLv9GMRTYkjUOpn9x18gPkoFvoUxQ"
+      BPI_ENCRYPTION_KEY_KTY_PARAM: "oct"
+      VSM_CYCLE_PERIOD_IN_SECS: 15
+      VSM_CYCLE_TX_BATCH_SIZE: 5
+      SNARKJS_CIRCUITS_PATH: "zeroKnowledgeArtifacts/circuits/"
+      CCSM_NETWORK: "goerli"
+      MERKLE_TREE_HASH_ALGH: "sha256"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,6 +77,10 @@ jobs:
         working-directory: examples/bri-3
         run: npm ci
 
+      - name: Run build
+        working-directory: examples/bri-3
+        run: npm run build
+
       - name: Run prettier
         working-directory: examples/bri-3
         run: npm run format:check
@@ -50,6 +89,22 @@ jobs:
         working-directory: examples/bri-3
         run: npm run lint:check
 
-      - name: Run test
+      - name: Run tests
         working-directory: examples/bri-3
         run: npm run test
+
+      - name: Run prisma generate
+        working-directory: examples/bri-3
+        run: npm run prisma:generate
+
+      - name: Run prisma migrate
+        working-directory: examples/bri-3
+        run: npm run prisma:migrate:dev
+
+      - name: Run prisma db seed
+        working-directory: examples/bri-3
+        run: npx prisma db seed
+
+      - name: Run e2e tests
+        working-directory: examples/bri-3
+        run: npm run test:e2e
