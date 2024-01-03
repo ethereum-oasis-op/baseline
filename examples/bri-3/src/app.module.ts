@@ -1,8 +1,8 @@
 import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
-import { pojos } from '@automapper/pojos';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
+import { PrismaMapper } from 'prisma/prisma.mapper';
 import { AuthModule } from './bri/auth/auth.module';
 import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
 import { AuthzModule } from './bri/authz/authz.module';
@@ -35,11 +35,7 @@ import { PrismaService } from './shared/prisma/prisma.service';
         {
             name: 'default',
             strategyInitializer: classes(),
-        },
-        {
-            name: 'pojos',
-            strategyInitializer: pojos(),
-        },
+        }
       ]
     ),
     AuthModule,
@@ -50,6 +46,7 @@ import { PrismaService } from './shared/prisma/prisma.service';
   ],
   providers: [
     PrismaService,
+    PrismaMapper,
     {
       provide: APP_GUARD,
       useClass: DidJwtAuthGuard,
