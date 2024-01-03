@@ -1,11 +1,11 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { BpiSubject as BpiSubjectPrismaModel } from '@prisma/client';
+import { BpiSubject as BpiSubjectPrismaModel, BpiSubjectRole as BpiSubjectRolePrismaModel } from '@prisma/client';
+import { PrismaService } from '../../../../../prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
-import { PrismaService } from '../../../../../prisma/prisma.service';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -20,17 +20,30 @@ export class BpiSubjectStorageAgent {
   async getBpiSubjectById(id: string): Promise<BpiSubject | undefined> {
     const bpiSubjectModel = await this.prisma.bpiSubject.findUnique({
       where: { id },
+      include: {
+        roles: true
+      }
     });
 
     if (!bpiSubjectModel) {
       return undefined;
     }
 
-    return this.mapper.map<BpiSubjectPrismaModel, BpiSubject>(
+    const bpiSubjectDO = this.mapper.map<BpiSubjectPrismaModel, BpiSubject>(
       bpiSubjectModel,
-      'JustAPojoTestPrismaModel',
-      'JustAPojoTestDomainObject'
+      'BpiSubjectPrismaModel',
+      'BpiSubjectDomainObject'
     );
+
+    bpiSubjectDO.roles = bpiSubjectModel.roles.map(rl => {
+      return this.mapper.map<BpiSubjectRolePrismaModel, BpiSubjectRole>(
+        rl,
+        'BpiSubjectRolePrismaModel',
+        'BpiSubjectRoleDomainObject'
+      )
+    })
+
+    return bpiSubjectDO;
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
