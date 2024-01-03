@@ -17,13 +17,14 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 import { CheckAuthz } from '../../../authz/guards/authz.decorator';
+import { Public } from 'src/bri/decorators/public-endpoint';
 
 @Controller('subjects')
 export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Get('/:id')
-  @CheckAuthz({ action: 'read', type: 'BpiSubject' })
+  @Public()
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
   }

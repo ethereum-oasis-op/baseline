@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { BpiSubjectDto } from './api/dtos/response/bpiSubject.dto';
 import { BpiSubject } from './models/bpiSubject';
 import { BpiSubjectRole } from './models/bpiSubjectRole';
+import { BpiSubjectRoleDto } from './api/dtos/response/bpiSubjectRole.dto';
 
 @Injectable()
 export class SubjectsProfile extends AutomapperProfile {
@@ -15,7 +16,7 @@ export class SubjectsProfile extends AutomapperProfile {
     
     return (mapper) => {     
       createMap(mapper, BpiSubject, BpiSubjectDto);
-      createMap(mapper, BpiSubjectRole, BpiSubjectRole);
+      createMap(mapper, BpiSubjectRole, BpiSubjectRoleDto);
     };
   }
 }
