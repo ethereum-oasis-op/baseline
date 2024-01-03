@@ -24,7 +24,7 @@ export class SubjectController {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
   @Get('/:id')
-  @Public()
+  @CheckAuthz({ action: 'read', type: 'BpiSubject' })
   async getBpiSubjectById(@Param('id') id: string): Promise<BpiSubjectDto> {
     return await this.queryBus.execute(new GetBpiSubjectByIdQuery(id));
   }
