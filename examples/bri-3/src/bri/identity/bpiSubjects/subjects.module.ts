@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { PrismaMapper } from 'prisma/prisma.mapper';
+import { PrismaMapper } from '../../../../prisma/prisma.mapper';
 import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { AuthzModule } from '../../authz/authz.module';
 import { BpiSubjectAgent } from './agents/bpiSubjects.agent';
