@@ -1,11 +1,12 @@
 import { AutoMap } from '@automapper/classes';
+import { IDomainObject } from '../../../../shared/domainObject.interface.js'
 
 export enum BpiSubjectRoleName {
   INTERNAL_BPI_SUBJECT = 'INTERNAL_BPI_SUBJECT',
   EXTERNAL_BPI_SUBJECT = 'EXTERNAL_BPI_SUBJECT',
 }
 
-export class BpiSubjectRole {
+export class BpiSubjectRole implements IDomainObject {
   @AutoMap()
   id: string; // TODO: Add uuid after #491
 
