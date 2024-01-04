@@ -20,7 +20,6 @@ export class BpiSubject {
 
   @AutoMap(() => [BpiSubjectRole])
   roles: BpiSubjectRole[];
-
   constructor(
     id: string,
     name: string,
