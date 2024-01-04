@@ -2,7 +2,6 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { PrismaMapper } from 'prisma/prisma.mapper';
 import { AuthModule } from './bri/auth/auth.module';
 import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
 import { AuthzModule } from './bri/authz/authz.module';
@@ -30,14 +29,9 @@ import { PrismaService } from './shared/prisma/prisma.service';
     LoggingModule,
     EncryptionModule,
     VsmModule,
-    AutomapperModule.forRoot(
-      [
-        {
-            name: 'default',
-            strategyInitializer: classes(),
-        }
-      ]
-    ),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
+    }),
     AuthModule,
     AuthzModule,
     SubjectModule,
@@ -46,7 +40,6 @@ import { PrismaService } from './shared/prisma/prisma.service';
   ],
   providers: [
     PrismaService,
-    PrismaMapper,
     {
       provide: APP_GUARD,
       useClass: DidJwtAuthGuard,
