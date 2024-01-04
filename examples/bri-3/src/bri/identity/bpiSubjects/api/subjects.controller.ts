@@ -17,7 +17,6 @@ import { CreateBpiSubjectDto } from './dtos/request/createBpiSubject.dto';
 import { UpdateBpiSubjectDto } from './dtos/request/updateBpiSubject.dto';
 import { BpiSubjectDto } from './dtos/response/bpiSubject.dto';
 import { CheckAuthz } from '../../../authz/guards/authz.decorator';
-import { Public } from 'src/bri/decorators/public-endpoint';
 
 @Controller('subjects')
 export class SubjectController {
