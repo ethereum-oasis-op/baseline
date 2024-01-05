@@ -3,10 +3,11 @@ import { Injectable } from "@nestjs/common";
 @Injectable()
 export class CircuitInputsParserService {
 
-  public async applyMappingToJSONPayload(payload: string, cim: CircuitInputsMapping) {
+  public applyMappingToJSONPayload(payload: string, cim: CircuitInputsMapping) {
     const result: any = {};
 
-    cim.mapping.forEach(mapping => {
+    try {
+      cim.mapping.forEach(mapping => {
         const value = this.getJsonValueByPath(payload, mapping.payloadJsonPath);
 
         switch (mapping.dataType) {
@@ -22,9 +23,13 @@ export class CircuitInputsParserService {
             }
             break;
         default:
-            result[mapping.circuitInput] = value;
+            return null;
         }
-    });
+      });
+      
+    } catch (error) {
+      return null;
+    }
 
     return result;
   }
