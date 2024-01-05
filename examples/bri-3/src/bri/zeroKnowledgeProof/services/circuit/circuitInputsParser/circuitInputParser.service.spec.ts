@@ -16,6 +16,6 @@ describe('CircuitInputsParserService', () => {
     const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
 
     // Assert
-    expect(circuitInputs).toBe({});
+    expect(circuitInputs).toBeNull();
   });
 });
