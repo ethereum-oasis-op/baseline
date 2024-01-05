@@ -7,9 +7,15 @@ export class CircuitInputsParserService {
     const result: any = {};
 
     try {
-      cim.mapping.forEach(mapping => {
-        const value = this.getJsonValueByPath(payload, mapping.payloadJsonPath);
+      const jsonPayload = JSON.parse(payload);
 
+      for (let mapping of cim.mapping) {
+        const value = this.getJsonValueByPath(jsonPayload, mapping.payloadJsonPath);
+  
+        if (!value && !mapping.defaultValue) {
+          return null;
+        }
+  
         switch (mapping.dataType) {
         case "string":
             result[mapping.circuitInput] = value ?? mapping.defaultValue;
@@ -25,8 +31,8 @@ export class CircuitInputsParserService {
         default:
             return null;
         }
-      });
-      
+
+      }
     } catch (error) {
       return null;
     }
