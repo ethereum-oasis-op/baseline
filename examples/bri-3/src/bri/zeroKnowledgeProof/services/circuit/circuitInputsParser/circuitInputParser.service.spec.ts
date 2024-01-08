@@ -91,6 +91,31 @@ describe('CircuitInputsParserService', () => {
     expect(circuitInputs).toBeNull();
   });
 
+  it('Should generate a single circuit input param based on a single string param at root + 1 level', () => {
+    // Arrange
+    const payload = 
+      `{
+        "supplierInvoice": {
+          "ID": "INV123"
+        } 
+       }`;
+
+    const schema = {
+      mapping: [{
+        circuitInput: 'dascircuitinput',
+        description: 'desc',
+        payloadJsonPath: 'supplierInvoice.ID',
+        dataType: 'string',
+      } as CircuitInputMapping]
+    } as CircuitInputsMapping;
+
+    // Act
+    const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
+
+    // Assert
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": "INV123" });
+  });
+
   it('Should generate a single circuit input param based on a single integer param at root level', () => {
     // Arrange
     const payload = 
