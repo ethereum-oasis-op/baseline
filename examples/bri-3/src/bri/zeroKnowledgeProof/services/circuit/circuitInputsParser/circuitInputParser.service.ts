@@ -17,15 +17,26 @@ export class CircuitInputsParserService {
         }
   
         switch (mapping.dataType) {
+
         case "string":
             result[mapping.circuitInput] = value ?? mapping.defaultValue;
             break;
+
         case "integer":
             result[mapping.circuitInput] = value ?? mapping.defaultValue;
             break;
+            
         case "array":
+            if (mapping.arrayType === "string") {
+                // TODO
+            }
+
             if (mapping.arrayType === "integer") {
-                result[mapping.circuitInput] = value ?? mapping.defaultValue;
+              // TODO
+            }
+
+            if (mapping.arrayType === "object") {
+              // TODO
             }
             break;
         default:
