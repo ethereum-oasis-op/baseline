@@ -1,7 +1,10 @@
 import { Injectable } from "@nestjs/common";
+import { LoggingService } from "../../../../../shared/logging/logging.service";
 
 @Injectable()
 export class CircuitInputsParserService {
+
+  constructor(private readonly logger: LoggingService) { }
 
   public applyMappingToJSONPayload(payload: string, cim: CircuitInputsMapping) {
     const result: any = {};
@@ -13,6 +16,7 @@ export class CircuitInputsParserService {
         const value = this.getJsonValueByPath(jsonPayload, mapping.payloadJsonPath);
   
         if (!value && !mapping.defaultValue) {
+          this.logger.logError(`Missing value and default value for mapping ${cim.mapping} while mapping circuit inputs for payload ${payload}`);
           return null;
         }
   
@@ -40,11 +44,13 @@ export class CircuitInputsParserService {
             }
             break;
         default:
+            this.logger.logError(`Unknown datatype '${mapping.dataType}' while mapping circuit inputs for payload ${payload}`);
             return null;
         }
 
       }
     } catch (error) {
+      this.logger.logError(`Error '${error}' while mapping circuit inputs for payload ${payload}`);
       return null;
     }
 

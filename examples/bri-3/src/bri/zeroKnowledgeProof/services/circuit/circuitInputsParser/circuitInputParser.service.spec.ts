@@ -1,9 +1,12 @@
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { LoggingService } from '../../../../../shared/logging/logging.service';
 import { CircuitInputsParserService } from './circuitInputParser.service';
 
 let cips: CircuitInputsParserService;
+const loggingServiceMock: DeepMockProxy<LoggingService> =  mockDeep<LoggingService>();
 
 beforeAll(async () => {
-  cips = new CircuitInputsParserService();
+  cips = new CircuitInputsParserService(loggingServiceMock);
 });
 
 describe('CircuitInputsParserService', () => {
