@@ -10,7 +10,10 @@ import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
-  constructor(private mapper: PrismaMapper, private readonly prisma: PrismaService) {
+  constructor(
+    private mapper: PrismaMapper,
+    private readonly prisma: PrismaService,
+  ) {
     super();
   }
 
@@ -18,8 +21,8 @@ export class BpiSubjectStorageAgent extends PrismaService {
     const bpiSubjectModel = await this.prisma.bpiSubject.findUnique({
       where: { id },
       include: {
-        roles: true
-      }
+        roles: true,
+      },
     });
 
     if (!bpiSubjectModel) {
@@ -32,7 +35,9 @@ export class BpiSubjectStorageAgent extends PrismaService {
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.prisma.bpiSubject.findMany();
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.mapBpiSubjectPrismaModelToDomainObject(bpiSubjectModel);
+      return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+        bpiSubjectModel,
+      );
     });
   }
 
@@ -44,7 +49,9 @@ export class BpiSubjectStorageAgent extends PrismaService {
       include: { roles: true },
     });
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.mapBpiSubjectPrismaModelToDomainObject(bpiSubjectModel);
+      return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+        bpiSubjectModel,
+      );
     });
   }
 
@@ -58,7 +65,9 @@ export class BpiSubjectStorageAgent extends PrismaService {
     if (!bpiSubjectRole) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.mapBpiSubjectRolePrismaModelToDomainObject(bpiSubjectRole);
+    return this.mapper.mapBpiSubjectRolePrismaModelToDomainObject(
+      bpiSubjectRole,
+    );
   }
 
   async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
@@ -76,7 +85,9 @@ export class BpiSubjectStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(newBpiSubjectModel);
+    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+      newBpiSubjectModel,
+    );
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
@@ -93,7 +104,9 @@ export class BpiSubjectStorageAgent extends PrismaService {
         },
       },
     });
-    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(updatedBpiSubjectModel);
+    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+      updatedBpiSubjectModel,
+    );
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {

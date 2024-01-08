@@ -2,7 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
 import { BpiSubjectRole } from './bpiSubjectRole';
 
-export class BpiSubject  {
+export class BpiSubject {
   @AutoMap()
   id: string; // TODO: Add uuid after #491
 
