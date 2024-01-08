@@ -218,4 +218,32 @@ describe('CircuitInputsParserService', () => {
     // Assert
     expect(circuitInputs).toStrictEqual({ "dascircuitinput": [123, 321, 454] });
   });
+
+  it('Should generate a single circuit input param with charcode sums based on a single string array param at root level', () => {
+    // Arrange
+    const payload = 
+      `{
+        "supplierInvoiceIDs": [
+          "INV123",
+          "INV124",
+          "INV125"
+        ]
+       }`;
+
+    const schema = {
+      mapping: [{
+        circuitInput: 'dascircuitinput',
+        description: 'desc',
+        payloadJsonPath: 'supplierInvoiceIDs',
+        dataType: 'array',
+        arrayType: 'string',
+      } as CircuitInputMapping]
+    } as CircuitInputsMapping;
+
+    // Act
+    const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
+
+    // Assert
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": [387, 388, 389] });
+  });
 });
