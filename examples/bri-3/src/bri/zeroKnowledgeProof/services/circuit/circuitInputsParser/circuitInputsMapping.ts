@@ -1,12 +1,12 @@
 type CircuitInputsMapping = {
-    mapping: CircuitInputMapping[]; 
+  mapping: CircuitInputMapping[];
 };
 
 type CircuitInputMapping = {
-    circuitInput: string;
-    description: string;
-    payloadJsonPath: string;
-    dataType: string;
-    defaultValue?: any;
-    arrayType?: string;
+  circuitInput: string;
+  description: string;
+  payloadJsonPath: string;
+  dataType: string;
+  defaultValue?: any;
+  arrayType?: string;
 };
