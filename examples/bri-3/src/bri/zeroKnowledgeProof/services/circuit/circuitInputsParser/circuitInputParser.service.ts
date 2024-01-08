@@ -23,7 +23,9 @@ export class CircuitInputsParserService {
         switch (mapping.dataType) {
 
         case "string":
-            result[mapping.circuitInput] = value ?? mapping.defaultValue;
+            result[mapping.circuitInput] = value ?
+              this.calculateStringCharCodeSum(value) : 
+              this.calculateStringCharCodeSum(mapping.defaultValue);
             break;
 
         case "integer":
@@ -32,7 +34,9 @@ export class CircuitInputsParserService {
             
         case "array":
             if (mapping.arrayType === "string") {
-              result[mapping.circuitInput] = value ?? mapping.defaultValue;
+              result[mapping.circuitInput] = value ?
+                value.map(val => this.calculateStringCharCodeSum(val)) : 
+                mapping.defaultValue.map(val => this.calculateStringCharCodeSum(val));
             }
 
             if (mapping.arrayType === "integer") {
@@ -69,5 +73,15 @@ export class CircuitInputsParserService {
     }
   
     return currentValue;
+  };
+
+  private calculateStringCharCodeSum(text: string): number {
+    let sum = 0;
+
+    for (let i = 0; i < text.length; i++) {
+      sum += text.charCodeAt(i);
+    }
+
+    return sum;
   };
 }

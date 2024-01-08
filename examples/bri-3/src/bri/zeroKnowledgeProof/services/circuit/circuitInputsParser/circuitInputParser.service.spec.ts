@@ -22,7 +22,7 @@ describe('CircuitInputsParserService', () => {
     expect(circuitInputs).toBeNull();
   });
 
-  it('Should generate a single circuit input param based on a single string param at root level', () => {
+  it('Should generate a single circuit input param with charcode sum based on a single string param at root level', () => {
     // Arrange
     const payload = 
       `{
@@ -42,10 +42,10 @@ describe('CircuitInputsParserService', () => {
     const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
 
     // Assert
-    expect(circuitInputs).toStrictEqual({ "dascircuitinput": "INV123" });
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": 387 });
   });
 
-  it('Should generate a single circuit input param based on a default value for a missing string param at root level', () => {
+  it('Should generate a single circuit input param with charcode sum based on a default value for a missing string param at root level', () => {
     // Arrange
     const payload = 
       `{
@@ -68,7 +68,7 @@ describe('CircuitInputsParserService', () => {
     const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
 
     // Assert
-    expect(circuitInputs).toStrictEqual({ "dascircuitinput": defaultParamValue });
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": 312 });
   });
 
   it('Should return null based on a missing default value for a missing string param at root level', () => {
@@ -94,7 +94,7 @@ describe('CircuitInputsParserService', () => {
     expect(circuitInputs).toBeNull();
   });
 
-  it('Should generate a single circuit input param based on a single string param at root + 1 level', () => {
+  it('Should generate a single circuit input param with charcode sum based on a single string param at root + 1 level', () => {
     // Arrange
     const payload = 
       `{
@@ -116,7 +116,7 @@ describe('CircuitInputsParserService', () => {
     const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
 
     // Assert
-    expect(circuitInputs).toStrictEqual({ "dascircuitinput": "INV123" });
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": 387 });
   });
 
   it('Should generate a single circuit input param based on a single integer param at root level', () => {
