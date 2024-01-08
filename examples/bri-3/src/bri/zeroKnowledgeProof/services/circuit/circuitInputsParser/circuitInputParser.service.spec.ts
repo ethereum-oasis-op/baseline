@@ -25,6 +25,7 @@ describe('CircuitInputsParserService', () => {
       `{
         "supplierInvoiceID": "INV123"
        }`;
+
     const schema = {
       mapping: [{
         circuitInput: 'dascircuitinput',
@@ -47,13 +48,16 @@ describe('CircuitInputsParserService', () => {
       `{
         "somethingElse": ""
        }`;
+
+    const defaultParamValue = '555333';
+
     const schema = {
       mapping: [{
         circuitInput: 'dascircuitinput',
         description: 'desc',
         payloadJsonPath: 'supplierInvoiceID',
         dataType: 'string',
-        defaultValue: '555333'
+        defaultValue: defaultParamValue
       } as CircuitInputMapping]
     } as CircuitInputsMapping;
 
@@ -61,7 +65,7 @@ describe('CircuitInputsParserService', () => {
     const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
 
     // Assert
-    expect(circuitInputs).toStrictEqual({ "dascircuitinput": "555333" });
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": defaultParamValue });
   });
 
   it('Should return null based on a missing default value for a missing string param at root level', () => {
@@ -70,12 +74,85 @@ describe('CircuitInputsParserService', () => {
       `{
         "somethingElse": ""
        }`;
+
     const schema = {
       mapping: [{
         circuitInput: 'dascircuitinput',
         description: 'desc',
         payloadJsonPath: 'supplierInvoiceID',
         dataType: 'string',
+      } as CircuitInputMapping]
+    } as CircuitInputsMapping;
+
+    // Act
+    const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
+
+    // Assert
+    expect(circuitInputs).toBeNull();
+  });
+
+  it('Should generate a single circuit input param based on a single integer param at root level', () => {
+    // Arrange
+    const payload = 
+      `{
+        "supplierInvoiceID": 123
+       }`;
+
+    const schema = {
+      mapping: [{
+        circuitInput: 'dascircuitinput',
+        description: 'desc',
+        payloadJsonPath: 'supplierInvoiceID',
+        dataType: 'integer',
+      } as CircuitInputMapping]
+    } as CircuitInputsMapping;
+
+    // Act
+    const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
+
+    // Assert
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": 123 });
+  });
+
+  it('Should generate a single circuit input param based on a default value for a missing integer param at root level', () => {
+    // Arrange
+    const payload = 
+      `{
+        "somethingElse": ""
+       }`;
+
+    const defaultValue = 555333;
+
+    const schema = {
+      mapping: [{
+        circuitInput: 'dascircuitinput',
+        description: 'desc',
+        payloadJsonPath: 'supplierInvoiceID',
+        dataType: 'integer',
+        defaultValue: defaultValue
+      } as CircuitInputMapping]
+    } as CircuitInputsMapping;
+
+    // Act
+    const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
+
+    // Assert
+    expect(circuitInputs).toStrictEqual({ "dascircuitinput": defaultValue });
+  });
+
+  it('Should return null based on a missing default value for a missing integer param at root level', () => {
+    // Arrange
+    const payload = 
+      `{
+        "somethingElse": ""
+       }`;
+
+    const schema = {
+      mapping: [{
+        circuitInput: 'dascircuitinput',
+        description: 'desc',
+        payloadJsonPath: 'supplierInvoiceID',
+        dataType: 'integer',
       } as CircuitInputMapping]
     } as CircuitInputsMapping;
 
