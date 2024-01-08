@@ -32,11 +32,11 @@ export class CircuitInputsParserService {
             
         case "array":
             if (mapping.arrayType === "string") {
-                // TODO
+              result[mapping.circuitInput] = value ?? mapping.defaultValue;
             }
 
             if (mapping.arrayType === "integer") {
-              // TODO
+              result[mapping.circuitInput] = value ?? mapping.defaultValue;
             }
 
             if (mapping.arrayType === "object") {
