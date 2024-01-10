@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AccountModule } from '../../state/bpiAccounts/accounts.module';
+import { PrismaMapper } from '../../../../prisma/prisma.mapper';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { SubjectAccountModule } from '../../identity/bpiSubjectAccounts/subjectAccounts.module';
 import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
+import { AccountModule } from '../../state/bpiAccounts/accounts.module';
 import { WorkgroupStorageAgent } from '../workgroups/agents/workgroupStorage.agent';
 import { WorkgroupAgent } from '../workgroups/agents/workgroups.agent';
 import { WorkstepModule } from '../worksteps/worksteps.module';
@@ -15,7 +17,6 @@ import { GetAllWorkflowsQueryHandler } from './capabilities/getAllWorkflows/getA
 import { GetWorkflowByIdQueryHandler } from './capabilities/getWorkflowById/getWorkflowByIdQuery.handler';
 import { UpdateWorkflowCommandHandler } from './capabilities/updateWorkflow/updateWorkflowCommand.handler';
 import { WorkflowProfile } from './workflow.profile';
-import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateWorkflowCommandHandler,
@@ -48,6 +49,7 @@ export const QueryHandlers = [
     // for the two providers below - resolve.
     WorkgroupAgent,
     WorkgroupStorageAgent,
+    PrismaMapper,
   ],
   exports: [WorkflowAgent, WorkflowStorageAgent],
 })
