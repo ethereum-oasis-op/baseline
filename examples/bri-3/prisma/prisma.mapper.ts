@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { BpiSubject as BpiSubjectPrismaModel, BpiSubjectRole as BpiSubjectRolePrismaModel } from '@prisma/client';
+import {
+    Message as BpiMessagePrismaModel,
+    BpiSubject as BpiSubjectPrismaModel,
+    BpiSubjectRole as BpiSubjectRolePrismaModel
+} from '@prisma/client';
+import { BpiMessage } from '../src/bri/communication/models/bpiMessage';
 import { BpiSubject } from '../src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../src/bri/identity/bpiSubjects/models/bpiSubjectRole';
 
@@ -25,6 +30,14 @@ export class PrismaMapper {
 
     public mapBpiSubjectRolePrismaModelToDomainObject(source: BpiSubjectRolePrismaModel): BpiSubjectRole {
         const target = this.activator(BpiSubjectRole);
+
+        Object.assign(target, source);
+
+        return target;
+    }
+
+    public mapBpiMessagePrismaModelToDomainObject(source: BpiMessagePrismaModel): BpiMessage {
+        const target = this.activator(BpiMessage);
 
         Object.assign(target, source);
 
