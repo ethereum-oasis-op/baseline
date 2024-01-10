@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import {
+    BpiAccount as BpiAccountPrismaModel,
     Message as BpiMessagePrismaModel,
     BpiSubject as BpiSubjectPrismaModel,
-    BpiSubjectRole as BpiSubjectRolePrismaModel
+    BpiSubjectRole as BpiSubjectRolePrismaModel,
+    BpiAccountStateTreeLeafValue as BpiAccountStateTreeLeafValuePrismaModel 
 } from '@prisma/client';
 import { BpiMessage } from '../src/bri/communication/models/bpiMessage';
 import { BpiSubject } from '../src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../src/bri/identity/bpiSubjects/models/bpiSubjectRole';
+import { BpiAccount } from '../src/bri/state/bpiAccounts/models/bpiAccount';
+import { StateTreeLeafValueContent } from '../src/bri/state/models/stateTreeLeafValueContent';
 
 // We do mapping from prisma models to domain objects using simple Object.assign
 // since automapper is not happy working with types, which is how Prisma generates database entities.
@@ -38,6 +42,22 @@ export class PrismaMapper {
 
     public mapBpiMessagePrismaModelToDomainObject(source: BpiMessagePrismaModel): BpiMessage {
         const target = this.activator(BpiMessage);
+
+        Object.assign(target, source);
+
+        return target;
+    }
+
+    public mapBpiAccountPrismaModelToDomainObject(source: BpiAccountPrismaModel): BpiAccount {
+        const target = this.activator(BpiAccount);
+
+        Object.assign(target, source);
+
+        return target;
+    }
+
+    public mapBpiAccountStateTreeLeafValuePrismaModelToDomainObject(source: BpiAccountStateTreeLeafValuePrismaModel): StateTreeLeafValueContent {
+        const target = this.activator(StateTreeLeafValueContent);
 
         Object.assign(target, source);
 

@@ -7,8 +7,6 @@ import { MerkleTreeAgent } from '../../merkleTree/agents/merkleTree.agent';
 import { MerkleTreeStorageAgent } from '../../merkleTree/agents/merkleTreeStorage.agent';
 import { Witness } from '../../zeroKnowledgeProof/models/witness';
 import { StateTreeLeafValueContent } from '../models/stateTreeLeafValueContent';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
 import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../bpiAccounts/api/err.messages';
 
 // TODO: #741 We should follow this approach everywhere for storage
@@ -24,7 +22,6 @@ import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../bpiAccounts/api/err.m
 @Injectable()
 export class StateAgent {
   constructor(
-    @InjectMapper() private mapper: Mapper,
     private bpiAccountStorageAgent: BpiAccountStorageAgent,
     private merkleTreetStorageAgent: MerkleTreeStorageAgent,
     private merkleTreeAgent: MerkleTreeAgent,
@@ -88,10 +85,6 @@ export class StateAgent {
       throw new NotFoundException(LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(
-      stateLeafValues,
-      StateTreeLeafValueContent,
-      StateTreeLeafValueContent,
-    );
+    return stateLeafValues;
   }
 }
