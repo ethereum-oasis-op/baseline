@@ -5,7 +5,8 @@ import {
     Message as BpiMessagePrismaModel,
     BpiSubjectAccount as BpiSubjectAccountPrismaModel,
     BpiSubject as BpiSubjectPrismaModel,
-    BpiSubjectRole as BpiSubjectRolePrismaModel
+    BpiSubjectRole as BpiSubjectRolePrismaModel,
+    Transaction as TransactionPrismaModel
 } from '@prisma/client';
 import { BpiMessage } from '../src/bri/communication/models/bpiMessage';
 import { BpiSubjectAccount } from '../src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
@@ -13,6 +14,7 @@ import { BpiSubject } from '../src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../src/bri/identity/bpiSubjects/models/bpiSubjectRole';
 import { BpiAccount } from '../src/bri/state/bpiAccounts/models/bpiAccount';
 import { StateTreeLeafValueContent } from '../src/bri/state/models/stateTreeLeafValueContent';
+import { Transaction } from '../src/bri/transactions/models/transaction';
 
 // We do mapping from prisma models to domain objects using simple Object.assign
 // since automapper is not happy working with types, which is how Prisma generates database entities.
@@ -68,6 +70,14 @@ export class PrismaMapper {
 
     public mapBpiSubjectAccountPrismaModelToDomainObject(source: BpiSubjectAccountPrismaModel): BpiSubjectAccount {
         const target = this.activator(BpiSubjectAccount);
+
+        Object.assign(target, source);
+
+        return target;
+    }
+
+    public mapTransactionPrismaModelToDomainObject(source: TransactionPrismaModel): Transaction {
+        const target = this.activator(Transaction);
 
         Object.assign(target, source);
 
