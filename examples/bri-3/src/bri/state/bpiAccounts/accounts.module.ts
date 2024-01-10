@@ -32,7 +32,7 @@ export const QueryHandlers = [
     BpiAccountAgent,
     BpiAccountStorageAgent,
     AccountsProfile,
-    PrismaMapper
+    PrismaMapper,
   ],
   exports: [BpiAccountAgent, BpiAccountStorageAgent],
 })

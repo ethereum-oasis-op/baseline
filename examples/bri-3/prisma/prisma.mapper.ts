@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import {
     BpiAccount as BpiAccountPrismaModel,
+    BpiAccountStateTreeLeafValue as BpiAccountStateTreeLeafValuePrismaModel,
     Message as BpiMessagePrismaModel,
+    BpiSubjectAccount as BpiSubjectAccountPrismaModel,
     BpiSubject as BpiSubjectPrismaModel,
-    BpiSubjectRole as BpiSubjectRolePrismaModel,
-    BpiAccountStateTreeLeafValue as BpiAccountStateTreeLeafValuePrismaModel 
+    BpiSubjectRole as BpiSubjectRolePrismaModel
 } from '@prisma/client';
 import { BpiMessage } from '../src/bri/communication/models/bpiMessage';
+import { BpiSubjectAccount } from '../src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../src/bri/identity/bpiSubjects/models/bpiSubjectRole';
 import { BpiAccount } from '../src/bri/state/bpiAccounts/models/bpiAccount';
@@ -58,6 +60,14 @@ export class PrismaMapper {
 
     public mapBpiAccountStateTreeLeafValuePrismaModelToDomainObject(source: BpiAccountStateTreeLeafValuePrismaModel): StateTreeLeafValueContent {
         const target = this.activator(StateTreeLeafValueContent);
+
+        Object.assign(target, source);
+
+        return target;
+    }
+
+    public mapBpiSubjectAccountPrismaModelToDomainObject(source: BpiSubjectAccountPrismaModel): BpiSubjectAccount {
+        const target = this.activator(BpiSubjectAccount);
 
         Object.assign(target, source);
 
