@@ -22,6 +22,7 @@ import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { BpiSubject } from '../models/bpiSubject';
 import { uuid } from 'uuidv4';
 import { PublicKey } from '../models/publicKey';
+import { Prisma } from '@prisma/client';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
@@ -30,7 +31,7 @@ describe('SubjectController', () => {
     uuid(),
     'name',
     'description',
-    { ecdsa: 'pk', eddsa: 'pk' } as PublicKey,
+    { ecdsa: 'pk', eddsa: 'pk' },
     [],
   );
 
@@ -38,7 +39,7 @@ describe('SubjectController', () => {
     uuid(),
     'name2',
     'description2',
-    { ecdsa: 'pk', eddsa: 'pk' } as PublicKey,
+    { ecdsa: 'pk', eddsa: 'pk' },
     [],
   );
 

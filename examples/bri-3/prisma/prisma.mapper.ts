@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
   BpiSubject as BpiSubjectPrismaModel,
   BpiSubjectRole as BpiSubjectRolePrismaModel,
+  Prisma,
 } from '@prisma/client';
 import { BpiSubject } from '../src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../src/bri/identity/bpiSubjects/models/bpiSubjectRole';
@@ -24,6 +25,11 @@ export class PrismaMapper {
     const target = this.activator(BpiSubject);
 
     Object.assign(target, source);
+
+    target.publicKey = {
+      ecdsa: (source.publicKey as Prisma.JsonObject)['ecdsa'] as string,
+      eddsa: (source.publicKey as Prisma.JsonObject)['eddsa'] as string,
+    };
 
     return target;
   }

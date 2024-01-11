@@ -13,7 +13,10 @@ export class BpiSubjectDto {
   description: string;
 
   @AutoMap()
-  publicKey: PublicKey;
+  publicKey: {
+    ecdsa: string;
+    eddsa: string;
+  };
 
   @AutoMap(() => [BpiSubjectRoleDto])
   roles: BpiSubjectRoleDto[];

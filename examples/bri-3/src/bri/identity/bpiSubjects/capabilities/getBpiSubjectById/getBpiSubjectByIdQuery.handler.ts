@@ -24,6 +24,8 @@ export class GetBpiSubjectByIdQueryHandler
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.autoMapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
+    const target = new BpiSubjectDto();
+
+    return Object.assign(target, bpiSubject);
   }
 }
