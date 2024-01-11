@@ -95,14 +95,14 @@ describe('AccountController', () => {
       '123',
       'owner',
       'desc',
-      'publicKey',
+      { ecdsa: 'publicKey', eddsa: 'publicKey' },
       [],
     );
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      { ecdsa: 'publicKey', eddsa: 'publicKey' },
       [],
     );
     return new BpiSubjectAccount(

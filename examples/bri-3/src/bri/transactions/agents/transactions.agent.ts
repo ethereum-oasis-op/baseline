@@ -7,8 +7,6 @@ import {
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
-import MerkleTree from 'merkletreejs';
-import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
@@ -154,11 +152,12 @@ export class TransactionAgent {
       return false;
     }
 
-    const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
-      tx.payload,
-      tx.signature,
-      tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
-    );
+    const isSignatureValid =
+      this.authAgent.verifyEddsaSignatureAgainstPublicKey(
+        tx.payload,
+        tx.signature,
+        tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey.eddsa,
+      );
 
     if (!isSignatureValid) {
       return false;

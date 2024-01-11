@@ -12,6 +12,7 @@ import { TransactionStatus } from '../models/transactionStatus.enum';
 import { TransactionStorageAgent } from './transactionStorage.agent';
 import { TransactionAgent } from './transactions.agent';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
+import { PublicKey } from '../../identity/bpiSubjects/models/publicKey';
 
 let transactionAgent: TransactionAgent;
 
@@ -32,18 +33,25 @@ const circuitsServiceMock: DeepMockProxy<ICircuitService> =
 // https://github.com/demonsters/prisma-mock
 const existingWorkgroupId = uuid();
 
+const existingBpiSubjectPublicKey: PublicKey = {
+  ecdsa:
+    '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539',
+  eddsa:
+    '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539',
+};
+
 const existingBpiSubject1 = new BpiSubject(
   '',
   'name',
   'desc',
-  '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539',
+  existingBpiSubjectPublicKey,
   [],
 );
 const existingBpiSubject2 = new BpiSubject(
   '',
   'name2',
   'desc2',
-  '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980',
+  existingBpiSubjectPublicKey,
   [],
 );
 
@@ -212,7 +220,7 @@ describe('Transaction Agent', () => {
       existingWorkstep1,
     );
 
-    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(false);
+    authAgentMock.verifyEddsaSignatureAgainstPublicKey.mockResolvedValue(false);
 
     const tx = new Transaction(
       '1',
@@ -244,7 +252,7 @@ describe('Transaction Agent', () => {
       existingWorkstep1,
     );
 
-    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);
+    authAgentMock.verifyEddsaSignatureAgainstPublicKey.mockResolvedValue(true);
 
     const tx = new Transaction(
       '1',
@@ -276,7 +284,7 @@ describe('Transaction Agent', () => {
       existingWorkstep1,
     );
 
-    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);
+    authAgentMock.verifyEddsaSignatureAgainstPublicKey.mockResolvedValue(true);
 
     const tx = new Transaction(
       '1',
@@ -308,7 +316,7 @@ describe('Transaction Agent', () => {
       existingWorkstep1,
     );
 
-    authAgentMock.verifySignatureAgainstPublicKey.mockReturnValue(true);
+    authAgentMock.verifyEddsaSignatureAgainstPublicKey.mockResolvedValue(true);
 
     const tx = new Transaction(
       '1',

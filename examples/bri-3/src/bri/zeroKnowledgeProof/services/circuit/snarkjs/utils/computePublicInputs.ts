@@ -47,7 +47,7 @@ export const computeEcdsaSigPublicInputs = (tx: Transaction) => {
     ethers.utils.arrayify(ethers.utils.hashMessage(tx.payload)),
   );
 
-  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
+  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey.ecdsa;
 
   return computeEffectiveEcdsaSigPublicInputs(
     ecdsaSignature,
@@ -113,7 +113,7 @@ export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
     .digest();
 
   const publicKey =
-    tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey.split(',');
+    tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey.eddsa.split(',');
 
   const publicKeyPoints = [
     Uint8Array.from(Buffer.from(publicKey[0], 'hex')),
