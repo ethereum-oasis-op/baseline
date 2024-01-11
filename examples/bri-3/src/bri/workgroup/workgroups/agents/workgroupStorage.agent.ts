@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Workgroup } from '../models/workgroup';
-import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
+import { PrismaMapper } from '../../../../../prisma/prisma.mapper';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { Workgroup } from '../models/workgroup';
 
 @Injectable()
 export class WorkgroupStorageAgent {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -29,7 +28,7 @@ export class WorkgroupStorageAgent {
       throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(workgroupModel, Workgroup, Workgroup);
+    return this.mapper.mapWorkgroupPrismaModelToDomainObject(workgroupModel);
   }
 
   async createNewWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -68,7 +67,7 @@ export class WorkgroupStorageAgent {
       },
     });
 
-    return this.mapper.map(newWorkgroupModel, Workgroup, Workgroup);
+    return this.mapper.mapWorkgroupPrismaModelToDomainObject(newWorkgroupModel);
   }
 
   async updateWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -106,7 +105,9 @@ export class WorkgroupStorageAgent {
       },
     });
 
-    return this.mapper.map(updatedWorkgroupModel, Workgroup, Workgroup);
+    return this.mapper.mapWorkgroupPrismaModelToDomainObject(
+      updatedWorkgroupModel,
+    );
   }
 
   async deleteWorkgroup(workgroup: Workgroup): Promise<void> {
