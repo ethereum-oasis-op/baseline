@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { PrismaMapper } from '../../../prisma/prisma.mapper';
 import { EncryptionModule } from '../../shared/encryption/encryption.module';
 import { LoggingModule } from '../../shared/logging/logging.module';
 import { PrismaModule } from '../../shared/prisma/prisma.module';
@@ -45,7 +44,6 @@ export const QueryHandlers = [GetBpiMessageByIdQueryHandler];
     MessagingAgent,
     SubjectsProfile,
     CommunicationProfile,
-    PrismaMapper,
     {
       provide: 'IMessagingClient',
       useClass: NatsMessagingClient,

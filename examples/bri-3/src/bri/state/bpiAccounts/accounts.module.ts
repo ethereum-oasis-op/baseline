@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { PrismaMapper } from '../../../../prisma/prisma.mapper';
 import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { SubjectAccountModule } from '../../identity/bpiSubjectAccounts/subjectAccounts.module';
 import { MerkleModule } from '../../merkleTree/merkle.module';
@@ -32,7 +31,6 @@ export const QueryHandlers = [
     BpiAccountAgent,
     BpiAccountStorageAgent,
     AccountsProfile,
-    PrismaMapper,
   ],
   exports: [BpiAccountAgent, BpiAccountStorageAgent],
 })

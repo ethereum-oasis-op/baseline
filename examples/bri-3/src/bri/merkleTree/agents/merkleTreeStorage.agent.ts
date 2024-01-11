@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import MerkleTree from 'merkletreejs';
-import { PrismaMapper } from '../../../../prisma/prisma.mapper';
+import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
 
@@ -20,7 +20,9 @@ export class MerkleTreeStorageAgent {
       return undefined;
     }
 
-    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(merkleTreeModel);
+    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(
+      merkleTreeModel,
+    );
   }
 
   async storeNewMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
@@ -32,7 +34,9 @@ export class MerkleTreeStorageAgent {
       },
     });
 
-    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(storedMerkleTree);
+    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(
+      storedMerkleTree,
+    );
   }
 
   async storeUpdatedMerkleTree(
@@ -45,7 +49,9 @@ export class MerkleTreeStorageAgent {
       },
     });
 
-    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(updatedMerkleTree);
+    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(
+      updatedMerkleTree,
+    );
   }
 
   async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<void> {

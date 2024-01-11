@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaMapper } from '../../../../prisma/prisma.mapper';
+import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
 import { EncryptionService } from '../../../shared/encryption/encryption.service';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { BpiMessage } from '../models/bpiMessage';

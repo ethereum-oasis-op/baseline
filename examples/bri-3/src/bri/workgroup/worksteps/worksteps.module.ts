@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { PrismaMapper } from '../../../../prisma/prisma.mapper';
 import { LoggingModule } from '../../../../src/shared/logging/logging.module';
 import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { WorkstepAgent } from './agents/worksteps.agent';
@@ -33,7 +32,6 @@ export const QueryHandlers = [
     WorkstepAgent,
     WorkstepStorageAgent,
     WorkstepProfile,
-    PrismaMapper,
   ],
   exports: [WorkstepAgent, WorkstepStorageAgent],
 })
