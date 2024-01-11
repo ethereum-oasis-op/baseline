@@ -7,7 +7,7 @@ import { Workflow } from '../models/workflow';
 @Injectable()
 export class WorkflowStorageAgent {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 

@@ -9,7 +9,7 @@ import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 @Injectable()
 export class BpiSubjectAccountStorageAgent {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 

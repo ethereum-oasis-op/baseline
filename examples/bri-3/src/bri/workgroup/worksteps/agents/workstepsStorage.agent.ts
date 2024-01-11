@@ -10,7 +10,7 @@ import { Workstep } from '../models/workstep';
 @Injectable()
 export class WorkstepStorageAgent {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 

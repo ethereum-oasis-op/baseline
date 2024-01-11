@@ -8,7 +8,7 @@ import { TransactionStatus } from '../models/transactionStatus.enum';
 @Injectable()
 export class TransactionStorageAgent {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 

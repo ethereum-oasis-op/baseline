@@ -7,7 +7,7 @@ import { BpiMessage } from '../models/bpiMessage';
 @Injectable()
 export class BpiMessageStorageAgent {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly encryptionService: EncryptionService,
     private readonly prisma: PrismaService,
   ) {}

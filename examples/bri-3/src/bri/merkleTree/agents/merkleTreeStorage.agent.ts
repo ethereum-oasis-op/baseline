@@ -7,7 +7,7 @@ import { BpiMerkleTree } from '../models/bpiMerkleTree';
 @Injectable()
 export class MerkleTreeStorageAgent {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 
