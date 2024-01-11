@@ -1,37 +1,43 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaMapper } from '../../../../../prisma/prisma.mapper';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
 import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
-import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
-export class BpiSubjectStorageAgent {
+export class BpiSubjectStorageAgent extends PrismaService {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private mapper: PrismaMapper,
     private readonly prisma: PrismaService,
-  ) {}
+  ) {
+    super();
+  }
 
   async getBpiSubjectById(id: string): Promise<BpiSubject | undefined> {
     const bpiSubjectModel = await this.prisma.bpiSubject.findUnique({
       where: { id },
+      include: {
+        roles: true,
+      },
     });
 
     if (!bpiSubjectModel) {
       return undefined;
     }
 
-    return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(bpiSubjectModel);
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
     const bpiSubjectModels = await this.prisma.bpiSubject.findMany();
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+      return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+        bpiSubjectModel,
+      );
     });
   }
 
@@ -43,7 +49,9 @@ export class BpiSubjectStorageAgent {
       include: { roles: true },
     });
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+      return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+        bpiSubjectModel,
+      );
     });
   }
 
@@ -57,13 +65,15 @@ export class BpiSubjectStorageAgent {
     if (!bpiSubjectRole) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.map(bpiSubjectRole, BpiSubjectRole, BpiSubjectRole);
+    return this.mapper.mapBpiSubjectRolePrismaModelToDomainObject(
+      bpiSubjectRole,
+    );
   }
 
   async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
     bpiSubject.publicKey.ecdsa = bpiSubject.publicKey.ecdsa.toLowerCase();
     bpiSubject.publicKey.eddsa = bpiSubject.publicKey.eddsa.toLowerCase();
-    const bpiSubjectModel = await this.prisma.bpiSubject.create({
+    const newBpiSubjectModel = await this.prisma.bpiSubject.create({
       data: {
         ...bpiSubject,
         roles: {
@@ -76,12 +86,9 @@ export class BpiSubjectStorageAgent {
       },
     });
 
-    const newBpiSubjectModel = .publicKey = {
-      ecdsa: newBpiSubjectModel.publicKey['ecdsa'],
-      eddsa: newBpiSubjectModel.publicKey['eddsa'],
-    };
-
-    return this.mapper.map(newBpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+      newBpiSubjectModel,
+    );
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
@@ -98,7 +105,9 @@ export class BpiSubjectStorageAgent {
         },
       },
     });
-    return this.mapper.map(updatedBpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(
+      updatedBpiSubjectModel,
+    );
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
@@ -122,6 +131,6 @@ export class BpiSubjectStorageAgent {
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.mapBpiSubjectPrismaModelToDomainObject(bpiSubjectModel);
   }
 }
