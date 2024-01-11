@@ -30,7 +30,7 @@ export class CreateBpiMessageCommandHandler
     this.authAgent.throwIfSignatureVerificationFails(
       command.content,
       command.signature,
-      fromBpiSubject.publicKey,
+      fromBpiSubject.publicKey.ecdsa,
     );
 
     const newBpiMessageCandidate = this.agent.createNewBpiMessage(
@@ -47,7 +47,7 @@ export class CreateBpiMessageCommandHandler
     );
 
     await this.messagingAgent.publishMessage(
-      toBpiSubject.publicKey,
+      toBpiSubject.publicKey.ecdsa,
       this.messagingAgent.serializeBpiMessage(newBpiMessage),
     );
 

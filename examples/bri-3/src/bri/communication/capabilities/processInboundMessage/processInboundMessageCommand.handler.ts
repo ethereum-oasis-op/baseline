@@ -31,11 +31,12 @@ export class ProcessInboundMessageCommandHandler
       return false;
     }
 
-    const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
-      command.content,
-      command.signature,
-      fromBpiSubject.publicKey,
-    );
+    const isSignatureValid =
+      this.authAgent.verifyEcdsaSignatureAgainstPublicKey(
+        command.content,
+        command.signature,
+        fromBpiSubject.publicKey.ecdsa,
+      );
 
     if (!isSignatureValid) {
       return false;
@@ -55,7 +56,7 @@ export class ProcessInboundMessageCommandHandler
     );
 
     await this.messagingAgent.publishMessage(
-      toBpiSubject.publicKey,
+      toBpiSubject.publicKey.ecdsa,
       this.messagingAgent.serializeBpiMessage(newBpiMessage),
     );
 
