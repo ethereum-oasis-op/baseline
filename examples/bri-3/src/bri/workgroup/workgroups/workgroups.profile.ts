@@ -12,7 +12,6 @@ export class WorkgroupProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper) => {
-      createMap(mapper, Workgroup, Workgroup);
       createMap(mapper, Workgroup, WorkgroupDto);
     };
   }
