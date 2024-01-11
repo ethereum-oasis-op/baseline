@@ -4,15 +4,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 import { Workflow as WorkflowModel } from '@prisma/client';
-import { BpiAccount as BpiAccountModel } from '@prisma/client';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { PrismaPromise } from '@prisma/client';
+import { BpiAccountStorageAgent } from '../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
+import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
 
 @Injectable()
 export class WorkflowStorageAgent {
   constructor(
     @InjectMapper() private mapper: Mapper,
     private readonly prisma: PrismaService,
+    private readonly bpiAccountStorageAgent: BpiAccountStorageAgent,
   ) {}
 
   async getWorkflowById(id: string): Promise<Workflow | undefined> {
@@ -107,12 +109,22 @@ export class WorkflowStorageAgent {
   }
 
   async storeWorkflowTransaction(
-    bpiAccountOperation: PrismaPromise<BpiAccountModel>,
-    workflowOperation: PrismaPromise<WorkflowModel>,
-  ) {
-    await this.prisma.executeTransaction(
-      bpiAccountOperation,
-      workflowOperation,
-    );
+    bpiAccountCandidate: BpiAccount,
+    workflowCandidate: Workflow,
+  ): Promise<any> {
+    const boundStoreNewWorkflow = this.storeNewWorkflow.bind(this);
+    const boundStoreNewBpiAccount =
+      this.bpiAccountStorageAgent.storeNewBpiAccount.bind(
+        this.bpiAccountStorageAgent,
+      );
+    const results = await this.prisma.executeTransaction(() => {
+      return boundStoreNewBpiAccount(bpiAccountCandidate).then(
+        (newBpiAccount: { id: string }) => {
+          workflowCandidate.bpiAccountId = newBpiAccount.id;
+          return boundStoreNewWorkflow(workflowCandidate);
+        },
+      );
+    });
+    return results;
   }
 }
