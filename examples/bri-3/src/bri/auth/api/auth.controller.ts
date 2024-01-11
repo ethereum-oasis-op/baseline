@@ -26,7 +26,7 @@ export class AuthController {
   @Post('nonce')
   async nonce(@Body() generateNonceDto: GenerateNonceDto) {
     return await this.commandBus.execute(
-      new GenerateNonceCommand(generateNonceDto.publicKey),
+      new GenerateNonceCommand(generateNonceDto.ecdsaPublicKey),
     );
   }
 }

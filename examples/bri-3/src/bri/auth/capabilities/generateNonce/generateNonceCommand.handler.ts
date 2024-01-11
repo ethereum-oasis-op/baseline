@@ -10,7 +10,7 @@ export class GenerateNonceCommandHandler
 
   async execute(command: GenerateNonceCommand) {
     const bpiSubject = await this.authAgent.getBpiSubjectByPublicKey(
-      command.publicKey,
+      command.ecdsaPublicKey,
     );
 
     await this.authAgent.updateLoginNonce(bpiSubject);

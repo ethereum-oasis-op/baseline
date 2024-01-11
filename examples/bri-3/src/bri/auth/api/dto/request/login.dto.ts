@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { PublicKey } from '../../../../identity/bpiSubjects/models/publicKey';
 
 export class LoginDto {
   @IsNotEmpty()
@@ -8,5 +9,5 @@ export class LoginDto {
   signature: string;
 
   @IsNotEmpty()
-  publicKey: string;
+  publicKey: PublicKey;
 }

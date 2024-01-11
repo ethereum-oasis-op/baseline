@@ -1,3 +1,3 @@
 export class GenerateNonceCommand {
-  constructor(public readonly publicKey: string) {}
+  constructor(public readonly ecdsaPublicKey: string) {}
 }

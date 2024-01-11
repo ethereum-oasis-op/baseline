@@ -9,14 +9,16 @@ export class LoginCommandHandler implements ICommandHandler<LoginCommand> {
   async execute(command: LoginCommand): Promise<{ access_token: string }> {
     const { message, signature, publicKey } = command;
 
-    const bpiSubject = await this.authAgent.getBpiSubjectByPublicKey(publicKey);
+    const bpiSubject = await this.authAgent.getBpiSubjectByPublicKey(
+      publicKey.ecdsa,
+    );
 
     this.authAgent.throwIfLoginNonceMismatch(bpiSubject, message);
 
     this.authAgent.throwIfSignatureVerificationFails(
       message,
       signature,
-      publicKey,
+      publicKey.ecdsa,
     );
 
     return this.authAgent.generateDidJwt(bpiSubject);

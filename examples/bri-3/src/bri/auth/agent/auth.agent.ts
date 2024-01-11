@@ -7,7 +7,9 @@ import { BpiSubject } from '../../../bri/identity/bpiSubjects/models/bpiSubject'
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { INVALID_SIGNATURE, USER_NOT_AUTHORIZED } from '../api/err.messages';
 import { jwtConstants } from '../constants';
-
+import * as crypto from 'crypto';
+import { Point, buildEddsa } from 'circomlibjs';
+import 'dotenv/config';
 @Injectable()
 export class AuthAgent {
   constructor(
@@ -23,12 +25,14 @@ export class AuthAgent {
     signature: string,
     publicKey: string,
   ): void {
-    if (!this.verifySignatureAgainstPublicKey(message, signature, publicKey)) {
+    if (
+      !this.verifyEcdsaSignatureAgainstPublicKey(message, signature, publicKey)
+    ) {
       throw new UnauthorizedException(INVALID_SIGNATURE);
     }
   }
 
-  verifySignatureAgainstPublicKey(
+  verifyEcdsaSignatureAgainstPublicKey(
     message: string,
     signature: string,
     senderPublicKey: string,
@@ -53,6 +57,43 @@ export class AuthAgent {
     const isValid =
       publicAddressFromSignature.toLowerCase() ===
       publicAddressFromSenderPublicKey.toLowerCase();
+
+    if (!isValid) {
+      this.logger.logWarn(
+        `Signature: ${signature} for public key ${senderPublicKey} is invalid.`,
+      );
+    }
+
+    return isValid;
+  }
+
+  async verifyEddsaSignatureAgainstPublicKey(
+    message: string,
+    signature: string,
+    senderPublicKey: string,
+  ): Promise<boolean> {
+    const eddsa = await buildEddsa();
+
+    const hashedPayload = crypto
+      .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
+      .update(JSON.stringify(message))
+      .digest();
+
+    const publicKey = senderPublicKey.split(',');
+
+    const publicKeyPoints = [
+      Uint8Array.from(Buffer.from(publicKey[0], 'hex')),
+      Uint8Array.from(Buffer.from(publicKey[1], 'hex')),
+    ] as Point;
+
+    const eddsaSignature = Uint8Array.from(Buffer.from(signature, 'hex'));
+    const unpackedSignature = eddsa.unpackSignature(eddsaSignature);
+
+    const isValid = eddsa.verifyPedersen(
+      hashedPayload,
+      unpackedSignature,
+      publicKeyPoints,
+    );
 
     if (!isValid) {
       this.logger.logWarn(
