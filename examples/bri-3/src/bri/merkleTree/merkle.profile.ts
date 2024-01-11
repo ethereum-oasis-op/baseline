@@ -7,9 +7,7 @@ import { BpiMerkleTree } from './models/bpiMerkleTree';
 
 @Injectable()
 export class MerkleProfile extends AutomapperProfile {
-  constructor(
-    @InjectMapper() mapper: Mapper,
-  ) {
+  constructor(@InjectMapper() mapper: Mapper) {
     super(mapper);
   }
 

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { PrismaMapper } from '../../../../prisma/prisma.mapper';
 import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { AuthModule } from '../../auth/auth.module';
 import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
@@ -40,7 +39,6 @@ export const QueryHandlers = [GetWorkgroupByIdQueryHandler];
     WorkgroupAgent,
     WorkgroupStorageAgent,
     WorkgroupProfile,
-    PrismaMapper,
   ],
   exports: [WorkgroupAgent],
 })

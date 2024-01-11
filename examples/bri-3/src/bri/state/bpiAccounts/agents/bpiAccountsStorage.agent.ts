@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import MerkleTree from 'merkletreejs';
-import { PrismaMapper } from '../../../../../prisma/prisma.mapper';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { Witness } from '../../../zeroKnowledgeProof/models/witness';
 import { StateTreeLeafValueContent } from '../../models/stateTreeLeafValueContent';

@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { PrismaMapper } from '../../../prisma/prisma.mapper';
 import { PrismaModule } from '../../shared/prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
 import { SubjectAccountModule } from '../identity/bpiSubjectAccounts/subjectAccounts.module';
@@ -47,7 +46,6 @@ export const QueryHandlers = [
     TransactionAgent,
     TransactionStorageAgent,
     TransactionsProfile,
-    PrismaMapper,
   ],
   exports: [TransactionAgent, TransactionStorageAgent],
 })

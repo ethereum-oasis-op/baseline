@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { PrismaMapper } from '../../../../prisma/prisma.mapper';
 import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { SubjectAccountModule } from '../../identity/bpiSubjectAccounts/subjectAccounts.module';
 import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
@@ -49,7 +48,6 @@ export const QueryHandlers = [
     // for the two providers below - resolve.
     WorkgroupAgent,
     WorkgroupStorageAgent,
-    PrismaMapper,
   ],
   exports: [WorkflowAgent, WorkflowStorageAgent],
 })
