@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import {
     BpiAccount as BpiAccountPrismaModel,
     BpiAccountStateTreeLeafValue as BpiAccountStateTreeLeafValuePrismaModel,
+    BpiMerkleTree as BpiMerkleTreePrismaModel,
     Message as BpiMessagePrismaModel,
     BpiSubjectAccount as BpiSubjectAccountPrismaModel,
     BpiSubject as BpiSubjectPrismaModel,
@@ -15,12 +16,15 @@ import { BpiMessage } from '../src/bri/communication/models/bpiMessage';
 import { BpiSubjectAccount } from '../src/bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../src/bri/identity/bpiSubjects/models/bpiSubjectRole';
+import { BpiMerkleTree } from '../src/bri/merkleTree/models/bpiMerkleTree';
 import { BpiAccount } from '../src/bri/state/bpiAccounts/models/bpiAccount';
 import { StateTreeLeafValueContent } from '../src/bri/state/models/stateTreeLeafValueContent';
 import { Transaction } from '../src/bri/transactions/models/transaction';
 import { Workflow } from '../src/bri/workgroup/workflows/models/workflow';
 import { Workgroup } from '../src/bri/workgroup/workgroups/models/workgroup';
 import { Workstep } from '../src/bri/workgroup/worksteps/models/workstep';
+import { MerkleTreeService } from '../src/bri/merkleTree/services/merkleTree.service';
+import MerkleTree from 'merkletreejs';
 
 // We do mapping from prisma models to domain objects using simple Object.assign
 // since automapper is not happy working with types, which is how Prisma generates database entities.
@@ -34,6 +38,9 @@ interface IConstructor<T> {
 
 @Injectable()
 export class PrismaMapper {
+
+    constructor(private readonly merkleTreeService: MerkleTreeService) { }
+
     public mapBpiSubjectPrismaModelToDomainObject(source: BpiSubjectPrismaModel): BpiSubject {
         const target = this.activator(BpiSubject);
 
@@ -110,6 +117,19 @@ export class PrismaMapper {
         const target = this.activator(Workstep);
 
         Object.assign(target, source);
+
+        return target;
+    }
+
+    public mapBpiMerkleTreePrismaModelToDomainObject(source: BpiMerkleTreePrismaModel): BpiMerkleTree {
+        const target = this.activator(BpiMerkleTree);
+
+        Object.assign(target, source);
+
+        target.tree = MerkleTree.unmarshalTree(
+            source.tree,
+            this.merkleTreeService.createHashFunction(source.hashAlgName)
+        )
 
         return target;
     }
