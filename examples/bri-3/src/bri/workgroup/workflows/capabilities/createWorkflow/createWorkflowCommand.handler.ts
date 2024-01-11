@@ -1,6 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BpiAccountAgent } from '../../../../state/bpiAccounts/agents/bpiAccounts.agent';
-import { BpiAccountStorageAgent } from '../../../../state/bpiAccounts/agents/bpiAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { WorkgroupAgent } from '../../../../workgroup/workgroups/agents/workgroups.agent';
 import { WorkflowAgent } from '../../agents/workflows.agent';
