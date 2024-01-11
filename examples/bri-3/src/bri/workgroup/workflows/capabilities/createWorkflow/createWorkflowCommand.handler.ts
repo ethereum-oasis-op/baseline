@@ -17,7 +17,6 @@ export class CreateWorkflowCommandHandler
     private subjectAccountAgent: BpiSubjectAccountAgent,
     private workgroupAgent: WorkgroupAgent,
     private storageAgent: WorkflowStorageAgent,
-    private accountStorageAgent: BpiAccountStorageAgent,
   ) {}
 
   async execute(command: CreateWorkflowCommand) {
@@ -47,9 +46,6 @@ export class CreateWorkflowCommandHandler
       'sample state object prover system',
     );
 
-    const storeNewBpiAccountOperation =
-      this.accountStorageAgent.storeNewBpiAccount(newBpiAccountCandidate);
-
     const newWorkflowCandidate = this.agent.createNewWorkflow(
       command.name,
       workstepsToConnect,
@@ -57,14 +53,12 @@ export class CreateWorkflowCommandHandler
       newBpiAccountCandidate,
     );
 
-    const storeNewWorkflowOperation =
-      this.storageAgent.storeNewWorkflow(newWorkflowCandidate);
-
-    this.storageAgent.storeWorkflowTransaction(
-      storeNewBpiAccountOperation,
-      storeNewWorkflowOperation,
+    const results = await this.storageAgent.storeWorkflowTransaction(
+      newBpiAccountCandidate,
+      newWorkflowCandidate,
     );
 
-    return newWorkflowCandidate.id;
+    console.log(results);
+    return results;
   }
 }
