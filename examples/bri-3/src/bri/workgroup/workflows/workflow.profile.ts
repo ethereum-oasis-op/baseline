@@ -13,7 +13,6 @@ export class WorkflowProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, Workflow, WorkflowDto);
-      createMap(mapper, Workflow, Workflow);
     };
   }
 }

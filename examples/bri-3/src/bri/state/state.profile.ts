@@ -12,7 +12,6 @@ export class StateProfile extends AutomapperProfile {
 
   override get profile() {
     return (mapper: Mapper) => {
-      createMap(mapper, StateTreeLeafValueContent, StateTreeLeafValueContent);
       createMap(
         mapper,
         StateTreeLeafValueContent,
