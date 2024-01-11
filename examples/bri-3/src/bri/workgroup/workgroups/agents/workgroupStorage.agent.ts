@@ -7,7 +7,7 @@ import { Workgroup } from '../models/workgroup';
 @Injectable()
 export class WorkgroupStorageAgent {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 

@@ -11,7 +11,7 @@ import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
   constructor(
-    private mapper: PrismaMapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {
     super();
