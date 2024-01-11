@@ -14,7 +14,7 @@ model BpiSubject {
   id                        String              @id @default(uuid())
   name                      String
   description               String
-  publicKey                 String
+  publicKey                 Json
   loginNonce                String              @default("")
   ownedBpiSubjectAccounts   BpiSubjectAccount[] @relation(name: "ownerBpiSubject_fk")
   createdBpiSubjectAccounts BpiSubjectAccount[] @relation(name: "creatorBpiSubject_fk")
@@ -150,6 +150,7 @@ model BpiAccountStateTreeLeafValue {
   merkelizedPayload String
   witness           String
 }
+
 
 enum WorkgroupStatus {
   ACTIVE
