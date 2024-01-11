@@ -3,11 +3,10 @@ import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
-import { Workflow as WorkflowModel } from '@prisma/client';
+import { BpiAccount, Workflow as WorkflowModel } from '@prisma/client';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { PrismaPromise } from '@prisma/client';
-import { BpiAccountStorageAgent } from '../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
-import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
+import { BpiAccountStorageAgent } from '../../../state/bpiAccounts/agents/bpiAccountsStorage.agent';
 
 @Injectable()
 export class WorkflowStorageAgent {

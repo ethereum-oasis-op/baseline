@@ -57,7 +57,6 @@ export class CreateWorkflowCommandHandler
       newWorkflowCandidate,
     );
 
-    console.log(results);
     return results;
   }
 }
