@@ -1,6 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
 import { BpiSubjectRole } from './bpiSubjectRole';
+import { PublicKey } from './publicKey';
 
 export class BpiSubject {
   @AutoMap()
@@ -13,7 +14,10 @@ export class BpiSubject {
   description: string;
 
   @AutoMap()
-  publicKey: string;
+  publicKey: {
+    ecdsa: string;
+    eddsa: string;
+  };
 
   @AutoMap()
   loginNonce: string;
@@ -25,13 +29,16 @@ export class BpiSubject {
     id: string,
     name: string,
     description: string,
-    publicKey: string,
+    publicKey: PublicKey,
     roles: BpiSubjectRole[],
   ) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.publicKey = publicKey;
+    this.publicKey = {
+      ecdsa: publicKey.ecdsa,
+      eddsa: publicKey.eddsa,
+    };
     this.roles = roles;
   }
 
@@ -43,8 +50,11 @@ export class BpiSubject {
     this.description = newDescription;
   }
 
-  public updatePublicKey(newPk: string): void {
-    this.publicKey = newPk;
+  public updatePublicKey(newPk: PublicKey): void {
+    this.publicKey = {
+      ecdsa: newPk.ecdsa,
+      eddsa: newPk.eddsa,
+    };
   }
 
   public updateLoginNonce(): void {
@@ -52,6 +62,6 @@ export class BpiSubject {
   }
 
   public getBpiSubjectDid(): string {
-    return `did:ethr:0x5:${this.publicKey}`;
+    return `did:ethr:0x5:${this.publicKey.ecdsa}`;
   }
 }

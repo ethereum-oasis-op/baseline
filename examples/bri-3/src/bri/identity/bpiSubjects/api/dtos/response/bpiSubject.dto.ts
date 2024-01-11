@@ -1,4 +1,5 @@
 import { AutoMap } from '@automapper/classes';
+import { PublicKey } from '../../../models/publicKey';
 
 export class BpiSubjectDto {
   @AutoMap()
@@ -11,5 +12,5 @@ export class BpiSubjectDto {
   description: string;
 
   @AutoMap()
-  publicKey: string;
+  publicKey: PublicKey;
 }

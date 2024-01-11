@@ -70,14 +70,14 @@ describe('SubjectAccountController', () => {
       '123',
       'owner',
       'desc',
-      'publicKey',
+      { ecdsa: 'publicKey', eddsa: 'publicKey' },
       [],
     );
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      { ecdsa: 'publicKey', eddsa: 'publicKey' },,
       [],
     );
 
@@ -195,7 +195,7 @@ describe('SubjectAccountController', () => {
         '123',
         'owner',
         'desc',
-        'publicKey',
+        { ecdsa: 'publicKey', eddsa: 'publicKey' },
         [],
       );
       const creatorBpiSubjectId = 'not-existing-id';
@@ -219,7 +219,7 @@ describe('SubjectAccountController', () => {
         '123',
         'creator',
         'desc',
-        'publicKey',
+        { ecdsa: 'publicKey', eddsa: 'publicKey' },,
         [],
       );
       const ownerBpiSubjectId = 'not-existing-id';

@@ -21,6 +21,7 @@ import { AuthzModule } from '../../../authz/authz.module';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { BpiSubject } from '../models/bpiSubject';
 import { uuid } from 'uuidv4';
+import { PublicKey } from '../models/publicKey';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
@@ -29,14 +30,15 @@ describe('SubjectController', () => {
     uuid(),
     'name',
     'description',
-    'pk',
+    { ecdsa: 'pk', eddsa: 'pk' } as PublicKey,
     [],
   );
+
   const existingBpiSubject2 = new BpiSubject(
     uuid(),
     'name2',
     'description2',
-    'pk2',
+    { ecdsa: 'pk', eddsa: 'pk' } as PublicKey,
     [],
   );
 
@@ -100,8 +102,8 @@ describe('SubjectController', () => {
       expect(fetchedBpiSubject.description).toEqual(
         existingBpiSubject1.description,
       );
-      expect(fetchedBpiSubject.publicKey).toEqual(
-        existingBpiSubject1.publicKey,
+      expect(fetchedBpiSubject.publicKey.ecdsa).toEqual(
+        existingBpiSubject1.publicKey.ecdsa,
       );
     });
   });
@@ -150,7 +152,7 @@ describe('SubjectController', () => {
       // Arrange
       const requestDto = {
         desc: 'desc',
-        publicKey: 'publicKey',
+        publicKey: { ecdsa: 'pk', eddsa: 'pk' },
       } as CreateBpiSubjectDto;
 
       // Act and assert
@@ -164,7 +166,7 @@ describe('SubjectController', () => {
       const requestDto = {
         name: 'name',
         desc: 'desc',
-        publicKey: 'publicKey',
+        publicKey: { ecdsa: 'pk', eddsa: 'pk' },
       } as CreateBpiSubjectDto;
       subjectStorageAgentMock.storeNewBpiSubject.mockResolvedValueOnce(
         existingBpiSubject1,
@@ -186,7 +188,7 @@ describe('SubjectController', () => {
       const requestDto = {
         name: 'name',
         desc: 'desc',
-        publicKey: 'publicKey',
+        publicKey: { ecdsa: 'pk', eddsa: 'pk' },
       } as UpdateBpiSubjectDto;
 
       // Act and assert
@@ -203,7 +205,7 @@ describe('SubjectController', () => {
       const updateRequestDto = {
         name: 'name2',
         desc: 'desc2',
-        publicKey: 'publicKey2',
+        publicKey: { ecdsa: 'pk2', eddsa: 'pk2' },
       } as UpdateBpiSubjectDto;
       subjectStorageAgentMock.updateBpiSubject.mockResolvedValueOnce({
         ...existingBpiSubject1,

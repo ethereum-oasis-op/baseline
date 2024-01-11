@@ -61,8 +61,9 @@ export class BpiSubjectStorageAgent {
   }
 
   async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    bpiSubject.publicKey = bpiSubject.publicKey.toLowerCase();
-    const newBpiSubjectModel = await this.prisma.bpiSubject.create({
+    bpiSubject.publicKey.ecdsa = bpiSubject.publicKey.ecdsa.toLowerCase();
+    bpiSubject.publicKey.eddsa = bpiSubject.publicKey.eddsa.toLowerCase();
+    const bpiSubjectModel = await this.prisma.bpiSubject.create({
       data: {
         ...bpiSubject,
         roles: {
@@ -74,6 +75,11 @@ export class BpiSubjectStorageAgent {
         },
       },
     });
+
+    const newBpiSubjectModel = .publicKey = {
+      ecdsa: newBpiSubjectModel.publicKey['ecdsa'],
+      eddsa: newBpiSubjectModel.publicKey['eddsa'],
+    };
 
     return this.mapper.map(newBpiSubjectModel, BpiSubject, BpiSubject);
   }
@@ -104,7 +110,10 @@ export class BpiSubjectStorageAgent {
   async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.prisma.bpiSubject.findFirst({
       where: {
-        publicKey: publicKey,
+        publicKey: {
+          path: ['ecdsa'],
+          equals: publicKey,
+        },
       },
       include: {
         roles: true,
