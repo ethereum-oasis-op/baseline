@@ -77,7 +77,7 @@ describe('SubjectAccountController', () => {
       '321',
       'creator',
       'desc',
-      { ecdsa: 'publicKey', eddsa: 'publicKey' },,
+      { ecdsa: 'publicKey', eddsa: 'publicKey' },
       [],
     );
 
@@ -219,7 +219,7 @@ describe('SubjectAccountController', () => {
         '123',
         'creator',
         'desc',
-        { ecdsa: 'publicKey', eddsa: 'publicKey' },,
+        { ecdsa: 'publicKey', eddsa: 'publicKey' },
         [],
       );
       const ownerBpiSubjectId = 'not-existing-id';

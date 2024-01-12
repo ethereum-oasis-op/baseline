@@ -18,7 +18,8 @@ export class GetAllBpiSubjectsQueryHandler
   async execute() {
     const bpiSubjects = await this.storageAgent.getAllBpiSubjects();
     return bpiSubjects.map((bp) => {
-      return this.autoMapper.map(bp, BpiSubject, BpiSubjectDto);
+      const target = new BpiSubjectDto();
+      return Object.assign(target, bp);
     });
   }
 }

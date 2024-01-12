@@ -34,6 +34,8 @@ export class UpdateBpiSubjectCommandHandler
       bpiSubjectToUpdate,
     );
 
-    return this.mapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
+    const target = new BpiSubjectDto();
+
+    return Object.assign(target, bpiSubject);
   }
 }

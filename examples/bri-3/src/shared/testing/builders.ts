@@ -2,6 +2,7 @@
 
 import { BpiAccount } from '../../bri/state/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccount } from '../../bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { PublicKey } from '../../bri/identity/bpiSubjects/models/publicKey';
 import { BpiSubject } from '../../bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../../bri/identity/bpiSubjects/models/bpiSubjectRole';
 import { BpiMerkleTree } from '../../bri/merkleTree/models/bpiMerkleTree';
@@ -121,7 +122,10 @@ export class BpiSubjectBuilder {
   private id: string;
   private name: string;
   private description: string;
-  private publicKey: string;
+  private publicKey: {
+    ecdsa: string;
+    eddsa: string;
+  };
   private loginNonce: string;
   private roles: BpiSubjectRole[];
 
@@ -142,8 +146,11 @@ export class BpiSubjectBuilder {
     return this;
   }
 
-  setPublicKey(publicKey: string): BpiSubjectBuilder {
-    this.publicKey = publicKey;
+  setPublicKey(publicKey: PublicKey): BpiSubjectBuilder {
+    this.publicKey = {
+      ecdsa: publicKey.ecdsa,
+      eddsa: publicKey.eddsa,
+    };
     return this;
   }
 

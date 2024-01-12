@@ -35,7 +35,13 @@ describe('WorkgroupsController', () => {
   let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
 
   const createTestBpiSubject = () => {
-    return new BpiSubject('123', 'name', 'desc', 'pubkey', []);
+    return new BpiSubject(
+      '123',
+      'name',
+      'desc',
+      { ecdsa: 'pubKey', eddsa: 'pubKey' },
+      [],
+    );
   };
 
   const createTestWorkgroup = (): Workgroup => {

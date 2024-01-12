@@ -103,8 +103,8 @@ describe('SubjectController', () => {
       expect(fetchedBpiSubject.description).toEqual(
         existingBpiSubject1.description,
       );
-      expect(fetchedBpiSubject.publicKey.ecdsa).toEqual(
-        existingBpiSubject1.publicKey.ecdsa,
+      expect(fetchedBpiSubject.publicKey).toEqual(
+        existingBpiSubject1.publicKey,
       );
     });
   });
