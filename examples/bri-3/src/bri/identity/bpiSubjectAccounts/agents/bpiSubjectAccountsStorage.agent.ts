@@ -26,9 +26,7 @@ export class BpiSubjectAccountStorageAgent {
       return undefined;
     }
 
-    return this.mapper.mapBpiSubjectAccountPrismaModelToDomainObject(
-      bpiSubjectAccountModel,
-    );
+    return this.mapper.map(bpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async getAllBpiSubjectAccounts(): Promise<BpiSubjectAccount[]> {
@@ -37,7 +35,7 @@ export class BpiSubjectAccountStorageAgent {
         include: { ownerBpiSubject: true, creatorBpiSubject: true },
       });
     return bpiSubjectAccountsModels.map((bp) => {
-      return this.mapper.mapBpiSubjectAccountPrismaModelToDomainObject(bp);
+      return this.mapper.map(bp, BpiSubjectAccount);
     });
   }
 
@@ -57,9 +55,7 @@ export class BpiSubjectAccountStorageAgent {
         include: { ownerBpiSubject: true, creatorBpiSubject: true },
       });
 
-    return this.mapper.mapBpiSubjectAccountPrismaModelToDomainObject(
-      newBpiSubjectAccountModel,
-    );
+    return this.mapper.map(newBpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async updateBpiSubjectAccount(
@@ -79,9 +75,7 @@ export class BpiSubjectAccountStorageAgent {
         include: { ownerBpiSubject: true, creatorBpiSubject: true },
       });
 
-    return this.mapper.mapBpiSubjectAccountPrismaModelToDomainObject(
-      newBpiSubjectAccountModel,
-    );
+    return this.mapper.map(newBpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async deleteBpiSubjectAccount(

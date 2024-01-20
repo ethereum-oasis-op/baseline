@@ -28,7 +28,7 @@ export class WorkgroupStorageAgent {
       throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.mapWorkgroupPrismaModelToDomainObject(workgroupModel);
+    return this.mapper.map(workgroupModel, Workgroup);
   }
 
   async createNewWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -67,7 +67,7 @@ export class WorkgroupStorageAgent {
       },
     });
 
-    return this.mapper.mapWorkgroupPrismaModelToDomainObject(newWorkgroupModel);
+    return this.mapper.map(newWorkgroupModel, Workgroup);
   }
 
   async updateWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -105,9 +105,7 @@ export class WorkgroupStorageAgent {
       },
     });
 
-    return this.mapper.mapWorkgroupPrismaModelToDomainObject(
-      updatedWorkgroupModel,
-    );
+    return this.mapper.map(updatedWorkgroupModel, Workgroup);
   }
 
   async deleteWorkgroup(workgroup: Workgroup): Promise<void> {

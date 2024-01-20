@@ -23,13 +23,13 @@ export class WorkstepStorageAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.mapWorkstepPrismaModelToDomainObject(workstepModel);
+    return this.mapper.map(workstepModel, Workstep);
   }
 
   async getAllWorksteps(): Promise<Workstep[]> {
     const workstepModels = await this.prisma.workstep.findMany();
     return workstepModels.map((workstepModel) => {
-      return this.mapper.mapWorkstepPrismaModelToDomainObject(workstepModel);
+      return this.mapper.map(workstepModel, Workstep);
     });
   }
 
@@ -40,7 +40,7 @@ export class WorkstepStorageAgent {
       },
     });
     return workstepModels.map((w) => {
-      return this.mapper.mapWorkstepPrismaModelToDomainObject(w);
+      return this.mapper.map(w, Workstep);
     });
   }
 
@@ -48,7 +48,7 @@ export class WorkstepStorageAgent {
     const newWorkstepModel = await this.prisma.workstep.create({
       data: workstep,
     });
-    return this.mapper.mapWorkstepPrismaModelToDomainObject(newWorkstepModel);
+    return this.mapper.map(newWorkstepModel, Workstep);
   }
 
   async updateWorkstep(workstep: Workstep): Promise<Workstep> {
@@ -56,9 +56,7 @@ export class WorkstepStorageAgent {
       where: { id: workstep.id },
       data: workstep,
     });
-    return this.mapper.mapWorkstepPrismaModelToDomainObject(
-      updatedWorkstepModel,
-    );
+    return this.mapper.map(updatedWorkstepModel, Workstep);
   }
 
   async deleteWorkstep(workstep: Workstep): Promise<void> {
