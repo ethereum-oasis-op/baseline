@@ -17,7 +17,7 @@ export class CircuitInputsParserService {
           mapping.payloadJsonPath,
         );
 
-        if (!value && !mapping.defaultValue) {
+        if (value === undefined && mapping.defaultValue === undefined) {
           this.logger.logError(
             `Missing value and default value for mapping ${cim.mapping} while mapping circuit inputs for payload ${payload}`,
           );
@@ -26,9 +26,7 @@ export class CircuitInputsParserService {
 
         switch (mapping.dataType) {
           case 'string':
-            result[mapping.circuitInput] = value
-              ? this.calculateStringCharCodeSum(value)
-              : this.calculateStringCharCodeSum(mapping.defaultValue);
+            result[mapping.circuitInput] = this.calculateStringCharCodeSum(value || mapping.defaultValue);
             break;
 
           case 'integer':
