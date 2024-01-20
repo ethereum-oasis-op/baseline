@@ -22,8 +22,7 @@ export class BpiMessageStorageAgent {
       return undefined;
     }
 
-    const bpiMessage =
-      this.mapper.mapBpiMessagePrismaModelToDomainObject(bpiMessageModel);
+    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage);
     bpiMessage.updateContent(
       await this.encryptionService.decrypt(bpiMessage.content),
     );
@@ -35,9 +34,7 @@ export class BpiMessageStorageAgent {
     const bpiMessageModels = await this.prisma.message.findMany();
 
     return bpiMessageModels.map((bpiMessageModel) => {
-      return this.mapper.mapBpiMessagePrismaModelToDomainObject(
-        bpiMessageModel,
-      );
+      return this.mapper.map(bpiMessageModel, BpiMessage);
     });
   }
 
@@ -54,9 +51,7 @@ export class BpiMessageStorageAgent {
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
-    return this.mapper.mapBpiMessagePrismaModelToDomainObject(
-      newBpiMessageModel,
-    );
+    return this.mapper.map(newBpiMessageModel, BpiMessage);
   }
 
   async updateBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
@@ -73,9 +68,7 @@ export class BpiMessageStorageAgent {
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
-    return this.mapper.mapBpiMessagePrismaModelToDomainObject(
-      updatedBpiMessageModel,
-    );
+    return this.mapper.map(updatedBpiMessageModel, BpiMessage);
   }
 
   async deleteBpiMessage(bpiMessage: BpiMessage): Promise<void> {

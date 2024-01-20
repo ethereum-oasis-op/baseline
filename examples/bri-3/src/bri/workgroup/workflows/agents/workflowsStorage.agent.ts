@@ -24,7 +24,7 @@ export class WorkflowStorageAgent {
       throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.mapWorkflowPrismaModelToDomainObject(workflowModel);
+    return this.mapper.map(workflowModel, Workflow);
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
@@ -32,7 +32,7 @@ export class WorkflowStorageAgent {
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return this.mapper.mapWorkflowPrismaModelToDomainObject(w);
+      return this.mapper.map(w, Workflow);
     });
   }
 
@@ -44,7 +44,7 @@ export class WorkflowStorageAgent {
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return this.mapper.mapWorkflowPrismaModelToDomainObject(w);
+      return this.mapper.map(w, Workflow);
     });
   }
 
@@ -71,7 +71,7 @@ export class WorkflowStorageAgent {
       },
     });
 
-    return this.mapper.mapWorkflowPrismaModelToDomainObject(newWorkflowModel);
+    return this.mapper.map(newWorkflowModel, Workflow);
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
@@ -95,9 +95,7 @@ export class WorkflowStorageAgent {
       },
     });
 
-    return this.mapper.mapWorkflowPrismaModelToDomainObject(
-      updatedWorkflowModel,
-    );
+    return this.mapper.map(updatedWorkflowModel, Workflow);
   }
 
   async deleteWorkflow(workflow: Workflow): Promise<void> {

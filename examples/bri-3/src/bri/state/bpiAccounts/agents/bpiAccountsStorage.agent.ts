@@ -34,7 +34,7 @@ export class BpiAccountStorageAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.mapBpiAccountPrismaModelToDomainObject(bpiAccountModel);
+    return this.mapper.map(bpiAccountModel, BpiAccount);
   }
 
   async getAllBpiAccounts(): Promise<BpiAccount[]> {
@@ -50,7 +50,7 @@ export class BpiAccountStorageAgent {
     });
 
     return bpiAccountModels.map((bp) => {
-      return this.mapper.mapBpiAccountPrismaModelToDomainObject(bp);
+      return this.mapper.map(bp, BpiAccount);
     });
   }
 
@@ -87,9 +87,7 @@ export class BpiAccountStorageAgent {
       },
     });
 
-    return this.mapper.mapBpiAccountPrismaModelToDomainObject(
-      newBpiAccountModel,
-    );
+    return this.mapper.map(newBpiAccountModel, BpiAccount);
   }
 
   async updateBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
@@ -103,9 +101,7 @@ export class BpiAccountStorageAgent {
       },
     });
 
-    return this.mapper.mapBpiAccountPrismaModelToDomainObject(
-      newBpiAccountModel,
-    );
+    return this.mapper.map(newBpiAccountModel, BpiAccount);
   }
 
   async deleteBpiAccount(bpiAccount: BpiAccount): Promise<void> {
@@ -144,8 +140,6 @@ export class BpiAccountStorageAgent {
       return undefined;
     }
 
-    return this.mapper.mapBpiAccountStateTreeLeafValuePrismaModelToDomainObject(
-      stateLeafValues,
-    );
+    return this.mapper.map(stateLeafValues, StateTreeLeafValueContent);
   }
 }

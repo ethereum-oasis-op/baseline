@@ -17,9 +17,7 @@ export class TransactionStorageAgent {
       include: { fromBpiSubjectAccount: true, toBpiSubjectAccount: true },
     });
     return transactionModels.map((transactionModel) => {
-      return this.mapper.mapTransactionPrismaModelToDomainObject(
-        transactionModel,
-      );
+      return this.mapper.map(transactionModel, Transaction);
     });
   }
 
@@ -46,9 +44,7 @@ export class TransactionStorageAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.mapTransactionPrismaModelToDomainObject(
-      transactionModel,
-    );
+    return this.mapper.map(transactionModel, Transaction);
   }
 
   async getTopNTransactionsByStatus(
@@ -75,9 +71,7 @@ export class TransactionStorageAgent {
     });
 
     return transactionModels.map((transactionModel) => {
-      return this.mapper.mapTransactionPrismaModelToDomainObject(
-        transactionModel,
-      );
+      return this.mapper.map(transactionModel, Transaction);
     });
   }
 
@@ -110,9 +104,7 @@ export class TransactionStorageAgent {
       },
     });
 
-    return this.mapper.mapTransactionPrismaModelToDomainObject(
-      newTransactionModel,
-    );
+    return this.mapper.map(newTransactionModel, Transaction);
   }
 
   async updateTransaction(transaction: Transaction): Promise<Transaction> {
@@ -124,9 +116,7 @@ export class TransactionStorageAgent {
       },
     });
 
-    return this.mapper.mapTransactionPrismaModelToDomainObject(
-      updatedTransactionModel,
-    );
+    return this.mapper.map(updatedTransactionModel, Transaction);
   }
 
   async updateTransactionStatus(
@@ -141,9 +131,7 @@ export class TransactionStorageAgent {
       },
     });
 
-    return this.mapper.mapTransactionPrismaModelToDomainObject(
-      updatedTransaction,
-    );
+    return this.mapper.map(updatedTransaction, Transaction);
   }
 
   async deleteTransaction(transaction: Transaction): Promise<void> {
