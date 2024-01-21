@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { LoggingModule } from '../../../../src/shared/logging/logging.module';
 import { PrismaModule } from '../../../shared/prisma/prisma.module';
+import { ZeroKnowledgeProofModule } from '../../zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { WorkstepAgent } from './agents/worksteps.agent';
 import { WorkstepStorageAgent } from './agents/workstepsStorage.agent';
 import { WorkstepController } from './api/worksteps.controller';
@@ -24,7 +25,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, LoggingModule, PrismaModule],
+  imports: [CqrsModule, LoggingModule, PrismaModule, ZeroKnowledgeProofModule],
   controllers: [WorkstepController],
   providers: [
     ...CommandHandlers,
