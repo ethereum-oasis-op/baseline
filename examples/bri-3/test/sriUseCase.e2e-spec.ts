@@ -383,3 +383,16 @@ async function createEddsaPrivateKey(
 
   return eddsaPrivateKey;
 }
+
+async function createEddsaPublicKey(eddsaPrivateKey: string): Promise<string> {
+  const eddsa = await circomlib.buildEddsa();
+  const babyJub = await circomlib.buildBabyjub();
+
+  const privateKeyBytes = Buffer.from(eddsaPrivateKey, 'hex');
+  const publicKeyPoints = eddsa.prv2pub(privateKeyBytes);
+  const eddsaPublicKey = Buffer.from(
+    babyJub.packPoint(publicKeyPoints),
+  ).toString('hex');
+
+  return eddsaPublicKey;
+}
