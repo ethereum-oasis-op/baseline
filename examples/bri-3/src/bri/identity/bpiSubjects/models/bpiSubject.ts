@@ -44,7 +44,7 @@ export class BpiSubject {
   }
 
   public updatePublicKey(newPk: PublicKey): void {
-    this.publicKey.map((key) => (key.type == newPk.type ? (key = newPk) : key));
+    this.publicKey.push(newPk);
   }
 
   public updateLoginNonce(): void {

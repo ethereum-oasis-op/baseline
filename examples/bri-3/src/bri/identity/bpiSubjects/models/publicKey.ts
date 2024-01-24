@@ -17,11 +17,11 @@ export class PublicKey {
   @AutoMap()
   bpiSubject: BpiSubject;
 
-  constructor(id: string, type: string, value: string, bpiSubject: BpiSubject) {
+  constructor(id: string, type: string, value: string, bpiSubjectId: string) {
     this.id = id;
     this.type = type;
     this.value = value;
-    this.bpiSubject = bpiSubject;
+    this.bpiSubjectId = bpiSubjectId;
   }
 
   public updateType(newType: string): void {
@@ -32,7 +32,7 @@ export class PublicKey {
     this.value = newValue;
   }
 
-  public updateBpiSubject(newBpiSubject: BpiSubject): void {
-    this.bpiSubject = newBpiSubject;
+  public updateBpiSubjectId(newBpiSubjectId: string): void {
+    this.bpiSubjectId = newBpiSubjectId;
   }
 }

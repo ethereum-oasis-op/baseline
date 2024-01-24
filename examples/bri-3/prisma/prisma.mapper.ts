@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import {
   BpiSubject as BpiSubjectPrismaModel,
   BpiSubjectRole as BpiSubjectRolePrismaModel,
+  PublicKey as PublicKeyPrismaModel,
   Prisma,
 } from '@prisma/client';
 import { BpiSubject } from '../src/bri/identity/bpiSubjects/models/bpiSubject';
 import { BpiSubjectRole } from '../src/bri/identity/bpiSubjects/models/bpiSubjectRole';
+import { PublicKey } from '../src/bri/identity/bpiSubjects/models/publicKey';
 
 // We do mapping from prisma models to domain objects using simple Object.assign
 // since automapper is not happy working with types, which is how Prisma generates database entities.
@@ -26,11 +28,6 @@ export class PrismaMapper {
 
     Object.assign(target, source);
 
-    target.publicKey = {
-      ecdsa: (source.publicKey as Prisma.JsonObject)['ecdsa'] as string,
-      eddsa: (source.publicKey as Prisma.JsonObject)['eddsa'] as string,
-    };
-
     return target;
   }
 
@@ -44,6 +41,15 @@ export class PrismaMapper {
     return target;
   }
 
+  public mapPublicKeyPrismaModelToDomainObject(
+    source: PublicKeyPrismaModel,
+  ): PublicKey {
+    const target = this.activator(PublicKey);
+
+    Object.assign(target, source);
+
+    return target;
+  }
   private activator<T>(type: IConstructor<T>): T {
     return new type();
   }

@@ -154,9 +154,10 @@ model BpiAccountStateTreeLeafValue {
 model PublicKey {
   id            String      @id @default(uuid())
   type          String
-  value         String
+  value         String      @unique
   bpiSubjectId  String
   bpiSubject    BpiSubject  @relation(fields: [bpiSubjectId], references: [id])
+  @@unique([type, bpiSubjectId])
 }
 
 enum WorkgroupStatus {

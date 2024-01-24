@@ -17,5 +17,11 @@ CREATE TABLE "PublicKey" (
     CONSTRAINT "PublicKey_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateIndex
+CREATE UNIQUE INDEX "PublicKey_value_key" ON "PublicKey"("value");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PublicKey_type_bpiSubjectId_key" ON "PublicKey"("type", "bpiSubjectId");
+
 -- AddForeignKey
 ALTER TABLE "PublicKey" ADD CONSTRAINT "PublicKey_bpiSubjectId_fkey" FOREIGN KEY ("bpiSubjectId") REFERENCES "BpiSubject"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

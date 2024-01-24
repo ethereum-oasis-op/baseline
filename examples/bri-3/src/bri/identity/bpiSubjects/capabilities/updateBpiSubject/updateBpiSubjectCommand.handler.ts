@@ -23,11 +23,17 @@ export class UpdateBpiSubjectCommandHandler
         command.id,
       );
 
+    const newPk = await this.storageAgent.updatePublicKey(
+      command.publicKey.type,
+      command.publicKey.value,
+      bpiSubjectToUpdate.id,
+    );
+
     this.agent.updateBpiSubject(
       bpiSubjectToUpdate,
       command.name,
       command.description,
-      command.publicKey,
+      newPk,
     );
 
     const bpiSubject = await this.storageAgent.updateBpiSubject(
