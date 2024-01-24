@@ -4,6 +4,9 @@ import { ethers } from 'ethers';
 import * as request from 'supertest';
 import { v4 } from 'uuid';
 import { AppModule } from '../src/app.module';
+import { keccak256 } from 'ethers/lib/utils';
+import * as circomlib from 'circomlibjs';
+import * as crypto from 'crypto';
 
 jest.setTimeout(120000);
 
@@ -11,15 +14,19 @@ let accessToken: string;
 let app: INestApplication;
 let server: any;
 
-const supplierBPiSubjectPublicKey =
+const supplierBPiSubjectEcdsaPublicKey =
   '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539';
-const supplierBPiSubjectPrivateKey =
+const supplierBPiSubjectEcdsaPrivateKey =
   '0x93b7ed4405c73a1dbd8936e67419ee4e711ed44225aeabe9a5acf49a9ec90e68';
-const buyerBPiSubjectPublicKey =
+const buyerBPiSubjectEcdsaPublicKey =
   '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980';
-const buyerBPiSubjectPrivateKey =
+const buyerBPiSubjectEcdsaPrivateKey =
   '0x32c8d8f4e53cd1920d1ad22b9d51a7b28216337f2b664fb8d33bbcfc3c455c62';
 
+let supplierBPiSubjectEddsaPublicKey: string;
+let supplierBPiSubjectEddsaPrivateKey: string;
+let buyerBPiSubjectEddsaPublicKey: string;
+let buyerBPiSubjectEddsaPrivateKey: string;
 let createdWorkgroupId: string;
 let createdWorkstepId: string;
 let createdWorkflowId: string;
@@ -35,6 +42,32 @@ describe('SRI use-case end-to-end test', () => {
     app = moduleFixture.createNestApplication();
     await app.init();
     server = app.getHttpServer();
+
+    const supplierWallet = new ethers.Wallet(
+      supplierBPiSubjectEcdsaPrivateKey,
+      undefined,
+    );
+    supplierBPiSubjectEddsaPrivateKey = await createEddsaPrivateKey(
+      supplierBPiSubjectEcdsaPublicKey,
+      supplierWallet,
+    );
+
+    supplierBPiSubjectEddsaPublicKey = await createEddsaPublicKey(
+      supplierBPiSubjectEddsaPrivateKey,
+    );
+
+    const buyerWallet = new ethers.Wallet(
+      buyerBPiSubjectEcdsaPrivateKey,
+      undefined,
+    );
+    buyerBPiSubjectEddsaPrivateKey = await createEddsaPrivateKey(
+      buyerBPiSubjectEcdsaPublicKey,
+      buyerWallet,
+    );
+
+    buyerBPiSubjectEddsaPublicKey = await createEddsaPublicKey(
+      buyerBPiSubjectEddsaPrivateKey,
+    );
   });
 
   afterAll(async () => {
@@ -49,7 +82,10 @@ describe('SRI use-case end-to-end test', () => {
     const createdBpiSubjectSupplierId =
       await createExternalBpiSubjectAndReturnId(
         'External Bpi Subject - Supplier',
-        supplierBPiSubjectPublicKey,
+        [
+          { type: 'ecdsa', value: supplierBPiSubjectEcdsaPublicKey },
+          { type: 'eddsa', value: supplierBPiSubjectEddsaPublicKey },
+        ],
       );
 
     createdBpiSubjectAccountSupplierId =
@@ -60,7 +96,10 @@ describe('SRI use-case end-to-end test', () => {
 
     const createdBpiSubjectBuyerId = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject 2 - Buyer',
-      buyerBPiSubjectPublicKey,
+      [
+        { type: 'ecdsa', value: buyerBPiSubjectEcdsaPublicKey },
+        { type: 'eddsa', value: buyerBPiSubjectEddsaPublicKey },
+      ],
     );
 
     createdBpiSubjectAccountBuyerId = await createBpiSubjectAccountAndReturnId(
@@ -113,7 +152,7 @@ describe('SRI use-case end-to-end test', () => {
       createdWorkflowId,
       createdWorkstepId,
       createdBpiSubjectAccountSupplierId,
-      supplierBPiSubjectPrivateKey,
+      supplierBPiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
       `{
         "supplierInvoiceID": "INV123",
@@ -147,14 +186,14 @@ describe('SRI use-case end-to-end test', () => {
 async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string> {
   // These two values must be inline with the value for the bpiAdmin from seed.ts
   // These values are used for testing purposes only
-  const internalBpiSubjectPublicKey =
+  const internalBpiSubjectEcdsaPublicKey =
     '0x044e851fa6118d0d33f11ebf8d4cae2a25dca959f06c1ab87b8fec9ccbf0ca0021b7efc27c786f9480f9f11cfe8df1ae991329654308611148a35a2277ba5909fe';
   const internalBpiSubjectPrivateKey =
     '0x0fbdb56ab0fecb2f406fa807d9e6558baedacc1c15c0e2703b77d4c08441e4fe';
 
   const nonceResponse = await request(server)
     .post('/auth/nonce')
-    .send({ publicKey: internalBpiSubjectPublicKey })
+    .send({ publicKey: internalBpiSubjectEcdsaPublicKey })
     .expect(201);
 
   const signer = new ethers.Wallet(internalBpiSubjectPrivateKey, undefined);
@@ -165,7 +204,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string
     .send({
       message: nonceResponse.text,
       signature: signature,
-      publicKey: internalBpiSubjectPublicKey,
+      publicKey: internalBpiSubjectEcdsaPublicKey,
     })
     .expect(201);
 
@@ -174,7 +213,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string
 
 async function createExternalBpiSubjectAndReturnId(
   bpiSubjectName: string,
-  pk: string,
+  pk: object[],
 ): Promise<string> {
   const createdBpiSubjectResponse = await request(server)
     .post('/subjects')
@@ -296,8 +335,8 @@ async function createTransactionAndReturnId(
   toSubjectAccountId: string,
   payload: string,
 ): Promise<string> {
-  const signer = new ethers.Wallet(fromPrivatekey, undefined);
-  const signature = await signer.signMessage(payload);
+  //Eddsa signature
+  const signature = await createEddsaSignature(payload, fromPrivatekey);
 
   const createdTransactionResponse = await request(server)
     .post('/transactions')
@@ -333,4 +372,14 @@ async function fetchBpiAccount(bpiAccountId: string): Promise<any> {
     .expect(200);
 
   return JSON.parse(getBpiAccountResponse.text);
+}
+
+async function createEddsaPrivateKey(
+  ecdsaPublicKeyOwnerEthereumAccount: string,
+  signer: ethers.Wallet,
+): Promise<string> {
+  const message = keccak256(ecdsaPublicKeyOwnerEthereumAccount);
+  const eddsaPrivateKey = await signer.signMessage(message);
+
+  return eddsaPrivateKey;
 }
