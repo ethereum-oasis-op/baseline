@@ -396,3 +396,19 @@ async function createEddsaPublicKey(eddsaPrivateKey: string): Promise<string> {
 
   return eddsaPublicKey;
 }
+
+async function createEddsaSignature(
+  payload: any,
+  eddsaPrivateKey: string,
+): Promise<string> {
+  const eddsa = await circomlib.buildEddsa();
+  const hashedPayload = crypto
+    .createHash('sha256')
+    .update(JSON.stringify(payload))
+    .digest();
+
+  const eddsaSignature = eddsa.signPedersen(eddsaPrivateKey, hashedPayload);
+  const packedSignature = eddsa.packSignature(eddsaSignature);
+  const signature = Buffer.from(packedSignature).toString('hex');
+  return signature;
+}
