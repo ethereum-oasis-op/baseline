@@ -89,13 +89,13 @@ jobs:
         working-directory: examples/bri-3
         run: npm run lint:check
 
-      - name: Run tests
-        working-directory: examples/bri-3
-        run: npm run test
-
       - name: Run prisma generate
         working-directory: examples/bri-3
         run: npm run prisma:generate
+
+      - name: Run tests
+        working-directory: examples/bri-3
+        run: npm run test
 
       - name: Run prisma migrate
         working-directory: examples/bri-3
