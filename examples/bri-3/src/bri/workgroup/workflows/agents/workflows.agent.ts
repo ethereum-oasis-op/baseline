@@ -10,9 +10,11 @@ import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.ag
 import { Workstep } from '../../worksteps/models/workstep';
 import {
   BPI_ACCOUNT_OWNERS_NOT_WORKGROUP_PARTICIPANTS,
-  WORKFLOW_NOT_FOUND_ERR_MESSAGE,
-  WORKSTEP_NOT_FOUND_ERR_MESSAGE,
+  NOT_FOUND_ERR_MESSAGE as WORKFLOW_NOT_FOUND_ERR_MESSAGE,
 } from '../api/err.messages';
+import {
+  NOT_FOUND_ERR_MESSAGE as WORKSTEP_NOT_FOUND_ERR_MESSAGE
+} from '../../worksteps/api/err.messages';
 import { Workflow } from '../models/workflow';
 import { WorkflowStorageAgent } from './workflowsStorage.agent';
 import { BpiAccount } from 'src/bri/state/bpiAccounts/models/bpiAccount';

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
-import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
 
 @Injectable()
@@ -21,7 +21,7 @@ export class WorkflowStorageAgent {
     });
 
     if (!workflowModel) {
-      throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
     return this.mapper.map(workflowModel, Workflow);
