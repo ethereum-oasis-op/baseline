@@ -278,7 +278,7 @@ describe('Transaction Agent', () => {
       bpiSubjectAccount1 as ModelBpiSubjectAccount,
       bpiSubjectAccount2 as ModelBpiSubjectAccount,
       'transaction payload',
-      'wrong sig',
+      'correct sig',
       TransactionStatus.Executed,
     );
 
