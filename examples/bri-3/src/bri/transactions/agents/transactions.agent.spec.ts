@@ -120,9 +120,11 @@ beforeEach(async () => {
     data: {
       nonce: 0,
       ownerBpiSubjectAccounts: {
-        connect: [{
-          id: bpiSubjectAccount1.id,
-        }],
+        connect: [
+          {
+            id: bpiSubjectAccount1.id,
+          },
+        ],
       },
     },
   });
