@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [20.0.0]
+        node: [17.0.0]
 
     services:
       postgres:
