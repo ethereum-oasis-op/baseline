@@ -4,7 +4,7 @@ import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
-import { PublicKey } from '../models/publicKey';
+import { PublicKey, KeyType } from '../models/publicKey';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -67,7 +67,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
 
   async storePublicKey(
     id: string,
-    type: string,
+    type: KeyType,
     value: string,
     bpiSubjectId: string,
   ): Promise<void> {
@@ -82,7 +82,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
   }
 
   async updatePublicKey(
-    type: string,
+    type: KeyType,
     value: string,
     bpiSubjectId: string,
   ): Promise<PublicKey> {

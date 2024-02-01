@@ -1,12 +1,16 @@
 import { AutoMap } from '@automapper/classes';
 import { BpiSubject } from './bpiSubject';
 
+export enum KeyType {
+  ECDSA = 'ECDSA',
+  EDDSA = 'EDDSA',
+}
 export class PublicKey {
   @AutoMap()
   id: string;
 
   @AutoMap()
-  type: string;
+  type: KeyType;
 
   @AutoMap()
   value: string;
@@ -17,14 +21,14 @@ export class PublicKey {
   @AutoMap()
   bpiSubject: BpiSubject;
 
-  constructor(id: string, type: string, value: string, bpiSubjectId: string) {
+  constructor(id: string, type: KeyType, value: string, bpiSubjectId: string) {
     this.id = id;
     this.type = type;
     this.value = value;
     this.bpiSubjectId = bpiSubjectId;
   }
 
-  public updateType(newType: string): void {
+  public updateType(newType: KeyType): void {
     this.type = newType;
   }
 
