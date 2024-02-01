@@ -153,7 +153,7 @@ model BpiAccountStateTreeLeafValue {
 
 model PublicKey {
   id            String      @id @default(uuid())
-  type          String
+  type          KeyType
   value         String      @unique
   bpiSubjectId  String
   bpiSubject    BpiSubject  @relation(fields: [bpiSubjectId], references: [id])
@@ -163,4 +163,9 @@ model PublicKey {
 enum WorkgroupStatus {
   ACTIVE
   ARCHIVED
+}
+
+enum KeyType {
+  ECDSA
+  EDDSA
 }
