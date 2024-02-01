@@ -149,16 +149,18 @@ export class BpiSubjectStorageAgent extends PrismaService {
     });
   }
 
-  async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
-    const bpiSubjectKey = await this.prisma.publicKey.findUnique({
-      where: { value: publicKey },
-    });
-
-    if (!bpiSubjectKey) {
-      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
-    }
-    const bpiSubjectModel = await this.prisma.bpiSubject.findFirst({
-      where: { id: bpiSubjectKey.id },
+  async getBpiSubjectByPublicKey(publicKeyValue: string): Promise<BpiSubject> {
+    const bpiSubjectModel = await this.prisma.bpiSubject.findMany({
+      where: {
+        publicKey: {
+          some: {
+            value: publicKeyValue,
+          },
+        },
+      },
+      include: {
+        publicKey: true,
+      },
     });
 
     if (!bpiSubjectModel) {
