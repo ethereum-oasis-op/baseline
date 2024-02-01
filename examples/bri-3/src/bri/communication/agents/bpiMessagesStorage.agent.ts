@@ -1,14 +1,13 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
+import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
 import { EncryptionService } from '../../../shared/encryption/encryption.service';
-import { BpiMessage } from '../models/bpiMessage';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
+import { BpiMessage } from '../models/bpiMessage';
 
 @Injectable()
 export class BpiMessageStorageAgent {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private readonly mapper: PrismaMapper,
     private readonly encryptionService: EncryptionService,
     private readonly prisma: PrismaService,
   ) {}
@@ -23,7 +22,7 @@ export class BpiMessageStorageAgent {
       return undefined;
     }
 
-    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
+    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage);
     bpiMessage.updateContent(
       await this.encryptionService.decrypt(bpiMessage.content),
     );
@@ -35,7 +34,7 @@ export class BpiMessageStorageAgent {
     const bpiMessageModels = await this.prisma.message.findMany();
 
     return bpiMessageModels.map((bpiMessageModel) => {
-      return this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
+      return this.mapper.map(bpiMessageModel, BpiMessage);
     });
   }
 
@@ -52,7 +51,7 @@ export class BpiMessageStorageAgent {
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
-    return this.mapper.map(newBpiMessageModel, BpiMessage, BpiMessage);
+    return this.mapper.map(newBpiMessageModel, BpiMessage);
   }
 
   async updateBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
@@ -69,7 +68,7 @@ export class BpiMessageStorageAgent {
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
-    return this.mapper.map(updatedBpiMessageModel, BpiMessage, BpiMessage);
+    return this.mapper.map(updatedBpiMessageModel, BpiMessage);
   }
 
   async deleteBpiMessage(bpiMessage: BpiMessage): Promise<void> {

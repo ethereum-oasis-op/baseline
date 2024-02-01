@@ -1,8 +1,7 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -10,7 +9,7 @@ import { PrismaService } from '../../../../shared/prisma/prisma.service';
 @Injectable()
 export class BpiSubjectAccountStorageAgent {
   constructor(
-    @InjectMapper() private readonly mapper: Mapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -27,11 +26,7 @@ export class BpiSubjectAccountStorageAgent {
       return undefined;
     }
 
-    return this.mapper.map(
-      bpiSubjectAccountModel,
-      BpiSubjectAccount,
-      BpiSubjectAccount,
-    );
+    return this.mapper.map(bpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async getAllBpiSubjectAccounts(): Promise<BpiSubjectAccount[]> {
@@ -40,7 +35,7 @@ export class BpiSubjectAccountStorageAgent {
         include: { ownerBpiSubject: true, creatorBpiSubject: true },
       });
     return bpiSubjectAccountsModels.map((bp) => {
-      return this.mapper.map(bp, BpiSubjectAccount, BpiSubjectAccount);
+      return this.mapper.map(bp, BpiSubjectAccount);
     });
   }
 
@@ -60,11 +55,7 @@ export class BpiSubjectAccountStorageAgent {
         include: { ownerBpiSubject: true, creatorBpiSubject: true },
       });
 
-    return this.mapper.map(
-      newBpiSubjectAccountModel,
-      BpiSubjectAccount,
-      BpiSubjectAccount,
-    );
+    return this.mapper.map(newBpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async updateBpiSubjectAccount(
@@ -84,11 +75,7 @@ export class BpiSubjectAccountStorageAgent {
         include: { ownerBpiSubject: true, creatorBpiSubject: true },
       });
 
-    return this.mapper.map(
-      newBpiSubjectAccountModel,
-      BpiSubjectAccount,
-      BpiSubjectAccount,
-    );
+    return this.mapper.map(newBpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async deleteBpiSubjectAccount(

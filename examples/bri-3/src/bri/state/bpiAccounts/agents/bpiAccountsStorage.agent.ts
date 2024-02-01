@@ -1,12 +1,11 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import MerkleTree from 'merkletreejs';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { Witness } from '../../../zeroKnowledgeProof/models/witness';
+import { StateTreeLeafValueContent } from '../../models/stateTreeLeafValueContent';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiAccount } from '../models/bpiAccount';
-import { StateTreeLeafValueContent } from '../../models/stateTreeLeafValueContent';
-import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -14,7 +13,7 @@ import { PrismaService } from '../../../../shared/prisma/prisma.service';
 @Injectable()
 export class BpiAccountStorageAgent {
   constructor(
-    @InjectMapper() private readonly mapper: Mapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -35,7 +34,7 @@ export class BpiAccountStorageAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(bpiAccountModel, BpiAccount, BpiAccount);
+    return this.mapper.map(bpiAccountModel, BpiAccount);
   }
 
   async getAllBpiAccounts(): Promise<BpiAccount[]> {
@@ -51,7 +50,7 @@ export class BpiAccountStorageAgent {
     });
 
     return bpiAccountModels.map((bp) => {
-      return this.mapper.map(bp, BpiAccount, BpiAccount);
+      return this.mapper.map(bp, BpiAccount);
     });
   }
 
@@ -88,7 +87,7 @@ export class BpiAccountStorageAgent {
       },
     });
 
-    return this.mapper.map(newBpiAccountModel, BpiAccount, BpiAccount);
+    return this.mapper.map(newBpiAccountModel, BpiAccount);
   }
 
   async updateBpiAccount(bpiAccount: BpiAccount): Promise<BpiAccount> {
@@ -102,7 +101,7 @@ export class BpiAccountStorageAgent {
       },
     });
 
-    return this.mapper.map(newBpiAccountModel, BpiAccount, BpiAccount);
+    return this.mapper.map(newBpiAccountModel, BpiAccount);
   }
 
   async deleteBpiAccount(bpiAccount: BpiAccount): Promise<void> {
@@ -141,10 +140,6 @@ export class BpiAccountStorageAgent {
       return undefined;
     }
 
-    return this.mapper.map(
-      stateLeafValues,
-      StateTreeLeafValueContent,
-      StateTreeLeafValueContent,
-    );
+    return this.mapper.map(stateLeafValues, StateTreeLeafValueContent);
   }
 }

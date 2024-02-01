@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { MerkleModule } from '../../merkleTree/merkle.module';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { SubjectAccountModule } from '../../identity/bpiSubjectAccounts/subjectAccounts.module';
+import { MerkleModule } from '../../merkleTree/merkle.module';
 import { AccountsProfile } from './accounts.profile';
 import { BpiAccountAgent } from './agents/bpiAccounts.agent';
 import { BpiAccountStorageAgent } from './agents/bpiAccountsStorage.agent';
@@ -11,7 +12,6 @@ import { DeleteBpiAccountCommandHandler } from './capabilities/deleteBpiAccount/
 import { GetAllBpiAccountsQueryHandler } from './capabilities/getAllBpiAccounts/getAllBpiAccountQuery.handler';
 import { GetBpiAccountByIdQueryHandler } from './capabilities/getBpiAccountById/getBpiAccountByIdQuery.handler';
 import { UpdateBpiAccountCommandHandler } from './capabilities/updateBpiAccount/updateBpiAccountCommand.handler';
-import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateBpiAccountCommandHandler,

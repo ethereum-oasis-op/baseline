@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { SubjectModule } from '../bpiSubjects/subjects.module';
 import { BpiSubjectAccountAgent } from './agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from './agents/bpiSubjectAccountsStorage.agent';
@@ -10,7 +11,6 @@ import { GetAllBpiSubjectAccountsQueryHandler } from './capabilities/getAllBpiSu
 import { GetBpiSubjectAccountByIdQueryHandler } from './capabilities/getBpiSubjectAccountById/getBpiSubjectAccountByIdQuery.handler';
 import { UpdateBpiSubjectAccountCommandHandler } from './capabilities/updateBpiSubjectAccount/updateBpiSubjectAccountCommand.handler';
 import { SubjectAccountsProfile } from './subjectAccounts.profile';
-import { PrismaModule } from '../../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateBpiSubjectAccountCommandHandler,

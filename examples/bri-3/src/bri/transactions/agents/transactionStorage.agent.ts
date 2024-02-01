@@ -1,15 +1,14 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '..//api/err.messages';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
-import { PrismaService } from '../../../shared/prisma/prisma.service';
 
 @Injectable()
 export class TransactionStorageAgent {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -18,7 +17,7 @@ export class TransactionStorageAgent {
       include: { fromBpiSubjectAccount: true, toBpiSubjectAccount: true },
     });
     return transactionModels.map((transactionModel) => {
-      return this.mapper.map(transactionModel, Transaction, Transaction);
+      return this.mapper.map(transactionModel, Transaction);
     });
   }
 
@@ -45,7 +44,7 @@ export class TransactionStorageAgent {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(transactionModel, Transaction, Transaction);
+    return this.mapper.map(transactionModel, Transaction);
   }
 
   async getTopNTransactionsByStatus(
@@ -72,7 +71,7 @@ export class TransactionStorageAgent {
     });
 
     return transactionModels.map((transactionModel) => {
-      return this.mapper.map(transactionModel, Transaction, Transaction);
+      return this.mapper.map(transactionModel, Transaction);
     });
   }
 
@@ -105,7 +104,7 @@ export class TransactionStorageAgent {
       },
     });
 
-    return this.mapper.map(newTransactionModel, Transaction, Transaction);
+    return this.mapper.map(newTransactionModel, Transaction);
   }
 
   async updateTransaction(transaction: Transaction): Promise<Transaction> {
@@ -117,7 +116,7 @@ export class TransactionStorageAgent {
       },
     });
 
-    return this.mapper.map(updatedTransactionModel, Transaction, Transaction);
+    return this.mapper.map(updatedTransactionModel, Transaction);
   }
 
   async updateTransactionStatus(
@@ -132,7 +131,7 @@ export class TransactionStorageAgent {
       },
     });
 
-    return this.mapper.map(updatedTransaction, Transaction, Transaction);
+    return this.mapper.map(updatedTransaction, Transaction);
   }
 
   async deleteTransaction(transaction: Transaction): Promise<void> {

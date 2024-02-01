@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { EncryptionModule } from '../../shared/encryption/encryption.module';
 import { LoggingModule } from '../../shared/logging/logging.module';
+import { PrismaModule } from '../../shared/prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
 import { SubjectModule } from '../identity/bpiSubjects/subjects.module';
 import { SubjectsProfile } from '../identity/bpiSubjects/subjects.profile';
@@ -16,7 +17,6 @@ import { GetBpiMessageByIdQueryHandler } from './capabilities/getBpiMessageById/
 import { ProcessInboundMessageCommandHandler } from './capabilities/processInboundMessage/processInboundMessageCommand.handler';
 import { UpdateBpiMessageCommandHandler } from './capabilities/updateBpiMessage/updateBpiMessageCommand.handler';
 import { CommunicationProfile } from './communicaton.profile';
-import { PrismaModule } from '../../shared/prisma/prisma.module';
 
 export const CommandHandlers = [
   CreateBpiMessageCommandHandler,

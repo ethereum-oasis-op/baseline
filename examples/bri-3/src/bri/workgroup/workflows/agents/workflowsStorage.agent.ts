@@ -1,14 +1,13 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
-import { PrismaService } from '../../../../shared/prisma/prisma.service';
 
 @Injectable()
 export class WorkflowStorageAgent {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private readonly mapper: PrismaMapper,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -25,7 +24,7 @@ export class WorkflowStorageAgent {
       throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(workflowModel, Workflow, Workflow);
+    return this.mapper.map(workflowModel, Workflow);
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
@@ -33,7 +32,7 @@ export class WorkflowStorageAgent {
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return this.mapper.map(w, Workflow, Workflow);
+      return this.mapper.map(w, Workflow);
     });
   }
 
@@ -45,7 +44,7 @@ export class WorkflowStorageAgent {
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return this.mapper.map(w, Workflow, Workflow);
+      return this.mapper.map(w, Workflow);
     });
   }
 
@@ -72,7 +71,7 @@ export class WorkflowStorageAgent {
       },
     });
 
-    return this.mapper.map(newWorkflowModel, Workflow, Workflow);
+    return this.mapper.map(newWorkflowModel, Workflow);
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
@@ -96,7 +95,7 @@ export class WorkflowStorageAgent {
       },
     });
 
-    return this.mapper.map(updatedWorkflowModel, Workflow, Workflow);
+    return this.mapper.map(updatedWorkflowModel, Workflow);
   }
 
   async deleteWorkflow(workflow: Workflow): Promise<void> {
