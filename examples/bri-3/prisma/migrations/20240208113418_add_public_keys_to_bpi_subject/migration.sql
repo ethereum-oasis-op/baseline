@@ -5,7 +5,7 @@
 
 */
 -- CreateEnum
-CREATE TYPE "KeyType" AS ENUM ('ECDSA', 'EDDSA');
+CREATE TYPE "PublicKeyType" AS ENUM ('ECDSA', 'EDDSA');
 
 -- AlterTable
 ALTER TABLE "BpiSubject" DROP COLUMN "publicKey";
@@ -13,7 +13,7 @@ ALTER TABLE "BpiSubject" DROP COLUMN "publicKey";
 -- CreateTable
 CREATE TABLE "PublicKey" (
     "id" TEXT NOT NULL,
-    "type" "KeyType" NOT NULL,
+    "type" "PublicKeyType" NOT NULL,
     "value" TEXT NOT NULL,
     "bpiSubjectId" TEXT NOT NULL,
 
