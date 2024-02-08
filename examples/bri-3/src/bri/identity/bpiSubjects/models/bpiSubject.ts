@@ -1,7 +1,7 @@
 import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
 import { BpiSubjectRole } from './bpiSubjectRole';
-import { KeyType, PublicKey } from './publicKey';
+import { PublicKeyType, PublicKey } from './publicKey';
 
 export class BpiSubject {
   @AutoMap()
@@ -44,7 +44,7 @@ export class BpiSubject {
   }
 
   public updatePublicKey(newPk: PublicKey): void {
-    this.publicKeys.map((key) =>
+    this.publicKeys = this.publicKeys.map((key) =>
       key.type == newPk.type ? (key = newPk) : key,
     );
   }
@@ -55,7 +55,7 @@ export class BpiSubject {
 
   public getBpiSubjectDid(): string {
     const ecdsaPublicKey = this.publicKeys.filter(
-      (key) => key.type == KeyType.ECDSA,
+      (key) => key.type == PublicKeyType.ECDSA,
     )[0];
     return `did:ethr:0x5:${ecdsaPublicKey.value}`;
   }
