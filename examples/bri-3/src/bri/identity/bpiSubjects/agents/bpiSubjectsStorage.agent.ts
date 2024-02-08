@@ -107,7 +107,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
           }),
         },
         publicKey: {
-          connect: bpiSubject.publicKey.map((pk) => {
+          connect: bpiSubject.publicKeys.map((pk) => {
             return {
               id: pk.id,
             };
@@ -132,7 +132,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
           }),
         },
         publicKey: {
-          connect: bpiSubject.publicKey.map((pk) => {
+          connect: bpiSubject.publicKeys.map((pk) => {
             return {
               id: pk.id,
             };
