@@ -43,10 +43,7 @@ describe('SRI use-case end-to-end test', () => {
     await app.init();
     server = app.getHttpServer();
 
-    const supplierWallet = new ethers.Wallet(
-      supplierBpiSubjectEcdsaPrivateKey,
-      undefined,
-    );
+    const supplierWallet = new ethers.Wallet(supplierBpiSubjectEcdsaPrivateKey);
     supplierBpiSubjectEddsaPrivateKey = await createEddsaPrivateKey(
       supplierBpiSubjectEcdsaPublicKey,
       supplierWallet,
