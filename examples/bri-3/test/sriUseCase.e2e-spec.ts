@@ -4,9 +4,6 @@ import { ethers } from 'ethers';
 import * as request from 'supertest';
 import { v4 } from 'uuid';
 import { AppModule } from '../src/app.module';
-import { keccak256 } from 'ethers/lib/utils';
-import * as circomlib from 'circomlibjs';
-import * as crypto from 'crypto';
 import {
   supplierBpiSubjectEcdsaPublicKey,
   supplierBpiSubjectEcdsaPrivateKey,
@@ -15,6 +12,11 @@ import {
   internalBpiSubjectEcdsaPublicKey,
   internalBpiSubjectEcdsaPrivateKey,
 } from '../src/shared/testing/constants';
+import {
+  createEddsaPrivateKey,
+  createEddsaPublicKey,
+  createEddsaSignature,
+} from '../src/shared/testing/utils';
 
 jest.setTimeout(120000);
 
@@ -367,43 +369,4 @@ async function fetchBpiAccount(bpiAccountId: string): Promise<any> {
     .expect(200);
 
   return JSON.parse(getBpiAccountResponse.text);
-}
-
-async function createEddsaPrivateKey(
-  ecdsaPublicKeyOwnerEthereumAccount: string,
-  signer: ethers.Wallet,
-): Promise<string> {
-  const message = keccak256(ecdsaPublicKeyOwnerEthereumAccount);
-  const eddsaPrivateKey = await signer.signMessage(message);
-
-  return eddsaPrivateKey;
-}
-
-async function createEddsaPublicKey(eddsaPrivateKey: string): Promise<string> {
-  const eddsa = await circomlib.buildEddsa();
-  const babyJub = await circomlib.buildBabyjub();
-
-  const privateKeyBytes = Buffer.from(eddsaPrivateKey, 'hex');
-  const publicKeyPoints = eddsa.prv2pub(privateKeyBytes);
-  const eddsaPublicKey = Buffer.from(
-    babyJub.packPoint(publicKeyPoints),
-  ).toString('hex');
-
-  return eddsaPublicKey;
-}
-
-async function createEddsaSignature(
-  payload: any,
-  eddsaPrivateKey: string,
-): Promise<string> {
-  const eddsa = await circomlib.buildEddsa();
-  const hashedPayload = crypto
-    .createHash('sha256')
-    .update(JSON.stringify(payload))
-    .digest();
-
-  const eddsaSignature = eddsa.signPedersen(eddsaPrivateKey, hashedPayload);
-  const packedSignature = eddsa.packSignature(eddsaSignature);
-  const signature = Buffer.from(packedSignature).toString('hex');
-  return signature;
 }
