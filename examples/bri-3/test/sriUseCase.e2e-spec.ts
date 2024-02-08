@@ -216,7 +216,7 @@ async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string
 
 async function createExternalBpiSubjectAndReturnId(
   bpiSubjectName: string,
-  pk: object[],
+  pk: { type: string; value: string }[],
 ): Promise<string> {
   const createdBpiSubjectResponse = await request(server)
     .post('/subjects')
