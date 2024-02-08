@@ -14,19 +14,19 @@ let accessToken: string;
 let app: INestApplication;
 let server: any;
 
-const supplierBPiSubjectEcdsaPublicKey =
+const supplierBpiSubjectEcdsaPublicKey =
   '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539';
-const supplierBPiSubjectEcdsaPrivateKey =
+const supplierBpiSubjectEcdsaPrivateKey =
   '0x93b7ed4405c73a1dbd8936e67419ee4e711ed44225aeabe9a5acf49a9ec90e68';
-const buyerBPiSubjectEcdsaPublicKey =
+const buyerBpiSubjectEcdsaPublicKey =
   '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980';
-const buyerBPiSubjectEcdsaPrivateKey =
+const buyerBpiSubjectEcdsaPrivateKey =
   '0x32c8d8f4e53cd1920d1ad22b9d51a7b28216337f2b664fb8d33bbcfc3c455c62';
 
-let supplierBPiSubjectEddsaPublicKey: string;
-let supplierBPiSubjectEddsaPrivateKey: string;
-let buyerBPiSubjectEddsaPublicKey: string;
-let buyerBPiSubjectEddsaPrivateKey: string;
+let supplierBpiSubjectEddsaPublicKey: string;
+let supplierBpiSubjectEddsaPrivateKey: string;
+let buyerBpiSubjectEddsaPublicKey: string;
+let buyerBpiSubjectEddsaPrivateKey: string;
 let createdWorkgroupId: string;
 let createdWorkstepId: string;
 let createdWorkflowId: string;
@@ -44,29 +44,29 @@ describe('SRI use-case end-to-end test', () => {
     server = app.getHttpServer();
 
     const supplierWallet = new ethers.Wallet(
-      supplierBPiSubjectEcdsaPrivateKey,
+      supplierBpiSubjectEcdsaPrivateKey,
       undefined,
     );
-    supplierBPiSubjectEddsaPrivateKey = await createEddsaPrivateKey(
-      supplierBPiSubjectEcdsaPublicKey,
+    supplierBpiSubjectEddsaPrivateKey = await createEddsaPrivateKey(
+      supplierBpiSubjectEcdsaPublicKey,
       supplierWallet,
     );
 
-    supplierBPiSubjectEddsaPublicKey = await createEddsaPublicKey(
-      supplierBPiSubjectEddsaPrivateKey,
+    supplierBpiSubjectEddsaPublicKey = await createEddsaPublicKey(
+      supplierBpiSubjectEddsaPrivateKey,
     );
 
     const buyerWallet = new ethers.Wallet(
-      buyerBPiSubjectEcdsaPrivateKey,
+      buyerBpiSubjectEcdsaPrivateKey,
       undefined,
     );
-    buyerBPiSubjectEddsaPrivateKey = await createEddsaPrivateKey(
-      buyerBPiSubjectEcdsaPublicKey,
+    buyerBpiSubjectEddsaPrivateKey = await createEddsaPrivateKey(
+      buyerBpiSubjectEcdsaPublicKey,
       buyerWallet,
     );
 
-    buyerBPiSubjectEddsaPublicKey = await createEddsaPublicKey(
-      buyerBPiSubjectEddsaPrivateKey,
+    buyerBpiSubjectEddsaPublicKey = await createEddsaPublicKey(
+      buyerBpiSubjectEddsaPrivateKey,
     );
   });
 
@@ -83,8 +83,8 @@ describe('SRI use-case end-to-end test', () => {
       await createExternalBpiSubjectAndReturnId(
         'External Bpi Subject - Supplier',
         [
-          { type: 'ecdsa', value: supplierBPiSubjectEcdsaPublicKey },
-          { type: 'eddsa', value: supplierBPiSubjectEddsaPublicKey },
+          { type: 'ecdsa', value: supplierBpiSubjectEcdsaPublicKey },
+          { type: 'eddsa', value: supplierBpiSubjectEddsaPublicKey },
         ],
       );
 
@@ -97,8 +97,8 @@ describe('SRI use-case end-to-end test', () => {
     const createdBpiSubjectBuyerId = await createExternalBpiSubjectAndReturnId(
       'External Bpi Subject 2 - Buyer',
       [
-        { type: 'ecdsa', value: buyerBPiSubjectEcdsaPublicKey },
-        { type: 'eddsa', value: buyerBPiSubjectEddsaPublicKey },
+        { type: 'ecdsa', value: buyerBpiSubjectEcdsaPublicKey },
+        { type: 'eddsa', value: buyerBpiSubjectEddsaPublicKey },
       ],
     );
 
@@ -152,7 +152,7 @@ describe('SRI use-case end-to-end test', () => {
       createdWorkflowId,
       createdWorkstepId,
       createdBpiSubjectAccountSupplierId,
-      supplierBPiSubjectEddsaPrivateKey,
+      supplierBpiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
       `{
         "supplierInvoiceID": "INV123",
