@@ -14,7 +14,7 @@ export class BpiSubject {
   description: string;
 
   @AutoMap()
-  publicKey: PublicKey[];
+  publicKeys: PublicKey[];
 
   @AutoMap()
   loginNonce: string;
@@ -25,13 +25,13 @@ export class BpiSubject {
     id: string,
     name: string,
     description: string,
-    publicKey: PublicKey[],
+    publicKeys: PublicKey[],
     roles: BpiSubjectRole[],
   ) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.publicKey = publicKey;
+    this.publicKeys = publicKeys;
     this.roles = roles;
   }
 
@@ -44,7 +44,9 @@ export class BpiSubject {
   }
 
   public updatePublicKey(newPk: PublicKey): void {
-    this.publicKey.map((key) => (key.type == newPk.type ? (key = newPk) : key));
+    this.publicKeys.map((key) =>
+      key.type == newPk.type ? (key = newPk) : key,
+    );
   }
 
   public updateLoginNonce(): void {
@@ -52,7 +54,7 @@ export class BpiSubject {
   }
 
   public getBpiSubjectDid(): string {
-    const ecdsaPublicKey = this.publicKey.filter(
+    const ecdsaPublicKey = this.publicKeys.filter(
       (key) => key.type == KeyType.ECDSA,
     )[0];
     return `did:ethr:0x5:${ecdsaPublicKey.value}`;

@@ -4,13 +4,16 @@
   - You are about to drop the column `publicKey` on the `BpiSubject` table. All the data in the column will be lost.
 
 */
+-- CreateEnum
+CREATE TYPE "KeyType" AS ENUM ('ECDSA', 'EDDSA');
+
 -- AlterTable
 ALTER TABLE "BpiSubject" DROP COLUMN "publicKey";
 
 -- CreateTable
 CREATE TABLE "PublicKey" (
     "id" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
+    "type" "KeyType" NOT NULL,
     "value" TEXT NOT NULL,
     "bpiSubjectId" TEXT NOT NULL,
 
