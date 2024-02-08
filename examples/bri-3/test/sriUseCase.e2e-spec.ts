@@ -7,21 +7,20 @@ import { AppModule } from '../src/app.module';
 import { keccak256 } from 'ethers/lib/utils';
 import * as circomlib from 'circomlibjs';
 import * as crypto from 'crypto';
+import {
+  supplierBpiSubjectEcdsaPublicKey,
+  supplierBpiSubjectEcdsaPrivateKey,
+  buyerBpiSubjectEcdsaPublicKey,
+  buyerBpiSubjectEcdsaPrivateKey,
+  internalBpiSubjectEcdsaPublicKey,
+  internalBpiSubjectEcdsaPrivateKey,
+} from '../src/shared/testing/constants';
 
 jest.setTimeout(120000);
 
 let accessToken: string;
 let app: INestApplication;
 let server: any;
-
-const supplierBpiSubjectEcdsaPublicKey =
-  '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539';
-const supplierBpiSubjectEcdsaPrivateKey =
-  '0x93b7ed4405c73a1dbd8936e67419ee4e711ed44225aeabe9a5acf49a9ec90e68';
-const buyerBpiSubjectEcdsaPublicKey =
-  '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980';
-const buyerBpiSubjectEcdsaPrivateKey =
-  '0x32c8d8f4e53cd1920d1ad22b9d51a7b28216337f2b664fb8d33bbcfc3c455c62';
 
 let supplierBpiSubjectEddsaPublicKey: string;
 let supplierBpiSubjectEddsaPrivateKey: string;
@@ -181,12 +180,8 @@ describe('SRI use-case end-to-end test', () => {
 });
 
 async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string> {
-  // These two values must be inline with the value for the bpiAdmin from seed.ts
+  // internalBpiSubjectEcdsaPublicKey & internalBpiSubjectEcdsaPrivateKey must be inline with the value for the bpiAdmin from seed.ts
   // These values are used for testing purposes only
-  const internalBpiSubjectEcdsaPublicKey =
-    '0x044e851fa6118d0d33f11ebf8d4cae2a25dca959f06c1ab87b8fec9ccbf0ca0021b7efc27c786f9480f9f11cfe8df1ae991329654308611148a35a2277ba5909fe';
-  const internalBpiSubjectEcdsaPrivateKey =
-    '0x0fbdb56ab0fecb2f406fa807d9e6558baedacc1c15c0e2703b77d4c08441e4fe';
 
   const nonceResponse = await request(server)
     .post('/auth/nonce')
