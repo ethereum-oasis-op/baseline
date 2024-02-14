@@ -27,12 +27,11 @@ export class BpiSubjectAgent {
   public async createNewExternalBpiSubject(
     name: string,
     description: string,
-    publicKey: string,
   ): Promise<BpiSubject> {
     const externalRole = await this.storageAgent.getBpiSubjectRoleByName(
       BpiSubjectRoleName.EXTERNAL_BPI_SUBJECT,
     );
-    return new BpiSubject(v4(), name, description, publicKey, [externalRole]);
+    return new BpiSubject(v4(), name, description, [], [externalRole]);
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(

@@ -43,7 +43,7 @@ export class SubjectController {
       new CreateBpiSubjectCommand(
         requestDto.name,
         requestDto.desc,
-        requestDto.publicKey,
+        requestDto.publicKeys,
       ),
     );
   }
