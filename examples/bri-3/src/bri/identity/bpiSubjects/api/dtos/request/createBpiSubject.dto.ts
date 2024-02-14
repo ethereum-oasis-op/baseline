@@ -8,5 +8,10 @@ export class CreateBpiSubjectDto {
   desc: string;
 
   @IsNotEmpty()
-  publicKey: string;
+  publicKeys: [
+    {
+      type: string;
+      value: string;
+    },
+  ];
 }
