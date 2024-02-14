@@ -27,7 +27,7 @@ export class UpdateBpiSubjectCommandHandler
       bpiSubjectToUpdate,
       command.name,
       command.description,
-      command.publicKey,
+      command.publicKeys,
     );
 
     const bpiSubject = await this.storageAgent.updateBpiSubject(
