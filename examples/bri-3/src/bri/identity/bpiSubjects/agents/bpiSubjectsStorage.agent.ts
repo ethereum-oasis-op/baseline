@@ -4,6 +4,7 @@ import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
 import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
+import { PublicKey, PublicKeyType } from '../models/publicKey';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
@@ -64,8 +65,37 @@ export class BpiSubjectStorageAgent extends PrismaService {
     return this.mapper.map(bpiSubjectRole, BpiSubjectRole);
   }
 
+  async storePublicKey(
+    id: string,
+    type: PublicKeyType,
+    value: string,
+    bpiSubjectId: string,
+  ): Promise<void> {
+    await this.prisma.publicKey.create({
+      data: {
+        id: id,
+        type: type,
+        value: value,
+        bpiSubjectId: bpiSubjectId,
+      },
+    });
+  }
+
+  async updatePublicKey(
+    type: PublicKeyType,
+    value: string,
+    bpiSubjectId: string,
+  ): Promise<PublicKey> {
+    const updatedPublicKey = await this.prisma.publicKey.update({
+      where: { type_bpiSubjectId: { type: type, bpiSubjectId: bpiSubjectId } },
+      data: {
+        value: value,
+      },
+    });
+
+    return this.mapper.map(updatedPublicKey, PublicKey);
+  }
   async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    bpiSubject.publicKey = bpiSubject.publicKey.toLowerCase();
     const newBpiSubjectModel = await this.prisma.bpiSubject.create({
       data: {
         ...bpiSubject,
@@ -73,6 +103,13 @@ export class BpiSubjectStorageAgent extends PrismaService {
           connect: bpiSubject.roles.map((r) => {
             return {
               id: r.id,
+            };
+          }),
+        },
+        publicKey: {
+          connect: bpiSubject.publicKeys.map((pk) => {
+            return {
+              id: pk.id,
             };
           }),
         },
@@ -94,6 +131,13 @@ export class BpiSubjectStorageAgent extends PrismaService {
             };
           }),
         },
+        publicKey: {
+          connect: bpiSubject.publicKeys.map((pk) => {
+            return {
+              id: pk.id,
+            };
+          }),
+        },
       },
     });
     return this.mapper.map(updatedBpiSubjectModel, BpiSubject);
@@ -105,15 +149,20 @@ export class BpiSubjectStorageAgent extends PrismaService {
     });
   }
 
-  async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
+  async getBpiSubjectByPublicKey(publicKeyValue: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.prisma.bpiSubject.findFirst({
       where: {
-        publicKey: publicKey,
+        publicKey: {
+          some: {
+            value: publicKeyValue,
+          },
+        },
       },
       include: {
-        roles: true,
+        publicKey: true,
       },
     });
+
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
