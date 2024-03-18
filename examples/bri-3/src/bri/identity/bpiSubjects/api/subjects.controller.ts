@@ -59,7 +59,7 @@ export class SubjectController {
         id,
         requestDto.name,
         requestDto.desc,
-        requestDto.publicKey,
+        requestDto.publicKeys,
       ),
     );
   }

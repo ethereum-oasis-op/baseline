@@ -8,6 +8,7 @@ import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
 import { Point, buildBabyjub, buildEddsa } from 'circomlibjs';
 import 'dotenv/config';
+import { PublicKeyType } from 'src/bri/identity/bpiSubjects/models/publicKey';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
@@ -47,7 +48,9 @@ export const computeEcdsaSigPublicInputs = (tx: Transaction) => {
     ethers.utils.arrayify(ethers.utils.hashMessage(tx.payload)),
   );
 
-  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
+  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(
+    (key) => key.type == PublicKeyType.ECDSA,
+  )[0].value;
 
   return computeEffectiveEcdsaSigPublicInputs(
     ecdsaSignature,
