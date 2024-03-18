@@ -8,10 +8,8 @@ export class UpdateBpiSubjectDto {
   desc: string;
 
   @IsNotEmpty()
-  publicKeys: [
-    {
-      type: string;
-      value: string;
-    },
-  ];
+  publicKeys: {
+    type: string;
+    value: string;
+  }[];
 }
