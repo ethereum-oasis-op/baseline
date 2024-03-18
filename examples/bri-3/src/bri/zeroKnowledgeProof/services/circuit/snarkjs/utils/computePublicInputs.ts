@@ -8,7 +8,7 @@ import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
 import { Point, buildBabyjub, buildEddsa } from 'circomlibjs';
 import 'dotenv/config';
-import { PublicKeyType } from 'src/bri/identity/bpiSubjects/models/publicKey';
+import { PublicKeyType } from '../../../../../identity/bpiSubjects/models/publicKey';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,

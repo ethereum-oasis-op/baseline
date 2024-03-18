@@ -4,7 +4,7 @@ import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../../agents/messaging.agent';
 import { CreateBpiMessageCommand } from './createBpiMessage.command';
-import { PublicKeyType } from 'src/bri/identity/bpiSubjects/models/publicKey';
+import { PublicKeyType } from '../../../identity/bpiSubjects/models/publicKey';
 
 @CommandHandler(CreateBpiMessageCommand)
 export class CreateBpiMessageCommandHandler

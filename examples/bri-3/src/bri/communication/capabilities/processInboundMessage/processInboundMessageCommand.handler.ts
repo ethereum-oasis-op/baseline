@@ -4,7 +4,7 @@ import { BpiMessageAgent } from '../../agents/bpiMessages.agent';
 import { BpiMessageStorageAgent } from '../../agents/bpiMessagesStorage.agent';
 import { MessagingAgent } from '../../agents/messaging.agent';
 import { ProcessInboundBpiMessageCommand } from './processInboundMessage.command';
-import { PublicKeyType } from 'src/bri/identity/bpiSubjects/models/publicKey';
+import { PublicKeyType } from '../../../identity/bpiSubjects/models/publicKey';
 
 // Difference between this and the create bpi message command handler is that this one does not
 // stop the execution flow by throwing a nestjs exception (which results in 404 response in the other handler)
