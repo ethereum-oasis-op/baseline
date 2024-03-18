@@ -32,13 +32,14 @@ export class ProcessInboundMessageCommandHandler
       return false;
     }
 
-    const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
-      command.content,
-      command.signature,
-      fromBpiSubject.publicKeys.filter(
-        (key) => key.type == PublicKeyType.ECDSA,
-      )[0].value,
-    );
+    const isSignatureValid =
+      this.authAgent.verifyEddsaSignatureAgainstPublicKey(
+        command.content,
+        command.signature,
+        fromBpiSubject.publicKeys.filter(
+          (key) => key.type == PublicKeyType.EDDSA,
+        )[0].value,
+      );
 
     if (!isSignatureValid) {
       return false;
