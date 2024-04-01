@@ -1,18 +1,17 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { PrismaMapper as Mapper } from '../../../../../shared/prisma/prisma.mapper';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BpiSubjectAgent } from '../../agents/bpiSubjects.agent';
 import { BpiSubjectStorageAgent } from '../../agents/bpiSubjectsStorage.agent';
-import { BpiSubjectDto } from '../../api/dtos/response/bpiSubject.dto';
 import { BpiSubject } from '../../models/bpiSubject';
 import { UpdateBpiSubjectCommand } from './updateBpiSubject.command';
+import { PublicKey, PublicKeyType } from '../../models/publicKey';
 
 @CommandHandler(UpdateBpiSubjectCommand)
 export class UpdateBpiSubjectCommandHandler
   implements ICommandHandler<UpdateBpiSubjectCommand>
 {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private readonly mapper: Mapper,
     private agent: BpiSubjectAgent,
     private storageAgent: BpiSubjectStorageAgent,
   ) {}
@@ -23,17 +22,39 @@ export class UpdateBpiSubjectCommandHandler
         command.id,
       );
 
+    const newPublicKeys = await Promise.all<PublicKey>(
+      command.publicKeys.map(async (key) => {
+        let publicKeyType;
+        switch (key.type.toLowerCase()) {
+          case 'ecdsa':
+            publicKeyType = PublicKeyType.ECDSA;
+            break;
+          case 'eddsa':
+            publicKeyType = PublicKeyType.EDDSA;
+            break;
+          default:
+        }
+
+        const newKey = await this.storageAgent.updatePublicKey(
+          publicKeyType,
+          key.value,
+          bpiSubjectToUpdate.id,
+        );
+
+        return newKey;
+      }),
+    );
+
     this.agent.updateBpiSubject(
       bpiSubjectToUpdate,
       command.name,
       command.description,
-      command.publicKey,
     );
 
     const bpiSubject = await this.storageAgent.updateBpiSubject(
       bpiSubjectToUpdate,
     );
 
-    return this.mapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
+    return this.mapper.map(bpiSubject, BpiSubject);
   }
 }
