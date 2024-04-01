@@ -16,10 +16,10 @@ export class PublicKey {
   value: string;
 
   @AutoMap()
-  bpiSubjectId: string;
+  bpiSubjectId?: string;
 
   @AutoMap()
-  bpiSubject: BpiSubject;
+  bpiSubject?: BpiSubject;
 
   constructor(
     id: string,
