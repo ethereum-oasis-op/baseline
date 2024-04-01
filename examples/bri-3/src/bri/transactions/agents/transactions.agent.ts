@@ -154,7 +154,7 @@ export class TransactionAgent {
     }
 
     const isSignatureValid =
-      this.authAgent.verifyEddsaSignatureAgainstPublicKey(
+      await this.authAgent.verifyEddsaSignatureAgainstPublicKey(
         tx.payload,
         tx.signature,
         tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(

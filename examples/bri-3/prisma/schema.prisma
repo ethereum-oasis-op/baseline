@@ -152,7 +152,7 @@ model BpiAccountStateTreeLeafValue {
 }
 
 model PublicKey {
-  id            String      @id @default(uuid())
+  id            String     @id @default(uuid())
   type          PublicKeyType
   value         String      @unique
   bpiSubjectId  String

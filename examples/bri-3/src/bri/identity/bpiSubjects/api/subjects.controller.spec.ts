@@ -21,22 +21,37 @@ import { AuthzModule } from '../../../authz/authz.module';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { BpiSubject } from '../models/bpiSubject';
 import { uuid } from 'uuidv4';
+import { PublicKey, PublicKeyType } from '../models/publicKey';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
+import { MerkleTreeService } from '../../../merkleTree/services/merkleTree.service';
 
 describe('SubjectController', () => {
   let sController: SubjectController;
   let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
+
+  const existingBpiSubject1Id = uuid();
+  const publicKeys1 = [
+    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', existingBpiSubject1Id),
+    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', existingBpiSubject1Id),
+  ];
   const existingBpiSubject1 = new BpiSubject(
-    uuid(),
+    existingBpiSubject1Id,
     'name',
     'description',
-    [],
+    publicKeys1,
     [],
   );
+
+  const existingBpiSubject2Id = uuid();
+  const publicKeys2 = [
+    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', existingBpiSubject2Id),
+    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', existingBpiSubject2Id),
+  ];
   const existingBpiSubject2 = new BpiSubject(
     uuid(),
     'name2',
     'description2',
-    [],
+    publicKeys2,
     [],
   );
 
@@ -59,7 +74,9 @@ describe('SubjectController', () => {
         GetAllBpiSubjectsQueryHandler,
         BpiSubjectStorageAgent,
         SubjectsProfile,
+        PrismaMapper,
         AuthzFactory,
+        MerkleTreeService,
       ],
     })
       .overrideProvider(BpiSubjectStorageAgent)
@@ -149,7 +166,6 @@ describe('SubjectController', () => {
     it('should throw BadRequest if name not provided', () => {
       // Arrange
       const requestDto = {
-        name: 'BpiSubject',
         desc: 'desc',
         publicKeys: [
           { type: 'ecdsa', value: 'ecdsaPk' },
@@ -215,14 +231,19 @@ describe('SubjectController', () => {
         desc: 'desc2',
         publicKeys: [
           { type: 'ecdsa', value: 'ecdsaPk' },
-          { type: 'ecdsa', value: 'ecdsaPk' },
+          { type: 'eddsa', value: 'eddsaPk' },
         ],
       } as UpdateBpiSubjectDto;
       subjectStorageAgentMock.updateBpiSubject.mockResolvedValueOnce({
         ...existingBpiSubject1,
         name: updateRequestDto.name,
         description: updateRequestDto.desc,
-        publicKeys: updateRequestDto.publicKeys,
+        publicKeys: [
+          new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
+          ,
+          new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+          ,
+        ],
       } as BpiSubject);
 
       // Act
@@ -235,7 +256,9 @@ describe('SubjectController', () => {
       expect(updatedBpiSubject.id).toEqual(existingBpiSubject1.id);
       expect(updatedBpiSubject.name).toEqual(updateRequestDto.name);
       expect(updatedBpiSubject.description).toEqual(updateRequestDto.desc);
-      expect(updatedBpiSubject.publicKeys).toEqual(updateRequestDto.publicKeys);
+      expect(updatedBpiSubject.publicKeys[0].value).toEqual(
+        updateRequestDto.publicKeys[0].value,
+      );
     });
   });
 

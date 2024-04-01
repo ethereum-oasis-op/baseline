@@ -1,9 +1,7 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
+import { PrismaMapper as Mapper } from '../../../../../shared/prisma/prisma.mapper';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BpiSubjectAgent } from '../../agents/bpiSubjects.agent';
 import { BpiSubjectStorageAgent } from '../../agents/bpiSubjectsStorage.agent';
-import { BpiSubjectDto } from '../../api/dtos/response/bpiSubject.dto';
 import { BpiSubject } from '../../models/bpiSubject';
 import { UpdateBpiSubjectCommand } from './updateBpiSubject.command';
 import { PublicKey, PublicKeyType } from '../../models/publicKey';
@@ -13,7 +11,7 @@ export class UpdateBpiSubjectCommandHandler
   implements ICommandHandler<UpdateBpiSubjectCommand>
 {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private readonly mapper: Mapper,
     private agent: BpiSubjectAgent,
     private storageAgent: BpiSubjectStorageAgent,
   ) {}
@@ -37,11 +35,13 @@ export class UpdateBpiSubjectCommandHandler
           default:
         }
 
-        return await this.storageAgent.updatePublicKey(
+        const newKey = await this.storageAgent.updatePublicKey(
           publicKeyType,
           key.value,
           bpiSubjectToUpdate.id,
         );
+
+        return newKey;
       }),
     );
 
@@ -49,13 +49,12 @@ export class UpdateBpiSubjectCommandHandler
       bpiSubjectToUpdate,
       command.name,
       command.description,
-      newPublicKeys,
     );
 
     const bpiSubject = await this.storageAgent.updateBpiSubject(
       bpiSubjectToUpdate,
     );
 
-    return this.mapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
+    return this.mapper.map(bpiSubject, BpiSubject);
   }
 }

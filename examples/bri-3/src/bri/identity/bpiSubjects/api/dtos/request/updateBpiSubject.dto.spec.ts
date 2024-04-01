@@ -52,9 +52,9 @@ describe('UpdateBpiSubjectDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('publicKey');
+    expect(errors[0].property).toEqual('publicKeys');
     expect(errors[0].constraints?.isNotEmpty).toContain(
-      'publicKey ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+      'publicKeys ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 

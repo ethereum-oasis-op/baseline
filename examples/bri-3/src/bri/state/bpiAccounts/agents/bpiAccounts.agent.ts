@@ -25,7 +25,8 @@ export class BpiAccountAgent {
     authorizationCondition: string,
     stateObjectProverSystem: string,
   ): BpiAccount {
-    return new BpiAccount(
+    console.log('Here Fierst');
+    const test = new BpiAccount(
       v4(),
       ownerBpiSubjectAccounts,
       authorizationCondition,
@@ -33,6 +34,8 @@ export class BpiAccountAgent {
       this.merkleTreeAgent.createNewMerkleTree([]),
       this.merkleTreeAgent.createNewMerkleTree([]),
     );
+    console.log('Here');
+    return test;
   }
 
   public async fetchUpdateCandidateAndThrowIfUpdateValidationFails(

@@ -64,11 +64,9 @@ export class BpiSubjectAgent {
     bpiSubjectToUpdate: BpiSubject,
     name: string,
     description: string,
-    publicKeys: PublicKey[],
   ) {
     bpiSubjectToUpdate.updateName(name);
     bpiSubjectToUpdate.updateDescription(description);
-    bpiSubjectToUpdate.updatePublicKeys(publicKeys);
   }
 
   public async fetchDeleteCandidateAndThrowIfDeleteValidationFails(
