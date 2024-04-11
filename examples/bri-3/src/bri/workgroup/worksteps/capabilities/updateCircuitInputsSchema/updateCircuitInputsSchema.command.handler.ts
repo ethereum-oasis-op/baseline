@@ -1,15 +1,15 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { WorkstepAgent } from '../../agents/worksteps.agent';
 import { WorkstepStorageAgent } from '../../agents/workstepsStorage.agent';
-import { SetCircuitInputsSchemaCommand } from './setCircuitInputsSchema.command';
+import { UpdateCircuitInputsSchemaCommand } from './updateCircuitInputsSchema.command';
 import { InjectMapper } from '@automapper/nestjs';
 import { Mapper } from '@automapper/core';
 import { Workstep } from '../../models/workstep';
 import { WorkstepDto } from '../../api/dtos/response/workstep.dto';
 
-@CommandHandler(SetCircuitInputsSchemaCommand)
-export class SetCircuitInputsSchemaCommandHandler
-  implements ICommandHandler<SetCircuitInputsSchemaCommand>
+@CommandHandler(UpdateCircuitInputsSchemaCommand)
+export class UpdateCircuitInputsSchemaCommandHandler
+  implements ICommandHandler<UpdateCircuitInputsSchemaCommand>
 {
   constructor(
     @InjectMapper() private readonly mapper: Mapper,
@@ -17,7 +17,7 @@ export class SetCircuitInputsSchemaCommandHandler
     private storageAgent: WorkstepStorageAgent,
   ) {}
 
-  async execute(command: SetCircuitInputsSchemaCommand) {
+  async execute(command: UpdateCircuitInputsSchemaCommand) {
     const workstepToUpdate =
       await this.agent.fetchUpdateCandidateAndThrowIfUpdateValidationFails(
         command.workstepId,

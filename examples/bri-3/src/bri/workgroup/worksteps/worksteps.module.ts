@@ -10,7 +10,7 @@ import { CreateWorkstepCommandHandler } from './capabilities/createWorkstep/crea
 import { DeleteWorkstepCommandHandler } from './capabilities/deleteWorkstep/deleteWorkstepCommand.handler';
 import { GetAllWorkstepsQueryHandler } from './capabilities/getAllWorksteps/getAllWorkstepsQuery.handler';
 import { GetWorkstepByIdQueryHandler } from './capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
-import { SetCircuitInputsSchemaCommandHandler } from './capabilities/setCircuitInputsSchema/setCircuitInputsSchema.command.handler';
+import { UpdateCircuitInputsSchemaCommandHandler } from './capabilities/updateCircuitInputsSchema/updateCircuitInputsSchema.command.handler';
 import { UpdateWorkstepCommandHandler } from './capabilities/updateWorkstep/updateWorkstep.command.handler';
 import { WorkstepProfile } from './workstep.profile';
 
@@ -18,7 +18,7 @@ export const CommandHandlers = [
   CreateWorkstepCommandHandler,
   UpdateWorkstepCommandHandler,
   DeleteWorkstepCommandHandler,
-  SetCircuitInputsSchemaCommandHandler,
+  UpdateCircuitInputsSchemaCommandHandler,
 ];
 
 export const QueryHandlers = [

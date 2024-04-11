@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CheckAuthz } from '../../../authz/guards/authz.decorator';
-import { SetCircuitInputsSchemaCommand } from '../capabilities/setCircuitInputsSchema/setCircuitInputsSchema.command';
+import { UpdateCircuitInputsSchemaCommand } from '../capabilities/updateCircuitInputsSchema/updateCircuitInputsSchema.command';
 import { CreateWorkstepCommand } from '../capabilities/createWorkstep/createWorkstep.command';
 import { DeleteWorkstepCommand } from '../capabilities/deleteWorkstep/deleteWorkstep.command';
 import { GetAllWorkstepsQuery } from '../capabilities/getAllWorksteps/getAllWorksteps.query';
@@ -80,7 +80,7 @@ export class WorkstepController {
     @Body() requestDto: SetCircuitInputsSchemaDto,
   ): Promise<WorkstepDto> {
     return await this.commandBus.execute(
-      new SetCircuitInputsSchemaCommand(id, requestDto.schema),
+      new UpdateCircuitInputsSchemaCommand(id, requestDto.schema),
     );
   }
 
