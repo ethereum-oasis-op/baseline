@@ -66,9 +66,9 @@ export class WorkstepAgent {
   }
 
   public throwIfCircuitInputTranslationSchemaInvalid(schema): void {
-    const [result, error] =
+    const [valid, error] =
       this.cips.validateCircuitInputTranslationSchema(schema);
-    if (!result) {
+    if (!valid) {
       throw new BadRequestException(error);
     }
   }
