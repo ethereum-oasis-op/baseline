@@ -70,7 +70,7 @@ model Workstep {
   workgroupId    String
   securityPolicy String
   privacyPolicy  String
-  circuitInputsTranslationSchema String?
+  circuitInputsTranslationSchema Json?
   workflow       Workflow[]
   workgroup      Workgroup  @relation(fields: [workgroupId], references: [id])
 }
