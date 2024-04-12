@@ -37,7 +37,7 @@ export class ProcessInboundTransactionCommandHandler
     const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
       command.payload,
       command.signature,
-      subjectAccounts[0].ownerBpiSubject.publicKey,
+      subjectAccounts[0].ownerBpiSubject.publicKeys[0].value,
     );
 
     if (!isSignatureValid) {

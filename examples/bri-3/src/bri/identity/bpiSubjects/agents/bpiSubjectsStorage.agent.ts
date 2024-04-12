@@ -107,11 +107,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
           }),
         },
         publicKeys: {
-          connect: bpiSubject.publicKeys.map((pk) => {
-            return {
-              id: pk.id,
-            };
-          }),
+          createMany: { data: bpiSubject.publicKeys },
         },
       },
     });

@@ -34,7 +34,7 @@ export class ProcessInboundMessageCommandHandler
     const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
       command.content,
       command.signature,
-      fromBpiSubject.publicKey,
+      fromBpiSubject.publicKeys[0].value,
     );
 
     if (!isSignatureValid) {
@@ -55,7 +55,7 @@ export class ProcessInboundMessageCommandHandler
     );
 
     await this.messagingAgent.publishMessage(
-      toBpiSubject.publicKey,
+      toBpiSubject.publicKeys[0].value,
       this.messagingAgent.serializeBpiMessage(newBpiMessage),
     );
 

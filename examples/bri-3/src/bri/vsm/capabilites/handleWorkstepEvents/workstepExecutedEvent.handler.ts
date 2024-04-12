@@ -43,10 +43,14 @@ export class WorkstepExecutedEventHandler
     );
 
     // Change channels to publish message here
-    const channels = [event.tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey];
+    const channels = [
+      event.tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys[0].value,
+    ];
 
     if (event.status == 'Success') {
-      channels.push(event.tx.toBpiSubjectAccount.ownerBpiSubject.publicKey);
+      channels.push(
+        event.tx.toBpiSubjectAccount.ownerBpiSubject.publicKeys[0].value,
+      );
     }
 
     await this.publishMessage(channels, bpiMessage);

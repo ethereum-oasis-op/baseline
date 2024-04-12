@@ -157,7 +157,7 @@ export class TransactionAgent {
     const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
       tx.payload,
       tx.signature,
-      tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
+      tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys[0].value,
     );
 
     if (!isSignatureValid) {

@@ -16,6 +16,10 @@ import {
   WorkgroupBuilder,
   WorkstepBuilder,
 } from './builders';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../bri/identity/bpiSubjects/models/publicKey';
 
 // A place to encapsulate  creation of test data objects used for controller testing.
 // These objects will later be used to mock prisma.client calls only once during test bootstrap
@@ -51,11 +55,14 @@ export class TestDataHelper {
   };
 
   public static createBpiSubject = () => {
+    const bpiSubjectId = uuid();
     const bpiSubject = new BpiSubjectBuilder()
-      .setId(uuid())
+      .setId(bpiSubjectId)
       .setName('name')
       .setDescription('desc')
-      .setPublicKey('pk')
+      .setPublicKey([
+        new PublicKey(uuid(), PublicKeyType.ECDSA, '12345', bpiSubjectId),
+      ])
       .setRoles([
         new BpiSubjectRole(
           uuid(),
