@@ -442,7 +442,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"schemas\": \"olleh2\"\n}",
+									"raw": "{\n    \"schema\": \"{\\\"mapping\\\": [{\\\"circuitInput\\\": \\\"input1\\\", \\\"description\\\": \\\"desc1\\\", \\\"payloadJsonPath\\\": \\\"path1\\\", \\\"dataType\\\": \\\"string\\\"}]}\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -450,7 +450,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/worksteps/19854519-fe4b-45fc-843b-39b0446d556e/circuitinputsschema",
+									"raw": "http://localhost:3000/worksteps/ac5888b8-0306-40d4-9961-1cf1dcc31042/circuitinputsschema",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -458,7 +458,7 @@
 									"port": "3000",
 									"path": [
 										"worksteps",
-										"19854519-fe4b-45fc-843b-39b0446d556e",
+										"ac5888b8-0306-40d4-9961-1cf1dcc31042",
 										"circuitinputsschema"
 									]
 								}
