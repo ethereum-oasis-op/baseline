@@ -1,6 +1,6 @@
 import { AutoMap } from '@automapper/classes';
 import { BpiSubjectRoleDto } from './bpiSubjectRole.dto';
-import { PublicKey } from '../../../models/publicKey';
+import { PublicKeyDto } from '../request/publicKey.dto';
 
 export class BpiSubjectDto {
   @AutoMap()
@@ -13,7 +13,7 @@ export class BpiSubjectDto {
   description: string;
 
   @AutoMap()
-  publicKeys: PublicKey[];
+  publicKeys: PublicKeyDto[];
 
   @AutoMap(() => [BpiSubjectRoleDto])
   roles: BpiSubjectRoleDto[];
