@@ -1,14 +1,14 @@
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE } from '../../../../../shared/constants';
-import { SetCircuitInputsSchemaDto } from './setCircuitInputsSchema.dto';
+import { UpdateCircuitInputsSchemaDto } from './updateCircuitInputsSchema.dto';
 
-describe('SetCircuitInputsSchemaDto', () => {
+describe('UpdateCircuitInputsSchemaDto', () => {
   it('should return error in case schema not provided.', async () => {
     // Arrange
     const dto = { wrong: '1' };
     const setCircuitInputsSchemaDto = plainToInstance(
-      SetCircuitInputsSchemaDto,
+      UpdateCircuitInputsSchemaDto,
       dto,
     );
 
@@ -27,7 +27,7 @@ describe('SetCircuitInputsSchemaDto', () => {
     // Arrange
     const dto = { schema: 'test' };
     const setCircuitInputsSchemaDto = plainToInstance(
-      SetCircuitInputsSchemaDto,
+      UpdateCircuitInputsSchemaDto,
       dto,
     );
 

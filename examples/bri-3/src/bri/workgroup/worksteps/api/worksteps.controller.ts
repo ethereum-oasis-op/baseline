@@ -15,10 +15,11 @@ import { DeleteWorkstepCommand } from '../capabilities/deleteWorkstep/deleteWork
 import { GetAllWorkstepsQuery } from '../capabilities/getAllWorksteps/getAllWorksteps.query';
 import { GetWorkstepByIdQuery } from '../capabilities/getWorkstepById/getWorkstepById.query';
 import { UpdateWorkstepCommand } from '../capabilities/updateWorkstep/updateWorkstep.command';
-import { SetCircuitInputsSchemaDto } from './dtos/request/setCircuitInputsSchema.dto';
+import { UpdateCircuitInputsSchemaDto } from './dtos/request/updateCircuitInputsSchema.dto';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { WorkstepDto } from './dtos/response/workstep.dto';
+import { Public } from 'src/bri/decorators/public-endpoint';
 
 @Controller('worksteps')
 export class WorkstepController {
@@ -74,10 +75,11 @@ export class WorkstepController {
   }
 
   @Put('/:id/circuitinputsschema')
-  @CheckAuthz({ action: 'update', type: 'Workstep' })
-  async setCircuitInputsSchemaCommand(
+  @Public()
+  // @CheckAuthz({ action: 'update', type: 'Workstep' })
+  async updateCircuitInputsSchemaCommand(
     @Param('id') id: string,
-    @Body() requestDto: SetCircuitInputsSchemaDto,
+    @Body() requestDto: UpdateCircuitInputsSchemaDto,
   ): Promise<WorkstepDto> {
     return await this.commandBus.execute(
       new UpdateCircuitInputsSchemaCommand(id, requestDto.schema),

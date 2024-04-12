@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 
-export class SetCircuitInputsSchemaDto {
+export class UpdateCircuitInputsSchemaDto {
   @IsNotEmpty()
   schema: string;
 }
