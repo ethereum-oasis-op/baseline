@@ -19,7 +19,6 @@ import { UpdateCircuitInputsSchemaDto } from './dtos/request/updateCircuitInputs
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { WorkstepDto } from './dtos/response/workstep.dto';
-import { Public } from 'src/bri/decorators/public-endpoint';
 
 @Controller('worksteps')
 export class WorkstepController {
@@ -75,8 +74,7 @@ export class WorkstepController {
   }
 
   @Put('/:id/circuitinputsschema')
-  @Public()
-  // @CheckAuthz({ action: 'update', type: 'Workstep' })
+  @CheckAuthz({ action: 'update', type: 'Workstep' })
   async updateCircuitInputsSchemaCommand(
     @Param('id') id: string,
     @Body() requestDto: UpdateCircuitInputsSchemaDto,
