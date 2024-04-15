@@ -22,6 +22,7 @@ import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 import { uuid } from 'uuidv4';
+import { PublicKey, PublicKeyType } from '../../bpiSubjects/models/publicKey';
 
 describe('SubjectAccountController', () => {
   let subjectAccountController: SubjectAccountController;
@@ -70,14 +71,14 @@ describe('SubjectAccountController', () => {
       '123',
       'owner',
       'desc',
-      'publicKey',
+      [new PublicKey('223', PublicKeyType.ECDSA, 'publicKey', '123')],
       [],
     );
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      [new PublicKey('223', PublicKeyType.ECDSA, 'publicKey', '321')],
       [],
     );
 
@@ -195,7 +196,7 @@ describe('SubjectAccountController', () => {
         '123',
         'owner',
         'desc',
-        'publicKey',
+        [new PublicKey('223', PublicKeyType.ECDSA, 'publicKey', '123')],
         [],
       );
       const creatorBpiSubjectId = 'not-existing-id';
@@ -219,7 +220,7 @@ describe('SubjectAccountController', () => {
         '123',
         'creator',
         'desc',
-        'publicKey',
+        [new PublicKey('223', PublicKeyType.ECDSA, 'publicKey', '123')],
         [],
       );
       const ownerBpiSubjectId = 'not-existing-id';

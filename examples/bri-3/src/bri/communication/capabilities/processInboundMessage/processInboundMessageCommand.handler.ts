@@ -31,11 +31,12 @@ export class ProcessInboundMessageCommandHandler
       return false;
     }
 
-    const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
-      command.content,
-      command.signature,
-      fromBpiSubject.publicKeys[0].value,
-    );
+    const isSignatureValid =
+      this.authAgent.verifyEcdsaSignatureAgainstPublicKey(
+        command.content,
+        command.signature,
+        fromBpiSubject.publicKeys[0].value,
+      );
 
     if (!isSignatureValid) {
       return false;
