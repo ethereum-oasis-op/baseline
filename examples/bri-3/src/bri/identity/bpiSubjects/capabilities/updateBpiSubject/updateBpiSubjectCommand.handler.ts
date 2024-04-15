@@ -1,17 +1,18 @@
-import { PrismaMapper as Mapper } from '../../../../../shared/prisma/prisma.mapper';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BpiSubjectAgent } from '../../agents/bpiSubjects.agent';
 import { BpiSubjectStorageAgent } from '../../agents/bpiSubjectsStorage.agent';
 import { BpiSubject } from '../../models/bpiSubject';
 import { UpdateBpiSubjectCommand } from './updateBpiSubject.command';
-import { PublicKey, PublicKeyType } from '../../models/publicKey';
+import { BpiSubjectDto } from '../../api/dtos/response/bpiSubject.dto';
 
 @CommandHandler(UpdateBpiSubjectCommand)
 export class UpdateBpiSubjectCommandHandler
   implements ICommandHandler<UpdateBpiSubjectCommand>
 {
   constructor(
-    private readonly mapper: Mapper,
+    @InjectMapper() private mapper: Mapper,
     private agent: BpiSubjectAgent,
     private storageAgent: BpiSubjectStorageAgent,
   ) {}
@@ -33,6 +34,6 @@ export class UpdateBpiSubjectCommandHandler
       bpiSubjectToUpdate,
     );
 
-    return this.mapper.map(bpiSubject, BpiSubject);
+    return this.mapper.map(bpiSubject, BpiSubject, BpiSubjectDto);
   }
 }
