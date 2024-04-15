@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
 import { BpiSubjectRole } from './bpiSubjectRole';
 import { PublicKeyType, PublicKey } from './publicKey';
+import { PublicKeyDto } from '../api/dtos/request/publicKey.dto';
 
 export class BpiSubject {
   @AutoMap()
@@ -43,12 +44,12 @@ export class BpiSubject {
     this.description = newDescription;
   }
 
-  public updatePublicKeys(newPKs: PublicKey[]): void {
-    newPKs.map((newKey: PublicKey) => {
+  public updatePublicKeys(newPKs: PublicKeyDto[]): void {
+    newPKs.map((newKey: PublicKeyDto) => {
       const index = this.publicKeys.findIndex(
         (oldKey: PublicKey) => oldKey.type == newKey.type,
       );
-      this.publicKeys[index] = newKey;
+      this.publicKeys[index].value = newKey.value;
     });
   }
 

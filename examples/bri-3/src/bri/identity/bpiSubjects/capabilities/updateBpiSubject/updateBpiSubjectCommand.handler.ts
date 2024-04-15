@@ -22,33 +22,11 @@ export class UpdateBpiSubjectCommandHandler
         command.id,
       );
 
-    const newPublicKeys = await Promise.all<PublicKey>(
-      command.publicKeys.map(async (key) => {
-        let publicKeyType;
-        switch (key.type.toLowerCase()) {
-          case 'ecdsa':
-            publicKeyType = PublicKeyType.ECDSA;
-            break;
-          case 'eddsa':
-            publicKeyType = PublicKeyType.EDDSA;
-            break;
-          default:
-        }
-
-        const newKey = await this.storageAgent.updatePublicKey(
-          publicKeyType,
-          key.value,
-          bpiSubjectToUpdate.id,
-        );
-
-        return newKey;
-      }),
-    );
-
     this.agent.updateBpiSubject(
       bpiSubjectToUpdate,
       command.name,
       command.description,
+      command.publicKeys,
     );
 
     const bpiSubject = await this.storageAgent.updateBpiSubject(
