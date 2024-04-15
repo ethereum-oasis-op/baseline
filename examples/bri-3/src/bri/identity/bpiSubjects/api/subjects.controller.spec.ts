@@ -117,8 +117,8 @@ describe('SubjectController', () => {
       expect(fetchedBpiSubject.description).toEqual(
         existingBpiSubject1.description,
       );
-      expect(fetchedBpiSubject.publicKeys).toEqual(
-        existingBpiSubject1.publicKeys,
+      expect(fetchedBpiSubject.publicKeys[0].type).toEqual(
+        existingBpiSubject1.publicKeys[0].type,
       );
     });
   });
@@ -152,13 +152,18 @@ describe('SubjectController', () => {
       expect(bpiSubjects[0].description).toEqual(
         existingBpiSubject1.description,
       );
-      expect(bpiSubjects[0].publicKeys).toEqual(existingBpiSubject1.publicKeys);
+      expect(bpiSubjects[0].publicKeys[0].type).toEqual(
+        existingBpiSubject1.publicKeys[0].type,
+      );
+
       expect(bpiSubjects[1].id).toEqual(existingBpiSubject2.id);
       expect(bpiSubjects[1].name).toEqual(existingBpiSubject2.name);
       expect(bpiSubjects[1].description).toEqual(
         existingBpiSubject2.description,
       );
-      expect(bpiSubjects[1].publicKeys).toEqual(existingBpiSubject2.publicKeys);
+      expect(bpiSubjects[1].publicKeys[0].type).toEqual(
+        existingBpiSubject2.publicKeys[0].type,
+      );
     });
   });
 

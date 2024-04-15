@@ -14,7 +14,7 @@ export class BpiSubject {
   @AutoMap()
   description: string;
 
-  @AutoMap()
+  @AutoMap(() => [PublicKey])
   publicKeys: PublicKey[];
 
   @AutoMap()
@@ -47,7 +47,8 @@ export class BpiSubject {
   public updatePublicKeys(newPKs: PublicKeyDto[]): void {
     newPKs.map((newKey: PublicKeyDto) => {
       const index = this.publicKeys.findIndex(
-        (oldKey: PublicKey) => oldKey.type == newKey.type,
+        (oldKey: PublicKey) =>
+          oldKey.type.toLowerCase() == newKey.type.toLowerCase(),
       );
       this.publicKeys[index].value = newKey.value;
     });

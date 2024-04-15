@@ -12,7 +12,7 @@ export class BpiSubjectDto {
   @AutoMap()
   description: string;
 
-  @AutoMap()
+  @AutoMap(() => [PublicKeyDto])
   publicKeys: PublicKeyDto[];
 
   @AutoMap(() => [BpiSubjectRoleDto])
