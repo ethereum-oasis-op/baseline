@@ -11,7 +11,7 @@ export class CircuitInputsParserService {
     try {
       const jsonPayload = JSON.parse(payload);
 
-      for (let mapping of cim.mapping) {
+      for (const mapping of cim.mapping) {
         const value = this.getJsonValueByPath(
           jsonPayload,
           mapping.payloadJsonPath,
