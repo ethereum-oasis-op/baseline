@@ -128,11 +128,11 @@ export class BpiSubjectStorageAgent extends PrismaService {
           }),
         },
         publicKeys: {
-          upsert: bpiSubject.publicKeys.map((pk) => ({
-            where: { id: pk.id },
-            create: { type: pk.type, value: pk.value },
-            update: { value: pk.value },
-          })),
+          connect: bpiSubject.publicKeys.map((pk) => {
+            return {
+              id: pk.id,
+            };
+          }),
         },
       },
     });
