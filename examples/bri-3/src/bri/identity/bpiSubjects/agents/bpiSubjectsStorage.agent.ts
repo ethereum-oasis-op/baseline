@@ -155,6 +155,7 @@ export class BpiSubjectStorageAgent extends PrismaService {
         },
       },
       include: {
+        roles: true,
         publicKeys: true,
       },
     });
