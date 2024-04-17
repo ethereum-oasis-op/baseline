@@ -1,6 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { BpiSubject } from './bpiSubject';
 
+//ECDSA - Used for login, messaging, etc.
+//EDDSA - Used for signing transactions (inside zk circuit)
 export enum PublicKeyType {
   ECDSA = 'ECDSA',
   EDDSA = 'EDDSA',
@@ -16,10 +18,10 @@ export class PublicKey {
   value: string;
 
   @AutoMap()
-  bpiSubjectId: string;
+  bpiSubjectId?: string;
 
   @AutoMap()
-  bpiSubject: BpiSubject;
+  bpiSubject?: BpiSubject;
 
   constructor(
     id: string,

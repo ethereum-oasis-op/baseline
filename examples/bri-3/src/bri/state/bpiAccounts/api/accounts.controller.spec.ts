@@ -28,6 +28,10 @@ import { GetAllBpiAccountsQueryHandler } from '../capabilities/getAllBpiAccounts
 import { GetBpiAccountByIdQueryHandler } from '../capabilities/getBpiAccountById/getBpiAccountByIdQuery.handler';
 import { UpdateBpiAccountCommandHandler } from '../capabilities/updateBpiAccount/updateBpiAccountCommand.handler';
 import { BpiAccount } from '../models/bpiAccount';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../../identity/bpiSubjects/models/publicKey';
 import { AccountController } from './accounts.controller';
 import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
@@ -91,18 +95,28 @@ describe('AccountController', () => {
   });
 
   const createBpiSubjectAccount = () => {
+    const ownerPublicKeys = [
+      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
+      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+    ];
+
     const ownerBpiSubject = new BpiSubject(
       '123',
       'owner',
       'desc',
-      'publicKey',
+      ownerPublicKeys,
       [],
     );
+
+    const creatorPublicKeys = [
+      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk', '321'),
+      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk', '321'),
+    ];
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      creatorPublicKeys,
       [],
     );
     return new BpiSubjectAccount(

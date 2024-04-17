@@ -22,6 +22,7 @@ import { SubjectsProfile } from '../../bpiSubjects/subjects.profile';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 import { uuid } from 'uuidv4';
+import { PublicKey, PublicKeyType } from '../../bpiSubjects/models/publicKey';
 
 describe('SubjectAccountController', () => {
   let subjectAccountController: SubjectAccountController;
@@ -66,18 +67,26 @@ describe('SubjectAccountController', () => {
   });
 
   const createBpiSubjectAccount = async () => {
+    const ownerPublicKeys = [
+      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
+      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+    ];
     const ownerBpiSubject = new BpiSubject(
       '123',
       'owner',
       'desc',
-      'publicKey',
+      ownerPublicKeys,
       [],
     );
+    const creatorPublicKeys = [
+      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk', '321'),
+      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk', '321'),
+    ];
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      creatorPublicKeys,
       [],
     );
 
@@ -191,11 +200,15 @@ describe('SubjectAccountController', () => {
   describe('createBpiSubjectAccount', () => {
     it('should throw BadRequest if non existent creator provided', async () => {
       // Arrange
+      const publicKeys = [
+        new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
+        new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+      ];
       const ownerBpiSubject = new BpiSubject(
         '123',
         'owner',
         'desc',
-        'publicKey',
+        publicKeys,
         [],
       );
       const creatorBpiSubjectId = 'not-existing-id';
@@ -215,11 +228,15 @@ describe('SubjectAccountController', () => {
 
     it('should throw BadRequest if non existent owner provided', async () => {
       // Arrange
+      const publicKeys = [
+        new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
+        new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+      ];
       const creatorBpiSubject = new BpiSubject(
         '123',
         'creator',
         'desc',
-        'publicKey',
+        publicKeys,
         [],
       );
       const ownerBpiSubjectId = 'not-existing-id';
