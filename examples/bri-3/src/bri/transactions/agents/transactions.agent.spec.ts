@@ -105,18 +105,20 @@ beforeEach(async () => {
       name: 'name2',
       description: 'desc2',
       publicKeys: {
-        create: [
-          {
-            type: PublicKeyType.ECDSA,
-            value:
-              '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980',
-          },
-          {
-            type: PublicKeyType.EDDSA,
-            value:
-              '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980',
-          },
-        ],
+        createMany: {
+          data: [
+            {
+              type: PublicKeyType.ECDSA,
+              value:
+                '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980',
+            },
+            {
+              type: PublicKeyType.EDDSA,
+              value:
+                '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980',
+            },
+          ],
+        },
       },
     },
     include: {
