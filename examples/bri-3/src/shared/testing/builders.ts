@@ -9,6 +9,7 @@ import { BpiMerkleTree } from '../../bri/merkleTree/models/bpiMerkleTree';
 import { Workflow } from '../../bri/workgroup/workflows/models/workflow';
 import { Workgroup } from '../../bri/workgroup/workgroups/models/workgroup';
 import { Workstep } from '../../bri/workgroup/worksteps/models/workstep';
+import { PublicKey } from '../../bri/identity/bpiSubjects/models/publicKey';
 
 export class WorkstepBuilder {
   private id: string;
@@ -122,7 +123,11 @@ export class BpiSubjectBuilder {
   private id: string;
   private name: string;
   private description: string;
+<<<<<<< HEAD
   private publicKeys: PublicKey[];
+=======
+  private publicKey: PublicKey[];
+>>>>>>> feature/759-public-key-test-pass-2
   private loginNonce: string;
   private roles: BpiSubjectRole[];
 

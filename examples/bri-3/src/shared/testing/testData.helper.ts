@@ -20,6 +20,10 @@ import {
   WorkgroupBuilder,
   WorkstepBuilder,
 } from './builders';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../bri/identity/bpiSubjects/models/publicKey';
 
 // A place to encapsulate  creation of test data objects used for controller testing.
 // These objects will later be used to mock prisma.client calls only once during test bootstrap

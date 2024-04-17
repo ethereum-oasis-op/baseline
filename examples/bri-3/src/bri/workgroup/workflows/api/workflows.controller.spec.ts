@@ -29,6 +29,9 @@ import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { PrismaClient } from '@prisma/client';
+import { MerkleTreeAgent } from '../../../merkleTree/agents/merkleTree.agent';
+import { MerkleTreeStorageAgent } from '../../../merkleTree/agents/merkleTreeStorage.agent';
+import { MerkleTreeService } from '../../../merkleTree/services/merkleTree.service';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
@@ -100,6 +103,7 @@ describe('WorkflowsController', () => {
         WorkgroupAgent,
         BpiAccountAgent,
         BpiSubjectAccountAgent,
+        MerkleTreeAgent,
         CreateWorkflowCommandHandler,
         UpdateWorkflowCommandHandler,
         DeleteWorkflowCommandHandler,
@@ -107,22 +111,24 @@ describe('WorkflowsController', () => {
         GetAllWorkflowsQueryHandler,
         WorkflowStorageAgent,
         BpiAccountStorageAgent,
+        MerkleTreeStorageAgent,
         WorkstepProfile,
         WorkflowProfile,
+        MerkleTreeService,
       ],
     })
       .overrideProvider(WorkflowStorageAgent)
       .useValue(mockDeep<WorkflowStorageAgent>())
       .overrideProvider(WorkstepStorageAgent)
       .useValue(mockDeep<WorkstepStorageAgent>())
-      .overrideProvider(BpiAccountAgent)
-      .useValue(mockDeep<BpiAccountAgent>())
       .overrideProvider(BpiSubjectAccountAgent)
       .useValue(mockDeep<BpiSubjectAccountAgent>())
       .overrideProvider(WorkgroupAgent)
       .useValue(mockDeep<WorkgroupAgent>())
       .overrideProvider(BpiAccountStorageAgent)
       .useValue(mockDeep<BpiAccountStorageAgent>())
+      .overrideProvider(MerkleTreeStorageAgent)
+      .useValue(mockDeep<MerkleTreeStorageAgent>())
       .overrideProvider(PrismaService)
       .useValue(mockDeep<PrismaClient>())
       .compile();

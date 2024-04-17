@@ -40,22 +40,29 @@ describe('TransactionController', () => {
   let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
 
   const createBpiSubjectAccount = (id: string) => {
-    const publicKeys = [
+    const ownerPublicKeys = [
       new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
       new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
     ];
+
     const ownerBpiSubject = new BpiSubject(
       '123',
       'owner',
       'desc',
-      publicKeys,
+      ownerPublicKeys,
       [],
     );
+
+    const creatorPublicKeys = [
+      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk', '321'),
+      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk', '321'),
+    ];
+
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      publicKeys,
+      creatorPublicKeys,
       [],
     );
 

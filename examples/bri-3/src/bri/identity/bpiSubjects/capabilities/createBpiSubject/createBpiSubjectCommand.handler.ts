@@ -18,7 +18,7 @@ export class CreateBpiSubjectCommandHandler
     const newBpiSubjectCandidate = await this.agent.createNewExternalBpiSubject(
       command.name,
       command.description,
-      command.publicKey,
+      command.publicKeys,
     );
 
     const newBpiSubject = await this.storageAgent.storeNewBpiSubject(
