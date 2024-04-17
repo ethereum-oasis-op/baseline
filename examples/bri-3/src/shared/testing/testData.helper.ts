@@ -6,10 +6,6 @@ import {
   BpiSubjectRole,
   BpiSubjectRoleName,
 } from '../../bri/identity/bpiSubjects/models/bpiSubjectRole';
-import {
-  PublicKey,
-  PublicKeyType,
-} from '../../bri/identity/bpiSubjects/models/publicKey';
 import { Workflow } from '../../bri/workgroup/workflows/models/workflow';
 import { Workstep } from '../../bri/workgroup/worksteps/models/workstep';
 import {
