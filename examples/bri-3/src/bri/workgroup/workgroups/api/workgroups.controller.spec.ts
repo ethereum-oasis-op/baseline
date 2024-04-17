@@ -28,6 +28,10 @@ import { uuid } from 'uuidv4';
 import { WorkgroupProfile } from '../workgroups.profile';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { PrismaClient } from '@prisma/client';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../../identity/bpiSubjects/models/publicKey';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
@@ -35,7 +39,13 @@ describe('WorkgroupsController', () => {
   let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
 
   const createTestBpiSubject = () => {
-    return new BpiSubject('123', 'name', 'desc', 'pubkey', []);
+    return new BpiSubject(
+      '123',
+      'name',
+      'desc',
+      [new PublicKey('223', PublicKeyType.ECDSA, 'publicKey', '123')],
+      [],
+    );
   };
 
   const createTestWorkgroup = (): Workgroup => {

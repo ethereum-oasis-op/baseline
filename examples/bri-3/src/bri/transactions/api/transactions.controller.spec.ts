@@ -29,6 +29,10 @@ import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { TransactionController } from './transactions.controller';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../identity/bpiSubjects/models/publicKey';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -40,14 +44,14 @@ describe('TransactionController', () => {
       '123',
       'owner',
       'desc',
-      'publicKey',
+      [new PublicKey('222', PublicKeyType.ECDSA, 'publicKey', '123')],
       [],
     );
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      [new PublicKey('223', PublicKeyType.ECDSA, 'publicKey', '321')],
       [],
     );
 

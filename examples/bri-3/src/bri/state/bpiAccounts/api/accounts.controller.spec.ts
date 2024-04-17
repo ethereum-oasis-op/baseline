@@ -33,7 +33,10 @@ import { CreateBpiAccountDto } from './dtos/request/createBpiAccount.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { PrismaClient } from '@prisma/client';
-
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../../identity/bpiSubjects/models/publicKey';
 describe('AccountController', () => {
   let accountController: AccountController;
   let accountStorageAgentMock: DeepMockProxy<BpiAccountStorageAgent>;
@@ -95,14 +98,14 @@ describe('AccountController', () => {
       '123',
       'owner',
       'desc',
-      'publicKey',
+      [new PublicKey('232', PublicKeyType.ECDSA, 'publicKey', '123')],
       [],
     );
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      [new PublicKey('233', PublicKeyType.ECDSA, 'publicKey', '321')],
       [],
     );
     return new BpiSubjectAccount(

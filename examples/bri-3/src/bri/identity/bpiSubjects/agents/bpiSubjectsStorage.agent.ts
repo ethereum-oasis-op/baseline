@@ -106,12 +106,8 @@ export class BpiSubjectStorageAgent extends PrismaService {
             };
           }),
         },
-        publicKey: {
-          connect: bpiSubject.publicKeys.map((pk) => {
-            return {
-              id: pk.id,
-            };
-          }),
+        publicKeys: {
+          createMany: { data: bpiSubject.publicKeys },
         },
       },
     });
@@ -131,12 +127,12 @@ export class BpiSubjectStorageAgent extends PrismaService {
             };
           }),
         },
-        publicKey: {
-          connect: bpiSubject.publicKeys.map((pk) => {
-            return {
-              id: pk.id,
-            };
-          }),
+        publicKeys: {
+          upsert: bpiSubject.publicKeys.map((pk) => ({
+            where: { id: pk.id },
+            create: { type: pk.type, value: pk.value },
+            update: { value: pk.value },
+          })),
         },
       },
     });
@@ -152,14 +148,14 @@ export class BpiSubjectStorageAgent extends PrismaService {
   async getBpiSubjectByPublicKey(publicKeyValue: string): Promise<BpiSubject> {
     const bpiSubjectModel = await this.prisma.bpiSubject.findFirst({
       where: {
-        publicKey: {
+        publicKeys: {
           some: {
             value: publicKeyValue,
           },
         },
       },
       include: {
-        publicKey: true,
+        publicKeys: true,
       },
     });
 

@@ -34,11 +34,12 @@ export class ProcessInboundTransactionCommandHandler
       return false;
     }
 
-    const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
-      command.payload,
-      command.signature,
-      subjectAccounts[0].ownerBpiSubject.publicKey,
-    );
+    const isSignatureValid =
+      this.authAgent.verifyEcdsaSignatureAgainstPublicKey(
+        command.payload,
+        command.signature,
+        subjectAccounts[0].ownerBpiSubject.publicKeys[0].value,
+      );
 
     if (!isSignatureValid) {
       return false;
