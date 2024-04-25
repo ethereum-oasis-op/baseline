@@ -41,7 +41,7 @@ export class DidJwtAuthGuard implements CanActivate {
     context: ExecutionContext,
   ) {
     // TODO: store did in bpi subject and remove constant
-    const didSubstrLength = 13;
+    const didSubstrLength = 20;
     const bpiSubject =
       await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
         verified.payload.sub!.substring(didSubstrLength),

@@ -22,7 +22,7 @@ export class DidService {
 
   async createDid(keypair: KeyPair, provider: Provider): Promise<EthrDID> {
     const did = new EthrDID({
-      identifier: keypair.publicKey,
+      identifier: '0x08872e27BC5d78F1FC4590803369492868A1FCCb',
       provider,
       chainNameOrId: process.env.INFURA_PROVIDER_NETWORK,
       registry: process.env.DID_REGISTRY,

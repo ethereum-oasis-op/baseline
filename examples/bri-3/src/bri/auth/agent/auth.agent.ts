@@ -37,11 +37,10 @@ export class AuthAgent {
     signature: string,
     senderPublicKey: string,
   ): boolean {
-    let publicAddressFromSenderPublicKey = '';
     let publicAddressFromSignature = '';
 
     try {
-      publicAddressFromSenderPublicKey = ethers.computeAddress(senderPublicKey);
+      //publicAddressFromSenderPublicKey = ethers.computeAddress(senderPublicKey);
       publicAddressFromSignature = ethers.verifyMessage(message, signature);
     } catch (error) {
       this.logger.logError(
@@ -52,7 +51,7 @@ export class AuthAgent {
 
     const isValid =
       publicAddressFromSignature.toLowerCase() ===
-      publicAddressFromSenderPublicKey.toLowerCase();
+      senderPublicKey.toLowerCase();
 
     if (!isValid) {
       this.logger.logWarn(

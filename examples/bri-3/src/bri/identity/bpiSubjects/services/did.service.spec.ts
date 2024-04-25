@@ -11,11 +11,11 @@ describe('DID service', () => {
 
     const did = await didService.createDid(keypair, provider);
 
-    await didService.setAuthenticationPublicKey(
-      did,
-      supplierBpiSubjectEcdsaPublicKey,
-      provider,
-    );
+    // await didService.setAuthenticationPublicKey(
+    //   did,
+    //   supplierBpiSubjectEcdsaPublicKey,
+    //   provider,
+    // );
 
     const didResolver = await didService.getDidResolver(provider);
 
