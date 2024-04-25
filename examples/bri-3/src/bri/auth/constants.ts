@@ -3,5 +3,5 @@ export const jwtConstants = {
 };
 
 export const didResolverProviderConfig = {
-  networks: [{ name: '0x5', rpcUrl: process.env.GOERLI_RPC_URL }],
+  networks: [{ name: '0x11155111', rpcUrl: process.env.SEPOLIA_RPC_URL }],
 };

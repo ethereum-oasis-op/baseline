@@ -18,7 +18,7 @@ export const computeEffectiveEcdsaSigPublicInputs = (
   const ec = new EC('secp256k1');
 
   //Public Key
-  const publicKeyBuffer = ethers.utils.arrayify(publicKeyHex);
+  const publicKeyBuffer = ethers.toBeArray(publicKeyHex);
   const publicKeyCoordinates = ec.keyFromPublic(publicKeyBuffer).getPublic();
 
   //Signature
@@ -42,10 +42,10 @@ export const computeEffectiveEcdsaSigPublicInputs = (
 };
 
 export const computeEcdsaSigPublicInputs = (tx: Transaction) => {
-  const ecdsaSignature = ethers.utils.splitSignature(tx.signature);
+  const ecdsaSignature = ethers.Signature.from(tx.signature);
 
   const messageHash = Buffer.from(
-    ethers.utils.arrayify(ethers.utils.hashMessage(tx.payload)),
+    ethers.toBeArray(ethers.hashMessage(tx.payload)),
   );
 
   const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(

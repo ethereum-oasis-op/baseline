@@ -62,6 +62,6 @@ export class BpiSubject {
     const ecdsaPublicKey = this.publicKeys.filter(
       (key) => key.type == PublicKeyType.ECDSA,
     )[0];
-    return `did:ethr:0x5:${ecdsaPublicKey.value}`;
+    return `did:ethr:0x11155111:${ecdsaPublicKey.value}`;
   }
 }

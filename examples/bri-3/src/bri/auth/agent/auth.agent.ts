@@ -41,12 +41,8 @@ export class AuthAgent {
     let publicAddressFromSignature = '';
 
     try {
-      publicAddressFromSenderPublicKey =
-        ethers.utils.computeAddress(senderPublicKey);
-      publicAddressFromSignature = ethers.utils.verifyMessage(
-        message,
-        signature,
-      );
+      publicAddressFromSenderPublicKey = ethers.computeAddress(senderPublicKey);
+      publicAddressFromSignature = ethers.verifyMessage(message, signature);
     } catch (error) {
       this.logger.logError(
         `Error validating signature: ${signature} for message ${message}. Error: ${error}}`,
@@ -133,8 +129,8 @@ export class AuthAgent {
       iat: now,
     };
 
-    const serviceDid = process.env.GOERLI_SERVICE_DID as string;
-    const privateKey = process.env.GOERLI_SERVICE_SIGNER_PRIVATE_KEY as string;
+    const serviceDid = process.env.SEPOLIA_SERVICE_DID as string;
+    const privateKey = process.env.SEPOLIA_SERVICE_SIGNER_PRIVATE_KEY as string;
 
     const serviceSigner = ES256KSigner(hexToBytes(privateKey));
 

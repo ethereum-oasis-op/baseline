@@ -1,4 +1,4 @@
-import { keccak256 } from 'ethers/lib/utils';
+import { keccak256 } from 'ethers';
 import * as circomlib from 'circomlibjs';
 import * as crypto from 'crypto';
 import { ethers } from 'ethers';
