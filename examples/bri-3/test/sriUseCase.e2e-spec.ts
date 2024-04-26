@@ -218,7 +218,7 @@ async function createExternalBpiSubjectAndReturnId(
     .send({
       name: bpiSubjectName,
       desc: 'A test Bpi Subject',
-      publicKey: pk,
+      publicKeys: pk,
     })
     .expect(201);
 
