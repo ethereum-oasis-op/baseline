@@ -31,8 +31,8 @@ describe('SubjectController', () => {
 
   const existingBpiSubject1Id = uuid();
   const publicKeys1 = [
-    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', existingBpiSubject1Id),
-    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', existingBpiSubject1Id),
+    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
   ];
   const existingBpiSubject1 = new BpiSubject(
     existingBpiSubject1Id,
@@ -44,8 +44,8 @@ describe('SubjectController', () => {
 
   const existingBpiSubject2Id = uuid();
   const publicKeys2 = [
-    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', existingBpiSubject2Id),
-    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', existingBpiSubject2Id),
+    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
   ];
   const existingBpiSubject2 = new BpiSubject(
     uuid(),
@@ -244,9 +244,9 @@ describe('SubjectController', () => {
         name: updateRequestDto.name,
         description: updateRequestDto.desc,
         publicKeys: [
-          new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
+          new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
           ,
-          new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+          new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
           ,
         ],
       } as BpiSubject);

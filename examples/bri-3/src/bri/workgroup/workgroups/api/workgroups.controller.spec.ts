@@ -39,8 +39,8 @@ describe('WorkgroupsController', () => {
   let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
 
   const publicKeys = [
-    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
-    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
   ];
   const createTestBpiSubject = () => {
     return new BpiSubject('123', 'name', 'desc', publicKeys, []);

@@ -61,8 +61,8 @@ export class TestDataHelper {
       .setName('name')
       .setDescription('desc')
       .setPublicKey([
-        new PublicKey(uuid(), PublicKeyType.ECDSA, 'ecdsaPk', bpiSubjectId),
-        new PublicKey(uuid(), PublicKeyType.EDDSA, 'eddsaPk', bpiSubjectId),
+        new PublicKey(uuid(), PublicKeyType.ECDSA, 'ecdsaPk'),
+        new PublicKey(uuid(), PublicKeyType.EDDSA, 'eddsaPk'),
       ])
       .setRoles([
         new BpiSubjectRole(

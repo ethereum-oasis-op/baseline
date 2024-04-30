@@ -68,8 +68,8 @@ describe('SubjectAccountController', () => {
 
   const createBpiSubjectAccount = async () => {
     const ownerPublicKeys = [
-      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
-      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
     ];
     const ownerBpiSubject = new BpiSubject(
       '123',
@@ -79,8 +79,8 @@ describe('SubjectAccountController', () => {
       [],
     );
     const creatorPublicKeys = [
-      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk', '321'),
-      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk', '321'),
+      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk'),
     ];
     const creatorBpiSubject = new BpiSubject(
       '321',
@@ -201,8 +201,8 @@ describe('SubjectAccountController', () => {
     it('should throw BadRequest if non existent creator provided', async () => {
       // Arrange
       const publicKeys = [
-        new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
-        new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+        new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+        new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
       ];
       const ownerBpiSubject = new BpiSubject(
         '123',
@@ -229,8 +229,8 @@ describe('SubjectAccountController', () => {
     it('should throw BadRequest if non existent owner provided', async () => {
       // Arrange
       const publicKeys = [
-        new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
-        new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+        new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+        new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
       ];
       const creatorBpiSubject = new BpiSubject(
         '123',

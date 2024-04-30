@@ -96,8 +96,8 @@ describe('AccountController', () => {
 
   const createBpiSubjectAccount = () => {
     const ownerPublicKeys = [
-      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk', '123'),
-      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk', '123'),
+      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
     ];
 
     const ownerBpiSubject = new BpiSubject(
@@ -109,8 +109,8 @@ describe('AccountController', () => {
     );
 
     const creatorPublicKeys = [
-      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk', '321'),
-      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk', '321'),
+      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk'),
     ];
     const creatorBpiSubject = new BpiSubject(
       '321',
