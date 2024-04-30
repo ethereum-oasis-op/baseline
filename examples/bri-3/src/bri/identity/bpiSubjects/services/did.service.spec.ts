@@ -21,8 +21,6 @@ describe('DID service', () => {
 
     const didDocument = await didResolver.resolve(did.did);
 
-    console.log(didDocument);
-
     expect(didDocument).toEqual(didDocument);
   });
 });

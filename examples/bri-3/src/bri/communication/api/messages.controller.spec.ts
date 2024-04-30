@@ -60,7 +60,7 @@ describe('MessageController', () => {
       new PublicKey(
         '111',
         PublicKeyType.ECDSA,
-        '0x047a197a795a747c154dd92b217a048d315ef9ca1bfa9c15bfefe4e02fb338a70af23e7683b565a8dece5104a85ed24a50d791d8c5cb09ee21aabc927c98516539',
+        '0xaCAeE56CAFD9C1a189777f84C9fB00AA7c6C97Ab',
         '123',
       ),
       new PublicKey(
@@ -76,7 +76,7 @@ describe('MessageController', () => {
       new PublicKey(
         '111',
         PublicKeyType.ECDSA,
-        '0x04203db7d27bab8d711acc52479efcfa9d7846e4e176d82389689f95cf06a51818b0b9ab1c2c8d72f1a32e236e6296c91c922a0dc3d0cb9afc269834fc5646b980',
+        '0x4945bEf40ed1f7Ce1BfA1d2bC26D8A8de15D92B1',
         '123',
       ),
       new PublicKey(
@@ -245,7 +245,7 @@ describe('MessageController', () => {
         to: existingBpiSubject2.id,
         content: 'hello world',
         signature:
-          '0xb377f459b07873ed407c3d1a4904051f3384e02906a7ca0abd5bfe7b3349ee71194179801ad449c118281bd4772cfe3f272455f86ae8dfae59a5c00c1d762d2b1b',
+          '0xfb1a67702d0962082a4bd28eea34febfda969e40b4f1fa6c289fcf347aecd4bb148851eeda762d68761c2531dbf5dca6920e97b9d03762a0a26fbb4597f0a9661a',
         type: 1,
       } as CreateBpiMessageDto;
       subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
@@ -253,6 +253,9 @@ describe('MessageController', () => {
       );
       subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
         existingBpiSubject2,
+      );
+      messageStorageAgentMock.storeNewBpiMessage.mockRejectedValueOnce(
+        requestDto,
       );
 
       // Act and assert
@@ -269,7 +272,7 @@ describe('MessageController', () => {
         to: existingBpiSubject2.id,
         content: 'hello world',
         signature:
-          '0xfa6069e94f62a4bbf519d5ce9e367357804a5d933da6aeccfd69d9a4ffe9df40560d285e13a3408fe03e3934a3b9f309f5e22b3ebe5b21e4b73834a1ed8495ab1c',
+          '0xfb1a67702d0962082a4bd28eea34febfda969e40b4f1fa6c289fcf347aecd4bb148851eeda762d68761c2531dbf5dca6920e97b9d03762a0a26fbb4597f0a9661b',
         type: 1,
       } as CreateBpiMessageDto;
       subjectStorageAgentMock.getBpiSubjectById.mockResolvedValueOnce(
