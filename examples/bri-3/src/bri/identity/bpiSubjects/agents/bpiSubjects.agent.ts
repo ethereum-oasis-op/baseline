@@ -49,7 +49,7 @@ export class BpiSubjectAgent {
           break;
         default:
       }
-      return new PublicKey(v4(), publicKeyType, key.value, bpiSubjectId);
+      return new PublicKey(v4(), publicKeyType, key.value);
     });
 
     return new BpiSubject(

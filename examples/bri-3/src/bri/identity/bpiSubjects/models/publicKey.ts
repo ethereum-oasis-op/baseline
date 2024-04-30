@@ -23,16 +23,10 @@ export class PublicKey {
   @AutoMap()
   bpiSubject?: BpiSubject;
 
-  constructor(
-    id: string,
-    type: PublicKeyType,
-    value: string,
-    bpiSubjectId: string,
-  ) {
+  constructor(id: string, type: PublicKeyType, value: string) {
     this.id = id;
     this.type = type;
     this.value = value;
-    this.bpiSubjectId = bpiSubjectId;
   }
 
   public updateType(newType: PublicKeyType): void {

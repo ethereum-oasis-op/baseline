@@ -19,7 +19,7 @@ export async function createEddsaPublicKey(
   const eddsa = await circomlib.buildEddsa();
   const babyJub = await circomlib.buildBabyjub();
 
-  const privateKeyBytes = Buffer.from(eddsaPrivateKey, 'hex');
+  const privateKeyBytes = Buffer.from(eddsaPrivateKey.slice(2), 'hex');
   const publicKeyPoints = eddsa.prv2pub(privateKeyBytes);
   const eddsaPublicKey = Buffer.from(
     babyJub.packPoint(publicKeyPoints),

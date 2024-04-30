@@ -119,10 +119,12 @@ export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
     (key) => key.type == PublicKeyType.EDDSA,
   )[0].value;
 
-  const packedPublicKey = Uint8Array.from(Buffer.from(publicKey, 'hex'));
+  const packedPublicKey = Uint8Array.from(
+    Buffer.from(publicKey.slice(2), 'hex'),
+  );
   const publicKeyPoints = babyJub.unpackPoint(packedPublicKey);
 
-  const signature = Uint8Array.from(Buffer.from(tx.signature, 'hex'));
+  const signature = Uint8Array.from(Buffer.from(tx.signature.slice(2), 'hex'));
   const unpackedSignature = eddsa.unpackSignature(signature);
 
   if (

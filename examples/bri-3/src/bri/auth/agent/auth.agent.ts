@@ -75,10 +75,12 @@ export class AuthAgent {
       .update(JSON.stringify(message))
       .digest();
 
-    const publicKey = Uint8Array.from(Buffer.from(signature, 'hex'));
+    const publicKey = Uint8Array.from(Buffer.from(signature.slice(2), 'hex'));
     const publicKeyPoints = babyJub.unpackPoint(publicKey);
 
-    const eddsaSignature = Uint8Array.from(Buffer.from(signature, 'hex'));
+    const eddsaSignature = Uint8Array.from(
+      Buffer.from(signature.slice(2), 'hex'),
+    );
     const unpackedSignature = eddsa.unpackSignature(eddsaSignature);
 
     const isValid = eddsa.verifyPedersen(
