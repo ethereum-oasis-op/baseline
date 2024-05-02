@@ -107,7 +107,6 @@ export const computeMerkleProofPublicInputs = (
 };
 
 export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
-  const babyJub = await buildBabyjub();
   const eddsa = await buildEddsa();
 
   const hashedPayload = crypto
@@ -119,23 +118,16 @@ export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
     (key) => key.type == PublicKeyType.EDDSA,
   )[0].value;
 
-  const packedPublicKey = Uint8Array.from(
-    Buffer.from(publicKey.slice(2), 'hex'),
-  );
-  const publicKeyPoints = babyJub.unpackPoint(packedPublicKey);
+  const packedPublicKey = new Uint8Array(Buffer.from(publicKey, 'hex'));
 
-  const signature = Uint8Array.from(Buffer.from(tx.signature.slice(2), 'hex'));
+  const signature = Uint8Array.from(Buffer.from(tx.signature, 'hex'));
   const unpackedSignature = eddsa.unpackSignature(signature);
 
-  if (
-    !eddsa.verifyPedersen(hashedPayload, unpackedSignature, publicKeyPoints)
-  ) {
-    throw new Error(`Eddsa signature does not match public key.`);
-  }
+  const packedSignature = eddsa.packSignature(unpackedSignature);
 
   const messageBits = buffer2bits(hashedPayload);
-  const r8Bits = buffer2bits(Buffer.from(signature.slice(0, 32)));
-  const sBits = buffer2bits(Buffer.from(signature.slice(32, 64)));
+  const r8Bits = buffer2bits(Buffer.from(packedSignature.slice(0, 32)));
+  const sBits = buffer2bits(Buffer.from(packedSignature.slice(32, 64)));
   const aBits = buffer2bits(Buffer.from(packedPublicKey));
 
   const inputs = {

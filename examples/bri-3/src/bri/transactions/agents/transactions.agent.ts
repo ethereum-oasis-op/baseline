@@ -190,6 +190,8 @@ export class TransactionAgent {
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
+      circuitWitnessCalculatorPath,
+      circuitWitnessFilePath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
@@ -198,6 +200,8 @@ export class TransactionAgent {
       circuitPath,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
+      circuitWitnessCalculatorPath,
+      circuitWitnessFilePath,
     );
 
     const hashFn = this.merkleTreeService.createHashFunction(
@@ -225,6 +229,8 @@ export class TransactionAgent {
     circuitProvingKeyPath: string;
     circuitVerificatioKeyPath: string;
     circuitPath: string;
+    circuitWitnessCalculatorPath: string;
+    circuitWitnessFilePath: string;
   } {
     const snakeCaseWorkstepName = this.convertStringToSnakeCase(name);
 
@@ -233,27 +239,43 @@ export class TransactionAgent {
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
-      '_circuit_final.zkey';
+      '_final.zkey';
 
     const circuitVerificatioKeyPath =
       process.env.SNARKJS_CIRCUITS_PATH +
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
-      '_circuit_verification_key.json';
+      '_verification_key.json';
 
     const circuitPath =
       process.env.SNARKJS_CIRCUITS_PATH +
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
-      '_circuit.wasm';
+      '_js/' +
+      snakeCaseWorkstepName +
+      '.wasm';
 
+    const circuitWitnessCalculatorPath =
+      '../../../../../.' +
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/' +
+      snakeCaseWorkstepName +
+      '_js/witness_calculator';
+
+    const circuitWitnessFilePath =
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/witness.txt';
     return {
       snakeCaseWorkstepName,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
+      circuitWitnessCalculatorPath,
+      circuitWitnessFilePath,
     };
   }
 

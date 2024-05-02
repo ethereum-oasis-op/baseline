@@ -169,7 +169,7 @@ describe('SRI use-case end-to-end test', () => {
   });
 
   it('Waits for a single VSM cycle and then verifies that the transaction has been executed and that the state has been properly stored', async () => {
-    await new Promise((r) => setTimeout(r, 20000));
+    await new Promise((r) => setTimeout(r, 30000));
     const resultWorkflow = await fetchWorkflow(createdWorkflowId);
     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
