@@ -21,6 +21,7 @@ export async function createEddsaPublicKey(
 
   const privateKeyBytes = Buffer.from(eddsaPrivateKey.slice(2), 'hex');
   const publicKeyPoints = eddsa.prv2pub(privateKeyBytes);
+
   const eddsaPublicKey = Buffer.from(
     babyJub.packPoint(publicKeyPoints),
   ).toString('hex');
@@ -38,8 +39,10 @@ export async function createEddsaSignature(
     .update(JSON.stringify(payload))
     .digest();
 
-  const eddsaSignature = eddsa.signPedersen(eddsaPrivateKey, hashedPayload);
+  const privateKeyBytes = Buffer.from(eddsaPrivateKey.slice(2), 'hex');
+  const eddsaSignature = eddsa.signPedersen(privateKeyBytes, hashedPayload);
   const packedSignature = eddsa.packSignature(eddsaSignature);
   const signature = Buffer.from(packedSignature).toString('hex');
+
   return signature;
 }
