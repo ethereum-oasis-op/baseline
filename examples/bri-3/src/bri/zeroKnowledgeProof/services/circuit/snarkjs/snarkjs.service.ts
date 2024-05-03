@@ -16,7 +16,7 @@ export class SnarkjsCircuitService implements ICircuitService {
     publicInputs: string[],
   ): Promise<void> {
     if (publicInputs[0] === '0') {
-      throw new BadRequestException('Invalid inputs');
+      throw new BadRequestException('Invalid circuit inputs');
     }
   }
 
