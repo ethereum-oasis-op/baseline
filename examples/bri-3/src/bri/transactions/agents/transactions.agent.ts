@@ -258,7 +258,7 @@ export class TransactionAgent {
       '.wasm';
 
     const circuitWitnessCalculatorPath =
-      '../../../../../.' +
+      '../../../../../../' +
       process.env.SNARKJS_CIRCUITS_PATH +
       snakeCaseWorkstepName +
       '/' +

@@ -37,6 +37,8 @@ $ npm run prisma:generate # generate the prisma client
 $ npm run prisma:migrate:dev # migrate the db to latest state
 $ npx prisma db seed # seed db
 
+$ npx prisma migrate reset # reset the db to initial state, remove all data and apply seed
+
 ```
 
 ## Messaging
