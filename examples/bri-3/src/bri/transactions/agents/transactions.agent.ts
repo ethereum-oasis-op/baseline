@@ -263,7 +263,7 @@ export class TransactionAgent {
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
-      '_js/witness_calculator';
+      '_js/witness_calculator.js';
 
     const circuitWitnessFilePath =
       process.env.SNARKJS_CIRCUITS_PATH +
