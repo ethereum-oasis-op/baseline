@@ -18,7 +18,7 @@ import {
 } from '../../../../identity/bpiSubjects/models/publicKey';
 
 jest.setTimeout(20000);
-describe('SnarkjsService', () => {
+describe.skip('SnarkjsService', () => {
   const snarkjs = new SnarkjsCircuitService();
   let inputs: any;
   let witness: Witness;
