@@ -41,20 +41,22 @@ jobs:
           - 4222:4222
     env:
       DATABASE_URL: "postgresql://postgres:example@localhost:5432/postgres"
-      GOERLI_RPC_URL: "https://rpc.goerli.eth.gateway.fm"
-      GOERLI_SERVICE_DID: "did:ethr:0x5:0xB73A16e32FE027838f9aDEf72A192AFFf45a0A9D"
-      GOERLI_SERVICE_SIGNER_PRIVATE_KEY: "0x0fbdb56ab0fecb2f406fa807d9e6558baedacc1c15c0e2703b77d4c08441e4fe"
+      SEPOLIA_RPC_URL: "https://sepolia.infura.io/v3/c5f37cd25eca4007a9768f18f492bc6f"
+      SEPOLIA_SERVICE_DID: "did:ethr:sepolia:0x08872e27BC5d78F1FC4590803369492868A1FCCb"
+      SEPOLIA_SERVICE_SIGNER_PRIVATE_KEY: "2c95d82bcd8851bd3a813c50afafb025228bf8d237e8fd37ba4adba3a7596d58"
       SERVICE_URL: "bri-3"
       BPI_NATS_SERVER_URL: "localhost:4222"
       BPI_NATS_SERVER_USER: "bpi_operator"
       BPI_NATS_SERVER_PASS: "liftboiliftboiliftboiliftboi1"
       BPI_ENCRYPTION_KEY_K_PARAM: "yzkXp3vY_AZQ3YfLv9GMRTYkjUOpn9x18gPkoFvoUxQ"
       BPI_ENCRYPTION_KEY_KTY_PARAM: "oct"
+      SNARKJS_CIRCUITS_PATH: "zeroKnowledgeArtifacts/circuits/"
       VSM_CYCLE_PERIOD_IN_SECS: 15
       VSM_CYCLE_TX_BATCH_SIZE: 5
-      SNARKJS_CIRCUITS_PATH: "zeroKnowledgeArtifacts/circuits/"
-      CCSM_NETWORK: "goerli"
       MERKLE_TREE_HASH_ALGH: "sha256"
+      INFURA_PROVIDER_NETWORK: "sepolia"
+      INFURA_PROVIDER_API_KEY: "c5f37cd25eca4007a9768f18f492bc6f"
+      DID_REGISTRY: "0x03d5003bf0e79c5f5223588f347eba39afbc3818"
 
     steps:
       - name: Checkout
