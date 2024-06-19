@@ -68,7 +68,7 @@ Rank ordering, with "Crucial" indicating absolutely necessary criterion and "Imp
 ## Key Takeaways
 
 1. Layer 2 protocols can be used to scale baseline proofs and leverage recursive proof generations to compose/batch baseline proofs.
-2. The composition depicted in the above design assumes a simpler protoocol proof, that is common to any baseline participant to verify BLS signatures of workgroup proofs.
+2. The composition depicted in the above design assumes a simpler protocol proof, that is common to any baseline participant to verify BLS signatures of workgroup proofs.
 3. Each of the workgroup proofs are created with R1CS circuits, custom and specific to the particular workgroup.
 4. The workgroup proof itself is a composition of proofs and the above scheme depicts a simple zk-rollup proof, leveraging gnark as the privacy provider.
 5. Using standardized interfaces for Shield and RShield to represent accumulators of commitments and nullifiers, cross chain state can be synchronized to the mainnet.

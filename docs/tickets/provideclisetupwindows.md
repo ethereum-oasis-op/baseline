@@ -10,7 +10,7 @@ OS build 18363.1139
 1. git clone git@github.com:provideplatform/provide-cli.git
 cd provide-cli
 mkdir -p ~go
-Ensure your enviroment is setup correctly.
+Ensure your environment is setup correctly.
 set GOPATH=$HOME/go
 set "PATH=$GOPATH/bin"
 You will probably want to add the above path exports to your ~/.zshrc or equivalent.
