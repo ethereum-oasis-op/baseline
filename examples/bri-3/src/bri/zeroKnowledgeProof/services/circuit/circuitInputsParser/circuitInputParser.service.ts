@@ -7,37 +7,34 @@ export class CircuitInputsParserService {
 
   public validateCircuitInputTranslationSchema(
     schema: string,
-  ): [boolean, string] {
+  ): string {
     try {
       const parsedData: CircuitInputsMapping = JSON.parse(schema);
 
       if (!parsedData.mapping || !Array.isArray(parsedData.mapping)) {
-        return [false, `Missing mapping array`];
+        return `Missing mapping array`;
       }
 
       for (const mapping of parsedData.mapping) {
         if (typeof mapping.circuitInput !== 'string') {
-          return [false, `${mapping.circuitInput} not of type string`];
+          return `${mapping.circuitInput} not of type string`;
         }
 
         if (typeof mapping.description !== 'string') {
-          return [false, `${mapping.description} not of type string`];
+          return `${mapping.description} not of type string`;
         }
 
         if (typeof mapping.payloadJsonPath !== 'string') {
-          return [false, `${mapping.payloadJsonPath} not of type string`];
+          return `${mapping.payloadJsonPath} not of type string`;
         }
 
         if (typeof mapping.dataType !== 'string') {
-          return [false, `${mapping.dataType} not of type string`];
+          return `${mapping.dataType} not of type string`;
         }
 
         if (mapping.dataType === 'array') {
           if (!mapping.arrayType || typeof mapping.arrayType !== 'string') {
-            return [
-              false,
-              `arrayType not defined properly for ${mapping.circuitInput}`,
-            ];
+            return `arrayType not defined properly for ${mapping.circuitInput}`;
           }
         }
 
@@ -45,16 +42,13 @@ export class CircuitInputsParserService {
           mapping.defaultValue &&
           typeof mapping.defaultValue !== mapping.dataType
         ) {
-          return [
-            false,
-            `defaultValue not of type ${mapping.dataType} for ${mapping.circuitInput}`,
-          ];
+          return `defaultValue not of type ${mapping.dataType} for ${mapping.circuitInput}`;
         }
       }
 
-      return [true, ''];
+      return '';
     } catch (error) {
-      return [false, error.message];
+      return error.message;
     }
   }
 
