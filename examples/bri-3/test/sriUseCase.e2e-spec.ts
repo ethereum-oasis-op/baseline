@@ -19,7 +19,6 @@ import {
 } from '../src/shared/testing/utils';
 
 jest.setTimeout(240000);
-
 let accessToken: string;
 let app: INestApplication;
 let server: any;

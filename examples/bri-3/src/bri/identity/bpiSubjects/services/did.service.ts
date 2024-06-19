@@ -5,16 +5,15 @@ import { getResolver } from 'ethr-did-resolver';
 import 'dotenv/config';
 
 export class DidService {
-  private chainNameOrId = 'sepolia';
 
   async createKeypair(): Promise<KeyPair> {
-    const keypair = EthrDID.createKeyPair(this.chainNameOrId);
+    const keypair = EthrDID.createKeyPair(process.env.DID_NETWORK);
     return keypair;
   }
 
   async createProvider(): Promise<Provider> {
     const provider = new InfuraProvider(
-      process.env.INFURA_PROVIDER_NETWORK,
+      process.env.DID_NETWORK,
       process.env.INFURA_PROVIDER_API_KEY,
     );
     return provider;
@@ -22,9 +21,9 @@ export class DidService {
 
   async createDid(keypair: KeyPair, provider: Provider): Promise<EthrDID> {
     const did = new EthrDID({
-      identifier: '0x08872e27BC5d78F1FC4590803369492868A1FCCb',
+      identifier: process.env.DID_BPI_OPERATOR_PUBLIC_KEY as string,
       provider,
-      chainNameOrId: process.env.INFURA_PROVIDER_NETWORK,
+      chainNameOrId: process.env.DID_NETWORK,
       registry: process.env.DID_REGISTRY,
     });
     return did;
@@ -33,10 +32,10 @@ export class DidService {
   async getDidResolver(provider): Promise<Resolver> {
     const didResolver = new Resolver({
       ...getResolver({
-        name: process.env.INFURA_PROVIDER_NETWORK,
+        name: process.env.DID_NETWORK,
         provider: provider,
         registry: process.env.DID_REGISTRY,
-        chainId: process.env.INFURA_PROVIDER_NETWORK,
+        chainId: process.env.DID_NETWORK,
       }),
     });
 
