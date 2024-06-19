@@ -5,7 +5,6 @@ import { getResolver } from 'ethr-did-resolver';
 import 'dotenv/config';
 
 export class DidService {
-
   async createKeypair(): Promise<KeyPair> {
     const keypair = EthrDID.createKeyPair(process.env.DID_NETWORK);
     return keypair;
