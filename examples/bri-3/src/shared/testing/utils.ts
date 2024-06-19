@@ -1,4 +1,4 @@
-import { keccak256 } from 'ethers/lib/utils';
+import { keccak256 } from 'ethers';
 import * as circomlib from 'circomlibjs';
 import * as crypto from 'crypto';
 import { ethers } from 'ethers';
@@ -19,8 +19,9 @@ export async function createEddsaPublicKey(
   const eddsa = await circomlib.buildEddsa();
   const babyJub = await circomlib.buildBabyjub();
 
-  const privateKeyBytes = Buffer.from(eddsaPrivateKey, 'hex');
+  const privateKeyBytes = Buffer.from(eddsaPrivateKey.slice(2), 'hex');
   const publicKeyPoints = eddsa.prv2pub(privateKeyBytes);
+
   const eddsaPublicKey = Buffer.from(
     babyJub.packPoint(publicKeyPoints),
   ).toString('hex');
@@ -38,8 +39,10 @@ export async function createEddsaSignature(
     .update(JSON.stringify(payload))
     .digest();
 
-  const eddsaSignature = eddsa.signPedersen(eddsaPrivateKey, hashedPayload);
+  const privateKeyBytes = Buffer.from(eddsaPrivateKey.slice(2), 'hex');
+  const eddsaSignature = eddsa.signPedersen(privateKeyBytes, hashedPayload);
   const packedSignature = eddsa.packSignature(eddsaSignature);
   const signature = Buffer.from(packedSignature).toString('hex');
+
   return signature;
 }

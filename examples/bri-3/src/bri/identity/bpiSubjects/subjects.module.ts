@@ -11,6 +11,7 @@ import { GetAllBpiSubjectsQueryHandler } from './capabilities/getAllBpiSubjects/
 import { GetBpiSubjectByIdQueryHandler } from './capabilities/getBpiSubjectById/getBpiSubjectByIdQuery.handler';
 import { UpdateBpiSubjectCommandHandler } from './capabilities/updateBpiSubject/updateBpiSubjectCommand.handler';
 import { SubjectsProfile } from './subjects.profile';
+import { DidService } from './services/did.service';
 
 export const CommandHandlers = [
   CreateBpiSubjectCommandHandler,
@@ -30,8 +31,9 @@ export const QueryHandlers = [
     ...QueryHandlers,
     BpiSubjectAgent,
     BpiSubjectStorageAgent,
+    DidService,
     SubjectsProfile,
   ],
-  exports: [BpiSubjectAgent, BpiSubjectStorageAgent],
+  exports: [BpiSubjectAgent, BpiSubjectStorageAgent, DidService],
 })
 export class SubjectModule {}

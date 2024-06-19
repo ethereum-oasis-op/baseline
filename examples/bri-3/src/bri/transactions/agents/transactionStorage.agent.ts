@@ -27,13 +27,21 @@ export class TransactionStorageAgent {
       include: {
         fromBpiSubjectAccount: {
           include: {
-            ownerBpiSubject: true,
+            ownerBpiSubject: {
+              include: {
+                publicKeys: true,
+              },
+            },
             creatorBpiSubject: true,
           },
         },
         toBpiSubjectAccount: {
           include: {
-            ownerBpiSubject: true,
+            ownerBpiSubject: {
+              include: {
+                publicKeys: true,
+              },
+            },
             creatorBpiSubject: true,
           },
         },
@@ -57,12 +65,20 @@ export class TransactionStorageAgent {
       include: {
         fromBpiSubjectAccount: {
           include: {
-            ownerBpiSubject: true,
+            ownerBpiSubject: {
+              include: {
+                publicKeys: true,
+              },
+            },
           },
         },
         toBpiSubjectAccount: {
           include: {
-            ownerBpiSubject: true,
+            ownerBpiSubject: {
+              include: {
+                publicKeys: true,
+              },
+            },
           },
         },
       },
@@ -91,13 +107,21 @@ export class TransactionStorageAgent {
       include: {
         fromBpiSubjectAccount: {
           include: {
-            ownerBpiSubject: true,
+            ownerBpiSubject: {
+              include: {
+                publicKeys: true,
+              },
+            },
             creatorBpiSubject: true,
           },
         },
         toBpiSubjectAccount: {
           include: {
-            ownerBpiSubject: true,
+            ownerBpiSubject: {
+              include: {
+                publicKeys: true,
+              },
+            },
             creatorBpiSubject: true,
           },
         },

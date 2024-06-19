@@ -18,8 +18,7 @@ import {
   createEddsaSignature,
 } from '../src/shared/testing/utils';
 
-jest.setTimeout(120000);
-
+jest.setTimeout(240000);
 let accessToken: string;
 let app: INestApplication;
 let server: any;
@@ -169,7 +168,7 @@ describe('SRI use-case end-to-end test', () => {
   });
 
   it('Waits for a single VSM cycle and then verifies that the transaction has been executed and that the state has been properly stored', async () => {
-    await new Promise((r) => setTimeout(r, 20000));
+    await new Promise((r) => setTimeout(r, 50000));
     const resultWorkflow = await fetchWorkflow(createdWorkflowId);
     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
@@ -218,7 +217,7 @@ async function createExternalBpiSubjectAndReturnId(
     .send({
       name: bpiSubjectName,
       desc: 'A test Bpi Subject',
-      publicKey: pk,
+      publicKeys: pk,
     })
     .expect(201);
 

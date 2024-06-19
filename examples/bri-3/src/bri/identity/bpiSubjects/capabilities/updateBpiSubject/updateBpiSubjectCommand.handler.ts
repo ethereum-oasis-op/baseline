@@ -3,9 +3,9 @@ import { InjectMapper } from '@automapper/nestjs';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BpiSubjectAgent } from '../../agents/bpiSubjects.agent';
 import { BpiSubjectStorageAgent } from '../../agents/bpiSubjectsStorage.agent';
-import { BpiSubjectDto } from '../../api/dtos/response/bpiSubject.dto';
 import { BpiSubject } from '../../models/bpiSubject';
 import { UpdateBpiSubjectCommand } from './updateBpiSubject.command';
+import { BpiSubjectDto } from '../../api/dtos/response/bpiSubject.dto';
 
 @CommandHandler(UpdateBpiSubjectCommand)
 export class UpdateBpiSubjectCommandHandler
@@ -27,7 +27,7 @@ export class UpdateBpiSubjectCommandHandler
       bpiSubjectToUpdate,
       command.name,
       command.description,
-      command.publicKey,
+      command.publicKeys,
     );
 
     const bpiSubject = await this.storageAgent.updateBpiSubject(

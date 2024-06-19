@@ -29,6 +29,10 @@ import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { TransactionController } from './transactions.controller';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../identity/bpiSubjects/models/publicKey';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -36,18 +40,29 @@ describe('TransactionController', () => {
   let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
 
   const createBpiSubjectAccount = (id: string) => {
+    const ownerPublicKeys = [
+      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
+    ];
+
     const ownerBpiSubject = new BpiSubject(
       '123',
       'owner',
       'desc',
-      'publicKey',
+      ownerPublicKeys,
       [],
     );
+
+    const creatorPublicKeys = [
+      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk'),
+    ];
+
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      creatorPublicKeys,
       [],
     );
 

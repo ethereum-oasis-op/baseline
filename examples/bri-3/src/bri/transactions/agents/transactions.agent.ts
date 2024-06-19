@@ -7,8 +7,6 @@ import {
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
-import MerkleTree from 'merkletreejs';
-import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
@@ -23,6 +21,7 @@ import {
 } from '../api/err.messages';
 import { TransactionStorageAgent } from './transactionStorage.agent';
 import { TransactionResult } from '../models/transactionResult';
+import { PublicKeyType } from '../../identity/bpiSubjects/models/publicKey';
 
 @Injectable()
 export class TransactionAgent {
@@ -154,11 +153,14 @@ export class TransactionAgent {
       return false;
     }
 
-    const isSignatureValid = this.authAgent.verifySignatureAgainstPublicKey(
-      tx.payload,
-      tx.signature,
-      tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey,
-    );
+    const isSignatureValid =
+      await this.authAgent.verifyEddsaSignatureAgainstPublicKey(
+        tx.payload,
+        tx.signature,
+        tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(
+          (key) => key.type == PublicKeyType.EDDSA,
+        )[0].value,
+      );
 
     if (!isSignatureValid) {
       return false;
@@ -188,6 +190,8 @@ export class TransactionAgent {
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
+      circuitWitnessCalculatorPath,
+      circuitWitnessFilePath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
@@ -196,6 +200,8 @@ export class TransactionAgent {
       circuitPath,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
+      circuitWitnessCalculatorPath,
+      circuitWitnessFilePath,
     );
 
     const hashFn = this.merkleTreeService.createHashFunction(
@@ -223,6 +229,8 @@ export class TransactionAgent {
     circuitProvingKeyPath: string;
     circuitVerificatioKeyPath: string;
     circuitPath: string;
+    circuitWitnessCalculatorPath: string;
+    circuitWitnessFilePath: string;
   } {
     const snakeCaseWorkstepName = this.convertStringToSnakeCase(name);
 
@@ -231,27 +239,43 @@ export class TransactionAgent {
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
-      '_circuit_final.zkey';
+      '_final.zkey';
 
     const circuitVerificatioKeyPath =
       process.env.SNARKJS_CIRCUITS_PATH +
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
-      '_circuit_verification_key.json';
+      '_verification_key.json';
 
     const circuitPath =
       process.env.SNARKJS_CIRCUITS_PATH +
       snakeCaseWorkstepName +
       '/' +
       snakeCaseWorkstepName +
-      '_circuit.wasm';
+      '_js/' +
+      snakeCaseWorkstepName +
+      '.wasm';
 
+    const circuitWitnessCalculatorPath =
+      '../../../../../../' +
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/' +
+      snakeCaseWorkstepName +
+      '_js/witness_calculator.js';
+
+    const circuitWitnessFilePath =
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/witness.txt';
     return {
       snakeCaseWorkstepName,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
+      circuitWitnessCalculatorPath,
+      circuitWitnessFilePath,
     };
   }
 

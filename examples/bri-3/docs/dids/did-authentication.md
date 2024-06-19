@@ -14,21 +14,21 @@ Hence, Bri-3 utilizes the self-sovereign nature of decentralized identifiers (DI
 
 ## Environment Variables Explanation
 
-**GOERLI_RPC_URL**= "<Any GOERLI_RPC_URL i.e. _https://rpc.ankr.com/eth_goerli_>"
+**DID_REGISTRY**= "<address of the did registry smart contract>"
 
-#This is used to resolve dids. 
+#This is did registry address on a given network used to resolve dids. Example:https://sepolia.etherscan.io/address/0x03d5003bf0e79c5f5223588f347eba39afbc3818#code
 
-**GOERLI_SERVICE_DID**="did:ethr:0x5:<bpi_operator_public_key>" 
+**DID_BPI_OPERATOR_PUBLIC_KEY**="did:ethr:sepolia:<bpi_operator_public_key>" 
 
 #bpi_operator_public_key = public key of the bpi operator that represents the issuer of the JWT token. Users can retrieve their public key by accessing their blockchain account settings or using a wallet provider like [MetaMask](https://metamask.io/).
 
 where 
 1. did - the did URI scheme identifier
 2. ethr - the identifier for the DID method
-3. 0x5 - Specify GOERLI Test Network
+3. sepolia - Specify SEPOLIA Test Network
 4. bpi_operator_public_key - the DID method-specific identifier
 
-**GOERLI_SERVICE_SIGNER_PRIVATE_KEY**="<bpi_operator_private_key>" 
+**DID_BPI_OPERATOR_PRIVATE_KEY**="<bpi_operator_private_key>" 
 
 #bpi_operator_private_key = private key of the bpi operator that is used to sign the issued JWT token. Similar to the public key. For more information on how to view and access the public and private keys, please refer to the [MetaMask support](https://support.metamask.io/hc/en-us/articles/360015488791-How-to-view-your-account-details-and-public-address).
 

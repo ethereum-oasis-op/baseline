@@ -6,8 +6,9 @@ import { Transaction } from '../../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
-import { Point, buildBabyjub, buildEddsa } from 'circomlibjs';
+import { buildBabyjub, buildEddsa } from 'circomlibjs';
 import 'dotenv/config';
+import { PublicKeyType } from '../../../../../identity/bpiSubjects/models/publicKey';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
@@ -17,7 +18,7 @@ export const computeEffectiveEcdsaSigPublicInputs = (
   const ec = new EC('secp256k1');
 
   //Public Key
-  const publicKeyBuffer = ethers.utils.arrayify(publicKeyHex);
+  const publicKeyBuffer = ethers.toBeArray(publicKeyHex);
   const publicKeyCoordinates = ec.keyFromPublic(publicKeyBuffer).getPublic();
 
   //Signature
@@ -41,13 +42,15 @@ export const computeEffectiveEcdsaSigPublicInputs = (
 };
 
 export const computeEcdsaSigPublicInputs = (tx: Transaction) => {
-  const ecdsaSignature = ethers.utils.splitSignature(tx.signature);
+  const ecdsaSignature = ethers.Signature.from(tx.signature);
 
   const messageHash = Buffer.from(
-    ethers.utils.arrayify(ethers.utils.hashMessage(tx.payload)),
+    ethers.toBeArray(ethers.hashMessage(tx.payload)),
   );
 
-  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
+  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(
+    (key) => key.type == PublicKeyType.ECDSA,
+  )[0].value;
 
   return computeEffectiveEcdsaSigPublicInputs(
     ecdsaSignature,
@@ -104,7 +107,6 @@ export const computeMerkleProofPublicInputs = (
 };
 
 export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
-  const babyJub = await buildBabyjub();
   const eddsa = await buildEddsa();
 
   const hashedPayload = crypto
@@ -112,28 +114,20 @@ export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
     .update(JSON.stringify(tx.payload))
     .digest();
 
-  const publicKey =
-    tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey.split(',');
+  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(
+    (key) => key.type == PublicKeyType.EDDSA,
+  )[0].value;
 
-  const publicKeyPoints = [
-    Uint8Array.from(Buffer.from(publicKey[0], 'hex')),
-    Uint8Array.from(Buffer.from(publicKey[1], 'hex')),
-  ] as Point;
-
-  const packedPublicKey = babyJub.packPoint(publicKeyPoints);
+  const packedPublicKey = new Uint8Array(Buffer.from(publicKey, 'hex'));
 
   const signature = Uint8Array.from(Buffer.from(tx.signature, 'hex'));
   const unpackedSignature = eddsa.unpackSignature(signature);
 
-  if (
-    !eddsa.verifyPedersen(hashedPayload, unpackedSignature, publicKeyPoints)
-  ) {
-    throw new Error(`Eddsa signature does not match public key.`);
-  }
+  const packedSignature = eddsa.packSignature(unpackedSignature);
 
   const messageBits = buffer2bits(hashedPayload);
-  const r8Bits = buffer2bits(Buffer.from(signature.slice(0, 32)));
-  const sBits = buffer2bits(Buffer.from(signature.slice(32, 64)));
+  const r8Bits = buffer2bits(Buffer.from(packedSignature.slice(0, 32)));
+  const sBits = buffer2bits(Buffer.from(packedSignature.slice(32, 64)));
   const aBits = buffer2bits(Buffer.from(packedPublicKey));
 
   const inputs = {

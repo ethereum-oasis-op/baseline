@@ -67,7 +67,8 @@ export class ExecuteVsmCycleCommandHandler
           stateTreeRoot,
         );
 
-        await this.ccsmStorageAgent.storeAnchorHashOnCcsm(txResult.hash);
+        //TODO - Implement deploy and store on CCSM
+        //await this.ccsmStorageAgent.storeAnchorHashOnCcsm(txResult.hash);
 
         tx.updateStatusToExecuted();
         this.txStorageAgent.updateTransactionStatus(tx);

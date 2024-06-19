@@ -1,5 +1,5 @@
 import { computeEffectiveEcdsaSigPublicInputs } from './computePublicInputs';
-import { ethers } from 'ethers';
+import * as ethers from 'ethers';
 
 describe('Compute public inputs utils', () => {
   it('should calculate public key x and y coordinates ', async () => {
@@ -9,10 +9,11 @@ describe('Compute public inputs utils', () => {
     //Generate signature
     const message = 'Test';
     const messageHash = Buffer.from(
-      ethers.utils.arrayify(ethers.utils.hashMessage(message)),
+      ethers.toBeArray(ethers.hashMessage(message)),
     );
     const signature = await wallet.signMessage(message);
-    const expandedSignature = ethers.utils.splitSignature(signature);
+    //const expandedSignature = ethers.utils.splitSignature(signature);
+    const expandedSignature = ethers.Signature.from(signature);
 
     //Test
     const result = computeEffectiveEcdsaSigPublicInputs(

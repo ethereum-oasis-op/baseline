@@ -7,6 +7,8 @@ import { BpiSubject } from '../../../bri/identity/bpiSubjects/models/bpiSubject'
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { INVALID_SIGNATURE, USER_NOT_AUTHORIZED } from '../api/err.messages';
 import { jwtConstants } from '../constants';
+import { buildBabyjub, buildEddsa } from 'circomlibjs';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class AuthAgent {
@@ -23,26 +25,23 @@ export class AuthAgent {
     signature: string,
     publicKey: string,
   ): void {
-    if (!this.verifySignatureAgainstPublicKey(message, signature, publicKey)) {
+    if (
+      !this.verifyEcdsaSignatureAgainstPublicKey(message, signature, publicKey)
+    ) {
       throw new UnauthorizedException(INVALID_SIGNATURE);
     }
   }
 
-  verifySignatureAgainstPublicKey(
+  verifyEcdsaSignatureAgainstPublicKey(
     message: string,
     signature: string,
     senderPublicKey: string,
   ): boolean {
-    let publicAddressFromSenderPublicKey = '';
     let publicAddressFromSignature = '';
 
     try {
-      publicAddressFromSenderPublicKey =
-        ethers.utils.computeAddress(senderPublicKey);
-      publicAddressFromSignature = ethers.utils.verifyMessage(
-        message,
-        signature,
-      );
+      //publicAddressFromSenderPublicKey = ethers.computeAddress(senderPublicKey);
+      publicAddressFromSignature = ethers.verifyMessage(message, signature);
     } catch (error) {
       this.logger.logError(
         `Error validating signature: ${signature} for message ${message}. Error: ${error}}`,
@@ -52,7 +51,42 @@ export class AuthAgent {
 
     const isValid =
       publicAddressFromSignature.toLowerCase() ===
-      publicAddressFromSenderPublicKey.toLowerCase();
+      senderPublicKey.toLowerCase();
+
+    if (!isValid) {
+      this.logger.logWarn(
+        `Signature: ${signature} for public key ${senderPublicKey} is invalid.`,
+      );
+    }
+
+    return isValid;
+  }
+
+  async verifyEddsaSignatureAgainstPublicKey(
+    message: string,
+    signature: string,
+    senderPublicKey: string,
+  ): Promise<boolean> {
+    const eddsa = await buildEddsa();
+    const babyJub = await buildBabyjub();
+
+    const hashedPayload = crypto
+      .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
+      .update(JSON.stringify(message))
+      .digest();
+
+    const publicKey = Uint8Array.from(Buffer.from(senderPublicKey, 'hex'));
+    const publicKeyPoints = babyJub.unpackPoint(publicKey);
+
+    const eddsaSignature = Uint8Array.from(Buffer.from(signature, 'hex'));
+
+    const unpackedSignature = eddsa.unpackSignature(eddsaSignature);
+
+    const isValid = eddsa.verifyPedersen(
+      hashedPayload,
+      unpackedSignature,
+      publicKeyPoints,
+    );
 
     if (!isValid) {
       this.logger.logWarn(
@@ -95,8 +129,9 @@ export class AuthAgent {
       iat: now,
     };
 
-    const serviceDid = process.env.GOERLI_SERVICE_DID as string;
-    const privateKey = process.env.GOERLI_SERVICE_SIGNER_PRIVATE_KEY as string;
+    const serviceDid =
+      `did:ethr:${process.env.DID_NETWORK}:${process.env.DID_BPI_OPERATOR_PUBLIC_KEY}` as string;
+    const privateKey = process.env.DID_BPI_OPERATOR_PRIVATE_KEY as string;
 
     const serviceSigner = ES256KSigner(hexToBytes(privateKey));
 

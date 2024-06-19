@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
@@ -11,6 +11,14 @@ import * as fs from 'fs';
 @Injectable()
 export class SnarkjsCircuitService implements ICircuitService {
   public witness: Witness;
+
+  public async throwIfCreateWitnessInputInvalid(
+    publicInputs: string[],
+  ): Promise<void> {
+    if (publicInputs[0] === '0') {
+      throw new BadRequestException('Invalid circuit inputs');
+    }
+  }
 
   public async createWitness(
     inputs: {
@@ -81,6 +89,8 @@ export class SnarkjsCircuitService implements ICircuitService {
       pathToProvingKey,
       pathToWitnessFile,
     );
+
+    await this.throwIfCreateWitnessInputInvalid(publicInputs);
 
     const newProof = {
       value: proof,

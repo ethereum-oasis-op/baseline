@@ -2,6 +2,7 @@ import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
 import { BpiSubjectRole } from './bpiSubjectRole';
 import { PublicKeyType, PublicKey } from './publicKey';
+import { PublicKeyDto } from '../api/dtos/request/publicKey.dto';
 
 export class BpiSubject {
   @AutoMap()
@@ -13,7 +14,7 @@ export class BpiSubject {
   @AutoMap()
   description: string;
 
-  @AutoMap()
+  @AutoMap(() => [PublicKey])
   publicKeys: PublicKey[];
 
   @AutoMap()
@@ -43,10 +44,14 @@ export class BpiSubject {
     this.description = newDescription;
   }
 
-  public updatePublicKey(newPk: PublicKey): void {
-    this.publicKeys = this.publicKeys.map((key) =>
-      key.type == newPk.type ? (key = newPk) : key,
-    );
+  public updatePublicKeys(newPKs: PublicKeyDto[]): void {
+    newPKs.map((newKey: PublicKeyDto) => {
+      const index = this.publicKeys.findIndex(
+        (oldKey: PublicKey) =>
+          oldKey.type.toLowerCase() == newKey.type.toLowerCase(),
+      );
+      this.publicKeys[index].value = newKey.value;
+    });
   }
 
   public updateLoginNonce(): void {
@@ -57,6 +62,6 @@ export class BpiSubject {
     const ecdsaPublicKey = this.publicKeys.filter(
       (key) => key.type == PublicKeyType.ECDSA,
     )[0];
-    return `did:ethr:0x5:${ecdsaPublicKey.value}`;
+    return `did:ethr:0x11155111:${ecdsaPublicKey.value}`;
   }
 }
