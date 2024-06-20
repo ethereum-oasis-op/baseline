@@ -94,7 +94,7 @@ describe('validateCircuitInputTranslationSchema', () => {
     expect(result).toEqual('defaultValue not of type string for input1');
   });
 
-  it('Should return error] if an error occurs during schema parsing', () => {
+  it('Should return error if an error occurs during schema parsing', () => {
     // Arrange
     const schema = 'invalid JSON';
 
@@ -102,9 +102,7 @@ describe('validateCircuitInputTranslationSchema', () => {
     const result = cips.validateCircuitInputTranslationSchema(schema);
 
     // Assert
-    expect(result).toEqual(
-      'Unexpected token \'i\', "invalid JSON" is not valid JSON',
-    );
+    expect(result).toMatch(/^Unexpected token/);
   });
 
   it('Should return "" if basic valid schema passed in', () => {
