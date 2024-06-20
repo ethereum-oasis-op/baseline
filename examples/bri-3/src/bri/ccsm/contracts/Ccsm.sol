@@ -14,5 +14,9 @@ contract Ccsm {
 	emit AnchorHashSet(_workgroupId, _anchorHash);
   }
 
-  
+ function getAnchorHash(
+    string calldata _workgroupId
+  ) external view returns (string memory) {
+    return anchorHashStore[_workgroupId];
+  }  
 }
