@@ -79,10 +79,7 @@ describe('validateCircuitInputTranslationSchema', () => {
     const result = cips.validateCircuitInputTranslationSchema(schema);
 
     // Assert
-    expect(result).toEqual([
-      false,
-      'arrayType not defined properly for input1',
-    ]);
+    expect(result).toEqual('arrayType not defined properly for input1');
   });
 
   it('Should return "defaultValue not of type {dataType} for {circuitInput}" if defaultValue type does not match dataType', () => {
@@ -94,10 +91,7 @@ describe('validateCircuitInputTranslationSchema', () => {
     const result = cips.validateCircuitInputTranslationSchema(schema);
 
     // Assert
-    expect(result).toEqual([
-      false,
-      'defaultValue not of type string for input1',
-    ]);
+    expect(result).toEqual('defaultValue not of type string for input1');
   });
 
   it('Should return error] if an error occurs during schema parsing', () => {
@@ -108,10 +102,9 @@ describe('validateCircuitInputTranslationSchema', () => {
     const result = cips.validateCircuitInputTranslationSchema(schema);
 
     // Assert
-    expect(result).toEqual([
-      false,
+    expect(result).toEqual(
       'Unexpected token \'i\', "invalid JSON" is not valid JSON',
-    ]);
+    );
   });
 
   it('Should return "" if basic valid schema passed in', () => {

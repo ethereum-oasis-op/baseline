@@ -5,9 +5,7 @@ import { LoggingService } from '../../../../../shared/logging/logging.service';
 export class CircuitInputsParserService {
   constructor(private readonly logger: LoggingService) {}
 
-  public validateCircuitInputTranslationSchema(
-    schema: string,
-  ): string {
+  public validateCircuitInputTranslationSchema(schema: string): string {
     try {
       const parsedData: CircuitInputsMapping = JSON.parse(schema);
 
