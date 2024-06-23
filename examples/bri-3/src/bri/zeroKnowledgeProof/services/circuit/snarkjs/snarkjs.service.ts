@@ -21,8 +21,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   public async createWitness(
-    tx: Transaction,
-    circuitName: string,
+    circuitInputs: object,
     pathToCircuit: string,
     pathToProvingKey: string,
     pathToVerificationKey: string,
@@ -31,10 +30,8 @@ export class SnarkjsCircuitService implements ICircuitService {
   ): Promise<Witness> {
     this.witness = new Witness();
 
-    const preparedInputs = await this.prepareInputs(tx, circuitName);
-
     const { proof, publicInputs } = await this.executeCircuit(
-      preparedInputs,
+      circuitInputs,
       pathToCircuit,
       pathToProvingKey,
       pathToWitnessCalculator,
@@ -98,43 +95,6 @@ export class SnarkjsCircuitService implements ICircuitService {
     return { proof: newProof, publicInputs };
   }
 
-  private async prepareInputs(
-    tx: Transaction,
-    circuitName: string,
-  ): Promise<object> {
-    return await this[circuitName](tx);
-  }
-
-  // TODO: Mil5 - How to parametrize this for different use-cases?
-  private async workstep1(tx: Transaction): Promise<object> {
-    //1. Ecdsa signature
-    const { message, A, R8, S } = await computeEddsaSigPublicInputs(tx);
-
-    //2. Items
-    const payload = JSON.parse(tx.payload);
-
-    const itemPrices: number[] = [];
-    const itemAmount: number[] = [];
-
-    payload.items.forEach((item: object) => {
-      itemPrices.push(item['price']);
-      itemAmount.push(item['amount']);
-    });
-
-    const preparedInputs = {
-      invoiceStatus: this.calculateStringCharCodeSum(payload.status),
-      invoiceAmount: payload.amount,
-      itemPrices,
-      itemAmount,
-      message,
-      A,
-      R8,
-      S,
-    };
-
-    return preparedInputs;
-  }
-
   private async workstep2(inputs: {
     tx: Transaction;
     merkelizedPayload: MerkleTree;
@@ -173,15 +133,5 @@ export class SnarkjsCircuitService implements ICircuitService {
     };
 
     return preparedInputs;
-  }
-
-  private calculateStringCharCodeSum(status: string): number {
-    let sum = 0;
-
-    for (let i = 0; i < status.length; i++) {
-      sum += status.charCodeAt(i);
-    }
-
-    return sum;
   }
 }
