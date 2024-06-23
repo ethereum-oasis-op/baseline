@@ -1,8 +1,9 @@
 import { Witness } from '../../models/witness';
+import { Transaction } from '../../../transactions/models/transaction';
 
 export interface ICircuitService {
   createWitness(
-    inputs: object,
+    tx: Transaction,
     circuitName: string,
     pathToCircuit: string,
     pathToProvingKey: string,

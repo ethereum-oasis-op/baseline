@@ -18,17 +18,12 @@ import {
 } from '../../../../identity/bpiSubjects/models/publicKey';
 
 jest.setTimeout(20000);
+//NOTE: Skiping out the workstep1 as it requires compiled artifacts to run.
 describe.skip('SnarkjsService', () => {
   const snarkjs = new SnarkjsCircuitService();
-  let inputs: any;
+  let tx: Transaction;
   let witness: Witness;
 
-  //REMOVE THIS TEST: Empty test
-  it('this is empty test', () => {
-    expect('test').toBe('test');
-  });
-
-  //NOTE: Commenting out the workstep1 as it requires compiled artifacts to run. RUN THIS.
   beforeAll(async () => {
     const eddsa = await circomlib.buildEddsa();
     const babyJub = await circomlib.buildBabyjub();
@@ -112,7 +107,7 @@ describe.skip('SnarkjsService', () => {
     const packedSignature = eddsa.packSignature(eddsaSignature);
     const signature = Buffer.from(packedSignature).toString('hex');
 
-    const tx: Transaction = new Transaction(
+    tx = new Transaction(
       '123',
       12,
       '123',
@@ -123,8 +118,6 @@ describe.skip('SnarkjsService', () => {
       signature,
       TransactionStatus.Initialized,
     );
-
-    inputs = { tx };
   });
 
   it('creates witness for workstep1', async () => {
@@ -141,7 +134,7 @@ describe.skip('SnarkjsService', () => {
       './zeroKnowledgeArtifacts/circuits/workstep1/witness.txt';
 
     witness = await snarkjs.createWitness(
-      inputs,
+      tx,
       circuitName,
       pathToCircuit,
       pathToProvingKey,

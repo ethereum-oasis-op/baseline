@@ -21,10 +21,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   public async createWitness(
-    inputs: {
-      tx: Transaction;
-      merkelizedPayload: MerkleTree;
-    },
+    tx: Transaction,
     circuitName: string,
     pathToCircuit: string,
     pathToProvingKey: string,
@@ -34,7 +31,7 @@ export class SnarkjsCircuitService implements ICircuitService {
   ): Promise<Witness> {
     this.witness = new Witness();
 
-    const preparedInputs = await this.prepareInputs(inputs, circuitName);
+    const preparedInputs = await this.prepareInputs(tx, circuitName);
 
     const { proof, publicInputs } = await this.executeCircuit(
       preparedInputs,
@@ -102,25 +99,19 @@ export class SnarkjsCircuitService implements ICircuitService {
   }
 
   private async prepareInputs(
-    inputs: {
-      tx: Transaction;
-      merkelizedPayload: MerkleTree;
-    },
+    tx: Transaction,
     circuitName: string,
   ): Promise<object> {
-    return await this[circuitName](inputs);
+    return await this[circuitName](tx);
   }
 
   // TODO: Mil5 - How to parametrize this for different use-cases?
-  private async workstep1(inputs: {
-    tx: Transaction;
-    merkelizedPayload: MerkleTree;
-  }): Promise<object> {
+  private async workstep1(tx: Transaction): Promise<object> {
     //1. Ecdsa signature
-    const { message, A, R8, S } = await computeEddsaSigPublicInputs(inputs.tx);
+    const { message, A, R8, S } = await computeEddsaSigPublicInputs(tx);
 
     //2. Items
-    const payload = JSON.parse(inputs.tx.payload);
+    const payload = JSON.parse(tx.payload);
 
     const itemPrices: number[] = [];
     const itemAmount: number[] = [];
