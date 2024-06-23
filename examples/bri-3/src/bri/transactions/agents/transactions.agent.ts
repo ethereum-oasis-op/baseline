@@ -9,19 +9,20 @@ import { TransactionStatus } from '../models/transactionStatus.enum';
 
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { PublicKeyType } from '../../identity/bpiSubjects/models/publicKey';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { Workstep } from '../../workgroup/worksteps/models/workstep';
 import { ICircuitService } from '../../zeroKnowledgeProof/services/circuit/circuitService.interface';
+import { computeEddsaSigPublicInputs } from '../../zeroKnowledgeProof/services/circuit/snarkjs/utils/computePublicInputs';
 import {
   DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
-import { TransactionStorageAgent } from './transactionStorage.agent';
 import { TransactionResult } from '../models/transactionResult';
-import { PublicKeyType } from '../../identity/bpiSubjects/models/publicKey';
+import { TransactionStorageAgent } from './transactionStorage.agent';
 
 @Injectable()
 export class TransactionAgent {
@@ -194,9 +195,10 @@ export class TransactionAgent {
       circuitWitnessFilePath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
+    const circuitInputs = await this.prepareInputs(tx, snakeCaseWorkstepName);
+
     txResult.witness = await this.circuitService.createWitness(
-      tx,
-      snakeCaseWorkstepName,
+      circuitInputs,
       circuitPath,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
@@ -298,5 +300,52 @@ export class TransactionAgent {
     name = name.replace(/[^a-zA-Z0-9_]/g, '');
 
     return name;
+  }
+
+  private async prepareInputs(
+    tx: Transaction,
+    circuitName: string,
+  ): Promise<object> {
+    return await this[circuitName](tx);
+  }
+
+  // TODO: Mil5 - How to parametrize this for different use-cases?
+  private async workstep1(tx: Transaction): Promise<object> {
+    //1. Ecdsa signature
+    const { message, A, R8, S } = await computeEddsaSigPublicInputs(tx);
+
+    //2. Items
+    const payload = JSON.parse(tx.payload);
+
+    const itemPrices: number[] = [];
+    const itemAmount: number[] = [];
+
+    payload.items.forEach((item: object) => {
+      itemPrices.push(item['price']);
+      itemAmount.push(item['amount']);
+    });
+
+    const preparedInputs = {
+      invoiceStatus: this.calculateStringCharCodeSum(payload.status),
+      invoiceAmount: payload.amount,
+      itemPrices,
+      itemAmount,
+      message,
+      A,
+      R8,
+      S,
+    };
+
+    return preparedInputs;
+  }
+
+  private calculateStringCharCodeSum(status: string): number {
+    let sum = 0;
+
+    for (let i = 0; i < status.length; i++) {
+      sum += status.charCodeAt(i);
+    }
+
+    return sum;
   }
 }

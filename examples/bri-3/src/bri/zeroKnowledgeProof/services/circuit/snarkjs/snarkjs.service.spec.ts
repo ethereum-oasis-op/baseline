@@ -134,8 +134,7 @@ describe.skip('SnarkjsService', () => {
       './zeroKnowledgeArtifacts/circuits/workstep1/witness.txt';
 
     witness = await snarkjs.createWitness(
-      tx,
-      circuitName,
+      'TODO: circuitInputs' as unknown as object,
       pathToCircuit,
       pathToProvingKey,
       pathToVerificationKey,
