@@ -2,7 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
@@ -14,12 +14,13 @@ import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service'
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { Workstep } from '../../workgroup/worksteps/models/workstep';
+import { CircuitInputsParserService } from '../../zeroKnowledgeProof/services/circuit/circuitInputsParser/circuitInputParser.service';
 import { ICircuitService } from '../../zeroKnowledgeProof/services/circuit/circuitService.interface';
 import { computeEddsaSigPublicInputs } from '../../zeroKnowledgeProof/services/circuit/snarkjs/utils/computePublicInputs';
 import {
   DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
-  UPDATE_WRONG_STATUS_ERR_MESSAGE,
+  UPDATE_WRONG_STATUS_ERR_MESSAGE
 } from '../api/err.messages';
 import { TransactionResult } from '../models/transactionResult';
 import { TransactionStorageAgent } from './transactionStorage.agent';
@@ -34,6 +35,7 @@ export class TransactionAgent {
     private merkleTreeService: MerkleTreeService,
     @Inject('ICircuitService')
     private readonly circuitService: ICircuitService,
+    private circuitInputsParserService: CircuitInputsParserService
   ) {}
 
   public throwIfCreateTransactionInputInvalid() {
@@ -186,17 +188,16 @@ export class TransactionAgent {
     );
     txResult.merkelizedPayload = merkelizedPayload;
 
+    const payloadAsCircuitInputs = await this.preparePayloadAsCircuitInputs(tx.payload, workstep.circuitInputsTranslationSchema);
+    const circuitInputs = Object.assign(payloadAsCircuitInputs, await computeEddsaSigPublicInputs(tx));
+
     const {
-      snakeCaseWorkstepName,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
       circuitWitnessCalculatorPath,
       circuitWitnessFilePath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
-
-    const payloadAsCircuitInputs = await this.preparePayloadAsCircuitInputs(tx, snakeCaseWorkstepName);
-    const circuitInputs = Object.assign(payloadAsCircuitInputs, await computeEddsaSigPublicInputs(tx));
 
     txResult.witness = await this.circuitService.createWitness(
       circuitInputs,
@@ -228,7 +229,6 @@ export class TransactionAgent {
   // Format is: <path_from_env>/<workstep_name_in_snake_case>_<predefined_suffix>.
   // Will be ditched completely as part of milestone 5.
   private constructCircuitPathsFromWorkstepName(name: string): {
-    snakeCaseWorkstepName: string;
     circuitProvingKeyPath: string;
     circuitVerificatioKeyPath: string;
     circuitPath: string;
@@ -273,7 +273,6 @@ export class TransactionAgent {
       snakeCaseWorkstepName +
       '/witness.txt';
     return {
-      snakeCaseWorkstepName,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
@@ -304,10 +303,22 @@ export class TransactionAgent {
   }
 
   private async preparePayloadAsCircuitInputs(
-    tx: Transaction,
-    circuitName: string,
+    txPayload: string,
+    workstepTranslationSchema: string,
   ): Promise<object> {
-    return await this[circuitName](tx);
+    const mapping:CircuitInputsMapping = JSON.parse(workstepTranslationSchema);
+
+    if (!mapping) {
+      throw new Error(`Broken mapping`);
+    }
+
+    const parsedInputs = this.circuitInputsParserService.applyMappingToJSONPayload(txPayload, mapping);
+    if (!parsedInputs) {
+      throw new Error(`Failed to parse inputs`);
+    }
+
+    return parsedInputs;
+    // return await this[circuitName](tx);
   }
 
   // TODO: Mil5 - How to parametrize this for different use-cases?
