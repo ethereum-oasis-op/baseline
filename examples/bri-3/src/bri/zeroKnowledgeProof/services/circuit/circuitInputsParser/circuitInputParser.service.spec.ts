@@ -10,6 +10,138 @@ beforeAll(async () => {
   cips = new CircuitInputsParserService(loggingServiceMock);
 });
 
+describe('validateCircuitInputTranslationSchema', () => {
+  it('Should return "Missing mapping array" if mapping array is missing', () => {
+    // Arrange
+    const schema = '{}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('Missing mapping array');
+  });
+
+  it('Should return "{circuitInput}" if any required property has incorrect type', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": 123, "description": "desc1", "payloadJsonPath": "path1", "dataType": "string"}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('123 not of type string');
+  });
+
+  it('Should return "{description}" if any required property has incorrect type', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "123", "description": false, "payloadJsonPath": "path1", "dataType": "string"}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('false not of type string');
+  });
+
+  it('Should return "{payloadJsonPath}" if any required property has incorrect type', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "123", "description": "desc", "payloadJsonPath": 12, "dataType": "string"}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('12 not of type string');
+  });
+
+  it('Should return "{dataType}" if any required property has incorrect type', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "123", "description": "desc", "payloadJsonPath": "path1", "dataType": 232}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('232 not of type string');
+  });
+
+  it('Should return "arrayType not defined properly for {circuitInput}" if dataType is array and arrayType is not defined properly', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "input1", "description": "desc1", "payloadJsonPath": "path1", "dataType": "array", "arrayType": 123}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('arrayType not defined properly for input1');
+  });
+
+  it('Should return "defaultValue not of type {dataType} for {circuitInput}" if defaultValue type does not match dataType', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "input1", "description": "desc1", "payloadJsonPath": "path1", "dataType": "string", "defaultValue": 123}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('defaultValue not of type string for input1');
+  });
+
+  it('Should return error if an error occurs during schema parsing', () => {
+    // Arrange
+    const schema = 'invalid JSON';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toMatch(/^Unexpected token/);
+  });
+
+  it('Should return "" if basic valid schema passed in', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "input1", "description": "desc1", "payloadJsonPath": "path1", "dataType": "string"}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('');
+  });
+
+  it('Should return "" if valid schema with default value passed in', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "input1", "description": "desc1", "payloadJsonPath": "path1", "dataType": "string", "defaultValue": "123"}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('');
+  });
+
+  it('Should return "" if valid schema with arrayType in', () => {
+    // Arrange
+    const schema =
+      '{"mapping": [{"circuitInput": "input1", "description": "desc1", "payloadJsonPath": "path1", "dataType": "array", "arrayType": "string"}]}';
+
+    // Act
+    const result = cips.validateCircuitInputTranslationSchema(schema);
+
+    // Assert
+    expect(result).toEqual('');
+  });
+});
+
 describe('CircuitInputsParserService', () => {
   it('Should return null if empty CircuitInputsMapping passed in', () => {
     // Arrange
