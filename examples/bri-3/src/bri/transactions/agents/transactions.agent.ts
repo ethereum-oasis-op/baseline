@@ -195,7 +195,8 @@ export class TransactionAgent {
       circuitWitnessFilePath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
-    const circuitInputs = await this.prepareInputs(tx, snakeCaseWorkstepName);
+    const payloadAsCircuitInputs = await this.preparePayloadAsCircuitInputs(tx, snakeCaseWorkstepName);
+    const circuitInputs = Object.assign(payloadAsCircuitInputs, await computeEddsaSigPublicInputs(tx));
 
     txResult.witness = await this.circuitService.createWitness(
       circuitInputs,
@@ -302,7 +303,7 @@ export class TransactionAgent {
     return name;
   }
 
-  private async prepareInputs(
+  private async preparePayloadAsCircuitInputs(
     tx: Transaction,
     circuitName: string,
   ): Promise<object> {
@@ -311,10 +312,7 @@ export class TransactionAgent {
 
   // TODO: Mil5 - How to parametrize this for different use-cases?
   private async workstep1(tx: Transaction): Promise<object> {
-    //1. Ecdsa signature
-    const { message, A, R8, S } = await computeEddsaSigPublicInputs(tx);
-
-    //2. Items
+    //2. TODO: Use circuit inputs parser
     const payload = JSON.parse(tx.payload);
 
     const itemPrices: number[] = [];
@@ -329,11 +327,7 @@ export class TransactionAgent {
       invoiceStatus: this.calculateStringCharCodeSum(payload.status),
       invoiceAmount: payload.amount,
       itemPrices,
-      itemAmount,
-      message,
-      A,
-      R8,
-      S,
+      itemAmount
     };
 
     return preparedInputs;
