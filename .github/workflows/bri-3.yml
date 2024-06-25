@@ -6,11 +6,13 @@ on:
       - examples/bri-3/**
     branches:
       - main
+      - develop
   pull_request:
     paths:
       - examples/bri-3/**
     branches:
       - main
+      - develop
 
 jobs:
   ci:
