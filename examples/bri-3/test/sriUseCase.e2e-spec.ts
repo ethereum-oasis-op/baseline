@@ -141,8 +141,40 @@ describe('SRI use-case end-to-end test', () => {
   });
 
   it('Add a circuit input translation schema to a workstep', async () => {
-    const schema =
-      '{"mapping": [{"circuitInput": "input1", "description": "desc1", "payloadJsonPath": "path1", "dataType": "string"}]}';
+    const schema = `{
+          "mapping": [
+            {
+              "circuitInput": "invoiceStatus", 
+              "description": "Invoice status", 
+              "payloadJsonPath": "status", 
+              "dataType": "string"
+            },
+            {
+              "circuitInput": "invoiceAmount", 
+              "description": "Total gross amount of the invoice", 
+              "payloadJsonPath": "amount", 
+              "dataType": "integer"
+            },
+            {
+              "circuitInput": "itemPrices", 
+              "description": "Invoice item prices", 
+              "payloadJsonPath": "items", 
+              "dataType": "array",
+              "arrayType": "object",
+              "arrayItemFieldName": "price",
+              "arrayItemFieldType": "integer"
+            },
+            {
+              "circuitInput": "itemAmount", 
+              "description": "Invoice item amounts", 
+              "payloadJsonPath": "items", 
+              "dataType": "array",
+              "arrayType": "object",
+              "arrayItemFieldName": "amount",
+              "arrayItemFieldType": "integer"
+            }
+          ]
+        }`;
     await addCircuitInputsSchema(createdWorkstepId, schema);
   });
 
