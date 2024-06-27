@@ -2,10 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { Witness } from '../../../models/witness';
 import { Proof } from '../../../models/proof';
 import { ICircuitService } from '../circuitService.interface';
-import { computeEddsaSigPublicInputs } from './utils/computePublicInputs';
 import * as snarkjs from 'snarkjs';
-import { Transaction } from '../../../../transactions/models/transaction';
-import MerkleTree from 'merkletreejs';
 import * as fs from 'fs';
 
 @Injectable()
@@ -93,45 +90,5 @@ export class SnarkjsCircuitService implements ICircuitService {
     } as Proof;
 
     return { proof: newProof, publicInputs };
-  }
-
-  private async workstep2(inputs: {
-    tx: Transaction;
-    merkelizedPayload: MerkleTree;
-  }): Promise<object> {
-    //1. Eddsa signature
-    const { message, A, R8, S } = await computeEddsaSigPublicInputs(inputs.tx);
-
-    const payload = JSON.parse(inputs.tx.payload);
-
-    const preparedInputs = {
-      invoiceStatus: payload.status,
-      message,
-      A,
-      R8,
-      S,
-    };
-
-    return preparedInputs;
-  }
-
-  private async workstep3(inputs: {
-    tx: Transaction;
-    merkelizedPayload: MerkleTree;
-  }): Promise<object> {
-    //1. Eddsa signature
-    const { message, A, R8, S } = await computeEddsaSigPublicInputs(inputs.tx);
-
-    const payload = JSON.parse(inputs.tx.payload);
-
-    const preparedInputs = {
-      invoiceStatus: payload.status,
-      message,
-      A,
-      R8,
-      S,
-    };
-
-    return preparedInputs;
   }
 }

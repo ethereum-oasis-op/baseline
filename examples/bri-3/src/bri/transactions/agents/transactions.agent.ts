@@ -328,39 +328,36 @@ export class TransactionAgent {
     }
 
     return parsedInputs;
-    // return await this[circuitName](tx);
-  }
-
-  // TODO: Mil5 - How to parametrize this for different use-cases?
-  private async workstep1(tx: Transaction): Promise<object> {
-    //2. TODO: Use circuit inputs parser
-    const payload = JSON.parse(tx.payload);
-
-    const itemPrices: number[] = [];
-    const itemAmount: number[] = [];
-
-    payload.items.forEach((item: object) => {
-      itemPrices.push(item['price']);
-      itemAmount.push(item['amount']);
-    });
-
-    const preparedInputs = {
-      invoiceStatus: this.calculateStringCharCodeSum(payload.status),
-      invoiceAmount: payload.amount,
-      itemPrices,
-      itemAmount,
-    };
-
-    return preparedInputs;
-  }
-
-  private calculateStringCharCodeSum(status: string): number {
-    let sum = 0;
-
-    for (let i = 0; i < status.length; i++) {
-      sum += status.charCodeAt(i);
-    }
-
-    return sum;
   }
 }
+// TODO: Example input preparation for other workstep circuits from the example use-case, to be used
+// to properly setup dynamic mappings and to delete afterwards
+// private async workstep2(inputs: {
+//   tx: Transaction;
+//   merkelizedPayload: MerkleTree;
+// }): Promise<object> {
+//   //1. Eddsa signature
+
+//   const payload = JSON.parse(inputs.tx.payload);
+
+//   const preparedInputs = {
+//     invoiceStatus: payload.status,
+//   };
+
+//   return preparedInputs;
+// }
+
+// private async workstep3(inputs: {
+//   tx: Transaction;
+//   merkelizedPayload: MerkleTree;
+// }): Promise<object> {
+//   //1. Eddsa signature
+
+//   const payload = JSON.parse(inputs.tx.payload);
+
+//   const preparedInputs = {
+//     invoiceStatus: payload.status,
+//   };
+
+//   return preparedInputs;
+// }
