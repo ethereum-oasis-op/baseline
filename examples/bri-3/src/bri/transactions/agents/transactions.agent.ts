@@ -2,7 +2,7 @@ import {
   BadRequestException,
   Inject,
   Injectable,
-  NotFoundException
+  NotFoundException,
 } from '@nestjs/common';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
@@ -20,7 +20,7 @@ import { computeEddsaSigPublicInputs } from '../../zeroKnowledgeProof/services/c
 import {
   DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
-  UPDATE_WRONG_STATUS_ERR_MESSAGE
+  UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
 import { TransactionResult } from '../models/transactionResult';
 import { TransactionStorageAgent } from './transactionStorage.agent';
@@ -35,7 +35,7 @@ export class TransactionAgent {
     private merkleTreeService: MerkleTreeService,
     @Inject('ICircuitService')
     private readonly circuitService: ICircuitService,
-    private circuitInputsParserService: CircuitInputsParserService
+    private circuitInputsParserService: CircuitInputsParserService,
   ) {}
 
   public throwIfCreateTransactionInputInvalid() {
@@ -188,8 +188,14 @@ export class TransactionAgent {
     );
     txResult.merkelizedPayload = merkelizedPayload;
 
-    const payloadAsCircuitInputs = await this.preparePayloadAsCircuitInputs(tx.payload, workstep.circuitInputsTranslationSchema);
-    const circuitInputs = Object.assign(payloadAsCircuitInputs, await computeEddsaSigPublicInputs(tx));
+    const payloadAsCircuitInputs = await this.preparePayloadAsCircuitInputs(
+      tx.payload,
+      workstep.circuitInputsTranslationSchema,
+    );
+    const circuitInputs = Object.assign(
+      payloadAsCircuitInputs,
+      await computeEddsaSigPublicInputs(tx),
+    );
 
     const {
       circuitProvingKeyPath,
@@ -306,13 +312,17 @@ export class TransactionAgent {
     txPayload: string,
     workstepTranslationSchema: string,
   ): Promise<object> {
-    const mapping:CircuitInputsMapping = JSON.parse(workstepTranslationSchema);
+    const mapping: CircuitInputsMapping = JSON.parse(workstepTranslationSchema);
 
     if (!mapping) {
       throw new Error(`Broken mapping`);
     }
 
-    const parsedInputs = this.circuitInputsParserService.applyMappingToJSONPayload(txPayload, mapping);
+    const parsedInputs =
+      this.circuitInputsParserService.applyMappingToJSONPayload(
+        txPayload,
+        mapping,
+      );
     if (!parsedInputs) {
       throw new Error(`Failed to parse inputs`);
     }
@@ -338,7 +348,7 @@ export class TransactionAgent {
       invoiceStatus: this.calculateStringCharCodeSum(payload.status),
       invoiceAmount: payload.amount,
       itemPrices,
-      itemAmount
+      itemAmount,
     };
 
     return preparedInputs;

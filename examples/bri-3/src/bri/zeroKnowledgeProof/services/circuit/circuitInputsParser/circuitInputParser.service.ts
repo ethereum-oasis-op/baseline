@@ -94,7 +94,24 @@ export class CircuitInputsParserService {
             }
 
             if (mapping.arrayType === 'object') {
-              // TODO
+              if (mapping.arrayItemFieldName && mapping.arrayItemFieldType) {
+                result[mapping.circuitInput] = value
+                  ? value.map((item) => {
+                      const fieldValue = item[mapping.arrayItemFieldName!];
+                      if (mapping.arrayItemFieldType === 'integer') {
+                        return parseInt(fieldValue, 10);
+                      } else if (mapping.arrayItemFieldType === 'string') {
+                        return this.calculateStringCharCodeSum(fieldValue);
+                      }
+                      return fieldValue;
+                    })
+                  : mapping.defaultValue;
+              } else {
+                this.logger.logError(
+                  `Missing arrayItemFieldName or arrayItemFieldType for object array mapping ${mapping.circuitInput}`,
+                );
+                return null;
+              }
             }
             break;
           default:
