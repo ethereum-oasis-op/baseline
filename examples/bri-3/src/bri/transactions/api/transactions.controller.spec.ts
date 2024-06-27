@@ -6,17 +6,24 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { uuid } from 'uuidv4';
+import { LoggingModule } from '../../../shared/logging/logging.module';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../identity/bpiSubjects/models/publicKey';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { CircuitInputsParserService } from '../../zeroKnowledgeProof/services/circuit/circuitInputsParser/circuitInputParser.service';
 import { SnarkjsCircuitService } from '../../zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service';
-import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { TransactionAgent } from '../agents/transactions.agent';
+import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { CreateTransactionCommandHandler } from '../capabilities/createTransaction/createTransactionCommand.handler';
 import { DeleteTransactionCommandHandler } from '../capabilities/deleteTransaction/deleteTransactionCommand.handler';
 import { GetTransactionByIdQueryHandler } from '../capabilities/getTransactionById/getTransactionByIdQuery.handler';
@@ -28,11 +35,6 @@ import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { TransactionController } from './transactions.controller';
-import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
-import {
-  PublicKey,
-  PublicKeyType,
-} from '../../identity/bpiSubjects/models/publicKey';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -84,6 +86,7 @@ describe('TransactionController', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        LoggingModule,
       ],
       controllers: [TransactionController],
       providers: [
@@ -105,6 +108,7 @@ describe('TransactionController', () => {
           provide: 'ICircuitService',
           useClass: SnarkjsCircuitService,
         },
+        CircuitInputsParserService,
       ],
     })
       .overrideProvider(TransactionStorageAgent)

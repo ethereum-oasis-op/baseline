@@ -9,4 +9,6 @@ type CircuitInputMapping = {
   dataType: string;
   defaultValue?: any;
   arrayType?: string;
+  arrayItemFieldName?: string;
+  arrayItemFieldType?: string;
 };
