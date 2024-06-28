@@ -198,7 +198,10 @@ export class TransactionAgent {
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
-      await this.prepareCircuitInputs(tx, workstep.circuitInputsTranslationSchema),
+      await this.prepareCircuitInputs(
+        tx,
+        workstep.circuitInputsTranslationSchema,
+      ),
       circuitPath,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
