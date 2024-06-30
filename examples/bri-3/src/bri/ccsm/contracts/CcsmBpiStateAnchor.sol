@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.17;
 
-import  "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract CcsmBpiStateAnchor is AccessControl {
   mapping(string => string) public anchorHashStore;
