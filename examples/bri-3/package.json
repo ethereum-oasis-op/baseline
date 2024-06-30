@@ -42,6 +42,7 @@
     "@nestjs/swagger": "^7.3.1",
     "@noble/curves": "^1.2.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@openzeppelin/contracts": "^5.0.2",
     "@personaelabs/spartan-ecdsa": "^2.1.4",
     "@prisma/client": "^5.2.0",
     "circomlib": "^2.0.5",
