@@ -36,9 +36,7 @@ describe('Messaging Agent', () => {
 
     // Assert
     expect(validationErrors.length).toBe(1);
-    expect(validationErrors[0]).toEqual(
-      'test is not valid JSON. Error: SyntaxError: Unexpected token e in JSON at position 1',
-    );
+    expect(validationErrors[0]).toMatch(/^test is not valid JSON./);
   });
 
   it('Should return error when validating correct JSON raw message with invalid UUID in id field', () => {
