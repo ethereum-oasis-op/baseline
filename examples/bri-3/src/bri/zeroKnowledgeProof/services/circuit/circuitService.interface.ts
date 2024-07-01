@@ -1,14 +1,15 @@
 import { Witness } from '../../models/witness';
+import { Transaction } from '../../../transactions/models/transaction';
 
 export interface ICircuitService {
   createWitness(
-    inputs: object,
-    circuitName: string,
+    circuitInputs: object,
     pathToCircuit: string,
     pathToProvingKey: string,
     pathToVerificationKey: string,
     pathToWitnessCalculator?: string,
     pathToWitnessFile?: string,
   ): Promise<Witness>;
+
   verifyProofUsingWitness(witness: Witness): Promise<boolean>;
 }

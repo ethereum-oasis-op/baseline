@@ -7,21 +7,25 @@ import {
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 
+import MerkleTree from 'merkletreejs';
+import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 import { AuthAgent } from '../../auth/agent/auth.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
+import { PublicKeyType } from '../../identity/bpiSubjects/models/publicKey';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { Workstep } from '../../workgroup/worksteps/models/workstep';
+import { CircuitInputsParserService } from '../../zeroKnowledgeProof/services/circuit/circuitInputsParser/circuitInputParser.service';
 import { ICircuitService } from '../../zeroKnowledgeProof/services/circuit/circuitService.interface';
+import { computeEddsaSigPublicInputs } from '../../zeroKnowledgeProof/services/circuit/snarkjs/utils/computePublicInputs';
 import {
   DELETE_WRONG_STATUS_ERR_MESSAGE,
   NOT_FOUND_ERR_MESSAGE,
   UPDATE_WRONG_STATUS_ERR_MESSAGE,
 } from '../api/err.messages';
-import { TransactionStorageAgent } from './transactionStorage.agent';
 import { TransactionResult } from '../models/transactionResult';
-import { PublicKeyType } from '../../identity/bpiSubjects/models/publicKey';
+import { TransactionStorageAgent } from './transactionStorage.agent';
 
 @Injectable()
 export class TransactionAgent {
@@ -33,6 +37,7 @@ export class TransactionAgent {
     private merkleTreeService: MerkleTreeService,
     @Inject('ICircuitService')
     private readonly circuitService: ICircuitService,
+    private circuitInputsParserService: CircuitInputsParserService,
   ) {}
 
   public throwIfCreateTransactionInputInvalid() {
@@ -179,14 +184,12 @@ export class TransactionAgent {
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
 
-    const merkelizedPayload = this.merkleTreeService.merkelizePayload(
+    txResult.merkelizedPayload = this.merkleTreeService.merkelizePayload(
       JSON.parse(tx.payload),
       `${process.env.MERKLE_TREE_HASH_ALGH}`,
     );
-    txResult.merkelizedPayload = merkelizedPayload;
 
     const {
-      snakeCaseWorkstepName,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
@@ -195,8 +198,10 @@ export class TransactionAgent {
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
-      { tx, merkelizedPayload },
-      snakeCaseWorkstepName,
+      await this.prepareCircuitInputs(
+        tx,
+        workstep.circuitInputsTranslationSchema,
+      ),
       circuitPath,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
@@ -204,17 +209,9 @@ export class TransactionAgent {
       circuitWitnessFilePath,
     );
 
-    const hashFn = this.merkleTreeService.createHashFunction(
-      `${process.env.MERKLE_TREE_HASH_ALGH}`,
-    );
-
-    const merkelizedInvoiceRoot = merkelizedPayload.getRoot().toString('hex');
-    const witnessHash = hashFn(JSON.stringify(txResult.witness)).toString(
-      'hex',
-    );
-
-    txResult.hash = hashFn(`${merkelizedInvoiceRoot}${witnessHash}`).toString(
-      'hex',
+    txResult.hash = this.constructTxHash(
+      txResult.merkelizedPayload,
+      txResult.witness,
     );
 
     return txResult;
@@ -225,7 +222,6 @@ export class TransactionAgent {
   // Format is: <path_from_env>/<workstep_name_in_snake_case>_<predefined_suffix>.
   // Will be ditched completely as part of milestone 5.
   private constructCircuitPathsFromWorkstepName(name: string): {
-    snakeCaseWorkstepName: string;
     circuitProvingKeyPath: string;
     circuitVerificatioKeyPath: string;
     circuitPath: string;
@@ -270,7 +266,6 @@ export class TransactionAgent {
       snakeCaseWorkstepName +
       '/witness.txt';
     return {
-      snakeCaseWorkstepName,
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
@@ -279,10 +274,7 @@ export class TransactionAgent {
     };
   }
 
-  // TODO: #744 ChatGPT generated only for the purposes of temporary convention
-  // to connect worksteps with circuits on the file system.
   private convertStringToSnakeCase(name: string): string {
-    // Remove any leading or trailing spaces
     name = name.trim();
 
     // Replace spaces, hyphens, and underscores with a single underscore
@@ -299,4 +291,86 @@ export class TransactionAgent {
 
     return name;
   }
+
+  private async prepareCircuitInputs(
+    tx: Transaction,
+    circuitInputsTranslationSchema: string,
+  ): Promise<object> {
+    const payloadAsCircuitInputs = await this.preparePayloadAsCircuitInputs(
+      tx.payload,
+      circuitInputsTranslationSchema,
+    );
+
+    return Object.assign(
+      payloadAsCircuitInputs,
+      await computeEddsaSigPublicInputs(tx),
+    );
+  }
+
+  private async preparePayloadAsCircuitInputs(
+    txPayload: string,
+    workstepTranslationSchema: string,
+  ): Promise<object> {
+    const mapping: CircuitInputsMapping = JSON.parse(workstepTranslationSchema);
+
+    if (!mapping) {
+      throw new Error(`Broken mapping`);
+    }
+
+    const parsedInputs =
+      this.circuitInputsParserService.applyMappingToJSONPayload(
+        txPayload,
+        mapping,
+      );
+    if (!parsedInputs) {
+      throw new Error(`Failed to parse inputs`);
+    }
+
+    return parsedInputs;
+  }
+
+  private constructTxHash(
+    merkelizedPayload: MerkleTree,
+    witness: Witness,
+  ): string {
+    const hashFn = this.merkleTreeService.createHashFunction(
+      `${process.env.MERKLE_TREE_HASH_ALGH}`,
+    );
+
+    const merkelizedInvoiceRoot = merkelizedPayload.getRoot().toString('hex');
+    const witnessHash = hashFn(JSON.stringify(witness)).toString('hex');
+
+    return hashFn(`${merkelizedInvoiceRoot}${witnessHash}`).toString('hex');
+  }
 }
+// TODO: Example input preparation for other workstep circuits from the example use-case, to be used
+// to properly setup dynamic mappings and to delete afterwards
+// private async workstep2(inputs: {
+//   tx: Transaction;
+//   merkelizedPayload: MerkleTree;
+// }): Promise<object> {
+//   //1. Eddsa signature
+
+//   const payload = JSON.parse(inputs.tx.payload);
+
+//   const preparedInputs = {
+//     invoiceStatus: payload.status,
+//   };
+
+//   return preparedInputs;
+// }
+
+// private async workstep3(inputs: {
+//   tx: Transaction;
+//   merkelizedPayload: MerkleTree;
+// }): Promise<object> {
+//   //1. Eddsa signature
+
+//   const payload = JSON.parse(inputs.tx.payload);
+
+//   const preparedInputs = {
+//     invoiceStatus: payload.status,
+//   };
+
+//   return preparedInputs;
+// }
