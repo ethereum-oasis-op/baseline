@@ -28,7 +28,8 @@ let supplierBpiSubjectEddsaPrivateKey: string;
 let buyerBpiSubjectEddsaPublicKey: string;
 let buyerBpiSubjectEddsaPrivateKey: string;
 let createdWorkgroupId: string;
-let createdWorkstepId: string;
+let createdWorkstep1Id: string;
+let createdWorkstep2Id: string;
 let createdWorkflowId: string;
 let createdBpiSubjectAccountSupplierId: string;
 let createdBpiSubjectAccountBuyerId: string;
@@ -123,24 +124,29 @@ describe('SRI use-case end-to-end test', () => {
     );
   });
 
-  it('Sets up a workflow with a workstep in the previously created workgroup', async () => {
+  it('Sets up a workflow with 2 worksteps in the previously created workgroup', async () => {
     // TODO: Auth as supplier?
     // TODO: Can we  listen and fire NATS messages here
 
-    createdWorkstepId = await createWorkstepAndReturnId(
+    createdWorkstep1Id = await createWorkstepAndReturnId(
       'workstep1',
+      createdWorkgroupId,
+    );
+
+    createdWorkstep2Id = await createWorkstepAndReturnId(
+      'workstep2',
       createdWorkgroupId,
     );
 
     createdWorkflowId = await createWorkflowAndReturnId(
       'worksflow1',
       createdWorkgroupId,
-      [createdWorkstepId],
+      [createdWorkstep1Id, createdWorkstep2Id],
       [createdBpiSubjectAccountSupplierId, createdBpiSubjectAccountBuyerId],
     );
   });
 
-  it('Add a circuit input translation schema to a workstep', async () => {
+  it('Add a circuit input translation schema to workstep 1', async () => {
     const schema = `{
           "mapping": [
             {
@@ -175,17 +181,31 @@ describe('SRI use-case end-to-end test', () => {
             }
           ]
         }`;
-    await addCircuitInputsSchema(createdWorkstepId, schema);
+    await addCircuitInputsSchema(createdWorkstep1Id, schema);
   });
 
-  it('Submits a transaction for execution of the workstep 1', async () => {
+  it('Add a circuit input translation schema to workstep 2', async () => {
+    const schema = `{
+          "mapping": [
+            {
+              "circuitInput": "invoiceStatus", 
+              "description": "Invoice status", 
+              "payloadJsonPath": "status", 
+              "dataType": "string"
+            }
+          ]
+        }`;
+    await addCircuitInputsSchema(createdWorkstep2Id, schema);
+  });
+
+  it('Submits transaction 1 for execution of the workstep 1', async () => {
     // TODO: CheckAuthz on createTransaction and in other places
     // TODO: Faking two items in the payload as the circuit is hardcoded to 4
-    const createdTransactionId = await createTransactionAndReturnId(
+    await createTransactionAndReturnId(
       v4(),
       1,
       createdWorkflowId,
-      createdWorkstepId,
+      createdWorkstep1Id,
       createdBpiSubjectAccountSupplierId,
       supplierBpiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
@@ -205,7 +225,7 @@ describe('SRI use-case end-to-end test', () => {
     );
   });
 
-  it('Waits for a single VSM cycle and then verifies that the transaction has been executed and that the state has been properly stored', async () => {
+  it('Waits for a single VSM cycle and then verifies that transaction 1 has been executed and that the state has been properly stored', async () => {
     await new Promise((r) => setTimeout(r, 50000));
     const resultWorkflow = await fetchWorkflow(createdWorkflowId);
     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
@@ -215,6 +235,44 @@ describe('SRI use-case end-to-end test', () => {
 
     expect(stateTree.leaves.length).toBe(1);
     expect(historyTree.leaves.length).toBe(1);
+  });
+
+  it('Submits transaction 2 for execution of the workstep 2', async () => {
+
+    await createTransactionAndReturnId(
+      v4(),
+      1,
+      createdWorkflowId,
+      createdWorkstep2Id,
+      createdBpiSubjectAccountSupplierId,
+      supplierBpiSubjectEddsaPrivateKey,
+      createdBpiSubjectAccountBuyerId,
+      `{
+        "supplierInvoiceID": "INV123",
+        "amount": 300,
+        "issueDate": "2023-06-15",
+        "dueDate": "2023-07-15",
+        "status": "VERIFIED",
+        "items": [
+          { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
+          { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
+          { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
+          { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
+        ]
+      }`,
+    );
+  });
+
+  it('Waits for a single VSM cycle and then verifies that the transaction 2 has been executed and that the state has been properly stored', async () => {
+    await new Promise((r) => setTimeout(r, 50000));
+    const resultWorkflow = await fetchWorkflow(createdWorkflowId);
+    const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
+
+    const stateTree = JSON.parse(resultBpiAccount.stateTree.tree);
+    const historyTree = JSON.parse(resultBpiAccount.historyTree.tree);
+
+    expect(stateTree.leaves.length).toBe(2);
+    expect(historyTree.leaves.length).toBe(2);
   });
 });
 
