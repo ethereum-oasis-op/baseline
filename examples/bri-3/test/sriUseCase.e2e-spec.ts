@@ -30,6 +30,7 @@ let buyerBpiSubjectEddsaPrivateKey: string;
 let createdWorkgroupId: string;
 let createdWorkstep1Id: string;
 let createdWorkstep2Id: string;
+let createdWorkstep3Id: string;
 let createdWorkflowId: string;
 let createdBpiSubjectAccountSupplierId: string;
 let createdBpiSubjectAccountBuyerId: string;
@@ -138,10 +139,15 @@ describe('SRI use-case end-to-end test', () => {
       createdWorkgroupId,
     );
 
+    createdWorkstep3Id = await createWorkstepAndReturnId(
+      'workstep3',
+      createdWorkgroupId,
+    );
+
     createdWorkflowId = await createWorkflowAndReturnId(
       'worksflow1',
       createdWorkgroupId,
-      [createdWorkstep1Id, createdWorkstep2Id],
+      [createdWorkstep1Id, createdWorkstep2Id, createdWorkstep3Id],
       [createdBpiSubjectAccountSupplierId, createdBpiSubjectAccountBuyerId],
     );
   });
@@ -185,6 +191,20 @@ describe('SRI use-case end-to-end test', () => {
   });
 
   it('Add a circuit input translation schema to workstep 2', async () => {
+    const schema = `{
+          "mapping": [
+            {
+              "circuitInput": "invoiceStatus", 
+              "description": "Invoice status", 
+              "payloadJsonPath": "status", 
+              "dataType": "string"
+            }
+          ]
+        }`;
+    await addCircuitInputsSchema(createdWorkstep2Id, schema);
+  });
+
+  it('Add a circuit input translation schema to workstep 3', async () => {
     const schema = `{
           "mapping": [
             {
@@ -274,7 +294,47 @@ describe('SRI use-case end-to-end test', () => {
     expect(stateTree.leaves.length).toBe(2);
     expect(historyTree.leaves.length).toBe(2);
   });
+
+  it('Submits transaction 3 for execution of the workstep 3', async () => {
+
+    await createTransactionAndReturnId(
+      v4(),
+      1,
+      createdWorkflowId,
+      createdWorkstep3Id,
+      createdBpiSubjectAccountSupplierId,
+      supplierBpiSubjectEddsaPrivateKey,
+      createdBpiSubjectAccountBuyerId,
+      `{
+        "supplierInvoiceID": "INV123",
+        "amount": 300,
+        "issueDate": "2023-06-15",
+        "dueDate": "2023-07-15",
+        "status": "PAID",
+        "items": [
+          { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
+          { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
+          { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
+          { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
+        ]
+      }`,
+    );
+  });
+
+  it('Waits for a single VSM cycle and then verifies that the transaction 3 has been executed and that the state has been properly stored', async () => {
+    await new Promise((r) => setTimeout(r, 50000));
+    const resultWorkflow = await fetchWorkflow(createdWorkflowId);
+    const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
+
+    const stateTree = JSON.parse(resultBpiAccount.stateTree.tree);
+    const historyTree = JSON.parse(resultBpiAccount.historyTree.tree);
+
+    expect(stateTree.leaves.length).toBe(3);
+    expect(historyTree.leaves.length).toBe(3);
+  });
 });
+
+
 
 async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string> {
   // internalBpiSubjectEcdsaPublicKey & internalBpiSubjectEcdsaPrivateKey must be inline with the value for the bpiAdmin from seed.ts
