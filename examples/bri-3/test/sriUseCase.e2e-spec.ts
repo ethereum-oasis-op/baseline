@@ -204,7 +204,7 @@ describe('SRI use-case end-to-end test', () => {
     await addCircuitInputsSchema(createdWorkstep2Id, schema);
   });
 
-  it('Add a circuit input translation schema to workstep 3', async () => {
+  it('Add a circuit input translation schema to workstep 3', async () => { // TODO: Correct err in case of missing mapping
     const schema = `{
           "mapping": [
             {
@@ -215,7 +215,7 @@ describe('SRI use-case end-to-end test', () => {
             }
           ]
         }`;
-    await addCircuitInputsSchema(createdWorkstep2Id, schema);
+    await addCircuitInputsSchema(createdWorkstep3Id, schema);
   });
 
   it('Submits transaction 1 for execution of the workstep 1', async () => {
@@ -264,7 +264,7 @@ describe('SRI use-case end-to-end test', () => {
       1,
       createdWorkflowId,
       createdWorkstep2Id,
-      createdBpiSubjectAccountSupplierId,
+      createdBpiSubjectAccountSupplierId, // TODO: Should fail because supplier should not be able to execute this one
       supplierBpiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
       `{
@@ -302,7 +302,7 @@ describe('SRI use-case end-to-end test', () => {
       1,
       createdWorkflowId,
       createdWorkstep3Id,
-      createdBpiSubjectAccountSupplierId,
+      createdBpiSubjectAccountSupplierId, // TODO: Should fail because supplier should not be able to execute this one
       supplierBpiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
       `{
