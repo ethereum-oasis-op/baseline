@@ -32,6 +32,6 @@ export class BpiMerkleTree {
   }
 
   public getRoot(): string {
-    return this.tree.getRoot().toString();
+    return this.tree.getHexRoot();
   }
 }
