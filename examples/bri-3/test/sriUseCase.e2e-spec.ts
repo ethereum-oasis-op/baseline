@@ -264,9 +264,9 @@ describe('SRI use-case end-to-end test', () => {
       1,
       createdWorkflowId,
       createdWorkstep2Id,
-      createdBpiSubjectAccountSupplierId, // TODO: Should fail because supplier should not be able to execute this one
-      supplierBpiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
+      buyerBpiSubjectEddsaPrivateKey,
+      createdBpiSubjectAccountSupplierId,
       `{
         "supplierInvoiceID": "INV123",
         "amount": 300,
@@ -299,12 +299,12 @@ describe('SRI use-case end-to-end test', () => {
 
     await createTransactionAndReturnId(
       v4(),
-      1,
+      2,
       createdWorkflowId,
       createdWorkstep3Id,
-      createdBpiSubjectAccountSupplierId, // TODO: Should fail because supplier should not be able to execute this one
-      supplierBpiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
+      buyerBpiSubjectEddsaPrivateKey,
+      createdBpiSubjectAccountSupplierId,
       `{
         "supplierInvoiceID": "INV123",
         "amount": 300,
