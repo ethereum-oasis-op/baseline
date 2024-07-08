@@ -204,7 +204,8 @@ describe('SRI use-case end-to-end test', () => {
     await addCircuitInputsSchema(createdWorkstep2Id, schema);
   });
 
-  it('Add a circuit input translation schema to workstep 3', async () => { // TODO: Correct err in case of missing mapping
+  it('Add a circuit input translation schema to workstep 3', async () => {
+    // TODO: Correct err in case of missing mapping
     const schema = `{
           "mapping": [
             {
@@ -258,7 +259,6 @@ describe('SRI use-case end-to-end test', () => {
   });
 
   it('Submits transaction 2 for execution of the workstep 2', async () => {
-
     await createTransactionAndReturnId(
       v4(),
       1,
@@ -296,7 +296,6 @@ describe('SRI use-case end-to-end test', () => {
   });
 
   it('Submits transaction 3 for execution of the workstep 3', async () => {
-
     await createTransactionAndReturnId(
       v4(),
       2,
@@ -333,8 +332,6 @@ describe('SRI use-case end-to-end test', () => {
     expect(historyTree.leaves.length).toBe(3);
   });
 });
-
-
 
 async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string> {
   // internalBpiSubjectEcdsaPublicKey & internalBpiSubjectEcdsaPrivateKey must be inline with the value for the bpiAdmin from seed.ts
