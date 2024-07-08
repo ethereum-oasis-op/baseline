@@ -125,7 +125,7 @@ describe('SRI use-case end-to-end test', () => {
     );
   });
 
-  it('Sets up a workflow with 2 worksteps in the previously created workgroup', async () => {
+  it('Sets up a workflow with 3 worksteps in the previously created workgroup', async () => {
     // TODO: Auth as supplier?
     // TODO: Can we  listen and fire NATS messages here
 
