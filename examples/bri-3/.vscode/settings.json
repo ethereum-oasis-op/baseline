@@ -1,3 +1,5 @@
 {
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "solidity-va.diagnostics.cdili_json.import": true,
+    "solidity.compileUsingRemoteVersion": "v0.8.20+commit.a1b79de6"
 }
