@@ -1,8 +1,8 @@
 /** @type import('hardhat/config').HardhatUserConfig */
-
 require('@nomicfoundation/hardhat-ethers');
 require('dotenv/config');
 module.exports = {
+  solidity: '0.8.20',
   defaultNetwork: process.env.CCSM_NETWORK,
   networks: {
     //Uncomment the required network
@@ -15,10 +15,9 @@ module.exports = {
     //   accounts: [`0x${process.env.GANACHE_ACCOUNT_PRIVATE_KEY}`],
     // },
   },
-  solidity: '0.8.19',
   paths: {
-    sources:
-      './src/bri/zeroKnowledgeProof/services/blockchain/ethereum/contracts',
+    sources: './src/bri/ccsm/contracts',
+    tests: './src/bri/ccsm/test',
     artifacts:
       './zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/artifacts',
   },
