@@ -28,7 +28,7 @@ contract CcsmBpiStateAnchor is AccessControl {
     );
     require(bytes(_anchorHash).length > 0, 'AnchorHash cannot be empty');
     require(
-      bytes(_anchorHash).length > 256,
+      bytes(_anchorHash).length <= 256,
       'AnchorHash cannot exceed 256 bytes'
     );
 

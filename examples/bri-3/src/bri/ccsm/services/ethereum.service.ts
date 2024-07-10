@@ -6,15 +6,17 @@ import {
   ethers,
   Provider,
   AlchemyProvider,
-  HDNodeWallet,
-  Wallet,
+  BaseWallet,
+  SigningKey,
 } from 'ethers';
 import * as CcsmBpiStateAnchor from '../../../../zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/artifacts/src/bri/ccsm/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
+import 'dotenv/config';
+import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
 
 @Injectable()
 export class EthereumService implements ICcsmService {
   private provider: Provider;
-  private wallet: HDNodeWallet;
+  private wallet: BaseWallet;
 
   constructor() {
     this.provider = new AlchemyProvider(
@@ -22,17 +24,21 @@ export class EthereumService implements ICcsmService {
       process.env.ALCHEMY_PROVIDER_API_KEY,
     );
 
-    this.wallet = Wallet.createRandom(this.provider);
+    const signingKey = new SigningKey('0x' + internalBpiSubjectEcdsaPrivateKey);
+
+    this.wallet = new BaseWallet(signingKey, this.provider);
   }
 
   public async deployContract(): Promise<void> {
     const ccsmBpiStateAnchorContract = new ethers.ContractFactory(
       CcsmBpiStateAnchor.abi,
       CcsmBpiStateAnchor.bytecode,
-      this.provider,
+      this.wallet,
     );
 
-    const deployingContract = await ccsmBpiStateAnchorContract.deploy();
+    const deployingContract = await ccsmBpiStateAnchorContract.deploy([
+      this.wallet.address,
+    ]);
     const deployedContract = await deployingContract.waitForDeployment();
 
     const deployedContractAddress = await deployedContract.getAddress();
