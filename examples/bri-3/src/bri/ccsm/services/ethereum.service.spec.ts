@@ -20,7 +20,7 @@ describe('Ethereum services', () => {
       const ccsmContract = await ccsm.connectToContract({ readonly: true });
 
       //Assert
-      expect(await ccsmContract.AnchorHashStore('workgroupId')).toEqual(
+      expect(await ccsmContract.anchorHashStore(workgroupdId)).toEqual(
         anchorHash,
       );
     });

@@ -19,10 +19,12 @@ export class EthereumService implements ICcsmService {
   private wallet: BaseWallet;
 
   constructor() {
-    this.provider = new AlchemyProvider(
-      process.env.ALCHEMY_PROVIDER_NETWORK,
-      process.env.ALCHEMY_PROVIDER_API_KEY,
-    );
+    if (process.env.PROVIDER === 'alchemy') {
+      this.provider = new AlchemyProvider(
+        process.env.ALCHEMY_PROVIDER_NETWORK,
+        process.env.ALCHEMY_PROVIDER_API_KEY,
+      );
+    }
 
     const signingKey = new SigningKey('0x' + internalBpiSubjectEcdsaPrivateKey);
 
