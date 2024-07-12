@@ -8,12 +8,17 @@ import { AppModule } from '../src/app.module';
 import { BpiMerkleTree } from '../src/bri/merkleTree/models/bpiMerkleTree';
 import { MerkleTreeService } from '../src/bri/merkleTree/services/merkleTree.service';
 import {
-  buyerBpiSubjectEcdsaPrivateKey, buyerBpiSubjectEcdsaPublicKey, internalBpiSubjectEcdsaPrivateKey, internalBpiSubjectEcdsaPublicKey, supplierBpiSubjectEcdsaPrivateKey, supplierBpiSubjectEcdsaPublicKey
+  buyerBpiSubjectEcdsaPrivateKey,
+  buyerBpiSubjectEcdsaPublicKey,
+  internalBpiSubjectEcdsaPrivateKey,
+  internalBpiSubjectEcdsaPublicKey,
+  supplierBpiSubjectEcdsaPrivateKey,
+  supplierBpiSubjectEcdsaPublicKey,
 } from '../src/shared/testing/constants';
 import {
   createEddsaPrivateKey,
   createEddsaPublicKey,
-  createEddsaSignature
+  createEddsaSignature,
 } from '../src/shared/testing/utils';
 
 jest.setTimeout(240000);
@@ -250,28 +255,33 @@ describe('SRI use-case end-to-end test', () => {
     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
     const stateBpiMerkleTree = new BpiMerkleTree(
-      "ttt", 
-      "sha256", 
+      'ttt',
+      'sha256',
       MerkleTree.unmarshalTree(
         resultBpiAccount.stateTree.tree,
-        new MerkleTreeService().createHashFunction("sha256"),
-    ));
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
 
     const historyBpiMerkleTree = new BpiMerkleTree(
-      "ttt", 
-      "sha256",
+      'ttt',
+      'sha256',
       MerkleTree.unmarshalTree(
         resultBpiAccount.historyTree.tree,
-        new MerkleTreeService().createHashFunction("sha256"),
-    ));
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
 
-    expect(historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot())).toBe(0);
+    expect(
+      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+    ).toBe(0);
 
-    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(stateBpiMerkleTree.getLeaf(0));
-    
+    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+      stateBpiMerkleTree.getLeaf(0),
+    );
+
     expect(stateTreeLeafValue.leafIndex).toBe(0);
   });
-  
 
   it('Submits transaction 2 for execution of the workstep 2', async () => {
     await createTransactionAndReturnId(
@@ -304,25 +314,31 @@ describe('SRI use-case end-to-end test', () => {
     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
     const stateBpiMerkleTree = new BpiMerkleTree(
-      "ttt", 
-      "sha256", 
+      'ttt',
+      'sha256',
       MerkleTree.unmarshalTree(
         resultBpiAccount.stateTree.tree,
-        new MerkleTreeService().createHashFunction("sha256"),
-    ));
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
 
     const historyBpiMerkleTree = new BpiMerkleTree(
-      "ttt", 
-      "sha256",
+      'ttt',
+      'sha256',
       MerkleTree.unmarshalTree(
         resultBpiAccount.historyTree.tree,
-        new MerkleTreeService().createHashFunction("sha256"),
-    ));
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
 
-    expect(historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot())).toBe(1);
+    expect(
+      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+    ).toBe(1);
 
-    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(stateBpiMerkleTree.getLeaf(1));
-    
+    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+      stateBpiMerkleTree.getLeaf(1),
+    );
+
     expect(stateTreeLeafValue.leafIndex).toBe(1);
   });
 
@@ -357,25 +373,31 @@ describe('SRI use-case end-to-end test', () => {
     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
     const stateBpiMerkleTree = new BpiMerkleTree(
-      "ttt", 
-      "sha256", 
+      'ttt',
+      'sha256',
       MerkleTree.unmarshalTree(
         resultBpiAccount.stateTree.tree,
-        new MerkleTreeService().createHashFunction("sha256"),
-    ));
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
 
     const historyBpiMerkleTree = new BpiMerkleTree(
-      "ttt", 
-      "sha256",
+      'ttt',
+      'sha256',
       MerkleTree.unmarshalTree(
         resultBpiAccount.historyTree.tree,
-        new MerkleTreeService().createHashFunction("sha256"),
-    ));
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
 
-    expect(historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot())).toBe(2);
+    expect(
+      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+    ).toBe(2);
 
-    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(stateBpiMerkleTree.getLeaf(2));
-    
+    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+      stateBpiMerkleTree.getLeaf(2),
+    );
+
     expect(stateTreeLeafValue.leafIndex).toBe(2);
   });
 });
