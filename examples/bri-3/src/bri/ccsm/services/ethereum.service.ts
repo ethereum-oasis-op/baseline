@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs/promises';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ICcsmService } from '../ccsm.interface';
+import { ICcsmService } from './ccsm.interface';
 import {
   Contract,
   ethers,

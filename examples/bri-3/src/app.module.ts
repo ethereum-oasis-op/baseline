@@ -6,6 +6,7 @@ import { AuthModule } from './bri/auth/auth.module';
 import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
 import { AuthzModule } from './bri/authz/authz.module';
 import { AuthzGuard } from './bri/authz/guards/authz.guard';
+import { CcsmModule } from './bri/ccsm/ccsm.module';
 import { CommunicationModule } from './bri/communication/communication.module';
 import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
 import { IdentityModule } from './bri/identity/identity.module';
@@ -37,6 +38,7 @@ import { PrismaService } from './shared/prisma/prisma.service';
     SubjectModule,
     MerkleModule,
     StateModule,
+    CcsmModule,
   ],
   providers: [
     PrismaService,
