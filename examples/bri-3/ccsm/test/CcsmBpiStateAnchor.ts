@@ -19,6 +19,7 @@ describe("CcsmBpiStateAnchor", function () {
   }
 
   describe("Deployment", function () {
+    // TODO: Extend tests
     it("Should deploy the contract", async function () {
       const { ccsmBpiStateAnchor, owner, otherAccount } = await loadFixture(deployCcsmBpiStateAnchor);
 

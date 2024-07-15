@@ -19,10 +19,11 @@ export class EthereumService implements ICcsmService {
   private wallet: BaseWallet;
 
   constructor() {
+    
     if (process.env.PROVIDER === 'alchemy') {
       this.provider = new AlchemyProvider(
-        process.env.ALCHEMY_PROVIDER_NETWORK,
-        process.env.ALCHEMY_PROVIDER_API_KEY,
+        process.env.ALCHEMY_PROVIDER_NETWORK, // TODO: Use did_network env just rename to CCSM_NETWORK
+        process.env.ALCHEMY_PROVIDER_API_KEY, // TODO: Use infura as we already use it for DIDs
       );
     }
 
@@ -31,9 +32,10 @@ export class EthereumService implements ICcsmService {
     this.wallet = new BaseWallet(signingKey, this.provider);
   }
 
+  // TODO: No need for this one
   public async deployContract(): Promise<void> {
     const ccsmBpiStateAnchorContract = new ethers.ContractFactory(
-      CcsmBpiStateAnchor.abi,
+      CcsmBpiStateAnchor.abi, // Read this one from a single artifacts file located in ccsmArtifacts on the same level as zeroKnowledgeArtifacts
       CcsmBpiStateAnchor.bytecode,
       this.wallet,
     );
@@ -89,6 +91,7 @@ export class EthereumService implements ICcsmService {
     return anchorHash;
   }
 
+  // TODO: No need for this one
   private async storeDeployedContractAddress(contractAddress: string) {
     const ccsmAddress = JSON.stringify({
       contractAddress: contractAddress,
@@ -100,6 +103,7 @@ export class EthereumService implements ICcsmService {
     );
   }
 
+  // TODO: Read contract address from ENV (it is deployed during BPI setup)
   private async getDeployedContractAddress(): Promise<string> {
     return JSON.parse(
       (
