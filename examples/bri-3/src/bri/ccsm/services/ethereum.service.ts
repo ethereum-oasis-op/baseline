@@ -19,7 +19,6 @@ export class EthereumService implements ICcsmService {
   private wallet: BaseWallet;
 
   constructor() {
-    
     if (process.env.PROVIDER === 'alchemy') {
       this.provider = new AlchemyProvider(
         process.env.ALCHEMY_PROVIDER_NETWORK, // TODO: Use did_network env just rename to CCSM_NETWORK
