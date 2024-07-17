@@ -31,25 +31,8 @@ export class EthereumService implements ICcsmService {
     this.wallet = new BaseWallet(signingKey, this.provider);
   }
 
-  // TODO: No need for this one
-  public async deployContract(): Promise<void> {
-    const ccsmBpiStateAnchorContract = new ethers.ContractFactory(
-      CcsmBpiStateAnchor.abi, // Read this one from a single artifacts file located in ccsmArtifacts on the same level as zeroKnowledgeArtifacts
-      CcsmBpiStateAnchor.bytecode,
-      this.wallet,
-    );
-
-    const deployingContract = await ccsmBpiStateAnchorContract.deploy([
-      this.wallet.address,
-    ]);
-    const deployedContract = await deployingContract.waitForDeployment();
-
-    const deployedContractAddress = await deployedContract.getAddress();
-    await this.storeDeployedContractAddress(deployedContractAddress);
-  }
-
   async connectToContract(options: { readonly: boolean }): Promise<Contract> {
-    const ccsmContractAddress = await this.getDeployedContractAddress();
+    const ccsmContractAddress = process.env.ALCHEMY_PROVIDER_NETWORK!;
     let ccsmBpiStateAnchorContract;
 
     if (options.readonly) {
@@ -88,28 +71,5 @@ export class EthereumService implements ICcsmService {
     const ccsmContract = await this.connectToContract({ readonly: true });
     const anchorHash = await ccsmContract.getAnchorHash(workgroupdId);
     return anchorHash;
-  }
-
-  // TODO: No need for this one
-  private async storeDeployedContractAddress(contractAddress: string) {
-    const ccsmAddress = JSON.stringify({
-      contractAddress: contractAddress,
-    });
-
-    await writeFile(
-      './zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/ccsmContractAddress.json',
-      ccsmAddress,
-    );
-  }
-
-  // TODO: Read contract address from ENV (it is deployed during BPI setup)
-  private async getDeployedContractAddress(): Promise<string> {
-    return JSON.parse(
-      (
-        await readFile(
-          './zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/ccsmContractAddress.json',
-        )
-      ).toString(),
-    ).contractAddress;
   }
 }
