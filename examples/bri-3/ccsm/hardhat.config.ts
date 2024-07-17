@@ -6,14 +6,13 @@ const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   networks: {
     sepolia: {
-      url: process.env.ROPSTEN_URL || "",
+      url: "https://sepolia.infura.io/v3/" + process.env.INFURA_PROVIDER_API_KEY,
       accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [], // TODO: Add test account for sepolia
     }
   }
 };
 
-// TODO: add sepolia network config with infura or alchemy URL
 // TODO: Compile the contract and add the ABI to a folder ccsmArtifacts so that it can be used by the BPI to talk to the contract
 
 export default config;
