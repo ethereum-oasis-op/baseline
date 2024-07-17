@@ -13,6 +13,4 @@ const config: HardhatUserConfig = {
   }
 };
 
-// TODO: Compile the contract and add the ABI to a folder ccsmArtifacts so that it can be used by the BPI to talk to the contract
-
 export default config;

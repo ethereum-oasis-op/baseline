@@ -1,10 +1,12 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import 'dotenv/config';
 import {
-  BaseWallet, Contract,
+  BaseWallet,
+  Contract,
   ethers,
   InfuraProvider,
-  Provider, SigningKey
+  Provider,
+  SigningKey,
 } from 'ethers';
 import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/CcsmBpiStateAnchor.json';
 import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
@@ -16,7 +18,7 @@ export class EthereumService implements ICcsmService {
   private wallet: BaseWallet;
 
   constructor() {
-    // TOOD: This should be environment agnostic, meanning it can worok both against 
+    // TOOD: This should be environment agnostic, meanning it can worok both against
     // local hardhat node, sepolia and mainnet
     this.provider = new InfuraProvider(
       process.env.CCSM_NETWORK,

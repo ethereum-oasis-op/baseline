@@ -8,7 +8,6 @@ describe.skip('Ethereum services', () => {
 
   beforeAll(async () => {
     ccsm = new EthereumService();
-    await ccsm.deployContract();
   });
 
   describe('storeAnchorHash', () => {
