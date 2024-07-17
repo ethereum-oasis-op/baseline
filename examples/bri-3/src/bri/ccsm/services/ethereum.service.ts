@@ -1,17 +1,14 @@
-import { readFile, writeFile } from 'fs/promises';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { ICcsmService } from './ccsm.interface';
-import {
-  Contract,
-  ethers,
-  Provider,
-  AlchemyProvider,
-  BaseWallet,
-  SigningKey,
-} from 'ethers';
-import * as CcsmBpiStateAnchor from '../../../../zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/artifacts/src/bri/ccsm/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
 import 'dotenv/config';
+import {
+  BaseWallet, Contract,
+  ethers,
+  InfuraProvider,
+  Provider, SigningKey
+} from 'ethers';
+import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/CcsmBpiStateAnchor.json';
 import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
+import { ICcsmService } from './ccsm.interface';
 
 @Injectable()
 export class EthereumService implements ICcsmService {
@@ -19,12 +16,12 @@ export class EthereumService implements ICcsmService {
   private wallet: BaseWallet;
 
   constructor() {
-    if (process.env.PROVIDER === 'alchemy') {
-      this.provider = new AlchemyProvider(
-        process.env.ALCHEMY_PROVIDER_NETWORK, // TODO: Use did_network env just rename to CCSM_NETWORK
-        process.env.ALCHEMY_PROVIDER_API_KEY, // TODO: Use infura as we already use it for DIDs
-      );
-    }
+    // TOOD: This should be environment agnostic, meanning it can worok both against 
+    // local hardhat node, sepolia and mainnet
+    this.provider = new InfuraProvider(
+      process.env.CCSM_NETWORK,
+      process.env.INFURA_PROVIDER_API_KEY,
+    );
 
     const signingKey = new SigningKey('0x' + internalBpiSubjectEcdsaPrivateKey);
 
