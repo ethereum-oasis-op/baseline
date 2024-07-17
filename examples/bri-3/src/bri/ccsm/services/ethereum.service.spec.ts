@@ -1,7 +1,9 @@
 import { EthereumService } from './ethereum.service';
 
-jest.setTimeout(60000);
-describe('Ethereum services', () => {
+// jest.setTimeout(60000);
+// TODO: These below are not unit tests, they are expecting a deployed contract on sepolia
+// We ll do this testing as part of the e2e test in the end so these can be removed
+describe.skip('Ethereum services', () => {
   let ccsm: EthereumService;
 
   beforeAll(async () => {
