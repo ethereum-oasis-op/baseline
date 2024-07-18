@@ -30,23 +30,16 @@ export class EthereumService implements ICcsmService {
     this.wallet = new BaseWallet(signingKey, this.provider);
   }
 
-  async connectToContract(options: { readonly: boolean }): Promise<Contract> {
-    const ccsmContractAddress = process.env.ALCHEMY_PROVIDER_NETWORK!;
+  async connectToContract(): Promise<Contract> {
+    const ccsmContractAddress =
+      process.env.CCSM_BPI_STATE_ANCHOR_CONTRACT_ADDRESS!;
     let ccsmBpiStateAnchorContract;
 
-    if (options.readonly) {
-      ccsmBpiStateAnchorContract = new ethers.Contract(
-        ccsmContractAddress,
-        CcsmBpiStateAnchor.abi,
-        this.provider,
-      );
-    } else {
-      ccsmBpiStateAnchorContract = new ethers.Contract(
-        ccsmContractAddress,
-        CcsmBpiStateAnchor.abi,
-        this.wallet,
-      );
-    }
+    ccsmBpiStateAnchorContract = new ethers.Contract(
+      ccsmContractAddress,
+      CcsmBpiStateAnchor.abi,
+      this.wallet,
+    );
 
     return ccsmBpiStateAnchorContract;
   }
@@ -55,7 +48,7 @@ export class EthereumService implements ICcsmService {
     workgroupId: string,
     anchorHash: string,
   ): Promise<void> {
-    const ccsmContract = await this.connectToContract({ readonly: false });
+    const ccsmContract = await this.connectToContract();
     try {
       const tx = await ccsmContract.setAnchorHash(workgroupId, anchorHash);
       await tx.wait();
@@ -67,7 +60,7 @@ export class EthereumService implements ICcsmService {
   }
 
   public async getAnchorHash(workgroupdId: string): Promise<string> {
-    const ccsmContract = await this.connectToContract({ readonly: true });
+    const ccsmContract = await this.connectToContract();
     const anchorHash = await ccsmContract.getAnchorHash(workgroupdId);
     return anchorHash;
   }

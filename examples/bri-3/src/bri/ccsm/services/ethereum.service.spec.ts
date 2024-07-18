@@ -18,7 +18,7 @@ describe.skip('Ethereum services', () => {
 
       //Act
       await ccsm.storeAnchorHash(workgroupdId, anchorHash);
-      const ccsmContract = await ccsm.connectToContract({ readonly: true });
+      const ccsmContract = await ccsm.connectToContract();
 
       //Assert
       expect(await ccsmContract.anchorHashStore(workgroupdId)).toEqual(
