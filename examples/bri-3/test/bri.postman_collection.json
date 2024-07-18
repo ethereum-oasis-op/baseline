@@ -1183,6 +1183,36 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "State",
+			"item": [
+				{
+					"name": "Get state leaf",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/state?leafValue=b7f9a093718ccbf28cb838042efc1ae19a9e78dcf3b95d928a447230fee30960",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"state"
+							],
+							"query": [
+								{
+									"key": "leafValue",
+									"value": "b7f9a093718ccbf28cb838042efc1ae19a9e78dcf3b95d928a447230fee30960"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
