@@ -6,13 +6,13 @@ import 'dotenv/config';
 
 export class DidService {
   async createKeypair(): Promise<KeyPair> {
-    const keypair = EthrDID.createKeyPair(process.env.DID_NETWORK);
+    const keypair = EthrDID.createKeyPair(process.env.CCSM_NETWORK);
     return keypair;
   }
 
   async createProvider(): Promise<Provider> {
     const provider = new InfuraProvider(
-      process.env.DID_NETWORK,
+      process.env.CCSM_NETWORK,
       process.env.INFURA_PROVIDER_API_KEY,
     );
     return provider;
@@ -22,7 +22,7 @@ export class DidService {
     const did = new EthrDID({
       identifier: process.env.DID_BPI_OPERATOR_PUBLIC_KEY as string,
       provider,
-      chainNameOrId: process.env.DID_NETWORK,
+      chainNameOrId: process.env.CCSM_NETWORK,
       registry: process.env.DID_REGISTRY,
     });
     return did;
@@ -31,10 +31,10 @@ export class DidService {
   async getDidResolver(provider): Promise<Resolver> {
     const didResolver = new Resolver({
       ...getResolver({
-        name: process.env.DID_NETWORK,
+        name: process.env.CCSM_NETWORK,
         provider: provider,
         registry: process.env.DID_REGISTRY,
-        chainId: process.env.DID_NETWORK,
+        chainId: process.env.CCSM_NETWORK,
       }),
     });
 

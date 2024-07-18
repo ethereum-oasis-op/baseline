@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IBlockchainService } from '../services/blockchain/blockchain.interface';
+import { ICcsmService } from '../services/ccsm.interface';
 
 @Injectable()
 export class CcsmStorageAgent {
   constructor(
     @Inject('IBlockchainService')
-    private readonly ccsmStorageAgent: IBlockchainService,
+    private readonly ccsmService: ICcsmService,
   ) {}
 
   async storeAnchorHashOnCcsm(anchorHash: string): Promise<void> {
-    await this.ccsmStorageAgent.storeAnchorHash('Ccsm', anchorHash);
+    await this.ccsmService.storeAnchorHash('Ccsm', anchorHash);
   }
 }

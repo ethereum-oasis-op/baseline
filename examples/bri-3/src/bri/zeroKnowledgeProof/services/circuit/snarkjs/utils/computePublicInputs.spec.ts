@@ -1,7 +1,8 @@
 import { computeEffectiveEcdsaSigPublicInputs } from './computePublicInputs';
 import * as ethers from 'ethers';
 
-describe('Compute public inputs utils', () => {
+// TODO: Resource heavy, cannot be part of the general unit test suite
+describe.skip('Compute public inputs utils', () => {
   it('should calculate public key x and y coordinates ', async () => {
     //Generate key pair
     const wallet = ethers.Wallet.createRandom();

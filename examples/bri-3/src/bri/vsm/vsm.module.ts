@@ -11,8 +11,8 @@ import { ExecuteVsmCycleCommandHandler } from './capabilites/executeVsmCycle/exe
 import { MessagingAgent } from '../communication/agents/messaging.agent';
 import { WorkstepExecutedEventHandler } from './capabilites/handleWorkstepEvents/workstepExecutedEvent.handler';
 import { NatsMessagingClient } from '../communication/messagingClients/natsMessagingClient';
-import { CcsmStorageAgent } from '../zeroKnowledgeProof/agents/ccsmStorage.agent';
-import { EthereumService } from '../zeroKnowledgeProof/services/blockchain/ethereum/ethereum.service';
+import { CcsmStorageAgent } from '../ccsm/agents/ccsmStorage.agent';
+import { EthereumService } from '../ccsm/services/ethereum.service';
 
 export const CommandHandlers = [
   ExecuteVsmCycleCommandHandler,
