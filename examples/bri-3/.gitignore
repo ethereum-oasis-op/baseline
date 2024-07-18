@@ -2,8 +2,6 @@
 /dist
 /node_modules
 src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
-!/zeroKnowledgeArtifacts/blockchain/ethereum/artifacts
-!/zeroKnowledgeArtifacts/blockchain/ethereum/artifacts/artifacts
 /typechain-types
 /cache
 
