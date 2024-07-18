@@ -5,7 +5,7 @@ import '@openzeppelin/contracts/access/AccessControl.sol';
 
 contract CcsmBpiStateAnchor is AccessControl {
   mapping(string => string) public anchorHashStore;
-  event AnchorHashSet(string indexed workgroupId, string anchorHash);
+  event AnchorHashSet(string indexed workstepInstanceId, string anchorHash);
 
   bytes32 public constant ADMIN_ROLE = keccak256('ADMIN_ROLE');
 
@@ -18,13 +18,16 @@ contract CcsmBpiStateAnchor is AccessControl {
   }
 
   function setAnchorHash(
-    string calldata _workgroupId,
+    string calldata _workstepInstanceId,
     string calldata _anchorHash
   ) external onlyAdmin {
-    require(bytes(_workgroupId).length > 0, 'WorkgroupId cannot be empty');
     require(
-      bytes(_workgroupId).length < 36,
-      'WorkgroupId cannot exceed 36 bytes'
+      bytes(_workstepInstanceId).length > 0,
+      'WorkstepInstanceId cannot be empty'
+    );
+    require(
+      bytes(_workstepInstanceId).length < 36,
+      'WorkstepInstanceId cannot exceed 36 bytes'
     );
     require(bytes(_anchorHash).length > 0, 'AnchorHash cannot be empty');
     require(
@@ -32,15 +35,15 @@ contract CcsmBpiStateAnchor is AccessControl {
       'AnchorHash cannot exceed 256 bytes'
     );
 
-    anchorHashStore[_workgroupId] = _anchorHash;
+    anchorHashStore[_workstepInstanceId] = _anchorHash;
 
-    emit AnchorHashSet(_workgroupId, _anchorHash);
+    emit AnchorHashSet(_workstepInstanceId, _anchorHash);
   }
 
   function getAnchorHash(
-    string calldata _workgroupId
+    string calldata _workstepInstanceId
   ) external view returns (string memory) {
-    return anchorHashStore[_workgroupId];
+    return anchorHashStore[_workstepInstanceId];
   }
 
   modifier onlyAdmin() {
