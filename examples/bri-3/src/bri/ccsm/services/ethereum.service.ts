@@ -33,9 +33,8 @@ export class EthereumService implements ICcsmService {
   async connectToContract(): Promise<Contract> {
     const ccsmContractAddress =
       process.env.CCSM_BPI_STATE_ANCHOR_CONTRACT_ADDRESS!;
-    let ccsmBpiStateAnchorContract;
 
-    ccsmBpiStateAnchorContract = new ethers.Contract(
+    const ccsmBpiStateAnchorContract = new ethers.Contract(
       ccsmContractAddress,
       CcsmBpiStateAnchor.abi,
       this.wallet,
