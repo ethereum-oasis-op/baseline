@@ -108,6 +108,10 @@ jobs:
       - name: Run prisma db seed
         working-directory: examples/bri-3
         run: npx prisma db seed
+      
+      - name: Install hardhar dependencies
+        working-directory: examples/bri-3/ccsm
+        run: npm ci
 
       - name: Run hardhat
         working-directory: examples/bri-3/ccsm
