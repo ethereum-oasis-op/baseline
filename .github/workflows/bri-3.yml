@@ -113,13 +113,11 @@ jobs:
         working-directory: examples/bri-3/ccsm
         run: npm ci
 
-      - name: Run hardhat
+      - name: Run hardhat and deploy contracts
         working-directory: examples/bri-3/ccsm
-        run: npx hardhat node
-
-      - name: deploy contracts
-        working-directory: examples/bri-3/ccsm
-        run: npx hardhat run scripts/deploy.ts
+        run: |
+          npx hardhat node &
+          npx hardhat run scripts/deploy.ts
 
       - name: Run e2e tests
         working-directory: examples/bri-3
