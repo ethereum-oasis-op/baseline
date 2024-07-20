@@ -1,5 +1,3 @@
-Shell script to set up, deploy, and run tests
-
 #!/bin/bash
 
 # Function to print messages with timestamps
@@ -38,6 +36,10 @@ run_command "npx hardhat run scripts/deploy.ts"
 log_message "Changing to root directory"
 run_command "cd .."
 
+# Prep database
+log_message "Reset and reseed database"
+run_command "npx prisma migrate reset --force"
+
 # Run e2e tests
 log_message "Running e2e tests"
 run_command "npm run test:e2e"
@@ -45,6 +47,5 @@ run_command "npm run test:e2e"
 # Stop Hardhat node
 log_message "Stopping Hardhat node"
 kill $HARDHAT_PID
-wait $HARDHAT_PID 2>/dev/null
 
 log_message "Script execution completed"
