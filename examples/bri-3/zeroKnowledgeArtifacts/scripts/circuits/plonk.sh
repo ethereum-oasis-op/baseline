@@ -19,6 +19,6 @@ snarkjs plonk setup zeroKnowledgeArtifacts/circuits/$1/$1.r1cs zeroKnowledgeArti
 snarkjs zkey export verificationkey zeroKnowledgeArtifacts/circuits/$1/$1_final.zkey zeroKnowledgeArtifacts/circuits/$1/$1_verification_key.json
 
 # Export circuit verifier with updated name and solidity version
-## snarkjs zkey export solidityverifier zeroKnowledgeArtifacts/circuits/$1/$1_final.zkey ccsm/contracts/$1Verifier.sol
+snarkjs zkey export solidityverifier zeroKnowledgeArtifacts/circuits/$1/$1_final.zkey ccsm/contracts/$1Verifier.sol
 
 echo "------------------Phase 2 complete-------------------------"
