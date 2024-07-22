@@ -39,8 +39,8 @@ export class TransactionController {
       new CreateTransactionCommand(
         requestDto.id,
         requestDto.nonce,
-        requestDto.workflowInstanceId,
-        requestDto.workstepInstanceId,
+        requestDto.workflowId,
+        requestDto.workstepId,
         requestDto.fromSubjectAccountId,
         requestDto.toSubjectAccountId,
         requestDto.payload,
