@@ -210,8 +210,8 @@ describe('TransactionController', () => {
       const requestDto = {
         id: uuid(),
         nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
+        workflowId: '42',
+        workstepId: '24',
         fromSubjectAccountId: fromBpiSubjectAccount.id,
         toSubjectAccountId: toBpiSubjectAccount.id,
         payload: 'payload1',
@@ -221,8 +221,8 @@ describe('TransactionController', () => {
       const expectedTransaction = new Transaction(
         requestDto.id,
         requestDto.nonce,
-        requestDto.workflowInstanceId,
-        requestDto.workstepInstanceId,
+        requestDto.workflowId,
+        requestDto.workstepId,
         fromBpiSubjectAccount,
         toBpiSubjectAccount,
         requestDto.payload,
