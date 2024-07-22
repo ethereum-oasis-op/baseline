@@ -561,8 +561,8 @@ async function createWorkflowAndReturnId(
 async function createTransactionAndReturnId(
   id: string,
   nonce: number,
-  workflowInstanceId: string,
-  workstepInstanceId: string,
+  workflowId: string,
+  workstepId: string,
   fromSubjectAccountId: string,
   fromPrivatekey: string,
   toSubjectAccountId: string,
@@ -577,8 +577,8 @@ async function createTransactionAndReturnId(
     .send({
       id: id,
       nonce: nonce,
-      workflowInstanceId: workflowInstanceId,
-      workstepInstanceId: workstepInstanceId,
+      workflowId: workflowId,
+      workstepId: workstepId,
       fromSubjectAccountId: fromSubjectAccountId,
       toSubjectAccountId: toSubjectAccountId,
       payload: payload,
