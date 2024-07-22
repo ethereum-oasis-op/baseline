@@ -8,8 +8,8 @@ describe('CreateTransactionDto', () => {
     // Arrange
     const dto = {
       nonce: 123,
-      workflowInstanceId: '123',
-      workstepInstanceId: '123',
+      workflowId: '123',
+      workstepId: '123',
       fromSubjectAccountId: '123',
       toSubjectAccountId: '123',
       payload: '123',
@@ -33,8 +33,8 @@ describe('CreateTransactionDto', () => {
     const dto = {
       id: '123',
       nonce: 123,
-      workflowInstanceId: '123',
-      workstepInstanceId: '123',
+      workflowId: '123',
+      workstepId: '123',
       fromSubjectAccountId: '123',
       toSubjectAccountId: '123',
       payload: '123',
