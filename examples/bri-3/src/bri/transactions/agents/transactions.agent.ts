@@ -26,6 +26,7 @@ import {
 } from '../api/err.messages';
 import { TransactionResult } from '../models/transactionResult';
 import { TransactionStorageAgent } from './transactionStorage.agent';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class TransactionAgent {
@@ -131,7 +132,7 @@ export class TransactionAgent {
   ): Promise<boolean> {
     // TODO: Log each validation err for now
     const workflow = await this.workflowStorageAgent.getWorkflowById(
-      tx.workflowInstanceId,
+      tx.workflowId,
     );
 
     if (!workflow) {
@@ -139,7 +140,7 @@ export class TransactionAgent {
     }
 
     const workstep = await this.workstepStorageAgent.getWorkstepById(
-      tx.workstepInstanceId,
+      tx.workstepId,
     );
 
     if (!workstep) {
@@ -183,6 +184,15 @@ export class TransactionAgent {
     workstep: Workstep,
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
+
+    //Generate and store workflowInstanceId & workstepInstanceId
+    const workflowInstanceId = v4();
+    const workstepInstanceId = v4();
+
+    tx.updateWorkflowInstanceId(workflowInstanceId);
+    tx.updateWorkstepInstanceId(workstepInstanceId);
+
+    this.txStorageAgent.updateTransaction(tx);
 
     txResult.merkelizedPayload = this.merkleTreeService.merkelizePayload(
       JSON.parse(tx.payload),
