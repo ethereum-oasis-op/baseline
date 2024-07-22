@@ -9,4 +9,4 @@ export const buyerBpiSubjectEcdsaPrivateKey =
 export const internalBpiSubjectEcdsaPublicKey =
   '0x08872e27BC5d78F1FC4590803369492868A1FCCb';
 export const internalBpiSubjectEcdsaPrivateKey =
-  '2c95d82bcd8851bd3a813c50afafb025228bf8d237e8fd37ba4adba3a7596d58';
+  '0x2c95d82bcd8851bd3a813c50afafb025228bf8d237e8fd37ba4adba3a7596d58';
