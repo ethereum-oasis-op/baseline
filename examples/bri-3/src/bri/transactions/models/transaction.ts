@@ -46,9 +46,7 @@ export class Transaction {
   constructor(
     id: string,
     nonce: number,
-    workflowInstanceId: string,
     workflowId: string,
-    workstepInstanceId: string,
     workstepId: string,
     fromBpiSubjectAccount: BpiSubjectAccount,
     toBpiSubjectAccount: BpiSubjectAccount,
@@ -58,9 +56,7 @@ export class Transaction {
   ) {
     this.id = id;
     this.nonce = nonce;
-    this.workflowInstanceId = workflowInstanceId;
     this.workflowId = workflowId;
-    this.workstepInstanceId = workstepInstanceId;
     this.workstepId = workstepId;
     this.fromBpiSubjectAccount = fromBpiSubjectAccount;
     this.fromBpiSubjectAccountId = fromBpiSubjectAccount?.id;
@@ -71,6 +67,13 @@ export class Transaction {
     this.status = status;
   }
 
+  public updateWorkflowInstanceId(workflowInstanceId: string): void {
+    this.workflowInstanceId = workflowInstanceId;
+  }
+
+  public updateWorkstepInstanceId(workstepInstanceId: string): void {
+    this.workstepInstanceId = workstepInstanceId;
+  }
   public updatePayload(payload: string, signature: string): void {
     // TODO: Verify signature
     this.payload = payload;
