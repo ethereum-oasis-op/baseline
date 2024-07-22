@@ -53,8 +53,8 @@ export class TransactionAgent {
   public createNewTransaction(
     id: string,
     nonce: number,
-    workflowInstanceId: string,
-    workstepInstanceId: string,
+    workflowId: string,
+    workstepId: string,
     fromBpiSubjectAccount: BpiSubjectAccount,
     toBpiSubjectAccount: BpiSubjectAccount,
     payload: string,
@@ -63,8 +63,8 @@ export class TransactionAgent {
     return new Transaction(
       id,
       nonce,
-      workflowInstanceId,
-      workstepInstanceId,
+      workflowId,
+      workstepId,
       fromBpiSubjectAccount,
       toBpiSubjectAccount,
       payload,
