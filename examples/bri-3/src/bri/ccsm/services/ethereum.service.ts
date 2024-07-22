@@ -44,12 +44,15 @@ export class EthereumService implements ICcsmService {
   }
 
   public async storeAnchorHash(
-    workgroupId: string,
+    workstepInstanceId: string,
     anchorHash: string,
   ): Promise<void> {
     const ccsmContract = await this.connectToContract();
     try {
-      const tx = await ccsmContract.setAnchorHash(workgroupId, anchorHash);
+      const tx = await ccsmContract.setAnchorHash(
+        workstepInstanceId,
+        anchorHash,
+      );
       await tx.wait();
     } catch (error) {
       throw new InternalServerErrorException(
@@ -58,9 +61,9 @@ export class EthereumService implements ICcsmService {
     }
   }
 
-  public async getAnchorHash(workgroupdId: string): Promise<string> {
+  public async getAnchorHash(workstepInstanceId: string): Promise<string> {
     const ccsmContract = await this.connectToContract();
-    const anchorHash = await ccsmContract.getAnchorHash(workgroupdId);
+    const anchorHash = await ccsmContract.getAnchorHash(workstepInstanceId);
     return anchorHash;
   }
 }

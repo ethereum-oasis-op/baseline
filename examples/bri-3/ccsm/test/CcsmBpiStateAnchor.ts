@@ -42,37 +42,37 @@ describe('CcsmBpiStateAnchor', function () {
       const { ccsmBpiStateAnchor, owner } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
-      const workgroupId = 'testWorkgroup';
+      const workstepInstanceId = 'testWorkstepInstance';
       const anchorHash = '0x1234567890abcdef';
 
       await expect(
         ccsmBpiStateAnchor
           .connect(owner)
-          .setAnchorHash(workgroupId, anchorHash),
+          .setAnchorHash(workstepInstanceId, anchorHash),
       )
         .to.emit(ccsmBpiStateAnchor, 'AnchorHashSet')
-        .withArgs(workgroupId, anchorHash);
+        .withArgs(workstepInstanceId, anchorHash);
 
-      expect(await ccsmBpiStateAnchor.anchorHashStore(workgroupId)).to.equal(
-        anchorHash,
-      );
+      expect(
+        await ccsmBpiStateAnchor.anchorHashStore(workstepInstanceId),
+      ).to.equal(anchorHash);
     });
 
     it('Should not allow a non-admin to set an anchor hash', async function () {
       const { ccsmBpiStateAnchor, otherAccount } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
-      const workgroupId = 'testWorkgroup';
+      const workstepInstanceId = 'testWorkstepInstance';
       const anchorHash = '0x1234567890abcdef';
 
       await expect(
         ccsmBpiStateAnchor
           .connect(otherAccount)
-          .setAnchorHash(workgroupId, anchorHash),
+          .setAnchorHash(workstepInstanceId, anchorHash),
       ).to.be.revertedWith('Only admin can call this function');
     });
 
-    it('Should revert when workgroupId is empty', async function () {
+    it('Should revert when workstepInstanceId is empty', async function () {
       const { ccsmBpiStateAnchor, owner } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
@@ -80,31 +80,31 @@ describe('CcsmBpiStateAnchor', function () {
 
       await expect(
         ccsmBpiStateAnchor.connect(owner).setAnchorHash('', anchorHash),
-      ).to.be.revertedWith('WorkgroupId cannot be empty');
+      ).to.be.revertedWith('WorkstepInstanceId cannot be empty');
     });
 
-    it('Should revert when workgroupId exceeds 36 bytes', async function () {
+    it('Should revert when workstepInstanceId exceeds 36 bytes', async function () {
       const { ccsmBpiStateAnchor, owner } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
-      const longWorkgroupId = 'a'.repeat(37);
+      const longWorkstepInstanceId = 'a'.repeat(37);
       const anchorHash = '0x1234567890abcdef';
 
       await expect(
         ccsmBpiStateAnchor
           .connect(owner)
-          .setAnchorHash(longWorkgroupId, anchorHash),
-      ).to.be.revertedWith('WorkgroupId cannot exceed 36 bytes');
+          .setAnchorHash(longWorkstepInstanceId, anchorHash),
+      ).to.be.revertedWith('WorkstepInstanceId cannot exceed 36 bytes');
     });
 
     it('Should revert when anchorHash is empty', async function () {
       const { ccsmBpiStateAnchor, owner } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
-      const workgroupId = 'testWorkgroup';
+      const workstepInstanceId = 'testWorkstepInstance';
 
       await expect(
-        ccsmBpiStateAnchor.connect(owner).setAnchorHash(workgroupId, ''),
+        ccsmBpiStateAnchor.connect(owner).setAnchorHash(workstepInstanceId, ''),
       ).to.be.revertedWith('AnchorHash cannot be empty');
     });
 
@@ -112,41 +112,41 @@ describe('CcsmBpiStateAnchor', function () {
       const { ccsmBpiStateAnchor, owner } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
-      const workgroupId = 'testWorkgroup';
+      const workstepInstanceId = 'testWorkstepInstance';
       const longAnchorHash = '0x' + 'a'.repeat(257);
 
       await expect(
         ccsmBpiStateAnchor
           .connect(owner)
-          .setAnchorHash(workgroupId, longAnchorHash),
+          .setAnchorHash(workstepInstanceId, longAnchorHash),
       ).to.be.revertedWith('AnchorHash cannot exceed 256 bytes');
     });
   });
 
   describe('getAnchorHash', function () {
-    it('Should return the correct anchor hash for a given workgroupId', async function () {
+    it('Should return the correct anchor hash for a given workstepInstanceId', async function () {
       const { ccsmBpiStateAnchor, owner } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
-      const workgroupId = 'testWorkgroup';
+      const workstepInstanceId = 'testWorkstepInstance';
       const anchorHash = '0x1234567890abcdef';
 
       await ccsmBpiStateAnchor
         .connect(owner)
-        .setAnchorHash(workgroupId, anchorHash);
-      expect(await ccsmBpiStateAnchor.getAnchorHash(workgroupId)).to.equal(
-        anchorHash,
-      );
+        .setAnchorHash(workstepInstanceId, anchorHash);
+      expect(
+        await ccsmBpiStateAnchor.getAnchorHash(workstepInstanceId),
+      ).to.equal(anchorHash);
     });
 
-    it('Should return an empty string for a non-existent workgroupId', async function () {
+    it('Should return an empty string for a non-existent workstepInstanceId', async function () {
       const { ccsmBpiStateAnchor } = await loadFixture(
         deployCcsmBpiStateAnchor,
       );
-      const nonExistentWorkgroupId = 'nonExistent';
+      const nonExistentWorkstepInstanceId = 'nonExistent';
 
       expect(
-        await ccsmBpiStateAnchor.getAnchorHash(nonExistentWorkgroupId),
+        await ccsmBpiStateAnchor.getAnchorHash(nonExistentWorkstepInstanceId),
       ).to.equal('');
     });
   });

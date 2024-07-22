@@ -13,27 +13,27 @@ describe.skip('Ethereum services', () => {
   describe('storeAnchorHash', () => {
     it('should set anchor hash in the mapping', async () => {
       //Arrange
-      const workgroupdId = '123';
+      const workstepInstanceId = '123';
       const anchorHash = 'anchorHash';
 
       //Act
-      await ccsm.storeAnchorHash(workgroupdId, anchorHash);
+      await ccsm.storeAnchorHash(workstepInstanceId, anchorHash);
       const ccsmContract = await ccsm.connectToContract();
 
       //Assert
-      expect(await ccsmContract.anchorHashStore(workgroupdId)).toEqual(
+      expect(await ccsmContract.anchorHashStore(workstepInstanceId)).toEqual(
         anchorHash,
       );
     });
   });
   describe('getAnchorHash', () => {
-    it('should get anchor hash of the workgroupId from the mapping', async () => {
+    it('should get anchor hash of the WorkstepInstanceId from the mapping', async () => {
       //Arrange
-      const workgroupdId = '123';
+      const workstepInstanceId = '123';
       const anchorHash = 'anchorHash';
 
       //Act
-      const response = await ccsm.getAnchorHash(workgroupdId);
+      const response = await ccsm.getAnchorHash(workstepInstanceId);
 
       //Assert
       expect(response).toEqual(anchorHash);
