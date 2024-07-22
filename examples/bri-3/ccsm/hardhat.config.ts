@@ -2,9 +2,12 @@ import { HardhatUserConfig } from 'hardhat/config';
 import '@nomicfoundation/hardhat-toolbox';
 
 const config: HardhatUserConfig = {
-  solidity: '0.8.24',
-  defaultNetwork: 'hardhat',
+  solidity: "0.8.24",
+  defaultNetwork: "localhost",
   networks: {
+    localhost: {
+      url: "http://localhost:8545",
+    },
     sepolia: {
       url:
         'https://sepolia.infura.io/v3/' + process.env.INFURA_PROVIDER_API_KEY,
