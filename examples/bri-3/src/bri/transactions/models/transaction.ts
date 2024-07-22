@@ -14,7 +14,13 @@ export class Transaction {
   workflowInstanceId: string;
 
   @AutoMap()
+  workflowId: string;
+
+  @AutoMap()
   workstepInstanceId: string;
+
+  @AutoMap()
+  workstepId: string;
 
   @AutoMap()
   fromBpiSubjectAccountId: string;
@@ -41,7 +47,9 @@ export class Transaction {
     id: string,
     nonce: number,
     workflowInstanceId: string,
+    workflowId: string,
     workstepInstanceId: string,
+    workstepId: string,
     fromBpiSubjectAccount: BpiSubjectAccount,
     toBpiSubjectAccount: BpiSubjectAccount,
     payload: string,
@@ -51,7 +59,9 @@ export class Transaction {
     this.id = id;
     this.nonce = nonce;
     this.workflowInstanceId = workflowInstanceId;
+    this.workflowId = workflowId;
     this.workstepInstanceId = workstepInstanceId;
+    this.workstepId = workstepId;
     this.fromBpiSubjectAccount = fromBpiSubjectAccount;
     this.fromBpiSubjectAccountId = fromBpiSubjectAccount?.id;
     this.toBpiSubjectAccount = toBpiSubjectAccount;
