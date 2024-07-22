@@ -28,8 +28,8 @@ export class CreateTransactionCommandHandler
     const newTransactionCandidate = this.agent.createNewTransaction(
       command.id,
       command.nonce,
-      command.workflowInstanceId,
-      command.workstepInstanceId,
+      command.workflowId,
+      command.workstepId,
       subjectAccounts[0],
       subjectAccounts[1],
       command.payload,

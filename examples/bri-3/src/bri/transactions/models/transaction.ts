@@ -14,7 +14,13 @@ export class Transaction {
   workflowInstanceId: string;
 
   @AutoMap()
+  workflowId: string;
+
+  @AutoMap()
   workstepInstanceId: string;
+
+  @AutoMap()
+  workstepId: string;
 
   @AutoMap()
   fromBpiSubjectAccountId: string;
@@ -40,8 +46,8 @@ export class Transaction {
   constructor(
     id: string,
     nonce: number,
-    workflowInstanceId: string,
-    workstepInstanceId: string,
+    workflowId: string,
+    workstepId: string,
     fromBpiSubjectAccount: BpiSubjectAccount,
     toBpiSubjectAccount: BpiSubjectAccount,
     payload: string,
@@ -50,8 +56,8 @@ export class Transaction {
   ) {
     this.id = id;
     this.nonce = nonce;
-    this.workflowInstanceId = workflowInstanceId;
-    this.workstepInstanceId = workstepInstanceId;
+    this.workflowId = workflowId;
+    this.workstepId = workstepId;
     this.fromBpiSubjectAccount = fromBpiSubjectAccount;
     this.fromBpiSubjectAccountId = fromBpiSubjectAccount?.id;
     this.toBpiSubjectAccount = toBpiSubjectAccount;
@@ -61,6 +67,13 @@ export class Transaction {
     this.status = status;
   }
 
+  public updateWorkflowInstanceId(workflowInstanceId: string): void {
+    this.workflowInstanceId = workflowInstanceId;
+  }
+
+  public updateWorkstepInstanceId(workstepInstanceId: string): void {
+    this.workstepInstanceId = workstepInstanceId;
+  }
   public updatePayload(payload: string, signature: string): void {
     // TODO: Verify signature
     this.payload = payload;

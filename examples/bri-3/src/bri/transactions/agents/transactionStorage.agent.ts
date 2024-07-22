@@ -96,8 +96,8 @@ export class TransactionStorageAgent {
       data: {
         id: transaction.id,
         nonce: transaction.nonce,
-        workflowInstanceId: transaction.workflowInstanceId,
-        workstepInstanceId: transaction.workstepInstanceId,
+        workflowId: transaction.workflowId,
+        workstepId: transaction.workstepId,
         fromBpiSubjectAccountId: transaction.fromBpiSubjectAccountId,
         toBpiSubjectAccountId: transaction.toBpiSubjectAccountId,
         payload: transaction.payload,

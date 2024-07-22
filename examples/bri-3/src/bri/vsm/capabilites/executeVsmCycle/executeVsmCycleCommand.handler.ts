@@ -45,11 +45,11 @@ export class ExecuteVsmCycleCommandHandler
       }
 
       const workstep = await this.workstepStorageAgent.getWorkstepById(
-        tx.workstepInstanceId,
+        tx.workstepId,
       );
 
       const workflow = await this.workflowStorageAgent.getWorkflowById(
-        tx.workflowInstanceId,
+        tx.workflowId,
       );
 
       try {
