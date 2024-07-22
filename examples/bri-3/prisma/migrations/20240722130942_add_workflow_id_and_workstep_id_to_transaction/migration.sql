@@ -7,4 +7,6 @@
 */
 -- AlterTable
 ALTER TABLE "Transaction" ADD COLUMN     "workflowId" TEXT NOT NULL,
-ADD COLUMN     "workstepId" TEXT NOT NULL;
+ADD COLUMN     "workstepId" TEXT NOT NULL,
+ALTER COLUMN "workflowInstanceId" DROP NOT NULL,
+ALTER COLUMN "workstepInstanceId" DROP NOT NULL;

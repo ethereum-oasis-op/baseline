@@ -101,9 +101,9 @@ model Transaction {
   id                      String            @id
   nonce                   Int
   workflowId              String
-  workflowInstanceId      String
+  workflowInstanceId      String?
   workstepId              String
-  workstepInstanceId      String
+  workstepInstanceId      String?
   fromBpiSubjectAccountId String
   fromBpiSubjectAccount   BpiSubjectAccount @relation(fields: [fromBpiSubjectAccountId], references: [id], name: "fromBpiSubjectAccount_fk")
   toBpiSubjectAccountId   String
