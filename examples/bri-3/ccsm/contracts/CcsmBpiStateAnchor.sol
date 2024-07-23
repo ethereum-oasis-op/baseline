@@ -26,8 +26,8 @@ contract CcsmBpiStateAnchor is AccessControl {
       'WorkstepInstanceId cannot be empty'
     );
     require(
-      bytes(_workstepInstanceId).length < 36,
-      'WorkstepInstanceId cannot exceed 36 bytes'
+      bytes(_workstepInstanceId).length < 40,
+      'WorkstepInstanceId cannot exceed 40 bytes'
     );
     require(bytes(_anchorHash).length > 0, 'AnchorHash cannot be empty');
     require(
