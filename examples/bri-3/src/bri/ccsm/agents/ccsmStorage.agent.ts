@@ -4,11 +4,11 @@ import { ICcsmService } from '../services/ccsm.interface';
 @Injectable()
 export class CcsmStorageAgent {
   constructor(
-    @Inject('IBlockchainService')
+    @Inject('ICcsmService')
     private readonly ccsmService: ICcsmService,
   ) {}
 
-  async storeAnchorHashOnCcsm(anchorHash: string): Promise<void> {
-    await this.ccsmService.storeAnchorHash('Ccsm', anchorHash);
+  async storeAnchorHashOnCcsm(workstepInstanceId: string, anchorHash: string): Promise<void> {
+    await this.ccsmService.storeAnchorHash(workstepInstanceId, anchorHash);
   }
 }
