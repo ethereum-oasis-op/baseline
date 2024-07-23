@@ -251,7 +251,7 @@ describe('TransactionController', () => {
         signature: 'signature2',
       } as UpdateTransactionDto;
 
-      transactionStorageAgentMock.updateTransaction.mockRejectedValueOnce(
+      transactionStorageAgentMock.updateTransactionPayload.mockRejectedValueOnce(
         undefined,
       );
       // Act and assert
@@ -285,7 +285,7 @@ describe('TransactionController', () => {
         signature: 'signature2',
       } as UpdateTransactionDto;
 
-      transactionStorageAgentMock.updateTransaction.mockResolvedValueOnce({
+      transactionStorageAgentMock.updateTransactionPayload.mockResolvedValueOnce({
         ...existingTransaction,
         payload: updateRequestDto.payload,
         signature: updateRequestDto.signature,

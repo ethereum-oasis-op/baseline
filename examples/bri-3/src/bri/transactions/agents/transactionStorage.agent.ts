@@ -131,7 +131,7 @@ export class TransactionStorageAgent {
     return this.mapper.map(newTransactionModel, Transaction);
   }
 
-  async updateTransaction(transaction: Transaction): Promise<Transaction> {
+  async updateTransactionPayload(transaction: Transaction): Promise<Transaction> {
     const updatedTransactionModel = await this.prisma.transaction.update({
       where: { id: transaction.id },
       data: {
@@ -143,7 +143,7 @@ export class TransactionStorageAgent {
     return this.mapper.map(updatedTransactionModel, Transaction);
   }
 
-  async updateTransactionStatus(
+  async updateTransaction(
     transaction: Transaction,
   ): Promise<Transaction> {
     const updatedTransaction = await this.prisma.transaction.update({
@@ -152,6 +152,8 @@ export class TransactionStorageAgent {
       },
       data: {
         status: transaction.status,
+        workflowInstanceId: transaction.workflowInstanceId,
+        workstepInstanceId: transaction.workstepInstanceId,
       },
     });
 
