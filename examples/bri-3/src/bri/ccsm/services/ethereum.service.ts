@@ -22,7 +22,7 @@ export class EthereumService implements ICcsmService {
     const network = process.env.CCSM_NETWORK;
 
     if (network === 'localhost') {
-      this.provider = new JsonRpcProvider('http://localhost:8545');
+      this.provider = new JsonRpcProvider('http://127.0.0.1:8545');
     } else {
       this.provider = new InfuraProvider(
         network,
