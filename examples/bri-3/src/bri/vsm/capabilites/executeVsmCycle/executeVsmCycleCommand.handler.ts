@@ -33,14 +33,14 @@ export class ExecuteVsmCycleCommandHandler
     // TODO: When do we update the nonce on the BpiAccount? // Whenever a transaction is initiated
     executionCandidates.forEach(async (tx) => {
       tx.updateStatusToProcessing();
-      await this.txStorageAgent.updateTransactionStatus(tx);
+      await this.txStorageAgent.updateTransaction(tx);
 
       if (!this.txAgent.validateTransactionForExecution(tx)) {
         this.eventBus.publish(
           new WorkstepExecutedEvent(tx, 'Validation Error'),
         );
         tx.updateStatusToInvalid();
-        await this.txStorageAgent.updateTransactionStatus(tx);
+        await this.txStorageAgent.updateTransaction(tx);
         return;
       }
 
@@ -67,15 +67,14 @@ export class ExecuteVsmCycleCommandHandler
           stateTreeRoot,
         );
 
-        //TODO - Implement deploy and store on CCSM
-        //await this.ccsmStorageAgent.storeAnchorHashOnCcsm(txResult.hash);
+        await this.ccsmStorageAgent.storeAnchorHashOnCcsm(tx.workstepInstanceId, txResult.hash);
 
         tx.updateStatusToExecuted();
-        this.txStorageAgent.updateTransactionStatus(tx);
+        this.txStorageAgent.updateTransaction(tx);
       } catch (error) {
         this.eventBus.publish(new WorkstepExecutedEvent(tx, error));
         tx.updateStatusToAborted();
-        this.txStorageAgent.updateTransactionStatus(tx);
+        this.txStorageAgent.updateTransaction(tx);
         return;
       }
 

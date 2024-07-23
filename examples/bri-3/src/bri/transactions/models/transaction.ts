@@ -2,6 +2,7 @@ import { TransactionStatus } from './transactionStatus.enum';
 import { AutoMap } from '@automapper/classes';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { InternalServerErrorException } from '@nestjs/common';
+import { v4 } from 'uuid';
 
 export class Transaction {
   @AutoMap()
@@ -67,13 +68,6 @@ export class Transaction {
     this.status = status;
   }
 
-  public updateWorkflowInstanceId(workflowInstanceId: string): void {
-    this.workflowInstanceId = workflowInstanceId;
-  }
-
-  public updateWorkstepInstanceId(workstepInstanceId: string): void {
-    this.workstepInstanceId = workstepInstanceId;
-  }
   public updatePayload(payload: string, signature: string): void {
     // TODO: Verify signature
     this.payload = payload;
@@ -91,6 +85,8 @@ export class Transaction {
     }
 
     this.status = TransactionStatus.Processing;
+    this.workflowInstanceId = v4();
+    this.workstepInstanceId = v4();
   }
 
   public updateStatusToInvalid(): void {

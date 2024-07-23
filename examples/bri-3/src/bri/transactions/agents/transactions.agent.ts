@@ -185,15 +185,6 @@ export class TransactionAgent {
   ): Promise<TransactionResult> {
     const txResult = new TransactionResult();
 
-    //Generate and store workflowInstanceId & workstepInstanceId
-    const workflowInstanceId = v4();
-    const workstepInstanceId = v4();
-
-    tx.updateWorkflowInstanceId(workflowInstanceId);
-    tx.updateWorkstepInstanceId(workstepInstanceId);
-
-    this.txStorageAgent.updateTransaction(tx);
-
     txResult.merkelizedPayload = this.merkleTreeService.merkelizePayload(
       JSON.parse(tx.payload),
       `${process.env.MERKLE_TREE_HASH_ALGH}`,
