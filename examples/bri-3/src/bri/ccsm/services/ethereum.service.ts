@@ -8,7 +8,7 @@ import {
   Provider,
   SigningKey,
 } from 'ethers';
-import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/CcsmBpiStateAnchor.json';
+import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
 import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
 import { ICcsmService } from './ccsm.interface';
 
