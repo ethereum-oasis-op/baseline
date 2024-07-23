@@ -8,7 +8,10 @@ export class CcsmStorageAgent {
     private readonly ccsmService: ICcsmService,
   ) {}
 
-  async storeAnchorHashOnCcsm(workstepInstanceId: string, anchorHash: string): Promise<void> {
+  async storeAnchorHashOnCcsm(
+    workstepInstanceId: string,
+    anchorHash: string,
+  ): Promise<void> {
     await this.ccsmService.storeAnchorHash(workstepInstanceId, anchorHash);
   }
 }

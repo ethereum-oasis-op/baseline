@@ -285,11 +285,13 @@ describe('TransactionController', () => {
         signature: 'signature2',
       } as UpdateTransactionDto;
 
-      transactionStorageAgentMock.updateTransactionPayload.mockResolvedValueOnce({
-        ...existingTransaction,
-        payload: updateRequestDto.payload,
-        signature: updateRequestDto.signature,
-      } as Transaction);
+      transactionStorageAgentMock.updateTransactionPayload.mockResolvedValueOnce(
+        {
+          ...existingTransaction,
+          payload: updateRequestDto.payload,
+          signature: updateRequestDto.signature,
+        } as Transaction,
+      );
 
       // Act
       const updatedTransaction = await controller.updateTransaction(
