@@ -6,10 +6,10 @@ import { EthereumService } from './services/ethereum.service';
   providers: [
     CcsmStorageAgent,
     {
-      provide: 'IBlockchainService',
+      provide: 'ICcsmService',
       useClass: EthereumService,
     },
   ],
-  exports: [CcsmStorageAgent, 'IBlockchainService'],
+  exports: [CcsmStorageAgent, 'ICcsmService'],
 })
 export class CcsmModule {}

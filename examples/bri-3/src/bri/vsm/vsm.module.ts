@@ -42,7 +42,7 @@ export const QueryHandlers = [];
       useClass: NatsMessagingClient,
     },
     {
-      provide: 'IBlockchainService',
+      provide: 'ICcsmService',
       useClass: EthereumService,
     },
   ],
