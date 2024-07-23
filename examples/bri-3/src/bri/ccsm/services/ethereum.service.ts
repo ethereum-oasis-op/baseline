@@ -5,6 +5,7 @@ import {
   Contract,
   ethers,
   InfuraProvider,
+  JsonRpcProvider,
   Provider,
   SigningKey,
 } from 'ethers';
@@ -18,15 +19,18 @@ export class EthereumService implements ICcsmService {
   private wallet: BaseWallet;
 
   constructor() {
-    // TOOD: This should be environment agnostic, meanning it can worok both against
-    // local hardhat node, sepolia and mainnet
-    this.provider = new InfuraProvider(
-      process.env.CCSM_NETWORK,
-      process.env.INFURA_PROVIDER_API_KEY,
-    );
+    const network = process.env.CCSM_NETWORK;
 
-    const signingKey = new SigningKey('0x' + internalBpiSubjectEcdsaPrivateKey);
+    if (network === 'localhost') {
+      this.provider = new JsonRpcProvider('http://localhost:8545');
+    } else {
+      this.provider = new InfuraProvider(
+        network,
+        process.env.INFURA_PROVIDER_API_KEY,
+      );
+    }
 
+    const signingKey = new SigningKey(internalBpiSubjectEcdsaPrivateKey);
     this.wallet = new BaseWallet(signingKey, this.provider);
   }
 
