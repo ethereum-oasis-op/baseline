@@ -6,7 +6,7 @@ import 'dotenv/config';
 
 export class DidService {
   // TODO: Hardcoded sepolia everywhere for DID resolution
-  // This should be taken from the CCSM_NETWORK env value and 
+  // This should be taken from the CCSM_NETWORK env value and
   // the service refactored to connect to locahost as well,
   // with  previous deployment of a did registry to local node.
   async createKeypair(): Promise<KeyPair> {
