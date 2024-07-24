@@ -54,5 +54,6 @@ run_command "npm run test:e2e"
 # Stop Hardhat node
 log_message "Stopping Hardhat node"
 kill $HARDHAT_PID
+wait $HARDHAT_PID
 
 log_message "Script execution completed"
