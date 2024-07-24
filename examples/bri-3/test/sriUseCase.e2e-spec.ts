@@ -283,7 +283,9 @@ describe('SRI use-case end-to-end test', () => {
     const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
 
     const contract = getContractFromLocalNode();
-    const contentAddressableHash = await contract.getAnchorHash(resultWorkstepInstanceId);
+    const contentAddressableHash = await contract.getAnchorHash(
+      resultWorkstepInstanceId,
+    );
 
     expect(contentAddressableHash).toBeTruthy();
     expect(contentAddressableHash.length).toBeGreaterThan(0);
@@ -291,7 +293,7 @@ describe('SRI use-case end-to-end test', () => {
     expect(stateBpiMerkleTree.getLeaf(0)).toEqual(contentAddressableHash);
 
     const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
-      contentAddressableHash
+      contentAddressableHash,
     );
 
     expect(stateTreeLeafValue).toBeTruthy();
@@ -354,7 +356,9 @@ describe('SRI use-case end-to-end test', () => {
     const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
 
     const contract = getContractFromLocalNode();
-    const contentAddressableHash = await contract.getAnchorHash(resultWorkstepInstanceId);
+    const contentAddressableHash = await contract.getAnchorHash(
+      resultWorkstepInstanceId,
+    );
 
     expect(contentAddressableHash).toBeTruthy();
     expect(contentAddressableHash.length).toBeGreaterThan(0);
@@ -362,7 +366,7 @@ describe('SRI use-case end-to-end test', () => {
     expect(stateBpiMerkleTree.getLeaf(1)).toEqual(contentAddressableHash);
 
     const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
-      contentAddressableHash
+      contentAddressableHash,
     );
 
     expect(stateTreeLeafValue).toBeTruthy();
@@ -425,7 +429,9 @@ describe('SRI use-case end-to-end test', () => {
     const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
 
     const contract = getContractFromLocalNode();
-    const contentAddressableHash = await contract.getAnchorHash(resultWorkstepInstanceId);
+    const contentAddressableHash = await contract.getAnchorHash(
+      resultWorkstepInstanceId,
+    );
 
     expect(contentAddressableHash).toBeTruthy();
     expect(contentAddressableHash.length).toBeGreaterThan(0);
@@ -433,7 +439,7 @@ describe('SRI use-case end-to-end test', () => {
     expect(stateBpiMerkleTree.getLeaf(2)).toEqual(contentAddressableHash);
 
     const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
-      contentAddressableHash
+      contentAddressableHash,
     );
 
     expect(stateTreeLeafValue).toBeTruthy();
@@ -656,12 +662,13 @@ async function fetchTransaction(txId: string): Promise<any> {
 }
 
 function getContractFromLocalNode(): ethers.Contract {
-  const provider = new JsonRpcProvider('http://localhost:8545');
-  const contractAddress = '0x1CC96ba639d4fd7624913fde39122270a1aC5c34';
+  const provider = new JsonRpcProvider('http://127.0.0.1:8545');
+  const contractAddress = `${process.env.CCSM_BPI_STATE_ANCHOR_CONTRACT_ADDRESS}`;
+
   const contractABI = [
-    'function getAnchorHash(string calldata _workstepInstanceId) external view returns (string memory)'
+    'function getAnchorHash(string calldata _workstepInstanceId) external view returns (string memory)',
   ];
-  
+
   return new ethers.Contract(contractAddress, contractABI, provider);
 }
 
