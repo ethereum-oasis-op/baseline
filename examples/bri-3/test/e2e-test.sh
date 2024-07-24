@@ -15,6 +15,13 @@ run_command() {
     fi
 }
 
+# Check if port 8545 is in use
+EXISTING_PID=$(lsof -ti:8545)
+if [ ! -z "$EXISTING_PID" ]; then
+    log_message "Port 8545 is in use. Killing process $EXISTING_PID"
+    kill $EXISTING_PID
+fi
+
 # Change to ccsm directory
 log_message "Changing to ccsm directory"
 run_command "cd ../ccsm"
