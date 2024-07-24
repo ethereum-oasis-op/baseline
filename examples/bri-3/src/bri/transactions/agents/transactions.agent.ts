@@ -344,34 +344,3 @@ export class TransactionAgent {
     return hashFn(`${merkelizedInvoiceRoot}${witnessHash}`).toString('hex');
   }
 }
-// TODO: Example input preparation for other workstep circuits from the example use-case, to be used
-// to properly setup dynamic mappings and to delete afterwards
-// private async workstep2(inputs: {
-//   tx: Transaction;
-//   merkelizedPayload: MerkleTree;
-// }): Promise<object> {
-//   //1. Eddsa signature
-
-//   const payload = JSON.parse(inputs.tx.payload);
-
-//   const preparedInputs = {
-//     invoiceStatus: payload.status,
-//   };
-
-//   return preparedInputs;
-// }
-
-// private async workstep3(inputs: {
-//   tx: Transaction;
-//   merkelizedPayload: MerkleTree;
-// }): Promise<object> {
-//   //1. Eddsa signature
-
-//   const payload = JSON.parse(inputs.tx.payload);
-
-//   const preparedInputs = {
-//     invoiceStatus: payload.status,
-//   };
-
-//   return preparedInputs;
-// }
