@@ -19,8 +19,8 @@ export const CommandHandlers = [
     CqrsModule,
     PassportModule,
     JwtModule,
-    SubjectModule, // TODO: Dummy commit to trigger GH action
-    LoggingModule
+    SubjectModule,
+    LoggingModule,
   ],
   controllers: [AuthController],
   providers: [...CommandHandlers, AuthAgent],
