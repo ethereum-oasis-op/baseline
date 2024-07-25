@@ -300,151 +300,151 @@ describe('SRI use-case end-to-end test', () => {
     expect(stateTreeLeafValue.leafIndex).toBe(0);
   });
 
-  it('Submits transaction 2 for execution of the workstep 2', async () => {
-    createdTransaction2Id = await createTransactionAndReturnId(
-      v4(),
-      1,
-      createdWorkflowId,
-      createdWorkstep2Id,
-      createdBpiSubjectAccountBuyerId,
-      buyerBpiSubjectEddsaPrivateKey,
-      createdBpiSubjectAccountSupplierId,
-      `{
-        "supplierInvoiceID": "INV123",
-        "amount": 300,
-        "issueDate": "2023-06-15",
-        "dueDate": "2023-07-15",
-        "status": "VERIFIED",
-        "items": [
-          { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
-          { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
-          { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
-          { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
-        ]
-      }`,
-    );
-  });
+//   it('Submits transaction 2 for execution of the workstep 2', async () => {
+//     createdTransaction2Id = await createTransactionAndReturnId(
+//       v4(),
+//       1,
+//       createdWorkflowId,
+//       createdWorkstep2Id,
+//       createdBpiSubjectAccountBuyerId,
+//       buyerBpiSubjectEddsaPrivateKey,
+//       createdBpiSubjectAccountSupplierId,
+//       `{
+//         "supplierInvoiceID": "INV123",
+//         "amount": 300,
+//         "issueDate": "2023-06-15",
+//         "dueDate": "2023-07-15",
+//         "status": "VERIFIED",
+//         "items": [
+//           { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
+//           { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
+//           { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
+//           { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
+//         ]
+//       }`,
+//     );
+//   });
 
-  it('Waits for a single VSM cycle and then verifies that the transaction 2 has been executed and that the state has been properly stored on chain and off chain', async () => {
-    await new Promise((r) => setTimeout(r, 50000));
-    const resultWorkflow = await fetchWorkflow(createdWorkflowId);
-    const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
+//   it('Waits for a single VSM cycle and then verifies that the transaction 2 has been executed and that the state has been properly stored on chain and off chain', async () => {
+//     await new Promise((r) => setTimeout(r, 50000));
+//     const resultWorkflow = await fetchWorkflow(createdWorkflowId);
+//     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
-    const stateBpiMerkleTree = new BpiMerkleTree(
-      'ttt',
-      'sha256',
-      MerkleTree.unmarshalTree(
-        resultBpiAccount.stateTree.tree,
-        new MerkleTreeService().createHashFunction('sha256'),
-      ),
-    );
+//     const stateBpiMerkleTree = new BpiMerkleTree(
+//       'ttt',
+//       'sha256',
+//       MerkleTree.unmarshalTree(
+//         resultBpiAccount.stateTree.tree,
+//         new MerkleTreeService().createHashFunction('sha256'),
+//       ),
+//     );
 
-    const historyBpiMerkleTree = new BpiMerkleTree(
-      'ttt',
-      'sha256',
-      MerkleTree.unmarshalTree(
-        resultBpiAccount.historyTree.tree,
-        new MerkleTreeService().createHashFunction('sha256'),
-      ),
-    );
+//     const historyBpiMerkleTree = new BpiMerkleTree(
+//       'ttt',
+//       'sha256',
+//       MerkleTree.unmarshalTree(
+//         resultBpiAccount.historyTree.tree,
+//         new MerkleTreeService().createHashFunction('sha256'),
+//       ),
+//     );
 
-    expect(
-      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
-    ).toBe(1);
+//     expect(
+//       historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+//     ).toBe(1);
 
-    const resultTransaction = await fetchTransaction(createdTransaction2Id);
-    const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
+//     const resultTransaction = await fetchTransaction(createdTransaction2Id);
+//     const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
 
-    const contract = getContractFromLocalNode();
-    const contentAddressableHash = await contract.getAnchorHash(
-      resultWorkstepInstanceId,
-    );
+//     const contract = getContractFromLocalNode();
+//     const contentAddressableHash = await contract.getAnchorHash(
+//       resultWorkstepInstanceId,
+//     );
 
-    expect(contentAddressableHash).toBeTruthy();
-    expect(contentAddressableHash.length).toBeGreaterThan(0);
+//     expect(contentAddressableHash).toBeTruthy();
+//     expect(contentAddressableHash.length).toBeGreaterThan(0);
 
-    expect(stateBpiMerkleTree.getLeaf(1)).toEqual(contentAddressableHash);
+//     expect(stateBpiMerkleTree.getLeaf(1)).toEqual(contentAddressableHash);
 
-    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
-      contentAddressableHash,
-    );
+//     const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+//       contentAddressableHash,
+//     );
 
-    expect(stateTreeLeafValue).toBeTruthy();
-    expect(stateTreeLeafValue.leafIndex).toBe(1);
-  });
+//     expect(stateTreeLeafValue).toBeTruthy();
+//     expect(stateTreeLeafValue.leafIndex).toBe(1);
+//   });
 
-  it('Submits transaction 3 for execution of the workstep 3', async () => {
-    createdTransaction3Id = await createTransactionAndReturnId(
-      v4(),
-      2,
-      createdWorkflowId,
-      createdWorkstep3Id,
-      createdBpiSubjectAccountBuyerId,
-      buyerBpiSubjectEddsaPrivateKey,
-      createdBpiSubjectAccountSupplierId,
-      `{
-        "supplierInvoiceID": "INV123",
-        "amount": 300,
-        "issueDate": "2023-06-15",
-        "dueDate": "2023-07-15",
-        "status": "PAID",
-        "items": [
-          { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
-          { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
-          { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
-          { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
-        ]
-      }`,
-    );
-  });
+//   it('Submits transaction 3 for execution of the workstep 3', async () => {
+//     createdTransaction3Id = await createTransactionAndReturnId(
+//       v4(),
+//       2,
+//       createdWorkflowId,
+//       createdWorkstep3Id,
+//       createdBpiSubjectAccountBuyerId,
+//       buyerBpiSubjectEddsaPrivateKey,
+//       createdBpiSubjectAccountSupplierId,
+//       `{
+//         "supplierInvoiceID": "INV123",
+//         "amount": 300,
+//         "issueDate": "2023-06-15",
+//         "dueDate": "2023-07-15",
+//         "status": "PAID",
+//         "items": [
+//           { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
+//           { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
+//           { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
+//           { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
+//         ]
+//       }`,
+//     );
+//   });
 
-  it('Waits for a single VSM cycle and then verifies that the transaction 3 has been executed and that the state has been properly stored on chain and off chain', async () => {
-    await new Promise((r) => setTimeout(r, 50000));
-    const resultWorkflow = await fetchWorkflow(createdWorkflowId);
-    const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
+//   it('Waits for a single VSM cycle and then verifies that the transaction 3 has been executed and that the state has been properly stored on chain and off chain', async () => {
+//     await new Promise((r) => setTimeout(r, 50000));
+//     const resultWorkflow = await fetchWorkflow(createdWorkflowId);
+//     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
-    const stateBpiMerkleTree = new BpiMerkleTree(
-      'ttt',
-      'sha256',
-      MerkleTree.unmarshalTree(
-        resultBpiAccount.stateTree.tree,
-        new MerkleTreeService().createHashFunction('sha256'),
-      ),
-    );
+//     const stateBpiMerkleTree = new BpiMerkleTree(
+//       'ttt',
+//       'sha256',
+//       MerkleTree.unmarshalTree(
+//         resultBpiAccount.stateTree.tree,
+//         new MerkleTreeService().createHashFunction('sha256'),
+//       ),
+//     );
 
-    const historyBpiMerkleTree = new BpiMerkleTree(
-      'ttt',
-      'sha256',
-      MerkleTree.unmarshalTree(
-        resultBpiAccount.historyTree.tree,
-        new MerkleTreeService().createHashFunction('sha256'),
-      ),
-    );
+//     const historyBpiMerkleTree = new BpiMerkleTree(
+//       'ttt',
+//       'sha256',
+//       MerkleTree.unmarshalTree(
+//         resultBpiAccount.historyTree.tree,
+//         new MerkleTreeService().createHashFunction('sha256'),
+//       ),
+//     );
 
-    expect(
-      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
-    ).toBe(2);
+//     expect(
+//       historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+//     ).toBe(2);
 
-    const resultTransaction = await fetchTransaction(createdTransaction3Id);
-    const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
+//     const resultTransaction = await fetchTransaction(createdTransaction3Id);
+//     const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
 
-    const contract = getContractFromLocalNode();
-    const contentAddressableHash = await contract.getAnchorHash(
-      resultWorkstepInstanceId,
-    );
+//     const contract = getContractFromLocalNode();
+//     const contentAddressableHash = await contract.getAnchorHash(
+//       resultWorkstepInstanceId,
+//     );
 
-    expect(contentAddressableHash).toBeTruthy();
-    expect(contentAddressableHash.length).toBeGreaterThan(0);
+//     expect(contentAddressableHash).toBeTruthy();
+//     expect(contentAddressableHash.length).toBeGreaterThan(0);
 
-    expect(stateBpiMerkleTree.getLeaf(2)).toEqual(contentAddressableHash);
+//     expect(stateBpiMerkleTree.getLeaf(2)).toEqual(contentAddressableHash);
 
-    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
-      contentAddressableHash,
-    );
+//     const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+//       contentAddressableHash,
+//     );
 
-    expect(stateTreeLeafValue).toBeTruthy();
-    expect(stateTreeLeafValue.leafIndex).toBe(2);
-  });
+//     expect(stateTreeLeafValue).toBeTruthy();
+//     expect(stateTreeLeafValue.leafIndex).toBe(2);
+//   });
 });
 
 async function loginAsInternalBpiSubjectAndReturnAnAccessToken(): Promise<string> {

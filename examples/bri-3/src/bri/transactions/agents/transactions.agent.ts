@@ -26,7 +26,7 @@ import {
 } from '../api/err.messages';
 import { TransactionResult } from '../models/transactionResult';
 import { TransactionStorageAgent } from './transactionStorage.agent';
-import { v4 } from 'uuid';
+import { ICcsmService } from 'src/bri/ccsm/services/ccsm.interface';
 
 @Injectable()
 export class TransactionAgent {
@@ -39,6 +39,8 @@ export class TransactionAgent {
     @Inject('ICircuitService')
     private readonly circuitService: ICircuitService,
     private circuitInputsParserService: CircuitInputsParserService,
+    @Inject('ICcsmService')
+    private readonly ccsmService: ICcsmService,
   ) {}
 
   public throwIfCreateTransactionInputInvalid() {
@@ -209,6 +211,8 @@ export class TransactionAgent {
       circuitWitnessCalculatorPath,
       circuitWitnessFilePath,
     );
+
+    await this.ccsmService.verifyProof('0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512', txResult.witness)
 
     txResult.hash = this.constructTxHash(
       txResult.merkelizedPayload,
