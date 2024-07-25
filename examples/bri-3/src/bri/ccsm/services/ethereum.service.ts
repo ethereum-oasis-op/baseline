@@ -34,24 +34,11 @@ export class EthereumService implements ICcsmService {
     this.wallet = new BaseWallet(signingKey, this.provider);
   }
 
-  async connectToContract(): Promise<Contract> {
-    const ccsmContractAddress =
-      process.env.CCSM_BPI_STATE_ANCHOR_CONTRACT_ADDRESS!;
-
-    const ccsmBpiStateAnchorContract = new ethers.Contract(
-      ccsmContractAddress,
-      CcsmBpiStateAnchor.abi,
-      this.wallet,
-    );
-
-    return ccsmBpiStateAnchorContract;
-  }
-
   public async storeAnchorHash(
     workstepInstanceId: string,
     anchorHash: string,
   ): Promise<void> {
-    const ccsmContract = await this.connectToContract();
+    const ccsmContract = await this.connectToCcsmBpiStateAnchorContract();
     try {
       const tx = await ccsmContract.setAnchorHash(
         workstepInstanceId,
@@ -66,8 +53,21 @@ export class EthereumService implements ICcsmService {
   }
 
   public async getAnchorHash(workstepInstanceId: string): Promise<string> {
-    const ccsmContract = await this.connectToContract();
+    const ccsmContract = await this.connectToCcsmBpiStateAnchorContract();
     const anchorHash = await ccsmContract.getAnchorHash(workstepInstanceId);
     return anchorHash;
+  }
+
+  private async connectToCcsmBpiStateAnchorContract(): Promise<Contract> {
+    const ccsmContractAddress =
+      process.env.CCSM_BPI_STATE_ANCHOR_CONTRACT_ADDRESS!;
+
+    const ccsmBpiStateAnchorContract = new ethers.Contract(
+      ccsmContractAddress,
+      CcsmBpiStateAnchor.abi,
+      this.wallet,
+    );
+
+    return ccsmBpiStateAnchorContract;
   }
 }
