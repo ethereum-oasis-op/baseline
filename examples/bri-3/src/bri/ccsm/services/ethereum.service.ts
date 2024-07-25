@@ -9,7 +9,9 @@ import {
   Provider,
   SigningKey,
 } from 'ethers';
+import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
+import * as Workstep1Verifier from '../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1Verifier.sol/Workstep1Verifier.json';
 import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
 import { ICcsmService } from './ccsm.interface';
 
@@ -56,6 +58,45 @@ export class EthereumService implements ICcsmService {
     const ccsmContract = await this.connectToCcsmBpiStateAnchorContract();
     const anchorHash = await ccsmContract.getAnchorHash(workstepInstanceId);
     return anchorHash;
+  }
+
+  public async verifyProof(verifierAddress: string, witness: Witness): Promise<boolean> {
+    const verifierContract = new ethers.Contract(
+      verifierAddress,
+      Workstep1Verifier.abi,
+      this.wallet,
+    );
+
+    // Helper function to pad and concatenate values
+    const padAndConcat = (value: string | string[]) => {
+      if (Array.isArray(value)) {
+        return value.slice(0, 2).map(v => ethers.zeroPadValue(ethers.toBigInt(v).toString(16), 32).slice(2)).join('');
+      }
+      return ethers.zeroPadValue(ethers.toBigInt(value).toString(16), 32).slice(2);
+      
+    };
+
+    const proofHex = "0x" + 
+      padAndConcat(witness.proof.value["A"]) +
+      padAndConcat(witness.proof.value["B"]) +
+      padAndConcat(witness.proof.value["C"]) +
+      padAndConcat(witness.proof.value["Z"]) +
+      padAndConcat(witness.proof.value["T1"]) +
+      padAndConcat(witness.proof.value["T2"]) +
+      padAndConcat(witness.proof.value["T3"]) +
+      padAndConcat(witness.proof.value["Wxi"]) +
+      padAndConcat(witness.proof.value["Wxiw"]) +
+      padAndConcat(witness.proof.value["eval_a"]) +
+      padAndConcat(witness.proof.value["eval_b"]) +
+      padAndConcat(witness.proof.value["eval_c"]) +
+      padAndConcat(witness.proof.value["eval_s1"]) +
+      padAndConcat(witness.proof.value["eval_s2"]) +
+      padAndConcat(witness.proof.value["eval_zw"]) +
+      padAndConcat(witness.proof.value["eval_r"]);
+
+    const pubInputs = witness.publicInputs!.map(input => ethers.toBigInt(input));
+
+    return await verifierContract.verifyProof(proofHex, pubInputs);
   }
 
   private async connectToCcsmBpiStateAnchorContract(): Promise<Contract> {
