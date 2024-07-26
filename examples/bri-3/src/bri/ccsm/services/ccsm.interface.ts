@@ -8,5 +8,9 @@ export interface ICcsmService {
 
   getAnchorHash(workstepInstanceId: string): Promise<string>;
 
-  verifyProof(verifierAddress: string, pathToAbi: string, witness: Witness): Promise<boolean>;
+  verifyProof(
+    verifierAddress: string,
+    pathToAbi: string,
+    witness: Witness,
+  ): Promise<boolean>;
 }

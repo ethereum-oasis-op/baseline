@@ -6,6 +6,6 @@ export class CreateWorkstepCommand {
     public readonly workgroupId: string,
     public readonly securityPolicy: string,
     public readonly privacyPolicy: string,
-    public readonly verifierContractAddress: string
+    public readonly verifierContractAddress: string,
   ) {}
 }
