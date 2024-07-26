@@ -17,6 +17,7 @@ import { LoggingModule } from '../../../shared/logging/logging.module';
 import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { AuthAgent } from '../../auth/agent/auth.agent';
+import { CcsmModule } from '../../ccsm/ccsm.module';
 import { BpiSubjectAccount as BpiSubjectAccountPrismaModel } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
@@ -26,7 +27,6 @@ import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/worksteps
 import { NOT_FOUND_ERR_MESSAGE as WORKSTEP_NOT_FOUND_ERR_MESSAGE } from '../../workgroup/worksteps/api/err.messages';
 import { CircuitInputsParserService } from '../../zeroKnowledgeProof/services/circuit/circuitInputsParser/circuitInputParser.service';
 import { SnarkjsCircuitService } from '../../zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service';
-import { ZeroKnowledgeProofModule } from '../../zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { Transaction } from '../models/transaction';
 import { TransactionStatus } from '../models/transactionStatus.enum';
 import { TransactionAgent } from './transactions.agent';
@@ -53,6 +53,7 @@ beforeEach(async () => {
       AutomapperModule.forRoot({
         strategyInitializer: classes(),
       }),
+      CcsmModule,
     ],
     providers: [
       TransactionAgent,
@@ -191,6 +192,7 @@ beforeEach(async () => {
       securityPolicy: '',
       privacyPolicy: '',
       workgroupId: workgroup.id,
+      verifierContractAddress: '',
     },
   });
 
