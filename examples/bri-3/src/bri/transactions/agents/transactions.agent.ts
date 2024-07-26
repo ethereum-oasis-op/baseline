@@ -26,7 +26,7 @@ import {
 } from '../api/err.messages';
 import { TransactionResult } from '../models/transactionResult';
 import { TransactionStorageAgent } from './transactionStorage.agent';
-import { ICcsmService } from 'src/bri/ccsm/services/ccsm.interface';
+import { ICcsmService } from '../../ccsm/services/ccsm.interface';
 
 @Injectable()
 export class TransactionAgent {
@@ -212,7 +212,7 @@ export class TransactionAgent {
       circuitWitnessFilePath,
     );
 
-    await this.ccsmService.verifyProof('0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512', txResult.witness)
+    txResult.verifiedOnChain = await this.ccsmService.verifyProof('0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512', txResult.witness);
 
     txResult.hash = this.constructTxHash(
       txResult.merkelizedPayload,

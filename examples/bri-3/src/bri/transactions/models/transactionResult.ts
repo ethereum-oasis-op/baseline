@@ -5,4 +5,5 @@ export class TransactionResult {
   merkelizedPayload: MerkleTree;
   witness: Witness;
   hash: string;
+  verifiedOnChain: boolean;
 }

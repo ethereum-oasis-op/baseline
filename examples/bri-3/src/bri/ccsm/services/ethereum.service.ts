@@ -7,12 +7,12 @@ import {
   InfuraProvider,
   JsonRpcProvider,
   Provider,
-  SigningKey,
+  SigningKey
 } from 'ethers';
-import { Witness } from 'src/bri/zeroKnowledgeProof/models/witness';
 import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
 import * as Workstep1Verifier from '../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1Verifier.sol/Workstep1Verifier.json';
 import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
+import { Witness } from '../../zeroKnowledgeProof/models/witness';
 import { ICcsmService } from './ccsm.interface';
 
 @Injectable()
@@ -49,7 +49,7 @@ export class EthereumService implements ICcsmService {
       await tx.wait();
     } catch (error) {
       throw new InternalServerErrorException(
-        `Error while trying to process ethereum tx : ${error}`,
+        `Error while trying to store anchor hash on chain : ${error}`,
       );
     }
   }
@@ -67,36 +67,38 @@ export class EthereumService implements ICcsmService {
       this.wallet,
     );
 
-    // Helper function to pad and concatenate values
-    const padAndConcat = (value: string | string[]) => {
-      if (Array.isArray(value)) {
-        return value.slice(0, 2).map(v => ethers.zeroPadValue(ethers.toBigInt(v).toString(16), 32).slice(2)).join('');
-      }
-      return ethers.zeroPadValue(ethers.toBigInt(value).toString(16), 32).slice(2);
-      
-    };
+    const proofElements = [
+      ...witness.proof.value["A"].slice(0, 2),
+      ...witness.proof.value["B"].slice(0, 2),
+      ...witness.proof.value["C"].slice(0, 2),
+      ...witness.proof.value["Z"].slice(0, 2),
+      ...witness.proof.value["T1"].slice(0, 2),
+      ...witness.proof.value["T2"].slice(0, 2),
+      ...witness.proof.value["T3"].slice(0, 2),
+      ...witness.proof.value["Wxi"].slice(0, 2),
+      ...witness.proof.value["Wxiw"].slice(0, 2),
+      witness.proof.value["eval_a"],
+      witness.proof.value["eval_b"],
+      witness.proof.value["eval_c"],
+      witness.proof.value["eval_s1"],
+      witness.proof.value["eval_s2"],
+      witness.proof.value["eval_zw"],
+      witness.proof.value["eval_r"]
+    ];
 
-    const proofHex = "0x" + 
-      padAndConcat(witness.proof.value["A"]) +
-      padAndConcat(witness.proof.value["B"]) +
-      padAndConcat(witness.proof.value["C"]) +
-      padAndConcat(witness.proof.value["Z"]) +
-      padAndConcat(witness.proof.value["T1"]) +
-      padAndConcat(witness.proof.value["T2"]) +
-      padAndConcat(witness.proof.value["T3"]) +
-      padAndConcat(witness.proof.value["Wxi"]) +
-      padAndConcat(witness.proof.value["Wxiw"]) +
-      padAndConcat(witness.proof.value["eval_a"]) +
-      padAndConcat(witness.proof.value["eval_b"]) +
-      padAndConcat(witness.proof.value["eval_c"]) +
-      padAndConcat(witness.proof.value["eval_s1"]) +
-      padAndConcat(witness.proof.value["eval_s2"]) +
-      padAndConcat(witness.proof.value["eval_zw"]) +
-      padAndConcat(witness.proof.value["eval_r"]);
+    const proofHex = '0x' + proofElements.map(this.formatHexString).join('');
 
-    const pubInputs = witness.publicInputs!.map(input => ethers.toBigInt(input));
+    const pubInputs = witness.publicInputs!.map(input => BigInt(input));
 
-    return await verifierContract.verifyProof(proofHex, pubInputs);
+    try {
+
+      return await verifierContract.verifyProof(proofHex, pubInputs);;
+
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error while trying to verify proof on chain : ${error}`,
+      );
+    }
   }
 
   private async connectToCcsmBpiStateAnchorContract(): Promise<Contract> {
@@ -111,4 +113,22 @@ export class EthereumService implements ICcsmService {
 
     return ccsmBpiStateAnchorContract;
   }
+
+  private formatHexString(value: string | number | bigint): string {
+    let hexValue: string;
+    if (typeof value === 'string' && value.startsWith('0x')) {
+      // If it's already a hex string, just pad it
+      hexValue = value;
+    } else {
+      // Otherwise, convert to BigInt first
+      try {
+        const bigIntValue = BigInt(value);
+        hexValue = '0x' + bigIntValue.toString(16).padStart(64, '0');
+      } catch (error) {
+        console.error('Error converting value to BigInt:', value);
+        throw error;
+      }
+    }
+    return hexValue.slice(2); // Remove '0x' prefix
+  };
 }
