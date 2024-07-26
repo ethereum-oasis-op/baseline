@@ -50,6 +50,7 @@ export class WorkstepController {
         requestDto.workgroupId,
         requestDto.securityPolicy,
         requestDto.privacyPolicy,
+        requestDto.verifierContractAddress
       ),
     );
   }

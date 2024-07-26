@@ -14,4 +14,6 @@ export class CreateWorkstepDto {
   securityPolicy: string;
 
   privacyPolicy: string;
+
+  verifierContractAddress: string;
 }

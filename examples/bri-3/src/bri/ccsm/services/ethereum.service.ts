@@ -10,10 +10,11 @@ import {
   SigningKey,
 } from 'ethers';
 import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
-import * as Workstep1Verifier from '../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1Verifier.sol/Workstep1Verifier.json';
+// import * as Workstep1Verifier from '../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1Verifier.sol/Workstep1Verifier.json';
 import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
 import { Witness } from '../../zeroKnowledgeProof/models/witness';
 import { ICcsmService } from './ccsm.interface';
+import * as fs from 'fs';
 
 @Injectable()
 export class EthereumService implements ICcsmService {
@@ -62,11 +63,25 @@ export class EthereumService implements ICcsmService {
 
   public async verifyProof(
     verifierAddress: string,
+    pathToAbi: string,
     witness: Witness,
   ): Promise<boolean> {
+
+    let verifierAbi = '';
+    try {
+      const abiRaw = fs.readFileSync(pathToAbi, 'utf8');
+      verifierAbi = JSON.parse(abiRaw);
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new Error('Workstep verifier contract ABI does not exist on path:' + pathToAbi);
+      } else {
+        throw new Error('Error while reading verifier contract ABI:' + error);
+      }
+    }
+
     const verifierContract = new ethers.Contract(
       verifierAddress,
-      Workstep1Verifier.abi,
+      verifierAbi["abi"],
       this.wallet,
     );
 
