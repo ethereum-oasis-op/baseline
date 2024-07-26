@@ -73,6 +73,7 @@ model Workstep {
   circuitInputsTranslationSchema Json?
   workflow       Workflow[]
   workgroup      Workgroup  @relation(fields: [workgroupId], references: [id])
+  verifierContractAddress  String
 }
 
 model Workflow {

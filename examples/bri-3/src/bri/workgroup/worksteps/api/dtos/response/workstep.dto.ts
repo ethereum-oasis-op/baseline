@@ -24,4 +24,7 @@ export class WorkstepDto {
 
   @AutoMap()
   circuitInputsTranslationSchema: string;
+
+  @AutoMap()
+  verifierContractAddress: string;
 }

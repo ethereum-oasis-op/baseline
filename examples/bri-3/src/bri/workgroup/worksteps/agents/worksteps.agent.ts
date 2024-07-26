@@ -24,6 +24,7 @@ export class WorkstepAgent {
     workgroupId: string,
     securityPolicy: string,
     privacyPolicy: string,
+    verifierContractAddress: string,
   ): Workstep {
     return new Workstep(
       v4(),
@@ -33,6 +34,7 @@ export class WorkstepAgent {
       workgroupId,
       securityPolicy,
       privacyPolicy,
+      verifierContractAddress
     );
   }
 
