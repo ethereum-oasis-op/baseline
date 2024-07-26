@@ -18,6 +18,7 @@ export class WorkstepBuilder {
   private workgroupId: string;
   private securityPolicy: string;
   private privacyPolicy: string;
+  private verifierContractAddress: string;
 
   constructor() {}
 
@@ -56,6 +57,11 @@ export class WorkstepBuilder {
     return this;
   }
 
+  setVerifierContractAddress(verifierContractAddress: string): WorkstepBuilder {
+    this.verifierContractAddress = verifierContractAddress;
+    return this;
+  }
+
   build(): Workstep {
     return new Workstep(
       this.id,
@@ -65,6 +71,7 @@ export class WorkstepBuilder {
       this.workgroupId,
       this.securityPolicy,
       this.privacyPolicy,
+      this.verifierContractAddress,
     );
   }
 }

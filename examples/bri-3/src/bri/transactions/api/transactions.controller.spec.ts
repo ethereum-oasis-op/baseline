@@ -8,6 +8,7 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { uuid } from 'uuidv4';
 import { LoggingModule } from '../../../shared/logging/logging.module';
 import { AuthAgent } from '../../auth/agent/auth.agent';
+import { CcsmModule } from '../../ccsm/ccsm.module';
 import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
@@ -87,6 +88,7 @@ describe('TransactionController', () => {
           strategyInitializer: classes(),
         }),
         LoggingModule,
+        CcsmModule,
       ],
       controllers: [TransactionController],
       providers: [

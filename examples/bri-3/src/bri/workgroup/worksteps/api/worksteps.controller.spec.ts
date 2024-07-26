@@ -35,6 +35,7 @@ describe('WorkstepController', () => {
       'wgid',
       'secPolicy',
       'privPolicy',
+      'verifierContractAddress',
     );
   };
 
