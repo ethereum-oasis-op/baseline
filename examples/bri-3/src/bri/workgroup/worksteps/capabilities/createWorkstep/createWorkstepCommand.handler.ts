@@ -20,7 +20,7 @@ export class CreateWorkstepCommandHandler
       command.workgroupId,
       command.securityPolicy,
       command.privacyPolicy,
-      command.verifierContractAddress
+      command.verifierContractAddress,
     );
 
     const newWorkstep = await this.storageAgent.storeNewWorkstep(

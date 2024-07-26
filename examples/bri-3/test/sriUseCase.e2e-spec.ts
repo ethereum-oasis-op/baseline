@@ -138,19 +138,19 @@ describe('SRI use-case end-to-end test', () => {
     createdWorkstep1Id = await createWorkstepAndReturnId(
       'workstep1',
       createdWorkgroupId,
-      '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+      '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
     );
 
     createdWorkstep2Id = await createWorkstepAndReturnId(
       'workstep2',
       createdWorkgroupId,
-      '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
+      '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
     );
 
     createdWorkstep3Id = await createWorkstepAndReturnId(
       'workstep3',
       createdWorkgroupId,
-      '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9'
+      '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
     );
 
     createdWorkflowId = await createWorkflowAndReturnId(
@@ -554,7 +554,7 @@ async function fetchWorkgroup(workgroupId: string): Promise<any> {
 async function createWorkstepAndReturnId(
   name: string,
   workgroupId: string,
-  verifierContractAddress: string
+  verifierContractAddress: string,
 ): Promise<string> {
   const createdWorkstepResponse = await request(server)
     .post('/worksteps')
@@ -566,7 +566,7 @@ async function createWorkstepAndReturnId(
       workgroupId: workgroupId,
       securityPolicy: 'Dummy security policy',
       privacyPolicy: 'Dummy privacy policy',
-      verifierContractAddress: verifierContractAddress
+      verifierContractAddress: verifierContractAddress,
     })
     .expect(201);
 

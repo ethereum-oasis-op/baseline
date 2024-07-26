@@ -198,7 +198,7 @@ export class TransactionAgent {
       circuitPath,
       circuitWitnessCalculatorPath,
       circuitWitnessFilePath,
-      verifierContractAbiFilePath
+      verifierContractAbiFilePath,
     } = this.constructCircuitPathsFromWorkstepName(workstep.name);
 
     txResult.witness = await this.circuitService.createWitness(
@@ -277,21 +277,22 @@ export class TransactionAgent {
       snakeCaseWorkstepName +
       '/witness.txt';
 
-      const verifierContractAbiFilePath =
-        process.env.SNARKJS_CIRCUITS_PATH +
-        snakeCaseWorkstepName +
-        '/' +
-        snakeCaseWorkstepName +
-        'Verifier.sol' +
-        '/' +
-        snakeCaseWorkstepName + 'Verifier.json'
+    const verifierContractAbiFilePath =
+      process.env.SNARKJS_CIRCUITS_PATH +
+      snakeCaseWorkstepName +
+      '/' +
+      snakeCaseWorkstepName +
+      'Verifier.sol' +
+      '/' +
+      snakeCaseWorkstepName +
+      'Verifier.json';
     return {
       circuitProvingKeyPath,
       circuitVerificatioKeyPath,
       circuitPath,
       circuitWitnessCalculatorPath,
       circuitWitnessFilePath,
-      verifierContractAbiFilePath
+      verifierContractAbiFilePath,
     };
   }
 

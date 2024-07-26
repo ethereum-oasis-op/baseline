@@ -34,7 +34,7 @@ export class WorkstepAgent {
       workgroupId,
       securityPolicy,
       privacyPolicy,
-      verifierContractAddress
+      verifierContractAddress,
     );
   }
 

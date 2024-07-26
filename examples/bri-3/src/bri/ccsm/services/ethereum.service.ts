@@ -66,14 +66,15 @@ export class EthereumService implements ICcsmService {
     pathToAbi: string,
     witness: Witness,
   ): Promise<boolean> {
-
     let verifierAbi = '';
     try {
       const abiRaw = fs.readFileSync(pathToAbi, 'utf8');
       verifierAbi = JSON.parse(abiRaw);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        throw new Error('Workstep verifier contract ABI does not exist on path:' + pathToAbi);
+        throw new Error(
+          'Workstep verifier contract ABI does not exist on path:' + pathToAbi,
+        );
       } else {
         throw new Error('Error while reading verifier contract ABI:' + error);
       }
@@ -81,7 +82,7 @@ export class EthereumService implements ICcsmService {
 
     const verifierContract = new ethers.Contract(
       verifierAddress,
-      verifierAbi["abi"],
+      verifierAbi['abi'],
       this.wallet,
     );
 
