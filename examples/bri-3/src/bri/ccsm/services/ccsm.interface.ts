@@ -1,4 +1,4 @@
-import { Witness } from "src/bri/zeroKnowledgeProof/models/witness";
+import { Witness } from '../../zeroKnowledgeProof/models/witness';
 
 export interface ICcsmService {
   storeAnchorHash(
@@ -8,5 +8,5 @@ export interface ICcsmService {
 
   getAnchorHash(workstepInstanceId: string): Promise<string>;
 
-  verifyProof(verifierAddress: string, witness: Witness): Promise<boolean>
+  verifyProof(verifierAddress: string, witness: Witness): Promise<boolean>;
 }

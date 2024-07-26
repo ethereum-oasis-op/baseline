@@ -7,7 +7,7 @@ import {
   InfuraProvider,
   JsonRpcProvider,
   Provider,
-  SigningKey
+  SigningKey,
 } from 'ethers';
 import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
 import * as Workstep1Verifier from '../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1Verifier.sol/Workstep1Verifier.json';
@@ -60,7 +60,10 @@ export class EthereumService implements ICcsmService {
     return anchorHash;
   }
 
-  public async verifyProof(verifierAddress: string, witness: Witness): Promise<boolean> {
+  public async verifyProof(
+    verifierAddress: string,
+    witness: Witness,
+  ): Promise<boolean> {
     const verifierContract = new ethers.Contract(
       verifierAddress,
       Workstep1Verifier.abi,
@@ -68,32 +71,30 @@ export class EthereumService implements ICcsmService {
     );
 
     const proofElements = [
-      ...witness.proof.value["A"].slice(0, 2),
-      ...witness.proof.value["B"].slice(0, 2),
-      ...witness.proof.value["C"].slice(0, 2),
-      ...witness.proof.value["Z"].slice(0, 2),
-      ...witness.proof.value["T1"].slice(0, 2),
-      ...witness.proof.value["T2"].slice(0, 2),
-      ...witness.proof.value["T3"].slice(0, 2),
-      ...witness.proof.value["Wxi"].slice(0, 2),
-      ...witness.proof.value["Wxiw"].slice(0, 2),
-      witness.proof.value["eval_a"],
-      witness.proof.value["eval_b"],
-      witness.proof.value["eval_c"],
-      witness.proof.value["eval_s1"],
-      witness.proof.value["eval_s2"],
-      witness.proof.value["eval_zw"],
-      witness.proof.value["eval_r"]
+      ...witness.proof.value['A'].slice(0, 2),
+      ...witness.proof.value['B'].slice(0, 2),
+      ...witness.proof.value['C'].slice(0, 2),
+      ...witness.proof.value['Z'].slice(0, 2),
+      ...witness.proof.value['T1'].slice(0, 2),
+      ...witness.proof.value['T2'].slice(0, 2),
+      ...witness.proof.value['T3'].slice(0, 2),
+      ...witness.proof.value['Wxi'].slice(0, 2),
+      ...witness.proof.value['Wxiw'].slice(0, 2),
+      witness.proof.value['eval_a'],
+      witness.proof.value['eval_b'],
+      witness.proof.value['eval_c'],
+      witness.proof.value['eval_s1'],
+      witness.proof.value['eval_s2'],
+      witness.proof.value['eval_zw'],
+      witness.proof.value['eval_r'],
     ];
 
     const proofHex = '0x' + proofElements.map(this.formatHexString).join('');
 
-    const pubInputs = witness.publicInputs!.map(input => BigInt(input));
+    const pubInputs = witness.publicInputs!.map((input) => BigInt(input));
 
     try {
-
-      return await verifierContract.verifyProof(proofHex, pubInputs);;
-
+      return await verifierContract.verifyProof(proofHex, pubInputs);
     } catch (error) {
       throw new InternalServerErrorException(
         `Error while trying to verify proof on chain : ${error}`,
@@ -130,5 +131,5 @@ export class EthereumService implements ICcsmService {
       }
     }
     return hexValue.slice(2); // Remove '0x' prefix
-  };
+  }
 }
