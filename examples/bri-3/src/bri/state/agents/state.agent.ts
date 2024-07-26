@@ -9,15 +9,6 @@ import { Witness } from '../../zeroKnowledgeProof/models/witness';
 import { StateTreeLeafValueContent } from '../models/stateTreeLeafValueContent';
 import { LEAF_STATE_VALUE_NOT_FOUND_ERR_MESSAGE } from '../bpiAccounts/api/err.messages';
 
-// TODO: #741 We should follow this approach everywhere for storage
-// https://www.prisma.io/docs/guides/performance-and-optimization/prisma-client-transactions-guide#scenario-pre-computed-ids-and-the-transaction-api
-// We precompute Ids, collect all storage actions from the relevant storage agents
-// and then execute a single prisma transaction at the end of the command handler
-// Best way to achieve this is to have a provider called i.e dbContext, which is scoped as REQUEST
-// that is injected in every agent and serves as the place where we collect all the db actions created by storage agents which are invoked by
-// by regular agents. This dbContext is in the end passed to prisma.transaction call, so that db actions are executed in order
-// as part of a single transaction.
-
 // TODO: #742 MIL5 - Introduce unit tests once https://github.com/demonsters/prisma-mock implemented
 @Injectable()
 export class StateAgent {
