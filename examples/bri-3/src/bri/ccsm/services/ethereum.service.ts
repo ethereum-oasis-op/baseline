@@ -10,7 +10,6 @@ import {
   SigningKey,
 } from 'ethers';
 import * as CcsmBpiStateAnchor from '../../../../ccsmArtifacts/contracts/CcsmBpiStateAnchor.sol/CcsmBpiStateAnchor.json';
-// import * as Workstep1Verifier from '../../../../zeroKnowledgeArtifacts/circuits/workstep1/workstep1Verifier.sol/Workstep1Verifier.json';
 import { internalBpiSubjectEcdsaPrivateKey } from '../../../shared/testing/constants';
 import { Witness } from '../../zeroKnowledgeProof/models/witness';
 import { ICcsmService } from './ccsm.interface';
