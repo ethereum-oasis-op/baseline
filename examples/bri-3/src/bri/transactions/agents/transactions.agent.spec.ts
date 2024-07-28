@@ -1,35 +1,36 @@
-import { AuthAgent } from '../../auth/agent/auth.agent';
-import { BpiSubjectAccount as BpiSubjectAccountPrismaModel } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
-import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
-import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
-import { Transaction } from '../models/transaction';
-import { TransactionStatus } from '../models/transactionStatus.enum';
-import { TransactionStorageAgent } from './transactionStorage.agent';
-import { TransactionAgent } from './transactions.agent';
-import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
+import { NotFoundException } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
 import {
+  BpiAccount,
   BpiSubject,
   BpiSubjectAccount,
+  PrismaClient,
+  PublicKeyType,
   Workflow,
   Workgroup,
   Workstep,
-  BpiAccount,
-  PrismaClient,
-  PublicKeyType,
 } from '../../../../__mocks__/@prisma/client';
-import { Test, TestingModule } from '@nestjs/testing';
-import { SnarkjsCircuitService } from '../../zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service';
+import { AuthModule } from '../../../bri/auth/auth.module';
+import { LoggingModule } from '../../../shared/logging/logging.module';
 import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
+import { AuthAgent } from '../../auth/agent/auth.agent';
+import { CcsmModule } from '../../ccsm/ccsm.module';
+import { BpiSubjectAccount as BpiSubjectAccountPrismaModel } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { LoggingModule } from '../../../shared/logging/logging.module';
-import { NotFoundException } from '@nestjs/common';
-import { NOT_FOUND_ERR_MESSAGE as WORKSTEP_NOT_FOUND_ERR_MESSAGE } from '../../workgroup/worksteps/api/err.messages';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
+import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { NOT_FOUND_ERR_MESSAGE as WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../../workgroup/workflows/api/err.messages';
-import { AuthModule } from '../../../bri/auth/auth.module';
-import { AutomapperModule } from '@automapper/nestjs';
-import { classes } from '@automapper/classes';
-import { uuid } from 'uuidv4';
+import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { NOT_FOUND_ERR_MESSAGE as WORKSTEP_NOT_FOUND_ERR_MESSAGE } from '../../workgroup/worksteps/api/err.messages';
+import { CircuitInputsParserService } from '../../zeroKnowledgeProof/services/circuit/circuitInputsParser/circuitInputParser.service';
+import { SnarkjsCircuitService } from '../../zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service';
+import { Transaction } from '../models/transaction';
+import { TransactionStatus } from '../models/transactionStatus.enum';
+import { TransactionAgent } from './transactions.agent';
+import { TransactionStorageAgent } from './transactionStorage.agent';
 
 let agent: TransactionAgent;
 let authAgent: AuthAgent;
@@ -52,6 +53,7 @@ beforeEach(async () => {
       AutomapperModule.forRoot({
         strategyInitializer: classes(),
       }),
+      CcsmModule,
     ],
     providers: [
       TransactionAgent,
@@ -66,6 +68,7 @@ beforeEach(async () => {
         provide: 'ICircuitService',
         useClass: SnarkjsCircuitService,
       },
+      CircuitInputsParserService,
     ],
   })
     .overrideProvider(PrismaService)
@@ -189,6 +192,7 @@ beforeEach(async () => {
       securityPolicy: '',
       privacyPolicy: '',
       workgroupId: workgroup.id,
+      verifierContractAddress: '',
     },
   });
 

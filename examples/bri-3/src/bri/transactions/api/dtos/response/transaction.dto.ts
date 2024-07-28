@@ -9,7 +9,13 @@ export class TransactionDto {
   nonce: number;
 
   @AutoMap()
+  workflowId: string;
+
+  @AutoMap()
   workflowInstanceId: string;
+
+  @AutoMap()
+  workstepId: string;
 
   @AutoMap()
   workstepInstanceId: string;

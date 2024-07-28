@@ -29,7 +29,7 @@ export class UpdateTransactionCommandHandler
       command.signature,
     );
 
-    const updatedTransaction = await this.storageAgent.updateTransaction(
+    const updatedTransaction = await this.storageAgent.updateTransactionPayload(
       transactionToUpdate,
     );
 

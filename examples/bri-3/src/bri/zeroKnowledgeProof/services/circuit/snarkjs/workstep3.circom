@@ -1,7 +1,7 @@
 pragma circom 2.1.5;
 
 include "../../../../../../node_modules/circomlib/circuits/comparators.circom";
-include "./utils/ecdsaSignatureVerifier.circom";
+include "../../../../../../node_modules/circomlib/circuits/eddsa.circom";
 include "./utils/arithmeticOperators.circom";
 
 template Workstep3(){

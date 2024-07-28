@@ -5,14 +5,18 @@ import { getResolver } from 'ethr-did-resolver';
 import 'dotenv/config';
 
 export class DidService {
+  // TODO: Hardcoded sepolia everywhere for DID resolution
+  // This should be taken from the CCSM_NETWORK env value and
+  // the service refactored to connect to locahost as well,
+  // with  previous deployment of a did registry to local node.
   async createKeypair(): Promise<KeyPair> {
-    const keypair = EthrDID.createKeyPair(process.env.DID_NETWORK);
+    const keypair = EthrDID.createKeyPair('sepolia');
     return keypair;
   }
 
   async createProvider(): Promise<Provider> {
     const provider = new InfuraProvider(
-      process.env.DID_NETWORK,
+      'sepolia',
       process.env.INFURA_PROVIDER_API_KEY,
     );
     return provider;
@@ -22,7 +26,7 @@ export class DidService {
     const did = new EthrDID({
       identifier: process.env.DID_BPI_OPERATOR_PUBLIC_KEY as string,
       provider,
-      chainNameOrId: process.env.DID_NETWORK,
+      chainNameOrId: 'sepolia',
       registry: process.env.DID_REGISTRY,
     });
     return did;
@@ -31,10 +35,10 @@ export class DidService {
   async getDidResolver(provider): Promise<Resolver> {
     const didResolver = new Resolver({
       ...getResolver({
-        name: process.env.DID_NETWORK,
+        name: 'sepolia',
         provider: provider,
         registry: process.env.DID_REGISTRY,
-        chainId: process.env.DID_NETWORK,
+        chainId: 'sepolia',
       }),
     });
 

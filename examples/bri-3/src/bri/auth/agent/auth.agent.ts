@@ -130,7 +130,7 @@ export class AuthAgent {
     };
 
     const serviceDid =
-      `did:ethr:${process.env.DID_NETWORK}:${process.env.DID_BPI_OPERATOR_PUBLIC_KEY}` as string;
+      `did:ethr:sepolia:${process.env.DID_BPI_OPERATOR_PUBLIC_KEY}` as string;
     const privateKey = process.env.DID_BPI_OPERATOR_PRIVATE_KEY as string;
 
     const serviceSigner = ES256KSigner(hexToBytes(privateKey));

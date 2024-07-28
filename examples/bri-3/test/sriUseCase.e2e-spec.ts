@@ -1,16 +1,19 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { ethers } from 'ethers';
+import { ethers, JsonRpcProvider } from 'ethers';
+import MerkleTree from 'merkletreejs';
 import * as request from 'supertest';
 import { v4 } from 'uuid';
 import { AppModule } from '../src/app.module';
+import { BpiMerkleTree } from '../src/bri/merkleTree/models/bpiMerkleTree';
+import { MerkleTreeService } from '../src/bri/merkleTree/services/merkleTree.service';
 import {
-  supplierBpiSubjectEcdsaPublicKey,
-  supplierBpiSubjectEcdsaPrivateKey,
-  buyerBpiSubjectEcdsaPublicKey,
   buyerBpiSubjectEcdsaPrivateKey,
-  internalBpiSubjectEcdsaPublicKey,
+  buyerBpiSubjectEcdsaPublicKey,
   internalBpiSubjectEcdsaPrivateKey,
+  internalBpiSubjectEcdsaPublicKey,
+  supplierBpiSubjectEcdsaPrivateKey,
+  supplierBpiSubjectEcdsaPublicKey,
 } from '../src/shared/testing/constants';
 import {
   createEddsaPrivateKey,
@@ -28,10 +31,15 @@ let supplierBpiSubjectEddsaPrivateKey: string;
 let buyerBpiSubjectEddsaPublicKey: string;
 let buyerBpiSubjectEddsaPrivateKey: string;
 let createdWorkgroupId: string;
-let createdWorkstepId: string;
+let createdWorkstep1Id: string;
+let createdWorkstep2Id: string;
+let createdWorkstep3Id: string;
 let createdWorkflowId: string;
 let createdBpiSubjectAccountSupplierId: string;
 let createdBpiSubjectAccountBuyerId: string;
+let createdTransaction1Id: string;
+let createdTransaction2Id: string;
+let createdTransaction3Id: string;
 
 describe('SRI use-case end-to-end test', () => {
   beforeAll(async () => {
@@ -123,37 +131,111 @@ describe('SRI use-case end-to-end test', () => {
     );
   });
 
-  it('Sets up a workflow with a workstep in the previously created workgroup', async () => {
+  it('Sets up a workflow with 3 worksteps in the previously created workgroup', async () => {
     // TODO: Auth as supplier?
     // TODO: Can we  listen and fire NATS messages here
 
-    createdWorkstepId = await createWorkstepAndReturnId(
+    createdWorkstep1Id = await createWorkstepAndReturnId(
       'workstep1',
       createdWorkgroupId,
+      '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+    );
+
+    createdWorkstep2Id = await createWorkstepAndReturnId(
+      'workstep2',
+      createdWorkgroupId,
+      '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0',
+    );
+
+    createdWorkstep3Id = await createWorkstepAndReturnId(
+      'workstep3',
+      createdWorkgroupId,
+      '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
     );
 
     createdWorkflowId = await createWorkflowAndReturnId(
       'worksflow1',
       createdWorkgroupId,
-      [createdWorkstepId],
+      [createdWorkstep1Id, createdWorkstep2Id, createdWorkstep3Id],
       [createdBpiSubjectAccountSupplierId, createdBpiSubjectAccountBuyerId],
     );
   });
 
-  it('Add a circuit input translation schema to a workstep', async () => {
-    const schema =
-      '{"mapping": [{"circuitInput": "input1", "description": "desc1", "payloadJsonPath": "path1", "dataType": "string"}]}';
-    await addCircuitInputsSchema(createdWorkstepId, schema);
+  it('Add a circuit input translation schema to workstep 1', async () => {
+    const schema = `{
+          "mapping": [
+            {
+              "circuitInput": "invoiceStatus", 
+              "description": "Invoice status", 
+              "payloadJsonPath": "status", 
+              "dataType": "string"
+            },
+            {
+              "circuitInput": "invoiceAmount", 
+              "description": "Total gross amount of the invoice", 
+              "payloadJsonPath": "amount", 
+              "dataType": "integer"
+            },
+            {
+              "circuitInput": "itemPrices", 
+              "description": "Invoice item prices", 
+              "payloadJsonPath": "items", 
+              "dataType": "array",
+              "arrayType": "object",
+              "arrayItemFieldName": "price",
+              "arrayItemFieldType": "integer"
+            },
+            {
+              "circuitInput": "itemAmount", 
+              "description": "Invoice item amounts", 
+              "payloadJsonPath": "items", 
+              "dataType": "array",
+              "arrayType": "object",
+              "arrayItemFieldName": "amount",
+              "arrayItemFieldType": "integer"
+            }
+          ]
+        }`;
+    await addCircuitInputsSchema(createdWorkstep1Id, schema);
   });
 
-  it('Submits a transaction for execution of the workstep 1', async () => {
+  it('Add a circuit input translation schema to workstep 2', async () => {
+    const schema = `{
+          "mapping": [
+            {
+              "circuitInput": "invoiceStatus", 
+              "description": "Invoice status", 
+              "payloadJsonPath": "status", 
+              "dataType": "string"
+            }
+          ]
+        }`;
+    await addCircuitInputsSchema(createdWorkstep2Id, schema);
+  });
+
+  it('Add a circuit input translation schema to workstep 3', async () => {
+    // TODO: Correct err in case of missing mapping
+    const schema = `{
+          "mapping": [
+            {
+              "circuitInput": "invoiceStatus", 
+              "description": "Invoice status", 
+              "payloadJsonPath": "status", 
+              "dataType": "string"
+            }
+          ]
+        }`;
+    await addCircuitInputsSchema(createdWorkstep3Id, schema);
+  });
+
+  it('Submits transaction 1 for execution of the workstep 1', async () => {
     // TODO: CheckAuthz on createTransaction and in other places
     // TODO: Faking two items in the payload as the circuit is hardcoded to 4
-    const createdTransactionId = await createTransactionAndReturnId(
+    createdTransaction1Id = await createTransactionAndReturnId(
       v4(),
       1,
       createdWorkflowId,
-      createdWorkstepId,
+      createdWorkstep1Id,
       createdBpiSubjectAccountSupplierId,
       supplierBpiSubjectEddsaPrivateKey,
       createdBpiSubjectAccountBuyerId,
@@ -173,16 +255,198 @@ describe('SRI use-case end-to-end test', () => {
     );
   });
 
-  it('Waits for a single VSM cycle and then verifies that the transaction has been executed and that the state has been properly stored', async () => {
+  it('Waits for a single VSM cycle and then verifies that transaction 1 has been executed and that the state has been properly stored on chain and off chain', async () => {
     await new Promise((r) => setTimeout(r, 50000));
     const resultWorkflow = await fetchWorkflow(createdWorkflowId);
     const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
 
-    const stateTree = JSON.parse(resultBpiAccount.stateTree.tree);
-    const historyTree = JSON.parse(resultBpiAccount.historyTree.tree);
+    const stateBpiMerkleTree = new BpiMerkleTree(
+      'ttt',
+      'sha256',
+      MerkleTree.unmarshalTree(
+        resultBpiAccount.stateTree.tree,
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
 
-    expect(stateTree.leaves.length).toBe(1);
-    expect(historyTree.leaves.length).toBe(1);
+    const historyBpiMerkleTree = new BpiMerkleTree(
+      'ttt',
+      'sha256',
+      MerkleTree.unmarshalTree(
+        resultBpiAccount.historyTree.tree,
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
+
+    expect(
+      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+    ).toBe(0);
+
+    const resultTransaction = await fetchTransaction(createdTransaction1Id);
+    const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
+
+    const contract = getContractFromLocalNode();
+    const contentAddressableHash = await contract.getAnchorHash(
+      resultWorkstepInstanceId,
+    );
+
+    expect(contentAddressableHash).toBeTruthy();
+    expect(contentAddressableHash.length).toBeGreaterThan(0);
+
+    expect(stateBpiMerkleTree.getLeaf(0)).toEqual(contentAddressableHash);
+
+    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+      contentAddressableHash,
+    );
+
+    expect(stateTreeLeafValue).toBeTruthy();
+    expect(stateTreeLeafValue.leafIndex).toBe(0);
+  });
+
+  it('Submits transaction 2 for execution of the workstep 2', async () => {
+    createdTransaction2Id = await createTransactionAndReturnId(
+      v4(),
+      1,
+      createdWorkflowId,
+      createdWorkstep2Id,
+      createdBpiSubjectAccountBuyerId,
+      buyerBpiSubjectEddsaPrivateKey,
+      createdBpiSubjectAccountSupplierId,
+      `{
+        "supplierInvoiceID": "INV123",
+        "amount": 300,
+        "issueDate": "2023-06-15",
+        "dueDate": "2023-07-15",
+        "status": "VERIFIED",
+        "items": [
+          { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
+          { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
+          { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
+          { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
+        ]
+      }`,
+    );
+  });
+
+  it('Waits for a single VSM cycle and then verifies that the transaction 2 has been executed and that the state has been properly stored on chain and off chain', async () => {
+    await new Promise((r) => setTimeout(r, 50000));
+    const resultWorkflow = await fetchWorkflow(createdWorkflowId);
+    const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
+
+    const stateBpiMerkleTree = new BpiMerkleTree(
+      'ttt',
+      'sha256',
+      MerkleTree.unmarshalTree(
+        resultBpiAccount.stateTree.tree,
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
+
+    const historyBpiMerkleTree = new BpiMerkleTree(
+      'ttt',
+      'sha256',
+      MerkleTree.unmarshalTree(
+        resultBpiAccount.historyTree.tree,
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
+
+    expect(
+      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+    ).toBe(1);
+
+    const resultTransaction = await fetchTransaction(createdTransaction2Id);
+    const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
+
+    const contract = getContractFromLocalNode();
+    const contentAddressableHash = await contract.getAnchorHash(
+      resultWorkstepInstanceId,
+    );
+
+    expect(contentAddressableHash).toBeTruthy();
+    expect(contentAddressableHash.length).toBeGreaterThan(0);
+
+    expect(stateBpiMerkleTree.getLeaf(1)).toEqual(contentAddressableHash);
+
+    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+      contentAddressableHash,
+    );
+
+    expect(stateTreeLeafValue).toBeTruthy();
+    expect(stateTreeLeafValue.leafIndex).toBe(1);
+  });
+
+  it('Submits transaction 3 for execution of the workstep 3', async () => {
+    createdTransaction3Id = await createTransactionAndReturnId(
+      v4(),
+      2,
+      createdWorkflowId,
+      createdWorkstep3Id,
+      createdBpiSubjectAccountBuyerId,
+      buyerBpiSubjectEddsaPrivateKey,
+      createdBpiSubjectAccountSupplierId,
+      `{
+        "supplierInvoiceID": "INV123",
+        "amount": 300,
+        "issueDate": "2023-06-15",
+        "dueDate": "2023-07-15",
+        "status": "PAID",
+        "items": [
+          { "id": 1, "productId": "product1", "price": 100, "amount": 1 },
+          { "id": 2, "productId": "product2", "price": 200, "amount": 1 },
+          { "id": 3, "productId": "placeholder", "price": 0, "amount": 0 },
+          { "id": 4, "productId": "placeholder", "price": 0, "amount": 0 }
+        ]
+      }`,
+    );
+  });
+
+  it('Waits for a single VSM cycle and then verifies that the transaction 3 has been executed and that the state has been properly stored on chain and off chain', async () => {
+    await new Promise((r) => setTimeout(r, 50000));
+    const resultWorkflow = await fetchWorkflow(createdWorkflowId);
+    const resultBpiAccount = await fetchBpiAccount(resultWorkflow.bpiAccountId);
+
+    const stateBpiMerkleTree = new BpiMerkleTree(
+      'ttt',
+      'sha256',
+      MerkleTree.unmarshalTree(
+        resultBpiAccount.stateTree.tree,
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
+
+    const historyBpiMerkleTree = new BpiMerkleTree(
+      'ttt',
+      'sha256',
+      MerkleTree.unmarshalTree(
+        resultBpiAccount.historyTree.tree,
+        new MerkleTreeService().createHashFunction('sha256'),
+      ),
+    );
+
+    expect(
+      historyBpiMerkleTree.getLeafIndex(stateBpiMerkleTree.getRoot()),
+    ).toBe(2);
+
+    const resultTransaction = await fetchTransaction(createdTransaction3Id);
+    const resultWorkstepInstanceId = resultTransaction.workstepInstanceId;
+
+    const contract = getContractFromLocalNode();
+    const contentAddressableHash = await contract.getAnchorHash(
+      resultWorkstepInstanceId,
+    );
+
+    expect(contentAddressableHash).toBeTruthy();
+    expect(contentAddressableHash.length).toBeGreaterThan(0);
+
+    expect(stateBpiMerkleTree.getLeaf(2)).toEqual(contentAddressableHash);
+
+    const stateTreeLeafValue = await fetchStateTreeLeafViaCAH(
+      contentAddressableHash,
+    );
+
+    expect(stateTreeLeafValue).toBeTruthy();
+    expect(stateTreeLeafValue.leafIndex).toBe(2);
   });
 });
 
@@ -290,6 +554,7 @@ async function fetchWorkgroup(workgroupId: string): Promise<any> {
 async function createWorkstepAndReturnId(
   name: string,
   workgroupId: string,
+  verifierContractAddress: string,
 ): Promise<string> {
   const createdWorkstepResponse = await request(server)
     .post('/worksteps')
@@ -301,6 +566,7 @@ async function createWorkstepAndReturnId(
       workgroupId: workgroupId,
       securityPolicy: 'Dummy security policy',
       privacyPolicy: 'Dummy privacy policy',
+      verifierContractAddress: verifierContractAddress,
     })
     .expect(201);
 
@@ -345,8 +611,8 @@ async function createWorkflowAndReturnId(
 async function createTransactionAndReturnId(
   id: string,
   nonce: number,
-  workflowInstanceId: string,
-  workstepInstanceId: string,
+  workflowId: string,
+  workstepId: string,
   fromSubjectAccountId: string,
   fromPrivatekey: string,
   toSubjectAccountId: string,
@@ -361,8 +627,8 @@ async function createTransactionAndReturnId(
     .send({
       id: id,
       nonce: nonce,
-      workflowInstanceId: workflowInstanceId,
-      workstepInstanceId: workstepInstanceId,
+      workflowId: workflowId,
+      workstepId: workstepId,
       fromSubjectAccountId: fromSubjectAccountId,
       toSubjectAccountId: toSubjectAccountId,
       payload: payload,
@@ -389,4 +655,34 @@ async function fetchBpiAccount(bpiAccountId: string): Promise<any> {
     .expect(200);
 
   return JSON.parse(getBpiAccountResponse.text);
+}
+
+async function fetchTransaction(txId: string): Promise<any> {
+  const getTransactionResponse = await request(server)
+    .get(`/transactions/${txId}`)
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect(200);
+
+  return JSON.parse(getTransactionResponse.text);
+}
+
+function getContractFromLocalNode(): ethers.Contract {
+  const provider = new JsonRpcProvider('http://127.0.0.1:8545');
+  const contractAddress = `${process.env.CCSM_BPI_STATE_ANCHOR_CONTRACT_ADDRESS}`;
+
+  const contractABI = [
+    'function getAnchorHash(string calldata _workstepInstanceId) external view returns (string memory)',
+  ];
+
+  return new ethers.Contract(contractAddress, contractABI, provider);
+}
+
+async function fetchStateTreeLeafViaCAH(cah: string): Promise<any> {
+  const fetchStateTreeLeafResponse = await request(server)
+    .get(`/state`)
+    .query({ leafValue: cah })
+    .set('Authorization', `Bearer ${accessToken}`)
+    .expect(200);
+
+  return JSON.parse(fetchStateTreeLeafResponse.text);
 }

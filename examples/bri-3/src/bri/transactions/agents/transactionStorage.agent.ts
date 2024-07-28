@@ -96,8 +96,8 @@ export class TransactionStorageAgent {
       data: {
         id: transaction.id,
         nonce: transaction.nonce,
-        workflowInstanceId: transaction.workflowInstanceId,
-        workstepInstanceId: transaction.workstepInstanceId,
+        workflowId: transaction.workflowId,
+        workstepId: transaction.workstepId,
         fromBpiSubjectAccountId: transaction.fromBpiSubjectAccountId,
         toBpiSubjectAccountId: transaction.toBpiSubjectAccountId,
         payload: transaction.payload,
@@ -131,7 +131,9 @@ export class TransactionStorageAgent {
     return this.mapper.map(newTransactionModel, Transaction);
   }
 
-  async updateTransaction(transaction: Transaction): Promise<Transaction> {
+  async updateTransactionPayload(
+    transaction: Transaction,
+  ): Promise<Transaction> {
     const updatedTransactionModel = await this.prisma.transaction.update({
       where: { id: transaction.id },
       data: {
@@ -143,15 +145,15 @@ export class TransactionStorageAgent {
     return this.mapper.map(updatedTransactionModel, Transaction);
   }
 
-  async updateTransactionStatus(
-    transaction: Transaction,
-  ): Promise<Transaction> {
+  async updateTransaction(transaction: Transaction): Promise<Transaction> {
     const updatedTransaction = await this.prisma.transaction.update({
       where: {
         id: transaction.id,
       },
       data: {
         status: transaction.status,
+        workflowInstanceId: transaction.workflowInstanceId,
+        workstepInstanceId: transaction.workstepInstanceId,
       },
     });
 

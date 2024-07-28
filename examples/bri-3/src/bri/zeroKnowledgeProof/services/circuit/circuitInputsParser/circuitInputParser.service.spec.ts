@@ -388,4 +388,66 @@ describe('CircuitInputsParserService', () => {
     // Assert
     expect(circuitInputs).toStrictEqual({ dascircuitinput: [387, 388, 389] });
   });
+
+  it('Should generate a single circuit input param based on a object string property of an object array at root level', () => {
+    // Arrange
+    const payload = `{
+        "supplierInvoiceIDs": [
+          { "id": "INV123", "price" : 222 },
+          { "id": "INV124", "price" : 223 },
+          { "id": "INV125", "price" : 224 }
+        ]
+       }`;
+
+    const schema = {
+      mapping: [
+        {
+          circuitInput: 'dascircuitinput',
+          description: 'desc',
+          payloadJsonPath: 'supplierInvoiceIDs',
+          dataType: 'array',
+          arrayType: 'object',
+          arrayItemFieldName: 'id',
+          arrayItemFieldType: 'string',
+        } as CircuitInputMapping,
+      ],
+    } as CircuitInputsMapping;
+
+    // Act
+    const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
+
+    // Assert
+    expect(circuitInputs).toStrictEqual({ dascircuitinput: [387, 388, 389] });
+  });
+
+  it('Should generate a single circuit input param based on a object integer property of an object array at root level', () => {
+    // Arrange
+    const payload = `{
+        "supplierInvoiceIDs": [
+          { "id": "1", "price" : 222 },
+          { "id": "2", "price" : 223 },
+          { "id": "3", "price" : 224 }
+        ]
+       }`;
+
+    const schema = {
+      mapping: [
+        {
+          circuitInput: 'dascircuitinput',
+          description: 'desc',
+          payloadJsonPath: 'supplierInvoiceIDs',
+          dataType: 'array',
+          arrayType: 'object',
+          arrayItemFieldName: 'price',
+          arrayItemFieldType: 'integer',
+        } as CircuitInputMapping,
+      ],
+    } as CircuitInputsMapping;
+
+    // Act
+    const circuitInputs = cips.applyMappingToJSONPayload(payload, schema);
+
+    // Assert
+    expect(circuitInputs).toStrictEqual({ dascircuitinput: [222, 223, 224] });
+  });
 });

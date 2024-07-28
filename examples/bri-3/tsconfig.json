@@ -23,5 +23,5 @@
   },
   "ts-node": {
     "compiler": "ttypescript"
-},
+  }
 }
