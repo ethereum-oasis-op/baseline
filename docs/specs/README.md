@@ -21,15 +21,15 @@ The Baseline protocol specifications are currently work in progress.
 
 There are currently three specifications in development:
 
-Oasis Standard 1 - The Baseline CORE Specifications document: The document describes the minimal set of business and technical prerequisites, functional and non-functional requirements, together with a reference architecture that when implemented ensures that two or more systems of record can synchronize their system state over a permissionless public Distributed Ledger Technology (DLT) network.
+Oasis Standard 1 - The Baseline CORE Specifications document: The document describes the minimal set of business and technical prerequisites, functional and non-functional requirements, together with a reference architecture that when implemented ensures that two or more systems of record can synchronize their system state over a permissionless public Consensus Controlled State Machine (CCSM) network. [Link to Spec]https://github.com/ethereum-oasis-op/baseline-standard/tree/main/core()
 
-Oasis Standard 2 - The Baseline API & Data Model Specifications document: The document describes the Baseline programming interface and expected behaviors of all instances of this interface together with the required programming interface data model.
+Oasis Standard 2 - The Baseline API & Data Model Specifications document: The document describes the Baseline programming interface and expected behaviors of all instances of this interface together with the required programming interface data model. [Link to Spec](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/api)
 
-Specification - Permissionless DLT Requirements document: The document describes required and assumed properties and qualities of a permissionless singleton state machine and its operating environment for such a permissionless DLT to safely synchronize two or more enterprise systems of record.
+Oasis Standard 3 - Permissionless CCSM Requirements document: The document describes required and assumed properties and qualities of a permissionless singleton state machine and its operating environment for such a permissionless CCSM to safely synchronize two or more enterprise systems of record. [Link to Spec](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/ccsm)
 
 ## License
 
-All contribution in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](https://github.com/ethereum-oasis/baseline/blob/master/LICENSE).
+All contribution in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](https://github.com/ethereum-oasis-op/baseline/blob/master/LICENSE).
 
 ## Contributions
 

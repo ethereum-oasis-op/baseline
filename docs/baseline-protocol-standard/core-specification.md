@@ -1,6 +1,6 @@
 # The Core Specification
 
-The CORE specification document is available on [Github here](https://github.com/eea-oasis/baseline-standard/tree/main/core).
+The CORE specification document is available on [Github here](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/core).
 
 ## CORE Specification Overview
 

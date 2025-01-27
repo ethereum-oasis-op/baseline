@@ -63,12 +63,4 @@ The setup of specialized circuits are costly via the time necessary for developm
 
 **An Opportunity for Standards and Regulation:** Typically, a small group of counterparties may be fine relying on a code package shared between them to be correct. All they need know is that everyone executed it correctly based on the same inputs, which generated the same outputs. Where greater scrutiny of these packages is needed, consider a set of companies in a highly regulated industry. An industry standards body could publish a set of Circuits/packages/libraries and require their use when regulated companies _baseline_ their Workflows. This would allow the regulated companies, potentially, to reduce the cost of oversight by ensuring the business logic they used to conduct business with their counterparties was done correctly and in accordance with the regulation...or at least with the enforcement Circuits provided.
 
-## UI Integration <a href="#ui-integration" id="ui-integration"></a>
-
-In the Radish34 Demo, the team built a simple web-based UI to simulate the user experience of systems of record that were enabled with the Baseline Protocol. You can find that [**here**](https://github.com/eea-oasis/baseline/tree/v0.1/examples/radish34)**.**
-
-In the real world, the user experience is the experience of any number of products.
-
-If you are in charge of the feature/benefit mix of a product in ERP, CRM, SCM, Core Banking or any other type of system of record, you can use the example in the Radish34 UI section to get ideas for how to integrate with baseline components (whether they have added to your product's internal services or whether they have been deployed as services in your wider IT environment) and present baselining benefits to users.
-
 ​

@@ -1,0 +1,24 @@
+class PurchRFQSent_EventHandler
+{
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [DataEventHandler(tableStr(PurchRFQCaseTable), DataEventType::Updating)]
+    public static void PurchRFQCaseTable_onUpdating(Common sender, DataEventArgs e)
+    {
+        PurchRFQCaseTable rfqTable = sender as PurchRFQCaseTable;
+        str rfqJson;
+
+        if (rfqTable.StatusHigh == PurchRFQStatus::Sent && rfqTable.IsSentToBaseline == NoYes::No)
+        {
+            rfqJson = Baseline_JsonBuilder::generateRFQJson(rfqTable.RFQCaseId);
+
+            BaselineDll.Integration::PostDocument(rfqJson, "rfq");
+
+            rfqTable.IsSentToBaseline = NoYes::Yes;
+        }
+    }
+
+}

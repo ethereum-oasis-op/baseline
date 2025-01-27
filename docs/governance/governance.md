@@ -1,5 +1,5 @@
 ---
-description: The Baseline Protocol is an openly governed project and standards body.
+description: Baseline is an openly governed project and standards body.
 ---
 
 # Overview
@@ -14,7 +14,7 @@ In order to ensure clean IPR that allows the Baseline Protocol to remain an open
 
 ## Code of Conduct <a href="#code-of-conduct" id="code-of-conduct"></a>
 
-​Here is the link to the official [Code of Conduct](https://github.com/ethereum-oasis/baseline/blob/master/CODE\_OF\_CONDUCT.md).
+​Here is the link to the official [Code of Conduct](https://github.com/ethereum-oasis-op/baseline/blob/master/CODE\_OF\_CONDUCT.md).
 
 ## **Charter: Baseline Open Source Project Governance** <a href="#charter-baseline-open-source-project-governance" id="charter-baseline-open-source-project-governance"></a>
 
@@ -24,7 +24,7 @@ The Baseline Protocol shall be a project within the Ethereum-Oasis project of [O
 
 ### TSC <a href="#tsc" id="tsc"></a>
 
-The Baseline Protocol shall be governed by a Technical Steering Committee, with 7, 9 or 11 Members, one of whom will serve as TSC Chair or two as TSC Co-Chairs. The current number of TSC members is 11.
+The Baseline Protocol shall be governed by a Technical Steering Committee, with 7, 9 or 11 Members, one of whom will serve as TSC Chair or two as TSC Co-Chairs.
 
 A quorum of two-thirds of the TSC members can conduct any vote required of the TSC during any given meeting. Disputes on whether a matter should be tabled for a different TSC meeting can be presented to the PGB of the Ethereum-OASIS project for a decision. A move to table a matter can be lodged during a TSC meeting, and it shall be tabled and submitted to the PGB with a simple majority vote. If a majority cannot be achieved during the meeting, a minimum of two members that were present at the meeting in question may dispute the matter after the fact to the PGB.
 
@@ -34,7 +34,7 @@ The TSC's members are elected annually in September/October, concluding on the l
 
 #### Attendance Policy
 
-TSC members who miss two consective TSC meetings without prior notice will lose their voting right at the end of the second meeting missed and will not be counted towards quorum in a TSC meeting. However, they shall retain all other rights, privileges, and obligations afforded to TSC members. A TSC member who has lost voting rights by missing two meetings may regain voting rights by (a) declaring to the Chair their desire to regain voting rights and then (b) attending two consecutive meetings of the TSC. Their rights will be restored at the end of the second meeting.
+TSC members who miss two consecutive TSC meetings without prior notice will lose their voting right at the end of the second meeting missed and will not be counted towards quorum in a TSC meeting. However, they shall retain all other rights, privileges, and obligations afforded to TSC members. A TSC member who has lost voting rights by missing two meetings may regain voting rights by (a) declaring to the Chair their desire to regain voting rights and then (b) attending two consecutive meetings of the TSC. Their rights will be restored at the end of the second meeting.
 
 #### Removal
 
@@ -65,7 +65,7 @@ Baseline Maintainers have advanced code repository permissions and responsibilit
 
 First, one must attend at least two consecutive Baseline Core Dev meetings and contribute to the project through PRs, workgroups, or other contributions. E-mail baseline-team@oasis-open.org to be added to the Core Devs meeting invite.
 
-Then complete the [Pull_Request_Template](https://github.com/eea-oasis/baseline/blob/main/.github/PULL_REQUEST_TEMPLATE.md) in its entirety to add your Github ID to the [Code Owners file](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS).The current Maintainers will be assigned to review the Pull Request, and the PR will be merged through the PR approval process.
+Then complete the [Pull_Request_Template](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/PULL_REQUEST_TEMPLATE.md) in its entirety to add your Github ID to the [Code Owners file](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/CODEOWNERS).The current Maintainers will be assigned to review the Pull Request, and the PR will be merged through the PR approval process.
 
 If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC by informing Oasis or a TSC member.
 
@@ -75,7 +75,7 @@ Maintainers must notify the private 'maintainer' Slack group or a community lead
 
 The initial number of maintainers required to merge a pull request to the main repository in Github is three, but may be amended to no fewer than two by a simple majority of the maintainers.
 
-Maintainers are expected to review PRs in a timely manner, follow project guidelines (for branch, PR, code, testing, etc.), be reliable for assigned issues, and follow the [Code of Conduct](https://github.com/eea-oasis/baseline/blob/main/CODE_OF_CONDUCT.md).
+Maintainers are expected to review PRs in a timely manner, follow project guidelines (for branch, PR, code, testing, etc.), be reliable for assigned issues, and follow the [Code of Conduct](https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md).
   
 #### Removal
 To step away from being a Baseline Maintainer, notify the other Maintainers or TSC members that you would like to relinquish your Baseline Maintainer status.
@@ -84,7 +84,7 @@ If a Maintainer misses three consecutive meetings without prior notice, a commun
 
 If a Maintainer is removed due to the attendance policy and wants to recommit, they must attend 2 consecutive Core Dev sessions, notify the group of intent to re-commit, then submit the PR to be added back to the Code Owners File.
 
-Maintainers can also be voted for removal for violating the Code of Conduct (https://github.com/eea-oasis/baseline/blob/main/CODE_OF_CONDUCT.md) or expectations.
+Maintainers can also be voted for removal for violating the Code of Conduct (https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md) or expectations.
 
 Two-thirds of all current Maintainers constitute a quorum for a meeting involving a question of removal. A simple majority vote from Maintainers is required to remove a Maintainer, but the TSC may be brought in to arbitrate if the Baseline Maintainer to be removed or any other community members wish to dispute the action.
 
@@ -103,5 +103,5 @@ This document was ratified by the PGB before the public launch of the Baseline P
 
 ### Details on OASIS and the Open Ethereum Project <a href="#details-on-oasis-and-the-open-ethereum-project" id="details-on-oasis-and-the-open-ethereum-project"></a>
 
-Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis/oasis-open-project/blob/master/GOVERNANCE.md%E2%80%8B).
+Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis-op/oasis-open-project/blob/master/GOVERNANCE.md%E2%80%8B).
 
