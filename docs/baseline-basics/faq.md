@@ -46,7 +46,7 @@ Any system of record can be baselined without requiring modification to legacy s
 
 ## Does 'baselining' require a blockchain?
 
-Distributed Ledger Technology, often referred to as a Consensus Controlled State Machine (CCSM) is the foundational enabler of a Baseline Protocol Implementation (BPI). A compliant BPI requires conformance to the [CCSM specification](../baseline-protocol-standard/ccsm-specification.md) of the [Baseline Protocol Standard](https://github.com/eea-oasis/baseline-standard).
+Distributed Ledger Technology, often referred to as a Consensus Controlled State Machine (CCSM) is the foundational enabler of a Baseline Protocol Implementation (BPI). A compliant BPI requires conformance to the [CCSM specification](../baseline-protocol-standard/ccsm-specification.md) of the [Baseline Protocol Standard](https://github.com/ethereum-oasis-op/baseline-standard).
 
 ## Does 'baselining' require Ethereum and/or Baseledger ?
 

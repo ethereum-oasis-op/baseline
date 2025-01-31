@@ -45,6 +45,6 @@ where
 5. BpiOperator receives the request, verifies the token, and, if successful, routes the request to the target service. If the token verification fails (e.g. expiration), a failure message is generated, and the request is not routed to its target service.
 
 ## Reference
-1. [PR #606](https://github.com/eea-oasis/baseline/pull/606)
+1. [PR #606](https://github.com/ethereum-oasis-op/baseline/pull/606)
 2. [DID authentication](https://rsksmart.github.io/rif-identity-docs/ssi/specs/did-auth.html#how-to-send-tokens)
 3. [W3C Decentralized Identifiers (DIDs) v1.0](https://www.w3.org/TR/did-core/#dfn-did-subjects)

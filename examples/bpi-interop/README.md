@@ -1,6 +1,6 @@
 # Baseline Protocol - BPI Interoperability
 
-This is the workspace of the Baseline Interop WG to deliver on the [2023 Baseline Protocol Interoperability roadmap item](https://github.com/eea-oasis/baseline-grants/issues/101).
+This is the workspace of the Baseline Interop WG to deliver on the [2023 Baseline Protocol Interoperability roadmap item](https://github.com/ethereum-oasis-op/baseline-grants/issues/101).
 
 The WG meets every Friday at 7:30 am PST / 10:30 am EST / 15:30 GMT / 19:00 IST. Please, use this [Zoom link](https://us02web.zoom.us/j/85004523244?pwd=Y0U3N1gxYittSUNYZEZPZGkrQXZDQT09) to join the meetings.
 

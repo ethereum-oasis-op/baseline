@@ -18,9 +18,9 @@ Sign up to join the Baseline Core Developers[ **here**](https://www.baseline-pro
 
 Core developers are people who take an active role in advancing the Baseline Protocol and/or related projects. They are primarily responsible for:
 
-* Submitting or working on [**Baseline Improvement Proposals (BLIPs)** ](https://github.com/eea-oasis/baseline-blips)\*\*\*\*
+* Submitting or working on [**Baseline Improvement Proposals (BLIPs)** ](https://github.com/ethereum-oasis-op/baseline-blips)\*\*\*\*
 * Contributing code or contributing to specification work in the form of PRs that are linked to open and prioritized issues
-* Developing items on the [**Baseline Protocol Roadmap** ](https://github.com/eea-oasis/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf)to achieve high priority items
+* Developing items on the [**Baseline Protocol Roadmap** ](https://github.com/ethereum-oasis-op/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf)to achieve high priority items
 * Setting up and supporting infrastructure (running demos, CI systems, community projects, etc.) that further the Baseline Protocol
 * Presenting the project and key technologies to the public (in-person, webinar, videos, articles, etc.)
 * Identify technical resources needed for further implementation of the protocol (developer onboarding materials, tutorials, etc.)
@@ -35,8 +35,8 @@ Baseline Protocol Maintainers are Baseline Core Developers with advanced Github 
 A Baseline Core Developer can become a Baseline Maintainer by doing the following,
 
 * Being an active Baseline Core Developer by actively attending the bi-weekly meetings
-* Making a contribution to the Baseline Protocol through [**BLIP work**](https://github.com/eea-oasis/baseline-blips), [**progressing the roadmap**](https://github.com/eea-oasis/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf), or other efforts
-* Then completing the [**Pull\_Request\_Template** ](https://github.com/eea-oasis/baseline/blob/main/.github/PULL\_REQUEST\_TEMPLATE.md)in its entirety to add users Github ID to the [**Code Owners file**](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS)&#x20;
+* Making a contribution to the Baseline Protocol through [**BLIP work**](https://github.com/ethereum-oasis-op/baseline-blips), [**progressing the roadmap**](https://github.com/ethereum-oasis-op/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf), or other efforts
+* Then completing the [**Pull\_Request\_Template** ](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/PULL\_REQUEST\_TEMPLATE.md)in its entirety to add users Github ID to the [**Code Owners file**](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/CODEOWNERS)&#x20;
 * The current Maintainers (listed Code Owners) will be assigned to review the Pull Request, and the PR will be merged once **two** Maintainers approve the request
 * If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC
 
@@ -44,8 +44,8 @@ A Baseline Core Developer can become a Baseline Maintainer by doing the followin
 
 To retain Maintainer permissions and status, Baseline Maintainers are required to comply with the following,
 
-* **Attendance Policy:** Maintainers must notify the [**'maintainer' Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) group or a community leader if unable to attend. If a Maintainer misses **three** consecutive meetings without prior notice, a community member will submit a PR to remove the member's GitHub ID from the [**Code Owners File**](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS)
-* **If a Maintainer is removed due to the attendance policy**, they must attend 2 Core Dev sessions, notify the group of intent to re-commit, then submit the PR to be added back to the [**Code Owners File**](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS).
+* **Attendance Policy:** Maintainers must notify the [**'maintainer' Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) group or a community leader if unable to attend. If a Maintainer misses **three** consecutive meetings without prior notice, a community member will submit a PR to remove the member's GitHub ID from the [**Code Owners File**](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/CODEOWNERS)
+* **If a Maintainer is removed due to the attendance policy**, they must attend 2 Core Dev sessions, notify the group of intent to re-commit, then submit the PR to be added back to the [**Code Owners File**](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/CODEOWNERS).
 * Show commitment over time by timely review of Pull Requests
 * Follow branch, PR, code, project style, and testing guidelines
 * Be reliable in completing issues to which they have been assigned
@@ -76,6 +76,6 @@ The Baseline Maintainers use a private 'maintainers' channel in Slack that membe
 
 ### Baseline Core Developer Meetings <a href="#weekly-meetings" id="weekly-meetings"></a>
 
-There are bi-weekly Baseline Core Developer _meetings_ where members can new or open [**Baseline Improvement Proposals (BLIPs)**](https://github.com/eea-oasis/baseline-blips), open repo issues and pull requests, roadmap items grant projects, and more.
+There are bi-weekly Baseline Core Developer _meetings_ where members can new or open [**Baseline Improvement Proposals (BLIPs)**](https://github.com/ethereum-oasis-op/baseline-blips), open repo issues and pull requests, roadmap items grant projects, and more.
 
 Members with Maintainer status are required to join Baseline Core Developer meetings, as outlined in the terms above.

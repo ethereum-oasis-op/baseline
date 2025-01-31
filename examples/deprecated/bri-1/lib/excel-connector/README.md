@@ -9,7 +9,7 @@ Shuttle-Excel is a connector for Microsoft Excel that allows Excel sheets to con
 
 ## Installation
 
-Clone the Baseline Protocol [repo](https://github.com/eea-oasis/baseline). The Excel-Addin is located in the baseline/examples/bri-1/lib/excel-connector. Go to the folder and run the following command to install all the node modules.
+Clone the Baseline Protocol [repo](https://github.com/ethereum-oasis-op/baseline). The Excel-Addin is located in the baseline/examples/bri-1/lib/excel-connector. Go to the folder and run the following command to install all the node modules.
 
 ```bash
 npm i

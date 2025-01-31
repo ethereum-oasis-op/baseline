@@ -1,4 +1,4 @@
-**⚠️ The "Baseline-SAP-Dynamics" demo is being integrated with [this new reference implementation](https://github.com/ethereum-oasis/baseline/tree/master/examples/shuttle-app) as a result of the `v0.1` release.**
+**⚠️ The "Baseline-SAP-Dynamics" demo is being integrated with [this new reference implementation](https://github.com/ethereum-oasis-op/baseline/tree/master/examples/shuttle-app) as a result of the `v0.1` release.**
 
 # Baselining Business Process Automation across SAP and Microsoft Dynamics
 
@@ -22,7 +22,7 @@ You can find all the details on the Baseline Protocol [here](https://www.baselin
 
 # Challenges and Scope of Work
 
-The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](https://github.com/ethereum-oasis/baseline-roadmap) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
+The setting of tasks in the Community Bootstrapping Phase of Baseline [roadmap](https://github.com/ethereum-oasis-op/baseline-roadmap) include extraction of concepts out of the Radish34 demo case into the protocol level. This demo therefore wants to extend the Radish34 case by integrating off-chain systems of record, to work out major challenges and provide solutions to them. The learnings should be manifested in a reference implementation that can support standards on the protocol itself.
 
 The Use-case shown in the demo follows this path:
 
@@ -56,7 +56,7 @@ The architecture proposal of this demo builds upon the existing microservices, a
 ![Shuttle Microservice Containers](docs/images/image5.png)
 <br/><sub><sup>**Microservice container environment for a participant in a baselined business process.**</sub></sup>
 
-**Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis/baseline/tree/init-core) in GitHub, including several key fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment) and enhancements (i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements).
+**Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis-op/baseline/tree/init-core) in GitHub, including several key fixes (i.e., unwiring cyclic dependencies within the existing Radish34 environment) and enhancements (i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements).
 
 **Provide Containers**: Provide's identity, key management, blockchain and messaging microservice API containers representing the technical entry point and translation layer for data and baseline protocol messages, and the provider of messaging infrastructure leveraged by the Baseline stack for secure point-to-point messaging.
 

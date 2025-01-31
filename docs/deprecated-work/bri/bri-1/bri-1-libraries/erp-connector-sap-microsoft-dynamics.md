@@ -53,7 +53,7 @@ The architecture proposal of this demo builds upon the existing microservices, a
 ![Shuttle Microservice Containers](docs/images/image5.png)   
 **Microservice container environment for a participant in a baselined business process.**&lt;/sup&gt;
 
-**Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis/baseline/tree/init-core) in GitHub, including several key fixes \(i.e., unwiring cyclic dependencies within the existing Radish34 environment\) and enhancements \(i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements\).
+**Baseline Containers**: The microservices providing the Baseline Protocol and Radish34 use-case, based on this [branch](https://github.com/ethereum-oasis-op/baseline/tree/init-core) in GitHub, including several key fixes \(i.e., unwiring cyclic dependencies within the existing Radish34 environment\) and enhancements \(i.e., point-to-point messaging between parties, use of a generalized circuit for baselining agreements\).
 
 **Provide Containers**: Provide's identity, key management, blockchain and messaging microservice API containers representing the technical entry point and translation layer for data and baseline protocol messages, and the provider of messaging infrastructure leveraged by the Baseline stack for secure point-to-point messaging.
 

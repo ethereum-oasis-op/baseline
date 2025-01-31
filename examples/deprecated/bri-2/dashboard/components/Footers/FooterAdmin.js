@@ -29,7 +29,7 @@ export default function FooterAdmin() {
             <ul className="flex flex-wrap list-none md:justify-end  justify-center">
               <li>
                 <a
-                  href="https://github.com/ethereum-oasis/baseline/blob/master/LICENSE"
+                  href="https://github.com/ethereum-oasis-op/baseline/blob/master/LICENSE"
                   className="text-black hover:text-gray-400 text-sm font-semibold block py-1 px-3"
                 >
                   CC0 License

@@ -10,11 +10,11 @@ All repos in the Ethereum OASIS organization, including Baseline Protocol reposi
 
 Contributions to the open source repo shall be under creative commons public domain license [(CC0 1.0 Universal)](https://creativecommons.org/publicdomain/zero/1.0/).
 
-In order to ensure clean IPR that allows the Baseline Protocol to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](http://cla-assistant.io/ethereum-oasis/baseline) for community contributions. You must [sign the ICLA](http://cla-assistant.io/ethereum-oasis/baseline) before your pull requests to the baseline repository will be merged. [Check here](https://www.oasis-open.org/resources/projects/cla/projects-view-entity-cla) to see if your company has signed the ECLA.
+In order to ensure clean IPR that allows the Baseline Protocol to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](http://cla-assistant.io/ethereum-oasis-op/baseline) for community contributions. You must [sign the ICLA](http://cla-assistant.io/ethereum-oasis-op/baseline) before your pull requests to the baseline repository will be merged. [Check here](https://www.oasis-open.org/resources/projects/cla/projects-view-entity-cla) to see if your company has signed the ECLA.
 
 ## Code of Conduct <a href="#code-of-conduct" id="code-of-conduct"></a>
 
-​Here is the link to the official [Code of Conduct](https://github.com/ethereum-oasis/baseline/blob/master/CODE\_OF\_CONDUCT.md).
+​Here is the link to the official [Code of Conduct](https://github.com/ethereum-oasis-op/baseline/blob/master/CODE\_OF\_CONDUCT.md).
 
 ## **Charter: Baseline Open Source Project Governance** <a href="#charter-baseline-open-source-project-governance" id="charter-baseline-open-source-project-governance"></a>
 
@@ -65,7 +65,7 @@ Baseline Maintainers have advanced code repository permissions and responsibilit
 
 First, one must attend at least two consecutive Baseline Core Dev meetings and contribute to the project through PRs, workgroups, or other contributions. E-mail baseline-team@oasis-open.org to be added to the Core Devs meeting invite.
 
-Then complete the [Pull_Request_Template](https://github.com/eea-oasis/baseline/blob/main/.github/PULL_REQUEST_TEMPLATE.md) in its entirety to add your Github ID to the [Code Owners file](https://github.com/eea-oasis/baseline/blob/main/.github/CODEOWNERS).The current Maintainers will be assigned to review the Pull Request, and the PR will be merged through the PR approval process.
+Then complete the [Pull_Request_Template](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/PULL_REQUEST_TEMPLATE.md) in its entirety to add your Github ID to the [Code Owners file](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/CODEOWNERS).The current Maintainers will be assigned to review the Pull Request, and the PR will be merged through the PR approval process.
 
 If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC by informing Oasis or a TSC member.
 
@@ -75,7 +75,7 @@ Maintainers must notify the private 'maintainer' Slack group or a community lead
 
 The initial number of maintainers required to merge a pull request to the main repository in Github is three, but may be amended to no fewer than two by a simple majority of the maintainers.
 
-Maintainers are expected to review PRs in a timely manner, follow project guidelines (for branch, PR, code, testing, etc.), be reliable for assigned issues, and follow the [Code of Conduct](https://github.com/eea-oasis/baseline/blob/main/CODE_OF_CONDUCT.md).
+Maintainers are expected to review PRs in a timely manner, follow project guidelines (for branch, PR, code, testing, etc.), be reliable for assigned issues, and follow the [Code of Conduct](https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md).
   
 #### Removal
 To step away from being a Baseline Maintainer, notify the other Maintainers or TSC members that you would like to relinquish your Baseline Maintainer status.
@@ -84,7 +84,7 @@ If a Maintainer misses three consecutive meetings without prior notice, a commun
 
 If a Maintainer is removed due to the attendance policy and wants to recommit, they must attend 2 consecutive Core Dev sessions, notify the group of intent to re-commit, then submit the PR to be added back to the Code Owners File.
 
-Maintainers can also be voted for removal for violating the Code of Conduct (https://github.com/eea-oasis/baseline/blob/main/CODE_OF_CONDUCT.md) or expectations.
+Maintainers can also be voted for removal for violating the Code of Conduct (https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md) or expectations.
 
 Two-thirds of all current Maintainers constitute a quorum for a meeting involving a question of removal. A simple majority vote from Maintainers is required to remove a Maintainer, but the TSC may be brought in to arbitrate if the Baseline Maintainer to be removed or any other community members wish to dispute the action.
 
@@ -103,5 +103,5 @@ This document was ratified by the PGB before the public launch of the Baseline P
 
 ### Details on OASIS and the Open Ethereum Project <a href="#details-on-oasis-and-the-open-ethereum-project" id="details-on-oasis-and-the-open-ethereum-project"></a>
 
-Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis/oasis-open-project/blob/master/GOVERNANCE.md%E2%80%8B).
+Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis-op/oasis-open-project/blob/master/GOVERNANCE.md%E2%80%8B).
 

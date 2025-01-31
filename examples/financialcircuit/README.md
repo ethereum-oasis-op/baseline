@@ -7,7 +7,7 @@ Writing zero-knowledge circuits using `gnark` to expand the existing library –
 ## Technologies Used 
 
 * [Gnark 0.4](https://docs.gnark.consensys.net/en/latest/)
-* [Baseline](https://github.com/eea-oasis/baseline)
+* [Baseline](https://github.com/ethereum-oasis-op/baseline)
 
 # Diagram
 ![diagram](./doc/DiagramZKP_Bond_RFQ.png)
@@ -41,7 +41,7 @@ The circuits will be built in such a manner that they will keep the details of t
 
 **Motivation**
 
-Strong belief that [Baseline protocol](https://github.com/eea-oasis/baseline/blob/master/README.md) on public blockchain will set a new direction for participants and financial regulators that want/need to coordinate multi party business processes with privacy and without putting sensitive enterprise information on the blockchain.
+Strong belief that [Baseline protocol](https://github.com/ethereum-oasis-op/baseline/blob/master/README.md) on public blockchain will set a new direction for participants and financial regulators that want/need to coordinate multi party business processes with privacy and without putting sensitive enterprise information on the blockchain.
 
 **Specific expected project benefits**
 

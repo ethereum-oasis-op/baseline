@@ -6,9 +6,9 @@ description: >-
 
 # Contributing
 
-All work of the Baseline Protocol initiative is maintained publicly on a [**Github repository.**](https://github.com/eea-oasis/baseline)&#x20;
+All work of the Baseline Protocol initiative is maintained publicly on a [**Github repository.**](https://github.com/ethereum-oasis-op/baseline)&#x20;
 
-Full governance for contributing can be[ **found here.** ](https://github.com/eea-oasis/baseline/blob/main/CONTRIBUTING.md)****
+Full governance for contributing can be[ **found here.** ](https://github.com/ethereum-oasis-op/baseline/blob/main/CONTRIBUTING.md)****
 
 Anyone with a Github ID can fork the repo, submit an issue, submit a PR, or participate in the further development of the work.
 
@@ -24,7 +24,7 @@ There is one other, important, way to contribute: **use the work in the Baseline
 
 The Baseline Protocol Code of Conduct is located here
 
-{% embed url="https://github.com/ethereum-oasis/baseline/blob/master/CODE_OF_CONDUCT.md" %}
+{% embed url="https://github.com/ethereum-oasis-op/baseline/blob/master/CODE_OF_CONDUCT.md" %}
 
 ## Technical Contributors <a href="#technical-contributors" id="technical-contributors"></a>
 
@@ -32,7 +32,7 @@ Technical contributors are the[ **Technical Members**](../community-leaders/main
 
 ### BLIPs
 
-As of October 1, 2021, the Baseline Protocol organizes using[ **Baseline Improvement Proposals (BLIPs)**](https://github.com/eea-oasis/baseline-blips), which are managed similarly to [**Ethereum Improvement Proposals (EIPs)**](https://eips.ethereum.org/)**.**  Everyone is encouraged to submit a BLIP for an idea related to the further development or enhancement of the protocol. BLIPs can be worked on by the Baseline Core Developers or anyone interested, and even be funded through the[ **grant fund**](https://github.com/eea-oasis/baseline-grants) if requested and approved.&#x20;
+As of October 1, 2021, the Baseline Protocol organizes using[ **Baseline Improvement Proposals (BLIPs)**](https://github.com/ethereum-oasis-op/baseline-blips), which are managed similarly to [**Ethereum Improvement Proposals (EIPs)**](https://eips.ethereum.org/)**.**  Everyone is encouraged to submit a BLIP for an idea related to the further development or enhancement of the protocol. BLIPs can be worked on by the Baseline Core Developers or anyone interested, and even be funded through the[ **grant fund**](https://github.com/ethereum-oasis-op/baseline-grants) if requested and approved.&#x20;
 
 ### Work Item Management <a href="#issues-organization-and-community-sprints" id="issues-organization-and-community-sprints"></a>
 
@@ -53,7 +53,7 @@ Good practice strongly favors committing work frequently to allow Baseline Maint
 
 Anyone can submit a pull request and commit work to the community. In order for your work to be merged, you will need to sign the eCLA (entity contributor agreement) or iCLA (individual contributor agreement). Here are the details: [https://www.oasis-open.org/resources/projects/cla/projects-entity-cla](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla)​
 
-The iCLA happens automatically when people submit a pull request, or they can access directly by going to [https://cla-assistant.io/ethereum-oasis/baseline](https://cla-assistant.io/ethereum-oasis/baseline)​
+The iCLA happens automatically when people submit a pull request, or they can access directly by going to [https://cla-assistant.io/ethereum-oasis-op/baseline](https://cla-assistant.io/ethereum-oasis-op/baseline)​
 
 ### Core Developers and Commit Rules <a href="#maintainers-and-commit-rules" id="maintainers-and-commit-rules"></a>
 
@@ -65,6 +65,6 @@ All contributors to the Baseline repositories that have a merged pull request an
 
 ## ​Contributors
 
-The active contributors and maintainers of the Baseline Protocol repo can be found on [Github](https://github.com/ethereum-oasis/baseline/graphs/contributors).&#x20;
+The active contributors and maintainers of the Baseline Protocol repo can be found on [Github](https://github.com/ethereum-oasis-op/baseline/graphs/contributors).&#x20;
 
 Note: many contributors work in clones extending the protocol for their products. These people don't necessarily show up in the Github contributors list.

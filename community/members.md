@@ -36,7 +36,7 @@ Members should:
 
 ## Code of Conduct <a href="#code-of-conduct" id="code-of-conduct"></a>
 
-Of course, all members must respect and adhere to the community's [code of conduct](https://github.com/ethereum-oasis/baseline/blob/master/CODE\_OF\_CONDUCT.md).
+Of course, all members must respect and adhere to the community's [code of conduct](https://github.com/ethereum-oasis-op/baseline/blob/master/CODE\_OF\_CONDUCT.md).
 
 ## Removal <a href="#removal" id="removal"></a>
 

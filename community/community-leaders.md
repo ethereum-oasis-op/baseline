@@ -35,7 +35,7 @@ The technical steering committee (TSC) is accountable to the Project Governance 
 
 The Maintainers are a subset of the contributing members of the community who have demonstrated leadership and teamwork and approve all contributions before merging them to the Main branch of the repo.
 
-Details on how to become a [Maintainer here](https://github.com/eea-oasis/baseline/blob/main/MAINTAINERS.md#how-to-become-a-maintainer).
+Details on how to become a [Maintainer here](https://github.com/ethereum-oasis-op/baseline/blob/main/MAINTAINERS.md#how-to-become-a-maintainer).
 
 Maintainer (with link to Github ID):
 - [Biswashree Dey](https://github.com/biscuitdey)

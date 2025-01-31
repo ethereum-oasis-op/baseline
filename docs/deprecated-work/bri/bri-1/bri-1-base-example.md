@@ -11,7 +11,7 @@ The reference implementation runs on the Ethereum Ropsten testnet and can be con
 Clone the Baseline repository:
 
 ```
-git clone https://github.com/eea-oasis/baseline.git
+git clone https://github.com/ethereum-oasis-op/baseline.git
 ```
 
 Checkout the bri-1-privacy branch:

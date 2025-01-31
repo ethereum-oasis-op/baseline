@@ -1,4 +1,4 @@
-module github.com/ethereum-oasis/baseline/zkp-mgr
+module github.com/ethereum-oasis-op/baseline/zkp-mgr
 
 go 1.15
 

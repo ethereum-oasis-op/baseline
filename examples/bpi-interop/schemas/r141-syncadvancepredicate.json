@@ -1,9 +1,9 @@
 {
   "$schema": "https://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r141-syncadvancepredicate.json",
+  "$id": "https://github.com/ethereum-oasis-op/baseline/blob/main/examples/bpi-interop/schemas/r141-syncadvancepredicate.json",
   "$comment": {
     "term": "r141-syncadvancepredicate",
-    "@id": "https://github.com/eea-oasis/baseline#r141-syncadvancepredicate"
+    "@id": "https://github.com/ethereum-oasis-op/baseline#r141-syncadvancepredicate"
   },
   "title": "syncadvancepredicate",
   "description": "BPI State Synchronization and Advancement Predicate",
@@ -230,7 +230,7 @@
       "required": ["predicate", "input", "output"]
     },
     "bankStateObject": {
-      "$ref": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json"
+      "$ref": "https://github.com/ethereum-oasis-op/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json"
     },
     "environment": {
       "type": "array",
@@ -272,7 +272,7 @@
   },
   "definitions": {
     "BankStateObject": {
-      "$ref": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json"
+      "$ref": "https://github.com/ethereum-oasis-op/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json"
     },
     "Environment": {
       "type": "object",

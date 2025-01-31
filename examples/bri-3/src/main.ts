@@ -10,7 +10,7 @@ async function bootstrap() {
     }),
   );
 
-  //Please refer and document here: https://github.com/eea-oasis/baseline/issues/593
+  //Please refer and document here: https://github.com/ethereum-oasis-op/baseline/issues/593
   app.enableCors();
   await app.listen(3000);
 }

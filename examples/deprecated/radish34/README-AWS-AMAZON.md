@@ -49,7 +49,7 @@ Carry out the steps below on the EC2 instance:
 
     ```
     cd ~
-    git clone https://github.com/ethereum-oasis/baseline.git
+    git clone https://github.com/ethereum-oasis-op/baseline.git
     ```
 
 1. Follow the Quickstart steps in the baseline [README](../README.md)
