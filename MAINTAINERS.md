@@ -21,6 +21,7 @@ Code and Systems maintainers
 - [Biswashree Dey](https://github.com/biscuitdey)
 - [Andreas Freund](https://github.com/Therecanbeonlyone1969)
 - [Ognjen Kurtic](https://github.com/ognjenkurtic)
+- [Stefan Kostic](https://github.com/skosito)
 
 # How to become a maintainer?
 
