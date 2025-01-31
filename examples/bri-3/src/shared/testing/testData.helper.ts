@@ -1,5 +1,5 @@
 import { uuid } from 'uuidv4';
-import { BpiAccount } from '../../bri/identity/bpiAccounts/models/bpiAccount';
+import { BpiAccount } from '../../bri/state/bpiAccounts/models/bpiAccount';
 import { BpiSubjectAccount } from '../../bri/identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubject } from '../../bri/identity/bpiSubjects/models/bpiSubject';
 import {
@@ -16,6 +16,10 @@ import {
   WorkgroupBuilder,
   WorkstepBuilder,
 } from './builders';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../bri/identity/bpiSubjects/models/publicKey';
 
 // A place to encapsulate  creation of test data objects used for controller testing.
 // These objects will later be used to mock prisma.client calls only once during test bootstrap
@@ -51,11 +55,15 @@ export class TestDataHelper {
   };
 
   public static createBpiSubject = () => {
+    const bpiSubjectId = uuid();
     const bpiSubject = new BpiSubjectBuilder()
-      .setId(uuid())
+      .setId(bpiSubjectId)
       .setName('name')
       .setDescription('desc')
-      .setPublicKey('pk')
+      .setPublicKey([
+        new PublicKey(uuid(), PublicKeyType.ECDSA, 'ecdsaPk'),
+        new PublicKey(uuid(), PublicKeyType.EDDSA, 'eddsaPk'),
+      ])
       .setRoles([
         new BpiSubjectRole(
           uuid(),

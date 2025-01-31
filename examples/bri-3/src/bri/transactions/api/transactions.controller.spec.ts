@@ -6,17 +6,25 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { uuid } from 'uuidv4';
+import { LoggingModule } from '../../../shared/logging/logging.module';
 import { AuthAgent } from '../../auth/agent/auth.agent';
+import { CcsmModule } from '../../ccsm/ccsm.module';
 import { BpiSubjectAccountAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from '../../identity/bpiSubjectAccounts/agents/bpiSubjectAccountsStorage.agent';
 import { BpiSubjectAccount } from '../../identity/bpiSubjectAccounts/models/bpiSubjectAccount';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
 import { BpiSubject } from '../../identity/bpiSubjects/models/bpiSubject';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../identity/bpiSubjects/models/publicKey';
+import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 import { WorkflowStorageAgent } from '../../workgroup/workflows/agents/workflowsStorage.agent';
 import { WorkstepStorageAgent } from '../../workgroup/worksteps/agents/workstepsStorage.agent';
+import { CircuitInputsParserService } from '../../zeroKnowledgeProof/services/circuit/circuitInputsParser/circuitInputParser.service';
 import { SnarkjsCircuitService } from '../../zeroKnowledgeProof/services/circuit/snarkjs/snarkjs.service';
-import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { TransactionAgent } from '../agents/transactions.agent';
+import { TransactionStorageAgent } from '../agents/transactionStorage.agent';
 import { CreateTransactionCommandHandler } from '../capabilities/createTransaction/createTransactionCommand.handler';
 import { DeleteTransactionCommandHandler } from '../capabilities/deleteTransaction/deleteTransactionCommand.handler';
 import { GetTransactionByIdQueryHandler } from '../capabilities/getTransactionById/getTransactionByIdQuery.handler';
@@ -28,7 +36,6 @@ import { CreateTransactionDto } from './dtos/request/createTransaction.dto';
 import { UpdateTransactionDto } from './dtos/request/updateTransaction.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { TransactionController } from './transactions.controller';
-import { MerkleTreeService } from '../../merkleTree/services/merkleTree.service';
 
 describe('TransactionController', () => {
   let controller: TransactionController;
@@ -36,18 +43,29 @@ describe('TransactionController', () => {
   let subjectAccountStorageAgentMock: DeepMockProxy<BpiSubjectAccountStorageAgent>;
 
   const createBpiSubjectAccount = (id: string) => {
+    const ownerPublicKeys = [
+      new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
+    ];
+
     const ownerBpiSubject = new BpiSubject(
       '123',
       'owner',
       'desc',
-      'publicKey',
+      ownerPublicKeys,
       [],
     );
+
+    const creatorPublicKeys = [
+      new PublicKey('1111', PublicKeyType.ECDSA, 'ecdsaPk'),
+      new PublicKey('1122', PublicKeyType.EDDSA, 'eddsaPk'),
+    ];
+
     const creatorBpiSubject = new BpiSubject(
       '321',
       'creator',
       'desc',
-      'publicKey',
+      creatorPublicKeys,
       [],
     );
 
@@ -69,6 +87,8 @@ describe('TransactionController', () => {
         AutomapperModule.forRoot({
           strategyInitializer: classes(),
         }),
+        LoggingModule,
+        CcsmModule,
       ],
       controllers: [TransactionController],
       providers: [
@@ -90,6 +110,7 @@ describe('TransactionController', () => {
           provide: 'ICircuitService',
           useClass: SnarkjsCircuitService,
         },
+        CircuitInputsParserService,
       ],
     })
       .overrideProvider(TransactionStorageAgent)
@@ -191,8 +212,8 @@ describe('TransactionController', () => {
       const requestDto = {
         id: uuid(),
         nonce: 1,
-        workflowInstanceId: '42',
-        workstepInstanceId: '24',
+        workflowId: '42',
+        workstepId: '24',
         fromSubjectAccountId: fromBpiSubjectAccount.id,
         toSubjectAccountId: toBpiSubjectAccount.id,
         payload: 'payload1',
@@ -202,8 +223,8 @@ describe('TransactionController', () => {
       const expectedTransaction = new Transaction(
         requestDto.id,
         requestDto.nonce,
-        requestDto.workflowInstanceId,
-        requestDto.workstepInstanceId,
+        requestDto.workflowId,
+        requestDto.workstepId,
         fromBpiSubjectAccount,
         toBpiSubjectAccount,
         requestDto.payload,
@@ -232,7 +253,7 @@ describe('TransactionController', () => {
         signature: 'signature2',
       } as UpdateTransactionDto;
 
-      transactionStorageAgentMock.updateTransaction.mockRejectedValueOnce(
+      transactionStorageAgentMock.updateTransactionPayload.mockRejectedValueOnce(
         undefined,
       );
       // Act and assert
@@ -266,11 +287,13 @@ describe('TransactionController', () => {
         signature: 'signature2',
       } as UpdateTransactionDto;
 
-      transactionStorageAgentMock.updateTransaction.mockResolvedValueOnce({
-        ...existingTransaction,
-        payload: updateRequestDto.payload,
-        signature: updateRequestDto.signature,
-      } as Transaction);
+      transactionStorageAgentMock.updateTransactionPayload.mockResolvedValueOnce(
+        {
+          ...existingTransaction,
+          payload: updateRequestDto.payload,
+          signature: updateRequestDto.signature,
+        } as Transaction,
+      );
 
       // Act
       const updatedTransaction = await controller.updateTransaction(

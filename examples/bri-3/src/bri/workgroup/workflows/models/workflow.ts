@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { BpiAccount } from '../../../identity/bpiAccounts/models/bpiAccount';
+import { BpiAccount } from '../../../state/bpiAccounts/models/bpiAccount';
 import { Workgroup } from '../../workgroups/models/workgroup';
 import { Workstep } from '../../worksteps/models/workstep';
 

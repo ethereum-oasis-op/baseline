@@ -13,7 +13,6 @@ export class TransactionsProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, Transaction, TransactionDto);
-      createMap(mapper, Transaction, Transaction);
     };
   }
 }

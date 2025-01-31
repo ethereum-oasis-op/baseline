@@ -7,9 +7,16 @@ import { MerkleTreeAgent } from './agents/merkleTree.agent';
 import { MerkleTreeStorageAgent } from './agents/merkleTreeStorage.agent';
 import { MerkleProfile } from './merkle.profile';
 import { MerkleTreeService } from './services/merkleTree.service';
+import { PrismaModule } from '../../shared/prisma/prisma.module';
 
 @Module({
-  imports: [CqrsModule, AuthModule, LoggingModule, EncryptionModule],
+  imports: [
+    CqrsModule,
+    AuthModule,
+    LoggingModule,
+    EncryptionModule,
+    PrismaModule,
+  ],
   providers: [
     MerkleTreeAgent,
     MerkleTreeStorageAgent,

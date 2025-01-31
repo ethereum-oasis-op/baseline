@@ -6,7 +6,10 @@ import { CreateBpiSubjectDto } from './createBpiSubject.dto';
 describe('CreateBpiSubjectDto', () => {
   it('should return error in case name not provided.', async () => {
     // Arrange
-    const dto = { desc: 'this is a description', publicKey: '2323' };
+    const dto = {
+      desc: 'this is a description',
+      publicKeys: [{ type: 'ecdsa', value: '214324' }],
+    };
     const createBpiSubjectDto = plainToInstance(CreateBpiSubjectDto, dto);
 
     // Act
@@ -22,7 +25,10 @@ describe('CreateBpiSubjectDto', () => {
 
   it('should return error in case desc not provided.', async () => {
     // Arrange
-    const dto = { name: 'test', publicKey: '2323' };
+    const dto = {
+      name: 'test',
+      publicKeys: [{ type: 'ecdsa', value: '214324' }],
+    };
     const createBpiSubjectDto = plainToInstance(CreateBpiSubjectDto, dto);
 
     // Act
@@ -46,9 +52,9 @@ describe('CreateBpiSubjectDto', () => {
 
     // Assert
     expect(errors.length).toBe(1);
-    expect(errors[0].property).toEqual('publicKey');
+    expect(errors[0].property).toEqual('publicKeys');
     expect(errors[0].constraints?.isNotEmpty).toContain(
-      'publicKey ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
+      'publicKeys ' + SHOULD_NOT_BE_EMPTY_VALIDATION_MESSAGE,
     );
   });
 
@@ -57,7 +63,7 @@ describe('CreateBpiSubjectDto', () => {
     const dto = {
       name: 'test',
       desc: 'this is a description',
-      publicKey: '2323',
+      publicKeys: [{ type: 'ecdsa', value: '214324' }],
     };
     const createBpiSubjectDto = plainToInstance(CreateBpiSubjectDto, dto);
 

@@ -9,10 +9,10 @@ export class CreateTransactionDto {
   nonce: number;
 
   @IsNotEmpty()
-  workflowInstanceId: string;
+  workflowId: string;
 
   @IsNotEmpty()
-  workstepInstanceId: string;
+  workstepId: string;
 
   @IsNotEmpty()
   fromSubjectAccountId: string;

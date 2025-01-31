@@ -1,5 +1,5 @@
 import { AutoMap } from '@automapper/classes';
-import { BpiAccount } from '../../identity/bpiAccounts/models/bpiAccount';
+import { BpiAccount } from '../bpiAccounts/models/bpiAccount';
 import MerkleTree from 'merkletreejs';
 
 export class StateTreeLeafValueContent {

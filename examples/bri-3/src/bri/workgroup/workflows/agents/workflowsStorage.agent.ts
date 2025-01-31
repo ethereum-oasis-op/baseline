@@ -1,18 +1,19 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../../prisma/prisma.service';
-import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { Workflow } from '../models/workflow';
+import MerkleTree from 'merkletreejs';
 
 @Injectable()
-export class WorkflowStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
-    super();
-  }
+export class WorkflowStorageAgent {
+  constructor(
+    private readonly mapper: PrismaMapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getWorkflowById(id: string): Promise<Workflow | undefined> {
-    const workflowModel = await this.workflow.findUnique({
+    const workflowModel = await this.prisma.workflow.findUnique({
       where: { id: id },
       include: {
         worksteps: true,
@@ -21,30 +22,30 @@ export class WorkflowStorageAgent extends PrismaService {
     });
 
     if (!workflowModel) {
-      throw new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE);
+      throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(workflowModel, Workflow, Workflow);
+    return this.mapper.map(workflowModel, Workflow);
   }
 
   async getAllWorkflows(): Promise<Workflow[]> {
-    const workflowModels = await this.workflow.findMany({
+    const workflowModels = await this.prisma.workflow.findMany({
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return this.mapper.map(w, Workflow, Workflow);
+      return this.mapper.map(w, Workflow);
     });
   }
 
   async getWorkflowsByIds(ids: string[]): Promise<Workflow[]> {
-    const workflowModels = await this.workflow.findMany({
+    const workflowModels = await this.prisma.workflow.findMany({
       where: {
         id: { in: ids },
       },
       include: { worksteps: true },
     });
     return workflowModels.map((w) => {
-      return this.mapper.map(w, Workflow, Workflow);
+      return this.mapper.map(w, Workflow);
     });
   }
 
@@ -55,23 +56,53 @@ export class WorkflowStorageAgent extends PrismaService {
       };
     });
 
-    const newWorkflowModel = await this.workflow.create({
+    const connectedOwnerBpiAccounts =
+      workflow.bpiAccount.ownerBpiSubjectAccounts.map((o) => {
+        return {
+          id: o.id,
+        };
+      });
+
+    const newBpiAccountModel = await this.prisma.bpiAccount.create({
       data: {
-        id: workflow.id,
-        name: workflow.name,
-        worksteps: {
-          connect: workstepIds,
+        nonce: workflow.bpiAccount.nonce,
+        ownerBpiSubjectAccounts: {
+          connect: connectedOwnerBpiAccounts,
         },
-        workgroupId: workflow.workgroupId,
-        bpiAccountId: workflow.bpiAccountId,
+        authorizationCondition: workflow.bpiAccount.authorizationCondition,
+        stateObjectProverSystem: workflow.bpiAccount.stateObjectProverSystem,
+        stateTree: {
+          create: {
+            id: workflow.bpiAccount.stateTreeId,
+            hashAlgName: workflow.bpiAccount.stateTree.hashAlgName,
+            tree: MerkleTree.marshalTree(workflow.bpiAccount.stateTree.tree),
+          },
+        },
+        historyTree: {
+          create: {
+            id: workflow.bpiAccount.historyTreeId,
+            hashAlgName: workflow.bpiAccount.historyTree.hashAlgName,
+            tree: MerkleTree.marshalTree(workflow.bpiAccount.historyTree.tree),
+          },
+        },
+        Workflow: {
+          create: [
+            {
+              name: workflow.name,
+              worksteps: {
+                connect: workstepIds,
+              },
+              workgroupId: workflow.workgroupId,
+            },
+          ],
+        },
       },
       include: {
-        worksteps: true,
-        bpiAccount: true,
+        Workflow: true,
       },
     });
 
-    return this.mapper.map(newWorkflowModel, Workflow, Workflow);
+    return this.mapper.map(newBpiAccountModel.Workflow[0], Workflow);
   }
 
   async updateWorkflow(workflow: Workflow): Promise<Workflow> {
@@ -81,7 +112,7 @@ export class WorkflowStorageAgent extends PrismaService {
       };
     });
 
-    const updatedWorkflowModel = await this.workflow.update({
+    const updatedWorkflowModel = await this.prisma.workflow.update({
       where: { id: workflow.id },
       data: {
         name: workflow.name,
@@ -95,11 +126,11 @@ export class WorkflowStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(updatedWorkflowModel, Workflow, Workflow);
+    return this.mapper.map(updatedWorkflowModel, Workflow);
   }
 
   async deleteWorkflow(workflow: Workflow): Promise<void> {
-    await this.workflow.delete({
+    await this.prisma.workflow.delete({
       where: { id: workflow.id },
     });
   }

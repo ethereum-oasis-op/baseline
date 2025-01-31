@@ -26,14 +26,24 @@ import { Workgroup, WorkgroupStatus } from '../models/workgroup';
 import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
 import { uuid } from 'uuidv4';
 import { WorkgroupProfile } from '../workgroups.profile';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
+import {
+  PublicKey,
+  PublicKeyType,
+} from '../../../identity/bpiSubjects/models/publicKey';
 
 describe('WorkgroupsController', () => {
   let workgroupController: WorkgroupController;
   let workgroupStorageAgentMock: DeepMockProxy<WorkgroupStorageAgent>;
   let subjectStorageAgentMock: DeepMockProxy<BpiSubjectStorageAgent>;
 
+  const publicKeys = [
+    new PublicKey('111', PublicKeyType.ECDSA, 'ecdsaPk'),
+    new PublicKey('112', PublicKeyType.EDDSA, 'eddsaPk'),
+  ];
   const createTestBpiSubject = () => {
-    return new BpiSubject('123', 'name', 'desc', 'pubkey', []);
+    return new BpiSubject('123', 'name', 'desc', publicKeys, []);
   };
 
   const createTestWorkgroup = (): Workgroup => {
@@ -73,12 +83,15 @@ describe('WorkgroupsController', () => {
         GetWorkgroupByIdQueryHandler,
         WorkgroupStorageAgent,
         WorkgroupProfile,
+        PrismaService,
       ],
     })
       .overrideProvider(WorkgroupStorageAgent)
       .useValue(mockDeep<WorkgroupStorageAgent>())
       .overrideProvider(BpiSubjectStorageAgent)
       .useValue(mockDeep<BpiSubjectStorageAgent>())
+      .overrideProvider(PrismaService)
+      .useValue(mockDeep<PrismaClient>())
       .compile();
 
     workgroupController = app.get<WorkgroupController>(WorkgroupController);

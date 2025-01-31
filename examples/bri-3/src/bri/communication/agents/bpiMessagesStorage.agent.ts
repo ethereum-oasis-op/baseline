@@ -1,21 +1,19 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../../../prisma/prisma.service';
+import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
 import { EncryptionService } from '../../../shared/encryption/encryption.service';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { BpiMessage } from '../models/bpiMessage';
 
 @Injectable()
-export class BpiMessageStorageAgent extends PrismaService {
+export class BpiMessageStorageAgent {
   constructor(
-    @InjectMapper() private mapper: Mapper,
+    private readonly mapper: PrismaMapper,
     private readonly encryptionService: EncryptionService,
-  ) {
-    super();
-  }
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getBpiMessageById(id: string): Promise<BpiMessage | undefined> {
-    const bpiMessageModel = await this.message.findUnique({
+    const bpiMessageModel = await this.prisma.message.findUnique({
       where: { id },
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
@@ -24,7 +22,7 @@ export class BpiMessageStorageAgent extends PrismaService {
       return undefined;
     }
 
-    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
+    const bpiMessage = this.mapper.map(bpiMessageModel, BpiMessage);
     bpiMessage.updateContent(
       await this.encryptionService.decrypt(bpiMessage.content),
     );
@@ -33,15 +31,15 @@ export class BpiMessageStorageAgent extends PrismaService {
   }
 
   async getAllBpiMessages(): Promise<BpiMessage[]> {
-    const bpiMessageModels = await this.message.findMany();
+    const bpiMessageModels = await this.prisma.message.findMany();
 
     return bpiMessageModels.map((bpiMessageModel) => {
-      return this.mapper.map(bpiMessageModel, BpiMessage, BpiMessage);
+      return this.mapper.map(bpiMessageModel, BpiMessage);
     });
   }
 
   async storeNewBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
-    const newBpiMessageModel = await this.message.create({
+    const newBpiMessageModel = await this.prisma.message.create({
       data: {
         id: bpiMessage.id,
         fromBpiSubjectId: bpiMessage.fromBpiSubjectId,
@@ -53,11 +51,11 @@ export class BpiMessageStorageAgent extends PrismaService {
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
-    return this.mapper.map(newBpiMessageModel, BpiMessage, BpiMessage);
+    return this.mapper.map(newBpiMessageModel, BpiMessage);
   }
 
   async updateBpiMessage(bpiMessage: BpiMessage): Promise<BpiMessage> {
-    const updatedBpiMessageModel = await this.message.update({
+    const updatedBpiMessageModel = await this.prisma.message.update({
       where: { id: bpiMessage.id },
       data: {
         id: bpiMessage.id,
@@ -70,11 +68,11 @@ export class BpiMessageStorageAgent extends PrismaService {
       include: { fromBpiSubject: true, toBpiSubject: true },
     });
 
-    return this.mapper.map(updatedBpiMessageModel, BpiMessage, BpiMessage);
+    return this.mapper.map(updatedBpiMessageModel, BpiMessage);
   }
 
   async deleteBpiMessage(bpiMessage: BpiMessage): Promise<void> {
-    await this.message.delete({
+    await this.prisma.message.delete({
       where: { id: bpiMessage.id },
     });
   }

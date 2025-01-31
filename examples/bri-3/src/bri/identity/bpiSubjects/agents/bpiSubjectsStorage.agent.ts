@@ -1,67 +1,102 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../../prisma/prisma.service';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
 import { BpiSubject } from '../models/bpiSubject';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
 import { BpiSubjectRole, BpiSubjectRoleName } from '../models/bpiSubjectRole';
+import { PublicKey, PublicKeyType } from '../models/publicKey';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
 export class BpiSubjectStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
+  constructor(
+    private readonly mapper: PrismaMapper,
+    private readonly prisma: PrismaService,
+  ) {
     super();
   }
 
   async getBpiSubjectById(id: string): Promise<BpiSubject | undefined> {
-    const bpiSubjectModel = await this.bpiSubject.findUnique({
+    const bpiSubjectModel = await this.prisma.bpiSubject.findUnique({
       where: { id },
+      include: {
+        roles: true,
+      },
     });
 
     if (!bpiSubjectModel) {
       return undefined;
     }
 
-    return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.map(bpiSubjectModel, BpiSubject);
   }
 
   async getAllBpiSubjects(): Promise<BpiSubject[]> {
-    const bpiSubjectModels = await this.bpiSubject.findMany();
+    const bpiSubjectModels = await this.prisma.bpiSubject.findMany();
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+      return this.mapper.map(bpiSubjectModel, BpiSubject);
     });
   }
 
   async getBpiSubjectsById(ids: string[]): Promise<BpiSubject[]> {
-    const bpiSubjectModels = await this.bpiSubject.findMany({
+    const bpiSubjectModels = await this.prisma.bpiSubject.findMany({
       where: {
         id: { in: ids },
       },
       include: { roles: true },
     });
     return bpiSubjectModels.map((bpiSubjectModel) => {
-      return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+      return this.mapper.map(bpiSubjectModel, BpiSubject);
     });
   }
 
   async getBpiSubjectRoleByName(
     name: BpiSubjectRoleName,
   ): Promise<BpiSubjectRole> {
-    const bpiSubjectRole = await this.bpiSubjectRole.findUnique({
+    const bpiSubjectRole = await this.prisma.bpiSubjectRole.findUnique({
       where: { name },
     });
 
     if (!bpiSubjectRole) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.map(bpiSubjectRole, BpiSubjectRole, BpiSubjectRole);
+    return this.mapper.map(bpiSubjectRole, BpiSubjectRole);
   }
 
+  async storePublicKey(
+    id: string,
+    type: PublicKeyType,
+    value: string,
+    bpiSubjectId: string,
+  ): Promise<void> {
+    await this.prisma.publicKey.create({
+      data: {
+        id: id,
+        type: type,
+        value: value,
+        bpiSubjectId: bpiSubjectId,
+      },
+    });
+  }
+
+  async updatePublicKey(
+    type: PublicKeyType,
+    value: string,
+    bpiSubjectId: string,
+  ): Promise<PublicKey> {
+    const updatedPublicKey = await this.prisma.publicKey.update({
+      where: { type_bpiSubjectId: { type: type, bpiSubjectId: bpiSubjectId } },
+      data: {
+        value: value,
+      },
+    });
+
+    return this.mapper.map(updatedPublicKey, PublicKey);
+  }
   async storeNewBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    bpiSubject.publicKey = bpiSubject.publicKey.toLowerCase();
-    const newBpiSubjectModel = await this.bpiSubject.create({
+    const newBpiSubjectModel = await this.prisma.bpiSubject.create({
       data: {
         ...bpiSubject,
         roles: {
@@ -71,14 +106,17 @@ export class BpiSubjectStorageAgent extends PrismaService {
             };
           }),
         },
+        publicKeys: {
+          createMany: { data: bpiSubject.publicKeys },
+        },
       },
     });
 
-    return this.mapper.map(newBpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.map(newBpiSubjectModel, BpiSubject);
   }
 
   async updateBpiSubject(bpiSubject: BpiSubject): Promise<BpiSubject> {
-    const updatedBpiSubjectModel = await this.bpiSubject.update({
+    const updatedBpiSubjectModel = await this.prisma.bpiSubject.update({
       where: { id: bpiSubject.id },
       data: {
         ...bpiSubject,
@@ -89,29 +127,42 @@ export class BpiSubjectStorageAgent extends PrismaService {
             };
           }),
         },
+        publicKeys: {
+          upsert: bpiSubject.publicKeys.map((pk) => ({
+            where: { id: pk.id },
+            create: { type: pk.type, value: pk.value },
+            update: { value: pk.value },
+          })),
+        },
       },
     });
-    return this.mapper.map(updatedBpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.map(updatedBpiSubjectModel, BpiSubject);
   }
 
   async deleteBpiSubject(bpiSubject: BpiSubject): Promise<void> {
-    await this.bpiSubject.delete({
+    await this.prisma.bpiSubject.delete({
       where: { id: bpiSubject.id },
     });
   }
 
-  async getBpiSubjectByPublicKey(publicKey: string): Promise<BpiSubject> {
-    const bpiSubjectModel = await this.bpiSubject.findFirst({
+  async getBpiSubjectByPublicKey(publicKeyValue: string): Promise<BpiSubject> {
+    const bpiSubjectModel = await this.prisma.bpiSubject.findFirst({
       where: {
-        publicKey: publicKey,
+        publicKeys: {
+          some: {
+            value: publicKeyValue,
+          },
+        },
       },
       include: {
         roles: true,
+        publicKeys: true,
       },
     });
+
     if (!bpiSubjectModel) {
       throw new NotFoundException(NOT_FOUND_ERR_MESSAGE);
     }
-    return this.mapper.map(bpiSubjectModel, BpiSubject, BpiSubject);
+    return this.mapper.map(bpiSubjectModel, BpiSubject);
   }
 }

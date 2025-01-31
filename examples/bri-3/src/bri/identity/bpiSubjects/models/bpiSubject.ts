@@ -1,6 +1,8 @@
 import { AutoMap } from '@automapper/classes';
 import { v4 } from 'uuid';
 import { BpiSubjectRole } from './bpiSubjectRole';
+import { PublicKeyType, PublicKey } from './publicKey';
+import { PublicKeyDto } from '../api/dtos/request/publicKey.dto';
 
 export class BpiSubject {
   @AutoMap()
@@ -12,26 +14,25 @@ export class BpiSubject {
   @AutoMap()
   description: string;
 
-  @AutoMap()
-  publicKey: string;
+  @AutoMap(() => [PublicKey])
+  publicKeys: PublicKey[];
 
   @AutoMap()
   loginNonce: string;
 
   @AutoMap(() => [BpiSubjectRole])
   roles: BpiSubjectRole[];
-
   constructor(
     id: string,
     name: string,
     description: string,
-    publicKey: string,
+    publicKeys: PublicKey[],
     roles: BpiSubjectRole[],
   ) {
     this.id = id;
     this.name = name;
     this.description = description;
-    this.publicKey = publicKey;
+    this.publicKeys = publicKeys;
     this.roles = roles;
   }
 
@@ -43,8 +44,14 @@ export class BpiSubject {
     this.description = newDescription;
   }
 
-  public updatePublicKey(newPk: string): void {
-    this.publicKey = newPk;
+  public updatePublicKeys(newPKs: PublicKeyDto[]): void {
+    newPKs.map((newKey: PublicKeyDto) => {
+      const index = this.publicKeys.findIndex(
+        (oldKey: PublicKey) =>
+          oldKey.type.toLowerCase() == newKey.type.toLowerCase(),
+      );
+      this.publicKeys[index].value = newKey.value;
+    });
   }
 
   public updateLoginNonce(): void {
@@ -52,6 +59,9 @@ export class BpiSubject {
   }
 
   public getBpiSubjectDid(): string {
-    return `did:ethr:0x5:${this.publicKey}`;
+    const ecdsaPublicKey = this.publicKeys.filter(
+      (key) => key.type == PublicKeyType.ECDSA,
+    )[0];
+    return `did:ethr:0x11155111:${ecdsaPublicKey.value}`;
   }
 }

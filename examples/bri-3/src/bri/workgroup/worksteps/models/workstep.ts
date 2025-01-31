@@ -22,6 +22,12 @@ export class Workstep {
   @AutoMap()
   privacyPolicy: string; // TODO Implement simple privacy policy inhereted from workgroup #487
 
+  @AutoMap()
+  circuitInputsTranslationSchema: string;
+
+  @AutoMap()
+  verifierContractAddress: string;
+
   constructor(
     id: string,
     name: string,
@@ -30,6 +36,7 @@ export class Workstep {
     workgroupId: string,
     securityPolicy: string,
     privacyPolicy: string,
+    verifierContractAddress: string,
   ) {
     this.id = id;
     this.name = name;
@@ -38,6 +45,7 @@ export class Workstep {
     this.workgroupId = workgroupId;
     this.securityPolicy = securityPolicy;
     this.privacyPolicy = privacyPolicy;
+    this.verifierContractAddress = verifierContractAddress;
   }
 
   public updateName(newName: string): void {
@@ -62,5 +70,13 @@ export class Workstep {
 
   public updatePrivacyPolicy(newPrivacyPolicy: string): void {
     this.privacyPolicy = newPrivacyPolicy;
+  }
+
+  public updateCircuitInputTranslationSchema(schema: string): void {
+    this.circuitInputsTranslationSchema = schema;
+  }
+
+  public updateVerifierContractAddress(verifierContractAddress: string): void {
+    this.verifierContractAddress = verifierContractAddress;
   }
 }

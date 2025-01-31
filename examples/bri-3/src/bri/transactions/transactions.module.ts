@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { PrismaModule } from '../../shared/prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
 import { SubjectAccountModule } from '../identity/bpiSubjectAccounts/subjectAccounts.module';
+import { MerkleModule } from '../merkleTree/merkle.module';
 import { WorkflowModule } from '../workgroup/workflows/workflows.module';
 import { WorkstepModule } from '../workgroup/worksteps/worksteps.module';
 import { ZeroKnowledgeProofModule } from '../zeroKnowledgeProof/zeroKnowledgeProof.module';
@@ -14,7 +16,7 @@ import { GetAllTransactionsQueryHandler } from './capabilities/getAllTransaction
 import { GetTransactionByIdQueryHandler } from './capabilities/getTransactionById/getTransactionByIdQuery.handler';
 import { UpdateTransactionCommandHandler } from './capabilities/updateTransaction/updateTransactionCommand.handler';
 import { TransactionsProfile } from './transactions.profile';
-import { MerkleModule } from '../merkleTree/merkle.module';
+import { CcsmModule } from '../ccsm/ccsm.module';
 
 export const CommandHandlers = [
   CreateTransactionCommandHandler,
@@ -36,6 +38,8 @@ export const QueryHandlers = [
     AuthModule,
     MerkleModule,
     ZeroKnowledgeProofModule,
+    CcsmModule,
+    PrismaModule,
   ],
   controllers: [TransactionController],
   providers: [

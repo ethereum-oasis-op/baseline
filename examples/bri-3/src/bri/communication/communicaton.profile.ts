@@ -13,7 +13,6 @@ export class CommunicationProfile extends AutomapperProfile {
   override get profile() {
     return (mapper) => {
       createMap(mapper, BpiMessage, BpiMessageDto);
-      createMap(mapper, BpiMessage, BpiMessage);
     };
   }
 }

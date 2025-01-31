@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { SubjectModule } from '../bpiSubjects/subjects.module';
 import { BpiSubjectAccountAgent } from './agents/bpiSubjectAccounts.agent';
 import { BpiSubjectAccountStorageAgent } from './agents/bpiSubjectAccountsStorage.agent';
@@ -22,7 +23,7 @@ export const QueryHandlers = [
 ];
 
 @Module({
-  imports: [CqrsModule, SubjectModule],
+  imports: [CqrsModule, SubjectModule, PrismaModule],
   controllers: [SubjectAccountController],
   providers: [
     ...CommandHandlers,

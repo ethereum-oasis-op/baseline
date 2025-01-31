@@ -1,7 +1,7 @@
 import { Mapper } from '@automapper/core';
 import { InjectMapper } from '@automapper/nestjs';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
+import { BpiAccountAgent } from '../../bpiAccounts/agents/bpiAccounts.agent';
 import { MerkleTreeAgent } from '../../../merkleTree/agents/merkleTree.agent';
 import { StateAgent } from '../../agents/state.agent';
 import { StateTreeLeafValueContentDto } from '../../api/dtos/response/stateTreeLeafValueContent.dto';

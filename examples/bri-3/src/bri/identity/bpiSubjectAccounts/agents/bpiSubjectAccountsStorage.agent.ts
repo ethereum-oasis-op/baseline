@@ -1,96 +1,87 @@
-import { Mapper } from '@automapper/core';
-import { InjectMapper } from '@automapper/nestjs';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../../prisma/prisma.service';
-import { NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
+import { Injectable } from '@nestjs/common';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { BpiSubjectAccount } from '../models/bpiSubjectAccount';
 
 // Repositories are the only places that talk the Prisma language of models.
 // They are always mapped to and from domain objects so that the business layer of the application
 // does not have to care about the ORM.
 @Injectable()
-export class BpiSubjectAccountStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private readonly mapper: Mapper) {
-    super();
-  }
+export class BpiSubjectAccountStorageAgent {
+  constructor(
+    private readonly mapper: PrismaMapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getBpiSubjectAccountById(
     id: string,
   ): Promise<BpiSubjectAccount | undefined> {
-    const bpiSubjectAccountModel = await this.bpiSubjectAccount.findUnique({
-      where: { id: id },
-      include: { ownerBpiSubject: true, creatorBpiSubject: true },
-    });
+    const bpiSubjectAccountModel =
+      await this.prisma.bpiSubjectAccount.findUnique({
+        where: { id: id },
+        include: { ownerBpiSubject: true, creatorBpiSubject: true },
+      });
 
     if (!bpiSubjectAccountModel) {
       return undefined;
     }
 
-    return this.mapper.map(
-      bpiSubjectAccountModel,
-      BpiSubjectAccount,
-      BpiSubjectAccount,
-    );
+    return this.mapper.map(bpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async getAllBpiSubjectAccounts(): Promise<BpiSubjectAccount[]> {
-    const bpiSubjectAccountsModels = await this.bpiSubjectAccount.findMany({
-      include: { ownerBpiSubject: true, creatorBpiSubject: true },
-    });
+    const bpiSubjectAccountsModels =
+      await this.prisma.bpiSubjectAccount.findMany({
+        include: { ownerBpiSubject: true, creatorBpiSubject: true },
+      });
     return bpiSubjectAccountsModels.map((bp) => {
-      return this.mapper.map(bp, BpiSubjectAccount, BpiSubjectAccount);
+      return this.mapper.map(bp, BpiSubjectAccount);
     });
   }
 
   async storeNewBpiSubjectAccount(
     bpiSubjectAccount: BpiSubjectAccount,
   ): Promise<BpiSubjectAccount> {
-    const newBpiSubjectAccountModel = await this.bpiSubjectAccount.create({
-      data: {
-        creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
-        ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
-        authenticationPolicy: bpiSubjectAccount.authenticationPolicy,
-        authorizationPolicy: bpiSubjectAccount.authorizationPolicy,
-        verifiableCredential: bpiSubjectAccount.verifiableCredential,
-        recoveryKey: bpiSubjectAccount.recoveryKey,
-      },
-      include: { ownerBpiSubject: true, creatorBpiSubject: true },
-    });
+    const newBpiSubjectAccountModel =
+      await this.prisma.bpiSubjectAccount.create({
+        data: {
+          creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
+          ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
+          authenticationPolicy: bpiSubjectAccount.authenticationPolicy,
+          authorizationPolicy: bpiSubjectAccount.authorizationPolicy,
+          verifiableCredential: bpiSubjectAccount.verifiableCredential,
+          recoveryKey: bpiSubjectAccount.recoveryKey,
+        },
+        include: { ownerBpiSubject: true, creatorBpiSubject: true },
+      });
 
-    return this.mapper.map(
-      newBpiSubjectAccountModel,
-      BpiSubjectAccount,
-      BpiSubjectAccount,
-    );
+    return this.mapper.map(newBpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async updateBpiSubjectAccount(
     bpiSubjectAccount: BpiSubjectAccount,
   ): Promise<BpiSubjectAccount> {
-    const newBpiSubjectAccountModel = await this.bpiSubjectAccount.update({
-      where: { id: bpiSubjectAccount.id },
-      data: {
-        creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
-        ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
-        authenticationPolicy: bpiSubjectAccount.authenticationPolicy,
-        authorizationPolicy: bpiSubjectAccount.authorizationPolicy,
-        verifiableCredential: bpiSubjectAccount.verifiableCredential,
-        recoveryKey: bpiSubjectAccount.recoveryKey,
-      },
-      include: { ownerBpiSubject: true, creatorBpiSubject: true },
-    });
+    const newBpiSubjectAccountModel =
+      await this.prisma.bpiSubjectAccount.update({
+        where: { id: bpiSubjectAccount.id },
+        data: {
+          creatorBpiSubjectId: bpiSubjectAccount.creatorBpiSubject.id,
+          ownerBpiSubjectId: bpiSubjectAccount.ownerBpiSubject.id,
+          authenticationPolicy: bpiSubjectAccount.authenticationPolicy,
+          authorizationPolicy: bpiSubjectAccount.authorizationPolicy,
+          verifiableCredential: bpiSubjectAccount.verifiableCredential,
+          recoveryKey: bpiSubjectAccount.recoveryKey,
+        },
+        include: { ownerBpiSubject: true, creatorBpiSubject: true },
+      });
 
-    return this.mapper.map(
-      newBpiSubjectAccountModel,
-      BpiSubjectAccount,
-      BpiSubjectAccount,
-    );
+    return this.mapper.map(newBpiSubjectAccountModel, BpiSubjectAccount);
   }
 
   async deleteBpiSubjectAccount(
     bpiSubjectAccount: BpiSubjectAccount,
   ): Promise<void> {
-    await this.bpiSubjectAccount.delete({
+    await this.prisma.bpiSubjectAccount.delete({
       where: { id: bpiSubjectAccount.id },
     });
   }

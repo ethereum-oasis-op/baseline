@@ -1,23 +1,19 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { CcsmStorageAgent } from './agents/ccsmStorage.agent';
+import { LoggingModule } from '../../shared/logging/logging.module';
+import { CircuitInputsParserService } from './services/circuit/circuitInputsParser/circuitInputParser.service';
 import { SnarkjsCircuitService } from './services/circuit/snarkjs/snarkjs.service';
-import { EthereumService } from './services/blockchain/ethereum/ethereum.service';
 
 @Module({
-  imports: [CqrsModule],
+  imports: [CqrsModule, LoggingModule],
 
   providers: [
-    CcsmStorageAgent,
+    CircuitInputsParserService,
     {
       provide: 'ICircuitService',
       useClass: SnarkjsCircuitService,
     },
-    {
-      provide: 'IBlockchainService',
-      useClass: EthereumService,
-    },
   ],
-  exports: ['ICircuitService', 'IBlockchainService', CcsmStorageAgent],
+  exports: ['ICircuitService', CircuitInputsParserService],
 })
 export class ZeroKnowledgeProofModule {}

@@ -1,12 +1,11 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JWTVerified, verifyJWT } from 'did-jwt';
-import { Resolver } from 'did-resolver';
-import { getResolver } from 'ethr-did-resolver';
 import { LoggingService } from '../../../shared/logging/logging.service';
 import { IS_PUBLIC_ENDPOINT_METADATA_KEY } from '../../decorators/public-endpoint';
 import { BpiSubjectStorageAgent } from '../../identity/bpiSubjects/agents/bpiSubjectsStorage.agent';
-import { didResolverProviderConfig } from '../constants';
+import { DidService } from '../../identity/bpiSubjects/services/did.service';
+import 'dotenv/config';
 
 @Injectable()
 export class DidJwtAuthGuard implements CanActivate {
@@ -14,6 +13,7 @@ export class DidJwtAuthGuard implements CanActivate {
     private reflector: Reflector,
     private log: LoggingService,
     private bpiSubjectStorageAgent: BpiSubjectStorageAgent,
+    private didService: DidService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -41,7 +41,7 @@ export class DidJwtAuthGuard implements CanActivate {
     context: ExecutionContext,
   ) {
     // TODO: store did in bpi subject and remove constant
-    const didSubstrLength = 13;
+    const didSubstrLength = 20;
     const bpiSubject =
       await this.bpiSubjectStorageAgent.getBpiSubjectByPublicKey(
         verified.payload.sub!.substring(didSubstrLength),
@@ -51,8 +51,9 @@ export class DidJwtAuthGuard implements CanActivate {
   }
 
   private async getDidResolver() {
-    const ethrDidResolver = getResolver(didResolverProviderConfig);
-    return new Resolver(ethrDidResolver);
+    const provider = await this.didService.createProvider();
+    const ethrDidResolver = await this.didService.getDidResolver(provider);
+    return ethrDidResolver;
   }
 
   private async verifyJwt(jwt: string) {

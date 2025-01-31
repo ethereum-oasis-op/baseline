@@ -24,11 +24,15 @@ export class BpiMerkleTree {
 
   public addLeaf(leaf: string): void {
     const bufferLeaf = Buffer.from(leaf, 'utf-8');
-    this.tree.addLeaf(bufferLeaf, true);
+    this.tree.addLeaf(bufferLeaf, false);
   }
 
   public getLeafIndex(leaf: string): number {
     return this.tree.getLeafIndex(Buffer.from(leaf, 'utf-8'));
+  }
+
+  public getLeaf(index: number): string {
+    return this.tree.getLeaf(index).toString();
   }
 
   public getRoot(): string {

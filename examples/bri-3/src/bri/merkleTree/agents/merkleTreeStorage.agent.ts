@@ -1,19 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
-import { PrismaService } from '../../../../prisma/prisma.service';
 import MerkleTree from 'merkletreejs';
+import { PrismaMapper } from '../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../shared/prisma/prisma.service';
 import { BpiMerkleTree } from '../models/bpiMerkleTree';
-import { MerkleTreeDto } from '../api/dtos/response/merkleTree.dto';
 
 @Injectable()
-export class MerkleTreeStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
-    super();
-  }
+export class MerkleTreeStorageAgent {
+  constructor(
+    private readonly mapper: PrismaMapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getMerkleTreeById(id: string): Promise<BpiMerkleTree | undefined> {
-    const merkleTreeModel = await this.bpiMerkleTree.findUnique({
+    const merkleTreeModel = await this.prisma.bpiMerkleTree.findUnique({
       where: { id },
     });
 
@@ -21,11 +20,13 @@ export class MerkleTreeStorageAgent extends PrismaService {
       return undefined;
     }
 
-    return this.mapper.map(merkleTreeModel, MerkleTreeDto, BpiMerkleTree);
+    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(
+      merkleTreeModel,
+    );
   }
 
   async storeNewMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    const storedMerkleTree = await this.bpiMerkleTree.create({
+    const storedMerkleTree = await this.prisma.bpiMerkleTree.create({
       data: {
         id: merkleTree.id,
         hashAlgName: merkleTree.hashAlgName,
@@ -33,30 +34,29 @@ export class MerkleTreeStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(storedMerkleTree, MerkleTreeDto, BpiMerkleTree);
+    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(
+      storedMerkleTree,
+    );
   }
 
   async storeUpdatedMerkleTree(
     merkleTree: BpiMerkleTree,
   ): Promise<BpiMerkleTree> {
-    const updatedMerkleTree = await this.bpiMerkleTree.update({
+    const updatedMerkleTree = await this.prisma.bpiMerkleTree.update({
       where: { id: merkleTree.id },
       data: {
         tree: MerkleTree.marshalTree(merkleTree.tree),
       },
     });
 
-    return this.mapper.map(updatedMerkleTree, MerkleTreeDto, BpiMerkleTree);
+    return this.mapper.mapBpiMerkleTreePrismaModelToDomainObject(
+      updatedMerkleTree,
+    );
   }
 
-  async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<BpiMerkleTree> {
-    await this.bpiMerkleTree.delete({
+  async deleteMerkleTree(merkleTree: BpiMerkleTree): Promise<void> {
+    await this.prisma.bpiMerkleTree.delete({
       where: { id: merkleTree.id },
     });
-
-    // TODO: #740 Mil5 - Mapping from a prisma client type to a domain object is not working.
-    // We need to address this by either introducing a helper model (like the MerkleTreeDto above)
-    // or experimenting with automapper pojos strategy.
-    return this.mapper.map(merkleTree, BpiMerkleTree, BpiMerkleTree);
   }
 }

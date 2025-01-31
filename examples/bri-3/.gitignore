@@ -1,10 +1,7 @@
 # compiled output
 /dist
 /node_modules
-/zeroKnowledgeArtifacts/ptau
-/zeroKnowledgeArtifacts/circuits
 src/bri/zeroKnowledgeProof/services/circuit/snarkjs/*.sol
-/zeroKnowledgeArtifacts/blockchain/ethereum/artifacts
 /typechain-types
 /cache
 

@@ -21,4 +21,10 @@ export class WorkstepDto {
 
   @AutoMap()
   privacyPolicy: string;
+
+  @AutoMap()
+  circuitInputsTranslationSchema: string;
+
+  @AutoMap()
+  verifierContractAddress: string;
 }

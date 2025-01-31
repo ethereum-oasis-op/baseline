@@ -1,18 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaService } from '../../../../../prisma/prisma.service';
-import { Workgroup } from '../models/workgroup';
+import { PrismaMapper } from '../../../../shared/prisma/prisma.mapper';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
 import { WORKGROUP_NOT_FOUND_ERR_MESSAGE } from '../api/err.messages';
-import { InjectMapper } from '@automapper/nestjs';
-import { Mapper } from '@automapper/core';
+import { Workgroup } from '../models/workgroup';
 
 @Injectable()
-export class WorkgroupStorageAgent extends PrismaService {
-  constructor(@InjectMapper() private mapper: Mapper) {
-    super();
-  }
+export class WorkgroupStorageAgent {
+  constructor(
+    private readonly mapper: PrismaMapper,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async getWorkgroupById(id: string): Promise<Workgroup> {
-    const workgroupModel = await this.workgroup.findUnique({
+    const workgroupModel = await this.prisma.workgroup.findUnique({
       where: { id: id },
       include: {
         worksteps: true,
@@ -28,7 +28,7 @@ export class WorkgroupStorageAgent extends PrismaService {
       throw new NotFoundException(WORKGROUP_NOT_FOUND_ERR_MESSAGE);
     }
 
-    return this.mapper.map(workgroupModel, Workgroup, Workgroup);
+    return this.mapper.map(workgroupModel, Workgroup);
   }
 
   async createNewWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -44,7 +44,7 @@ export class WorkgroupStorageAgent extends PrismaService {
       };
     });
 
-    const newWorkgroupModel = await this.workgroup.create({
+    const newWorkgroupModel = await this.prisma.workgroup.create({
       data: {
         id: workgroup.id,
         name: workgroup.name,
@@ -67,7 +67,7 @@ export class WorkgroupStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(newWorkgroupModel, Workgroup, Workgroup);
+    return this.mapper.map(newWorkgroupModel, Workgroup);
   }
 
   async updateWorkgroup(workgroup: Workgroup): Promise<Workgroup> {
@@ -83,7 +83,7 @@ export class WorkgroupStorageAgent extends PrismaService {
       };
     });
 
-    const updatedWorkgroupModel = await this.workgroup.update({
+    const updatedWorkgroupModel = await this.prisma.workgroup.update({
       where: { id: workgroup.id },
       data: {
         name: workgroup.name,
@@ -105,11 +105,11 @@ export class WorkgroupStorageAgent extends PrismaService {
       },
     });
 
-    return this.mapper.map(updatedWorkgroupModel, Workgroup, Workgroup);
+    return this.mapper.map(updatedWorkgroupModel, Workgroup);
   }
 
   async deleteWorkgroup(workgroup: Workgroup): Promise<void> {
-    await this.workgroup.delete({
+    await this.prisma.workgroup.delete({
       where: { id: workgroup.id },
     });
   }

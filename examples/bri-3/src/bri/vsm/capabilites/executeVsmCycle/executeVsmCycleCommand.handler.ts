@@ -7,7 +7,7 @@ import { WorkflowStorageAgent } from '../../../workgroup/workflows/agents/workfl
 import { WorkstepStorageAgent } from '../../../workgroup/worksteps/agents/workstepsStorage.agent';
 import { ExecuteVsmCycleCommand } from './executeVsmCycle.command';
 import { WorkstepExecutedEvent } from '../handleWorkstepEvents/workstepExecuted.event';
-import { CcsmStorageAgent } from '../../../zeroKnowledgeProof/agents/ccsmStorage.agent';
+import { CcsmStorageAgent } from '../../../ccsm/agents/ccsmStorage.agent';
 
 @CommandHandler(ExecuteVsmCycleCommand)
 export class ExecuteVsmCycleCommandHandler
@@ -33,23 +33,23 @@ export class ExecuteVsmCycleCommandHandler
     // TODO: When do we update the nonce on the BpiAccount? // Whenever a transaction is initiated
     executionCandidates.forEach(async (tx) => {
       tx.updateStatusToProcessing();
-      await this.txStorageAgent.updateTransactionStatus(tx);
+      await this.txStorageAgent.updateTransaction(tx);
 
       if (!this.txAgent.validateTransactionForExecution(tx)) {
         this.eventBus.publish(
           new WorkstepExecutedEvent(tx, 'Validation Error'),
         );
         tx.updateStatusToInvalid();
-        await this.txStorageAgent.updateTransactionStatus(tx);
+        await this.txStorageAgent.updateTransaction(tx);
         return;
       }
 
       const workstep = await this.workstepStorageAgent.getWorkstepById(
-        tx.workstepInstanceId,
+        tx.workstepId,
       );
 
       const workflow = await this.workflowStorageAgent.getWorkflowById(
-        tx.workflowInstanceId,
+        tx.workflowId,
       );
 
       try {
@@ -67,14 +67,17 @@ export class ExecuteVsmCycleCommandHandler
           stateTreeRoot,
         );
 
-        await this.ccsmStorageAgent.storeAnchorHashOnCcsm(txResult.hash);
+        await this.ccsmStorageAgent.storeAnchorHashOnCcsm(
+          tx.workstepInstanceId,
+          txResult.hash,
+        );
 
         tx.updateStatusToExecuted();
-        this.txStorageAgent.updateTransactionStatus(tx);
+        this.txStorageAgent.updateTransaction(tx);
       } catch (error) {
         this.eventBus.publish(new WorkstepExecutedEvent(tx, error));
         tx.updateStatusToAborted();
-        this.txStorageAgent.updateTransactionStatus(tx);
+        this.txStorageAgent.updateTransaction(tx);
         return;
       }
 

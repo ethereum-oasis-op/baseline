@@ -2,11 +2,11 @@ import { classes } from '@automapper/classes';
 import { AutomapperModule } from '@automapper/nestjs';
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { PrismaService } from '../prisma/prisma.service';
 import { AuthModule } from './bri/auth/auth.module';
 import { DidJwtAuthGuard } from './bri/auth/guards/didJwt.guard';
 import { AuthzModule } from './bri/authz/authz.module';
 import { AuthzGuard } from './bri/authz/guards/authz.guard';
+import { CcsmModule } from './bri/ccsm/ccsm.module';
 import { CommunicationModule } from './bri/communication/communication.module';
 import { SubjectModule } from './bri/identity/bpiSubjects/subjects.module';
 import { IdentityModule } from './bri/identity/identity.module';
@@ -18,6 +18,7 @@ import { WorkgroupsModule } from './bri/workgroup/workgroup.module';
 import { ZeroKnowledgeProofModule } from './bri/zeroKnowledgeProof/zeroKnowledgeProof.module';
 import { EncryptionModule } from './shared/encryption/encryption.module';
 import { LoggingModule } from './shared/logging/logging.module';
+import { PrismaService } from './shared/prisma/prisma.service';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { LoggingModule } from './shared/logging/logging.module';
     SubjectModule,
     MerkleModule,
     StateModule,
+    CcsmModule,
   ],
   providers: [
     PrismaService,

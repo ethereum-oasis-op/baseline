@@ -1,24 +1,26 @@
+import { classes } from '@automapper/classes';
+import { AutomapperModule } from '@automapper/nestjs';
 import { NotFoundException } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Test, TestingModule } from '@nestjs/testing';
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { uuid } from 'uuidv4';
+import { LoggingService } from '../../../../shared/logging/logging.service';
+import { CircuitInputsParserService } from '../../../zeroKnowledgeProof/services/circuit/circuitInputsParser/circuitInputParser.service';
 import { WorkstepAgent } from '../agents/worksteps.agent';
+import { WorkstepStorageAgent } from '../agents/workstepsStorage.agent';
 import { CreateWorkstepCommandHandler } from '../capabilities/createWorkstep/createWorkstepCommand.handler';
 import { DeleteWorkstepCommandHandler } from '../capabilities/deleteWorkstep/deleteWorkstepCommand.handler';
 import { GetAllWorkstepsQueryHandler } from '../capabilities/getAllWorksteps/getAllWorkstepsQuery.handler';
 import { GetWorkstepByIdQueryHandler } from '../capabilities/getWorkstepById/getWorkstepByIdQuery.handler';
 import { UpdateWorkstepCommandHandler } from '../capabilities/updateWorkstep/updateWorkstep.command.handler';
-import { WorkstepStorageAgent } from '../agents/workstepsStorage.agent';
+import { Workstep } from '../models/workstep';
+import { WorkstepProfile } from '../workstep.profile';
 import { CreateWorkstepDto } from './dtos/request/createWorkstep.dto';
 import { UpdateWorkstepDto } from './dtos/request/updateWorkstep.dto';
 import { NOT_FOUND_ERR_MESSAGE } from './err.messages';
 import { WorkstepController } from './worksteps.controller';
-import { validate as uuidValidate, version as uuidVersion } from 'uuid';
-import { WorkstepProfile } from '../workstep.profile';
-import { classes } from '@automapper/classes';
-import { AutomapperModule } from '@automapper/nestjs';
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended';
-import { Workstep } from '../models/workstep';
-import { uuid } from 'uuidv4';
 
 describe('WorkstepController', () => {
   let wController: WorkstepController;
@@ -33,6 +35,7 @@ describe('WorkstepController', () => {
       'wgid',
       'secPolicy',
       'privPolicy',
+      'verifierContractAddress',
     );
   };
 
@@ -47,6 +50,8 @@ describe('WorkstepController', () => {
       controllers: [WorkstepController],
       providers: [
         WorkstepAgent,
+        CircuitInputsParserService,
+        LoggingService,
         CreateWorkstepCommandHandler,
         UpdateWorkstepCommandHandler,
         DeleteWorkstepCommandHandler,

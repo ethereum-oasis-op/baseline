@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { BpiAccountAgent } from '../../../../identity/bpiAccounts/agents/bpiAccounts.agent';
-import { BpiAccountStorageAgent } from '../../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
+import { BpiAccountAgent } from '../../../../state/bpiAccounts/agents/bpiAccounts.agent';
+import { BpiAccountStorageAgent } from '../../../../state/bpiAccounts/agents/bpiAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
 import { WorkgroupAgent } from '../../../../workgroup/workgroups/agents/workgroups.agent';
 import { WorkflowAgent } from '../../agents/workflows.agent';
@@ -47,15 +47,11 @@ export class CreateWorkflowCommandHandler
       'sample state object prover system',
     );
 
-    const newBpiAccount = await this.accountStorageAgent.storeNewBpiAccount(
-      newBpiAccountCandidate,
-    );
-
     const newWorkflowCandidate = this.agent.createNewWorkflow(
       command.name,
       workstepsToConnect,
       command.workgroupId,
-      newBpiAccount,
+      newBpiAccountCandidate,
     );
 
     const newWorkflow = await this.storageAgent.storeNewWorkflow(

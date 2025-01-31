@@ -7,10 +7,10 @@ import { DeepMockProxy, mockDeep } from 'jest-mock-extended';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { uuid } from 'uuidv4';
 import { TestDataHelper } from '../../../../shared/testing/testData.helper';
-import { BpiAccountAgent } from '../../../identity/bpiAccounts/agents/bpiAccounts.agent';
-import { BpiAccountStorageAgent } from '../../../identity/bpiAccounts/agents/bpiAccountsStorage.agent';
+import { BpiAccountAgent } from '../../../state/bpiAccounts/agents/bpiAccounts.agent';
+import { BpiAccountStorageAgent } from '../../../state/bpiAccounts/agents/bpiAccountsStorage.agent';
 import { BpiSubjectAccountAgent } from '../../../identity/bpiSubjectAccounts/agents/bpiSubjectAccounts.agent';
-import { WORKFLOW_NOT_FOUND_ERR_MESSAGE } from '../../workflows/api/err.messages';
+import { NOT_FOUND_ERR_MESSAGE } from '../../workflows/api/err.messages';
 import { WorkgroupAgent } from '../../workgroups/agents/workgroups.agent';
 import { WorkstepStorageAgent } from '../../worksteps/agents/workstepsStorage.agent';
 import { WorkstepProfile } from '../../worksteps/workstep.profile';
@@ -27,6 +27,11 @@ import { WorkflowProfile } from '../workflow.profile';
 import { CreateWorkflowDto } from './dtos/request/createWorkflow.dto';
 import { UpdateWorkflowDto } from './dtos/request/updateWorkflow.dto';
 import { WorkflowController } from './workflows.controller';
+import { PrismaService } from '../../../../shared/prisma/prisma.service';
+import { PrismaClient } from '@prisma/client';
+import { MerkleTreeAgent } from '../../../merkleTree/agents/merkleTree.agent';
+import { MerkleTreeStorageAgent } from '../../../merkleTree/agents/merkleTreeStorage.agent';
+import { MerkleTreeService } from '../../../merkleTree/services/merkleTree.service';
 
 describe('WorkflowsController', () => {
   let workflowController: WorkflowController;
@@ -98,6 +103,7 @@ describe('WorkflowsController', () => {
         WorkgroupAgent,
         BpiAccountAgent,
         BpiSubjectAccountAgent,
+        MerkleTreeAgent,
         CreateWorkflowCommandHandler,
         UpdateWorkflowCommandHandler,
         DeleteWorkflowCommandHandler,
@@ -105,22 +111,26 @@ describe('WorkflowsController', () => {
         GetAllWorkflowsQueryHandler,
         WorkflowStorageAgent,
         BpiAccountStorageAgent,
+        MerkleTreeStorageAgent,
         WorkstepProfile,
         WorkflowProfile,
+        MerkleTreeService,
       ],
     })
       .overrideProvider(WorkflowStorageAgent)
       .useValue(mockDeep<WorkflowStorageAgent>())
       .overrideProvider(WorkstepStorageAgent)
       .useValue(mockDeep<WorkstepStorageAgent>())
-      .overrideProvider(BpiAccountAgent)
-      .useValue(mockDeep<BpiAccountAgent>())
       .overrideProvider(BpiSubjectAccountAgent)
       .useValue(mockDeep<BpiSubjectAccountAgent>())
       .overrideProvider(WorkgroupAgent)
       .useValue(mockDeep<WorkgroupAgent>())
       .overrideProvider(BpiAccountStorageAgent)
       .useValue(mockDeep<BpiAccountStorageAgent>())
+      .overrideProvider(MerkleTreeStorageAgent)
+      .useValue(mockDeep<MerkleTreeStorageAgent>())
+      .overrideProvider(PrismaService)
+      .useValue(mockDeep<PrismaClient>())
       .compile();
 
     workflowController = app.get<WorkflowController>(WorkflowController);
@@ -137,13 +147,13 @@ describe('WorkflowsController', () => {
       // Arrange
       const nonExistentId = '123';
       workflowStorageAgentMock.getWorkflowById.mockRejectedValueOnce(
-        new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE),
+        new NotFoundException(NOT_FOUND_ERR_MESSAGE),
       );
 
       // Act and assert
       expect(async () => {
         await workflowController.getWorkflowById(nonExistentId);
-      }).rejects.toThrow(new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should return the correct workflow if proper id passed ', async () => {
@@ -246,13 +256,13 @@ describe('WorkflowsController', () => {
       };
 
       workflowStorageAgentMock.updateWorkflow.mockRejectedValueOnce(
-        new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE),
+        new NotFoundException(NOT_FOUND_ERR_MESSAGE),
       );
 
       // Act and assert
       expect(async () => {
         await workflowController.updateWorkflow(nonExistentId, requestDto);
-      }).rejects.toThrow(new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should perform the update if existing id passed', async () => {
@@ -293,13 +303,13 @@ describe('WorkflowsController', () => {
       // Arrange
       const nonExistentId = '123';
       workflowStorageAgentMock.updateWorkflow.mockRejectedValueOnce(
-        new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE),
+        new NotFoundException(NOT_FOUND_ERR_MESSAGE),
       );
 
       // Act and assert
       expect(async () => {
         await workflowController.deleteWorkflow(nonExistentId);
-      }).rejects.toThrow(new NotFoundException(WORKFLOW_NOT_FOUND_ERR_MESSAGE));
+      }).rejects.toThrow(new NotFoundException(NOT_FOUND_ERR_MESSAGE));
     });
 
     it('should perform the delete if existing id passed', async () => {

@@ -6,6 +6,9 @@ import { Transaction } from '../../../../../transactions/models/transaction';
 import MerkleTree from 'merkletreejs';
 import { MerkleTree as FixedMerkleTree } from 'fixed-merkle-tree';
 import * as crypto from 'crypto';
+import { buildBabyjub, buildEddsa } from 'circomlibjs';
+import 'dotenv/config';
+import { PublicKeyType } from '../../../../../identity/bpiSubjects/models/publicKey';
 
 export const computeEffectiveEcdsaSigPublicInputs = (
   signature: Signature,
@@ -15,7 +18,7 @@ export const computeEffectiveEcdsaSigPublicInputs = (
   const ec = new EC('secp256k1');
 
   //Public Key
-  const publicKeyBuffer = ethers.utils.arrayify(publicKeyHex);
+  const publicKeyBuffer = ethers.toBeArray(publicKeyHex);
   const publicKeyCoordinates = ec.keyFromPublic(publicKeyBuffer).getPublic();
 
   //Signature
@@ -39,13 +42,15 @@ export const computeEffectiveEcdsaSigPublicInputs = (
 };
 
 export const computeEcdsaSigPublicInputs = (tx: Transaction) => {
-  const ecdsaSignature = ethers.utils.splitSignature(tx.signature);
+  const ecdsaSignature = ethers.Signature.from(tx.signature);
 
   const messageHash = Buffer.from(
-    ethers.utils.arrayify(ethers.utils.hashMessage(tx.payload)),
+    ethers.toBeArray(ethers.hashMessage(tx.payload)),
   );
 
-  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKey;
+  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(
+    (key) => key.type == PublicKeyType.ECDSA,
+  )[0].value;
 
   return computeEffectiveEcdsaSigPublicInputs(
     ecdsaSignature,
@@ -99,4 +104,52 @@ export const computeMerkleProofPublicInputs = (
     stateTree: pathElements,
     stateTreeLeafPosition: pathIndices,
   };
+};
+
+export const computeEddsaSigPublicInputs = async (tx: Transaction) => {
+  const eddsa = await buildEddsa();
+
+  const hashedPayload = crypto
+    .createHash(`${process.env.MERKLE_TREE_HASH_ALGH}`)
+    .update(JSON.stringify(tx.payload))
+    .digest();
+
+  const publicKey = tx.fromBpiSubjectAccount.ownerBpiSubject.publicKeys.filter(
+    (key) => key.type == PublicKeyType.EDDSA,
+  )[0].value;
+
+  const packedPublicKey = new Uint8Array(Buffer.from(publicKey, 'hex'));
+
+  const signature = Uint8Array.from(Buffer.from(tx.signature, 'hex'));
+  const unpackedSignature = eddsa.unpackSignature(signature);
+
+  const packedSignature = eddsa.packSignature(unpackedSignature);
+
+  const messageBits = buffer2bits(hashedPayload);
+  const r8Bits = buffer2bits(Buffer.from(packedSignature.slice(0, 32)));
+  const sBits = buffer2bits(Buffer.from(packedSignature.slice(32, 64)));
+  const aBits = buffer2bits(Buffer.from(packedPublicKey));
+
+  const inputs = {
+    message: messageBits,
+    A: aBits,
+    R8: r8Bits,
+    S: sBits,
+  };
+
+  return inputs;
+};
+
+const buffer2bits = (buffer: Buffer) => {
+  const res: bigint[] = [];
+  for (let i = 0; i < buffer.length; i++) {
+    for (let j = 0; j < 8; j++) {
+      if ((buffer[i] >> j) & 1) {
+        res.push(BigInt(1));
+      } else {
+        res.push(BigInt(0));
+      }
+    }
+  }
+  return res;
 };

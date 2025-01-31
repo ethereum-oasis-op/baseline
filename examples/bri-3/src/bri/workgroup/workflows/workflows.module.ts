@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CqrsModule } from '@nestjs/cqrs';
-import { AccountModule } from '../../identity/bpiAccounts/accounts.module';
+import { PrismaModule } from '../../../shared/prisma/prisma.module';
 import { SubjectAccountModule } from '../../identity/bpiSubjectAccounts/subjectAccounts.module';
 import { SubjectModule } from '../../identity/bpiSubjects/subjects.module';
+import { AccountModule } from '../../state/bpiAccounts/accounts.module';
 import { WorkgroupStorageAgent } from '../workgroups/agents/workgroupStorage.agent';
 import { WorkgroupAgent } from '../workgroups/agents/workgroups.agent';
 import { WorkstepModule } from '../worksteps/worksteps.module';
@@ -34,6 +35,7 @@ export const QueryHandlers = [
     AccountModule,
     SubjectAccountModule,
     SubjectModule,
+    PrismaModule,
   ],
   controllers: [WorkflowController],
   providers: [

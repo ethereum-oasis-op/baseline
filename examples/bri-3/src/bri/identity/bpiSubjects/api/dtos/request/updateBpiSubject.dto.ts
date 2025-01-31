@@ -1,4 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
+import { PublicKeyDto } from './publicKey.dto';
 
 export class UpdateBpiSubjectDto {
   @IsNotEmpty()
@@ -8,5 +9,5 @@ export class UpdateBpiSubjectDto {
   desc: string;
 
   @IsNotEmpty()
-  publicKey: string;
+  publicKeys: PublicKeyDto[];
 }
