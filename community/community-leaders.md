@@ -55,11 +55,11 @@ The Standards team worked through most of 2021 to develop a world-class technica
 | Yoav Bittan    | ConsenSys Mesh     |
 | Chaale Neville | EEA                |
 
-The Standards work is completed.
+The Standards Team's work is paused until after Project Specification Draft (PSD) Ratification. See link to standard for details [here](https://github.com/ethereum-oasis-op/baseline-standard)
 
 ## Outreach Team
 
-The outreach team should consist of writers, evangelists, stakeholders, sponsors, events organizers and marketers who work together to develop enablement materials, promote Baseline and "Baseline Isnide" in the media, events and through direct engagement with thought leaders and decision-makers. The Outreach Team is currently looking for members.
+The outreach team should consist of writers, evangelists, stakeholders, sponsors, events organizers and marketers who work together to develop enablement materials, promote Baseline and "Baseline Inside" in the media, events and through direct engagement with thought leaders and decision-makers. The Outreach Team is currently looking for members.
 
 | Member                             | Company |
 | ---------------------------------- | ------- |

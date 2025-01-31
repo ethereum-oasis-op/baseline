@@ -24,9 +24,9 @@ The community now focuses on financial inclusion and ESG (Environmental, Social,
 
 The community's brand statement, "Baseline Inside," reflects this renewed focus on leveraging the Baseline Protocol to drive positive change in financial inclusion and ESG.
 
-## About Baseline's Protocol -- The Baseline Protocol
+## About Baseline
 
-The Baseline Protocol is the standard for state synchronization across different systems of record. This applies to traditional corporate systems of record, any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine), and even different blockchains or distributed ledger technologies (DLTs). It is particularly beneficial as a way to reduce capital expense and other overheads, while increasing operational integrity and information security when **automating and synchronizing business processes** across multiple companies.
+The Baseline Protocol is the global standard for state synchronization across different systems of record. This applies to traditional corporate systems of record, any kind of database or [state machine](https://www.techopedia.com/definition/16447/state-machine), and even different blockchains or distributed ledger technologies (DLTs). It is particularly beneficial as a way to reduce capital expense and other overheads, while increasing operational integrity and information security when **automating and synchronizing business processes** across multiple companies.
 
 The Baseline Protocol initiative was [announced](https://consensys.net/blog/press-release/ey-and-consensys-announce-formation-of-baseline-protocol-initiative-to-make-ethereum-mainnet-safe-and-effective-for-enterprises/) on March 4, 2020, and launched as an [OASIS Open Source Project](https://oasis-open-projects.org) on March 19, 2020, supported by fourteen founding companies. More companies joined the effort shortly thereafter and continue to do so. In 2021, the Enterprise Ethereum Alliance and OASIS collaborated to establish the Baseline Protocol as an [EEA Community Project](https://entethalliance.org/eeacommunityprojects/#:\~:text=The%20EEA%20Community%20Projects%2C%20formerly,API%20documentation%20under%20its%20stewardship.).
 

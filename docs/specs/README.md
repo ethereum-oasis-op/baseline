@@ -21,7 +21,7 @@ The Baseline protocol specifications are currently work in progress.
 
 There are currently three specifications in development:
 
-Oasis Standard 1 - The Baseline CORE Specifications document: The document describes the minimal set of business and technical prerequisites, functional and non-functional requirements, together with a reference architecture that when implemented ensures that two or more systems of record can synchronize their system state over a permissionless public Consensus Controlled State Machine (CCSM) network. [Link to Spec]https://github.com/ethereum-oasis-op/baseline-standard/tree/main/core()
+Oasis Standard 1 - The Baseline CORE Specifications document: The document describes the minimal set of business and technical prerequisites, functional and non-functional requirements, together with a reference architecture that when implemented ensures that two or more systems of record can synchronize their system state over a permissionless public Consensus Controlled State Machine (CCSM) network. [Link to Spec](https://github.com/ethereum-oasis-op/baseline-standard)
 
 Oasis Standard 2 - The Baseline API & Data Model Specifications document: The document describes the Baseline programming interface and expected behaviors of all instances of this interface together with the required programming interface data model. [Link to Spec](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/api)
 

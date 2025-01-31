@@ -18,7 +18,7 @@ The Baseline Protocol Standard and source code are available under the CC0 1.0 U
 
 Join our open source teams - learn more and sign up [here](https://www.baseline-protocol.org/get-involved/).
 
-* _**Baseline Core Devs:** Baseline Core Devs_ are the backbone of the Baseline Protocol open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of top blockchain developers leading the rise of ubiquitous sync services to state machines everywhere!
+* _**Baseline Maintainers:** Baseline Maintainers_ are the backbone of the Baseline Protocol open source community and have an active role in advancing the Baseline Protocol and/or related projects. Join the next generation of top blockchain developers leading the rise of ubiquitous sync services to state machines everywhere!
 * **Outreach Team**: Outreach members communicate, advocate, and educate the world on the advantages of using and contributing to the protocol. Several working groups create enablement materials, devise industry-specific use cases, and document the significant work being done in the community.
 * **Standards Team**: Members of the team work to define and contribute to the specifications of baseline compliance. The[ Standard ](https://github.com/ethereum-oasis-op/baseline-standard)is currently in the ratification process to become an official [Oasis Standard](https://www.oasis-open.org).
 
@@ -26,7 +26,7 @@ Join our open source teams - learn more and sign up [here](https://www.baseline-
 
 **Reference Implementations:** You can also choose to build on top of existing reference implementations.
 
-We recommend starting with BRI-3, this reference implementation of the core interfaces specified in the v1.0 release has been developed by individual members of the Baseline community. You can get started with BRI-1 [here](https://github.com/ethereum-oasis-op/baseline/tree/main/examples/bri-3).
+We recommend starting with BRI-3, this reference implementation of the core interfaces specified in the v1.0 release has been developed by individual members of the Baseline community. You can get started with BRI-3 [here](https://github.com/ethereum-oasis-op/baseline/tree/main/examples/bri-3).
 
 **Developer Resources:** To help you build with the Baseline Protocol, you can use the implementation guide and other developer resources available [here](../baseline-protocol-code/developer-resources.md).
 
