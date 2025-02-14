@@ -39,7 +39,7 @@ Baseline has 3 teams, and several focused working groups within each, where anyo
 
 Resources are constantly being developed in the community for the effective onboarding of new community members, start by **reviewing the** [**resources**](open-source-community.md#resources) **across the docs here,** [**website**](../docs/baseline-protocol/the-baseline-protocol.md)**, or** [**repository**](https://github.com/orgs/ethereum-oasis-op/repositories)**.**
 
-Let the community know if there are any gaps you're finding the materials, as we are constantly working to develop valuable tools for implementing, explaining, or evangelizing Baseline.&#x20;
+Let the community know if there are any gaps you're finding the materials, as we are constantly working to develop valuable tools for implementing, explaining, or evangelizing Baseline.
 
 ## **Leadership** <a href="#leadership" id="leadership"></a>
 
