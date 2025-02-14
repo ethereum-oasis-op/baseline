@@ -4,7 +4,7 @@
 
 Parties store data in local systems of record (Mongo, Oracle, SAP, etc). Components involved in the baseline process are given CRUD access to this and conduct a series of operations to serialize records (including any associated business logic), send those records to counterparties, receive the records, sign them, generate proofs, and store these proofs to a Merkle Tree on the Mainnet.
 
-Connectors for various systems can be found [here](https://github.com/ethereum-oasis-op/baseline/tree/master/examples/bri-1/lib).
+[Example Connectors](https://github.com/ethereum-oasis-op/baseline/tree/main/examples/bri-1/lib) are available for various systems.
 
 ## Setting up the Workgroup <a href="#setting-up-the-workgroup-and-sending-messages-to-counterparties" id="setting-up-the-workgroup-and-sending-messages-to-counterparties"></a>
 
