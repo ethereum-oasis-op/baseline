@@ -8,7 +8,7 @@ description: Frequently Asked Questions
 
 There is no Baseline token.
 
-The Baseline Protocol is a standardized framework, with requirements outlined in the [Baseline Protocol Standard](https://github.com/ethereum-oasis-op/baseline-standard), which is undergoing ratification to become an [OASIS Open Standard](https://www.oasis-open.org/standards/). All reference implementations do not employ a token.
+The Baseline Protocol is a standardized framework, with requirements outlined in the [Baseline Protocol Standard](https://github.com/ethereum-oasis-op/baseline-standard), which is undergoing ratification to become an [OASIS Open Standard](https://www.oasis-open.org/standards/). No reference implementations employ a token.
 
 Being open-source, open-standard means that anyone is free to build any application or service implementing the protocol. Those applications or services may or may not have their own tokens.
 
