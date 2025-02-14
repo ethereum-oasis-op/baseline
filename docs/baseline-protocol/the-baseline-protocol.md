@@ -1,4 +1,4 @@
-# Baseline and it's Protocol
+# Baseline and its Protocol
 
 Baseline and it's Protocol is an open source initiative that combines advances in cryptography, messaging, and blockchain to deliver secure and private business processes at low cost using the public Mainnet for event ordering, data consistency and workflow integrity. The protocol will enable confidential and complex collaboration between enterprises without moving any sensitive data from traditional systems of record. The work is governed by [OASIS](https://oasis-open-projects.org).
 
