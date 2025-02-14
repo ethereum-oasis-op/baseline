@@ -12,7 +12,7 @@ The Baseline Protocol is a standardized framework, with requirements outlined in
 
 Being open-source, open-standard means that anyone is free to build any application or service implementing the protocol. Those applications or services may or may not have their own tokens.
 
-The Baseline Protocol Standard and source code are available under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [license](https://github.com/ethereum-oasis-op/baseline/blob/master/LICENSE).
+The Baseline Protocol Standard and source code are available under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [license](https://github.com/ethereum-oasis-op/baseline/blob/main/LICENSE).
 
 ## I am interested in contributing, where do I start?
 

@@ -43,10 +43,10 @@ Once the business logic is rendered into provers, deploy the Workflow as follows
 
 First deploy a Node that has the baseline protocol RPC interface implemented. The Nethermind Ethereum Client is the first to implement this code. Alternatively, you can deploy the [commit-mgr](https://github.com/ethereum-oasis-op/baseline/tree/main/examples/bri-2/commit-mgr) Ethereum client extension plus a client type of your choice (i.e. Besu, Infura, etc.)
 
-Next, use the `IBaselineRPC` call in the Client to deploy the Shield and Verifier contracts on-chain. This can be found [here](https://github.com/ethereum-oasis-op/baseline/tree/master/core/api).
+Next, use the `IBaselineRPC` call in the Client to deploy the Shield and Verifier contracts on-chain. This can be found [here](https://github.com/ethereum-oasis-op/baseline/tree/main/core/api).
 
 ### Running Worksteps
 
 Now that the Workgroup and Workflow have been established, counterparties can send each other serialized records, confirm consistency between those records, and enforce business rules on the state changes from Workstep to Workstep.
 
-An example of this is in the BRI-1 Reference implementation [here](https://github.com/ethereum-oasis-op/baseline/tree/master/examples/bri-1). And a walkthrough of an "Alice and Bob" simple case is [here](https://youtu.be/2WXvTHR4\_7Q) and [here](https://youtu.be/R0AEww6fKLk).
+An example of this is in the BRI-1 Reference implementation [here](https://github.com/ethereum-oasis-op/baseline/tree/main/examples/bri-1). And a walkthrough of an "Alice and Bob" simple case is [here](https://youtu.be/2WXvTHR4\_7Q) and [here](https://youtu.be/R0AEww6fKLk).

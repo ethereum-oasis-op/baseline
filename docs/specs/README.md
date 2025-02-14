@@ -29,7 +29,7 @@ Oasis Standard 3 - Permissionless CCSM Requirements document: The document descr
 
 ## License
 
-All contribution in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](https://github.com/ethereum-oasis-op/baseline/blob/master/LICENSE).
+All contribution in this repo is released under the CC0 1.0 Universal public domain dedication. For the full license text, refer to [LICENSE](https://github.com/ethereum-oasis-op/baseline/blob/main/LICENSE).
 
 ## Contributions
 

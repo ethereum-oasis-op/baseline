@@ -8,7 +8,7 @@ If you are new to the baseline project and are looking for an entry-point to mak
 
 ## Submitting a new issue
 
-If you want to create a new issue that doesn't exist already, follow the guidelines in one of our [Issue Templates](https://github.com/ethereum-oasis-op/baseline/tree/master/.github/ISSUE_TEMPLATE).
+If you want to create a new issue that doesn't exist already, follow the guidelines in one of our [Issue Templates](https://github.com/ethereum-oasis-op/baseline/tree/main/.github/ISSUE_TEMPLATE).
 
 ## Submitting a new pull request
 

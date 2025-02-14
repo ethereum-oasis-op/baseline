@@ -5,7 +5,7 @@ so that notice of them may be posted.
 
 For information on any statements regarding IPR claims related to the work 
 of this project, see the 
-[OASIS OP IPR Statements](https://github.com/oasis-open-projects/administration/blob/master/IPR_STATEMENTS.md) 
+[OASIS OP IPR Statements](https://github.com/oasis-open-projects/administration/blob/main/IPR_STATEMENTS.md) 
 page.
 
 # CC0 1.0 Universal

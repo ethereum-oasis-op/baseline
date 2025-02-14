@@ -6,7 +6,7 @@ Anyone with a github ID can be a [Contributor](contributors.md) to Baseline and 
 
 Being a Member gives you [Write](https://help.github.com/en/github/setting-up-and-managing-organizations-and-teams/repository-permission-levels-for-an-organization) access to the Github Repo as well as the [Zenhub extension](https://help.zenhub.com/support/solutions/articles/43000037261-github-permissions-and-access-in-zenhub).
 
-Members can manage Issues in pipelines, assign others to Issues, create Epics and Milestones and push contributions to any unprotected branch other than Master/Main.
+Members can manage Issues in pipelines, assign others to Issues, create Epics and Milestones and push contributions to any unprotected branch other than Main.
 
 It's a good idea to become a member if you are making regular contributions and want to be assigned Issues, be responsible for assigning Issues to others, or both. Members can be technical contributors, contributors to specifications, or people stepping up to be accountable for projects.
 
@@ -36,7 +36,7 @@ Members should:
 
 ## Code of Conduct <a href="#code-of-conduct" id="code-of-conduct"></a>
 
-Of course, all members must respect and adhere to the community's [code of conduct](https://github.com/ethereum-oasis-op/baseline/blob/master/CODE\_OF\_CONDUCT.md).
+Of course, all members must respect and adhere to the community's [code of conduct](https://github.com/ethereum-oasis-op/baseline/blob/main/CODE\_OF\_CONDUCT.md).
 
 ## Removal <a href="#removal" id="removal"></a>
 

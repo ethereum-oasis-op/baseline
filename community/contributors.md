@@ -31,7 +31,7 @@ Technical contributors either are working on architecture or developing code...b
 
 ## Core Developers <a href="#maintainers" id="maintainers"></a>
 
-Once you've done some work as a Member, you may wish to become a **Maintainer** and have a direct hand in deciding what work is merged to the Main/Master Branch to become official Baseline technology and specifications.
+Once you've done some work as a Member, you may wish to become a [**Maintainer**](https://github.com/ethereum-oasis-op/baseline/blob/main/MAINTAINERS.md) and have a direct hand in deciding what work is merged to the Main Branch to become official Baseline technology and specifications.
 
 ### What do core developers do? <a href="#what-do-maintainers-do" id="what-do-maintainers-do"></a>
 

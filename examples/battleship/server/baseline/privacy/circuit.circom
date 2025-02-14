@@ -1,7 +1,7 @@
 
 pragma circom 2.0.0;
 include "./node_modules/circomlib/circuits/pedersen.circom";
-// simplified version of battleship circuit https://github.com/tommymsz006/zkbattleship-circuit/blob/master/circom/battleship_sha256.circom
+// simplified version of battleship circuit https://github.com/tommymsz006/zkbattleship-circuit/blob/main/circom/battleship_sha256.circom
 // with only one ship, slightly adapted to work with latest version circom
 
 template Battleship() {

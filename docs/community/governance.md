@@ -10,13 +10,13 @@ Additional documentation about the OASIS Open Projects program can be found [her
 
 ## License and Patent Policies <a id="license-and-patent-policies"></a>
 
-All repos in the Ethereum OASIS Projects organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md).
+All repos in the Ethereum OASIS Projects organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/main/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/main/policy/call-for-patent-disclosure.md).
 
 In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/open-projects/cla/entity-cla-20210630/) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](https://cla-assistant.io/ethereum-oasis-op/managed-open-project) for community contributions. You must [sign the ICLA](https://cla-assistant.io/ethereum-oasis-op/managed-open-project) before your pull requests to the baseline repository will be merged. [Check here](https://community.oasis-open.org/s/searchdirectory?id=a233l0000038IIo) to see if your company has signed the ECLA.
 
 ## Code of Conduct <a id="code-of-conduct"></a>
 
-​Here is the link to the official [code of conduct](https://github.com/ethereum-oasis-op/baseline/blob/master/CODE_OF_CONDUCT.md).
+​Here is the link to the official [code of conduct](https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md).
 
 ## **Charter: Baseline Open Source Project Governance** <a id="charter-baseline-open-source-project-governance"></a>
 

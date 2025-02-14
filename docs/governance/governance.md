@@ -6,7 +6,7 @@ description: The Baseline Protocol is an openly governed project and standards b
 
 ## License and Patent Policies <a href="#license-and-patent-policies" id="license-and-patent-policies"></a>
 
-All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md).
+All repos in the Ethereum OASIS organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/main/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/main/policy/call-for-patent-disclosure.md).
 
 Contributions to the open source repo shall be under creative commons public domain license [(CC0 1.0 Universal)](https://creativecommons.org/publicdomain/zero/1.0/).
 
@@ -103,5 +103,5 @@ This document was ratified by the PGB before the public launch of the Baseline P
 
 ### Details on OASIS and the Open Ethereum Project <a href="#details-on-oasis-and-the-open-ethereum-project" id="details-on-oasis-and-the-open-ethereum-project"></a>
 
-Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis-op/oasis-open-project/blob/master/GOVERNANCE.md%E2%80%8B).
+Governance documents from the existing [Open Ethereum Project](https://github.com/ethereum-oasis-op/oasis-open-project/blob/main/GOVERNANCE.md%E2%80%8B).
 
