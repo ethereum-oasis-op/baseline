@@ -59,7 +59,7 @@ Most of our open source teams and workgroups meet bi-weekly to discuss open item
 
 The Baseline Protocol community used to host a weekly[ Baseline Show through Youtube](https://youtube.com/playlist?list=PLxmhMSa49Q1CVwTdcUNeoqoME6GRwtSTA) with various community updates, live demos, guest speakers, themed discussions, and impromptu office hours. Anyone could join the live Zoom call by **emailing baseline-team@oasis-open.org** to be added to the invite.
 
-The Baseline Show is currently paused as the community regroups and refocuses.&#x20;
+The Baseline Show is currently paused as the community regroups and refocuses.
 
 #### General Assembly <a href="#specifications-steering-committee" id="specifications-steering-committee"></a>
 
