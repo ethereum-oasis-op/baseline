@@ -52,7 +52,7 @@ The Baseline Protocol Standard contains three specifications - [CORE](https://gi
 
 ## The Baseline Protocol Reference Implementations
 
-A growing number of Baseline Protocol Reference Implementations can be found [here](docs/bri/overview-of-reference-implementations.md). Demos and examples can be found [here](https://github.com/ethereum-oasis-op/baseline/tree/master/examples). These are intended to help you understand baselining and give you ideas for your implementation needs.
+A growing number of [Baseline Protocol Reference Implementations](docs/bri/overview-of-reference-implementations.md), along with [demonstrations and examples]https://github.com/ethereum-oasis-op/baseline/tree/master/examples) are available to help you understand baselining and give you ideas for your implementation needs.
 
 ## Baseline Protocol Interoperability Demo based on an EU Trustchain grant
 
