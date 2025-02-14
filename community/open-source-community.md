@@ -12,7 +12,7 @@ Our open source team members are the drivers of the development and adoption of 
 
 ### **Resources**
 
-Anyone can become a member or learn more about Baseline through the following resources:
+The following resources provide more information about becoming a member:
 
 * ****[**Get Involved**](https://www.baseline-protocol.org/get-involved/)**-** sign up and get involved in our open source teams
 * [**Community Member Starter Kit**](https://www.baseline-protocol.org/resources/)**-** understand how you can contribute as a community member and how the open source community operates
