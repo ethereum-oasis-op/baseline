@@ -14,7 +14,7 @@ Our open source team members are the drivers of the development and adoption of 
 
 Anyone can become a member or learn more about Baseline through the following resources:
 
-* ****[**Get Involved**](https://www.baseline-protocol.org/get-involved/)**-** sign up and get involved in our open source teams&#x20;
+* ****[**Get Involved**](https://www.baseline-protocol.org/get-involved/)**-** sign up and get involved in our open source teams
 * [**Community Member Starter Kit**](https://www.baseline-protocol.org/resources/)**-** understand how you can contribute as a community member and how the open source community operates
 * [**Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ)**-** join our community Slack, say hello, or ask a question
 * ****[**Learn more**](https://www.baseline-protocol.org/resources/)- about the Baseline Protocol
