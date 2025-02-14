@@ -41,7 +41,7 @@ The circuits will be built in such a manner that they will keep the details of t
 
 **Motivation**
 
-Strong belief that [Baseline protocol](https://github.com/ethereum-oasis-op/baseline/blob/master/README.md) on public blockchain will set a new direction for participants and financial regulators that want/need to coordinate multi party business processes with privacy and without putting sensitive enterprise information on the blockchain.
+A strong belief that [Baseline protocol](https://github.com/ethereum-oasis-op/baseline/blob/main/README.md) on public blockchain will set a new direction for participants and financial regulators that want/need to coordinate multi party business processes with privacy and without putting sensitive enterprise information on the blockchain.
 
 **Specific expected project benefits**
 
