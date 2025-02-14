@@ -1,6 +1,6 @@
 # General Members
 
-Anyone with a github ID can be a [Contributor](contributors.md) to Baseline and it's Protocol, but you can also become a **Member** of our Github Organization, which will allow you to get invitations to key meetings, be assigned to Issues, and vote for Technical Steering Committee members (provided you make at least one contribution that is successfully merged to master within the [voting period](../docs/governance/governance.md#steady-state-periods)).
+Anyone with a github ID can be a [Contributor](contributors.md) to Baseline and its Protocol, but you can also become a **Member** of our Github Organization, which will allow you to get invitations to key meetings, be assigned to Issues, and vote for Technical Steering Committee members (provided you make at least one contribution that is successfully merged to master within the [voting period](../docs/governance/governance.md#steady-state-periods)).
 
 ## What it means to be a Member <a href="#what-it-means-to-be-a-member" id="what-it-means-to-be-a-member"></a>
 
