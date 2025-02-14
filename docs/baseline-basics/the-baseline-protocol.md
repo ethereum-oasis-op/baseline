@@ -4,7 +4,7 @@
 
 The Baseline Protocol is an open-source initiative that combines advances in cryptography, messaging, and consensus-controlled state machines -- often referred to as blockchains or distributed ledger technology (DLT) -- to deliver secure and private business processes, event ordering, data consistency, and workflow integrity at low cost. The Baseline Protocol provides a framework that allows Baseline Protocol Implementations (BPIs) to establish a common frame of reference, enabling confidential and complex (business) collaborations between enterprises without moving any sensitive data out of traditional Systems of Record. The work is governed by [OASIS](https://oasis-open-projects.org).
 
-The community now focuses on financial inclusion and ESG (Environmental, Social, and Governance) as primary drivers. This pivot is driven by the recognition that the Baseline Protocol can play a crucial role in addressing significant global challenges, such as bridging the SME financing gap in developing regions and promoting sustainable business practices.
+The community now focuses on financial inclusion and ESG (Environmental, Social, and Governance) as primary drivers. This pivot is driven by the recognition that the Baseline Protocol can play a crucial role in addressing significant global challenges, such as bridging the SME (Small- and Medium-sizede Enterprise) financing gap in developing regions and promoting sustainable business practices.
 
 ### Rationale for the Pivot
 
