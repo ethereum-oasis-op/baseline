@@ -13,7 +13,7 @@ The baseline initiative's primary mission is to standardize these abstract techn
 
 Both the core libraries and the reference implementations should be thought of as a starting point for developers, a way of understanding the techniques and getting a jump start on their own work. So long as a developer follows the standard specifications of the baseline protocol, their work should interoperate with anyone else's implementation.
 
-If the core libraries and the reference implementations are just instances of the standard, why separate them into [core/](https://github.com/ethereum-oasis-op/baseline/tree/master/core) and different reference implementations (see [examples/](https://github.com/ethereum-oasis-op/baseline/tree/master/examples))? The answer is that the separation makes it easier to implement changes. The core should always be stable and capable of informing specifications development, where reference implementations are more "opinionated" and can constitute different approaches that utilize specific components, infrastructure, etc., while using the same core interfaces.
+If the core libraries and the reference implementations are just instances of the standard, why separate them into [core/](https://github.com/ethereum-oasis-op/baseline/tree/main/core) and different reference implementations (see [examples/](https://github.com/ethereum-oasis-op/baseline/tree/main/examples))? The answer is that the separation makes it easier to implement changes. The core should always be stable and capable of informing specifications development, where reference implementations are more "opinionated" and can constitute different approaches that utilize specific components, infrastructure, etc., while using the same core interfaces.
 
 > The core libraries are rails for standardization while reference implementations are rails for adoption.
 
@@ -43,9 +43,9 @@ Radish34 might be called BRI-0, but for historical purposes, and so as not to co
 
 ### **BRI-1**
 
-Baseline Reference Implementation #1 ([BRI-1](bri-1/)) was developed by contributors from Provide, Nethermind, EY and others, with support and oversight from the entire Baseline Maintainer team. This implementation correctly utilizes the core Baseline Protocol abstract interfaces, which are free of dependencies on any particular set of components or proprietary systems, but it also relies heavily on tools and systems made available by Provide. Provide's [Shuttle](https://shuttle.provide.services/waitlist) infrastructure deployment and manifold system is used by many \_baselining \_developers to make their work easier. Nethermind is the first Ethereum public client to implement the `IBaselineRPC` interface (found [here](https://github.com/ethereum-oasis-op/baseline/tree/master/core/api#interfaces)). NATS is a production-ready enterprise messaging layer that meets the privacy and performance requirements for baselining.
+Baseline Reference Implementation #1 ([BRI-1](bri-1/)) was developed by contributors from Provide, Nethermind, EY and others, with support and oversight from the entire Baseline Maintainer team. This implementation correctly utilizes the core Baseline Protocol abstract interfaces, which are free of dependencies on any particular set of components or proprietary systems, but it also relies heavily on tools and systems made available by Provide. Provide's [Shuttle](https://shuttle.provide.services/waitlist) infrastructure deployment and manifold system is used by many \_baselining \_developers to make their work easier. Nethermind is the first Ethereum public client to implement the [`IBaselineRPC` interface](https://github.com/ethereum-oasis-op/baseline/tree/master/core/api#interfaces)). NATS is a production-ready enterprise messaging layer that meets the privacy and performance requirements for baselining.
 
-Details on BRI-1 can be found [here](bri-1/), and the code can be found [here](https://github.com/ethereum-oasis-op/baseline/tree/master/examples/bri-1).
+Details on BRI-1 can be found [here](bri-1/), and the code can be found [here](https://github.com/ethereum-oasis-op/baseline/tree/main/examples/bri-1).
 
 ### **BRI-2**
 

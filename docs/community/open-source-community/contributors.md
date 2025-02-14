@@ -24,7 +24,7 @@ There is one other, important, way to contribute: **use the work in the Baseline
 
 The Baseline Protocol Code of Conduct is located here
 
-{% embed url="https://github.com/ethereum-oasis-op/baseline/blob/master/CODE_OF_CONDUCT.md" %}
+{% embed url="https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md" %}
 
 ## Technical Contributors <a href="#technical-contributors" id="technical-contributors"></a>
 

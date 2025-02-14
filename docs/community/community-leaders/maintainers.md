@@ -36,7 +36,7 @@ A Baseline Maintainer can become a Baseline Maintainer by doing the following,
 
 * Being an active Baseline Maintainer by actively attending the bi-weekly meetings
 * Making a contribution to the Baseline Protocol through [**BLIP work**](https://github.com/ethereum-oasis-op/baseline-blips), [**progressing the roadmap**](https://github.com/ethereum-oasis-op/baseline/blob/main/Baseline%20Protocol%20-%202022%20Roadmap.pdf), or other efforts
-* Then completing the [**Pull\_Request\_Template** ](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/PULL\_REQUEST\_TEMPLATE.md)in its entirety to add users Github ID to the [**Code Owners file**](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/CODEOWNERS)&#x20;
+* Then completing the [**Pull\_Request\_Template** ](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/PULL\_REQUEST\_TEMPLATE.md)in its entirety to add users Github ID to the [**Code Owners file**](https://github.com/ethereum-oasis-op/baseline/blob/main/.github/CODEOWNERS)
 * The current Maintainers (listed Code Owners) will be assigned to review the Pull Request, and the PR will be merged once **two** Maintainers approve the request
 * If the Baseline Maintainer request is denied or poses concerns, the proposer or other Baseline Core Devs can escalate to the TSC
 

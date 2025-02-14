@@ -36,7 +36,7 @@ An initial set of JSON-RPC methods have been defined for inclusion in the specif
 #### Ethereum clients that support baseline JSON-RPC
 
 * [Nethermind](https://github.com/NethermindEth/nethermind) .NET client
-* Any client supported by the [commit-mgr](https://github.com/ethereum-oasis-op/baseline/tree/master/examples/bri-2/commit-mgr) service. These include:
+* Any client supported by the [commit-mgr](https://github.com/ethereum-oasis-op/baseline/tree/main/examples/bri-2/commit-mgr) service. These include:
   * [ganache](https://github.com/trufflesuite/ganache)
   * [besu](https://github.com/hyperledger/besu)
   * [Infura](https://infura.io/docs/ethereum)

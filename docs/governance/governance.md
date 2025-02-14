@@ -14,7 +14,7 @@ In order to ensure clean IPR that allows the Baseline Protocol to remain an open
 
 ## Code of Conduct <a href="#code-of-conduct" id="code-of-conduct"></a>
 
-​Here is the link to the official [Code of Conduct](https://github.com/ethereum-oasis-op/baseline/blob/master/CODE\_OF\_CONDUCT.md).
+​Here is the official [Code of Conduct](https://github.com/ethereum-oasis-op/baseline/blob/main/CODE\_OF\_CONDUCT.md).
 
 ## **Charter: Baseline Open Source Project Governance** <a href="#charter-baseline-open-source-project-governance" id="charter-baseline-open-source-project-governance"></a>
 
