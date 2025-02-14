@@ -35,7 +35,7 @@ Before creating a Workflow, you must first create the business rules involved in
 
 More elaborate Workflows may contain rules that govern the state changes from one Workstep to the next. These can be written in zero knowledge circuits, and in a future release, one will be able to send business logic to counterparties without constructing special zk circuits (but allowing the core zk "consistency" circuit to check both code and data).
 
-To set up this business logic, use the Baseline Protocol Privacy Package [here](https://github.com/ethereum-oasis-op/baseline/tree/master/core/privacy).
+To set up this business logic, use the [Baseline Protocol Privacy Package](https://github.com/ethereum-oasis-op/baseline/tree/main/core/privacy).
 
 ### Deploying the Contracts
 
