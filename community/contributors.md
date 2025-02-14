@@ -136,7 +136,7 @@ The iCLA happens automatically when people submit a pull request, or they can ac
 
 ### Core Developers and Commit Rules <a href="#maintainers-and-commit-rules" id="maintainers-and-commit-rules"></a>
 
-Merging to Master requires review by THREE Core Developers. The TSC seeded the initial set of Core Developers. Now, any active Member can become a Maintainer. Core Developers may add more Core Developers by rough consensus, and the TSC may step in to resolve cases where this process fails.
+Merging to Master requires review by THREE Maintainers. The TSC seeded the initial set of Core Developers. Now, any active Member can [become a Maintainer](MAINTAINERS.md#how-to-become-a-maintainer). The Maintainers, collectively, may add more Maintainers by rough consensus, and the TSC may step in to resolve cases where this process fails.
 
 ## Specifications Contributors <a href="#specifications-contributors" id="specifications-contributors"></a>
 
