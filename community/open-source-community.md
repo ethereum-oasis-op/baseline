@@ -75,7 +75,7 @@ The [**TSC**](community-leaders.md#your-technical-steering-committee) meets now 
 
 #### [Slack](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ)  <a href="#slack-discourse-telegram" id="slack-discourse-telegram"></a>
 
-The Baseline Slack channel is the primary communication method for community members, and is moderated by community leaders and managers. The Slack is quite active with ways to get involved, updates, engaging discussions, and questions. Everyone is encouraged to [**join the Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) **** and various channels.&#x20;
+The Baseline Slack channel is the primary communication method for community members, and is moderated by community leaders and managers. The Slack is quite active with ways to get involved, updates, engaging discussions, and questions. Everyone is encouraged to [**join the Slack**](https://join.slack.com/t/ethereum-baseline/shared\_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) **** and various channels.
 
 #### [Discord](https://discord.gg/NE8AYD7) / Telegram <a href="#slack-discourse-telegram" id="slack-discourse-telegram"></a>
 
