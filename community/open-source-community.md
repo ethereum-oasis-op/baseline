@@ -65,7 +65,7 @@ The Baseline Show is currently paused as the community regroups and refocuses.
 
 The General Assembly was a monthly (typically the first Wednesday) community wide meeting to discuss updates from across the community or adjacent projects. The General Assembly was streamed to the weekly[ **Baseline Show through YouTube**](https://youtube.com/playlist?list=PLxmhMSa49Q1BTD\_-KrpuLIe8P2J1UR19W) and anyone could join the live Zoom call by **emailing baseline-team@oasis-open.org** to be added to the invite.
 
-The General Assembly is currently paused as the community regroups and refocuses.&#x20;
+The General Assembly is currently paused as the community regroups and refocuses.
 
 #### Technical Steering Committee <a href="#technical-steering-committee" id="technical-steering-committee"></a>
 
