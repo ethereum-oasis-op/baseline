@@ -10,10 +10,10 @@ Presented below is a reference architecture that ensures two or more systems of 
 
 **A Baseline Protocol Stack Reference Architecture** as depicted above in Figure 1 is comprised of the following layers:
 
-* **Baseline Protocol Implementation (BPI) Abstraction Layer**: Enables access to externally available BPI functions through APIs as defined in the [Baseline Protocol API Specification](https://github.com/eea-oasis/baseline-standard/tree/main/api).
+* **Baseline Protocol Implementation (BPI) Abstraction Layer**: Enables access to externally available BPI functions through APIs as defined in the [Baseline Protocol API Specification](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/api).
 * **Middleware Layer**: Manages all counterparties to an agreement and its associated workflows and worksteps with business rules and business data, as well as all counterparty delegates. It also manages all messaging between counterparties to an agreement and instantiation of processing layers based on newly created or updated agreements and their workflows, worksteps, business rules, and business data.
 * **Processing Layer**: Manages, properly sequences, and deterministically processes and finalizes all state change requests from counterparties to all agreements represented in the BPI, in a privacy-preserving, cryptographically verifiable manner .
-* **CCSM Abstraction Layer**: Enables access to all required BPI functions implemented on one or more CCSMs through APIs as defined in the [Baseline Protocol API Specification](https://github.com/eea-oasis/baseline-standard/tree/main/api).
+* **CCSM Abstraction Layer**: Enables access to all required BPI functions implemented on one or more CCSMs through APIs as defined in the [Baseline Protocol API Specification](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/api).
 * **CCSM Layer**: Manages, properly sequences, and deterministically processes all transactions from the Processing Layer, as well as either deterministically or probabilistically finalizes all CCSM state transitions based on said transactions on the CCSM.
 
 ## Components of Each Layer

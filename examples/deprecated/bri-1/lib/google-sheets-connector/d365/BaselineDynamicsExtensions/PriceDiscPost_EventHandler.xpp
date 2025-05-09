@@ -1,0 +1,20 @@
+class PriceDiscPost_EventHandler
+{
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    [DataEventHandler(tableStr(PriceDiscAdmTable), DataEventType::Updating)]
+    public static void PriceDiscAdmTable_onUpdating(Common sender, DataEventArgs e)
+    {
+        PriceDiscAdmTable priceDiscTable = sender as PriceDiscAdmTable;
+        str agreementJson;
+
+        if (priceDiscTable.Posted == NoYes::Yes)
+        {
+            agreementJson = Baseline_JsonBuilder::generateMSAJson(priceDiscTable.JournalNum);
+            BaselineDll.Integration::PostDocument(agreementJson, "msa");
+        }
+    }
+}

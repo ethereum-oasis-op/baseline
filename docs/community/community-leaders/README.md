@@ -25,7 +25,7 @@ The Technical Steering Committee (TSC) is accountable to the [Project Governance
 
 The group is responsible for reviewing and approving proper use of the grant funds, to ensure funds are allocated to valuable and appropriate work. The TSC meets regularly to set technical roadmaps and ensure progress of the community toward the ubiquitous implementation of the Baseline Protocol.
 
-The list of members for the TSC for the period from November 2022 to November 2023 can be [**found here**](https://github.com/eea-oasis/baseline/blob/main/TECHNICAL-STEERING-COMMITTEE.md).
+The list of members for the TSC for the period from November 2022 to November 2023 can be [**found here**](https://github.com/ethereum-oasis-op/baseline/blob/main/TECHNICAL-STEERING-COMMITTEE.md).
 
 ## Standards Team
 

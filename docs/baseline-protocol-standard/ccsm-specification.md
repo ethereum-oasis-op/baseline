@@ -1,6 +1,6 @@
 # The CCSM Specification
 
-**The CCSM specification document is available on Github** [**here**](https://github.com/eea-oasis/baseline-standard/tree/main/ccsm)**.**
+**The CCSM specification document is available on Github** [**here**](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/ccsm)**.**
 
 ## CCSM Specification Overview
 

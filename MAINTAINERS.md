@@ -18,12 +18,10 @@ They can/should also contribute in the following ways:
 
 Code and Systems maintainers
 
-- [Yoav Bittan](https://github.com/Ybittan)
 - [Biswashree Dey](https://github.com/biscuitdey)
 - [Andreas Freund](https://github.com/Therecanbeonlyone1969)
 - [Ognjen Kurtic](https://github.com/ognjenkurtic)
-- [Keith Salzman](https://github.com/Kasshern)
-- [Kartheek Solipuram](https://github.com/skarred14)
+- [Stefan Kostic](https://github.com/skosito)
 
 # How to become a maintainer?
 
@@ -61,9 +59,9 @@ In general, a maintainer needs to:
 
 Maintainers meet and discuss issues virtually via the private #maintainers slack room in the [baseline slack](https://ethereum-baseline.slack.com/).
 
-## Bi-Weekly Meetings
+## Maintainer Meetings
 
-There are Bi-Weekly _Maintainers meetings_(https://us06web.zoom.us/j/88974739050?pwd=M2w1THFHdzBkaXp0STZtWXQyZXlYQT09) where members can discuss plans and issues related to the project, updates, release planning, and other related topics. These meetings are not public but special exceptions can be granted for members of the baseline community, experts, or other key participants. The summaries of the meetings will be posted to the public #maintainer-meeting slack room.
+Currently paused as the community regroups.
 
 # How to stop being a maintainer?
 

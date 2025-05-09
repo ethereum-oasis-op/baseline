@@ -1,6 +1,6 @@
 ## Description
 
-BRI-3 is a simple reference implemenation of the baseline standard, developed under [grant 85](https://github.com/eea-oasis/baseline-grants/issues/85).  
+BRI-3 is a simple reference implemenation of the baseline standard, developed under [grant 85](https://github.com/ethereum-oasis-op/baseline-grants/issues/85).  
 
 
 This reference implementation is being built from scratch and will contain a limited set of features. It will serve the following purposes:

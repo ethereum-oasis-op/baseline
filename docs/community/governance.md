@@ -4,19 +4,19 @@
 
 OASIS Open is a non-profit, vendor-neutral standards developing organization. It provides rules and guidelines to ensure equitable and transparent oversight of technical collaborations in open source and open standards. Additionally, it provides services such as technical program support, legal, marketing, and events management.
 
-The Baseline Protocol is governed by the [EEA Community Projects Project Governing Board (PGB)](https://github.com/eea-oasis/managed-open-project/blob/main/PROJECT-GOVERNING-BOARD.md) under the [OASIS Open Projects Program](http://oasis-open-projects.org/). EEA Community Projects exists to provide a neutral forum for companies and community representatives to create high-quality specifications that facilitate Ethereum’s longevity, interoperability, and ease of integration. One does not have to "join" the group formally or financially in order to make a contribution to Baseline or other Ethereum OASIS projects.
+The Baseline Protocol is governed by the [Ethereum OASIS Projects Project Governing Board (PGB)](https://github.com/ethereum-oasis-op/managed-open-project/blob/main/PROJECT-GOVERNING-BOARD.md) under the [OASIS Open Projects Program](http://oasis-open-projects.org/). EEA Community Projects exists to provide a neutral forum for companies and community representatives to create high-quality specifications that facilitate Ethereum’s longevity, interoperability, and ease of integration. One does not have to "join" the group formally or financially in order to make a contribution to Baseline or other Ethereum OASIS projects.
 
 Additional documentation about the OASIS Open Projects program can be found [here](https://github.com/oasis-open-projects/documentation).
 
 ## License and Patent Policies <a id="license-and-patent-policies"></a>
 
-All repos in the EEA Community Projects organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/master/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/master/policy/call-for-patent-disclosure.md).
+All repos in the Ethereum OASIS Projects organization, including Baseline Protocol repositories, adhere to OASIS Open Projects [license](https://github.com/oasis-open-projects/documentation/blob/main/policy/licenses.md) and [patent polices](https://github.com/oasis-open-projects/documentation/blob/main/policy/call-for-patent-disclosure.md).
 
-In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/open-projects/cla/entity-cla-20210630/) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](https://cla-assistant.io/eea-oasis/managed-open-project) for community contributions. You must [sign the ICLA](https://cla-assistant.io/eea-oasis/managed-open-project) before your pull requests to the baseline repository will be merged. [Check here](https://community.oasis-open.org/s/searchdirectory?id=a233l0000038IIo) to see if your company has signed the ECLA.
+In order to ensure clean IPR that allows Baseline to remain an open technology, OASIS rules require an [Entity CLA](https://www.oasis-open.org/open-projects/cla/entity-cla-20210630/) for persons or organizations contributing on behalf of a legal entity, and an [Individual CLA](https://cla-assistant.io/ethereum-oasis-op/managed-open-project) for community contributions. You must [sign the ICLA](https://cla-assistant.io/ethereum-oasis-op/managed-open-project) before your pull requests to the baseline repository will be merged. [Check here](https://community.oasis-open.org/s/searchdirectory?id=a233l0000038IIo) to see if your company has signed the ECLA.
 
 ## Code of Conduct <a id="code-of-conduct"></a>
 
-​Here is the link to the official [code of conduct](https://github.com/eea-oasis/baseline/blob/master/CODE_OF_CONDUCT.md).
+​Here is the link to the official [code of conduct](https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md).
 
 ## **Charter: Baseline Open Source Project Governance** <a id="charter-baseline-open-source-project-governance"></a>
 
@@ -64,9 +64,9 @@ The TSC shall determine the number of maintainers required to merge a contributi
 
 This document shall be ratified by the PGB before the public launch of the Baseline Protocol. Changes to this document shall require a simple majority of the PGB.
 
-### Details on OASIS and EEA Community Projects <a id="details-on-oasis-and-eea-community-projects"></a>
+### Details on OASIS and Ethereum OASIS Projects <a id="details-on-oasis-and-eea-community-projects"></a>
 
-Governance documents for [EEA Community Projects](https://github.com/eea-oasis/managed-open-project/blob/main/GOVERNANCE.md).
+Governance documents for [Ethereum OASIS Projects](https://github.com/ethereum-oasis-op/managed-open-project/blob/main/GOVERNANCE.md).
 
 ### TSC Rules for Mid-term Member Replacements <a id="replacements"></a>
 

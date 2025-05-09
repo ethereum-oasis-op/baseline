@@ -18,4 +18,4 @@ At the moment, there are no open-source BPIs that can serve for core dev onboard
 
 ## How to participate
 
-Team is working on creating a set of small, atomic and independent tasks that can be picked up by a dev trying to get into the protocol. You can see the current list of tasks [here](https://github.com/eea-oasis/baseline/projects/2) and express your interest in the [Baseline Slack](https://join.slack.com/t/ethereum-baseline/shared_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) #devs channel.
+Team is working on creating a set of small, atomic and independent tasks that can be picked up by a dev trying to get into the protocol. You can see the current list of tasks [here](https://github.com/ethereum-oasis-op/baseline/projects/2) and express your interest in the [Baseline Slack](https://join.slack.com/t/ethereum-baseline/shared_invite/zt-d6emqeci-bjzBsXBqK4D7tBTZ40AEfQ) #devs channel.

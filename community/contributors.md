@@ -1,12 +1,12 @@
 ---
 description: >-
-  Anyone can contribute to the Baseline Protocol by making technical,
+  Anyone can contribute to Baseline by making technical,
   specification related, or other contributions
 ---
 
 # Contributors
 
-All technical and standards-related work of the Baseline Protocol initiative is maintained publicly on the [**github repo**](https://github.com/ethereum-oasis/baseline) **** and [**open source team**](open-source-community.md) work is managed in Google Drives by community managers. [**Sign up to join** the teams](open-source-community.md) or **email at baseline-team@oasis-open.org** for access to the open source team work.&#x20;
+All technical and standards-related work of the Baseline initiative is maintained publicly on the [**github repo**](https://github.com/ethereum-oasis-op/baseline) **** and [**open source team**](open-source-community.md) work is managed in Google Drives by community managers. [**Sign up to join** the teams](open-source-community.md) or **email at baseline-team@oasis-open.org** for access to the open source team work.&#x20;
 
 Anyone can get involved and start contributing by joining the open source teams, taking on work, proposing grant work, or even directly submitting an issue or PR to the repository.
 
@@ -23,7 +23,7 @@ There is one other way to contribute, and it's the most important: **use the wor
 
 Here is the link to the Baseline Protocol code of conduct:
 
-{% embed url="https://github.com/ethereum-oasis/baseline/blob/master/CODE_OF_CONDUCT.md" %}
+{% embed url="https://github.com/ethereum-oasis-op/baseline/blob/main/CODE_OF_CONDUCT.md" %}
 
 ## Technical Contributors <a href="#technical-contributors" id="technical-contributors"></a>
 
@@ -31,9 +31,7 @@ Technical contributors either are working on architecture or developing code...b
 
 ## Core Developers <a href="#maintainers" id="maintainers"></a>
 
-Once you've done some work as a Member, you may wish to become a **Core developer** and have a direct hand in deciding what work is merged to the Main/Master Branch to become official Baseline Protocol technology and specifications.
-
-Here's a list of [current Core Developers](broken-reference).
+Once you've done some work as a Member, you may wish to become a [**Maintainer**](https://github.com/ethereum-oasis-op/baseline/blob/main/MAINTAINERS.md) and have a direct hand in deciding what work is merged to the Main Branch to become official Baseline technology and specifications.
 
 ### What do core developers do? <a href="#what-do-maintainers-do" id="what-do-maintainers-do"></a>
 
@@ -51,11 +49,11 @@ They can/should also contribute in the following ways:
 * Working with the community to help with adoption
 * Presenting the project and key technologies to the public (in-person, webinar, videos, articles, etc...)
 
-## How to become a core developer? <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
+## How to become a maintainer? <a href="#how-to-become-a-maintainer" id="how-to-become-a-maintainer"></a>
 
-There are two ways to become a core developer: You are asked by a current core developer, or you make request to an existing core developer to become one.&#x20;
+There are two ways to become a maintainer: You are asked by a current maintainer, or you make request to an existing maintainer to become one.&#x20;
 
-With either path you become a "provisional core developer". As such you will need to show consistent contributions of code and/or specifications to the project. This can be in the form of pull requests that get merged into master. Or it can be in the form of technical specification, system architecture and related artifacts that guide the development activities of others.
+With either path you become a "provisional maintainer". As such you will need to show consistent contributions of code and/or specifications to the project. This can be in the form of pull requests that get merged into master. Or it can be in the form of technical specification, system architecture and related artifacts that guide the development activities of others.
 
 All provisional core developers that focus on code development (over standards) must meet with the existing core developers and demonstrate they are capable of the following:
 
@@ -64,11 +62,11 @@ All provisional core developers that focus on code development (over standards) 
 * Explaining the components of the system architecture
 * Walking through the code and explain the baseline process
 
-Once the provisional core developer demonstrates their capabilities, the existing core developers will vote during the next scheduled core developer meeting to give the prospect full core developer status. Members must vote with 2/3rds majority to add a core developer. Voting that results in a tie or potentially other issue will be brought to the TSC for review.
+Once the provisional maintainer demonstrates their capabilities, the existing core developers will vote during the next scheduled maintainer meeting to give the prospect full maintainer status. Members must vote with 2/3rds majority to add a maintainer. Voting that results in a tie or potentially other issue will be brought to the TSC for review.
 
 ## What is expected of core developers? <a href="#what-is-expected-of-maintainers" id="what-is-expected-of-maintainers"></a>
 
-In general, a core developer needs to:
+In general, a maintainer needs to:
 
 * be an expert in one or more fields related to the project
 * be an expert in finding and engaging the advice of other experts
@@ -90,24 +88,24 @@ Core Developers meet and discuss issues virtually via the #maintainers slack roo
 
 ### Regular Meetings <a href="#weekly-meetings" id="weekly-meetings"></a>
 
-There are weekly _Core Developers meetings_ where members can discuss plans and issues related to the project, updates, release planning, and other related topics. Anyone may attend these meetings, but the primary participants are core developers. Core developers are required to produce meeting summaries and document decisions.&#x20;
+There are currently no regular meetings.&#x20;
 
 Meeting signups are maintained on the "Join the Community" page on https://baseline-protocol.org.
 
-## How to stop being a core developer? <a href="#how-to-stop-being-a-maintainer" id="how-to-stop-being-a-maintainer"></a>
+## How to stop being a maintainer? <a href="#how-to-stop-being-a-maintainer" id="how-to-stop-being-a-maintainer"></a>
 
 Any of the following ways:
 
 * You stop reviewing PR's, responding to messages, answering emails, and/or generally ghost the project.
 * You are disrespectful towards anyone in the community and/or involved in the project.
 * You are disruptive to the general process of maintaining the project, meetings, discussions, issues, or other.
-* You notify the other core developers  you would like to relinquish your core developer status.
+* You notify the other core developers  you would like to relinquish your maintainer status.
 
-Two-thirds of all current core developers constitute a quorum for a meeting involving a question of removal. A simple majority vote from core developers attending the meeting is required to remove a core developer, but the TSC may be brought in to arbitrate if the core developer to be removed or any other core developer wishes to dispute the action. (See [Governance](https://github.com/eea-oasis/baseline/blob/main/docs/governance/governance.md) for details.)
+Two-thirds of all current core developers constitute a quorum for a meeting involving a question of removal. A simple majority vote from core developers attending the meeting is required to remove a maintainer, but the TSC may be brought in to arbitrate if the maintainer to be removed or any other maintainer wishes to dispute the action. (See [Governance](https://github.com/ethereum-oasis-op/baseline/blob/main/docs/governance/governance.md) for details.)
 
 ### BLIPs
 
-As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained [here](https://github.com/eea-oasis/baseline-blips/issues). YOU ARE ENCOURAGED TO SUBMIT IDEAS to the BLIP repo, and we are well-organized to review and act on them in a timely fashion. You never know -- we might decide to raise a grant to pay for your idea to get executed. It's happened before. Try it out!
+As of October 1, 2021, the baseline community will organize work in a similar fashion to Ethereum's EIPs (Ethereum Improvement Proposal). These will be called BaseLine Improvement Proposals, or BLIPs for short, and they will be maintained [here](https://github.com/ethereum-oasis-op/baseline-blips/issues). YOU ARE ENCOURAGED TO SUBMIT IDEAS to the BLIP repo, and we are well-organized to review and act on them in a timely fashion. You never know -- we might decide to raise a grant to pay for your idea to get executed. It's happened before. Try it out!
 
 ### Issues Organization and Community "Sprints" <a href="#issues-organization-and-community-sprints" id="issues-organization-and-community-sprints"></a>
 
@@ -126,7 +124,7 @@ Follow these steps when submitting a pull request:
 1. Fork the repo into your GitHub account. Read more about forking a repo on Github [here](https://help.github.com/articles/fork-a-repo/).
 2. Create a new branch, based on the `master` branch, with a name that concisely describes what you’re working on (ex. `add-mysql`).
 3. Ensure that your changes do not cause any existing tests to fail.
-4. Submit a pull request against the `master` branch.
+4. Submit a pull request against the `main` branch.
 
 Good practice strongly favors committing work frequently and not loading up a long period of work in isolation. Be brave...let others see what you are working on, even if it isn't "ready."
 
@@ -134,11 +132,11 @@ Good practice strongly favors committing work frequently and not loading up a lo
 
 Anyone can do a pull request and commit work to the community. In order for your work to be merged, you will need to sign the eCLA (entity contributor agreement) or iCLA (individual contributor agreement). Here are the details: [https://www.oasis-open.org/resources/projects/cla/projects-entity-cla](https://www.oasis-open.org/resources/projects/cla/projects-entity-cla)​
 
-The iCLA happens automatically when people submit a pull request, or they can access directly by going to [https://cla-assistant.io/ethereum-oasis/baseline](https://cla-assistant.io/ethereum-oasis/baseline)​
+The iCLA happens automatically when people submit a pull request, or they can access directly by going to [https://cla-assistant.io/ethereum-oasis-op/baseline](https://cla-assistant.io/ethereum-oasis-op/baseline)​
 
 ### Core Developers and Commit Rules <a href="#maintainers-and-commit-rules" id="maintainers-and-commit-rules"></a>
 
-Merging to Master requires review by THREE Core Developers. The TSC seeded the initial set of Core Developers. Now, any active Member can become a Core Developer. Core Developers may add more Core Developers by rough consensus, and the TSC may step in to resolve cases where this process fails.
+Merging to Master requires review by THREE Maintainers. The TSC seeded the initial set of Core Developers. Now, any active Member can [become a Maintainer](MAINTAINERS.md#how-to-become-a-maintainer). The Maintainers, collectively, may add more Maintainers by rough consensus, and the TSC may step in to resolve cases where this process fails.
 
 ## Specifications Contributors <a href="#specifications-contributors" id="specifications-contributors"></a>
 
@@ -146,7 +144,7 @@ The specifications work of the community can be done by anyone, both technical a
 
 ### Epics and Stories Organization <a href="#epics-and-stories-organization" id="epics-and-stories-organization"></a>
 
-The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/eea-oasis/baseline-standard) work and active protocol requirements and prioritization. (Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).)
+The Baseline Protocol initiative uses [Zenhub](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap) to create and manage both [specification](https://github.com/ethereum-oasis-op/baseline-standard) work and active protocol requirements and prioritization. (Zenhub should be a tab in your Github interface if you are using the [Chrome extension](https://chrome.google.com/webstore/detail/zenhub-for-github/ogcgkffhplmphkaahpmffcafajaocjbd?hl=en-US). There is also a web-app [here](https://app.zenhub.com/workspaces/baseline-5e713dc4f555144d9d6d17f6/roadmap).)
 
 Zenhub enables Epics to nest, while Issues don't nest...not really. Therefore, the community will employ the practice of using Issues for engineering Tasks and Epics to contain high level topics, which may have nested within them a set of agile Epics, and in them a set of Stories, and even Stories may have other Stories nested in them. Engineering meets planning where a Story (in the form of a Zenhub Epic) is referenced by an Issue/Task. (This can work very well, but Zenhub's choice in calling Epics, _Epics_ can cause confusion.
 
@@ -162,4 +160,4 @@ A Zenhub "Epic" used as a Story should almost always follow the form: "As X, I n
 
 ## ​Contributors
 
-The active contributors and maintainers of the Baseline Protocol repo can be found on [Github](https://github.com/ethereum-oasis/baseline/graphs/contributors). (Note: many contributors work in clones extending the protocol for their products. These people don't necessarily show up in the Github contributors list.)
+The active contributors and maintainers of the Baseline repo can be found on [Github](https://github.com/ethereum-oasis-op/baseline/graphs/contributors). (Note: many contributors work in clones extending the protocol for their products. These people don't necessarily show up in the Github contributors list.)

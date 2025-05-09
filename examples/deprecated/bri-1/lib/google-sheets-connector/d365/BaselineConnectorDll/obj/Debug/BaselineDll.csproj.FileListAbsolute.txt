@@ -1,0 +1,5 @@
+C:\Users\d365admin\Desktop\BaselineDll\BaselineDll\bin\Debug\BaselineDll.dll
+C:\Users\d365admin\Desktop\BaselineDll\BaselineDll\bin\Debug\BaselineDll.pdb
+C:\Users\d365admin\Desktop\BaselineDll\BaselineDll\obj\Debug\BaselineDll.dll
+C:\Users\d365admin\Desktop\BaselineDll\BaselineDll\obj\Debug\BaselineDll.pdb
+C:\Users\d365admin\Desktop\BaselineDll\BaselineDll\obj\Debug\BaselineDll.csprojResolveAssemblyReference.cache

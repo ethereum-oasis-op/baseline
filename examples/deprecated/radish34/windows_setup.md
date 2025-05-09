@@ -12,7 +12,7 @@ Release:        20.04
 You will use this version number to tailor further install instructions later on.
 
 ## 2) Clone Baseline GitHub Repo
-On the GitHub website, fork the repo `https://github.com/ethereum-oasis/baseline` into your own account. Then clone the fork you just made:
+On the GitHub website, fork the repo `https://github.com/ethereum-oasis-op/baseline` into your own account. Then clone the fork you just made:
 ```
 $ cd /home/(your ubuntu username)
 $ git clone https://github.com/(your github username)/baseline.git

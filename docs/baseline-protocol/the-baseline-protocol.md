@@ -1,8 +1,8 @@
-# The Baseline Protocol
+# Baseline and its Protocol
 
-The Baseline Protocol is an open source initiative that combines advances in cryptography, messaging, and blockchain to deliver secure and private business processes at low cost using the public Mainnet for event ordering, data consistency and workflow integrity. The protocol will enable confidential and complex collaboration between enterprises without moving any sensitive data from traditional systems of record. The work is governed as an [EEA Community Project](https://entethalliance.org/eeacommunityprojects/), managed by [OASIS](https://oasis-open-projects.org).
+Baseline and its Protocol is an open source initiative that combines advances in cryptography, messaging, and blockchain to deliver secure and private business processes at low cost using the public Mainnet for event ordering, data consistency and workflow integrity. The protocol will enable confidential and complex collaboration between enterprises without moving any sensitive data from traditional systems of record. The work is governed by [OASIS](https://oasis-open-projects.org).
 
-**The source code can be found** [**here**](https://github.com/eea-oasis/baseline/tree/main)**.**
+**The source code can be found** [**here**](https://github.com/ethereum-oasis-op/baseline/)**.**
 
 ## Why _Baseline_ Different Systems of Record? <a href="#why-baseline-different-systems-of-record" id="why-baseline-different-systems-of-record"></a>
 
@@ -16,7 +16,7 @@ The high level description and specification for a global public Mainnet are [he
 
 The Baseline Protocol can perform its core tasks on the current public Ethereum network at a rate that is reasonably expected to be sufficient for work in supply chain, B2B contracting, CRM, and other domains that involve coordinating records between legally separate entities.
 
-Eth2 will further extend the range of applications that baselining can serve at acceptable levels of performance and reliability. The Baseline Protocol community will align closely with Eth2 and work through the EEA Mainnet Working Group to supply the Ethereum core developer community with ideas, user stories and requirements to help see Eth2 evolve into a platform well-suited to baselining.
+Eth2 will further extend the range of applications that baselining can serve at acceptable levels of performance and reliability. The Baseline Protocol community will align closely with Ethereum and work through the EEA and the Ethereum Foundation to supply the Ethereum maintainer community with ideas, user stories and requirements to help see Eth2 evolve into a platform well-suited to baselining.
 
 ## Which Systems of Record Can We _Baseline?_ <a href="#which-systems-of-record-can-we-baseline" id="which-systems-of-record-can-we-baseline"></a>
 
@@ -26,4 +26,4 @@ Any state machine should be able to support the "baseline" pattern. Permissioned
 
 ## Current State of the Baseline Protocol
 
-The Baseline Core Version 1.0 has been ratified by the Technical Steering Committee on the 30th of September 2021 via unanimous vote on a recorded meeting. The standard draft has been submitted to OASIS for ratification to a standard. The submitted version of the document may be found [**here**](https://github.com/eea-oasis/baseline-standard/blob/main/core/baseline-core-v1.0-psd01.md) and the issue related to the approval of the standard may be found [**here**](https://github.com/eea-oasis/baseline-standard/issues/77#issue-1012249365).
+The Baseline Core Version 1.0 has been ratified by the Technical Steering Committee on the 30th of September 2021 via unanimous vote on a recorded meeting. The standard draft has been submitted to OASIS for ratification to a standard. The submitted version of the document may be found [**here**](https://github.com/ethereum-oasis-op/baseline-standard).

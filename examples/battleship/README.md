@@ -10,7 +10,7 @@ VS Code or any of your favorite IDE
 [Docker compose](https://docs.docker.com/compose/install/ ) 
 [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git )
 
-Once you have these installed, clone the official repo [Baseline repo](https://github.com/eea-oasis/baseline) and have it added to your local working directory
+Once you have these installed, clone the official repo [Baseline repo](https://github.com/ethereum-oasis-op/baseline) and have it added to your local working directory
 
 Navigate to the following path 
 ```

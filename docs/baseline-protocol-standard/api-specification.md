@@ -1,6 +1,6 @@
 # The API Specification
 
-**The API specification document is available on** [**Github here**](https://github.com/eea-oasis/baseline-standard/tree/main/api)**.**
+**The API specification document is available on** [**Github here**](https://github.com/ethereum-oasis-op/baseline-standard/tree/main/api)**.**
 
 ## API Specification Overview
 

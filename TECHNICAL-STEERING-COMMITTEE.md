@@ -4,12 +4,12 @@ The group is responsible for reviewing and approving proper use of the grant fun
 
 The following people were elected to serve on the Baseline TSC from November 2023 to November 2024 (in alphabetical order):
 
+* Ryan Fleischman
 * Andreas Freund
-* Biswashree Dey
 * Kartheek Solipuram
-* Mehran Shakeri
 * Ognjen Kurtic
-* Ryan Fleischmann
 * Sonal Patel
+
+The new TSC is currently being reconstituted.
 
 You can reach the TSC via the [mailing list](mailto:baseline-tsc@lists.oasis-open-projects.org).

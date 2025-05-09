@@ -1,7 +1,7 @@
 {
-    "$id": "https://github.com/eea-oasis/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json",
+    "$id": "https://github.com/ethereum-oasis-op/baseline/blob/main/examples/bpi-interop/schemas/r140-bankstateobject.json",
     "$schema": "https://json-schema.org/draft-07/schema#",
-    "$comment": "{\"term\": \"r140-bankstateobject\", \"@id\": \"https://github.com/eea-oasis/baseline#r140-bankstateobject\"}",
+    "$comment": "{\"term\": \"r140-bankstateobject\", \"@id\": \"https://github.com/ethereum-oasis-op/baseline#r140-bankstateobject\"}",
     "title": "BankStateObject",
     "description": "Bank State Object",
     "type": "object",
